@@ -1,0 +1,12 @@
+<Tags>
+   <Tag name="_types_" path="" type="Folder"/>
+   <Tag name="PID" path="" type="Folder"/>
+   <Tag name="Setpoint" path="PID" type="DB">
+      <Property name="Value">0.0</Property>
+      <Property name="DataType">5</Property>
+   </Tag>
+   <Tag name="Value" path="PID" type="DB">
+      <Property name="Value">9.8</Property>
+      <Property name="DataType">5</Property>
+   </Tag>
+</Tags>
