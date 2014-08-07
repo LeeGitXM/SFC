@@ -1,12 +1,210 @@
 <Tags>
-   <Tag name="_types_" path="" type="Folder"/>
-   <Tag name="PID" path="" type="Folder"/>
-   <Tag name="Setpoint" path="PID" type="DB">
-      <Property name="Value">0.0</Property>
-      <Property name="DataType">5</Property>
+   <Tag name="SFCDemo" path="" type="Folder"/>
+   <Tag name="BasicDemo" path="SFCDemo" type="Folder"/>
+   <Tag name="P1" path="SFCDemo/BasicDemo" type="DB">
+      <Property name="Value">false</Property>
+      <Property name="DataType">6</Property>
    </Tag>
-   <Tag name="Value" path="PID" type="DB">
-      <Property name="Value">9.8</Property>
-      <Property name="DataType">5</Property>
+   <Tag name="P2" path="SFCDemo/BasicDemo" type="DB">
+      <Property name="Value">false</Property>
+      <Property name="DataType">6</Property>
+   </Tag>
+   <Tag name="Opt3" path="SFCDemo/BasicDemo" type="DB">
+      <Property name="Value">false</Property>
+      <Property name="DataType">6</Property>
+   </Tag>
+   <Tag name="Opt1" path="SFCDemo/BasicDemo" type="DB">
+      <Property name="Value">false</Property>
+      <Property name="DataType">6</Property>
+   </Tag>
+   <Tag name="A1_Transition" path="SFCDemo/BasicDemo" type="DB">
+      <Property name="Value">true</Property>
+      <Property name="DataType">6</Property>
+   </Tag>
+   <Tag name="Opt2" path="SFCDemo/BasicDemo" type="DB">
+      <Property name="Value">false</Property>
+      <Property name="DataType">6</Property>
+   </Tag>
+   <Tag name="ExecutionLog" path="SFCDemo/BasicDemo" type="DB">
+      <Property name="Value">Step A1 ran.</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="LeaveOptions" path="SFCDemo/BasicDemo" type="DB">
+      <Property name="Value">false</Property>
+      <Property name="DataType">6</Property>
+   </Tag>
+   <Tag name="Vessel6" path="SFCDemo" type="UDT_INST">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Property name="UDTParentType">SFCDemoBatchVessel</Property>
+   </Tag>
+   <Tag name="Recipe" path="SFCDemo" type="Folder"/>
+   <Tag name="WaterQty" path="SFCDemo/Recipe" type="DB">
+      <Property name="Value">10.0</Property>
+      <Property name="DataType">4</Property>
+   </Tag>
+   <Tag name="WaterTemp" path="SFCDemo/Recipe" type="DB">
+      <Property name="Value">20.0</Property>
+      <Property name="DataType">4</Property>
+   </Tag>
+   <Tag name="WaterRest" path="SFCDemo/Recipe" type="DB">
+      <Property name="Value">0.0</Property>
+      <Property name="DataType">4</Property>
+   </Tag>
+   <Tag name="HCLTemp" path="SFCDemo/Recipe" type="DB">
+      <Property name="Value">30.0</Property>
+      <Property name="DataType">4</Property>
+   </Tag>
+   <Tag name="WaterAgit" path="SFCDemo/Recipe" type="DB">
+      <Property name="Value">20.0</Property>
+      <Property name="DataType">4</Property>
+   </Tag>
+   <Tag name="RawRest" path="SFCDemo/Recipe" type="DB">
+      <Property name="Value">10.0</Property>
+      <Property name="DataType">4</Property>
+   </Tag>
+   <Tag name="RawTemp" path="SFCDemo/Recipe" type="DB">
+      <Property name="Value">40.0</Property>
+      <Property name="DataType">4</Property>
+   </Tag>
+   <Tag name="HCLAgit" path="SFCDemo/Recipe" type="DB">
+      <Property name="Value">5.0</Property>
+      <Property name="DataType">4</Property>
+   </Tag>
+   <Tag name="HCLQty" path="SFCDemo/Recipe" type="DB">
+      <Property name="Value">35.0</Property>
+      <Property name="DataType">4</Property>
+   </Tag>
+   <Tag name="RawQty" path="SFCDemo/Recipe" type="DB">
+      <Property name="Value">10.0</Property>
+      <Property name="DataType">4</Property>
+   </Tag>
+   <Tag name="RecipeReady" path="SFCDemo/Recipe" type="DB">
+      <Property name="Value">true</Property>
+      <Property name="DataType">6</Property>
+   </Tag>
+   <Tag name="HCLRest" path="SFCDemo/Recipe" type="DB">
+      <Property name="Value">5.0</Property>
+      <Property name="DataType">4</Property>
+   </Tag>
+   <Tag name="RawAgit" path="SFCDemo/Recipe" type="DB">
+      <Property name="Value">25.0</Property>
+      <Property name="DataType">4</Property>
+   </Tag>
+   <Tag name="Vessel1" path="SFCDemo" type="UDT_INST">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Property name="UDTParentType">SFCDemoBatchVessel</Property>
+      <Tag name="AgitatorOn" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="Vessel_Fill" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="HE_In_Temp" path="" type="EXTENSION">
+         <Property name="Value">40.0</Property>
+      </Tag>
+      <Tag name="RecircPump" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="HCLValve" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="H2OValve" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+         <Property name="Name">H2OValve</Property>
+      </Tag>
+      <Tag name="DrainPump" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="HE_Out_Temp" path="" type="EXTENSION">
+         <Property name="Value">40.0</Property>
+      </Tag>
+      <Tag name="DrainValve" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="RawValve" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+   </Tag>
+   <Tag name="Vessel5" path="SFCDemo" type="UDT_INST">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Property name="UDTParentType">SFCDemoBatchVessel</Property>
+   </Tag>
+   <Tag name="Vessel4" path="SFCDemo" type="UDT_INST">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Property name="UDTParentType">SFCDemoBatchVessel</Property>
+   </Tag>
+   <Tag name="Vessel3" path="SFCDemo" type="UDT_INST">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Property name="UDTParentType">SFCDemoBatchVessel</Property>
+      <Tag name="AgitatorOn" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="Vessel_Fill" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="HE_In_Temp" path="" type="EXTENSION">
+         <Property name="Value">40.0</Property>
+      </Tag>
+      <Tag name="RecircPump" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="HCLValve" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="DrainPump" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="H2OValve" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="HE_Out_Temp" path="" type="EXTENSION">
+         <Property name="Value">40.0</Property>
+      </Tag>
+      <Tag name="DrainValve" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="RawValve" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+   </Tag>
+   <Tag name="Vessel2" path="SFCDemo" type="UDT_INST">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Property name="UDTParentType">SFCDemoBatchVessel</Property>
+      <Tag name="AgitatorOn" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="Vessel_Fill" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="HE_In_Temp" path="" type="EXTENSION">
+         <Property name="Value">40.0</Property>
+      </Tag>
+      <Tag name="RecircPump" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="HCLValve" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="DrainPump" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="H2OValve" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="HE_Out_Temp" path="" type="EXTENSION">
+         <Property name="Value">40.0</Property>
+      </Tag>
+      <Tag name="DrainValve" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
+      <Tag name="RawValve" path="" type="EXTENSION">
+         <Property name="Value">0</Property>
+      </Tag>
    </Tag>
 </Tags>
