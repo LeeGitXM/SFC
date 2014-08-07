@@ -1,11 +1,8 @@
 Copyright 2014 - ILS Automation - All rights reserved.
-ICC2 - Block and Connector Demonstration Project
--- prepared for Ignition Community Conference - 2014
+FC - ILSA Sequential Function Charts
+-- extensions of the Ignition Sequential Function Charts
 
-This software is licensed under the Apache License, Version 2.0. 
-This license is included in the module "license" link, or you may obtain a copy of the license
-at http://www.apache.org/licenses/LICENSE-2.0.
-
+TODO:
 Preparation:
   project: The sample project "sample.proj" is supplied as a way of demonstrating the "PID"
            block. The window "PIDControl" may be used to change set points to observe the 
