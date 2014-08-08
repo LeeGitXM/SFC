@@ -1,0 +1,46 @@
+<Tags>
+   <Tag name="SFCDemoBatchVessel" path="_types_" type="UDT_DEF">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Tag name="AgitatorOn" path="" type="DB">
+         <Property name="Value">0</Property>
+         <Property name="DataType">6</Property>
+      </Tag>
+      <Tag name="DrainPump" path="" type="DB">
+         <Property name="Value">0</Property>
+         <Property name="DataType">6</Property>
+      </Tag>
+      <Tag name="DrainValve" path="" type="DB">
+         <Property name="Value">0</Property>
+         <Property name="DataType">2</Property>
+      </Tag>
+      <Tag name="H2OValve" path="" type="DB">
+         <Property name="Value">0</Property>
+         <Property name="DataType">2</Property>
+      </Tag>
+      <Tag name="HCLValve" path="" type="DB">
+         <Property name="Value">0</Property>
+         <Property name="DataType">2</Property>
+      </Tag>
+      <Tag name="HE_In_Temp" path="" type="DB">
+         <Property name="Value">0.0</Property>
+         <Property name="DataType">4</Property>
+      </Tag>
+      <Tag name="HE_Out_Temp" path="" type="DB">
+         <Property name="Value">0.0</Property>
+         <Property name="DataType">4</Property>
+      </Tag>
+      <Tag name="RawValve" path="" type="DB">
+         <Property name="Value">0</Property>
+         <Property name="DataType">2</Property>
+      </Tag>
+      <Tag name="RecircPump" path="" type="DB">
+         <Property name="Value">0</Property>
+         <Property name="DataType">6</Property>
+      </Tag>
+      <Tag name="Vessel_Fill" path="" type="DB">
+         <Property name="Value">0</Property>
+         <Property name="DataType">2</Property>
+      </Tag>
+   </Tag>
+</Tags>

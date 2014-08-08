@@ -1,0 +1,576 @@
+<?xml version="1.0" ?>
+<sfc zoom="0.8999999" canvas="11 35" execution-mode="Callable" version="(Dev Version)" timestamp="Thu Aug 07 09:25:56 PDT 2014" hot-editable="true" persist-state="true">
+	<onabort>def onAbort(chart):
+	"""
+	This will run once if the chart is aborted.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+	"""
+	print chart.abortCause</onabort>
+	<step id="b8a8b608-9c18-4636-bab7-df12ba99fa6f" location="1 2" name="__begin" factory-id="begin-step">
+<parameters>
+	<parameter key="true"><name>VesselNum</name><expression>-1</expression></parameter>
+	<parameter><name>ClientID</name><expression>"EMPTY"</expression></parameter>
+</parameters>
+	</step>
+	<step id="c0729ca2-fc94-4498-b82f-f3ef9fb031b5" location="1 3" name="SETUP" factory-id="action-step">
+		<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	
+	# Now, reset all of this vessel's tags
+	shared.SFCDemo.write(chart,"H2OValve", 0)
+	shared.SFCDemo.write(chart,"HCLValve", 0)
+	shared.SFCDemo.write(chart,"RawValve", 0)
+	shared.SFCDemo.write(chart,"DrainPump", 0)
+	shared.SFCDemo.write(chart,"RecircPump", 0)
+	shared.SFCDemo.write(chart,"Vessel_Fill", 0)
+	shared.SFCDemo.write(chart,"HE_In_Temp", 5)
+	shared.SFCDemo.write(chart,"HE_Out_Temp", 5)
+	shared.SFCDemo.write(chart,"AgitatorOn", 0)
+	system.tag.write("[default]SFCDemo/Recipe/RecipeReady", False)</start-script>
+	</step>
+	<step id="207ae603-1e17-4861-a5ca-c979b8448811" location="1 4" name="RINSE" factory-id="action-step">
+		<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	
+	# Start filling with water
+	shared.SFCDemo.write(chart,"H2OValve", 1)</start-script>
+	<timer-script interval="250">def onTimer(chart, step):
+	"""
+	This will run at a fixed interval while the
+	step is active.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	fill = shared.SFCDemo.read(chart,"Vessel_Fill")
+	shared.SFCDemo.write(chart,"Vessel_Fill", fill + 2)</timer-script>
+	</step>
+	<step id="78f4e842-f43b-47ee-adff-647bf706ac1b" location="1 6" name="DRAIN" factory-id="action-step">
+		<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	
+	# Stop filling with water
+	shared.SFCDemo.write(chart,"H2OValve", 0)
+	shared.SFCDemo.write(chart,"DrainValve", 1)</start-script>
+		<stop-script>def onStop(chart, step):
+	"""
+	This will run when the step is finished and
+	all other actions complete.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	shared.SFCDemo.write(chart,"DrainValve", 0)</stop-script>
+	<timer-script interval="250">def onTimer(chart, step):
+	"""
+	This will run at a fixed interval while the
+	step is active.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	fill = shared.SFCDemo.read(chart,"Vessel_Fill")
+	shared.SFCDemo.write(chart,"Vessel_Fill", max(0,fill - 3))</timer-script>
+	</step>
+	<step id="ec0b7dc4-3feb-4ffc-b430-5910ba4e0b67" location="1 8" name="RECIPE" factory-id="action-step">
+		<notes>Asks the operator that started this
+chart for recipe information</notes>
+		<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	
+	instanceId = chart.instanceId
+	clientId = chart.ClientID
+	
+	system.util.sendMessage(project='test',
+							messageHandler='gatherRecipe',
+							clientSessionId=clientId,
+							payload={'chartId':instanceId})
+	</start-script>
+	</step>
+	<step id="3bd23256-19fd-4a96-9642-b90872dd7d39" location="1 13" name="OVERFLOW" factory-id="action-step">
+	</step>
+	<step id="352458ea-bc76-477f-b721-2861f402d5fc" location="1 14" name="__end2" factory-id="end-step">	</step>
+	<step id="a4e1e9ab-68de-4a4f-a7ec-216eb0c2b0ea" location="4 28" name="PUMP_OUT" factory-id="action-step">
+		<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	
+	shared.SFCDemo.write(chart,"DrainPump", 1)</start-script>
+		<stop-script>def onStop(chart, step):
+	"""
+	This will run when the step is finished and
+	all other actions complete.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	shared.SFCDemo.write(chart,"DrainPump", 0)</stop-script>
+	<timer-script interval="250">def onTimer(chart, step):
+	"""
+	This will run at a fixed interval while the
+	step is active.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	fill = shared.SFCDemo.read(chart,"Vessel_Fill")
+	shared.SFCDemo.write(chart,"Vessel_Fill", max(0,fill - 3))</timer-script>
+	</step>
+	<step id="96f19610-217a-4862-9420-947dd4039cb2" location="4 30" name="__end1" factory-id="end-step">	</step>
+	<transition id="81bd2bfe-0958-459e-97d6-10804bdccdee" location="1 5">tag("[default]SFCDemo/Vessel"+{VesselNum}+"/Vessel_Fill")&gt;=50</transition>
+	<transition id="0559d147-ae90-4512-a5fe-4c85ce18e5d7" location="1 7">tag("[default]SFCDemo/Vessel"+{VesselNum}+"/Vessel_Fill")=0</transition>
+	<transition id="9ae9343e-9018-4092-ac41-75284aa94fbe" location="1 9">{RecipeReady}</transition>
+	<transition id="beeaa193-539d-4a3f-83ee-77f8e5a6f5ee" location="3 9">{overflow}</transition>
+	<transition id="2f454e67-255a-41b5-bf5b-c8aabf4bad12" location="4 9">true</transition>
+	<transition id="2120a675-786a-42e1-a8bd-be28dbd29070" location="3 18">{overflow}</transition>
+	<transition id="5de97a97-e04c-4eef-8108-ec258dd3a118" location="4 18">true</transition>
+	<transition id="c081d37d-9762-414b-827a-c5cf20faff84" location="3 27">{overflow}</transition>
+	<transition id="fe5b8eab-87d7-4f94-a93a-89f9047362e3" location="4 27">true</transition>
+	<transition id="3413a45b-5da3-4f1d-bfd6-78e09f2d25de" location="4 29">tag("[default]SFCDemo/Vessel"+{VesselNum}+"/Vessel_Fill")=0</transition>
+	<parallel id="932c6596-40d8-4292-a6ef-4c01ba5d2eec" location="3 2" size="4 6">
+		<step id="6d4f317a-d4d1-4bd3-954a-77e28e7560f5" location="0 0" name="AGITATE" factory-id="action-step">
+			<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	chart.agitateStart = chart.runningTime
+	shared.SFCDemo.write(chart, "AgitatorOn", 1)
+	</start-script>
+			<stop-script>def onStop(chart, step):
+	"""
+	This will run when the step is finished and
+	all other actions complete.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	shared.SFCDemo.write(chart, "AgitatorOn", 0)</stop-script>
+		</step>
+		<step id="2901319a-8dc8-436c-8975-c5fd6883670b" location="1 0" name="PUMP_IN" factory-id="action-step">
+			<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	chart.pumpStart = chart.runningTime
+	shared.SFCDemo.write(chart, "H2OValve", 1)</start-script>
+			<stop-script>def onStop(chart, step):
+	"""
+	This will run when the step is finished and
+	all other actions complete.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	shared.SFCDemo.write(chart, "H2OValve", 0)</stop-script>
+	<timer-script interval="1000">def onTimer(chart, step):
+	"""
+	This will run at a fixed interval while the
+	step is active.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	fill = shared.SFCDemo.read(chart, "Vessel_Fill")
+	shared.SFCDemo.write(chart, "Vessel_Fill", fill+1)</timer-script>
+		</step>
+		<step id="6da8d9c2-86af-4a4d-9387-8767ef07402f" location="3 0" name="RECIRC" factory-id="action-step">
+			<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	shared.SFCDemo.write(chart, "RecircPump", 1)</start-script>
+			<stop-script>def onStop(chart, step):
+	"""
+	This will run when the step is finished and
+	all other actions complete.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	shared.SFCDemo.write(chart, "RecircPump", 0)</stop-script>
+	<timer-script interval="1000">def onTimer(chart, step):
+	"""
+	This will run at a fixed interval while the
+	step is active.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	
+	# Simulate the action of the heat exchanger
+	inTemp = shared.SFCDemo.read(chart, "HE_In_Temp")
+	outTemp = shared.SFCDemo.read(chart, "HE_Out_Temp")
+	target = chart.WaterTemp
+	
+	shared.SFCDemo.write(chart, "HE_Out_Temp", target)
+	
+	dif = target - inTemp
+	sign = (1, -1)[dif&lt;0]
+	shared.SFCDemo.write(chart, "HE_In_Temp", inTemp + (0.5*sign))</timer-script>
+		</step>
+		<step id="4a57e4c8-77bd-4291-886e-8bd157f07539" location="1 3" name="OVERFLOW" factory-id="action-step">
+			<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	chart.overflow = True</start-script>
+		</step>
+		<transition id="e3859668-71fc-4ff6-8fed-5fedb4dedbf4" location="0 1">{runningTime} - {agitateStart} &gt;= {WaterAgit}</transition>
+		<transition id="3e883ed9-9614-42af-b5d1-134751eab4a5" location="1 2">tag("[default]SFCDemo/Vessel"+{VesselNum}+"/Vessel_Fill")&gt;=100</transition>
+		<transition id="f7a86a73-262a-4c4e-b9c7-52281a6faed0" location="2 2">{runningTime} - {pumpStart} &gt;= {WaterQty}</transition>
+		<transition id="2b381afc-0ba9-472b-9a81-dde4f9646afd" location="3 1">tag("[default]SFCDemo/Vessel"+{VesselNum}+"/HE_In_Temp") = {WaterTemp}</transition>
+		<link id="18b693b6-5814-47b7-b329-98f5fc011a92" location="1 1"><up/><down/><right/></link>
+		<link id="4e7d565f-9baf-4943-8cc3-505548a08a7b" location="0 2"><up/><down/></link>
+		<link id="23303a77-4e75-4974-baa2-67f8575ac65a" location="2 1"><left/><down/><right/></link>
+		<link id="3aea1570-76ba-4f56-948e-7c5f33253184" location="0 3"><up/><down/></link>
+		<link id="d9422a80-0f46-41a7-8359-bc0b369a1b98" location="3 2"><up/><down/></link>
+		<link id="c650517e-2709-4e86-8bdf-6aeb214a7931" location="2 3"><up/><down/></link>
+		<link id="24b2d4c8-b13e-444c-bdc5-e2f17694892b" location="3 3"><up/><down/></link>
+	</parallel>
+	<parallel id="a242b04b-6377-46af-80cd-a83f969ec2d1" location="3 11" size="4 6">
+		<step id="7df29e9a-f2af-43bf-bef4-adc7ec191011" location="0 0" name="AGITATE" factory-id="action-step">
+			<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	chart.agitateStart = chart.runningTime
+	shared.SFCDemo.write(chart, "AgitatorOn", 1)
+	</start-script>
+			<stop-script>def onStop(chart, step):
+	"""
+	This will run when the step is finished and
+	all other actions complete.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	shared.SFCDemo.write(chart, "AgitatorOn", 0)</stop-script>
+		</step>
+		<step id="b174747a-0038-427c-a1e9-31766a7e7bdc" location="1 0" name="PUMP_IN" factory-id="action-step">
+			<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	chart.pumpStart = chart.runningTime
+	shared.SFCDemo.write(chart, "HCLValve", 1)</start-script>
+			<stop-script>def onStop(chart, step):
+	"""
+	This will run when the step is finished and
+	all other actions complete.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	shared.SFCDemo.write(chart, "HCLValve", 0)</stop-script>
+	<timer-script interval="1000">def onTimer(chart, step):
+	"""
+	This will run at a fixed interval while the
+	step is active.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	fill = shared.SFCDemo.read(chart, "Vessel_Fill")
+	shared.SFCDemo.write(chart, "Vessel_Fill", fill+1)</timer-script>
+		</step>
+		<step id="b3a96e6a-1df0-4188-a942-8ff9857ebda9" location="3 0" name="RECIRC" factory-id="action-step">
+			<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	shared.SFCDemo.write(chart, "RecircPump", 1)</start-script>
+			<stop-script>def onStop(chart, step):
+	"""
+	This will run when the step is finished and
+	all other actions complete.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	shared.SFCDemo.write(chart, "RecircPump", 0)</stop-script>
+	<timer-script interval="1000">def onTimer(chart, step):
+	"""
+	This will run at a fixed interval while the
+	step is active.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	
+	# Simulate the action of the heat exchanger
+	inTemp = shared.SFCDemo.read(chart, "HE_In_Temp")
+	outTemp = shared.SFCDemo.read(chart, "HE_Out_Temp")
+	target = chart.HCLTemp
+	
+	shared.SFCDemo.write(chart, "HE_Out_Temp", target)
+	
+	dif = target - inTemp
+	sign = (1, -1)[dif&lt;0]
+	shared.SFCDemo.write(chart, "HE_In_Temp", inTemp + (0.5*sign))</timer-script>
+		</step>
+		<step id="759c3473-c740-424a-b1ab-280b78a84b4a" location="1 3" name="OVERFLOW" factory-id="action-step">
+			<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	chart.overflow = True</start-script>
+		</step>
+		<transition id="38727fd0-4fdb-4233-b996-523d34b31ffa" location="0 1">{runningTime} - {agitateStart} &gt;= {HCLAgit}</transition>
+		<transition id="d1eec2cf-6948-41c7-b0b9-2425dfc0ccd8" location="1 2">tag("[default]SFCDemo/Vessel"+{VesselNum}+"/Vessel_Fill")&gt;=100</transition>
+		<transition id="86f82b4e-681a-411f-9f5b-4975a49fb17e" location="2 2">{runningTime} - {pumpStart} &gt;= {HCLQty}</transition>
+		<transition id="b0a33316-c1b7-4f3b-b834-8419ab8e040d" location="3 1">tag("[default]SFCDemo/Vessel"+{VesselNum}+"/HE_In_Temp") = {HCLTemp}</transition>
+		<link id="e4d09f94-8fc8-45ab-86e8-34a6130f66b5" location="1 1"><up/><down/><right/></link>
+		<link id="c2a4649e-8c53-448f-a555-83783a994a95" location="0 2"><up/><down/></link>
+		<link id="5e04ca60-35d7-41e2-b8d8-650609abab16" location="2 1"><left/><down/><right/></link>
+		<link id="a6fb72f2-d248-4c30-9edb-28d6aef30dee" location="0 3"><up/><down/></link>
+		<link id="95ded00c-34ea-4304-b6be-2a1489684303" location="3 2"><up/><down/></link>
+		<link id="c483859f-ca65-438d-94fa-ad44fcd8bb11" location="2 3"><up/><down/></link>
+		<link id="a3742514-c221-4512-94b6-2f3abf9ba010" location="3 3"><up/><down/></link>
+	</parallel>
+	<parallel id="1be2efd8-aba3-4ae5-a79d-265b86f984f7" location="3 20" size="4 6">
+		<step id="6734a793-9505-49d5-b159-49531fbedc83" location="0 0" name="AGITATE" factory-id="action-step">
+			<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	chart.agitateStart = chart.runningTime
+	shared.SFCDemo.write(chart, "AgitatorOn", 1)
+	</start-script>
+			<stop-script>def onStop(chart, step):
+	"""
+	This will run when the step is finished and
+	all other actions complete.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	shared.SFCDemo.write(chart, "AgitatorOn", 0)</stop-script>
+		</step>
+		<step id="c39fc85f-41bd-4fd6-9ccd-821bd770ec22" location="1 0" name="PUMP_IN" factory-id="action-step">
+			<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	chart.pumpStart = chart.runningTime
+	shared.SFCDemo.write(chart, "RawValve", 1)</start-script>
+			<stop-script>def onStop(chart, step):
+	"""
+	This will run when the step is finished and
+	all other actions complete.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	shared.SFCDemo.write(chart, "RawValve", 0)</stop-script>
+	<timer-script interval="1000">def onTimer(chart, step):
+	"""
+	This will run at a fixed interval while the
+	step is active.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	fill = shared.SFCDemo.read(chart, "Vessel_Fill")
+	shared.SFCDemo.write(chart, "Vessel_Fill", fill+1)</timer-script>
+		</step>
+		<step id="d180cc81-5fd5-4752-af19-40baf1032e8a" location="3 0" name="RECIRC" factory-id="action-step">
+			<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	shared.SFCDemo.write(chart, "RecircPump", 1)</start-script>
+			<stop-script>def onStop(chart, step):
+	"""
+	This will run when the step is finished and
+	all other actions complete.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	shared.SFCDemo.write(chart, "RecircPump", 0)</stop-script>
+	<timer-script interval="1000">def onTimer(chart, step):
+	"""
+	This will run at a fixed interval while the
+	step is active.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	
+	# Simulate the action of the heat exchanger
+	inTemp = shared.SFCDemo.read(chart, "HE_In_Temp")
+	outTemp = shared.SFCDemo.read(chart, "HE_Out_Temp")
+	target = chart.RawTemp
+	
+	shared.SFCDemo.write(chart, "HE_Out_Temp", target)
+	
+	dif = target - inTemp
+	sign = (1, -1)[dif&lt;0]
+	shared.SFCDemo.write(chart, "HE_In_Temp", inTemp + (0.5*sign))</timer-script>
+		</step>
+		<step id="81c9c5ac-e635-4683-91a2-611b30374f0d" location="1 3" name="OVERFLOW" factory-id="action-step">
+			<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	chart.overflow = True</start-script>
+		</step>
+		<transition id="d1d57a80-0e7a-4961-ac51-f3f5ecd11d5f" location="0 1">{runningTime} - {agitateStart} &gt;= {RawAgit}</transition>
+		<transition id="fda79009-34f0-4c87-933b-4d28bb9e3a95" location="1 2">tag("[default]SFCDemo/Vessel"+{VesselNum}+"/Vessel_Fill")&gt;=100</transition>
+		<transition id="02192b4d-77a9-4ed8-a568-5e47a55a9056" location="2 2">{runningTime} - {pumpStart} &gt;= {RawQty}</transition>
+		<transition id="7662700b-41a9-48b4-8271-2b5ab253062c" location="3 1">tag("[default]SFCDemo/Vessel"+{VesselNum}+"/HE_In_Temp") = {RawTemp}</transition>
+		<link id="4a91f4a2-cc6d-489f-a41d-32c8a0aee77a" location="1 1"><up/><down/><right/></link>
+		<link id="b74aced3-4539-4a1e-9600-3aa1e1028b63" location="0 2"><up/><down/></link>
+		<link id="be409828-3c57-47bf-b123-fc5ce4107ba2" location="2 1"><left/><down/><right/></link>
+		<link id="e82b8b81-1a67-4fd1-8dc1-3e1ddf235f97" location="0 3"><up/><down/></link>
+		<link id="e47d42d7-cd8b-4e31-a2b8-2e88693c6921" location="3 2"><up/><down/></link>
+		<link id="678e1c2e-62b2-48eb-99a8-34a3e18e88db" location="2 3"><up/><down/></link>
+		<link id="4c840e4e-d3ab-4453-918e-e4eed1503228" location="3 3"><up/><down/></link>
+	</parallel>
+	<jump id="c2fff6f9-7f1e-4061-8590-7b0adebb97b6" location="3 10">E</jump>
+	<jump id="278af89a-57f9-4aa7-9e32-cb397a558018" location="3 19">E</jump>
+	<jump id="711551bc-e20b-4fe6-94c4-ef48b4cdad5b" location="3 28">E</jump>
+	<anchor id="97be77ab-b971-487d-bd64-81afe370456a" location="1 12">E</anchor>
+	<note id="bb277c94-bf93-4edf-91c4-d74530565600" location="8 4" size="2 1" note-font="font(Dialog,plain,36)">Water</note>
+	<note id="72cde9bd-a31f-454d-9edc-c25dc55a99ad" location="8 13" size="2 1" note-font="font(Dialog,plain,36)">HCl</note>
+	<note id="567852a6-921d-42b1-99ba-2863a261ac88" location="8 22" size="2 1" note-font="font(Dialog,plain,36)">Product
+</note>
+	<link id="325806dc-f955-45dd-9fa2-3fa18599b9b3" location="2 1"><up/><down/><right/></link>
+	<link id="83a763cd-1257-4fc4-afa7-32095407832f" location="2 2"><up/><down/></link>
+	<link id="b066306d-76d8-47f7-9894-1951fcbc04eb" location="3 1"><left/><right/></link>
+	<link id="ab15d1bb-cdd4-483c-9d3f-48c1a94dd2a3" location="2 3"><up/><down/></link>
+	<link id="b40950ac-e0e1-48d8-967d-81de25edda5c" location="4 1"><left/><down/><right/></link>
+	<link id="d019fd43-f890-4802-8510-ce57e2dcf213" location="2 4"><up/><down/></link>
+	<link id="c4f37e4f-f7a7-41cd-9c78-a60cef62a3a8" location="2 5"><up/><down/></link>
+	<link id="030d68a0-eb10-4b0b-9e27-9c0c7e4ee704" location="2 6"><up/><down/></link>
+	<link id="711d27be-7416-4178-a6ee-2a179814e874" location="2 7"><up/><down/></link>
+	<link id="987f7e23-2123-4cb0-a98f-6e10c8c0d7eb" location="2 8"><up/><down/></link>
+	<link id="7ce3e9af-aae1-4a78-a98b-24735b0841e7" location="3 8"><left/><down/><right/></link>
+	<link id="43922225-9136-40e8-bb35-ccddffe46937" location="4 8"><up/><left/><down/></link>
+	<link id="bdd68ca4-324f-4099-8955-d7bd13212354" location="2 9"><up/><down/></link>
+	<link id="afd61aaf-c90c-41d8-9760-7999f6254275" location="1 10"><up/><down/><right/></link>
+	<link id="815370c0-91ae-498a-94ce-051539e8ab68" location="2 10"><up/><left/><right/></link>
+	<link id="b66520bc-9d0c-4453-87b3-8a322945aa4a" location="4 10"><up/><down/></link>
+	<link id="1211a8f7-6a63-4459-80bf-c31a13c29772" location="3 17"><left/><down/><right/></link>
+	<link id="cf318f15-cb4c-4daf-8a1f-a10d88b01aee" location="4 17"><up/><left/><down/></link>
+	<link id="9bb2e185-46b7-4c98-a9c6-34b831658b53" location="4 19"><up/><down/></link>
+	<link id="c3500ea8-fad4-4daa-b48a-26792918f8f1" location="3 26"><left/><down/><right/></link>
+	<link id="e85284e4-6b1b-42e3-9767-f7005a965447" location="4 26"><up/><left/><down/></link>
+
+</sfc>
