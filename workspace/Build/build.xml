@@ -1,0 +1,140 @@
+<project name="SDKModuleBuild" basedir="../../" default="BuildAndInstallModule">
+
+	<!-- Loads some generic Ant tasks that are used by this file -->
+	<import file="${basedir}/IgnitionSDK/Build/build.xml"/>
+	
+	<property name="modulename_compact" value="SFC-Example" />
+	<property name="modulename_compact_lower" value="sfc-example" />
+	
+	<!-- Loads entries from the module xml file to get the module id, name and description. 
+		These entries are used as properties throughout the rest of this file and are of
+		the format 'module.name' (such as for the module's name). -->
+	<xmlproperty file="${basedir}/${modulename_compact}/Build/module.xml"/>	
+	
+	<!-- Common classpath -->
+	<path id="Module_Common.classpath">
+		<path refid="Ignition_SDK.classpath" />
+	</path>
+
+	<!-- Client classpath -->
+	<path id="Module_Client.classpath">
+		<path refid="Ignition_SDK.classpath" />
+		<path refid="Module_Common.classpath" />
+		<fileset dir="${basedir}/${modulename_compact}/Build/bin/Common/dist/" includes="*.jar" />
+	</path>
+
+	<!-- Designer classpath -->
+	<path id="Module_Designer.classpath">
+		<path refid="Ignition_SDK.classpath" />
+		<path refid="Module_Common.classpath" />
+		<fileset dir="${basedir}/${modulename_compact}/Build/bin/Common/dist/" includes="*.jar" />
+		<path refid="Module_Client.classpath" />
+		<fileset dir="${basedir}/${modulename_compact}/Build/bin/Client/dist/" includes="*.jar" />
+	</path>
+
+	<!-- Gateway classpath -->
+	<path id="Module_Gateway.classpath">
+		<path refid="Ignition_SDK.classpath" />
+		<path refid="Module_Common.classpath" />
+		<fileset dir="${basedir}/${modulename_compact}/Build/bin/Common/dist/" includes="*.jar" />
+	</path>
+
+
+
+	<!-- This target will build the module and deploy it to the local Ignition gateway -->
+	<target name="BuildAndInstallModule" depends="clean, build, deploy" />
+
+	<!-- Cleans all previously built files -->
+	<target name="clean">
+		<delete dir="${basedir}/${modulename_compact}/Build/bin" />
+		<delete dir="${basedir}/${modulename_compact}/Build/modules" />
+		<delete dir="${basedir}/${modulename_compact}/Build/release" />
+	</target>	
+	
+	<!-- Builds the module jars and the final .modl file -->
+	<target name="build" depends="clean">
+		<echo message="${module.name} ${module.version}" />	
+	
+		<!-- build.date is a timestamp and is defined in build.xml -->
+		<echo message="Build date: ${build.date}" />
+		
+		<!-- Compile the Common jar -->
+		<antcall target="MakeProject">
+			<param name="project" value="${modulename_compact}" />
+			<param name="scope" value="Common" />
+			<param name="jarName" value="${modulename_compact_lower}-common" />
+			<param name="javacSource" value="1.6" />
+			<param name="module.build.classpath" value="Module_Common.classpath" />
+		</antcall>
+
+		<!-- Compile the Client jar -->
+		<antcall target="MakeProject">
+			<param name="project" value="${modulename_compact}" />
+			<param name="scope" value="Client" />
+			<param name="jarName" value="${modulename_compact_lower}-client" />
+			<param name="javacSource" value="1.6" />
+			<param name="module.build.classpath" value="Module_Client.classpath" />
+		</antcall>
+
+		<!-- Compile the Designer jar -->
+		<antcall target="MakeProject">
+			<param name="project" value="${modulename_compact}" />
+			<param name="scope" value="Designer" />
+			<param name="jarName" value="${modulename_compact_lower}-designer" />
+			<param name="javacSource" value="1.6" />
+			<param name="module.build.classpath" value="Module_Designer.classpath" />
+		</antcall>
+
+		<!-- Compile the Gateway jar -->
+		<antcall target="MakeProject">
+			<param name="project" value="${modulename_compact}" />
+			<param name="scope" value="Gateway" />
+			<param name="jarName" value="${modulename_compact_lower}-gateway" />
+			<param name="javacSource" value="1.6" />
+			<param name="module.build.classpath" value="Module_Gateway.classpath" />
+		</antcall>
+
+
+		
+		<!-- Create a temp folder that will later be zipped into a .modl file -->
+		<echo message="Making ${module.name} modl" />
+
+		<mkdir dir="${basedir}/${modulename_compact}/Build/temp_modl" />
+		<mkdir dir="${basedir}/${modulename_compact}/Build/modules" />
+
+		<!-- Copy module.xml file -->
+		<copy file="${basedir}/${modulename_compact}/Build/module.xml" todir="${basedir}/${modulename_compact}/Build/temp_modl" overwrite="true" />
+		
+		<!-- Copy license file -->
+		<copy file="${basedir}/${modulename_compact}/Build/license.html" todir="${basedir}/${modulename_compact}/Build/temp_modl" overwrite="true" />
+		
+		<!-- Copy doc folder -->
+		<copy todir="${basedir}/${modulename_compact}/Build/temp_modl/doc">
+			<fileset dir="${basedir}/${modulename_compact}/Build/doc"/>
+		</copy>
+
+		<!-- Copy built project jars and lib jars to temp folder -->
+		<copy file="${basedir}/${modulename_compact}/Build/bin/Common/dist/${modulename_compact_lower}-common.jar" todir="${basedir}/${modulename_compact}/Build/temp_modl/" />
+		<pack200 src="${basedir}/${modulename_compact}/Build/bin/Common/dist/${modulename_compact_lower}-common.jar" destfile="${basedir}/${modulename_compact}/Build/temp_modl/${modulename_compact_lower}-common.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
+		<pack200 src="${basedir}/${modulename_compact}/Build/bin/Client/dist/${modulename_compact_lower}-client.jar" destfile="${basedir}/${modulename_compact}/Build/temp_modl/${modulename_compact_lower}-client.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
+		<pack200 src="${basedir}/${modulename_compact}/Build/bin/Designer/dist/${modulename_compact_lower}-designer.jar" destfile="${basedir}/${modulename_compact}/Build/temp_modl/${modulename_compact_lower}-designer.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
+		<copy file="${basedir}/${modulename_compact}/Build/bin/Gateway/dist/${modulename_compact_lower}-gateway.jar" todir="${basedir}/${modulename_compact}/Build/temp_modl/" />
+
+
+		<!-- Build the *.modl file -->
+		<zip zipfile="${basedir}/${modulename_compact}/Build/modules/${modulename_compact}-unsigned.modl" basedir="${basedir}/${modulename_compact}/Build/temp_modl" />
+
+		<delete dir="${basedir}/${modulename_compact}/Build/temp_modl" />
+		
+		<echo message="${module.name} Module Build Complete."/>
+		<echo message="*.modl file can be found at: ${basedir}/${modulename_compact}/Build/modules/${modulename_compact}-unsigned.modl"/>
+		
+	</target>
+
+	<!-- Installs module in local Ignition gateway. Note that the gateway must be running in developer mode for this to succeed. -->
+	<target name="deploy">
+		<echo message="Installing ${module.name} on Ignition Gateway." />
+		<postmodule posturl="${local.gateway.url}" modulefile="${basedir}/${modulename_compact}/Build/modules/${modulename_compact}-unsigned.modl" />
+	</target>	
+
+</project>
