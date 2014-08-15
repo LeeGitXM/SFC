@@ -16,6 +16,8 @@ import net.miginfocom.swing.MigLayout;
 public class ExampleStepEditor extends AbstractStepEditor implements
 		ExampleStepProperties {
 
+	private static final long serialVersionUID = 1L;
+
 	private final DesignerContext context;
 
 	private JSpinner spinner;

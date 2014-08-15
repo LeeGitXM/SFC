@@ -1,7 +1,5 @@
 package com.inductiveautomation.sdk.examples.sfc;
 
-import static com.inductiveautomation.ignition.common.BundleUtil.i18n;
-
 import javax.swing.*;
 
 import java.awt.*;
@@ -10,7 +8,6 @@ import com.inductiveautomation.sfc.client.api.ChartStatusContext;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.client.ui.AbstractStepUI;
-import com.inductiveautomation.sfc.elements.steps.action.AbstractActionStepDelegate;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public class ExampleStepUI extends AbstractStepUI {

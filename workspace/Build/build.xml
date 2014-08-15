@@ -3,8 +3,8 @@
 	<!-- Loads some generic Ant tasks that are used by this file -->
 	<import file="${basedir}/IgnitionSDK/Build/build.xml"/>
 	
-	<property name="modulename_compact" value="SFC-Example" />
-	<property name="modulename_compact_lower" value="sfc-example" />
+	<property name="modulename_compact" value="ILS-SFC" />
+	<property name="modulename_compact_lower" value="ils-sfc" />
 	
 	<!-- Loads entries from the module xml file to get the module id, name and description. 
 		These entries are used as properties throughout the rest of this file and are of
