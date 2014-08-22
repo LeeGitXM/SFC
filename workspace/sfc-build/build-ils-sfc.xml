@@ -99,7 +99,7 @@
 		<echo message="Build date: ${build.date}" />
 		<echo message="Build version: ${version.build}" />	
 				
-		<!-- FC Common jar -->
+		<!-- sfc-common jar -->
 		<antcall target="MakeProject">
 			<param name="modName" value="${ils.sfc.name}_Common" />
 			<param name="sourceDirFolder" value="sfc-common" />
@@ -119,7 +119,7 @@
 		<jar destfile="${jar.dir}/${step.jar.name}" includes="**/*.class" basedir="${step.bin.dir}"/>
 	
 		
-		<!-- FC Gateway jar -->
+		<!-- sfc-gateway jar -->
 		<antcall target="MakeProject">
 			<param name="modName" value="${ils.sfc.name}_Gateway" />
 			<param name="sourceDirFolder" value="sfc-gateway" />
@@ -130,7 +130,7 @@
 			<param name="module.build.classpath" value="sfc.gateway.classpath"/>
 		</antcall>
 
-		<!-- FC Client jar -->
+		<!--sfc-client jar -->
 		<antcall target="MakeProject">
 			<param name="modName" value="${ils.sfc.name}_Client" />
 			<param name="sourceDirFolder" value="sfc-client" />
@@ -139,7 +139,7 @@
 			<param name="module.build.classpath" value="sfc.client.classpath"/>
 		</antcall>
 		
-		<!-- FC Designer jar -->
+		<!-- sfc-designer jar -->
 		<antcall target="MakeProject">
 			<param name="modName" value="${ils.sfc.name}_Designer" />
 			<param name="sourceDirFolder" value="sfc-designer" />
@@ -190,7 +190,7 @@
 		<zip zipfile="${basedir}/sfc-build/modules/${ils.sfc.name}-module-unsigned.modl" basedir="${basedir}/sfc-build/temp_modl" />
 	</target>
 
-	<!-- Installs FC module in local Ignition gateway. Note that the gateway must be running in developer mode for this to succeed. -->
+	<!-- Installs ILS-SFC module in local Ignition gateway. Note that the gateway must be running in developer mode for this to succeed. -->
 	<target name="deploy" depends="build" >
 		<echo message="Installing ${ils.sfc.name} on Ignition Gateway." />
 		<postmodule posturl="${local.gateway.url}" modulefile="${basedir}/sfc-build/modules/${ils.sfc.name}-module-unsigned.modl" />

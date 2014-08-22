@@ -29,7 +29,7 @@ public class IlsSfcTestDesignerHook extends AbstractDesignerModuleHook {
 	@Override
 	public void initializeScriptManager(ScriptManager mgr) {
 		super.initializeScriptManager(mgr);
-		mgr.addScriptModule(IlsSfcTestProperties.MOCK_SCRIPT_PACKAGE,MockChartScriptFunctions.class);
+		//mgr.addScriptModule(IlsSfcTestProperties.MOCK_SCRIPT_PACKAGE,MockChartScriptFunctions.class);
 	}
 	
 	@Override

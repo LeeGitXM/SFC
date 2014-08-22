@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="protected" author="true" 
+        	classpath="/Users/chuckc/Development/ils/repo/ignition-771/lib/designer-api.jar:
+        			   /Users/chuckc/Development/ils/repo/ignition-771/lib/vision-designer-api.jar:
+        			   /Users/chuckc/Development/ils/repo/ignition-771/lib/client-api.jar:
+        			   /Users/chuckc/Development/ils/repo/ignition-771/lib/vision-client-api.jar:
+        	           /Users/chuckc/Development/ils/repo/ignition-771/lib/ignition-common.jar:
+        	           /Users/chuckc/Development/ils/repo/common/workspace/ILS_Common/bin:
+        	           /Users/chuckc/Development/ils/repo/ignition-771/lib/client-api.jar:
+        	           /Users/chuckc/Development/ils/repo/external/lib/ils-common.jar:
+        	           /Users/chuckc/Development/ils/repo/external/lib/log4j-1.2.16.jar:
+        	           /Users/chuckc/Development/ils/repo/external/lib/jackson-core-2.2.3.jar:
+        			   /Users/chuckc/Development/ils/repo/external/lib/jackson-annotations-2.2.3.jar:
+        	           /Users/chuckc/Development/ils/repo/external/lib/jackson-databind-2.2.3.jar:
+        	           /Users/chuckc/Development/ils/repo/external/lib/commons-math3-3.1.1.jar:
+        	           /Users/chuckc/Development/ils/repo/ignition-77/lib/gateway-api.jar:
+        	           /Users/chuckc/Development/ils/repo/sfc/workspace/sfc-common/bin" 
+        	destdir="doc" nodeprecated="false" nodeprecatedlist="true" noindex="false" nonavbar="false" notree="false" 
+        	packagenames="com.ils.sfc.step,com.ils.sfc.step.annotation,
+        				  com.ils.com.ils.sfc.gateway,
+        	              com.ils.sfc.client,
+        	              com.ils.sfc.common,
+        	              com.ils.sfc.designer,
+        	              com.ils.common,com.ils.common.watchdog" 
+        	source="1.7" 
+        	sourcepath="/Users/chuckc/Development/ils/repo/sfc/workspace/sfc-step/src:
+        				/Users/chuckc/Development/ils/repo/sfc/workspace/sfc-common/src:
+        	            /Users/chuckc/Development/ils/repo/sfc/workspace/sfc-gateway/src:
+        	            /Users/chuckc/Development/ils/repo/sfc/workspace/sfc-client/src:
+        	            /Users/chuckc/Development/ils/repo/sfc/workspace/sfc-designer/src" 
+        	splitindex="false" use="true" version="true"/>
+    </target>
+</project>
