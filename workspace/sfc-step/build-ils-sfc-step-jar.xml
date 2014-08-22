@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="sfcsteps.makejar" default="all" basedir=".">
+	<property name="jar.dir" value="${basedir}/../../../external/lib" />
+	<property name="sdk.dir" value="${basedir}/../../../ignition-771/lib" />
+	<property name="jar.name" value="ils-sfc-steps.jar" />
+	<property name="build.dir" value="bin" />
+	<property name="src.dir" value="src" />
+	
+	<path id="blk-classpath">
+	   <fileset dir="${jar.dir}">
+	      <include name="*.jar"/>
+	   </fileset>
+		<fileset dir="${sdk.dir}">
+			 <include name="*.jar"/>
+		</fileset>
+	   <pathelement path="${build.dir}"/>
+	</path>
+	
+	<!-- This target will build the custom SFC step jar and deploy it to the local filesystem -->
+	<target name="all" depends="clean, build, jar" />
+	
+	<!-- Remove the existing target -->
+	<target name="clean" description="Remove existing build products">
+		<delete file="${jar.dir}/${jar.name}" />
+        <delete>
+            <fileset dir="${build.dir}">
+                <include name="**/*.class"/>
+            </fileset>
+        </delete>
+	</target>
+	
+	<!-- Compile the library (requires a local build of ILS-SFC first) -->
+	<target name="build" description="Compile the source">
+		<mkdir dir="${build.dir}"/>
+		<javac destdir="${build.dir}" source="1.8" target="1.8" debug="true" debuglevel="lines,vars,source">
+		     <src path="${src.dir}"/>
+		     <classpath refid="blk-classpath"/>
+		</javac>
+	</target>
+	
+	<target name ="jar" description="Create a jar for custom SFC steps">
+    	<jar destfile="${jar.dir}/${jar.name}" includes="**/*.class" basedir="bin"/>
+	</target>
+</project>

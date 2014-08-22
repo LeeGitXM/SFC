@@ -1,0 +1,50 @@
+<project name="G2Method" default="build" basedir=".">
+	<property name="src" location="src" />
+    <property name="src.dir" location="src/com/ils/sfc/workspace/g2-translation/src" />
+	<property name="lib" location="lib" />
+    <property name="bin" location="bin" />
+	<property name="jar.dir" location="${basedir}/../../../external/lib" />
+	<property name="package" value="com.ils.aed.expression" />
+ 
+    <path id="classpath">
+    	<pathelement location="${jar.dir}/antlr-4.0-complete.jar" />
+    </path>
+ 
+	<!-- Run the ANTLR code generator -->
+    <target name="generate" depends="clean">
+        <mkdir dir="${src.dir}" />
+    	<mkdir dir="${lib}" />
+        <java classname="org.antlr.v4.Tool" classpathref="classpath" fork="true">
+            <arg value="-o" />
+            <arg path="${src.dir}" />
+        	<arg value="-package" />
+        	<arg value="${package}" />
+            <arg value="-lib"/>
+        	<arg value="${lib}" />
+            <arg value="-visitor" />
+        	<arg value="-no-listener" />
+            <arg value="G2Method.g4" />
+        </java>
+    </target>
+	<!-- Compile the Java code and create a jar. -->
+	<target name="build" depends="generate" description="Compile source tree java files">
+	    <mkdir dir="${bin}"/>
+	    <javac destdir="${bin}" source="1.6" target="1.6">
+	            <src path="${src}"/>
+	            <classpath refid="classpath"/>
+	    </javac>
+		<jar destfile="${jar.dir}/g2-expression.jar"
+		     basedir="${bin}"
+		     includes="**/*.class"
+		/>
+	</target>
+	
+    <target name="clean">
+    	<mkdir dir="${bin}"/>
+    	<delete>
+    	    <fileset dir="${bin}">
+    	        <include name="**/*.class"/>
+    	    </fileset>
+        </delete>
+    </target>
+</project>

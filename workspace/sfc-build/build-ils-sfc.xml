@@ -1,0 +1,200 @@
+<project name="ILSSils.sfcBuilder" basedir="../" default="BuildAndInstallModule">
+
+	<import file="${basedir}/sfc-build/build.xml"/>
+
+	<property name="version.build" value="2" />	
+	<!-- Change version.beta value to "" for release builds -->
+	<property name="version.beta" value="-development" />		
+	<property name="ils.sfc.version" value="1.0.0.${version.build}" />
+	<property name="ils.sfc.name" value="ILS-SFC" />
+	<property name="ils.sfc.release" value="0.4" />
+	<property name="ils.sfc.description" value="ILS SFC Customizations" />
+	<property name="root.dir" value="${basedir}/../.." />
+	<property name="jar.dir" value="${root.dir}/external/lib" />
+	<property name="sdk.dir" value="${root.dir}/ignition-771/lib" />
+	<property name="step.jar.name" value="ils-sfc-steps.jar" />
+	<property name="step.bin.dir" value="${root.dir}/sfc/workspace/sfc-step/bin" />
+	<property name="step.src.dir" value="${root.dir}/sfc/workspace/sfc-step/src" />
+	<property name="ant.build.javac.source" value="1.7"/>
+	<property name="ant.build.javac.target" value="1.7"/>
+		
+
+	<!-- For the steps -->
+	<path id="CustomSteps.classpath">
+		<path refid="ExternalJar.classpath" />
+		<path refid="Ignition_SDK.classpath" />
+		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/" includes="*.jar" />
+	</path>
+	
+	<!-- The gateway, designer and clients depend on the Common -->
+	<path id="sfc.common.classpath">
+		<path refid="ExternalJar.classpath" />
+		<path refid="Ignition_SDK.classpath" />
+	</path>
+		
+	<!-- Gateway jar classpath -->
+	<path id="sfc.gateway.classpath">
+		<path refid="ExternalJar.classpath" />
+		<path refid="Ignition_SDK.classpath" />
+		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/" includes="*.jar" />
+	</path>	
+	<!-- Client jar classpath -->
+	<path id="sfc.client.classpath">
+		<path refid="ExternalJar.classpath" />
+		<path refid="Ignition_SDK.classpath" />
+		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/" includes="*.jar" />
+	</path>
+	
+	<!-- Designer jar classpath -->
+	<path id="sfc.designer.classpath">
+		<path refid="ExternalJar.classpath" />
+		<path refid="Ignition_SDK.classpath" />
+		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/" includes="*.jar" />
+		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Client/dist/" includes="*.jar" />
+		<fileset dir="${jar.dir}" includes="${step.jar.name}" />
+	</path>
+
+	
+	<!-- This target will build the toolkit module and deploy it to the local Ignition gateway -->
+		<target name="BuildAndInstallModule" depends="clean, build, deploy" />
+	
+	<!-- Clean step Definition -->
+	<target name="clean.step" >
+		<mkdir dir="${step.bin.dir}"/>
+		<delete file="${jar.dir}/${step.jar.name}" />
+		<delete>
+		    <fileset dir="${step.bin.dir}">
+		        <include name="**/*.class"/>
+		    </fileset>
+		</delete>
+	</target>
+
+	<!-- Cleans all previously built files (leaves doc) -->
+	<target name="clean" depends="clean.step" description="Remove existing build products" >
+		<delete dir="${basedir}/sfc-build/bin" />
+		<delete dir="${basedir}/sfc-build/modules" />
+		<delete dir="${basedir}/sfc-build/release" />
+		<delete dir="${basedir}/sfc-build/temp_modl" />   
+	</target>	
+	
+	<!-- Compile the step Definition library -->
+	<target name="step.build" description="Compile the source">
+		<mkdir dir="${step.bin.dir}"/>
+		<javac destdir="${step.bin.dir}" debug="true" includeantruntime="false">
+			<src path="${step.src.dir}"/>
+			<classpath refid="CustomSteps.classpath"/>
+		</javac>
+	</target>
+	<target name ="step.jar" description="Create a jar for the step Definition library">
+		<jar destfile="${jar.dir}/${step.jar.name}" includes="**/*.class" basedir="${step.bin.dir}"/>
+	</target>
+	
+	
+	<!-- Builds the toolkit module jars and the final .modl file -->
+	<target name="build"   description="Compile the source">
+		<echo message="${ils.sfc.name} ${ils.sfc.version}" />	
+		<delete dir="${basedir}/sfc-build/temp_modl" />	
+		
+		<!-- build.date and version.build are both defined in build.xml -->
+		<echo message="Build date: ${build.date}" />
+		<echo message="Build version: ${version.build}" />	
+				
+		<!-- FC Common jar -->
+		<antcall target="MakeProject">
+			<param name="modName" value="${ils.sfc.name}_Common" />
+			<param name="sourceDirFolder" value="sfc-common" />
+			<param name="jarName" value="ils-sfc-common" />
+			<param name="javacSource" value="1.7" />
+			<param name="module.build.classpath" value="sfc.common.classpath"/>
+		</antcall>
+		
+		<!-- Compile the step Definition library -->
+		<echo message="Compiling step definitions" />
+		<mkdir dir="${step.bin.dir}"/>
+		<javac destdir="${step.bin.dir}" debug="true" includeantruntime="false">
+				<src path="${step.src.dir}"/>
+				<classpath refid="CustomSteps.classpath"/>
+		</javac>
+		<echo message="Creating the step definition jar file" />
+		<jar destfile="${jar.dir}/${step.jar.name}" includes="**/*.class" basedir="${step.bin.dir}"/>
+	
+		
+		<!-- FC Gateway jar -->
+		<antcall target="MakeProject">
+			<param name="modName" value="${ils.sfc.name}_Gateway" />
+			<param name="sourceDirFolder" value="sfc-gateway" />
+			<param name="jarName" value="ils-sfc-gateway" />
+			<param name="javacSource" value="1.7" />
+			<param name="[replace]sfc.gateway.properties:Meta.Version" value="${version.build}" />
+			<param name="[replace]sfc.gateway.properties:Meta.ReleaseDate" value="${build.date}" />
+			<param name="module.build.classpath" value="sfc.gateway.classpath"/>
+		</antcall>
+
+		<!-- FC Client jar -->
+		<antcall target="MakeProject">
+			<param name="modName" value="${ils.sfc.name}_Client" />
+			<param name="sourceDirFolder" value="sfc-client" />
+			<param name="jarName" value="ils-sfc-client" />
+			<param name="javacSource" value="1.7" />
+			<param name="module.build.classpath" value="sfc.client.classpath"/>
+		</antcall>
+		
+		<!-- FC Designer jar -->
+		<antcall target="MakeProject">
+			<param name="modName" value="${ils.sfc.name}_Designer" />
+			<param name="sourceDirFolder" value="sfc-designer" />
+			<param name="jarName" value="ils-sfc-designer" />
+			<param name="javacSource" value="1.7" />
+			<param name="module.build.classpath" value="sfc.designer.classpath"/>
+		</antcall>
+		
+		<!-- Create .modl file -->
+		<echo message="Making ${ils.sfc.name} modl" />
+
+		<mkdir dir="${basedir}/sfc-build/temp_modl" />
+		<mkdir dir="${basedir}/sfc-build/modules" />
+		
+
+		<copy file="${basedir}/sfc-build/module-ils-sfc.xml" tofile="${basedir}/sfc-build/temp_modl/module.xml" overwrite="true" />
+
+		<replace file="${basedir}/sfc-build/temp_modl/module.xml" token="@NAME@" value="${ils.sfc.name}" />
+		<replace file="${basedir}/sfc-build/temp_modl/module.xml" token="@DESCRIPTION@" value="${ils.sfc.description}" />
+		<replace file="${basedir}/sfc-build/temp_modl/module.xml" token="@VERSION@" value="${ils.sfc.version}" />
+
+		<!-- Pack200 and then copy the designer, client jars -->
+		<pack200 src="${basedir}/sfc-build/bin/${ils.sfc.name}_Client/dist/ils-sfc-client.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-client.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
+		<pack200 src="${basedir}/sfc-build/bin/${ils.sfc.name}_Designer/dist/ils-sfc-designer.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-designer.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
+		<pack200 src="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/ils-sfc-common.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-common.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
+		<pack200 src="${basedir}/../../external/lib/ils-sfc-steps.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-steps.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
+		
+		
+		<!-- Copy gateway jar -->
+		<copy file="${basedir}/sfc-build/bin/${ils.sfc.name}_Gateway/dist/ils-sfc-gateway.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/ils-sfc-common.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		
+		<!-- Copy dependent jars -->
+		<copy file="${basedir}/../../external/lib/commons-math3-3.1.1.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${basedir}/../../external/lib/ils-sfc-steps.jar" todir="${basedir}/sfc-build/temp_modl/" />
+
+		<!-- Copy license file and javadoc into the bundle -->
+		<mkdir dir="${basedir}/sfc-build/doc" />
+		<copy file="${basedir}/sfc-build/license.html" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy todir="${basedir}/sfc-build/temp_modl/doc">
+		    <fileset dir="${basedir}/sfc-build/doc"/>
+		</copy>
+		<!-- Echo the version into .version in the bundle and to be saved -->
+		<echo message="${ils.sfc.name}-${ils.sfc.version}:${ils.sfc.release}" file="${basedir}/sfc-build/temp_modl/.version" append="false"/>
+		<echo message="${ils.sfc.name}-${ils.sfc.name}:${ils.sfc.release}" file="${basedir}/sfc-build/.version" append="false"/>
+		
+		<!-- Zip it all up -->
+		<zip zipfile="${basedir}/sfc-build/modules/${ils.sfc.name}-module-unsigned.modl" basedir="${basedir}/sfc-build/temp_modl" />
+	</target>
+
+	<!-- Installs FC module in local Ignition gateway. Note that the gateway must be running in developer mode for this to succeed. -->
+	<target name="deploy" depends="build" >
+		<echo message="Installing ${ils.sfc.name} on Ignition Gateway." />
+		<postmodule posturl="${local.gateway.url}" modulefile="${basedir}/sfc-build/modules/${ils.sfc.name}-module-unsigned.modl" />
+	</target>	
+
+</project>
+

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<module>
+		<id>ilssfc</id>
+		<name>@NAME@</name>
+		<description>@DESCRIPTION@</description>
+		<version>@VERSION@</version>
+		<license>license.html</license>
+		<requiredignitionversion>7.7.1</requiredignitionversion>
+		<requiredframeworkversion>6</requiredframeworkversion>
+		<freemodule>true</freemodule>
+		<documentation>index.html</documentation>
+
+		<!-- Add the module dependencies for each scope -->
+		<!-- NOTE: Build fails here if we specify a Gateway dependency -->
+		<depends scope="D">fpmi</depends>
+		
+		<!-- Load in our jars for each scope -->
+		<jar scope="CD">ils-sfc-client.jar.pack.gz</jar>
+		<jar scope="D">ils-sfc-designer.jar.pack.gz</jar>
+		<jar scope="D">ils-sfc-common.jar.pack.gz</jar>
+		<jar scope="G">ils-sfc-gateway.jar</jar>
+		<jar scope="G">ils-sfc-common.jar</jar>
+		<jar scope="GD">ils-sfc-steps.jar</jar>
+		<jar scope="G">commons-math3-3.1.1.jar</jar>
+		<!-- Tell the Gateway/Designer/Client where to find the hooks -->
+		<hook scope="G">com.ils.sfc.gateway.IlsSfcGatewayHook</hook>
+		<hook scope="D">com.ils.sfc.designer.IlsSfcDesignerHook</hook>
+		<hook scope="C">com.ils.sfc.client.IlsSfcClientHook</hook>
+	</module>
+</modules>
