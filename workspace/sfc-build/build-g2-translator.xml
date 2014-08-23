@@ -1,18 +1,17 @@
-<project name="BLTModuleBuilder" basedir="../" default="BuildMigrationApplication">
+<project name="TranslatorBuilder" basedir="../" default="BuildTranslatorApplication">
 
-	<import file="${basedir}/BLT_Build/build.xml"/>
+	<import file="${basedir}/sfc-build/build.xml"/>
 
 	<property name="version.build" value="14" />	
 	<property name="root.dir" value="${basedir}/../.." />
 	<property name="jar.dir" value="${root.dir}/external/lib" />
-	<property name="sdk.dir" value="${root.dir}/ignition-77/lib" />
+	<property name="sdk.dir" value="${root.dir}/ignition-771/lib" />
 	<property name="common.jar.name" value="ils-common.jar" />
 	<property name="common.bin.dir" value="${root.dir}/common/workspace/ILS_Common/bin" />
 	<property name="common.src.dir" value="${root.dir}/common/workspace/ILS_Common/src" />
-	<property name="block.jar.name" value="block-definition.jar" />
-	<property name="migration.jar.name" value="blt-migration.jar" />
-	<property name="migration.bin.dir" value="${root.dir}/blt/workspace/BLT_Migration/bin" />
-	<property name="migration.src.dir" value="${root.dir}/blt/workspace/BLT_Migration/src" />
+	<property name="translation.jar.name" value="blt-translation.jar" />
+	<property name="translation.bin.dir" value="${root.dir}/sfc/workspace/g2-translation/bin" />
+	<property name="translation.src.dir" value="${root.dir}/sfc/workspace/g2-translation/src" />
 	<property name="ant.build.javac.source" value="1.7"/>
 	<property name="ant.build.javac.target" value="1.7"/>
 		
@@ -28,58 +27,51 @@
 	</path>
 	
 	
-	<!-- Common jar classpath -->
+	<!-- Classpath for the application -->
 	<!-- The gateway, designer and clients depend on the Common -->
-	<path id="BLT_Common.classpath">
+	<path id="application.classpath">
 		<path refid="Ignition_SDK.classpath" />
 		<path refid="ExternalJar.classpath" />
 	</path>
 		
-	<!-- Migration jar classpath -->
-	<path id="BLT_Migration.classpath">
-		<path refid="BLT_Common.classpath" />
-		<path refid="ExternalJar.classpath" />
-		<fileset dir="${basedir}/BLT_Build/bin/BLT_Common/dist/" includes="*.jar" />
-		<fileset dir="${basedir}/BLT_Build/bin/BLT_Designer/dist/" includes="*.jar" />
-		<fileset dir="${jar.dir}" includes="${block.jar.name}" />
+	<!-- translation jar classpath -->
+	<path id="translator.classpath">
+		<path refid="application.classpath" />
 	</path>
 	
 	<!-- This target will build the toolkit module and deploy it to the local Ignition gateway -->
-		<target name="BuildMigrationApplication" depends="clean, build" />
+		<target name="BuildTranslatorApplication" depends="clean, build" />
 	
-	<!-- Clean Migration -->
+	<!-- Clean translation -->
 		<target name="clean" >
 			<mkdir dir="${jar.dir}"/>
-			<mkdir dir="${migration.bin.dir}"/>
-			<delete file="${jar.dir}/${migration.jar.name}" />
+			<mkdir dir="${translation.bin.dir}"/>
+			<delete file="${jar.dir}/${translation.jar.name}" />
 			<delete>
-			    <fileset dir="${migration.bin.dir}">
+			    <fileset dir="${translation.bin.dir}">
 			        <include name="**/*.class"/>
 			    </fileset>
 			</delete>
 		</target>
 	
-	<!-- Compile the Migration Tool -->
-	<target name="migration.build" description="Compile the migration tool">
-		<mkdir dir="${migration.bin.dir}"/>
-		<javac destdir="${migration.bin.dir}" debug="true" includeantruntime="false">
-			<src path="${migration.src.dir}"/>
-			<classpath refid="BLT_Migration.classpath"/>
+	<!-- Compile the translation Tool -->
+	<target name="translation.build" description="Compile the translation tool">
+		<mkdir dir="${translation.bin.dir}"/>
+		<javac destdir="${translation.bin.dir}" debug="true" includeantruntime="false">
+			<src path="${translation.src.dir}"/>
+			<classpath refid="translator.classpath"/>
 		</javac>
 	</target>
-	<!-- Build the migration jar with all necessary embedded jars -->
-	<target name ="build" depends="migration.build" description="Create a jar for the Migration tool">
-		<jar destfile="${jar.dir}/${migration.jar.name}" includes="**/*.class" basedir="${migration.bin.dir}">
+	<!-- Build the translation jar with all necessary embedded jars -->
+	<target name ="build" depends="translation.build" description="Create a jar for the translation tool">
+		<jar destfile="${jar.dir}/${translation.jar.name}" includes="**/*.class" basedir="${translation.bin.dir}">
 		    <zipgroupfileset dir="${jar.dir}" includes="sqlite-jdbc*.jar"/>
-			<zipgroupfileset dir="${jar.dir}" includes="${block.jar.name}"/>
-			<zipgroupfileset dir="${jar.dir}" includes="jackson-*.jar"/>
+			<zipgroupfileset dir="${jar.dir}" includes="antlr*.jar"/>
 			<zipgroupfileset dir="${jar.dir}" includes="commons-math*.jar"/>
 			<zipgroupfileset dir="${sdk.dir}" includes="ignition-common.jar"/>
 			<zipgroupfileset dir="${sdk.dir}" includes="designer-api.jar"/>
 			<zipgroupfileset dir="${sdk.dir}" includes="client-api.jar"/>
 			<zipgroupfileset dir="${jar.dir}" includes="ils-common.jar"/>
-			<zipgroupfileset dir="${basedir}/BLT_Build/bin/BLT_Common/dist/" includes="*.jar"/>
-			<zipgroupfileset dir="${basedir}/BLT_Build/bin/BLT_Designer/dist/" includes="*.jar"/>
 		</jar>
 	</target>
 

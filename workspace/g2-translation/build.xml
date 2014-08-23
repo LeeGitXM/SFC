@@ -4,7 +4,7 @@
 	<property name="lib" location="lib" />
     <property name="bin" location="bin" />
 	<property name="jar.dir" location="${basedir}/../../../external/lib" />
-	<property name="package" value="com.ils.aed.expression" />
+	<property name="package" value="com.ils.sfc.procedure" />
  
     <path id="classpath">
     	<pathelement location="${jar.dir}/antlr-4.0-complete.jar" />
@@ -23,7 +23,7 @@
         	<arg value="${lib}" />
             <arg value="-visitor" />
         	<arg value="-no-listener" />
-            <arg value="G2Method.g4" />
+            <arg value="G2Procedure.g4" />
         </java>
     </target>
 	<!-- Compile the Java code and create a jar. -->
@@ -33,7 +33,7 @@
 	            <src path="${src}"/>
 	            <classpath refid="classpath"/>
 	    </javac>
-		<jar destfile="${jar.dir}/g2-expression.jar"
+		<jar destfile="${jar.dir}/g2-procedure-translation.jar"
 		     basedir="${bin}"
 		     includes="**/*.class"
 		/>

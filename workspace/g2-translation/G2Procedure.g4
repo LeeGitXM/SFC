@@ -1,10 +1,9 @@
 /*
- * Define a formal grammar for the G2-based Expression language. This
- * serves as a basis for migration to the user-expression syntax -
- * and from there to valid Ignition syntax.
+ * Define a formal grammar for the G2-based method/procedure language.
+ * This will be used to assist conversion of G2 to python.
  */
 
-grammar G2Expression;
+grammar G2Procedure;
 
 /** Initial rule, begin parsing */
 expression: exprs EOF;
