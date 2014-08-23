@@ -1,1 +1,0 @@
-ALERT-DURATION("Model Name") < 23
