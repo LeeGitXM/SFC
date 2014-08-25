@@ -2,13 +2,13 @@
 <project default="javadoc">
     <target name="javadoc">
         <javadoc access="protected" author="true" 
-        	classpath="/Users/chuckc/Development/ils/repo/ignition-771/lib/designer-api.jar:
-        			   /Users/chuckc/Development/ils/repo/ignition-771/lib/vision-designer-api.jar:
-        			   /Users/chuckc/Development/ils/repo/ignition-771/lib/client-api.jar:
-        			   /Users/chuckc/Development/ils/repo/ignition-771/lib/vision-client-api.jar:
-        	           /Users/chuckc/Development/ils/repo/ignition-771/lib/ignition-common.jar:
+        	classpath="/Users/chuckc/Development/ils/repo/ignition-77/lib/designer-api.jar:
+        			   /Users/chuckc/Development/ils/repo/ignition-77/lib/vision-designer-api.jar:
+        			   /Users/chuckc/Development/ils/repo/ignition-77/lib/client-api.jar:
+        			   /Users/chuckc/Development/ils/repo/ignition-77/lib/vision-client-api.jar:
+        	           /Users/chuckc/Development/ils/repo/ignition-77/lib/ignition-common.jar:
         	           /Users/chuckc/Development/ils/repo/common/workspace/ILS_Common/bin:
-        	           /Users/chuckc/Development/ils/repo/ignition-771/lib/client-api.jar:
+        	           /Users/chuckc/Development/ils/repo/ignition-77/lib/client-api.jar:
         	           /Users/chuckc/Development/ils/repo/external/lib/ils-common.jar:
         	           /Users/chuckc/Development/ils/repo/external/lib/log4j-1.2.16.jar:
         	           /Users/chuckc/Development/ils/repo/external/lib/jackson-core-2.2.3.jar:

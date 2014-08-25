@@ -11,7 +11,7 @@
 	<property name="ils.sfc.description" value="ILS SFC Customizations" />
 	<property name="root.dir" value="${basedir}/../.." />
 	<property name="jar.dir" value="${root.dir}/external/lib" />
-	<property name="sdk.dir" value="${root.dir}/ignition-771/lib" />
+	<property name="sdk.dir" value="${root.dir}/ignition-77/lib" />
 	<property name="step.jar.name" value="ils-sfc-steps.jar" />
 	<property name="step.bin.dir" value="${root.dir}/sfc/workspace/sfc-step/bin" />
 	<property name="step.src.dir" value="${root.dir}/sfc/workspace/sfc-step/src" />
