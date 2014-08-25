@@ -2,18 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/ignition-771/lib/client-api-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/ignition-771/lib/designer-api-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/ignition-771/lib/gateway-api-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/ignition-771/lib/ignition-common-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/ignition-771/lib/sfc-client-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/ignition-771/lib/sfc-common-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/ignition-771/lib/sfc-designer-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/ignition-771/lib/sfc-gateway-api-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/ignition-771/lib/vision-client-api-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/ignition-771/lib/vision-common-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/ignition-771/lib/vision-designer-api-7.7.1-rc2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/ignition-771"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sfc-common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Ignition-77"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
