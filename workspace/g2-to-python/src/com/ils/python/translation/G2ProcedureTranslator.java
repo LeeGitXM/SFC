@@ -1,16 +1,12 @@
 /**
  *   (c) 2014  ILS Automation. All rights reserved.
  */
-package com.ils.sfc.translation;
+package com.ils.python.translation;
 
-import java.awt.Color;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.UUID;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.ConsoleAppender;
@@ -18,25 +14,22 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class Translator {
+
+
+public class G2ProcedureTranslator {
 	private final static String TAG = "Translator";
-	private static final String USAGE = "Usage: migrator <database>";
-	@SuppressWarnings("unused")
-
-
-
-	 
-	public Translator() {
+	private static final String USAGE = "Usage: translate <dir>";
+	
+	private String packageName = "";                  // No package by default
+	private File targetDirectory = new File(".");     // Current directory
+	
+	
+	public G2ProcedureTranslator() {
 		//this.root = rc;
 	}
 	
-	public void processTranslateFile(String path) {
-		
-	}
 	
 	/**
 	 * Read standard input. Convert into Python method
@@ -56,7 +49,7 @@ public class Translator {
 		}
 		catch(IOException ignore) {}
 		
-		// Now convert into G2 method
+		// Now run through ANTLR parser
 		try {
 			byte[] bytes = input.toString().getBytes();
 			ObjectMapper mapper = new ObjectMapper();
@@ -98,9 +91,15 @@ public class Translator {
 		
 	}
 	
+	// ====================== Setters/Getters ========================
+	public String getPackageName() {return packageName;}
+	public void setPackageName(String packageName) {this.packageName = packageName;}
+	public File getTargetDirectory() {return targetDirectory;}
+	public void setTargetDirectory(File targetDirectory) {this.targetDirectory = targetDirectory;}
+	
 	/**
 	 * Entry point for the application. 
-	 * Usage: Translator <path> 
+	 * Usage: translate
 	 * 
 	 * NOTE: For Windows, specify path as: C:/home/work/method.txt
 	 *       For Mac/Linux:    /home/work/method.txt
@@ -122,39 +121,25 @@ public class Translator {
 		Level level = Level.WARN;
 		if( levelString!=null) level = Level.toLevel(levelString);
         Logger.getRootLogger().setLevel(level); //set log level
-        /*
-        RootClass root = RootClass.APPLICATION;
-        String rootClass = System.getProperty("root.class");   // Application, Problem
-		if( rootClass!=null) {
-			try {
-				root = RootClass.valueOf(rootClass);
-			}
-			catch(IllegalArgumentException iae) {
-				System.err.println(String.format("%s: Unknown root.class (%s)",TAG,iae.getMessage()));
-			}
+        
+        G2ProcedureTranslator trans = new G2ProcedureTranslator();
+
+        // Read system properties to obtain the python package of the generated module.
+        String pythonPackage = System.getProperty("procedure.package");   
+		if( pythonPackage!=null) {
+			trans.setPackageName(pythonPackage);
 		}
-       */
-		Translator m = new Translator();
-		String path = args[0];
-		// In case we've been fed a Windows path, convert
-		path = path.replace("\\", "/");
-		/*
-		try {
-			m.processDatabase(path);
-			m.processInput();
-			if(root.equals(RootClass.APPLICATION) ) {
-				m.migrateApplication();
-			}
-			else if(root.equals(RootClass.DIAGRAM)) {
-				m.migrateDiagram();
-			}
-			m.createOutput();
+		
+		// Analyze command-line argument to obtain the target directory name
+		if( args.length>0 ) {
+			String path = args[0];
+			// In case we've been fed a Windows path, convert
+			path = path.replace("\\", "/");
+			File dir = new File(path);
+			trans.setTargetDirectory(dir);
 		}
-		catch(Exception ex) {
-			System.err.println(String.format("%s.main: UncaughtException (%s)",TAG,ex.getMessage()));
-			ex.printStackTrace(System.err);
-		}
-		*/
+		
+		trans.processInput();
 	}
 
 }
