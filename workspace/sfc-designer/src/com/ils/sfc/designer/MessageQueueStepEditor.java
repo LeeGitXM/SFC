@@ -1,9 +1,6 @@
 package com.ils.sfc.designer;
 
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-
-import net.miginfocom.swing.MigLayout;
+import javax.swing.JTextField;
 
 import com.ils.sfc.common.MessageQueueStepProperties;
 import com.inductiveautomation.ignition.client.util.gui.HeaderLabel;
@@ -14,6 +11,8 @@ import com.inductiveautomation.sfc.designer.api.StepConfigFactory;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
+import net.miginfocom.swing.MigLayout;
+
 public class MessageQueueStepEditor extends AbstractStepEditor implements
 		MessageQueueStepProperties {
 
@@ -21,33 +20,32 @@ public class MessageQueueStepEditor extends AbstractStepEditor implements
 
 	private final DesignerContext context;
 
-	private JSpinner spinner;
+	private JTextField textField;
 
 	public MessageQueueStepEditor(DesignerContext context, ChartUIModel chartModel) {
 		super(new MigLayout(), chartModel);
 		this.context = context;
 
-		spinner = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
+		textField = new JTextField();
 
 		add(HeaderLabel.forKey("words.name"), "wrap");
 		add(name, "gapleft 2px");
 		add(new HeaderLabel("Here is a property"), "wrap");
-		add(spinner, "gapleft 2px");
-
+		add(textField, "gapleft 2px");
 	}
 
 	@Override
 	public void setElement(ChartUIElement element) {
 		super.setElement(element);
 
-		spinner.setValue(element.getOrDefault(EXAMPLE_PROPERTY));
+		textField.setText(element.getOrDefault(MESSAGE_PROPERTY));
 	}
 
 	@Override
 	public void commitEdit() {
 		super.commitEdit();
 		
-		element.set(EXAMPLE_PROPERTY, ((Number)spinner.getValue()).intValue());
+		element.set(MESSAGE_PROPERTY, textField.getText());
 	}
 
 	public static class DesignerStepEditorFactory implements StepConfigFactory {

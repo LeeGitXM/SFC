@@ -12,6 +12,6 @@ public interface MessageQueueStepProperties extends ChartStepProperties {
 
 	public static final String FACTORY_ID = "com.ils.messageQueueStep";
 
-    public static final Property<Integer> EXAMPLE_PROPERTY = new BasicProperty<Integer>("example-property", Integer.class, 11);
+    public static final Property<String> MESSAGE_PROPERTY = new BasicProperty<String>("message", String.class, "");
 
 }

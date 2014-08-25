@@ -1,9 +1,8 @@
 package com.ils.sfc.client;
 
-import java.awt.Graphics2D;
+import javax.swing.*;
 
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
+import java.awt.*;
 
 import com.ils.sfc.common.AbstractMessageQueueStepDelegate;
 import com.inductiveautomation.sfc.client.api.ChartStatusContext;
@@ -43,11 +42,11 @@ public class QueueMessageStepUI extends AbstractStepUI {
         }
 
         public String getPaletteText() {
-            return "Example";
+            return "Queue Message";
         }
 
         public String getPaletteTooltip() {
-            return "Example tooltip";
+            return "Put the message in the current queue";
         }
 
         public void initializeStep(ChartUIElement element) {
