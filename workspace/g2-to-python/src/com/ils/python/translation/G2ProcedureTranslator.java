@@ -116,6 +116,7 @@ public class G2ProcedureTranslator {
 				    	FileWriter writer = new FileWriter(outFile, true);
 				        PrintWriter printer = new PrintWriter(writer);
 				        printer.append(getCopyright());
+				        printer.append(getDocstring());
 				        printer.append(getImports());
 				        printer.append(getCode());
 				        printer.close();
@@ -164,6 +165,12 @@ public class G2ProcedureTranslator {
 		return code;
 	}
 	
+	private String getDocstring() {
+		String doc = (String)translationResults.get(TranslationConstants.PY_DOC_STRING);
+		if( doc==null ) doc = "";
+		return doc;
+	}
+	
 	/**
 	 * This is the method for translation of a procedure. It uses the visitor pattern to
 	 * traverse the parse tree and generate the output expression.
@@ -192,7 +199,7 @@ public class G2ProcedureTranslator {
 		ParseTree tree = parser.procedure();   // Start with definition of a logical expression.
 		PythonGenerator visitor = new PythonGenerator(pyMap);
 		visitor.visit(tree);
-		StringBuffer procedure = visitor.getResult();  // Procedure less imports
+		StringBuffer procedure = visitor.getTranslation();  // Procedure less imports
 		pyMap.put(TranslationConstants.PY_PRELIM,procedure.toString());
 
 		return pyMap;

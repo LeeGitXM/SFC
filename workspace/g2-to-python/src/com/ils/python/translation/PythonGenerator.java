@@ -32,23 +32,57 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		this.translation = t;
 	}
 	/**
-	 * @return the StringBuffer constructed as part of the visiting.
+	 * @return the StringBuffer constructed as part of the visiting. This is the code.
 	 */
-	public StringBuffer getResult() { return buf; }
+	public StringBuffer getTranslation() { return buf; }
 	
 	// ================================= Overridden Methods =====================================
-
+	// In the variable list all we need is the variable name
+	@Override 
+	public Object visitArgDeclaration(G2ProcedureParser.ArgDeclarationContext ctx) { 
+		buf.append(ctx.VARNAME().toString());
+		return null;
+	}
+	@Override 
+	public Object visitFirstArgInList(G2ProcedureParser.FirstArgInListContext ctx) { 
+		visit(ctx.arg());
+		return null; 
+	}
+	// The docstring is saved off separately. Written a
+	@Override 
+	public Object visitProcedureDocstring(G2ProcedureParser.ProcedureDocstringContext ctx) {
+		StringBuffer doc = new StringBuffer();
+		doc.append("'''\n");
+		doc.append(ctx.COMMENT().getText());
+		doc.append("\n'''");
+		translation.put(TranslationConstants.PY_DOC_STRING, doc);
+		return null; 
+	}
+	
+	// Create the header. All methods are "evalate".
+	@Override 
+	public Object visitProcedureHeader(G2ProcedureParser.ProcedureHeaderContext ctx) { 
+		buf.append("def evaluate(");
+		visit(ctx.arglist());
+		buf.append("):");
+		translation.put(TranslationConstants.PY_INDENT, new Integer(1));
+		return null;
+	}
 	
 	// Convert the G2Name to a Python name. Record in the dictionary.
 	@Override 
 	public Object visitProcedureName(G2ProcedureParser.ProcedureNameContext ctx) { 
 		String pyName = pythonName(ctx.PNAME().getText());
-		buf.append(pyName);
 		translation.put(TranslationConstants.PY_MODULE_NAME, pyName);
 		translation.put(TranslationConstants.PY_G2_PROC, ctx.PNAME());
 		return null;
 	}
-	
+	@Override 
+	public Object visitSubsequentArgInList(G2ProcedureParser.SubsequentArgInListContext ctx) { 
+		buf.append(ctx.COMMA().getText());
+		visit(ctx.arg());
+		return null;
+	}
 
 	// ================================= End Overridden Methods =====================================
 	
