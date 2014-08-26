@@ -1,10 +1,10 @@
 <project name="G2Method" default="build" basedir=".">
 	<property name="src" location="src" />
-    <property name="src.dir" location="src/com/ils/sfc/workspace/g2-translation/src" />
+    <property name="src.dir" location="src/com/ils/g2/procedure" />
 	<property name="lib" location="lib" />
     <property name="bin" location="bin" />
 	<property name="jar.dir" location="${basedir}/../../../external/lib" />
-	<property name="package" value="com.ils.sfc.procedure" />
+	<property name="package" value="com.ils.g2.procedure" />
  
     <path id="classpath">
     	<pathelement location="${jar.dir}/antlr-4.0-complete.jar" />

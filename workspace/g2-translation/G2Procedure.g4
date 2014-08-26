@@ -13,9 +13,9 @@ body: BEGIN statement* END                               # procedureBody
 declaration: VARNAME COLON DATATYPE SEMI                 # uninitializedVariable
         |    VARNAME COLON DATATYPE EQU value SEMI       # initializedVariable
         ;
-docstring: COMMENT                                        # procedureDocstring
+docstring: COMMENT                                       # procedureDocstring
         ;
-header:   procname POPEN arglist PCLOSE rtndecl
+header:   procname POPEN arglist PCLOSE rtndecl          # procedureHeader
         ;
 /** =============================== Statement =============================== */
 statement: COMMENT                                       # braceComment
@@ -51,8 +51,8 @@ nexpr:  '(' nexpr ')'                                     # parentheses
 /** ====================== Secondary Syntax Elements ======================== */
 arg: VARNAME COLON DATATYPE                              # argDeclaration
         ;
-arglist: arg
-        | arglist COMMA arg
+arglist: arg                                             # firstArgInList
+        | arglist COMMA arg                              # subsequentArgInList
         ;
 forclause: FOR VARNAME EQU iexpr  DOWNTO iexpr BY ivalue DO statement END SEMI  # countdownFor
         ;
