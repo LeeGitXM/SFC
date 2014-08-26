@@ -15,7 +15,6 @@ public interface TranslationConstants   {
 	public final static String PY_DOC_STRING    = "docstring"; // "docstring"
 	public final static String PY_G2_PROC  		= "g2proc";    // The input procedure
 	public final static String PY_IMPORTS  		= "imports";   // List of required imports
-	public final static String PY_INDENT  		= "indent";    // Current indent level
 	public final static String PY_MODULE_CODE   = "pythonCode";    // Text of the module
 	public final static String PY_PACKAGE       = "package";   // Package for Python modules
 	public final static String PY_PRELIM        = "rawProc";   // Preliminary result

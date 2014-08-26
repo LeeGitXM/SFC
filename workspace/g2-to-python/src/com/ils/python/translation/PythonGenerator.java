@@ -21,7 +21,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	private LoggerEx log;
 	private final StringBuffer buf;
 	private final HashMap<String,Object> translation;
-	
+	private int currentIndent = 0;
 	/**
 	 * Constructor.
 	 * @param dict results dictionary
@@ -48,6 +48,18 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		visit(ctx.arg());
 		return null; 
 	}
+	@Override 
+	public Object visitIntParentheses(G2ProcedureParser.IntParenthesesContext ctx) {
+		buf.append(ctx.POPEN().getText());
+		visit(ctx.iexpr());
+		buf.append(ctx.PCLOSE().getText());
+		return null; 
+	}
+	@Override 
+	public Object visitIntVariable(G2ProcedureParser.IntVariableContext ctx) {
+		buf.append(ctx.VARNAME().getText());
+		return null; 
+	}
 	// The docstring is saved off separately. Written a
 	@Override 
 	public Object visitProcedureDocstring(G2ProcedureParser.ProcedureDocstringContext ctx) {
@@ -64,8 +76,8 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	public Object visitProcedureHeader(G2ProcedureParser.ProcedureHeaderContext ctx) { 
 		buf.append("def evaluate(");
 		visit(ctx.arglist());
-		buf.append("):");
-		translation.put(TranslationConstants.PY_INDENT, new Integer(1));
+		buf.append("):\n");
+		currentIndent = 1;
 		return null;
 	}
 	
@@ -82,6 +94,14 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		buf.append(ctx.COMMA().getText());
 		visit(ctx.arg());
 		return null;
+	}
+	@Override 
+	public Object visitReturnStatement(G2ProcedureParser.ReturnStatementContext ctx) {
+		appendIndent();
+		buf.append("return ");
+		visit(ctx.expr());
+		buf.append("\n");
+		return null; 
 	}
 
 	// ================================= End Overridden Methods =====================================
@@ -158,6 +178,15 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	    }
 	    return sb.toString();
 	}
-	
+	/**
+	 * Append the correct statement indent to the buffer
+	 */
+	private void appendIndent() {
+		int index=currentIndent;
+		while( index>0 ) {
+			buf.append("\t");
+			index++;
+		}
+	}
 	
 }

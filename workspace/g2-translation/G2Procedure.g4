@@ -30,19 +30,18 @@ expr: iexpr
     | lexpr
     | nexpr
     ;
-iexpr:  '(' iexpr ')'                                     # intParentheses
+iexpr:  POPEN iexpr PCLOSE                                # intParentheses
       | iexpr OPR iexpr                                   # intExpressionOperator
-      | OPR iexpr                                         # intNegative
       | ivalue                                            # intValueExpression
       | VARNAME                                           # intVariable
      ;
 lexpr: COMMENT lexpr                                      # leadingComment
-     | '(' lexpr ')'                                      # logicalParentheses
+     | POPEN lexpr PCLOSE                                 # logicalParentheses
      | lvalue                                             # logicalValue
      | lexpr (LOPR|EQU|NEQU) lexpr                        # logicalOperator
      | nexpr (ROPR|EQU|NEQU) nexpr                        # relationalOperator
      ;
-nexpr:  '(' nexpr ')'                                     # parentheses
+nexpr:  POPEN nexpr PCLOSE                                # parentheses
       | nexpr OPR nexpr                                   # expressionOperator
       | OPR nexpr                                         # negative
       | nvalue                                            # numericValue

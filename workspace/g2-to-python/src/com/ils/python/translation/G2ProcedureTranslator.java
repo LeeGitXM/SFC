@@ -35,7 +35,6 @@ public class G2ProcedureTranslator {
 	
 	private LoggerEx log;
 	private HashMap<String,Object> translationResults = null;
-	
 	private String packageName = "";                  // No package by default
 	private File targetDirectory = new File(".");     // Current directory
 	
