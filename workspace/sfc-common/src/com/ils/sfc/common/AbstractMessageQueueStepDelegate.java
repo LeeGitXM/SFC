@@ -47,7 +47,7 @@ public class AbstractMessageQueueStepDelegate implements StepDelegate,
 	@Override
 	public void validate(ChartUIElement element, ChartCompilationResults results) {
 		// check stuff in element
-		results.addError(new CompilationError("bad stuff", element.getLocation()));
+		//results.addError(new CompilationError("bad stuff", element.getLocation()));
 	}
 
 }

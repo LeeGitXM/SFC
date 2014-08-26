@@ -26,17 +26,6 @@ public abstract class IlsAbstractChartStep extends AbstractBlockingStep implemen
 	protected IlsAbstractChartStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
-
-	/** Insert a message in the appropriate queue. */
-	protected void queueMessage(String message) {
-		String messageQueueId = getCurrentMessageQueue();
-		if(messageQueueId != null) {
-			
-		}
-		else {
-			logger.error("Could not find message queue id for step " + toString());
-		}
-	}
 	
 	/** Get the parent scope of the given scope, or null if none exists. */
 	private PyChartScope getParentScope(PyChartScope scope) {
