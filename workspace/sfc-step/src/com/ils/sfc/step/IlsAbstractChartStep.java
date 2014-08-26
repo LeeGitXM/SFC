@@ -3,6 +3,7 @@ package com.ils.sfc.step;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ils.sfc.common.IlsSfcIOIF;
 import com.inductiveautomation.sfc.api.AbstractBlockingStep;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ChartStep;

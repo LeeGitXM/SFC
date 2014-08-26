@@ -4,9 +4,9 @@ import java.util.UUID;
 
 import junit.framework.TestCase;
 
+import com.ils.sfc.common.IlsSfcIOIF;
 import com.ils.sfc.common.MessageQueueStepProperties;
 import com.ils.sfc.step.IlsAbstractChartStep;
-import com.ils.sfc.step.IlsSfcIOIF;
 import com.ils.sfc.step.MessageQueueStep;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.sfc.definitions.StepDefinition;

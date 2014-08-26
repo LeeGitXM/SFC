@@ -7,6 +7,8 @@ import com.ils.sfc.common.MessageQueueStepProperties;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 
+import com.ils.sfc.common.IlsSfcIOIF;
+
 public class MessageQueueStep extends IlsAbstractChartStep implements MessageQueueStepProperties {
 	private static final Logger logger = LoggerFactory.getLogger(MessageQueueStep.class);
 
@@ -18,7 +20,7 @@ public class MessageQueueStep extends IlsAbstractChartStep implements MessageQue
 	protected void onStart() {
 		logger.debug("MessageQueueStep onStart(); message: " + getMessage());
 		String queueName = getCurrentMessageQueue();
-		getIO().enqueueMessage(queueName, getMessage(), MessageStatus.valueOf(getStatus()));
+		getIO().enqueueMessage(queueName, getMessage(), IlsSfcIOIF.MessageStatus.valueOf(getStatus()));
 	}
 
 	@Override

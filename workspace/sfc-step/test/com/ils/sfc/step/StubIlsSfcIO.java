@@ -5,8 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ils.sfc.common.MessageQueueStepProperties.MessageStatus;
-import com.ils.sfc.step.IlsSfcIOIF;
+import com.ils.sfc.common.IlsSfcIOIF;
 
 /** A dummy version of IlsSfcIO for testing. */
 public class StubIlsSfcIO implements IlsSfcIOIF {

@@ -1,11 +1,12 @@
-package com.ils.sfc.step;
+package com.ils.sfc.common;
 
 import java.sql.SQLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ils.sfc.common.MessageQueueStepProperties.MessageStatus;
+import com.ils.sfc.common.IlsSfcIOIF;
+import com.inductiveautomation.ignition.gateway.datasource.Datasource;
 import com.inductiveautomation.ignition.gateway.datasource.SRConnection;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 
@@ -15,9 +16,15 @@ public class IlsSfcIO implements IlsSfcIOIF {
 	private GatewayContext gatewayContext;
 	private String dbProvider;
 	
-	public IlsSfcIO(GatewayContext gatewayContext, String dbProvider) {
+	public IlsSfcIO(GatewayContext gatewayContext) {
 		this.gatewayContext = gatewayContext;
-		this.dbProvider = dbProvider;
+		// TODO: choose db provider more intelligently--which one is the default ??
+		for(Datasource datasource: gatewayContext.getDatasourceManager().getDatasources()) {
+			dbProvider = datasource.getName();
+		}
+		if(dbProvider == null) {
+			logger.error("Error: no datasource in project");
+		}
 	}
 		
 	public void enqueueMessage(String queueName, String message, MessageStatus status) {
