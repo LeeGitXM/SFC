@@ -8,15 +8,20 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.inductiveautomation.ignition.gateway.datasource.SRConnection;
+import com.inductiveautomation.ignition.gateway.model.GatewayContext;
+
 /** A singleton that encapsulates all IO for a SFC. */
 public class IlsSfcIO implements IlsSfcIOIF {
 	private static final Logger logger = LoggerFactory.getLogger(IlsSfcIO.class);
+	private GatewayContext gatewayContext;
 	
-	private Connection dbConnection;
-	
-	
-	public void enqueueMessage(String messageQueueId, String message) {
-		// TODO: create a timestamp and store the message
+	public IlsSfcIO(GatewayContext gatewayContext) {
+		this.gatewayContext = gatewayContext;
+	}
+		
+	public void enqueueMessage(String dataSource, String queueName, String message) {
+		gatewayContext.getScriptManager().runFunction(arg0, arg1);
 	}
 	
 	private IlsSfcIO(String dbDriverClass, String dbUrl, String dbUser, String dbPassword) throws SQLException {
