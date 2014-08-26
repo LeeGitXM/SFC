@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/External"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/ignition-771"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sfc-common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Ignition-77"/>
+	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-client-7.7.1-rc2.jar"/>
+	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-common-7.7.1-rc2.jar"/>
+	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-designer-7.7.1-rc2.jar"/>
+	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-gateway-api-7.7.1-rc2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

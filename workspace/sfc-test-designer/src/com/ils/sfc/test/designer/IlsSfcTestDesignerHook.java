@@ -5,7 +5,6 @@
  */
 package com.ils.sfc.test.designer;
 
-import com.ils.sfc.test.common.IlsSfcTestProperties;
 import com.inductiveautomation.ignition.common.expressions.ExpressionFunctionManager;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;

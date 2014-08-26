@@ -14,7 +14,7 @@ import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults.CompilationError;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-public class AbstractMessageQueueStepDelegate implements StepDelegate,
+public class AbstractClearQueueStepDelegate implements StepDelegate,
 		MessageQueueStepProperties {
 
 	@Override

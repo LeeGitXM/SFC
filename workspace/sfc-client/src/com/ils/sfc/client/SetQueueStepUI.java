@@ -11,7 +11,7 @@ import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.client.ui.AbstractStepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-public class QueueMessageStepUI extends AbstractStepUI {
+public class SetQueueStepUI extends AbstractStepUI {
 
     @Override
     public void drawStep(ChartUIElement propertyValues, ChartStatusContext chartStatusContext, Graphics2D graphics2D) {
@@ -19,11 +19,11 @@ public class QueueMessageStepUI extends AbstractStepUI {
     }
 
     
-    public static final ClientStepFactory FACTORY = new QueueMessageStepFactory();
+    public static final ClientStepFactory FACTORY = new SetQueueStepFactory();
 
-    public static final class QueueMessageStepFactory extends AbstractMessageQueueStepDelegate implements ClientStepFactory {
+    public static final class SetQueueStepFactory extends AbstractMessageQueueStepDelegate implements ClientStepFactory {
 
-    	QueueMessageStepUI UI = new QueueMessageStepUI();
+    	SetQueueStepUI UI = new SetQueueStepUI();
 
         Icon icon = new ImageIcon(getClass().getResource("/images/auction_hammer.png"));
         Icon rollover = new ImageIcon(getClass().getResource("/images/auction_hammer.png"));
@@ -42,11 +42,11 @@ public class QueueMessageStepUI extends AbstractStepUI {
         }
 
         public String getPaletteText() {
-            return "Queue Message";
+            return "Set Queue";
         }
 
         public String getPaletteTooltip() {
-            return "Put the message in the current queue";
+            return "Set the current queue for this chart";
         }
 
         public void initializeStep(ChartUIElement element) {

@@ -8,10 +8,10 @@ import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
  * This interface just exists to store some constants for the step's properties and factory id
  *
  */
-public interface MessageQueueStepProperties extends ChartStepProperties {
+public interface ShowQueueStepProperties extends ChartStepProperties {
 
-	public static final String FACTORY_ID = "com.ils.messageQueueStep";
+	public static final String FACTORY_ID = "com.ils.showQueueStep";
 
-    public static final Property<String> MESSAGE_PROPERTY = new BasicProperty<String>("message", String.class, "");
+    public static final Property<String> QUEUE_PROPERTY = new BasicProperty<String>("queue", String.class, "");
 
 }

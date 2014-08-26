@@ -4,31 +4,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ils.sfc.common.MessageQueueStepProperties;
-import com.inductiveautomation.sfc.api.AbstractBlockingStep;
 import com.inductiveautomation.sfc.api.ChartContext;
-import com.inductiveautomation.sfc.api.ChartStep;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 
-public class MessageQueueStep extends AbstractBlockingStep implements ChartStep, MessageQueueStepProperties {
-
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-
-	private final ChartContext context;
-	private final Integer propertyValue;
+public class MessageQueueStep extends IlsAbstractChartStep implements MessageQueueStepProperties {
+	private static final Logger logger = LoggerFactory.getLogger(MessageQueueStep.class);
 
 	public MessageQueueStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
-
-		this.context = context;
-		this.propertyValue = definition.getProperties().getOrDefault(EXAMPLE_PROPERTY);
 	}
 
 	@Override
 	protected void onStart() {
-		logger.debug("Example step started");
-
-		context.getChartScope().setVariable("Hello",
-				"World, propertyValue = " + propertyValue);
+		logger.debug("MessageQueueStep onStart(); message: " + getMessage());
+		String messageQueueId = getMessageQueueId();
+		getIO().enqueueMessage(messageQueueId, getMessage());
 	}
 
 	@Override
@@ -46,4 +36,11 @@ public class MessageQueueStep extends AbstractBlockingStep implements ChartStep,
 
 	}
 
+	public String getMessage() {
+		return getDefinition().getProperties().getOrDefault(MessageQueueStepProperties.MESSAGE_PROPERTY);
+	}
+	
+	public void setMessage(String message) {
+		getDefinition().getProperties().set(MESSAGE_PROPERTY, message);
+	}
 }
