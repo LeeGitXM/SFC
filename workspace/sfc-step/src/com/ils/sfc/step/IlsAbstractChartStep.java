@@ -29,7 +29,7 @@ public abstract class IlsAbstractChartStep extends AbstractBlockingStep implemen
 
 	/** Insert a message in the appropriate queue. */
 	protected void queueMessage(String message) {
-		String messageQueueId = getMessageQueueId();
+		String messageQueueId = getCurrentMessageQueue();
 		if(messageQueueId != null) {
 			
 		}
@@ -44,7 +44,7 @@ public abstract class IlsAbstractChartStep extends AbstractBlockingStep implemen
 	}
 	
 	/** Get the ID for this step's message queue */
-	protected String getMessageQueueId() {
+	protected String getCurrentMessageQueue() {
 		return (String)getObjectFromScopeTree(MESSAGE_QUEUE_KEY);
 	}
 	

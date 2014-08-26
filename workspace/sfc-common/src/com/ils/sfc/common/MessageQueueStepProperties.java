@@ -9,9 +9,14 @@ import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
  *
  */
 public interface MessageQueueStepProperties extends ChartStepProperties {
-
+	/** The possible statuses for a queued message */
+	public enum MessageStatus {
+		Info, Warning, Error
+	};
+	
 	public static final String FACTORY_ID = "com.ils.messageQueueStep";
 
     public static final Property<String> MESSAGE_PROPERTY = new BasicProperty<String>("message", String.class, "");
+    public static final Property<String> STATUS_PROPERTY = new BasicProperty<String>("status", String.class, MessageStatus.Info.toString());
 
 }

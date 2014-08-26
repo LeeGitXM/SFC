@@ -17,8 +17,8 @@ public class MessageQueueStep extends IlsAbstractChartStep implements MessageQue
 	@Override
 	protected void onStart() {
 		logger.debug("MessageQueueStep onStart(); message: " + getMessage());
-		String messageQueueId = getMessageQueueId();
-		getIO().enqueueMessage(messageQueueId, getMessage());
+		String queueName = getCurrentMessageQueue();
+		getIO().enqueueMessage(queueName, getMessage(), MessageStatus.valueOf(getStatus()));
 	}
 
 	@Override
@@ -42,5 +42,13 @@ public class MessageQueueStep extends IlsAbstractChartStep implements MessageQue
 	
 	public void setMessage(String message) {
 		getDefinition().getProperties().set(MESSAGE_PROPERTY, message);
+	}
+
+	public String getStatus() {
+		return getDefinition().getProperties().getOrDefault(MessageQueueStepProperties.STATUS_PROPERTY);
+	}
+	
+	public void setStatus(String status) {
+		getDefinition().getProperties().set(STATUS_PROPERTY, status);
 	}
 }
