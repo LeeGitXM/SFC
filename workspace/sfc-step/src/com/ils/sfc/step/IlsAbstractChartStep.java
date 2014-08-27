@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ils.sfc.common.IlsSfcIOIF;
+import com.ils.sfc.step.annotation.ILSStep;
 import com.inductiveautomation.sfc.api.AbstractBlockingStep;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ChartStep;
@@ -17,6 +18,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
  * as the marker to group a particular subclass into the list of 
  * available executable block types.
  */
+@ILSStep
 public abstract class IlsAbstractChartStep extends AbstractBlockingStep implements ChartStep {
 	private static final Logger logger = LoggerFactory.getLogger(IlsAbstractChartStep.class);
 	
