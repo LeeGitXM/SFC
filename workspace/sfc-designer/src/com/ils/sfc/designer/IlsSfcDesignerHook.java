@@ -4,7 +4,9 @@
 package com.ils.sfc.designer;
 
 
+import com.ils.sfc.common.IlsGatewayScriptsIF;
 import com.ils.sfc.common.IlsSfcProperties;
+import com.inductiveautomation.ignition.client.gateway_interface.ModuleRPCFactory;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -14,10 +16,8 @@ import com.inductiveautomation.ignition.designer.model.DesignerContext;
 
 public class IlsSfcDesignerHook extends AbstractDesignerModuleHook  {
 	private static final String TAG = "IlsSfcDesignerHook";
-
 	public static String HOOK_BUNDLE_NAME   = "designer";      // Properties file is designer.properties
 	public static String PREFIX = IlsSfcProperties.BUNDLE_PREFIX; // Properties are accessed by this prefix
-
 
 	private DesignerContext context = null;
 	private final LoggerEx log;
@@ -30,6 +30,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook  {
 	@Override
 	public void initializeScriptManager(ScriptManager mgr) {
 		super.initializeScriptManager(mgr);
+    	mgr.addScriptModule("ils.sfc", ModuleRPCFactory.create(IlsSfcProperties.MODULE_ID, IlsGatewayScriptsIF.class));
 		//mgr.addScriptModule(SFCProperties.APPLICATION_SCRIPT_PACKAGE,ApplicationScriptFunctions.class);
 	}
 	
@@ -38,9 +39,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook  {
 		this.context = ctx;
 	
 	}
-	
-	
-	
+		
 	@Override
 	public void shutdown() {	
 	}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
 	<module>
-		<id>ilssfc</id>
+		<id>com.ils.sfc</id>
 		<name>@NAME@</name>
 		<description>@DESCRIPTION@</description>
 		<version>@VERSION@</version>

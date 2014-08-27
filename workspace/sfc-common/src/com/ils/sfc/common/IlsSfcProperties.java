@@ -10,7 +10,7 @@ package com.ils.sfc.common;
  *  Define an interface for accessing module properties .
  */
 public interface IlsSfcProperties   {   
-	public final static String MODULE_ID = "ilssfc";     // See module-icc2.xml
+	public final static String MODULE_ID = "com.ils.sfc";     // See module-icc2.xml
 	public final static String MODULE_NAME = "ILS-SFC";  // See build-icc2.xml
 	
 	/** This is the name of the jar file containing block class definitions */
