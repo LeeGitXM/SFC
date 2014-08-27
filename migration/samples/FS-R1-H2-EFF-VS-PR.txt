@@ -1,0 +1,47 @@
+fs-r1-h2-eff-vs-pr (BLOCK: class s88-recipe-entity)
+
+slope: float;
+h2-grade: truth-value;
+old-polyrate, new-polyrate, delta-polyrate : float; 
+old-h2-to-va-ratio, new-h2-to-va-ratio: float;
+ 
+ERROR: class s88-error;
+ERROR-TXT: text;
+P: class ph-procedure-or-method = this procedure;
+DEBUG-MODE: truth-value = false; 
+ 
+begin
+	if the debug-mode of P or the debug-mode of BLOCK then DEBUG-MODE = true;
+
+	if DEBUG-MODE then post "In [the name of P]. . ."; 
+
+	begin
+		new-polyrate = call s88-get (BLOCK, "new.poly-rate-from-user.val", s88-superior-operation);
+		old-polyrate = call s88-get (BLOCK, "cur.poly-rate-from-user.val", s88-superior-operation); 
+
+		old-h2-to-va-ratio = call s88-get(BLOCK, "cur.h2-to-v.val", s88-superior-operation); 
+
+		slope = call s88-get (BLOCK, "r1-h2-to-v-slope.val", s88-superior-operation); 
+		h2-grade = call s88-get (BLOCK, "new.h2-use-tag.val", s88-superior-operation); 
+	end
+	on error (ERROR)
+		delete ERROR;
+		ERROR-TXT = "In [the name of P] - failed to collect base case RECIPE data for Hydrogen efficiency.";
+		call s88-post-message-to-queue(BLOCK, ERROR-TXT, em-critical, BLOCK); 
+		return; 
+	end;
+
+{ Calculate the change in polymer rate desired [klb/day] }
+	delta-polyrate = new-polyrate - old-polyrate; 
+ 
+{ Calculate the new H2/Va molar ratio only if this is a hydrogen grade.  Note that the fetched slope for this calculation is the actual slope multiplied by 1000.  Thus, the fetched slope is divided by 1000 here.  [moles H2 / moles Va]  }
+
+	if (h2-grade = true) then begin
+		new-h2-to-va-ratio = 10.0 ^ (delta-polyrate * slope / 1000.0 + log(old-h2-to-va-ratio));
+		call s88-set-data(BLOCK, "new.h2-to-v.val", new-h2-to-va-ratio, s88-superior-operation);  
+		end
+	else begin
+		call s88-set-data(BLOCK, "new.h2-to-v.val", 0.0, s88-superior-operation);  
+	end;    
+
+end

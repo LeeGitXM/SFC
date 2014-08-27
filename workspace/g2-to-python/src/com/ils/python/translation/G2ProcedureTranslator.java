@@ -10,6 +10,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -21,9 +24,13 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.sqlite.JDBC;
 
 import com.ils.g2.procedure.G2ProcedureLexer;
 import com.ils.g2.procedure.G2ProcedureParser;
+import com.ils.python.lookup.ClassMapper;
+import com.ils.python.lookup.ProcedureMapper;
+import com.ils.python.lookup.PropertyMapper;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
@@ -31,19 +38,51 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 public class G2ProcedureTranslator {
 	private final static String TAG = "Translator";
-	private static final String USAGE = "Usage: translate <dir>";
-	
-	private LoggerEx log;
+	private static final String USAGE = "Usage: translate <dir> <dbpath>";
+	@SuppressWarnings("unused")
+	private final static JDBC driver = new JDBC(); // Force driver to be loaded
+	private final LoggerEx log;
+	private final ClassMapper classMapper;
+	private final ProcedureMapper procedureMapper;
+	private final PropertyMapper propertyMapper;
 	private HashMap<String,Object> translationResults = null;
-	
 	private String packageName = "";                  // No package by default
 	private File targetDirectory = new File(".");     // Current directory
 	
 	
 	public G2ProcedureTranslator() {
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
+		this.classMapper = new ClassMapper();
+		this.procedureMapper = new ProcedureMapper();
+		this.propertyMapper  = new PropertyMapper(); 
 	}
-	
+	public void processDatabase(String path) {
+		String connectPath = "jdbc:sqlite:"+path;
+
+		// Read database to generate conversion maps
+		Connection connection = null;
+		try {
+			connection = DriverManager.getConnection(connectPath);
+			classMapper.createMap(connection);
+			procedureMapper.createMap(connection);
+			propertyMapper.createMap(connection);
+		}
+		catch(SQLException e) {
+			// if the error message is "out of memory", 
+			// it probably means no database file is found
+			System.err.println(TAG+": "+e.getMessage());
+		}
+		finally {
+			try {
+				if(connection != null)
+					connection.close();
+			} 
+			catch(SQLException e) {
+				// connection close failed.
+				System.err.println(TAG+": "+e.getMessage());
+			}
+		}
+	}
 	
 	/**
 	 * Read standard input. Convert into Python method
@@ -51,14 +90,15 @@ public class G2ProcedureTranslator {
 	public void processInput() {
 		
 		// Read of stdin is expected to be from a re-directed file. 
-		// We gobble the whole thing here. Scrub out CR
+		// We gobble the whole thing here. Scrub out CR.
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		StringBuffer input = new StringBuffer();
 		String s = null;
 		try{
-			while ((s = in.readLine()) != null && s.length() != 0) {
+			while ((s = in.readLine()) != null ) {
 				s = s.replaceAll("\r", "");
 				input.append(s);
+				input.append("\n");
 			}
 		}
 		catch(IOException ignore) {}
@@ -98,7 +138,7 @@ public class G2ProcedureTranslator {
 				String[] pathSegments = packageName.split(".");
 				String target = targetDirectory.getAbsolutePath();
 				for(String seg:pathSegments) {
-					String next = target+File.pathSeparator+seg;
+					String next = target+File.separator+seg;
 					targetDirectory = new File(next);
 					if( !targetDirectory.exists() ) {
 						if( !targetDirectory.mkdir() ) {
@@ -111,7 +151,8 @@ public class G2ProcedureTranslator {
 				// Target directory is ready
 				String fname = (String)translationResults.get(TranslationConstants.PY_MODULE_NAME);
 				if( fname!=null ) {
-					File outFile = new File(targetDirectory+File.pathSeparator+fname+".py");
+					File outFile = new File(targetDirectory+File.separator+fname+".py");
+					log.debugf("%s.createOutput: outfile = %s",TAG,outFile.getAbsolutePath());
 				    try {
 				    	FileWriter writer = new FileWriter(outFile, true);
 				        PrintWriter printer = new PrintWriter(writer);
@@ -148,14 +189,17 @@ public class G2ProcedureTranslator {
 	
 
 	private String getCopyright() {
-		return "Copyright 2014 ILS Automation. All rights reserved.";
+		return "# Copyright 2014 ILS Automation. All rights reserved.\n";
 	}
 	private String getImports() {
+		@SuppressWarnings("unchecked")
 		List<String> imports = (List<String>)translationResults.get(TranslationConstants.PY_IMPORTS);
 		StringBuffer result = new StringBuffer();
-		for(String imp:imports) {
-			result.append(imp);
-			result.append("\n");
+		if( imports!=null ) {
+			for(String imp:imports) {
+				result.append(imp);
+				result.append("\n");
+			}
 		}
 		return result.toString();
 	}
@@ -183,8 +227,8 @@ public class G2ProcedureTranslator {
 		HashMap<String,Object> pyMap = new HashMap<String,Object>();
 		
 		// Convert the input expression to a stream
-		log.debug(TAG+": Parsing "+proc);
-		pyMap.put(TranslationConstants.PY_G2_PROC, proc);
+		log.tracef("%s.translateProcedure: Parsing:\n%s",TAG,proc);
+		pyMap.put(TranslationConstants.PY_G2_CODE, proc);
 		pyMap.put(TranslationConstants.PY_PACKAGE, packageName);
 		ByteArrayInputStream bais = new ByteArrayInputStream(proc.getBytes());
 		ANTLRInputStream in = new ANTLRInputStream(bais);
@@ -200,9 +244,35 @@ public class G2ProcedureTranslator {
 		PythonGenerator visitor = new PythonGenerator(pyMap);
 		visitor.visit(tree);
 		StringBuffer procedure = visitor.getTranslation();  // Procedure less imports
-		pyMap.put(TranslationConstants.PY_PRELIM,procedure.toString());
-
+		pyMap.put(TranslationConstants.PY_MODULE_CODE,procedure.toString());
+		if( log.isDebugEnabled() ) {
+			dump(pyMap);
+		}
 		return pyMap;
+	}
+	
+	/**
+	 * For debugging purposes - dump the contents of the translation map
+	 */
+	private void dump(HashMap<String,Object> pyMap) {
+		log.info("======================= G2 Code ======================");
+		Object proc = pyMap.get(TranslationConstants.PY_G2_CODE);
+		if( proc==null ) proc = "<null>";
+		log.info(proc.toString());
+		log.info("===================== Python Code =====================");
+		proc = pyMap.get(TranslationConstants.PY_MODULE_CODE);
+		if( proc==null ) proc = "<null>";
+		log.info(proc.toString());
+		log.info("============================================================");
+		Object val = pyMap.get(TranslationConstants.PY_PACKAGE);
+		if( val==null ) val = "<null>";
+		log.infof("Package:    %s",val.toString());
+		val = pyMap.get(TranslationConstants.PY_G2_PROC);
+		if( val==null ) val = "<null>";
+		log.infof("G2 Procedure: %s",val.toString());
+		val = pyMap.get(TranslationConstants.PY_MODULE_NAME);
+		if( val==null ) val = "<null>";
+		log.infof("ModuleName: %s",val.toString());
 	}
 	/**
 	 * Entry point for the application. 
@@ -217,10 +287,11 @@ public class G2ProcedureTranslator {
 	public static void main(String[] args) {
 			
 		// Look for database path as an argument
-		if( args.length == 0) {
+		if( args.length < 2) {
 			System.out.println(USAGE);
 			System.exit(1);
 		}
+		
 		// Some of the embedded jars use log4j - redirect to std error. Log level is system property "log.level"
 		ConsoleAppender appender = new ConsoleAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN),"System.err");
 		BasicConfigurator.configure(appender);
@@ -236,17 +307,22 @@ public class G2ProcedureTranslator {
 		if( pythonPackage!=null) {
 			trans.setPackageName(pythonPackage);
 		}
-		
+
 		// Analyze command-line argument to obtain the target directory name
-		if( args.length>0 ) {
-			String path = args[0];
-			// In case we've been fed a Windows path, convert
-			path = path.replace("\\", "/");
-			File dir = new File(path);
-			trans.setTargetDirectory(dir);
-		}
-		
+
+		String path = args[0];
+		// In case we've been fed a Windows path, convert
+		path = path.replace("\\", "/");
+		File dir = new File(path);
+		trans.setTargetDirectory(dir);
+
+		// The second argument is a path to the database
+		String dbpath = args[1];
+		// In case we've been fed a Windows path, convert
+		dbpath = dbpath.replace("\\", "/");
+		trans.processDatabase(dbpath);
 		trans.processInput();
+		trans.createOutput();
 	}
 
 }

@@ -1,0 +1,71 @@
+fs-r2-nh3-eff-vs-pr-2 (BLOCK: class s88-recipe-entity)
+
+grade: integer;
+new-nh3-grade, old-nh3-grade: truth-value;
+old-polyrate, new-polyrate, delta-polyrate : float; 
+old-nh3-to-va-ratio, new-nh3-to-va-ratio: float;
+ 
+ERROR: class s88-error;
+ERROR-TXT: text;
+P: class ph-procedure-or-method = this procedure;
+DEBUG-MODE: truth-value = false; 
+UNIT-PROCEDURE: class s88-unit-procedure;
+ 
+begin
+	if the debug-mode of P or the debug-mode of BLOCK then DEBUG-MODE = true;
+
+	if DEBUG-MODE then post "In [the name of P]. . ."; 
+
+	UNIT-PROCEDURE = call s88-get-unit-procedure (BLOCK); 
+
+	begin
+		new-polyrate = call s88-get (BLOCK, "new.poly-rate-from-user.val", s88-superior-operation);
+		old-polyrate = call s88-get (BLOCK, "cur.poly-rate-from-user.val", s88-superior-operation); 
+
+		old-nh3-to-va-ratio = call s88-get(BLOCK, "cur.nh3-to-v.val", s88-superior-operation); 
+ 
+		new-nh3-grade = call s88-get (BLOCK, "new.nh3-use-tag.val", s88-superior-operation); 
+		old-nh3-grade = call s88-get (BLOCK, "cur.nh3-use-tag.val", s88-superior-operation);
+		grade = call s88-get (BLOCK, "new.grade-number.val", s88-superior-operation);
+	end
+	on error (ERROR)
+		delete ERROR;
+		ERROR-TXT = "In [the name of P] - failed to collect base case RECIPE data for Ammonia efficiency.";
+		call s88-post-message-to-queue(BLOCK, ERROR-TXT, em-critical, BLOCK); 
+		return; 
+	end;
+
+	if DEBUG-MODE then post "In [the name of P] Old:New Rate=[old-polyrate]:[new-polyrate], nh3-grade=[old-nh3-grade]:[new-nh3-grade], NH3/V=[old-nh3-to-va-ratio],  Grade=[grade]."; 
+
+{ Calculate the change in polymer rate desired [klb/day] }
+	delta-polyrate = new-polyrate - old-polyrate; 
+ 
+{ Manage the special cases for grades which do not use NH3 at high rates but do use NH3 at low rates.  Flying switches are not allowed at rates which require NH3 when normal operation does not require NH3. }
+
+	case (grade) of 
+		5600:
+			if ( new-polyrate >= 450.0 ) then begin
+				call s88-set-data(BLOCK, "new.nh3-to-v.val", 0.0, s88-superior-operation);
+			end
+			else begin
+                		call s88-set-data(BLOCK, "new.nh3-to-v.val", 0.0, s88-superior-operation);
+				call s88-post-message-to-queue (BLOCK, " A Flying Switch to Grade [grade] is not allowed at Polymer Rates less than 450.0 KLB/D.  Aborting.", em-error, BLOCK);
+				start _s88-abort(UNIT-PROCEDURE); 
+				wait for 2 seconds;
+				return; 
+			end;
+        { Get data for grades which use ammonia. For these case the nh3-grade flag will have a value of 1.0  }
+		otherwise: begin 
+			if (new-nh3-grade = true) then begin 
+				new-nh3-to-va-ratio = old-nh3-to-va-ratio;
+				call s88-set-data(BLOCK, "new.nh3-to-v.val", new-nh3-to-va-ratio, s88-superior-operation); 
+			end  
+			else begin  
+				call s88-set-data (BLOCK, "new.nh3-to-v.val", 0.0, s88-superior-operation);
+			end;
+		end; { otherwise }               
+	end; { case } 
+
+	if DEBUG-MODE then post "In [the name of P] Conpleted normally."; 
+
+end

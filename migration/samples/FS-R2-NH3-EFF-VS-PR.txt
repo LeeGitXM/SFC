@@ -1,0 +1,77 @@
+fs-r2-nh3-eff-vs-pr (BLOCK: class s88-recipe-entity)
+
+grade: integer;
+new-nh3-grade, old-nh3-grade: truth-value;
+old-polyrate, new-polyrate, delta-polyrate : float; 
+old-nh3-to-va-ratio, new-nh3-to-va-ratio: float;
+ 
+ERROR: class s88-error;
+ERROR-TXT: text;
+P: class ph-procedure-or-method = this procedure;
+DEBUG-MODE: truth-value = false; 
+ 
+begin
+	if the debug-mode of P or the debug-mode of BLOCK then DEBUG-MODE = true;
+
+	if DEBUG-MODE then post "In [the name of P]. . ."; 
+
+	begin
+		new-polyrate = call s88-get (BLOCK, "new.poly-rate-from-user.val", s88-superior-operation);
+		old-polyrate = call s88-get (BLOCK, "cur.poly-rate-from-user.val", s88-superior-operation); 
+
+		old-nh3-to-va-ratio = call s88-get(BLOCK, "cur.nh3-to-v.val", s88-superior-operation); 
+ 
+		new-nh3-grade = call s88-get (BLOCK, "new.nh3-use-tag.val", s88-superior-operation); 
+		old-nh3-grade = call s88-get (BLOCK, "cur.nh3-use-tag.val", s88-superior-operation);
+		grade = call s88-get-data (BLOCK, "new.grade-number.val", s88-superior-operation);
+	end
+	on error (ERROR)
+		delete ERROR;
+		ERROR-TXT = "In [the name of P] - failed to collect base case RECIPE data for Ammonia efficiency.";
+		call s88-post-message-to-queue(BLOCK, ERROR-TXT, em-critical, BLOCK); 
+		return; 
+	end;
+
+{ Calculate the change in polymer rate desired [klb/day] }
+	delta-polyrate = new-polyrate - old-polyrate; 
+ 
+{ Manage the special cases for grades which do not use NH3 at high rates but do use NH3 at low rates.  If NH3 is not supposed to be in use at the current rate set the ammonia to vanadium ratio to 0.0 otherwise display the average value. }
+
+    case (grade) of 
+        5600:
+             if ( new-polyrate >= 450.0 ) then begin
+                 new-nh3-to-va-ratio = 0.0
+             end
+             else begin
+                 new-nh3-to-va-ratio = 0.1;
+             end;
+
+        { Get data for grades which use ammonia. For these case the nh3-grade flag will have a value of 1.0  }
+        otherwise: begin 
+            if (new-nh3-grade = true) then begin 
+                new-nh3-to-va-ratio = old-nh3-to-va-ratio;
+		call s88-set-data(BLOCK, "new.nh3-to-v.val", new-nh3-to-va-ratio, s88-superior-operation); 
+            end  
+            else begin  
+                new-nh3-to-va-ratio = 0.0;
+		call s88-set-data(BLOCK, "new.nh3-to-v.val", 0.0, s88-local);
+            end;
+        end; { otherwise }               
+    end; { case } 
+ 
+    { WARN THE OPERATOR WHEN NH3 IS TO BE STARTED OR STOPPED. }
+    
+    if (old-nh3-to-va-ratio <= 0.0) and (new-nh3-to-va-ratio > 0.0) then begin
+{        new-r1-c3-rate = new-r1-c3-rate * 1.1; }
+        call fs-reactant-change(3, FLYING-SWITCH-OPERATION);
+ {       call write-datum (s88-rx-rcp-nh3-flag, 1.0); }
+    end;
+
+    if (old-nh3-to-va-ratio > 0.0) and (new-nh3-to-va-ratio <= 0.0) then begin
+{        new-r1-c3-rate = new-r1-c3-rate * 0.9; }
+        call fs-reactant-change(4, FLYING-SWITCH-OPERATION);
+ {       call write-datum (s88-rx-rcp-nh3-flag, 0.0); }
+    end;
+
+
+end

@@ -1,0 +1,40 @@
+fs-new-poly-rate(BLOCK: class s88-recipe-entity) = (symbol {complete, stopped, or error} )
+
+{ This procedure is a template for implementing a custom callback.  This procedure template is meant to implement logic that runs very quickly.  If the implementation causes wait states or collect data or prolonged looping, then the template that implements logic that will respond to ABORT, STOP, PAUSE and HOLD commands should be used.  This template does not honor ABORT, STOP, PAUSE, or HOLD commands that arrive during its execution. }
+
+P: class ph-procedure-or-method = this procedure;
+DEBUG-MODE: truth-value = false; 
+STATUS: symbol;
+NEW-RATE: float;
+VAL: value;
+
+begin
+	if the debug-mode of P or the debug-mode of BLOCK then DEBUG-MODE = true;
+	if DEBUG-MODE then post "In [the name of P] with [the label of BLOCK], a [the class of BLOCK]. . .";
+
+	conclude that the state of BLOCK = s88-running-state;
+
+	STATUS, VAL = call s88-get-data (BLOCK, "user-response.val", s88-previous ); 
+	if DEBUG-MODE then post "In [the name of P] with val=[val] and status=[status].";
+
+	if STATUS /= the symbol SUCCESS then go to bad-ingredient;
+	VAL, STATUS = call em-convert-value-to-text-or-quant(val);
+
+	if STATUS /= the symbol FLT then go to bad-ingredient;
+	NEW-RATE = VAL;
+	call s88-set-data (BLOCK, "new.poly-rate-from-user.val", new-rate, s88-superior-operation);
+	if DEBUG-MODE then post "In [the name of P] with NEW-RATE=[NEW-RATE].";
+	NEW-RATE = NEW-RATE / 24.0;
+	call s88-set-data (BLOCK, "new.poly-rate.val", new-rate, s88-superior-operation);
+	if DEBUG-MODE then post "In [the name of P] with NEW-RATE2=[NEW-RATE].";
+	call s88-set-data (BLOCK, "USER-RESPONSE.val", "OK", s88-local);
+
+	if DEBUG-MODE then post "[the label of BLOCK] has completed!";
+	return s88-complete-state;
+
+bad-ingredient: 
+	call s88-set-data (BLOCK, "USER-RESPONSE.val", "CANCEL", s88-local);
+	call s88-post-message-to-queue  (BLOCK, "New Poly Rate =[val] is not acceptable.", em-error, BLOCK);
+	if DEBUG-MODE then post "In [the name of P] with status=[status] and val=[val] has completed with CANCEL.";
+	return s88-complete-state;
+end 

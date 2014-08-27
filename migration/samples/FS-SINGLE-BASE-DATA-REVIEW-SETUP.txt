@@ -1,0 +1,102 @@
+fs-single-base-data-review-setup
+(
+    BLOCK: class s88-recipe-entity
+) =
+(
+    symbol {complete, stopped, or error}
+)
+{
+    This procedure converts, scales, translates, etc., data that is calculated to a format that is desirable for viewing and checks if certain data is required or not to change the output to reflect this.  If the prompt or the value requires excessive conversion or formatting, then this procedure will perform the conversion and store the final value in the advice or prompt of the configuration of the block or local value (metadata) of the block. Otherwise, the value is stored in the global value (metadata).
+}
+STATUS: symbol;
+ADVICE: text;
+C9-USE, H2-USE, NH3-USE, ETOH-USE, OIL-USE: truth-value;
+MODEL-OUTPUT-SEQ, SEQ: sequence;
+CONV: value;
+ERROR: class s88-error;
+ERROR-TXT: text;
+P: class ph-procedure-or-method = this procedure;
+DEBUG-MODE: truth-value = false; 
+
+begin
+	if the debug-mode of P or the debug-mode of BLOCK then DEBUG-MODE = true;
+
+	if DEBUG-MODE then post "In [the name of P] with [the label of BLOCK], a [the class of BLOCK]. . .";
+
+	conclude that the state of BLOCK = s88-running-state;
+
+{SETUP SECONDARY OPERATOR REVIEW}
+	{NONE}
+ 
+{SETUP PRIMARY OPERATOR REVIEW}
+	begin
+		C9-USE 		= call s88-get (BLOCK, "new.C9-USE-TAG.val", s88-superior-operation ); 
+		H2-USE 		= call s88-get (BLOCK, "new.H2-USE-TAG.val", s88-superior-operation ); 
+		NH3-USE 	= call s88-get (BLOCK, "new.NH3-USE-TAG.val", s88-superior-operation ); 
+		ETOH-USE	 = call s88-get (BLOCK, "new.ETOH-USE-TAG.val", s88-superior-operation ); 
+		OIL-USE		 = call s88-get (BLOCK, "new.OIL-USE-TAG.val", s88-superior-operation ); 
+	end
+		on error (ERROR)
+		delete ERROR;
+		ERROR-TXT = "In [the name of P] - failed to collect use tag data.";
+		call s88-post-message-to-queue(BLOCK, ERROR-TXT, em-critical, BLOCK); 
+		return s88-complete-state;
+	end;
+
+	MODEL-OUTPUT-SEQ = the configuration of fs-single-base-flow-review;
+
+{------  C2 ------} 
+	CONV = call s88-get (BLOCK, "new.R1-C2-CONV.val", s88-superior-operation);
+	ADVICE = "Conversion [CONV as ddd.d] %";
+	MODEL-OUTPUT-SEQ = call ils-update-structure-in-a-keyed-sequence (MODEL-OUTPUT-SEQ, the symbol key, "r1-c2-sp", the symbol advice , ADVICE ); 
+
+{------  C3 ------}
+        CONV = call s88-get (BLOCK, "new.R1-C3-CONV.val", s88-superior-operation); 
+        ADVICE = "Conversion [CONV as ddd.d] %"; 
+	MODEL-OUTPUT-SEQ = call ils-update-structure-in-a-keyed-sequence(MODEL-OUTPUT-SEQ, the symbol key, "r1-c3-to-c2-sp", the symbol advice, ADVICE );
+
+{------  C9 ------} 
+	if C9-USE = true then begin
+		CONV = call s88-get (BLOCK, "new.R1-C9-CONV.val", s88-superior-operation); 
+		ADVICE = "Conversion [CONV as ddd.d] %"; 
+		end
+	else begin
+		ADVICE = "Not Required for this grade.";
+	end;
+	MODEL-OUTPUT-SEQ = call ils-update-structure-in-a-keyed-sequence(MODEL-OUTPUT-SEQ, the symbol key, "r1-c9-to-c2-sp", the symbol advice, ADVICE ); 
+
+{------  H2  ------} 
+	ADVICE = ""; 
+	if  H2-USE = false then begin 
+		ADVICE = "Not Required for this grade.";  
+	end;
+	MODEL-OUTPUT-SEQ = call ils-update-structure-in-a-keyed-sequence(MODEL-OUTPUT-SEQ, the symbol key, "r1-h2-to-va-sp", the symbol advice, ADVICE );
+
+{------  NH3  ------}
+	ADVICE = ""; 
+	if NH3-USE = false then begin 
+		ADVICE = "Not Required for this grade.";
+	end;  
+	MODEL-OUTPUT-SEQ = call ils-update-structure-in-a-keyed-sequence(MODEL-OUTPUT-SEQ, the symbol key, "r1-nh3-to-va-sp", the symbol advice, ADVICE );
+
+{------  ETOH  ------}
+	ADVICE = ""; 
+	if ETOH-USE = false then begin 
+		ADVICE = "Not Required for this grade.";
+	end;  
+	MODEL-OUTPUT-SEQ = call ils-update-structure-in-a-keyed-sequence(MODEL-OUTPUT-SEQ, the symbol key, "r1-etoh-to-va-sp", the symbol advice, ADVICE );
+
+{------  OIL  ------}
+	ADVICE = ""; 
+	if OIL-USE = false then begin 
+		ADVICE = "Not Required for this grade.";
+	end;  
+	MODEL-OUTPUT-SEQ = call ils-update-structure-in-a-keyed-sequence(MODEL-OUTPUT-SEQ, the symbol key, "oil-to-polymer", the symbol advice, ADVICE );
+
+{Replace the configuration sequence that has the updated prompts.}
+	conclude that the configuration of fs-single-base-flow-review = MODEL-OUTPUT-SEQ; 
+ 
+	if DEBUG-MODE then post "[the label of BLOCK] has completed!";
+
+	return s88-complete-state;
+end

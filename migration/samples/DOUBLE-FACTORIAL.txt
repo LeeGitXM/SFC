@@ -1,0 +1,16 @@
+double-factorial(i: integer) = (float)
+{
+This function is the simple yet troublesome double-factorial function.  There are plenty of texts that describe this function.  A simple web search will present a host of references.  Essentially instead of marching the numbers down by one in the product, you march down by two.  The double factorial of -1 and 0 is defined as 1.  The rather arbitrary decision to assign a zero for anything less than -1 was taken.
+}
+j: integer;
+prod: float = 1.0;
+
+begin
+   if i < -1 then return 0.0;
+   if i = -1 or i = 0 then return 1.0;
+   for j = i down to 1 by -2 do
+      prod = prod * j;
+   end;
+  
+   return prod;
+end
