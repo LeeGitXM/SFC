@@ -3,6 +3,8 @@ package com.ils.sfc.step;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ils.sfc.common.IlsSfcIOIF;
+import com.ils.sfc.step.annotation.ILSStep;
 import com.inductiveautomation.sfc.api.AbstractBlockingStep;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ChartStep;
@@ -16,6 +18,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
  * as the marker to group a particular subclass into the list of 
  * available executable block types.
  */
+@ILSStep
 public abstract class IlsAbstractChartStep extends AbstractBlockingStep implements ChartStep {
 	private static final Logger logger = LoggerFactory.getLogger(IlsAbstractChartStep.class);
 	
@@ -26,17 +29,6 @@ public abstract class IlsAbstractChartStep extends AbstractBlockingStep implemen
 	protected IlsAbstractChartStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
-
-	/** Insert a message in the appropriate queue. */
-	protected void queueMessage(String message) {
-		String messageQueueId = getMessageQueueId();
-		if(messageQueueId != null) {
-			
-		}
-		else {
-			logger.error("Could not find message queue id for step " + toString());
-		}
-	}
 	
 	/** Get the parent scope of the given scope, or null if none exists. */
 	private PyChartScope getParentScope(PyChartScope scope) {
@@ -44,7 +36,7 @@ public abstract class IlsAbstractChartStep extends AbstractBlockingStep implemen
 	}
 	
 	/** Get the ID for this step's message queue */
-	protected String getMessageQueueId() {
+	protected String getCurrentMessageQueue() {
 		return (String)getObjectFromScopeTree(MESSAGE_QUEUE_KEY);
 	}
 	

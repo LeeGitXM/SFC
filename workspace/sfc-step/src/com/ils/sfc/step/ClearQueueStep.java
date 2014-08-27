@@ -17,7 +17,8 @@ public class ClearQueueStep extends IlsAbstractChartStep implements ClearQueueSt
 	@Override
 	protected void onStart() {
 		logger.debug("ClearQueueStep onStart()");
-		// TODO: clear the queue
+		String queueName = getCurrentMessageQueue();
+		getIO().clearMessageQueue(queueName);
 	}
 
 	@Override

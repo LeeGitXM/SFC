@@ -19,7 +19,6 @@ public class AbstractShowQueueStepDelegate implements StepDelegate,
 
 	@Override
 	public List<Property<?>> getCompilationAlteringProperties() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -31,17 +30,19 @@ public class AbstractShowQueueStepDelegate implements StepDelegate,
 	@Override
 	public void toXML(XMLStreamWriter writer, ChartUIElement element, String arg2)
 			throws XMLStreamException {
+		// TODO: add common properties; e.g. label, description, audit level
 	}
 
 	@Override
 	public void fromXML(Element dom, ChartUIElement ui)
 			throws XMLParseException {
+		// TODO: add common properties; e.g. label, description, audit level
 	}
 	
 	@Override
 	public void validate(ChartUIElement element, ChartCompilationResults results) {
 		// check stuff in element
-		results.addError(new CompilationError("bad stuff", element.getLocation()));
+		//results.addError(new CompilationError("bad stuff", element.getLocation()));
 	}
 
 }

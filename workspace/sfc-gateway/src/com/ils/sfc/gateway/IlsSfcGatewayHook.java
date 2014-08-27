@@ -4,20 +4,18 @@
 package com.ils.sfc.gateway;
 
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
-import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
 import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 
+//import com.ils.sfc.step.IlsSfcIO;
 
 /**
  * This is root node for specialty code dealing with the gateway. On startup
  * we obtain the gateway context. It serves as our entry point into the
  * Ignition core.
- * 
- * At present this code does nothing.
  */
 public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 	public static String TAG = "SFCGatewayHook";
@@ -37,8 +35,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 
 	@Override
 	public void startup(LicenseState licenseState) {
-	    
-
 	    log.infof("%s: Startup complete.",TAG);
 	}
 
@@ -48,12 +44,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 
 	@Override
 	public Object getRPCHandler(ClientReqSession session, Long projectId) {
-		return null;
-	}
-	
-	@Override
-	public void initializeScriptManager(ScriptManager mgr) {
-		super.initializeScriptManager(mgr);
+		return new IlsGatewayScripts(context);
 	}
 
 }

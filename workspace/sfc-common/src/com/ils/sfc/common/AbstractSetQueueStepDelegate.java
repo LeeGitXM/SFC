@@ -31,22 +31,19 @@ public class AbstractSetQueueStepDelegate implements StepDelegate,
 	@Override
 	public void toXML(XMLStreamWriter writer, ChartUIElement element, String arg2)
 			throws XMLStreamException {
-		String message = element.getOrDefault(MESSAGE_PROPERTY);
-		writer.writeStartElement(MESSAGE_PROPERTY.getName());
-		writer.writeCharacters(message);
-		writer.writeEndElement();
+		// TODO: add common properties; e.g. label, description, audit level
 	}
 
 	@Override
 	public void fromXML(Element dom, ChartUIElement ui)
 			throws XMLParseException {
-		ui.set(MESSAGE_PROPERTY, IlsSfcCommonUtils.getStringProperty(MESSAGE_PROPERTY, dom));
+		// TODO: add common properties; e.g. label, description, audit level
 	}
 	
 	@Override
 	public void validate(ChartUIElement element, ChartCompilationResults results) {
 		// check stuff in element
-		results.addError(new CompilationError("bad stuff", element.getLocation()));
+		//results.addError(new CompilationError("bad stuff", element.getLocation()));
 	}
 
 }

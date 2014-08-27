@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ils.sfc.step.IlsSfcIOIF;
+import com.ils.sfc.common.IlsSfcIOIF;
 
 /** A dummy version of IlsSfcIO for testing. */
 public class StubIlsSfcIO implements IlsSfcIOIF {
@@ -22,12 +22,13 @@ public class StubIlsSfcIO implements IlsSfcIOIF {
 	}
 	
 	@Override
-	public void close() {
+	public void enqueueMessage(String queueId, String message, MessageStatus status) {
+		getMessageQueue(queueId).add(message);
 	}
 
 	@Override
-	public void enqueueMessage(String queueId, String message) {
-		getMessageQueue(queueId).add(message);
+	public void clearMessageQueue(String queueName) {
+		messagesByQueueName.put(queueName, null);		
 	}
 
 }
