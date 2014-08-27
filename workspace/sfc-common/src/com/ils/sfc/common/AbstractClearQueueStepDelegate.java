@@ -15,7 +15,7 @@ import com.inductiveautomation.sfc.uimodel.ChartCompilationResults.CompilationEr
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public class AbstractClearQueueStepDelegate implements StepDelegate,
-		MessageQueueStepProperties {
+		ClearQueueStepProperties {
 
 	@Override
 	public List<Property<?>> getCompilationAlteringProperties() {

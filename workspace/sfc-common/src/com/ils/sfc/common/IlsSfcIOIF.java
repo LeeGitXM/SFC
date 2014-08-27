@@ -17,4 +17,5 @@ public interface IlsSfcIOIF {
 	/** Clear all messages from the given queue */
 	void clearMessageQueue(String queueName);
 
+	void sendMessage(String message, String messageType, String clientId);
 }

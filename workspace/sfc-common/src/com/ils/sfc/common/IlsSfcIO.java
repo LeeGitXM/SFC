@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ils.sfc.common.IlsSfcIOIF;
+import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.gateway.datasource.Datasource;
 import com.inductiveautomation.ignition.gateway.datasource.SRConnection;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
@@ -61,6 +62,16 @@ public class IlsSfcIO implements IlsSfcIOIF {
 				if(conn != null) {conn.close();}
 			}
 			catch(SQLException e) {}
+		}
+	}
+
+	@Override
+	public void sendMessage(String message, String messageType, String clientId) {
+		//ClientReqSession clientSession = gatewayContext.getGatewaySessionManager().findSession(clientId)
+		try {
+			gatewayContext.getGatewaySessionManager().sendNotification(ApplicationScope.DESIGNER, IlsSfcProperties.MODULE_ID, messageType, message);
+		} catch (Exception e) {
+			logger.error("Error sending message to client " + clientId, e);
 		}
 	}
 

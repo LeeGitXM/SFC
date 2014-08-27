@@ -13,10 +13,10 @@ public class IlsSfcClientHook extends AbstractClientModuleHook {
 
     @Override
     public void startup(ClientContext context, LicenseState activationState) throws Exception {
-        ClientStepRegistry.getInstance(context).register(QueueMessageStepUI.FACTORY);
-        ClientStepRegistry.getInstance(context).register(ClearQueueStepUI.FACTORY);
-        ClientStepRegistry.getInstance(context).register(SetQueueStepUI.FACTORY);
-        ClientStepRegistry.getInstance(context).register(ShowQueueStepUI.FACTORY);
+        //ClientStepRegistry.getInstance(context).register(QueueMessageStepUI.FACTORY);
+        //ClientStepRegistry.getInstance(context).register(ClearQueueStepUI.FACTORY);
+        //ClientStepRegistry.getInstance(context).register(SetQueueStepUI.FACTORY);
+        //ClientStepRegistry.getInstance(context).register(ShowQueueStepUI.FACTORY);
     }
 
     @Override

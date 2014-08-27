@@ -18,7 +18,7 @@
 		<!-- Load in our jars for each scope -->
 		<jar scope="CD">ils-sfc-client.jar.pack.gz</jar>
 		<jar scope="D">ils-sfc-designer.jar.pack.gz</jar>
-		<jar scope="D">ils-sfc-common.jar.pack.gz</jar>
+		<jar scope="CD">ils-sfc-common.jar.pack.gz</jar>
 		<jar scope="G">ils-sfc-gateway.jar</jar>
 		<jar scope="G">ils-sfc-common.jar</jar>
 		<jar scope="G">ils-sfc-steps.jar</jar>
