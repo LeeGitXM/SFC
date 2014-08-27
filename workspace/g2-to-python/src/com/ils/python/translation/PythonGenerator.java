@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import com.ils.g2.procedure.G2ProcedureBaseVisitor;
 import com.ils.g2.procedure.G2ProcedureParser;
+import com.ils.g2.procedure.G2ProcedureParser.StatementContext;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
@@ -22,6 +23,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	private final StringBuffer buf;
 	private final HashMap<String,Object> translation;
 	private int currentIndent = 0;
+	private String currentG2Name = "";       // Most recent G2 object
 	/**
 	 * Constructor.
 	 * @param dict results dictionary
@@ -44,8 +46,34 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		return null;
 	}
 	@Override 
+	public Object visitBraceComment(G2ProcedureParser.BraceCommentContext ctx) {
+		appendIndent();
+		buf.append("# ");
+		buf.append(ctx.COMMENT().getText());
+		buf.append("\n");
+		return null; 
+	}
+	@Override 
 	public Object visitFirstArgInList(G2ProcedureParser.FirstArgInListContext ctx) { 
 		visit(ctx.arg());
+		return null; 
+	}
+	@Override 
+	public Object visitIfThenClause(G2ProcedureParser.IfThenClauseContext ctx) {
+		appendIndent();
+		buf.append("if ");
+		visit(ctx.lexpr());
+		buf.append(":\n");
+		currentIndent++;
+		if( ctx.statement().isEmpty()) {
+			buf.append("pass\n");
+		}
+		else {
+			for(StatementContext sctx:ctx.statement()) {
+				visit(sctx);
+			}
+		}
+		currentIndent--;
 		return null; 
 	}
 	@Override 
@@ -64,10 +92,10 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	@Override 
 	public Object visitProcedureDocstring(G2ProcedureParser.ProcedureDocstringContext ctx) {
 		StringBuffer doc = new StringBuffer();
-		doc.append("'''\n");
+		doc.append("\n'''\n");
 		doc.append(ctx.COMMENT().getText());
-		doc.append("\n'''");
-		translation.put(TranslationConstants.PY_DOC_STRING, doc);
+		doc.append("\n'''\n");
+		translation.put(TranslationConstants.PY_DOC_STRING, doc.toString());
 		return null; 
 	}
 	
@@ -78,15 +106,20 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		visit(ctx.arglist());
 		buf.append("):\n");
 		currentIndent = 1;
+		String name = ctx.g2name().getText();
+		translation.put(TranslationConstants.PY_MODULE_NAME, pythonName(name));
+		translation.put(TranslationConstants.PY_G2_PROC, name);
+		
 		return null;
 	}
 	
-	// Convert the G2Name to a Python name. Record in the dictionary.
+	// Convert the G2Name to a Python name. Save locally both before and after.
 	@Override 
-	public Object visitProcedureName(G2ProcedureParser.ProcedureNameContext ctx) { 
-		String pyName = pythonName(ctx.PNAME().getText());
-		translation.put(TranslationConstants.PY_MODULE_NAME, pyName);
-		translation.put(TranslationConstants.PY_G2_PROC, ctx.PNAME());
+	public Object visitG2NameString(G2ProcedureParser.G2NameStringContext ctx) {
+		
+		String pyName = pythonName(ctx.G2NAME().getText());
+		//translation.put(TranslationConstants.PY_MODULE_NAME, pyName);
+		//translation.put(TranslationConstants.PY_G2_PROC, ctx.GNAME());
 		return null;
 	}
 	@Override 
@@ -185,7 +218,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		int index=currentIndent;
 		while( index>0 ) {
 			buf.append("\t");
-			index++;
+			index--;
 		}
 	}
 	

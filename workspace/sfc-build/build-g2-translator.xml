@@ -39,6 +39,7 @@
 		<path refid="application.classpath" />
 		<fileset dir="${basedir}/../../external/lib" includes="antlr*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="g2-procedure-translation.jar" />
+		<fileset dir="${basedir}/../../external/lib" includes="sqlite*.jar" />
 	</path>
 	
 	<!-- This target will build the toolkit module and deploy it to the local Ignition gateway -->

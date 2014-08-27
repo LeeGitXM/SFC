@@ -1,0 +1,39 @@
+fs-r2-c3-conv-vs-pr(BLOCK: class s88-recipe-entity)
+
+slope: float;
+old-polyrate, new-polyrate, delta-polyrate : float; 
+old-conv, new-conv: float;
+ 
+ERROR: class s88-error;
+ERROR-TXT: text;
+P: class ph-procedure-or-method = this procedure;
+DEBUG-MODE: truth-value = false; 
+ 
+begin
+	if the debug-mode of P or the debug-mode of BLOCK then DEBUG-MODE = true;
+
+	if DEBUG-MODE then post "In [the name of P]. . ."; 
+
+	begin
+		new-polyrate = call s88-get(BLOCK, "new.poly-rate.val", s88-superior-operation);
+		old-polyrate = call s88-get(BLOCK, "cur.poly-rate.val", s88-superior-operation);
+
+		old-conv = call s88-get(BLOCK, "cur.r2-c3-conv.val", s88-superior-operation); 
+		slope = call s88-get(BLOCK, "r2-c3-conv-slope.val", s88-superior-operation); 
+	end
+	on error (ERROR)
+		delete ERROR;
+		ERROR-TXT = "In [the name of P] - failed to collect RECIPE data for the translation of R2 C3 conversion to a newpolymer rate.";
+		call s88-post-message-to-queue(BLOCK, ERROR-TXT, em-critical, BLOCK); 
+		return; 
+	end;
+
+{ Calculate the change in polymer rate desired [klb/day] }
+	delta-polyrate = (new-polyrate - old-polyrate) * 24.0; 
+
+{ Calculate the new monomer conversions [wt %] }
+	new-conv  = delta-polyrate * slope + old-conv;
+	call s88-set-data(BLOCK, "new.r2-c3-conv.val", new-conv, s88-superior-operation);  
+ 	
+	if DEBUG-MODE then post "In [the name of P] with new-c3-conv=[new-conv] , slope=[slope] , delta-pr=[delta-polyrate]."; 
+end

@@ -10,12 +10,12 @@ procedure: header docstring? declaration* body EOF;
 /** ================== Fundamental Procedure Elements ======================= */
 body: BEGIN statement* END                               # procedureBody
         ;
-declaration: VARNAME COLON DATATYPE SEMI                 # uninitializedVariable
-        |    VARNAME COLON DATATYPE EQU value SEMI       # initializedVariable
+declaration: VARNAME COLON datatype SEMI                 # uninitializedVariable
+        |    VARNAME COLON datatype EQU value SEMI       # initializedVariable
         ;
 docstring: COMMENT                                       # procedureDocstring
         ;
-header:   procname POPEN arglist PCLOSE rtndecl          # procedureHeader
+header:  G2NAME POPEN arglist PCLOSE rtndecl             # procedureHeader
         ;
 /** =============================== Statement =============================== */
 statement: COMMENT                                       # braceComment
@@ -23,9 +23,9 @@ statement: COMMENT                                       # braceComment
         | ifclause                                       # ifStatement  
         | forclause                                      # forStatement
         | RTN expr SEMI                                  # returnStatement 
-     ;
+        ;
 
-/** ============================== Expressions ============================== */
+/** ============================== Expressions ============================== */  
 expr: iexpr
     | lexpr
     | nexpr
@@ -53,9 +53,13 @@ arg: VARNAME COLON DATATYPE                              # argDeclaration
 arglist: arg                                             # firstArgInList
         | arglist COMMA arg                              # subsequentArgInList
         ;
+datatype: DATATYPE                                       # simpleDatatype
+        | CLASS G2NAME                                   # classDeclaration
+        ;
 forclause: FOR VARNAME EQU iexpr  DOWNTO iexpr BY ivalue DO statement END SEMI  # countdownFor
         ;
-ifclause: IF lexpr THEN statement                        # ifThenClause
+
+ifclause: IF lexpr THEN statement+                       # ifThenClause
         ;
 ivalue: INTEGER                                          # integerValue
         ;
@@ -65,9 +69,7 @@ lvalue: TRUE                                             # logicalTrue
 nvalue: ivalue                    
         | FLOAT
         ;
-procname: PNAME                                           # procedureName
-        ;
-rtndecl: EQU POPEN DATATYPE PCLOSE
+rtndecl: EQU POPEN datatype COMMENT? PCLOSE
         ;
 value: nvalue
         ;
@@ -78,6 +80,7 @@ LOPR: AND|OR;                               // Logical operator - must precede A
 AND:   'and';                     // Logical operator
 BY:    'by';
 BEGIN: 'begin';
+CLASS: 'class';
 DO:    'do'|'DO';
 DOWNTO:'down to';
 END:   'end';
@@ -92,7 +95,7 @@ THEN:  'then';
 COMMENT: BRACEOPEN .*? BRACECLOSE;
 INLINECOMMENT: '//' .*? '\n' ->skip;                  // Must preced OPR
 
-DATATYPE: 'float'|'integer';
+DATATYPE: 'float'|'integer'|'text'|'truth-value'|'symbol'|'Value';
 FLOAT: DASH? DIGIT+[.]DIGIT*
      | DASH? [.]DIGIT+; 
 INTEGER: DASH? DIGIT+; 
@@ -102,8 +105,8 @@ ROPR: '>='|'<='|'>'|'<';                    // Relational operators
 EQU: '=';                                   // Must follow the above
 
 
-VARNAME:  CHAR (CHAR|DIGIT)*;                          // Must precede PNAME
-PNAME:  (UNDERBAR|CHAR) (UNDERBAR|CHAR|DIGIT|DASH)+;   // Expect a dash
+VARNAME:  CHAR (CHAR|DIGIT)*;                           // Must precede G2NAME
+G2NAME:  (UNDERBAR|CHAR) (UNDERBAR|CHAR|DIGIT|DASH)+;   // Expect a dash
  
 FALSE: 'FALSE'|'False'|'false'|'none'|'NONE';
 TRUE:  'TRUE'|'True'|'true';          // Logical constant
