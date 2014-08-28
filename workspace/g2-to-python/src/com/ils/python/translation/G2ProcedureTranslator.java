@@ -153,8 +153,9 @@ public class G2ProcedureTranslator {
 				if( fname!=null ) {
 					File outFile = new File(targetDirectory+File.separator+fname+".py");
 					log.debugf("%s.createOutput: outfile = %s",TAG,outFile.getAbsolutePath());
+					
 				    try {
-				    	FileWriter writer = new FileWriter(outFile, true);
+				    	FileWriter writer = new FileWriter(outFile, false);  // Do not append
 				        PrintWriter printer = new PrintWriter(writer);
 				        printer.append(getCopyright());
 				        printer.append(getDocstring());
@@ -258,11 +259,11 @@ public class G2ProcedureTranslator {
 		log.info("======================= G2 Code ======================");
 		Object proc = pyMap.get(TranslationConstants.PY_G2_CODE);
 		if( proc==null ) proc = "<null>";
-		log.info(proc.toString());
+		log.info("\n"+proc.toString());
 		log.info("===================== Python Code =====================");
 		proc = pyMap.get(TranslationConstants.PY_MODULE_CODE);
 		if( proc==null ) proc = "<null>";
-		log.info(proc.toString());
+		log.info("\n"+proc.toString());
 		log.info("============================================================");
 		Object val = pyMap.get(TranslationConstants.PY_PACKAGE);
 		if( val==null ) val = "<null>";
