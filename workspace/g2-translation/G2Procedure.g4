@@ -10,8 +10,9 @@ procedure: header docstring? declaration* body EOF;
 /** ================== Fundamental Procedure Elements ======================= */
 body: BEGIN statement* END                               # procedureBody
         ;
-declaration: VARNAME COLON datatype SEMI                 # uninitializedVariable
-        |    VARNAME COLON datatype EQU value SEMI       # initializedVariable
+declaration: varlist COLON datatype SEMI                 # uninitializedVariable
+        |    G2NAME COLON datatype EQU value SEMI        # initializedVariable
+        |    G2NAME COLON datatype EQU THISPROC SEMI     # selfVariable
         ;
 docstring: COMMENT                                       # procedureDocstring
         ;
@@ -19,10 +20,11 @@ header:  G2NAME POPEN arglist PCLOSE rtndecl             # procedureHeader
         ;
 /** =============================== Statement =============================== */
 statement: COMMENT                                       # braceComment
-        | VARNAME EQU expr SEMI                          # assignmentStatement
+        | G2NAME EQU expr SEMI                           # assignmentStatement
         | ifclause                                       # ifStatement  
         | forclause                                      # forStatement
         | RTN expr SEMI                                  # returnStatement 
+        | BEGIN statement* END                           # beginBlock
         ;
 
 /** ============================== Expressions ============================== */  
@@ -33,11 +35,12 @@ expr: iexpr
 iexpr:  POPEN iexpr PCLOSE                                # intParentheses
       | iexpr OPR iexpr                                   # intExpressionOperator
       | ivalue                                            # intValueExpression
-      | VARNAME                                           # intVariable
+      | G2NAME                                            # intVariable
      ;
 lexpr: COMMENT lexpr                                      # leadingComment
      | POPEN lexpr PCLOSE                                 # logicalParentheses
      | lvalue                                             # logicalValue
+     | G2NAME                                             # logicalVariable
      | lexpr (LOPR|EQU|NEQU) lexpr                        # logicalOperator
      | nexpr (ROPR|EQU|NEQU) nexpr                        # relationalOperator
      ;
@@ -45,10 +48,10 @@ nexpr:  POPEN nexpr PCLOSE                                # parentheses
       | nexpr OPR nexpr                                   # expressionOperator
       | OPR nexpr                                         # negative
       | nvalue                                            # numericValue
-      | VARNAME                                           # numericVariable
+      | G2NAME                                            # numericVariable
     ;
 /** ====================== Secondary Syntax Elements ======================== */
-arg: VARNAME COLON DATATYPE                              # argDeclaration
+arg: G2NAME COLON datatype                               # argDeclaration
         ;
 arglist: arg                                             # firstArgInList
         | arglist COMMA arg                              # subsequentArgInList
@@ -56,10 +59,10 @@ arglist: arg                                             # firstArgInList
 datatype: DATATYPE                                       # simpleDatatype
         | CLASS G2NAME                                   # classDeclaration
         ;
-forclause: FOR VARNAME EQU iexpr  DOWNTO iexpr BY ivalue DO statement END SEMI  # countdownFor
+forclause: FOR G2NAME EQU iexpr DOWNTO iexpr BY ivalue DO statement END SEMI  # countdownFor
         ;
 
-ifclause: IF lexpr THEN statement+                       # ifThenClause
+ifclause: IF lexpr THEN statement                        # ifThenClause
         ;
 ivalue: INTEGER                                          # integerValue
         ;
@@ -72,6 +75,10 @@ nvalue: ivalue
 rtndecl: EQU POPEN datatype COMMENT? PCLOSE
         ;
 value: nvalue
+        | lvalue
+        ;
+varlist: G2NAME                                         # firstVarInList
+        | varlist COMMA G2NAME                          # subsequentVarInList
         ;
 
 LOPR: AND|OR;                               // Logical operator - must precede AND/OR
@@ -90,6 +97,7 @@ ONERR: 'on error';
 OR:    'or';                     // Logical operator
 RTN:   'return';
 THEN:  'then';
+THISPROC: 'this procedure';
 
 
 COMMENT: BRACEOPEN .*? BRACECLOSE;
@@ -104,9 +112,7 @@ NEQU: '/=' ;                                // Equality operator
 ROPR: '>='|'<='|'>'|'<';                    // Relational operators
 EQU: '=';                                   // Must follow the above
 
-
-VARNAME:  CHAR (CHAR|DIGIT)*;                           // Must precede G2NAME
-G2NAME:  (UNDERBAR|CHAR) (UNDERBAR|CHAR|DIGIT|DASH)+;   // Expect a dash
+G2NAME:  (UNDERBAR|CHAR) (UNDERBAR|CHAR|DIGIT|DASH)*;   // Expect a dash
  
 FALSE: 'FALSE'|'False'|'false'|'none'|'NONE';
 TRUE:  'TRUE'|'True'|'true';          // Logical constant
