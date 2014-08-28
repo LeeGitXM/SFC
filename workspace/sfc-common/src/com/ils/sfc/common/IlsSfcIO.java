@@ -69,7 +69,7 @@ public class IlsSfcIO implements IlsSfcIOIF {
 	public void sendMessage(String message, String messageType, String clientId) {
 		//ClientReqSession clientSession = gatewayContext.getGatewaySessionManager().findSession(clientId)
 		try {
-			gatewayContext.getGatewaySessionManager().sendNotification(ApplicationScope.DESIGNER, IlsSfcProperties.MODULE_ID, messageType, message);
+			gatewayContext.getGatewaySessionManager().sendNotification(ApplicationScope.ALL, IlsSfcProperties.MODULE_ID, messageType, message);
 		} catch (Exception e) {
 			logger.error("Error sending message to client " + clientId, e);
 		}
