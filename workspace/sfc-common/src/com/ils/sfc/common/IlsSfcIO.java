@@ -1,7 +1,13 @@
 package com.ils.sfc.common;
 
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.Properties;
 
+import org.python.core.PyDictionary;
+import org.python.core.PyInteger;
+import org.python.core.PyObject;
+import org.python.core.PyString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,12 +72,29 @@ public class IlsSfcIO implements IlsSfcIOIF {
 	}
 
 	@Override
-	public void sendMessage(String message, String messageType, String clientId) {
-		//ClientReqSession clientSession = gatewayContext.getGatewaySessionManager().findSession(clientId)
+	public void sendMessage(String project, String messageHandler, Map<String,?> payload, 
+		Properties filterParams) {
 		try {
-			gatewayContext.getGatewaySessionManager().sendNotification(ApplicationScope.ALL, IlsSfcProperties.MODULE_ID, messageType, message);
+			PyObject[] pyObjects = new PyObject[2 * payload.size()];
+			int index = 0;
+			for(String key: payload.keySet()) {
+				pyObjects[index++] = new PyString(key);
+				Object value = payload.get(key);
+				if(value instanceof String) {
+					pyObjects[index++] = new PyString((String)value);
+				}
+				else if(value instanceof Integer) {
+					pyObjects[index++] = new PyInteger((Integer)value);					
+				}
+				else {
+					logger.error("unknown type for message: " + value.getClass().getName());
+					index++;
+				}
+			}
+			PyDictionary pyPayload = new PyDictionary(pyObjects);
+			gatewayContext.getMessageDispatchManager().dispatch(project, messageHandler, pyPayload, filterParams);
 		} catch (Exception e) {
-			logger.error("Error sending message to client " + clientId, e);
+			logger.error("Error sending message to client", e);
 		}
 	}
 

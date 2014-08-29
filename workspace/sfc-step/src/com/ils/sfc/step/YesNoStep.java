@@ -1,13 +1,15 @@
 package com.ils.sfc.step;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ils.sfc.common.YesNoStepProperties;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
-
-import com.ils.sfc.common.IlsSfcIOIF;
 
 public class YesNoStep extends IlsAbstractChartStep implements YesNoStepProperties {
 	private static final Logger logger = LoggerFactory.getLogger(YesNoStep.class);
@@ -19,9 +21,9 @@ public class YesNoStep extends IlsAbstractChartStep implements YesNoStepProperti
 	@Override
 	protected void onStart() {
 		logger.debug("YesNoStep onStart(); message: " + getMessage());
-		String clientId = "??";
-		String messageType = "??";
-		getIO().sendMessage(getMessage(), messageType, clientId);
+		Map<String,Object> args = new HashMap<String,Object>();
+		args.put("message", "test message");
+		getIO().sendMessage("robscratch", "yesNoHandler", args, new Properties());
 	}
 
 	@Override

@@ -31,4 +31,10 @@ public class StubIlsSfcIO implements IlsSfcIOIF {
 		messagesByQueueName.put(queueName, null);		
 	}
 
+	@Override
+	public void sendMessage(String message, String messageType, String clientId) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

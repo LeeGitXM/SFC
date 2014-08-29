@@ -1,5 +1,8 @@
 package com.ils.sfc.gateway;
 
+import java.util.Properties;
+
+import org.python.core.PyDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +36,7 @@ public class IlsGatewayScripts implements IlsGatewayScriptsIF{
 	}
 
 	@Override
-	public void echoMessage(String message, String messageType, String clientId) {
-		ilsSfcIo.sendMessage(message, messageType, clientId);
+	public void echoMessage(String project, String messageHandler, PyDictionary payload) {
+		ilsSfcIo.sendMessage(project, messageHandler, payload, new Properties());
 	}
 }

@@ -1,8 +1,12 @@
 package com.ils.sfc.common;
 
+import java.util.Map;
+import java.util.Properties;
 
 /** An interface for handling all IO from ILS SFC steps. */
 public interface IlsSfcIOIF {
+	
+
 	/** The key to use to find an instance in the chart scope. */
 	static final String SCOPE_KEY = "IlsSfcIO"; 
 
@@ -17,5 +21,5 @@ public interface IlsSfcIOIF {
 	/** Clear all messages from the given queue */
 	void clearMessageQueue(String queueName);
 
-	void sendMessage(String message, String messageType, String clientId);
+	void sendMessage(String project, String messageHandler, Map<String, ?> payload, Properties filterParams);
 }
