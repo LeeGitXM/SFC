@@ -23,15 +23,16 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	private final StringBuffer buf;
 	private final HashMap<String,Object> translation;
 	private int currentIndent = 0;
-
+	private final HashMap<String,String> constantLookup;
 	/**
 	 * Constructor.
 	 * @param dict results dictionary
 	 */
-	public PythonGenerator(HashMap<String,Object> t) {
+	public PythonGenerator(HashMap<String,Object> t,HashMap<String,HashMap<String,String>> mapOfMaps) {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.buf = new StringBuffer();
 		this.translation = t;
+		constantLookup = mapOfMaps.get(TranslationConstants.MAP_CONSTANTS);
 	}
 	/**
 	 * @return the StringBuffer constructed as part of the visiting. This is the code.

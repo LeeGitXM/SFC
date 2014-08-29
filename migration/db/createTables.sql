@@ -32,3 +32,8 @@ CREATE TABLE PropertyMap(
 	Editable integer,
 	BindingType text NOT NULL
 );
+-- These are values of symbolic constants
+CREATE TABLE ConstantMap(
+   G2Name text NOT NULL,
+   Value  text NOT NULL
+);

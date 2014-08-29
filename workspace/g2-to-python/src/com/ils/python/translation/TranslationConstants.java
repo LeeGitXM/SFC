@@ -24,5 +24,8 @@ public interface TranslationConstants   {
 	public final static String ERR_MESSAGE  = "msg";       // text of error message
 	public final static String ERR_POSITION = "position";  // position in line where error occurred
 	public final static String ERR_TOKEN    = "token";     // token at which error occurred
+	
+	// These are the names of the lookup maps
+	public final static String MAP_CONSTANTS     = "constants";      // Lookup for global constants
 
 }

@@ -30,7 +30,7 @@ import com.ils.g2.procedure.G2ProcedureLexer;
 import com.ils.g2.procedure.G2ProcedureParser;
 import com.ils.python.lookup.ClassMapper;
 import com.ils.python.lookup.ProcedureMapper;
-import com.ils.python.lookup.PropertyMapper;
+import com.ils.python.lookup.ConstantMapper;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
@@ -44,7 +44,8 @@ public class G2ProcedureTranslator {
 	private final LoggerEx log;
 	private final ClassMapper classMapper;
 	private final ProcedureMapper procedureMapper;
-	private final PropertyMapper propertyMapper;
+	private final ConstantMapper constantMapper;
+	private HashMap<String,HashMap<String,String>> mapOfMaps;
 	private HashMap<String,Object> translationResults = null;
 	private String packageName = "";                  // No package by default
 	private File targetDirectory = new File(".");     // Current directory
@@ -54,7 +55,7 @@ public class G2ProcedureTranslator {
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.classMapper = new ClassMapper();
 		this.procedureMapper = new ProcedureMapper();
-		this.propertyMapper  = new PropertyMapper(); 
+		this.constantMapper  = new ConstantMapper(); 
 	}
 	public void processDatabase(String path) {
 		String connectPath = "jdbc:sqlite:"+path;
@@ -63,9 +64,7 @@ public class G2ProcedureTranslator {
 		Connection connection = null;
 		try {
 			connection = DriverManager.getConnection(connectPath);
-			classMapper.createMap(connection);
-			procedureMapper.createMap(connection);
-			propertyMapper.createMap(connection);
+			mapOfMaps.put(TranslationConstants.MAP_CONSTANTS, constantMapper.createMap(connection));
 		}
 		catch(SQLException e) {
 			// if the error message is "out of memory", 
@@ -242,7 +241,7 @@ public class G2ProcedureTranslator {
 	    parser.addErrorListener(new ProcedureErrorListener(pyMap));
 		parser.setErrorHandler(new ProcedureErrorStrategy(pyMap));
 		ParseTree tree = parser.procedure();   // Start with definition of a logical expression.
-		PythonGenerator visitor = new PythonGenerator(pyMap);
+		PythonGenerator visitor = new PythonGenerator(pyMap,mapOfMaps);
 		visitor.visit(tree);
 		StringBuffer procedure = visitor.getTranslation();  // Procedure less imports
 		pyMap.put(TranslationConstants.PY_MODULE_CODE,procedure.toString());

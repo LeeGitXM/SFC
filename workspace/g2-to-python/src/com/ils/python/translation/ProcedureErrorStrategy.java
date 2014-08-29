@@ -24,7 +24,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
  * a .
  */
 public class ProcedureErrorStrategy extends DefaultErrorStrategy {
-	private static final String TAG = "ExpressionErrorStrategy: ";
+	private static final String TAG = "ProcedureErrorStrategy: ";
 	private final LoggerEx log;
 	private final HashMap<String,Object> errorDictionary;
 	
@@ -39,7 +39,7 @@ public class ProcedureErrorStrategy extends DefaultErrorStrategy {
     @Override
     public void recover(Parser recognizer, RecognitionException e) {
     	super.recover(recognizer,e);
-    	log.trace(TAG+": RECOVER");
+    	//log.trace(TAG+": RECOVER");
     	//recordError(recognizer,e);  // Moved to reportError() override
     }
 
@@ -48,7 +48,7 @@ public class ProcedureErrorStrategy extends DefaultErrorStrategy {
      */
     @Override
     public Token recoverInline(Parser recognizer)  {
-    	log.trace(TAG+": RECOVER-INLINE");
+    	//log.tracef("%s: RECOVER-INLINE",TAG);
     	recordError(recognizer,new InputMismatchException(recognizer));
     	return super.recoverInline(recognizer);
     }
@@ -58,7 +58,7 @@ public class ProcedureErrorStrategy extends DefaultErrorStrategy {
 	 */
     @Override
     public void reportError(Parser recognizer, RecognitionException e) {
-    	log.trace(TAG+": REPORT-ERROR");
+    	//log.tracef("%s: REPORT-ERROR",TAG);
     	recordError(recognizer,e);
     }
 
@@ -72,7 +72,7 @@ public class ProcedureErrorStrategy extends DefaultErrorStrategy {
     	
     	Token offender = re.getOffendingToken();
     	if( offender != null ) {
-    		String msg = String.format("Mismatch col %d: expecting an expression, got \'%s\'",offender.getStartIndex(),offender.getText());
+    		String msg = String.format("Mismatch %d:%d: expecting an expression, got \'%s\'",offender.getLine(),offender.getCharPositionInLine(),offender.getText());
     		log.info(TAG+msg);
     		errorDictionary.put(TranslationConstants.ERR_MESSAGE, msg);
     		errorDictionary.put(TranslationConstants.ERR_LINE, Integer.toString(offender.getLine()));
