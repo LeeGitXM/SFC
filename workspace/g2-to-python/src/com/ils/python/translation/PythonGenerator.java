@@ -39,21 +39,114 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	 */
 	public StringBuffer getTranslation() { return buf; }
 	
-	// ================================= Overridden Methods =====================================
-	// In the variable list all we need is the variable name
+	// ================================= Procedure Methods =====================================
+	// The docstring is saved off separately. Written a
 	@Override 
-	public Object visitArgDeclaration(G2ProcedureParser.ArgDeclarationContext ctx) { 
-		buf.append(ctx.G2NAME().toString());
+	public Object visitProcedureDocstring(G2ProcedureParser.ProcedureDocstringContext ctx) {
+		StringBuffer doc = new StringBuffer();
+		doc.append("\n'''\n");
+		doc.append(stripBraces(ctx.COMMENT().getText()));
+		doc.append("\n'''\n");
+		translation.put(TranslationConstants.PY_DOC_STRING, doc.toString());
+		return null; 
+	}
+
+	// Create the header. All methods are "evalate".
+	@Override 
+	public Object visitProcedureHeader(G2ProcedureParser.ProcedureHeaderContext ctx) { 
+		buf.append("def evaluate(");
+		visit(ctx.arglist());
+		buf.append("):\n");
+		currentIndent = 1;
+		String name = ctx.G2NAME().getText();
+		translation.put(TranslationConstants.PY_MODULE_NAME, pythonName(name));
+		translation.put(TranslationConstants.PY_G2_PROC, name);
+
 		return null;
 	}
+	// ================================= Declaration Methods ===================================
 	@Override 
-	public Object visitAssignmentStatement(G2ProcedureParser.AssignmentStatementContext ctx) {
+	public Object visitDeclarationInitialized(G2ProcedureParser.DeclarationInitializedContext ctx) {
+		appendIndent();
+		buf.append(String.format("%s = %s\n",ctx.G2NAME().getText(),ctx.value().getText()));
+		return null; 
+	}
+	// ================================= Expression Methods ====================================
+	@Override 
+	public Object visitExprLogicalOperator(G2ProcedureParser.ExprLogicalOperatorContext ctx) {
+		visit(ctx.expr(0));
+		buf.append(String.format(" %s ",ctx.LOPR().getText().toLowerCase()));
+		visit(ctx.expr(1));
+		return null; 
+	}
+	@Override 
+	public Object visitExprOperator(G2ProcedureParser.ExprOperatorContext ctx) { 
+		visit(ctx.expr(0));
+		buf.append(String.format(" %s ",ctx.OPR().getText()));
+		visit(ctx.expr(1));
+		return null; 
+	}
+	@Override 
+	public Object visitExprParentheses(G2ProcedureParser.ExprParenthesesContext ctx) {
+		buf.append(ctx.POPEN().getText());
+		visit(ctx.expr());
+		buf.append(ctx.PCLOSE().getText());
+		return null; 
+	}
+	@Override 
+	public Object visitExprRelationalOperator(G2ProcedureParser.ExprRelationalOperatorContext ctx) { 
+		visit(ctx.expr(0));
+		if(ctx.EQU()!=null)       buf.append(" == ");
+		else if(ctx.NEQU()!=null) buf.append(" != ");
+		else if(ctx.ROPR()!=null) buf.append(String.format(" %s ",ctx.ROPR().getText()));
+		visit(ctx.expr(1));
+		return null; 
+	}
+	@Override 
+	public Object visitExprValue(G2ProcedureParser.ExprValueContext ctx) {
+		buf.append(ctx.value().getText());
+		return null; 
+	}
+	@Override 
+	public Object visitExprVariable(G2ProcedureParser.ExprVariableContext ctx) {
+		buf.append(ctx.variable().getText());
+		return null; 
+	}
+	// ================================= Statement Methods =====================================
+	@Override 
+	public Object visitStatementAssign(G2ProcedureParser.StatementAssignContext ctx) {
 		appendIndent();
 		buf.append(String.format("%s = ",ctx.G2NAME().getText()));
 		visit(ctx.expr());
 		buf.append("\n");
 		return null; 
 	}
+	@Override 
+	public Object visitStatementBlock(G2ProcedureParser.StatementBlockContext ctx) {
+		currentIndent++;
+		for(StatementContext sctx:ctx.statement()) {
+			visit(sctx);
+		}
+		currentIndent--;
+		return null; 
+	}
+	
+	@Override 
+	public Object visitStatementReturn(G2ProcedureParser.StatementReturnContext ctx) {
+		appendIndent();
+		buf.append("return ");
+		visit(ctx.expr());
+		buf.append("\n");
+		return null; 
+	}
+	// ================================= Helper Methods ========================================
+	// In the variable list all we need is the variable name
+	@Override 
+	public Object visitArgDeclaration(G2ProcedureParser.ArgDeclarationContext ctx) { 
+		buf.append(ctx.G2NAME().toString());
+		return null;
+	}
+
 	@Override 
 	public Object visitBraceComment(G2ProcedureParser.BraceCommentContext ctx) {
 		appendIndent();
@@ -62,23 +155,15 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		buf.append("\n");
 		return null; 
 	}
-	@Override 
-	public Object visitBeginBlock(G2ProcedureParser.BeginBlockContext ctx) {
-		currentIndent++;
-		for(StatementContext sctx:ctx.statement()) {
-			visit(sctx);
-		}
-		currentIndent--;
-		return null; 
-	}
+
 	// Implement a G2 for .. as a Python while ...
 	@Override 
-	public Object visitCountdownFor(G2ProcedureParser.CountdownForContext ctx) { 
-		int icount = ctx.iexpr().size();
+	public Object visitForByDecreasing(G2ProcedureParser.ForByDecreasingContext ctx) { 
+		int icount = ctx.expr().size();
 		if( icount>1) {
 			String varname = ctx.G2NAME().getText();
-			String start = ctx.iexpr(0).getText();
-			String end   = ctx.iexpr(1).getText();
+			String start = ctx.expr(0).getText();
+			String end   = ctx.expr(1).getText();
 			String decrement = ctx.ivalue().getText();
 			appendIndent();
 			buf.append(String.format("%s = %s\n",varname,start));
@@ -86,7 +171,9 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 			appendIndent();
 			buf.append(String.format("while %s >= %s:\n",varname,end));
 			currentIndent++;
-			visit(ctx.statement());
+			for(StatementContext sctx:ctx.statement()) {
+				visit(sctx);
+			}
 			appendIndent();
 			buf.append(String.format("%s = %s %s\n",varname,varname,decrement));
 			currentIndent--;
@@ -102,44 +189,14 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		return null; 
 	}
 	@Override 
-	public Object visitIfThenClause(G2ProcedureParser.IfThenClauseContext ctx) {
+	public Object visitIfSingleStatement(G2ProcedureParser.IfSingleStatementContext ctx) {
 		appendIndent();
 		buf.append("if ");
-		visit(ctx.lexpr());
+		visit(ctx.expr());
 		buf.append(":\n");
 		currentIndent++;
 		visit(ctx.statement());
 		currentIndent--;
-		return null; 
-	}
-	@Override 
-	public Object visitInitializedVariable(G2ProcedureParser.InitializedVariableContext ctx) {
-		appendIndent();
-		buf.append(String.format("%s = %s\n",ctx.G2NAME().getText(),ctx.value().getText()));
-		return null; 
-	}
-	@Override 
-	public Object visitIntegerValue(G2ProcedureParser.IntegerValueContext ctx) {
-		buf.append(ctx.INTEGER().getText());
-		return null; 
-	}
-	@Override 
-	public Object visitIntExpressionOperator(G2ProcedureParser.IntExpressionOperatorContext ctx) { 
-		visit(ctx.iexpr(0));
-		buf.append(String.format(" %s ",ctx.OPR().getText()));
-		visit(ctx.iexpr(1));
-		return null; 
-	}
-	@Override 
-	public Object visitIntParentheses(G2ProcedureParser.IntParenthesesContext ctx) {
-		buf.append(ctx.POPEN().getText());
-		visit(ctx.iexpr());
-		buf.append(ctx.PCLOSE().getText());
-		return null; 
-	}
-	@Override 
-	public Object visitIntVariable(G2ProcedureParser.IntVariableContext ctx) {
-		buf.append(ctx.G2NAME().getText());
 		return null; 
 	}
 	@Override
@@ -147,69 +204,14 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		buf.append("False"); 
 		return null; 
 	}
-	@Override 
-	public Object visitLogicalOperator(G2ProcedureParser.LogicalOperatorContext ctx) {
-		visit(ctx.lexpr(0));
-		buf.append(String.format(" %s ",ctx.LOPR().getText().toLowerCase()));
-		visit(ctx.lexpr(1));
-		return null; 
-	}
+
 	@Override
 	public Object visitLogicalTrue(G2ProcedureParser.LogicalTrueContext ctx) { 
 		buf.append("True"); 
 		return null; 
 	}
-	@Override 
-	public Object visitNumericValue(G2ProcedureParser.NumericValueContext ctx) {
-		buf.append(ctx.nvalue().getText());
-		return null; 
-	}
-	@Override 
-	public Object visitNumericVariable(G2ProcedureParser.NumericVariableContext ctx) {
-		buf.append(ctx.G2NAME().getText());
-		return null; 
-	}
-	// The docstring is saved off separately. Written a
-	@Override 
-	public Object visitProcedureDocstring(G2ProcedureParser.ProcedureDocstringContext ctx) {
-		StringBuffer doc = new StringBuffer();
-		doc.append("\n'''\n");
-		doc.append(stripBraces(ctx.COMMENT().getText()));
-		doc.append("\n'''\n");
-		translation.put(TranslationConstants.PY_DOC_STRING, doc.toString());
-		return null; 
-	}
-	
-	// Create the header. All methods are "evalate".
-	@Override 
-	public Object visitProcedureHeader(G2ProcedureParser.ProcedureHeaderContext ctx) { 
-		buf.append("def evaluate(");
-		visit(ctx.arglist());
-		buf.append("):\n");
-		currentIndent = 1;
-		String name = ctx.G2NAME().getText();
-		translation.put(TranslationConstants.PY_MODULE_NAME, pythonName(name));
-		translation.put(TranslationConstants.PY_G2_PROC, name);
-		
-		return null;
-	}
-	@Override 
-	public Object visitRelationalOperator(G2ProcedureParser.RelationalOperatorContext ctx) { 
-		visit(ctx.nexpr(0));
-		if(ctx.EQU()!=null)       buf.append(" == ");
-		else if(ctx.NEQU()!=null) buf.append(" != ");
-		else if(ctx.ROPR()!=null) buf.append(String.format(" %s ",ctx.ROPR().getText()));
-		visit(ctx.nexpr(1));
-		return null; 
-	}
-	@Override 
-	public Object visitReturnStatement(G2ProcedureParser.ReturnStatementContext ctx) {
-		appendIndent();
-		buf.append("return ");
-		visit(ctx.expr());
-		buf.append("\n");
-		return null; 
-	}
+
+
 	@Override 
 	public Object visitSubsequentArgInList(G2ProcedureParser.SubsequentArgInListContext ctx) { 
 		buf.append(ctx.COMMA().getText());

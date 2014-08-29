@@ -29,8 +29,8 @@ import org.sqlite.JDBC;
 import com.ils.g2.procedure.G2ProcedureLexer;
 import com.ils.g2.procedure.G2ProcedureParser;
 import com.ils.python.lookup.ClassMapper;
-import com.ils.python.lookup.ProcedureMapper;
 import com.ils.python.lookup.ConstantMapper;
+import com.ils.python.lookup.ProcedureMapper;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 

@@ -10,10 +10,10 @@ procedure: header docstring? declaration* body EOF;
 /** ================== Fundamental Procedure Elements ======================= */
 body: BEGIN statement* END                               # procedureBody
         ;
-declaration: varlist COLON datatype SEMI                 # uninitializedVariable
-        |    G2NAME COLON datatype EQU value SEMI        # initializedVariable
-        |    G2NAME COLON datatype EQU cagetter SEMI     # initializedByMember
-        |    G2NAME COLON datatype EQU THISPROC SEMI     # selfVariable
+declaration: varlist COLON datatype SEMI                 # declarationUninitialized
+        |    G2NAME COLON datatype EQU value SEMI        # declarationInitialized
+        |    G2NAME COLON datatype EQU cagetter SEMI     # declarationInitializedByMember
+        |    G2NAME COLON datatype EQU THISPROC SEMI     # declarationeSelf
         |    COMMENT                                     # braceCommentInDeclaration
         ;
 docstring: COMMENT                                       # procedureDocstring
@@ -28,7 +28,7 @@ statement: COMMENT                                       # braceComment
         | forclause                                      # statementFor
         | RTN expr SEMI                                  # statementReturn 
         | BEGIN statement* END SEMI                      # statementBlock
-        | varlist EQU CALL G2NAME POPEN exprlist? PCLOSE SEMI   # statementCallWithReturn
+        | varlist EQU CALL G2NAME POPEN exprlist? PCLOSE SEMI    # statementCallWithReturn
         | CALL G2NAME POPEN exprlist? PCLOSE SEMI        # statementCall
         | CHANGE casetter TO cagetter SEMI               # statementChange
         | CREATE G2NAME G2NAME SEMI                      # statementCreate
@@ -67,12 +67,13 @@ casetter: THE G2NAME OF G2NAME                           # classAttributeSetter
         ; 
 datatype: DATATYPE                                       # simpleDatatype
         | CLASS G2NAME                                   # classDatatype
-        | SYMBOL                                         # symbolDatatype
+        | (SEQUENCE|STRUCTURE|SYMBOL)                    # symbolDatatype
         ;
 exprlist: expr                                           # firstExpressionInList
         | exprlist COMMA expr                            # subsequentExpressionInList
         ;
-fnclause: variable EQU G2NAME POPEN exprlist? PCLOSE     # functionClause
+fnclause: variable EQU (SEQUENCE|STRUCTURE) POPEN PCLOSE # sequenceClause
+        | variable EQU G2NAME POPEN exprlist? PCLOSE     # functionClause
         ;
 forclause: FOR G2NAME EQU expr DOWNTO expr BY ivalue DO statement+ END SEMI  # forByDecreasing
         | FOR G2NAME EQU expr TO expr DO statement+ END SEMI                 # forLoop
@@ -148,7 +149,9 @@ WAITFOR: 'wait for';
 COMMENT: BRACEOPEN .*? BRACECLOSE;
 INLINECOMMENT: '//' .*? '\n' ->skip;                  // Must preced OPR
 
-DATATYPE: 'float'|'integer'|'quantity'|'sequence'|'structure'|'text'|'truth-value'|'Value';  // Also SYMBOL
+DATATYPE: 'float'|'integer'|'quantity'|'text'|'truth-value'|'Value';  // Also SEQUENCE,STRUCTURE,SYMBOL
+SEQUENCE: 'sequence';
+STRUCTURE:'structure';
 SYMBOL: 'symbol';
 FLOAT: DASH? DIGIT+[.]DIGIT*
      | DASH? [.]DIGIT+; 
