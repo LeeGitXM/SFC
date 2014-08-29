@@ -2,6 +2,7 @@ package com.ils.sfc.client;
 
 import com.ils.sfc.common.IlsGatewayScriptsIF;
 import com.ils.sfc.common.IlsSfcProperties;
+import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
 import com.inductiveautomation.ignition.client.gateway_interface.ModuleRPCFactory;
 import com.inductiveautomation.ignition.client.model.ClientContext;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
@@ -17,6 +18,8 @@ public class IlsSfcClientHook extends AbstractClientModuleHook {
         //ClientStepRegistry.getInstance(context).register(ClearQueueStepUI.FACTORY);
         //ClientStepRegistry.getInstance(context).register(SetQueueStepUI.FACTORY);
         //ClientStepRegistry.getInstance(context).register(ShowQueueStepUI.FACTORY);
+    	IlsSfcClientContext.getInstance().setClientContext(context);
+    	GatewayConnectionManager.getInstance().addPushNotificationListener(IlsSfcClientContext.getInstance());
     }
 
     @Override
