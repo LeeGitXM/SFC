@@ -5,19 +5,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Create a map of G2 globals (e.g. symbols) to their values
  */
 public class ConstantMapper {
 	private final String TAG = "ConstantMapper";
-	private final Map<String,String> constantMap;     // Lookup by G2 property name
 	/** 
 	 * Constructor: 
 	 */
 	public ConstantMapper() {
-		constantMap = new HashMap<String,String>();
 	}
 
 	/**
@@ -29,7 +26,7 @@ public class ConstantMapper {
 	public HashMap<String,String> createMap(Connection cxn) {
 		// Read the database to create the map.
 		ResultSet rs = null;
-		HashMap<String,String> constantMap = new HashMap<String,String>();
+		HashMap<String,String> constantMap = new HashMap<>();
 		try {
 			Statement statement = cxn.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.

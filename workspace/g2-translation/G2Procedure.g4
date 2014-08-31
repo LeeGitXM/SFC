@@ -5,7 +5,7 @@
 
 grammar G2Procedure;
 /** Initial rule, begin parsing */
-procedure: header docstring? declaration* body EOF;
+procedure: header docstring? declaration* body COMMENT* onerror? EOF;
 
 /** ================== Fundamental Procedure Elements ======================= */
 body: BEGIN statement* END                               # procedureBody
@@ -18,28 +18,35 @@ declaration: varlist COLON datatype SEMI                 # declarationUninitiali
         ;
 docstring: COMMENT                                       # procedureDocstring
         ;
-header:  G2NAME POPEN arglist PCLOSE rtndecl             # procedureHeader
+onerror:  ONERR POPEN G2NAME PCLOSE statement+ END SEMI COMMENT?  # procedureOnError
+        ;  
+header:  G2NAME POPEN arglist PCLOSE rtndecl?            # procedureHeader
         ;
 /** =============================== Statement =============================== */
-statement: COMMENT                                       # braceComment
-        | fnclause SEMI                                  # statementFunction
-        | G2NAME EQU expr SEMI                           # statementAssign
+statement: sfragment SEMI COMMENT*                       # statementRoot
+         ;                    
+
+sfragment: COMMENT sfragment                             # blockComment
+        | G2NAME EQU expr                                # statementAssign
+        | fnclause                                       # statementFunction
+        | switchclause                                   # statementCase 
         | ifclause                                       # statementIf  
         | forclause                                      # statementFor
-        | RTN expr SEMI                                  # statementReturn 
-        | BEGIN statement* END SEMI                      # statementBlock
-        | varlist EQU CALL G2NAME POPEN exprlist? PCLOSE SEMI    # statementCallWithReturn
-        | CALL G2NAME POPEN exprlist? PCLOSE SEMI        # statementCall
-        | CHANGE casetter TO cagetter SEMI               # statementChange
-        | CREATE G2NAME G2NAME SEMI                      # statementCreate
-        | COLLECT POPEN TIMINGOUT expr PCLOSE statement+ END SEMI # statementCollectData
-        | CONCLUDE (casetter|variable) EQU expr SEMI     # statementConclusion
-        | DELETE variable SEMI                           # statementDelete
-        | EXITIF expr SEMI                               # statementExitIf  
-        | POST STRING SEMI                               # statementPost
-        | REPEAT statement* END SEMI                     # statementRepeat
-        | START G2NAME POPEN exprlist? PCLOSE SEMI       # statementStart
-        | WAITFOR variable SEMI                          # statementWait
+        | RTN expr?                                      # statementReturn 
+        | BEGIN statement+ END blockerr?                 # statementBlock
+        | varlist EQU CALL G2NAME POPEN exprlist? PCLOSE # statementCallWithReturn
+        | CALL G2NAME POPEN exprlist? PCLOSE             # statementCall
+        | CHANGE casetter TO cagetter                    # statementChange
+        | CREATE G2NAME G2NAME                           # statementCreate
+        | COLLECT POPEN TIMINGOUT expr PCLOSE statement+ END  # statementCollectData
+        | CONCLUDE (casetter|variable) EQU expr           # statementConclusion
+        | DELETE variable                                 # statementDelete
+        | EXITIF expr                                     # statementExitIf  
+        | POST STRING                                     # statementPost
+        | REPEAT statement* END                           # statementRepeat
+        | START G2NAME POPEN exprlist? PCLOSE             # statementStart
+        | WAITFOR variable                                # statementWait
+        | WAITFOR INTEGER TIMEUNIT                        # statementWaitUnit
         ;
 
 /** ============================== Expressions ============================== */  
@@ -61,6 +68,8 @@ arg: G2NAME COLON datatype                               # argDeclaration
 arglist: arg                                             # firstArgInList
         | arglist COMMA arg                              # subsequentArgInList
         ;
+blockerr:  ONERR POPEN G2NAME PCLOSE statement+ END      # blockErrorClause
+        ;
 cagetter: THE G2NAME OF G2NAME                           # classAttributeGetter
         ;   
 casetter: THE G2NAME OF G2NAME                           # classAttributeSetter
@@ -75,31 +84,40 @@ exprlist: expr                                           # firstExpressionInList
 fnclause: variable EQU (SEQUENCE|STRUCTURE) POPEN PCLOSE # sequenceClause
         | variable EQU G2NAME POPEN exprlist? PCLOSE     # functionClause
         ;
-forclause: FOR G2NAME EQU expr DOWNTO expr BY ivalue DO statement+ END SEMI  # forByDecreasing
-        | FOR G2NAME EQU expr TO expr DO statement+ END SEMI                 # forLoop
+forclause: FOR G2NAME EQU expr DOWNTO expr BY ivalue DO statement+ END  # forByDecreasing
+        | FOR G2NAME EQU expr TO expr DO statement+ END                 # forLoop
         ;
 
-ifclause: IF expr THEN statement                                            # ifSingleStatement
-        | IF expr THEN BEGIN statement END elseifclause* elseclause? SEMI    # ifWithClauses
+ifclause: IF expr THEN sfragment elseifclause* elseclause?    # ifWithClauses
         ;
-elseifclause: ELSE IF expr THEN BEGIN statement+ END                        # ifElseIfClause
+elseifclause: ELSE IF expr THEN sfragment                     # ifElseIfClause
         ;
-elseclause: ELSE BEGIN statement+ END                             # ifElseClause
+elseclause: ELSE sfragment                                    # ifElseClause
         ;
-ivalue: INTEGER                                          # integerValue
+ivalue: INTEGER
         ;
-lvalue: TRUE                                             # logicalTrue
-        | FALSE                                          # logicalFalse
+lvalue: TRUE                                                 # logicalTrue
+        | FALSE                                              # logicalFalse
         ;
 nvalue: ivalue                    
         | FLOAT
-        ;
+        ; 
 rtndecl: EQU POPEN datatype COMMENT? PCLOSE
+        ;
+switchclause: CASE POPEN G2NAME PCLOSE OF COMMENT* switchcase+ COMMENT* otherwisecase? END  # caseRoot
+        ;
+switchcase: vallist COLON COMMENT* statement                           # caseClause
+        ;
+otherwisecase: OTHERWISE COLON statement                               # caseOtherwise
         ;
 value: nvalue
         | lvalue
         | STRING
         | THE SYMBOL G2NAME
+        | G2NAME BOPEN INTEGER BCLOSE
+        ;
+vallist: value                                         # firstValInList
+        | vallist COMMA value                          # subsequentValInList
         ;
 variable: G2NAME
         | G2NAME BOPEN expr BCLOSE 
@@ -109,13 +127,14 @@ varlist: variable                                         # firstVarInList
         ;
 
 LOPR: AND|OR;                               // Logical operator - must precede AND/OR
-SINGLEARGFN: 'abs'|'not';
+SINGLEARGFN: 'abs'|'log'|'not';
 
 /* ------------------- Keywords ------------------- */
 AND:   'and';                     // Logical operator
 BY:    'by';
 BEGIN: 'begin';
 CALL:  'call';
+CASE:  'case';
 CHANGE: 'change';
 CLASS: 'class';
 COLLECT: 'collect data';
@@ -134,6 +153,7 @@ NAMED: 'named';
 OF:    'of'; 
 ONERR: 'on error';
 OR:    'or';                     // Logical operator
+OTHERWISE:'otherwise'|'Otherwise';
 POST:  'post';
 REPEAT: 'repeat';
 RTN:   'return';
@@ -162,6 +182,7 @@ ROPR: '>='|'<='|'>'|'<';                    // Relational operators
 EQU: '=';                                   // Must follow the above
 FALSE: 'FALSE'|'False'|'false'|'none'|'NONE';
 TRUE:  'TRUE'|'True'|'true';          // Logical constant
+TIMEUNIT: 'minutes'|'seconds';
 // NOTE: Must appear after any keyword definitions.
 G2NAME:  (UNDERBAR|CHAR) (UNDERBAR|CHAR|DIGIT|DASH)*;   // Expect a dash
 STRING: QUOTE .*? QUOTE;

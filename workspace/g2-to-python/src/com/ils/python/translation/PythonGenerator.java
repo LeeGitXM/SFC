@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import com.ils.g2.procedure.G2ProcedureBaseVisitor;
 import com.ils.g2.procedure.G2ProcedureParser;
+import com.ils.g2.procedure.G2ProcedureParser.ElseifclauseContext;
 import com.ils.g2.procedure.G2ProcedureParser.StatementContext;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -75,7 +76,12 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	@Override 
 	public Object visitExprLogicalOperator(G2ProcedureParser.ExprLogicalOperatorContext ctx) {
 		visit(ctx.expr(0));
-		buf.append(String.format(" %s ",ctx.LOPR().getText().toLowerCase()));
+		String opr = "";
+		if( ctx.LOPR()!=null )     opr = ctx.LOPR().getText().toLowerCase();
+		else if(ctx.EQU()!=null)   opr = "==";
+		else if(ctx.NEQU()!=null)  opr = "!=";
+		
+		buf.append(String.format(" %s ",opr));
 		visit(ctx.expr(1));
 		return null; 
 	}
@@ -148,11 +154,12 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	}
 
 	@Override 
-	public Object visitBraceComment(G2ProcedureParser.BraceCommentContext ctx) {
+	public Object visitBlockComment(G2ProcedureParser.BlockCommentContext ctx) {
 		appendIndent();
 		buf.append("# ");
 		buf.append(stripBraces(ctx.COMMENT().getText()));
 		buf.append("\n");
+		visit(ctx.sfragment());    // The rest of the statement fragment
 		return null; 
 	}
 
@@ -189,14 +196,18 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		return null; 
 	}
 	@Override 
-	public Object visitIfSingleStatement(G2ProcedureParser.IfSingleStatementContext ctx) {
+	public Object visitIfWithClauses(G2ProcedureParser.IfWithClausesContext ctx) {
 		appendIndent();
 		buf.append("if ");
 		visit(ctx.expr());
 		buf.append(":\n");
 		currentIndent++;
-		visit(ctx.statement());
+		visit(ctx.sfragment());
 		currentIndent--;
+		for(ElseifclauseContext eicc:ctx.elseifclause()) {
+			visit(eicc);
+		}
+		if(ctx.elseclause()!=null) visit(ctx.elseclause());
 		return null; 
 	}
 	@Override

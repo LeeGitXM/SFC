@@ -56,6 +56,7 @@ public class G2ProcedureTranslator {
 		this.classMapper = new ClassMapper();
 		this.procedureMapper = new ProcedureMapper();
 		this.constantMapper  = new ConstantMapper(); 
+		this.mapOfMaps = new HashMap<>();
 	}
 	public void processDatabase(String path) {
 		String connectPath = "jdbc:sqlite:"+path;
@@ -106,8 +107,8 @@ public class G2ProcedureTranslator {
 		try {
 			translationResults = translateProcedure(input.toString(),packageName);
 		}
-		catch(Exception ex) {
-			System.err.println(String.format("%s: Parsing exception (%s)",TAG,ex.getMessage()));;
+		catch(IOException ioe) {
+			System.err.println(String.format("%s: Parsing exception (%s)",TAG,ioe.getMessage()));;
 		}
 	}
 	
@@ -223,7 +224,7 @@ public class G2ProcedureTranslator {
 	 * @param packageName a Python package for procedure references
 	 * @return a map containing the translated procedure and other ancillary information
 	 */
-	private HashMap<String,Object> translateProcedure(String proc, String packageName) throws Exception {
+	private HashMap<String,Object> translateProcedure(String proc, String packageName) throws IOException {
 		HashMap<String,Object> pyMap = new HashMap<String,Object>();
 		
 		// Convert the input expression to a stream
