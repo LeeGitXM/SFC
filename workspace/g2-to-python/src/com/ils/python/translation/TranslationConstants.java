@@ -27,5 +27,6 @@ public interface TranslationConstants   {
 	
 	// These are the names of the lookup maps
 	public final static String MAP_CONSTANTS     = "constants";      // Lookup for global constants
+	public final static String MAP_IMPORTS       = "imports";        // Collect import reqts as we parse
 
 }

@@ -13,7 +13,7 @@ body: BEGIN statement* END                               # procedureBody
 declaration: varlist COLON datatype SEMI                 # declarationUninitialized
         |    G2NAME COLON datatype EQU value SEMI        # declarationInitialized
         |    G2NAME COLON datatype EQU cagetter SEMI     # declarationInitializedByMember
-        |    G2NAME COLON datatype EQU THISPROC SEMI     # declarationeSelf
+        |    G2NAME COLON datatype EQU THISPROC SEMI     # declarationSelf
         |    COMMENT                                     # braceCommentInDeclaration
         ;
 docstring: COMMENT                                       # procedureDocstring
@@ -57,7 +57,7 @@ expr:  POPEN expr PCLOSE                                # exprParentheses
       | value                                           # exprValue
       | variable                                        # exprVariable
       | THE G2NAME OF G2NAME                            # exprClassMember
-      | CALL POPEN exprlist? PCLOSE                     # exprCall
+      | CALL G2NAME POPEN exprlist? PCLOSE              # exprCall
       | expr (LOPR|EQU|NEQU) expr                       # exprLogicalOperator
       | expr (ROPR|EQU|NEQU) expr                       # exprRelationalOperator
      ;

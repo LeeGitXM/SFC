@@ -66,6 +66,7 @@ public class G2ProcedureTranslator {
 		try {
 			connection = DriverManager.getConnection(connectPath);
 			mapOfMaps.put(TranslationConstants.MAP_CONSTANTS, constantMapper.createMap(connection));
+			mapOfMaps.put(TranslationConstants.MAP_IMPORTS, new HashMap<String,String>());
 		}
 		catch(SQLException e) {
 			// if the error message is "out of memory", 
@@ -129,21 +130,21 @@ public class G2ProcedureTranslator {
 					(line==null?"":"line:"+String.valueOf(line.intValue())),
 					(pos==null?"":":"+String.valueOf(pos.intValue())),
 					(tkn==null?"":" at:"+tkn));
-			System.err.println(msg);
+			log.errorf(msg);
 		}
 		else {
 			// Make sure that output directories exist.
 			// To start with, the target output must exist
 			if( targetDirectory.isDirectory() ) {
-				String[] pathSegments = packageName.split(".");
-				String target = targetDirectory.getAbsolutePath();
+				String[] pathSegments = packageName.split("[.]");
+				String targetPath = targetDirectory.getAbsolutePath();
 				for(String seg:pathSegments) {
-					String next = target+File.separator+seg;
-					targetDirectory = new File(next);
+					targetPath = targetPath+File.separator+seg;
+					targetDirectory = new File(targetPath);
 					if( !targetDirectory.exists() ) {
 						if( !targetDirectory.mkdir() ) {
-							String msg = String.format("%s: ERROR: Failed to create output directory %s ",TAG,next);
-							System.err.println(msg);
+							String msg = String.format("%s: ERROR: Failed to create output directory %s ",TAG,targetPath);
+							log.errorf(msg);
 							return;       // Can't do anything more
 						}
 					}
@@ -151,8 +152,8 @@ public class G2ProcedureTranslator {
 				// Target directory is ready
 				String fname = (String)translationResults.get(TranslationConstants.PY_MODULE_NAME);
 				if( fname!=null ) {
-					File outFile = new File(targetDirectory+File.separator+fname+".py");
-					log.debugf("%s.createOutput: outfile = %s",TAG,outFile.getAbsolutePath());
+					File outFile = new File(targetPath+File.separator+fname+".py");
+					log.infof("%s.createOutput: outfile = %s",TAG,outFile.getAbsolutePath());
 					
 				    try {
 				    	FileWriter writer = new FileWriter(outFile, false);  // Do not append
@@ -165,19 +166,19 @@ public class G2ProcedureTranslator {
 				    } 
 				    catch (IOException ioe) {
 				    	String msg = String.format("%s: ERROR: Writing to %s (%s)",TAG,outFile.getAbsolutePath(),ioe.getLocalizedMessage());
-						System.err.println(msg); 
+						log.errorf(msg); 
 				    }
 				}
 				else {
 					String msg = String.format("%s: ERROR: Parse failed to find a procedure name",TAG);
-					System.err.println(msg);
+					log.errorf(msg);
 				}
 				
 			}
 			else {
 				String msg = String.format("%s: ERROR: Target directory %s does not exist",TAG,
 						targetDirectory.getAbsolutePath());
-				System.err.println(msg);
+				log.errorf(msg);
 			}
 		}	
 	}
