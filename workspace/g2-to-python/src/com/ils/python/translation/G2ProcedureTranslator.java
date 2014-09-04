@@ -199,11 +199,19 @@ public class G2ProcedureTranslator {
 	}
 	private String getImports() {
 		Map<String,String> imports = mapOfMaps.get(TranslationConstants.PY_IMPORTS);
+		String defaultPackage = (String)translationResults.get(TranslationConstants.PY_PACKAGE);
 		StringBuffer result = new StringBuffer();
 		if( imports!=null ) {
-			for(String imp:imports.values()) {
-				result.append(imp);
-				result.append("\n");
+			for(String key:imports.keySet()) {
+				String imp = imports.get(key);
+				if( imp.length()>0) {
+					result.append(imp);
+					result.append("\n");
+				}
+				else {
+					// Create the import from the default package
+					result.append(String.format("from %s import %s\n",defaultPackage,key));
+				}
 			}
 		}
 		return result.toString();
@@ -271,9 +279,8 @@ public class G2ProcedureTranslator {
 		Map<String,String> imports = mapOfMaps.get(TranslationConstants.PY_IMPORTS);
 		StringBuffer result = new StringBuffer();
 		if( imports!=null ) {
-			for(String imp:imports.values()) {
-				result.append(imp);
-				result.append("\n");
+			for(String imp:imports.keySet()) {
+				log.info(imp);
 			}
 		}
 		log.info("============================================================");

@@ -5,10 +5,13 @@ package com.ils.python.translation;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.antlr.v4.runtime.tree.ParseTree;
 
 import com.ils.g2.procedure.G2ProcedureBaseVisitor;
 import com.ils.g2.procedure.G2ProcedureParser;
@@ -31,6 +34,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	private final Map<String,String> constantLookup;
 	private final Map<String,String> importLookup;
 	private final Map<String,String> procedureLookup;
+	private final Map<String,String> variableClassMap;
 	private int currentIndent = 0;
 	private String errorArgument = null;    // Name of exception in current error clause (g2Name)
 	private String selfArgument = null;     // Name of the first argument
@@ -49,6 +53,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		constantLookup = mapOfMaps.get(TranslationConstants.MAP_CONSTANTS);
 		importLookup = mapOfMaps.get(TranslationConstants.MAP_IMPORTS);
 		procedureLookup = mapOfMaps.get(TranslationConstants.MAP_PROCEDURES);
+		variableClassMap = new HashMap<String,String>();
 		
 		generalArgPattern = Pattern.compile("\\[[A-Za-z0-9-_ \t]+\\]");
 		singleVariablePattern = Pattern.compile("\\[[A-Za-z0-9-_]+\\]");
@@ -87,8 +92,9 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	// ================================= Declaration Methods ===================================
 	@Override 
 	public Object visitDeclarationInitialized(G2ProcedureParser.DeclarationInitializedContext ctx) {
-		appendIndent(1);      // Declarations always indented 1
+		appendIndent(1);          // Declarations always indented 1
 		buf.append(String.format("%s = %s\n",pythonName(ctx.G2NAME().getText(),false),ctx.value().getText()));
+		visit(ctx.datatype());    // For side effects only
 		return null; 
 	}
 	@Override 
@@ -98,6 +104,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		buf.append(String.format("%s = ",varname));
 		visit(ctx.cagetter());
 		buf.append("\n");
+		visit(ctx.datatype());       // For side effects only.
 		return null; 
 	}
 	@Override public Object visitDeclarationSelf(G2ProcedureParser.DeclarationSelfContext ctx) {
@@ -112,10 +119,12 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		String procName = ctx.G2NAME().getText();
 		String pyName = procedureLookup.get(procName);
 		if( pyName!=null ) {
-			buf.append(pyName);
+			String moduleName = getModuleName(pyName);
+			buf.append(moduleName);
 			buf.append(ctx.POPEN().getText());
 			visit(ctx.exprlist());
 			buf.append(ctx.PCLOSE().getText());
+			importLookup.put(moduleName,String.format("from %s import %s",getPackageName(pyName),moduleName));
 		}
 		else {
 			recordError("No python equivalent defined for "+procName,"call", "after" );
@@ -125,9 +134,10 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	@Override 
 	public Object visitExprClassMember(G2ProcedureParser.ExprClassMemberContext ctx) {
 		// In this context, we have a setter
-		String member = ctx.G2NAME(0).getText();
-		String clss = ctx.G2NAME(1).getText();
-		buf.append(String.format(" %s.get%s()",pythonName(clss,false),pythonName(member,true)));
+		String property = pythonName(ctx.G2NAME(0).getText(),true);
+		String clss = pythonName(ctx.G2NAME(1).getText(),false);
+		buf.append(String.format("get%s(%s)",property,clss));
+		importLookup.put("get"+property, "");
 		return null; 
 	}
 	@Override 
@@ -166,11 +176,10 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		visit(ctx.expr(1));
 		return null; 
 	}
+	// This is really a no-op
 	@Override 
 	public Object visitExprValue(G2ProcedureParser.ExprValueContext ctx) {
-		String val = ctx.value().getText();
-		//log.infof("ExprValue: %s", val);
-		buf.append(val);
+		visit(ctx.value());
 		return null; 
 	}
 	@Override 
@@ -206,12 +215,28 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		return null; 
 	}
 	@Override 
+	public Object visitStatementCallWithReturn(G2ProcedureParser.StatementCallWithReturnContext ctx) { 
+		visit(ctx.varlist());
+		buf.append("=");
+		String procName = ctx.G2NAME().getText();
+		String pyName = procedureLookup.get(procName);
+		if( pyName!=null ) {
+			String moduleName = getModuleName(pyName);
+			buf.append(moduleName);
+			buf.append(ctx.POPEN().getText());
+			visit(ctx.exprlist());
+			buf.append(ctx.PCLOSE().getText());
+			importLookup.put(moduleName,String.format("from %s import %s",getPackageName(pyName),moduleName));
+		}
+		else {
+			recordError("No python equivalent defined for "+procName,"call", "after" );
+		}
+		return null; 
+	}
+	@Override 
 	public Object visitStatementConclusion(G2ProcedureParser.StatementConclusionContext ctx) {
-		appendIndent(currentIndent);
 		if( ctx.casetter() !=null ) {
-			buf.append("CONCLUDE-SETTER");
-			visit(ctx.casetter());     // Does not include the argument
-			buf.append("(");
+			visit(ctx.casetter());     // Does not include the argument, nor closing parend
 			visit(ctx.expr());
 			buf.append(")");
 		}
@@ -277,6 +302,24 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		buf.append(ctx.BCLOSE().getText());
 		return null; 
 	}
+	// This is a pass-thru
+	@Override 
+	public Object visitValueLogical(G2ProcedureParser.ValueLogicalContext ctx) { 
+		visit(ctx.lvalue());
+		return null; 
+	}
+	@Override 
+	public Object visitValueNumeric(G2ProcedureParser.ValueNumericContext ctx) { 
+		buf.append(ctx.nvalue().getText());
+		return null; 
+	}
+	@Override
+	public String visitValueString(G2ProcedureParser.ValueStringContext ctx) { 
+		String text = ctx.STRING().getText();
+		text = extractActiveElementsForLogging(text);
+		buf.append(text);
+		return null; 
+	}
 	@Override 
 	public Object visitValueSymbol(G2ProcedureParser.ValueSymbolContext ctx) { 
 		buf.append("\"");
@@ -285,10 +328,12 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		return null;
 	}
 	// ================================= Helper Methods ========================================
-	// In the variable list all we need is the variable name
+	// In the variable list all we need is the variable name.
+	// We also map variable names to class.
 	@Override 
 	public Object visitArgDeclaration(G2ProcedureParser.ArgDeclarationContext ctx) { 
 		buf.append(pythonName(ctx.G2NAME().toString(),false));
+		visit(ctx.datatype());  // For side effects only
 		return null;
 	}
 
@@ -319,8 +364,9 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	public Object visitClassAttributeGetter(G2ProcedureParser.ClassAttributeGetterContext ctx) {
 		if( ctx.G2NAME().size() > 1 ) {
 			String property = pythonName(ctx.G2NAME(0).getText(),true);
-			String instanceVariable = pythonName(ctx.G2NAME(1).getText(),false);
-			buf.append(String.format("%s.get%s()", instanceVariable,property));
+			String instance = pythonName(ctx.G2NAME(1).getText(),false);
+			buf.append(String.format("get%s(%s)", property,instance));
+			importLookup.put("get"+property, "");
 		}
 		else {
 			recordError("Incorrect classs getter syntax",ctx.start.getText(),"following");
@@ -328,18 +374,31 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		return null; 
 	}
 	// Implement as a setter method.  Alternatively we can use a procedure setter
-	// dot notation.  "The property of instance"
+	// dot notation.  "The property of instance" 
+	// WARNING: Needs insertion of arguments and a final end parenthesis.
 	@Override 
 	public Object visitClassAttributeSetter(G2ProcedureParser.ClassAttributeSetterContext ctx) {
 		if( ctx.G2NAME().size() > 1 ) {
 			String property = pythonName(ctx.G2NAME(0).getText(),true);
-			String instanceVariable = pythonName(ctx.G2NAME(1).getText(),false);
-			buf.append(String.format("%s.set%s()", instanceVariable,property));
+			String instance = pythonName(ctx.G2NAME(1).getText(),false);
+			buf.append(String.format("set%s(%s,", property,instance));
+			importLookup.put("set"+property,"");
 		}
 		else {
 			recordError("Incorrect classs setter syntax",ctx.start.getText(),"following");
 		}
 		return null; 
+	}
+	// This endpoint exists only for the purposes of generating a map of variables to their
+	// respective class. These are stored in the variableClassMap in non-G2 form
+	@Override 
+	public Object visitClassDatatype(G2ProcedureParser.ClassDatatypeContext ctx) { 
+		String className = ctx.G2NAME().getText();
+		// Take the G2NAME arg of the first child of the parent as the local name
+		log.infof("PARENT class = %s",ctx.getParent().getClass().getName());
+		ParseTree child = ctx.getParent().getChild(0);
+		log.infof("CHILD local variable = %s",child.getText());
+		return null;
 	}
 	// Implement a G2 for .. as a Python while ... The first line is already indented.
 	@Override 
@@ -410,11 +469,31 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 
 	@Override 
 	public Object visitSubsequentArgInList(G2ProcedureParser.SubsequentArgInListContext ctx) { 
+		visit(ctx.arglist());
 		buf.append(ctx.COMMA().getText());
 		visit(ctx.arg());
 		return null;
 	}
-
+	@Override 
+	public Object visitSubsequentExpressionInList(G2ProcedureParser.SubsequentExpressionInListContext ctx) {
+		visit(ctx.exprlist());
+		buf.append(ctx.COMMA().getText());
+		visit(ctx.expr());
+		return null;
+	}
+	@Override
+	public Object visitSubsequentVarInList(G2ProcedureParser.SubsequentVarInListContext ctx) { 
+		visit(ctx.varlist());
+		buf.append(ctx.COMMA().getText());
+		visit(ctx.variable());
+		return null; 
+	}
+	@Override 
+	public Object visitVariableNamed(G2ProcedureParser.VariableNamedContext ctx) {
+		String var = ctx.G2NAME().getText();
+		buf.append(pythonName(var,false));
+		return null; 
+	}
 	// ================================= End Overridden Methods =====================================
 	
 	private void recordError(String text,String context, String verb ) {
@@ -475,7 +554,29 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		
 		return result;
 	}
-	
+	/**
+	 * Given the full path name of a Python module, return the module name.
+	 * @param s the module
+	 * @return the package
+	 */
+	private String getModuleName(String s) {
+		String[] components = s.split("[.]");
+		return components[components.length-1];
+	}
+	/**
+	 * Given a the name of a full Python module, return the package.
+	 * @param s the module
+	 * @return the package
+	 */
+	private String getPackageName(String s) {
+		int pos = s.lastIndexOf(".");
+		if( pos>0) {
+			return s.substring(0, pos);
+		}
+		else {
+			return s;
+		}
+	}
 	/**
 	 * Convert a G2 name into a camelCase name for use in Python
 	 * @param name
@@ -534,7 +635,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		StringBuffer sb = new StringBuffer();
 		while (matcher.find()) {
 			String element = matcher.group();
-			log.infof("FOUND AN ARG: %s", element);
+			//log.infof("FOUND AN ARG: %s", element);
 			element = pythonName(element,false);
 			args.add(element);
 			matcher.appendReplacement(sb,"%s");
@@ -542,22 +643,32 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		matcher.appendTail(sb);
 		// We now have the main string with %s substitutions.
 		// Now we need to convert the arguments
-
-		matcher = memberValuePattern.matcher(sb.toString());
-		sb = new StringBuffer();
-		while (matcher.find()) {
-			String element = matcher.group();
-			element = stripBrackets(element);
-			log.infof("GOT A MEMBER MATCH: %s:%s:%s", element,matcher.group(1),matcher.group(2));
-			element = pythonName(element,false);
-			args.add(element);
-			matcher.appendReplacement(sb,"%s");
-		}
-		matcher.appendTail(sb);
 		for(String arg:args) {
-			sb.append(",str(");
-			sb.append(arg);
-			sb.append(")");
+			// The arg is a complete match of the pattern, including brackets
+			// Try the member value first, it seems to be most common
+			matcher = memberValuePattern.matcher(arg);
+			if(matcher.matches()) {
+				String member = matcher.group(1);
+				member = pythonName(member,true);
+				String instance = matcher.group(2);
+				instance = pythonName(instance,false);
+				sb.append(String.format(",get%s(%s).toString()",member,instance));
+				importLookup.put("get"+member, "");
+			}
+			else {
+				matcher = singleVariablePattern.matcher(arg);
+				if(matcher.matches()) {
+					arg = matcher.group();
+					arg = stripBrackets(arg);
+					arg = pythonName(arg,false);
+					sb.append(String.format(",%s.toString()",arg));
+				}
+				else {
+					// In desparation, we just add the contents as a string
+					arg = stripBrackets(arg);
+					sb.append(String.format(",\"%s\"",arg));
+				}
+			}
 		}
 		return sb.toString();
 	}

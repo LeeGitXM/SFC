@@ -10,7 +10,7 @@ procedure: header docstring? declaration* block EOF;
 /** ================== Fundamental Procedure Elements ======================= */
 block: BEGIN statement+ END COMMENT* blockerr?           # statementBlock
         ;
-declaration: varlist COLON datatype SEMI                 # declarationUninitialized
+declaration: declist COLON datatype SEMI                 # declarationUninitialized
         |    G2NAME COLON datatype EQU value SEMI        # declarationInitialized
         |    G2NAME COLON datatype EQU cagetter SEMI     # declarationInitializedByMember
         |    G2NAME COLON datatype EQU THISPROC SEMI     # declarationSelf
@@ -18,8 +18,7 @@ declaration: varlist COLON datatype SEMI                 # declarationUninitiali
         ;
 docstring: COMMENT                                       # procedureDocstring
         ;
-onerror:  ONERR POPEN G2NAME PCLOSE statement+ END SEMI COMMENT?  # procedureOnError
-        ;  
+ 
 header:  G2NAME POPEN arglist PCLOSE rtndecl?            # procedureHeader
         ;
 /** =============================== Statement =============================== */
@@ -78,6 +77,9 @@ datatype: DATATYPE                                       # simpleDatatype
         | CLASS G2NAME                                   # classDatatype
         | (SEQUENCE|STRUCTURE|SYMBOL)                    # symbolDatatype
         ;
+declist: G2NAME                                        
+        | declist COMMA G2NAME                         
+        ;
 exprlist: expr                                           # firstExpressionInList
         | exprlist COMMA expr                            # subsequentExpressionInList
         ;
@@ -119,8 +121,8 @@ value: nvalue                                         # valueNumeric
 vallist: value                                        # firstValInList
         | vallist COMMA value                         # subsequentValInList
         ;
-variable: G2NAME
-        | G2NAME BOPEN expr BCLOSE 
+variable: G2NAME                                      # variableNamed
+        | G2NAME BOPEN expr BCLOSE                    # variableFunction
         ;    
 varlist: variable                                         # firstVarInList
         | varlist COMMA variable                          # subsequentVarInList
