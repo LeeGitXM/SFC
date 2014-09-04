@@ -5,10 +5,10 @@
 
 grammar G2Procedure;
 /** Initial rule, begin parsing */
-procedure: header docstring? declaration* body COMMENT* onerror? EOF;
+procedure: header docstring? declaration* block EOF;
 
 /** ================== Fundamental Procedure Elements ======================= */
-body: BEGIN statement* END                               # procedureBody
+block: BEGIN statement+ END COMMENT* blockerr?           # statementBlock
         ;
 declaration: varlist COLON datatype SEMI                 # declarationUninitialized
         |    G2NAME COLON datatype EQU value SEMI        # declarationInitialized
@@ -27,13 +27,13 @@ statement: sfragment SEMI COMMENT*                       # statementRoot
          ;                    
 
 sfragment: COMMENT sfragment                             # blockComment
+        | block                                          # blockFragement
         | G2NAME EQU expr                                # statementAssign
         | fnclause                                       # statementFunction
         | switchclause                                   # statementCase 
         | ifclause                                       # statementIf  
         | forclause                                      # statementFor
         | RTN expr?                                      # statementReturn 
-        | BEGIN statement+ END blockerr?                 # statementBlock
         | varlist EQU CALL G2NAME POPEN exprlist? PCLOSE # statementCallWithReturn
         | CALL G2NAME POPEN exprlist? PCLOSE             # statementCall
         | CHANGE casetter TO cagetter                    # statementChange
@@ -110,14 +110,14 @@ switchcase: vallist COLON COMMENT* statement                           # caseCla
         ;
 otherwisecase: OTHERWISE COLON statement                               # caseOtherwise
         ;
-value: nvalue
-        | lvalue
-        | STRING
-        | THE SYMBOL G2NAME
-        | G2NAME BOPEN INTEGER BCLOSE
+value: nvalue                                         # valueNumeric
+        | lvalue                                      # valueLogical
+        | STRING                                      # valueString
+        | THE SYMBOL G2NAME                           # valueSymbol
+        | G2NAME BOPEN INTEGER BCLOSE                 # valueArray
         ;
-vallist: value                                         # firstValInList
-        | vallist COMMA value                          # subsequentValInList
+vallist: value                                        # firstValInList
+        | vallist COMMA value                         # subsequentValInList
         ;
 variable: G2NAME
         | G2NAME BOPEN expr BCLOSE 

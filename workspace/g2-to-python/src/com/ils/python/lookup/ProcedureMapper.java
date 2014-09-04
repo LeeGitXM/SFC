@@ -7,38 +7,41 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
+
 /**
  * Convert a G2 classname into a BLT classname
  */
 public class ProcedureMapper {
 	private static final String TAG = "ProcedureMapper";
-	private static final String UNDEFINED_NAME = "UNDEFINED";
-	private final Map<String,String> procedureMap;     // Lookup by G2 classname
+	private final LoggerEx log;
 	/** 
 	 * Constructor: 
 	 */
 	public ProcedureMapper() {
-		procedureMap = new HashMap<String,String>();
+		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
-	
 	
 	/**
 	 * Perform a database lookup to create a map of G2
 	 * block names to Ignition blocks.
 	 * @param cxn open database connection
 	 */
-	public void createMap(Connection cxn) {
+	public Map<String,String> createMap(Connection cxn) {
+		Map<String,String> procedureMap = new HashMap<>();
 		ResultSet rs = null;
 		try {
 			Statement statement = cxn.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
-			
+			log.infof("ProcedureMapper: selecting ...");
 			rs = statement.executeQuery("select * from ProcedureMap");
 			while(rs.next())
 			{
 				String g2 = rs.getString("G2Procedure");
 				String ignition = rs.getString("IgnitionProcedure");
 				procedureMap.put(g2, ignition);
+				log.infof("ProcedureMapper: add %s = %s",g2,ignition);
 			}
 			rs.close();
 		}
@@ -52,25 +55,6 @@ public class ProcedureMapper {
 				try { rs.close(); } catch(SQLException ignore) {}
 			}
 		}
+		return procedureMap;
 	}
-	
-	/**
-	 * Use our map to get the Ignition class name. Set the discovered
-	 * name in the ignition block object. On error, print a warning
-	 * message and insert a default class name. (This allows us to
-	 * continue processing and collect all the errors at once).
-	 * 
-	 * @param g2proc incoming G2 procedure name
-	 * @return Ignition equivalent
-	 */
-	public String getProcedureName(String g2Proc) {
-		String pname = procedureMap.get(g2Proc);
-		if( pname==null) {
-			pname = UNDEFINED_NAME;
-			System.err.println(TAG+".getProcedureName: "+g2Proc+" has no Ignition equivalent");
-		}
-		return pname;
-	}
-	
-	
 }

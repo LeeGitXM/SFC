@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Create a map of G2 globals (e.g. symbols) to their values
@@ -23,7 +24,7 @@ public class ConstantMapper {
 	 * 
 	 * @param cxn open database connection
 	 */
-	public HashMap<String,String> createMap(Connection cxn) {
+	public Map<String,String> createMap(Connection cxn) {
 		// Read the database to create the map.
 		ResultSet rs = null;
 		HashMap<String,String> constantMap = new HashMap<>();

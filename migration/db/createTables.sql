@@ -37,3 +37,9 @@ CREATE TABLE ConstantMap(
    G2Name text NOT NULL,
    Value  text NOT NULL
 );
+-- These are values of globals
+-- by the procedures that need them.
+CREATE TABLE GlobalMap(
+   PyProc      text NOT NULL,
+   GlobalName  text NOT NULL
+);

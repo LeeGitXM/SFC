@@ -14,7 +14,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -30,6 +30,7 @@ import com.ils.g2.procedure.G2ProcedureLexer;
 import com.ils.g2.procedure.G2ProcedureParser;
 import com.ils.python.lookup.ClassMapper;
 import com.ils.python.lookup.ConstantMapper;
+import com.ils.python.lookup.GlobalMapper;
 import com.ils.python.lookup.ProcedureMapper;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -43,10 +44,11 @@ public class G2ProcedureTranslator {
 	private final static JDBC driver = new JDBC(); // Force driver to be loaded
 	private final LoggerEx log;
 	private final ClassMapper classMapper;
-	private final ProcedureMapper procedureMapper;
 	private final ConstantMapper constantMapper;
-	private HashMap<String,HashMap<String,String>> mapOfMaps;
-	private HashMap<String,Object> translationResults = null;
+	private final GlobalMapper globalMapper;
+	private final ProcedureMapper procedureMapper;
+	private Map<String,Map<String,String>> mapOfMaps;
+	private Map<String,Object> translationResults = null;
 	private String packageName = "";                  // No package by default
 	private File targetDirectory = new File(".");     // Current directory
 	
@@ -54,8 +56,9 @@ public class G2ProcedureTranslator {
 	public G2ProcedureTranslator() {
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.classMapper = new ClassMapper();
-		this.procedureMapper = new ProcedureMapper();
 		this.constantMapper  = new ConstantMapper(); 
+		this.globalMapper = new GlobalMapper();
+		this.procedureMapper = new ProcedureMapper();
 		this.mapOfMaps = new HashMap<>();
 	}
 	public void processDatabase(String path) {
@@ -67,6 +70,7 @@ public class G2ProcedureTranslator {
 			connection = DriverManager.getConnection(connectPath);
 			mapOfMaps.put(TranslationConstants.MAP_CONSTANTS, constantMapper.createMap(connection));
 			mapOfMaps.put(TranslationConstants.MAP_IMPORTS, new HashMap<String,String>());
+			mapOfMaps.put(TranslationConstants.MAP_PROCEDURES, procedureMapper.createMap(connection));
 		}
 		catch(SQLException e) {
 			// if the error message is "out of memory", 
@@ -114,7 +118,7 @@ public class G2ProcedureTranslator {
 	}
 	
 	/**
-	 * Write the translated code to std out
+	 * Write the translated code to std out. All of the TranslationConstants are strings
 	 */
 	public void createOutput() {
 		if( translationResults==null) return;      // Message printed with exception.
@@ -122,13 +126,13 @@ public class G2ProcedureTranslator {
 		// Check for errors. If any, these go on std error.
 		String errmsg = (String)translationResults.get(TranslationConstants.ERR_MESSAGE);
 		if( errmsg!=null ) {
-			Integer line = (Integer)translationResults.get(TranslationConstants.ERR_LINE);
-			Integer pos = (Integer)translationResults.get(TranslationConstants.ERR_POSITION);
+			String line = (String)translationResults.get(TranslationConstants.ERR_LINE);
+			String pos = (String)translationResults.get(TranslationConstants.ERR_POSITION);
 			String tkn = (String)translationResults.get(TranslationConstants.ERR_TOKEN);
 			
 			String msg = String.format("%s: ERROR: %s, %s%s%s",TAG,errmsg,
-					(line==null?"":"line:"+String.valueOf(line.intValue())),
-					(pos==null?"":":"+String.valueOf(pos.intValue())),
+					(line==null?"":"line:"+line),
+					(pos==null?"":":"+pos),
 					(tkn==null?"":" at:"+tkn));
 			log.errorf(msg);
 		}
@@ -194,11 +198,10 @@ public class G2ProcedureTranslator {
 		return "# Copyright 2014 ILS Automation. All rights reserved.\n";
 	}
 	private String getImports() {
-		@SuppressWarnings("unchecked")
-		List<String> imports = (List<String>)translationResults.get(TranslationConstants.PY_IMPORTS);
+		Map<String,String> imports = mapOfMaps.get(TranslationConstants.PY_IMPORTS);
 		StringBuffer result = new StringBuffer();
 		if( imports!=null ) {
-			for(String imp:imports) {
+			for(String imp:imports.values()) {
 				result.append(imp);
 				result.append("\n");
 			}
@@ -229,7 +232,6 @@ public class G2ProcedureTranslator {
 		HashMap<String,Object> pyMap = new HashMap<String,Object>();
 		
 		// Convert the input expression to a stream
-		log.tracef("%s.translateProcedure: Parsing:\n%s",TAG,proc);
 		pyMap.put(TranslationConstants.PY_G2_CODE, proc);
 		pyMap.put(TranslationConstants.PY_PACKAGE, packageName);
 		ByteArrayInputStream bais = new ByteArrayInputStream(proc.getBytes());
@@ -265,6 +267,15 @@ public class G2ProcedureTranslator {
 		proc = pyMap.get(TranslationConstants.PY_MODULE_CODE);
 		if( proc==null ) proc = "<null>";
 		log.info("\n"+proc.toString());
+		log.info("===================== Imports =====================");
+		Map<String,String> imports = mapOfMaps.get(TranslationConstants.PY_IMPORTS);
+		StringBuffer result = new StringBuffer();
+		if( imports!=null ) {
+			for(String imp:imports.values()) {
+				result.append(imp);
+				result.append("\n");
+			}
+		}
 		log.info("============================================================");
 		Object val = pyMap.get(TranslationConstants.PY_PACKAGE);
 		if( val==null ) val = "<null>";
