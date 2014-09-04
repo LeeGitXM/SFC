@@ -32,9 +32,12 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	private final Map<String,String> importLookup;
 	private final Map<String,String> procedureLookup;
 	private int currentIndent = 0;
+	private String errorArgument = null;    // Name of exception in current error clause (g2Name)
 	private String selfArgument = null;     // Name of the first argument
 	private String selfEquivalent = null;	// Argument used for "this procedure".
+	private final Pattern generalArgPattern;
 	private final Pattern singleVariablePattern;
+	private final Pattern memberValuePattern;
 	/**
 	 * Constructor.
 	 * @param dict results dictionary
@@ -47,7 +50,9 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		importLookup = mapOfMaps.get(TranslationConstants.MAP_IMPORTS);
 		procedureLookup = mapOfMaps.get(TranslationConstants.MAP_PROCEDURES);
 		
-		singleVariablePattern = Pattern.compile("\\[[A-Za-z0-9-_]\\]");
+		generalArgPattern = Pattern.compile("\\[[A-Za-z0-9-_ \t]+\\]");
+		singleVariablePattern = Pattern.compile("\\[[A-Za-z0-9-_]+\\]");
+		memberValuePattern = Pattern.compile("\\[\\s*the\\s*([A-Za-z0-9-_]+)\\s*of\\s*([A-Za-z0-9-_]+)\\]");
 	}
 	/**
 	 * @return the StringBuffer constructed as part of the visiting. This is the code.
@@ -84,6 +89,15 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	public Object visitDeclarationInitialized(G2ProcedureParser.DeclarationInitializedContext ctx) {
 		appendIndent(1);      // Declarations always indented 1
 		buf.append(String.format("%s = %s\n",pythonName(ctx.G2NAME().getText(),false),ctx.value().getText()));
+		return null; 
+	}
+	@Override 
+	public Object visitDeclarationInitializedByMember(G2ProcedureParser.DeclarationInitializedByMemberContext ctx) {
+		appendIndent(1);      // Declarations always indented 1
+		String varname= pythonName(ctx.G2NAME().getText(),false);
+		buf.append(String.format("%s = ",varname));
+		visit(ctx.cagetter());
+		buf.append("\n");
 		return null; 
 	}
 	@Override public Object visitDeclarationSelf(G2ProcedureParser.DeclarationSelfContext ctx) {
@@ -221,7 +235,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		importLookup.put("LoggerEx","from com.inductiveautomation.ignition.common.util import LoggerEx");
 		buf.append("log = LogUtil.getLogger(\""+LOG_PACKAGE+"\")\n");
 		String raw = ctx.STRING().getText();
-		String expanded = insertActiveElements(raw);
+		String expanded = extractActiveElementsForLogging(raw);
 		appendIndent(currentIndent);
 		buf.append("log.infof("+expanded+")\n");
 		return null;
@@ -287,7 +301,46 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		visit(ctx.sfragment());    // The rest of the statement fragment
 		return null; 
 	}
-
+	@Override 
+	public Object visitBlockErrorClause(G2ProcedureParser.BlockErrorClauseContext ctx) { 
+		appendIndent(currentIndent); 
+		buf.append("except:\n");
+		currentIndent++;
+		for(StatementContext sctx:ctx.statement()) {
+			visit(sctx);
+		}
+		currentIndent--;
+		return null;
+	}
+	
+	// Implement as a getter method.  Alternatively we can use a procedure getter
+	// dot notation.  "The property of instance"
+	@Override 
+	public Object visitClassAttributeGetter(G2ProcedureParser.ClassAttributeGetterContext ctx) {
+		if( ctx.G2NAME().size() > 1 ) {
+			String property = pythonName(ctx.G2NAME(0).getText(),true);
+			String instanceVariable = pythonName(ctx.G2NAME(1).getText(),false);
+			buf.append(String.format("%s.get%s()", instanceVariable,property));
+		}
+		else {
+			recordError("Incorrect classs getter syntax",ctx.start.getText(),"following");
+		}
+		return null; 
+	}
+	// Implement as a setter method.  Alternatively we can use a procedure setter
+	// dot notation.  "The property of instance"
+	@Override 
+	public Object visitClassAttributeSetter(G2ProcedureParser.ClassAttributeSetterContext ctx) {
+		if( ctx.G2NAME().size() > 1 ) {
+			String property = pythonName(ctx.G2NAME(0).getText(),true);
+			String instanceVariable = pythonName(ctx.G2NAME(1).getText(),false);
+			buf.append(String.format("%s.set%s()", instanceVariable,property));
+		}
+		else {
+			recordError("Incorrect classs setter syntax",ctx.start.getText(),"following");
+		}
+		return null; 
+	}
 	// Implement a G2 for .. as a Python while ... The first line is already indented.
 	@Override 
 	public Object visitForByDecreasing(G2ProcedureParser.ForByDecreasingContext ctx) { 
@@ -471,21 +524,36 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		}
 	}
 	// Use regular expressions to analyze string. Make appropriate
-	// substitutions, add quotes around fixed strings.
-	private String insertActiveElements(String input) {
+	// substitutions, add quotes around fixed strings. The resulting
+	// string is appropriate for the logging function.
+	private String extractActiveElementsForLogging(String input) {
 		List<String> args = new ArrayList<>();
+		log.infof("extractActiveElementsForLogging: string is %s", input);
+		// Order is important, so our initial pass is with the general pattern matcher.
+		Matcher matcher = generalArgPattern.matcher(input);
 		StringBuffer sb = new StringBuffer();
-		log.infof("insertActiveElements: string is %s", input);
-		Matcher matcher = singleVariablePattern.matcher(input);
 		while (matcher.find()) {
 			String element = matcher.group();
-			log.infof("GOT A MATCH: %s", element);
+			log.infof("FOUND AN ARG: %s", element);
 			element = pythonName(element,false);
 			args.add(element);
 			matcher.appendReplacement(sb,"%s");
 		}
 		matcher.appendTail(sb);
+		// We now have the main string with %s substitutions.
+		// Now we need to convert the arguments
 
+		matcher = memberValuePattern.matcher(sb.toString());
+		sb = new StringBuffer();
+		while (matcher.find()) {
+			String element = matcher.group();
+			element = stripBrackets(element);
+			log.infof("GOT A MEMBER MATCH: %s:%s:%s", element,matcher.group(1),matcher.group(2));
+			element = pythonName(element,false);
+			args.add(element);
+			matcher.appendReplacement(sb,"%s");
+		}
+		matcher.appendTail(sb);
 		for(String arg:args) {
 			sb.append(",str(");
 			sb.append(arg);
