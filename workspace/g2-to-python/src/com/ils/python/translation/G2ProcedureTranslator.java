@@ -68,6 +68,7 @@ public class G2ProcedureTranslator {
 		Connection connection = null;
 		try {
 			connection = DriverManager.getConnection(connectPath);
+			mapOfMaps.put(TranslationConstants.MAP_CLASSES, classMapper.createMap(connection));
 			mapOfMaps.put(TranslationConstants.MAP_CONSTANTS, constantMapper.createMap(connection));
 			mapOfMaps.put(TranslationConstants.MAP_IMPORTS, new HashMap<String,String>());
 			mapOfMaps.put(TranslationConstants.MAP_PROCEDURES, procedureMapper.createMap(connection));

@@ -26,9 +26,10 @@ public interface TranslationConstants   {
 	public final static String ERR_TOKEN    = "token";     // token at which error occurred
 	
 	// These are the names of the lookup maps
+	public final static String MAP_CLASSES       = "classes";        // Map of G2-to-Python classes
 	public final static String MAP_CONSTANTS     = "constants";      // Lookup for global constants
 	public final static String MAP_GLOBALS       = "globals";        // Unresolved globals by procedure
 	public final static String MAP_IMPORTS       = "imports";        // Collect imports as we parse
-	public final static String MAP_PROCEDURES    = "procedures";     // Map of G2 to python names
+	public final static String MAP_PROCEDURES    = "procedures";     // G2-to-python procedure/method names
 
 }

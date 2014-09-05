@@ -22,11 +22,10 @@ docstring: COMMENT                                       # procedureDocstring
 header:  G2NAME POPEN arglist PCLOSE rtndecl?            # procedureHeader
         ;
 /** =============================== Statement =============================== */
-statement: sfragment SEMI COMMENT*                       # statementRoot
+statement: (sfragment|block) SEMI COMMENT*               # statementRoot
          ;                    
 
 sfragment: COMMENT sfragment                             # blockComment
-        | block                                          # blockFragement
         | G2NAME EQU expr                                # statementAssign
         | fnclause                                       # statementFunction
         | switchclause                                   # statementCase 
@@ -90,11 +89,11 @@ forclause: FOR G2NAME EQU expr DOWNTO expr BY ivalue DO statement+ END  # forByD
         | FOR G2NAME EQU expr TO expr DO statement+ END                 # forLoop
         ;
 
-ifclause: IF expr THEN sfragment elseifclause* elseclause?    # ifWithClauses
+ifclause: IF expr THEN (sfragment|block) elseifclause* elseclause? # ifWithClauses
         ;
-elseifclause: ELSE IF expr THEN sfragment                     # ifElseIfClause
+elseifclause: ELSE IF expr THEN (sfragment|block)                  # ifElseIfClause
         ;
-elseclause: ELSE sfragment                                    # ifElseClause
+elseclause: ELSE (sfragment|block)                                 # ifElseClause
         ;
 ivalue: INTEGER
         ;
@@ -110,7 +109,7 @@ switchclause: CASE POPEN G2NAME PCLOSE OF COMMENT* switchcase+ COMMENT* otherwis
         ;
 switchcase: vallist COLON COMMENT* statement                           # caseClause
         ;
-otherwisecase: OTHERWISE COLON statement                               # caseOtherwise
+otherwisecase: OTHERWISE COLON statement               # caseOtherwise
         ;
 value: nvalue                                         # valueNumeric
         | lvalue                                      # valueLogical

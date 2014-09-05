@@ -12,13 +12,10 @@ import java.util.Map;
  */
 public class ClassMapper {
 	private static final String TAG = "ClassMapper";
-	private static final String UNDEFINED_NAME = "UNDEFINED";
-	private final Map<String,String> classMap;     // Lookup by G2 classname
 	/** 
 	 * Constructor: 
 	 */
 	public ClassMapper() {
-		classMap = new HashMap<String,String>();
 	}
 	
 	
@@ -27,8 +24,9 @@ public class ClassMapper {
 	 * block names to Ignition blocks.
 	 * @param cxn open database connection
 	 */
-	public void createMap(Connection cxn) {
+	public Map<String,String> createMap(Connection cxn) {
 		ResultSet rs = null;
+		HashMap<String,String> classMap = new HashMap<>();
 		try {
 			Statement statement = cxn.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
@@ -52,24 +50,6 @@ public class ClassMapper {
 				try { rs.close(); } catch(SQLException ignore) {}
 			}
 		}
+		return classMap;
 	}
-	
-	/**
-	 * Use our map to get the Ignition class name. On error, print a warning
-	 * message and insert a default class name. (This allows us to
-	 * continue processing and collect all the errors at once).
-	 * 
-	 * @param g2Name incoming G2 block
-	 * @return Ignition python equivalent
-	 */
-	public String getClassName(String g2Name) {
-		String cname = classMap.get(g2Name);
-		if( cname==null) {
-			cname = UNDEFINED_NAME;
-			System.err.println(TAG+".getClassName: "+g2Name+" has no Ignition equivalent");
-		}
-		return cname;
-	}
-	
-	
 }

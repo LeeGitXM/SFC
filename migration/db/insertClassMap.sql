@@ -1,1 +1,2 @@
-insert into ClassMap values ('EM-GDA-BAD-DATA-HANDLER','com.ils.block.DataConditioner');
+insert into ClassMap values ('quantity-array','list');
+insert into ClassMap values ('s88-recipe-entity','com.inductiveautomation.sfc.api.ChartStep');
