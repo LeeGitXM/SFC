@@ -34,7 +34,7 @@ sfragment: COMMENT sfragment                             # blockComment
         | RTN expr?                                      # statementReturn 
         | varlist EQU CALL G2NAME POPEN exprlist? PCLOSE # statementCallWithReturn
         | CALL G2NAME POPEN exprlist? PCLOSE             # statementCall
-        | CHANGE casetter TO cagetter                    # statementChange
+        | CHANGE casetter TO (cagetter|expr)             # statementChange
         | CREATE G2NAME G2NAME                           # statementCreate
         | COLLECT POPEN TIMINGOUT expr PCLOSE statement+ END  # statementCollectData
         | CONCLUDE (casetter|variable) EQU expr           # statementConclusion
@@ -121,7 +121,7 @@ vallist: value                                        # firstValInList
         | vallist COMMA value                         # subsequentValInList
         ;
 variable: G2NAME                                      # variableNamed
-        | G2NAME BOPEN expr BCLOSE                    # variableFunction
+        | G2NAME BOPEN expr BCLOSE                    # variableArray
         ;    
 varlist: variable                                         # firstVarInList
         | varlist COMMA variable                          # subsequentVarInList

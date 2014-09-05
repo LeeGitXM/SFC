@@ -72,7 +72,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	public Object visitProcedureDocstring(G2ProcedureParser.ProcedureDocstringContext ctx) {
 		StringBuffer doc = new StringBuffer();
 		doc.append("\n'''\n");
-		doc.append(stripBraces(ctx.COMMENT().getText()));
+		doc.append(stripBraces(removeNewlines(ctx.COMMENT().getText())));
 		doc.append("\n'''\n");
 		translation.put(TranslationConstants.PY_DOC_STRING, doc.toString());
 		return null; 
@@ -141,7 +141,6 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		String property = ctx.G2NAME(0).getText();
 		String clss = ctx.G2NAME(1).getText();
 		buf.append(createGetterCall(property,clss));
-		importLookup.put("get"+property, "");
 		return null; 
 	}
 	@Override 
@@ -255,6 +254,14 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		return null; 
 	}
 	@Override 
+	public Object visitStatementChange(G2ProcedureParser.StatementChangeContext ctx) { 
+		visit(ctx.casetter());
+		if( ctx.cagetter()!=null)   visit(ctx.cagetter());
+		else if(ctx.expr()!=null)   visit(ctx.expr());
+		buf.append(")");
+		return null; 
+	}
+	@Override 
 	public Object visitStatementConclusion(G2ProcedureParser.StatementConclusionContext ctx) {
 		if( ctx.casetter() !=null ) {
 			visit(ctx.casetter());     // Does not include the argument, nor closing parend
@@ -262,8 +269,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 			buf.append(")");
 		}
 		else if(ctx.variable()!=null   ) { 
-			buf.append("CONCLUDE VAR=");
-			visit(ctx.variable());
+			visit(ctx.variable());   
 			buf.append("=");
 			visit(ctx.expr());
 		}
@@ -279,7 +285,14 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		buf.append("pass;  # Delete is not necessary in python");
 		return null; 
 	}
-
+	// This is meant for breaking out of a loop ...
+	@Override 
+	public Object visitStatementExitIf(G2ProcedureParser.StatementExitIfContext ctx) { 
+		buf.append("if ");
+		visit(ctx.expr());
+		buf.append(": break\n");
+		return null; 
+	}
 	@Override 
 	public Object visitStatementPost(G2ProcedureParser.StatementPostContext ctx) 
 	{ 
@@ -291,6 +304,16 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		appendIndent(currentIndent);
 		buf.append("log.infof("+expanded+")\n");
 		return null;
+	}
+	@Override
+	public Object visitStatementRepeat(G2ProcedureParser.StatementRepeatContext ctx) { 
+		buf.append("while True:\n");
+		currentIndent++;
+		for(StatementContext sctx:ctx.statement()) {
+			visit(sctx);
+		}
+		currentIndent--;
+		return null; 
 	}
 	@Override 
 	public Object visitStatementReturn(G2ProcedureParser.StatementReturnContext ctx) {
@@ -318,10 +341,36 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		while( index<count) {
 			appendIndent(currentIndent);
 			buf.append("# ");
-			buf.append(stripBraces(ctx.COMMENT(index).getText()));
+			buf.append(stripBraces(removeNewlines(ctx.COMMENT(index).getText())));
 			buf.append("\n");
 			index++;
 		}	
+		return null; 
+	}
+	@Override 
+	public Object visitStatementStart(G2ProcedureParser.StatementStartContext ctx) { 
+		String procName = ctx.G2NAME().getText();
+		String pyName = procedureLookup.get(procName);
+		if( pyName!=null ) {
+			String moduleName = getModuleName(pyName);
+			buf.append("system.util.invokeAsynchronous(");
+			buf.append(moduleName);
+			buf.append(ctx.POPEN().getText());
+			visit(ctx.exprlist());
+			buf.append(ctx.PCLOSE().getText());
+			importLookup.put(moduleName,String.format("from %s import %s",getPackageName(pyName),moduleName));
+		}
+		else {
+			recordError("No python equivalent defined for "+procName,"call", "after" );
+		}
+		return null; 
+	}
+	@Override 
+	public Object visitStatementWait(G2ProcedureParser.StatementWaitContext ctx) { 
+		importLookup.put("time", "time");
+		buf.append("time.sleep(");
+		visit(ctx.variable());
+		buf.append(")");
 		return null; 
 	}
 	// ==================================== Value Methods ======================================
@@ -374,7 +423,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	public Object visitBlockComment(G2ProcedureParser.BlockCommentContext ctx) {
 		appendIndent(currentIndent);
 		buf.append("# ");
-		buf.append(stripBraces(ctx.COMMENT().getText()));
+		buf.append(stripBraces(removeNewlines(ctx.COMMENT().getText())));
 		buf.append("\n");
 		visit(ctx.sfragment());    // The rest of the statement fragment
 		return null; 
@@ -427,8 +476,10 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		log.infof("ClassDatatype: PARENT class = %s",ctx.getParent().getClass().getName());
 		ParseTree child = ctx.getParent().getChild(0);
 		log.infof("ClassDatatype: CHILD local variable = %s",child.getText());
-		String local = child.getText();
-		variableClassMap.put(local, className);
+		String[] locals = child.getText().split(",");
+		for( String local:locals) {
+			variableClassMap.put(local, className);
+		}
 		return null;
 	}
 	// Implement a G2 for .. as a Python while ... The first line is already indented.
@@ -466,6 +517,42 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		if( pos>0 ) name = name.substring(0, pos);
 		selfArgument = name;
 		return null; 
+	}
+	@Override 
+	public Object visitIfElseClause(G2ProcedureParser.IfElseClauseContext ctx) { 
+		appendIndent(currentIndent);
+		buf.append("else:\n");
+		currentIndent++;
+		// Since this is a fragment, we need to supply indent (unless it's a block)
+		if( ctx.sfragment()!=null) {
+			appendIndent(currentIndent);
+			visit(ctx.sfragment());
+			buf.append("\n");
+		}
+		else if(ctx.block()!=null ) {
+			visit(ctx.block());
+		}
+		currentIndent--;
+		return null; 
+	}
+	@Override 
+	public Object visitIfElseIfClause(G2ProcedureParser.IfElseIfClauseContext ctx) {
+		appendIndent(currentIndent);
+		buf.append("elif ");
+		visit(ctx.expr());
+		buf.append(":\n");
+		currentIndent++;
+		// Since this is a fragment, we need to supply indent (unless it's a block)
+		if( ctx.sfragment()!=null) {
+			appendIndent(currentIndent);
+			visit(ctx.sfragment());
+			buf.append("\n");
+		}
+		else if(ctx.block()!=null ) {
+			visit(ctx.block());
+		}
+		currentIndent--;
+		return null;
 	}
 	// This is a clause, so the indent is already made.
 	@Override 
@@ -525,6 +612,15 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		return null; 
 	}
 	@Override 
+	public Object visitVariableArray(G2ProcedureParser.VariableArrayContext ctx) { 
+		String var = ctx.G2NAME().getText();
+		buf.append(pythonName(var,false));
+		buf.append("[");
+		visit(ctx.expr());
+		buf.append("]");
+		return null; 
+	}
+	@Override 
 	public Object visitVariableNamed(G2ProcedureParser.VariableNamedContext ctx) {
 		String var = ctx.G2NAME().getText();
 		buf.append(pythonName(var,false));
@@ -544,7 +640,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 			msg = String.format("%s%s",text,verb); // In this case verb may have an argument
 		}
     	
-    	log.info(TAG+msg);
+    	log.info(TAG+":recordError:"+msg);
     	translation.put(TranslationConstants.ERR_MESSAGE, msg);
     	translation.put(TranslationConstants.ERR_LINE, "1");
     	translation.put(TranslationConstants.ERR_POSITION,"0");
@@ -719,6 +815,11 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	    //log.infof("pythonName: OUT=%s",sb.toString());
 	    return sb.toString();
 	}
+	private String removeNewlines(String input) {
+		String output = input.replaceAll("\n", " ");
+		output = output.replaceAll("\r", " ");
+		return output;
+	}
 	/**
 	 * Append the correct statement indent to the buffer
 	 */
@@ -735,7 +836,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	// string is appropriate for the logging function.
 	private String extractActiveElementsForLogging(String input) {
 		List<String> args = new ArrayList<>();
-		log.infof("extractActiveElementsForLogging: string is %s", input);
+		//log.infof("extractActiveElementsForLogging: string is %s", input);
 		// Order is important, so our initial pass is with the general pattern matcher.
 		Matcher matcher = generalArgPattern.matcher(input);
 		StringBuffer sb = new StringBuffer();
@@ -780,7 +881,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	// string is appropriate as a normal python string.
 	private String extractActiveElementsForString(String input) {
 		List<String> args = new ArrayList<>();
-		log.infof("extractActiveElementsForString: string is %s", input);
+		//log.infof("extractActiveElementsForString: string is %s", input);
 		// Order is important, so our initial pass is with the general pattern matcher.
 		Matcher matcher = generalArgPattern.matcher(input);
 		StringBuffer sb = new StringBuffer();

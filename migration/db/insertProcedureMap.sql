@@ -1,11 +1,15 @@
+insert into ProcedureMap values ('_s88-abort','com.ils.sfc.python.abort');
 insert into ProcedureMap values ('em-s88-c-rx-calc-dil-flows','com.ils.sfc.python.calcDilFlows');
 insert into ProcedureMap values ('em-write-file','com.ils.sfc.python.writeFile');
 insert into ProcedureMap values ('g2-array-subtract','com.ils.util.arrayDifference');
+insert into ProcedureMap values ('g2-scalar-multiply','com.ils.util.multiply');
 insert into ProcedureMap values ('s88-feed-enthalpy-ex-c6','com.ils.sfc.python.feedEnthalphyExC6');
 insert into ProcedureMap values ('s88-get','com.ils.sfc.python.getScopeData');
 insert into ProcedureMap values ('s88-get-data','com.ils.sfc.python.getRecipeData');
+insert into ProcedureMap values ('s88-get-unit-procedure','com.ils.sfc.python.getUnitProcedure');
 insert into ProcedureMap values ('s88-heat','com.ils.sfc.python.heat');
 insert into ProcedureMap values ('s88-ht-of-rx-t','com.ils.sfc.python.heatOfRxT');
+insert into ProcedureMap values ('s88-post-error','com.ils.sfc.python.postError');
 insert into ProcedureMap values ('s88-post-message-to-queue','com.ils.sfc.python.postMessageToQueue');
 insert into ProcedureMap values ('s88-set','com.ils.sfc.python.setScopeData');
 insert into ProcedureMap values ('s88-set-data','com.ils.sfc.python.setRecipeData');
