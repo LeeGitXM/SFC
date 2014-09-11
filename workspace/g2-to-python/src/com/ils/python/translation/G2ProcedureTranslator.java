@@ -29,7 +29,7 @@ import org.sqlite.JDBC;
 import com.ils.g2.procedure.G2ProcedureLexer;
 import com.ils.g2.procedure.G2ProcedureParser;
 import com.ils.python.lookup.ClassMapper;
-import com.ils.python.lookup.ConstantMapper;
+import com.ils.python.lookup.EnumerationMapper;
 import com.ils.python.lookup.GlobalMapper;
 import com.ils.python.lookup.ProcedureMapper;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -44,7 +44,7 @@ public class G2ProcedureTranslator {
 	private final static JDBC driver = new JDBC(); // Force driver to be loaded
 	private final LoggerEx log;
 	private final ClassMapper classMapper;
-	private final ConstantMapper constantMapper;
+	private final EnumerationMapper enumMapper;
 	private final GlobalMapper globalMapper;
 	private final ProcedureMapper procedureMapper;
 	private Map<String,Map<String,String>> mapOfMaps;
@@ -56,7 +56,7 @@ public class G2ProcedureTranslator {
 	public G2ProcedureTranslator() {
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.classMapper = new ClassMapper();
-		this.constantMapper  = new ConstantMapper(); 
+		this.enumMapper  = new EnumerationMapper(); 
 		this.globalMapper = new GlobalMapper();
 		this.procedureMapper = new ProcedureMapper();
 		this.mapOfMaps = new HashMap<>();
@@ -69,7 +69,7 @@ public class G2ProcedureTranslator {
 		try {
 			connection = DriverManager.getConnection(connectPath);
 			mapOfMaps.put(TranslationConstants.MAP_CLASSES, classMapper.createMap(connection));
-			mapOfMaps.put(TranslationConstants.MAP_CONSTANTS, constantMapper.createMap(connection));
+			mapOfMaps.put(TranslationConstants.MAP_ENUMERATIONS, enumMapper.createMap(connection));
 			mapOfMaps.put(TranslationConstants.MAP_IMPORTS, new HashMap<String,String>());
 			mapOfMaps.put(TranslationConstants.MAP_PROCEDURES, procedureMapper.createMap(connection));
 		}
@@ -155,7 +155,7 @@ public class G2ProcedureTranslator {
 					}
 				}
 				// Target directory is ready
-				String fname = (String)translationResults.get(TranslationConstants.PY_MODULE_NAME);
+				String fname = (String)translationResults.get(TranslationConstants.PY_MODULE);
 				if( fname!=null ) {
 					File outFile = new File(targetPath+File.separator+fname+".py");
 					log.infof("%s.createOutput: outfile = %s",TAG,outFile.getAbsolutePath());
@@ -218,7 +218,7 @@ public class G2ProcedureTranslator {
 		return result.toString();
 	}
 	private String getCode() {
-		String code = (String)translationResults.get(TranslationConstants.PY_MODULE_CODE);
+		String code = (String)translationResults.get(TranslationConstants.PY_CODE);
 		if( code==null ) code = "";
 		return code;
 	}
@@ -257,7 +257,7 @@ public class G2ProcedureTranslator {
 		PythonGenerator visitor = new PythonGenerator(pyMap,mapOfMaps);
 		visitor.visit(tree);
 		StringBuffer procedure = visitor.getTranslation();  // Procedure less imports
-		pyMap.put(TranslationConstants.PY_MODULE_CODE,procedure.toString());
+		pyMap.put(TranslationConstants.PY_CODE,procedure.toString());
 		if( log.isDebugEnabled() ) {
 			dump(pyMap);
 		}
@@ -273,7 +273,7 @@ public class G2ProcedureTranslator {
 		if( proc==null ) proc = "<null>";
 		log.info("\n"+proc.toString());
 		log.info("===================== Python Code =====================");
-		proc = pyMap.get(TranslationConstants.PY_MODULE_CODE);
+		proc = pyMap.get(TranslationConstants.PY_CODE);
 		if( proc==null ) proc = "<null>";
 		log.info("\n"+proc.toString());
 		log.info("===================== Imports =====================");
@@ -291,9 +291,26 @@ public class G2ProcedureTranslator {
 		val = pyMap.get(TranslationConstants.PY_G2_PROC);
 		if( val==null ) val = "<null>";
 		log.infof("G2 Procedure: %s",val.toString());
-		val = pyMap.get(TranslationConstants.PY_MODULE_NAME);
+		val = pyMap.get(TranslationConstants.PY_MODULE);
 		if( val==null ) val = "<null>";
 		log.infof("ModuleName: %s",val.toString());
+		val = pyMap.get(TranslationConstants.PY_METHOD);
+		if( val==null ) val = "<null>";
+		log.infof("MethodName: %s",val.toString());
+	}
+	/**
+	 * Given a the name of a full Python module, return the package.
+	 * @param s the module
+	 * @return the package
+	 */
+	private String derivePackageName(String s) {
+		int pos = s.lastIndexOf(".");
+		if( pos>0) {
+			return s.substring(0, pos);
+		}
+		else {
+			return s;
+		}
 	}
 	/**
 	 * Entry point for the application. 

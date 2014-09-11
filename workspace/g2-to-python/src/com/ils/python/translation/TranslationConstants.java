@@ -15,9 +15,10 @@ public interface TranslationConstants   {
 	public final static String PY_G2_CODE  		= "g2code";    // The input procedure code
 	public final static String PY_G2_PROC  		= "g2proc";    // The input procedure name
 	public final static String PY_IMPORTS  		= "imports";   // List of required imports
-	public final static String PY_MODULE_CODE   = "pythonCode";  // Text of the module (preliminary)
-	public final static String PY_PACKAGE       = "package";   // Package for Python modules
-	public final static String PY_MODULE_NAME   = "pythonModule";   // Module name
+	public final static String PY_CODE          = "pythonCode";  // Text of the module (preliminary)
+	public final static String PY_PACKAGE       = "package";     // Package for Python modules
+	public final static String PY_MODULE        = "pythonModule";   // Module name
+	public final static String PY_METHOD        = "pythonMethod";   // Method within module
 	
 	// Constants relating to errors
 	public final static String ERR_LINE     = "line";      // line on which error occurred
@@ -27,9 +28,13 @@ public interface TranslationConstants   {
 	
 	// These are the names of the lookup maps
 	public final static String MAP_CLASSES       = "classes";        // Map of G2-to-Python classes
-	public final static String MAP_CONSTANTS     = "constants";      // Lookup for global constants
+	public final static String MAP_ENUMERATIONS  = "enumerations";   // Lookup for global constants
 	public final static String MAP_GLOBALS       = "globals";        // Unresolved globals by procedure
 	public final static String MAP_IMPORTS       = "imports";        // Collect imports as we parse
 	public final static String MAP_PROCEDURES    = "procedures";     // G2-to-python procedure/method names
+	
+	// Use these if not available from the original source
+	public final String DEFAULT_METHOD_NAME      = "evaluate";
+	public final String ENUMERATIONS_PACKAGE     = "emc.constants.enum";
 
 }

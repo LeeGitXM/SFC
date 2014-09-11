@@ -10,12 +10,12 @@ import java.util.Map;
 /**
  * Create a map of G2 globals (e.g. symbols) to their values
  */
-public class ConstantMapper {
-	private final String TAG = "ConstantMapper";
+public class EnumerationMapper {
+	private final String TAG = "EnumerationMapper";
 	/** 
 	 * Constructor: 
 	 */
-	public ConstantMapper() {
+	public EnumerationMapper() {
 	}
 
 	/**
@@ -32,10 +32,11 @@ public class ConstantMapper {
 			Statement statement = cxn.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-			rs = statement.executeQuery("select * from ConstantMap");
+			rs = statement.executeQuery("select * from EnumerationMap");
 			while(rs.next())
 			{
 				String name = rs.getString("G2Name");
+				String enumName = rs.getString("EnumerationName");
 				String value = rs.getString("Value");
 				constantMap.put(name,value);
 			}

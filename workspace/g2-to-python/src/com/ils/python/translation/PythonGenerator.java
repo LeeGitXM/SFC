@@ -52,7 +52,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		this.buf = new StringBuffer();
 		this.translation = t;
 		classLookup = mapOfMaps.get(TranslationConstants.MAP_CLASSES);
-		constantLookup = mapOfMaps.get(TranslationConstants.MAP_CONSTANTS);
+		constantLookup = mapOfMaps.get(TranslationConstants.MAP_ENUMERATIONS);
 		importLookup = mapOfMaps.get(TranslationConstants.MAP_IMPORTS);
 		procedureLookup = mapOfMaps.get(TranslationConstants.MAP_PROCEDURES);
 		variableClassMap = new HashMap<String,String>();
@@ -86,8 +86,19 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		buf.append("):\n");
 		currentIndent = 1;  // First block increments it
 		String name = ctx.G2NAME().getText();
-		translation.put(TranslationConstants.PY_MODULE_NAME, pythonName(name,true));
 		translation.put(TranslationConstants.PY_G2_PROC, name);
+		// Attempt a lookup. On success use the translated name, plus package.
+		// otherwise use the default package and pythonize the name,
+		String pyName = procedureLookup.get(name);
+		if( pyName!=null ) {
+			translation.put(TranslationConstants.PY_METHOD, getMethodName(pyName));
+			translation.put(TranslationConstants.PY_MODULE, getModuleName(pyName));
+			translation.put(TranslationConstants.PY_PACKAGE, getPackageName(pyName));
+		}
+		else {
+			translation.put(TranslationConstants.PY_MODULE, pythonName(name,true));
+			translation.put(TranslationConstants.PY_METHOD, TranslationConstants.DEFAULT_METHOD_NAME);
+		}
 
 		return null;
 	}
@@ -208,9 +219,16 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 			buf.append("try:\n");
 			currentIndent++;
 		}
-		for(StatementContext sctx:ctx.statement()) {
-			visit(sctx);
+		if(!ctx.statement().isEmpty()) {
+			for(StatementContext sctx:ctx.statement()) {
+				visit(sctx);
+			}
 		}
+		else {
+			appendIndent(currentIndent);
+			buf.append("pass\n");   // To keep syntax legal
+		}
+		
 		if( ctx.blockerr() != null) {
 			currentIndent--;
 			visit(ctx.blockerr());
@@ -754,27 +772,39 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		return procName;
 	}
 	/**
-	 * Given the full path name of a Python module, return the module name.
+	 * Given the full path name of a Python module plus method, return the method name.
 	 * @param s the module
-	 * @return the package
+	 * @return the module name
 	 */
-	private String getModuleName(String s) {
+	private String getMethodName(String s) {
 		String[] components = s.split("[.]");
 		return components[components.length-1];
 	}
 	/**
-	 * Given a the name of a full Python module, return the package.
+	 * Given the full path name of a Python module plus method, return the module name.
+	 * @param s the module
+	 * @return the module name
+	 */
+	private String getModuleName(String s) {
+		String[] components = s.split("[.]");
+		return components[components.length-2];
+	}
+	/**
+	 * Given a the full name of a Python module, plus method, return the package.
 	 * @param s the module
 	 * @return the package
 	 */
 	private String getPackageName(String s) {
 		int pos = s.lastIndexOf(".");
 		if( pos>0) {
-			return s.substring(0, pos);
+			s = s.substring(0, pos);
+			// We want the second to last ...
+			pos = s.lastIndexOf(".");
+			if( pos>0) {
+				s = s.substring(0, pos);
+			}
 		}
-		else {
-			return s;
-		}
+		return s;
 	}
 	/**
 	 * Convert a G2 name into a camelCase name for use in Python

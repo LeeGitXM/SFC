@@ -8,7 +8,7 @@ grammar G2Procedure;
 procedure: header docstring? declaration* block EOF;
 
 /** ================== Fundamental Procedure Elements ======================= */
-block: BEGIN statement+ END COMMENT* blockerr?           # statementBlock
+block: BEGIN statement* END COMMENT* blockerr?           # statementBlock
         ;
 declaration: declist COLON datatype SEMI                 # declarationUninitialized
         |    G2NAME COLON datatype EQU value SEMI        # declarationInitialized

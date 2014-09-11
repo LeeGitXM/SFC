@@ -34,14 +34,14 @@ public class ProcedureMapper {
 		try {
 			Statement statement = cxn.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
-			log.infof("ProcedureMapper: selecting ...");
+			log.debugf("%s.createMap selecting ...",TAG);
 			rs = statement.executeQuery("select * from ProcedureMap");
 			while(rs.next())
 			{
 				String g2 = rs.getString("G2Procedure");
 				String ignition = rs.getString("IgnitionProcedure");
 				procedureMap.put(g2, ignition);
-				log.infof("ProcedureMapper: add %s = %s",g2,ignition);
+				log.debugf("%s.createMap: add %s = %s",TAG,g2,ignition);
 			}
 			rs.close();
 		}
