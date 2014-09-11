@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import com.ils.sfc.common.IlsSfcIOIF;
 
@@ -32,9 +33,11 @@ public class StubIlsSfcIO implements IlsSfcIOIF {
 	}
 
 	@Override
-	public void sendMessage(String message, String messageType, String clientId) {
+	public void sendMessage(String project, String messageHandler,
+			Map<String, ?> payload, Properties filterParams) {
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }
