@@ -38,7 +38,9 @@ public class EnumerationMapper {
 				String name = rs.getString("G2Name");
 				String enumName = rs.getString("EnumerationName");
 				String value = rs.getString("Value");
-				constantMap.put(name,value);
+				// Construct the string replacement ...
+				String entry = String.format("%s.%s",enumName,value.toUpperCase());
+				constantMap.put(name,entry);
 			}
 			rs.close();
 		}

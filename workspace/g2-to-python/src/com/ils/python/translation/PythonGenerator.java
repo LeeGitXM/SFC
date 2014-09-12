@@ -32,7 +32,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	private final StringBuffer buf;
 	private final Map<String,Object> translation;
 	private final Map<String,String> classLookup;
-	private final Map<String,String> constantLookup;
+	private final Map<String,String> enumerationLookup;
 	private final Map<String,String> importLookup;
 	private final Map<String,String> procedureLookup;
 	private final Map<String,String> variableClassMap;
@@ -52,7 +52,7 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		this.buf = new StringBuffer();
 		this.translation = t;
 		classLookup = mapOfMaps.get(TranslationConstants.MAP_CLASSES);
-		constantLookup = mapOfMaps.get(TranslationConstants.MAP_ENUMERATIONS);
+		enumerationLookup = mapOfMaps.get(TranslationConstants.MAP_ENUMERATIONS);
 		importLookup = mapOfMaps.get(TranslationConstants.MAP_IMPORTS);
 		procedureLookup = mapOfMaps.get(TranslationConstants.MAP_PROCEDURES);
 		variableClassMap = new HashMap<String,String>();
@@ -133,9 +133,11 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	public Object visitExprCall(G2ProcedureParser.ExprCallContext ctx) {
 		String procName = ctx.G2NAME().getText();
 		String pyName = procedureLookup.get(procName);
+		// The lookup returns the fully qualified method path.
 		if( pyName!=null ) {
 			String moduleName = getModuleName(pyName);
-			buf.append(moduleName);
+			String methodName = getMethodName(pyName);
+			buf.append(String.format("%s.%s", moduleName,methodName));
 			buf.append(ctx.POPEN().getText());
 			visit(ctx.exprlist());
 			buf.append(ctx.PCLOSE().getText());
@@ -148,9 +150,17 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	}
 	@Override 
 	public Object visitExprClassMember(G2ProcedureParser.ExprClassMemberContext ctx) {
-		// In this context, we have a setter
-		String property = ctx.G2NAME(0).getText();
-		String clss = ctx.G2NAME(1).getText();
+		// In this context, we have a getter. "post" is a legal class member.
+		String property = "";
+		String clss = "";
+		if( ctx.POST()!=null ) {
+			property = ctx.POST().getText();
+			clss = ctx.G2NAME(1).getText();
+		}
+		else {
+			property = ctx.G2NAME(0).getText();
+			clss = ctx.G2NAME(1).getText();
+		}
 		buf.append(createGetterCall(property,clss));
 		return null; 
 	}
@@ -239,9 +249,11 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	public Object visitStatementCall(G2ProcedureParser.StatementCallContext ctx) {
 		String procName = ctx.G2NAME().getText();
 		String pyName = procedureLookup.get(procName);
+		// The lookup returns the fully qualified method path.
 		if( pyName!=null ) {
 			String moduleName = getModuleName(pyName);
-			buf.append(moduleName);
+			String methodName = getMethodName(pyName);
+			buf.append(String.format("%s.%s", moduleName,methodName));
 			buf.append(ctx.POPEN().getText());
 			visit(ctx.exprlist());
 			buf.append(ctx.PCLOSE().getText());
@@ -257,10 +269,12 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		visit(ctx.varlist());
 		buf.append("=");
 		String procName = ctx.G2NAME().getText();
+		// The lookup returns the fully qualified method path.
 		String pyName = procedureLookup.get(procName);
 		if( pyName!=null ) {
 			String moduleName = getModuleName(pyName);
-			buf.append(moduleName);
+			String methodName = getMethodName(pyName);
+			buf.append(String.format("%s.%s", moduleName,methodName));
 			buf.append(ctx.POPEN().getText());
 			visit(ctx.exprlist());
 			buf.append(ctx.PCLOSE().getText());
@@ -314,13 +328,15 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	@Override 
 	public Object visitStatementPost(G2ProcedureParser.StatementPostContext ctx) 
 	{ 
-		importLookup.put("LogUtil","from com.inductiveautomation.ignition.common.util import LogUtil");
-		importLookup.put("LoggerEx","from com.inductiveautomation.ignition.common.util import LoggerEx");
-		buf.append("log = LogUtil.getLogger(\""+LOG_PACKAGE+"\")\n");
-		String raw = ctx.STRING().getText();
-		String expanded = extractActiveElementsForLogging(raw);
-		appendIndent(currentIndent);
-		buf.append("log.infof("+expanded+")\n");
+		if( ctx.STRING() !=null) {
+			importLookup.put("LogUtil","from com.inductiveautomation.ignition.common.util import LogUtil");
+			importLookup.put("LoggerEx","from com.inductiveautomation.ignition.common.util import LoggerEx");
+			buf.append("log = LogUtil.getLogger(\""+LOG_PACKAGE+"\")\n");
+			String raw = ctx.STRING().getText();
+			String expanded = extractActiveElementsForLogging(raw);
+			appendIndent(currentIndent);
+			buf.append("log.infof("+expanded+")\n");
+		}
 		return null;
 	}
 	@Override
@@ -369,10 +385,12 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	public Object visitStatementStart(G2ProcedureParser.StatementStartContext ctx) { 
 		String procName = ctx.G2NAME().getText();
 		String pyName = procedureLookup.get(procName);
+		// The lookup returns the fully qualified method path.
 		if( pyName!=null ) {
 			String moduleName = getModuleName(pyName);
+			String methodName = getMethodName(pyName);		
 			buf.append("system.util.invokeAsynchronous(");
-			buf.append(moduleName);
+			buf.append(String.format("%s.%s", moduleName,methodName));
 			buf.append(ctx.POPEN().getText());
 			visit(ctx.exprlist());
 			buf.append(ctx.PCLOSE().getText());
@@ -717,12 +735,12 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		property = pythonName(property,true);
 		// If it's a "this", then replace
 		if(selfEquivalent!=null && localVariable.equalsIgnoreCase(selfEquivalent) && selfArgument!=null) localVariable = selfArgument;
-		String className = variableClassMap.get(localVariable);
-		if( className!=null ) {
-			String localClass = className;
-			className = classLookup.get(localClass);
-			if( className!=null) {
-				className = getModuleName(className);
+		String classPath = variableClassMap.get(localVariable);
+		if( classPath!=null ) {
+			String localClass = classPath;
+			classPath = classLookup.get(localClass);
+			if( classPath!=null) {
+				classPath = getClassName(classPath);
 			}
 			else {
 				recordError("No class mapped for G2 class "+localClass,"", "" );
@@ -733,9 +751,9 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		}
 		
 		localVariable = pythonName(localVariable,false);
-		if(className == null) className = "";
-		String procName = String.format("get%s%s(%s)", className,property,localVariable);
-		importLookup.put("get"+className+property, "");
+		if(classPath == null) classPath = "";
+		String procName = String.format("get%s%s(%s)", classPath,property,localVariable);
+		importLookup.put("get"+classPath+property, "");
 		return procName;
 	}
 	/**
@@ -750,12 +768,12 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	private String createSetterCall(String property,String localVariable) {
 		if(selfEquivalent!=null && localVariable.equalsIgnoreCase(selfEquivalent) && selfArgument!=null) localVariable = selfArgument;
 		property = pythonName(property,true);
-		String className = variableClassMap.get(localVariable);
-		if( className!=null ) {
-			String localClass = className;
-			className = classLookup.get(localClass);
-			if( className!=null) {
-				className = getModuleName(className);
+		String classPath = variableClassMap.get(localVariable);
+		if( classPath!=null ) {
+			String localClass = classPath;
+			classPath = classLookup.get(localClass);
+			if( classPath!=null) {
+				classPath = getClassName(classPath);
 			}
 			else {
 				recordError("No class mapped for G2 class "+localClass,"", "" );
@@ -766,10 +784,19 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 		}
 		
 		localVariable = pythonName(localVariable,false);
-		if(className == null) className = "";
-		String procName = String.format("set%s%s(%s,", className,property,localVariable);
-		importLookup.put("set"+className+property, "");
+		if(classPath == null) classPath = "";
+		String procName = String.format("set%s%s(%s,", classPath,property,localVariable);
+		importLookup.put("set"+classPath+property, "");
 		return procName;
+	}
+	/**
+	 * Given the full path name of java class, return the class name.
+	 * @param s the fully qualified class
+	 * @return the class name
+	 */
+	private String getClassName(String s) {
+		String[] components = s.split("[.]");
+		return components[components.length-1];
 	}
 	/**
 	 * Given the full path name of a Python module plus method, return the method name.
@@ -814,8 +841,12 @@ public class PythonGenerator extends G2ProcedureBaseVisitor<Object>  {
 	 */
 	private String pythonName(String s,boolean leadingCap) {
 		// First do some lookups
-		String substitution = constantLookup.get(s);
-		if( substitution!=null) return "\""+substitution+"\"";
+		String substitution = enumerationLookup.get(s);
+		if( substitution!=null) {
+			String instance = getMethodName(substitution);  // Really the class of enumeration
+			importLookup.put(instance,String.format("from %s import %s",TranslationConstants.ENUMERATIONS_PACKAGE,instance));
+			return substitution;
+		}
 		
 		// If it's a "this", then replace. 
 		if(selfEquivalent!=null && s.equalsIgnoreCase(selfEquivalent) && 

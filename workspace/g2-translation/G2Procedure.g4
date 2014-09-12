@@ -36,11 +36,12 @@ sfragment: COMMENT sfragment                             # blockComment
         | CALL G2NAME POPEN exprlist? PCLOSE             # statementCall
         | CHANGE casetter TO (cagetter|expr)             # statementChange
         | CREATE G2NAME G2NAME                           # statementCreate
-        | COLLECT POPEN TIMINGOUT expr PCLOSE statement+ END  # statementCollectData
+        | COLLECT POPEN TIMINGOUT expr TIMEUNIT? PCLOSE statement+ END  # statementCollectData
         | CONCLUDE (casetter|variable) EQU expr           # statementConclusion
         | DELETE variable                                 # statementDelete
         | EXITIF expr                                     # statementExitIf  
         | POST STRING                                     # statementPost
+        | INFORM timeClause? THAT STRING                  # statementInform
         | REPEAT statement* END                           # statementRepeat
         | START G2NAME POPEN exprlist? PCLOSE             # statementStart
         | WAITFOR variable                                # statementWait
@@ -50,14 +51,16 @@ sfragment: COMMENT sfragment                             # blockComment
 /** ============================== Expressions ============================== */  
 expr:  POPEN expr PCLOSE                                # exprParentheses
       | expr OPR expr                                   # exprOperator
-      | SINGLEARGFN POPEN expr PCLOSE                   # expr1ArgFunction
-      | EXISTS G2NAME G2NAME NAMED BY G2NAME            # exprExists
-      | value                                           # exprValue
-      | variable                                        # exprVariable
-      | THE G2NAME OF G2NAME                            # exprClassMember
-      | CALL G2NAME POPEN exprlist? PCLOSE              # exprCall
       | expr (LOPR|EQU|NEQU) expr                       # exprLogicalOperator
       | expr (ROPR|EQU|NEQU) expr                       # exprRelationalOperator
+      | SINGLEARGFN POPEN expr PCLOSE                   # expr1ArgFunction
+      | EXISTSA G2NAME G2NAME NAMED BY G2NAME           # exprExists
+      | EXISTSA G2NAME G2NAME suchthat                  # exprExistsSuchThat
+      | CALL G2NAME POPEN exprlist? PCLOSE              # exprCall
+      | THE (G2NAME|POST) OF G2NAME EXISTS              # exprClassMemberExists
+      | THE (G2NAME|POST) OF G2NAME                     # exprClassMember
+      | value                                           # exprValue
+      | variable                                        # exprVariable
      ;
 /** ====================== Secondary Syntax Elements ======================== */
 
@@ -85,8 +88,9 @@ exprlist: expr                                           # firstExpressionInList
 fnclause: variable EQU (SEQUENCE|STRUCTURE) POPEN PCLOSE # sequenceClause
         | variable EQU G2NAME POPEN exprlist? PCLOSE     # functionClause
         ;
-forclause: FOR G2NAME EQU expr DOWNTO expr BY ivalue DO statement+ END  # forByDecreasing
-        | FOR G2NAME EQU expr TO expr DO statement+ END                 # forLoop
+forclause:FOR G2NAME EQU EACH G2NAME IN G2NAME DO statement+ END       # forInSet
+        | FOR G2NAME EQU expr DOWNTO expr BY ivalue DO statement+ END  # forByDecreasing
+        | FOR G2NAME EQU expr TO expr DO statement+ END                # forLoop
         ;
 
 ifclause: IF expr THEN (sfragment|block) elseifclause* elseclause? # ifWithClauses
@@ -105,11 +109,15 @@ nvalue: ivalue
         ; 
 rtndecl: EQU POPEN datatype COMMENT? PCLOSE
         ;
+suchthat: SUCHTHAT expr                                      #suchThatPredicate
+        ;
 switchclause: CASE POPEN G2NAME PCLOSE OF COMMENT* switchcase+ COMMENT* otherwisecase? END  # caseRoot
         ;
-switchcase: vallist COLON COMMENT* statement                           # caseClause
+switchcase: vallist COLON COMMENT* statement         # caseClause
         ;
-otherwisecase: OTHERWISE COLON statement               # caseOtherwise
+timeClause: FOR THE NEXT expr TIMEUNIT                # informTime
+        ;
+otherwisecase: OTHERWISE COLON statement              # caseOtherwise
         ;
 value: nvalue                                         # valueNumeric
         | lvalue                                      # valueLogical
@@ -122,15 +130,18 @@ vallist: value                                        # firstValInList
         ;
 variable: G2NAME                                      # variableNamed
         | G2NAME BOPEN expr BCLOSE                    # variableArray
+        | THE G2NAME UPONSWS variable                 # variableOnSubworkspace
         ;    
 varlist: variable                                         # firstVarInList
         | varlist COMMA variable                          # subsequentVarInList
         ;
 
 LOPR: AND|OR;                               // Logical operator - must precede AND/OR
-SINGLEARGFN: 'abs'|'log'|'not';
+SINGLEARGFN: 'abs'|'log'|'not'|'round';
 
 /* ------------------- Keywords ------------------- */
+EXISTSA: 'there exists a';
+
 AND:   'and';                     // Logical operator
 BY:    'by';
 BEGIN: 'begin';
@@ -144,13 +155,17 @@ CONCLUDE: 'conclude that';
 DELETE: 'delete';
 DO:    'do'|'DO';
 DOWNTO:'down to';
+EACH:  'each';
 ELSE:   'else';
 END:   'end';
-EXISTS: 'there exists a';
+EXISTS: 'exists';
 EXITIF: 'exit if';
 FOR:   'for';
-IF:    'if'; 
+IF:    'if'|'If';
+INFORM: 'inform the operator';
+IN:    'in';
 NAMED: 'named';
+NEXT: 'next';
 OF:    'of'; 
 ONERR: 'on error';
 OR:    'or';                     // Logical operator
@@ -158,12 +173,15 @@ OTHERWISE:'otherwise'|'Otherwise';
 POST:  'post';
 REPEAT: 'repeat';
 RTN:   'return';
+SUCHTHAT: 'such that';
 START: 'start';
+THAT:  'that';
 THE:   'the';
 THEN:  'then';
 THISPROC: 'this procedure';
 TIMINGOUT: 'timing out after';
 TO: 'to';
+UPONSWS: 'upon the subworkspace of';
 WAITFOR: 'wait for';
 
 
@@ -176,14 +194,14 @@ STRUCTURE:'structure';
 SYMBOL: 'symbol';
 FLOAT: DASH? DIGIT+[.]DIGIT*
      | DASH? [.]DIGIT+; 
-INTEGER: DASH? DIGIT+; 
+INTEGER: (DASH|DASH \s)? DIGIT+; 
 OPR: '+'|DASH|'*'|'/'|'%'|'^';              // Arithmetic operators
 NEQU: '/=' ;                                // Equality operator
 ROPR: '>='|'<='|'>'|'<';                    // Relational operators
 EQU: '=';                                   // Must follow the above
 FALSE: 'FALSE'|'False'|'false'|'none'|'NONE';
 TRUE:  'TRUE'|'True'|'true';          // Logical constant
-TIMEUNIT: 'minutes'|'seconds';
+TIMEUNIT: 'minutes'|'minute'|'seconds'|'second';
 // NOTE: Must appear after any keyword definitions.
 G2NAME:  (UNDERBAR|CHAR) (UNDERBAR|CHAR|DIGIT|DASH)*;   // Expect a dash
 STRING: QUOTE .*? QUOTE;
