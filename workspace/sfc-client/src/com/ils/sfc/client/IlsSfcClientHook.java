@@ -1,7 +1,7 @@
 package com.ils.sfc.client;
 
-import com.ils.sfc.common.IlsGatewayScriptsIF;
 import com.ils.sfc.common.IlsSfcProperties;
+import com.ils.sfc.util.IlsGatewayScriptsIF;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
 import com.inductiveautomation.ignition.client.gateway_interface.ModuleRPCFactory;
 import com.inductiveautomation.ignition.client.model.ClientContext;

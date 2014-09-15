@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.ils.sfc.common.IlsSfcIOIF;
+import com.ils.sfc.util.IlsSfcIOIF;
 
 /** A dummy version of IlsSfcIO for testing. */
 public class StubIlsSfcIO implements IlsSfcIOIF {

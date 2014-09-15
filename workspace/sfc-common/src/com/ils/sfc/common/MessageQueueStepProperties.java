@@ -1,5 +1,6 @@
 package com.ils.sfc.common;
 
+import com.ils.sfc.util.IlsSfcIOIF;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;

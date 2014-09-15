@@ -6,9 +6,9 @@ import org.python.core.PyDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ils.sfc.common.IlsGatewayScriptsIF;
-import com.ils.sfc.common.IlsSfcIO;
-import com.ils.sfc.common.IlsSfcIOIF.MessageStatus;
+import com.ils.sfc.util.IlsGatewayScriptsIF;
+import com.ils.sfc.util.IlsSfcIO;
+import com.ils.sfc.util.IlsSfcIOIF.MessageStatus;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 
 public class IlsGatewayScripts implements IlsGatewayScriptsIF{

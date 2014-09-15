@@ -1,7 +1,7 @@
 /**
  *   (c) 2014  ILS Automation. All rights reserved.
  */
-package com.ils.sfc.common;
+package com.ils.sfc.util;
 
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;

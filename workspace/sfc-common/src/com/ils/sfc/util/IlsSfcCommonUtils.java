@@ -1,4 +1,4 @@
-package com.ils.sfc.common;
+package com.ils.sfc.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

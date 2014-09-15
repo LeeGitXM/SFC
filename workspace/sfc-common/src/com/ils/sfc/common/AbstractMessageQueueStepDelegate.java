@@ -7,6 +7,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.w3c.dom.Element;
 
+import com.ils.sfc.util.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.sfc.api.StepDelegate;
 import com.inductiveautomation.sfc.api.XMLParseException;

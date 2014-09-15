@@ -4,8 +4,8 @@
 package com.ils.sfc.designer;
 
 
-import com.ils.sfc.common.IlsGatewayScriptsIF;
 import com.ils.sfc.common.IlsSfcProperties;
+import com.ils.sfc.util.IlsGatewayScriptsIF;
 import com.inductiveautomation.ignition.client.gateway_interface.ModuleRPCFactory;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;

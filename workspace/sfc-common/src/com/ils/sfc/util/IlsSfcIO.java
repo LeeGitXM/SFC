@@ -1,4 +1,4 @@
-package com.ils.sfc.common;
+package com.ils.sfc.util;
 
 import java.sql.SQLException;
 import java.util.Map;
@@ -11,7 +11,7 @@ import org.python.core.PyString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ils.sfc.common.IlsSfcIOIF;
+import com.ils.sfc.util.IlsSfcIOIF;
 import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.gateway.datasource.Datasource;
 import com.inductiveautomation.ignition.gateway.datasource.SRConnection;

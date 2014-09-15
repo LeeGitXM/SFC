@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-common-7.7.1-rc2.jar"/>
 	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-designer-7.7.1-rc2.jar"/>
 	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-gateway-api-7.7.1-rc2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

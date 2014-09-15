@@ -1,4 +1,4 @@
-package com.ils.sfc.common;
+package com.ils.sfc.util;
 
 import java.util.Map;
 import java.util.Properties;

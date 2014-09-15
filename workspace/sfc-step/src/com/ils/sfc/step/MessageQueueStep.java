@@ -6,8 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.ils.sfc.common.MessageQueueStepProperties;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
-
-import com.ils.sfc.common.IlsSfcIOIF;
+import com.ils.sfc.util.IlsSfcIOIF;
 
 public class MessageQueueStep extends IlsAbstractChartStep implements MessageQueueStepProperties {
 	private static final Logger logger = LoggerFactory.getLogger(MessageQueueStep.class);

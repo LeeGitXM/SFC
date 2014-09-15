@@ -1,7 +1,7 @@
 /**
  *   (c) 2013  ILS Automation. All rights reserved.
  */
-package com.ils.sfc.common;
+package com.ils.sfc.util;
 
 import java.io.File;
 import java.io.IOException;
