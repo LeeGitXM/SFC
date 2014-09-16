@@ -194,7 +194,7 @@ STRUCTURE:'structure';
 SYMBOL: 'symbol';
 FLOAT: DASH? DIGIT+[.]DIGIT*
      | DASH? [.]DIGIT+; 
-INTEGER: (DASH|DASH \s)? DIGIT+; 
+INTEGER: DASH? DIGIT+; 
 OPR: '+'|DASH|'*'|'/'|'%'|'^';              // Arithmetic operators
 NEQU: '/=' ;                                // Equality operator
 ROPR: '>='|'<='|'>'|'<';                    // Relational operators
