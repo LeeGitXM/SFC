@@ -12,9 +12,6 @@
 	<property name="root.dir" value="${basedir}/../.." />
 	<property name="jar.dir" value="${root.dir}/external/lib" />
 	<property name="sdk.dir" value="${root.dir}/ignition-77/lib" />
-	<property name="step.jar.name" value="ils-sfc-steps.jar" />
-	<property name="step.bin.dir" value="${root.dir}/sfc/workspace/sfc-step/bin" />
-	<property name="step.src.dir" value="${root.dir}/sfc/workspace/sfc-step/src" />
 	<property name="ant.build.javac.source" value="1.7"/>
 	<property name="ant.build.javac.target" value="1.7"/>
 		
@@ -51,45 +48,20 @@
 		<path refid="Ignition_SDK.classpath" />
 		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/" includes="*.jar" />
 		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Client/dist/" includes="*.jar" />
-		<fileset dir="${jar.dir}" includes="${step.jar.name}" />
 	</path>
 
 	
 	<!-- This target will build the toolkit module and deploy it to the local Ignition gateway -->
 		<target name="BuildAndInstallModule" depends="clean, build, deploy" />
 	
-	<!-- Clean step Definition -->
-	<target name="clean.step" >
-		<mkdir dir="${step.bin.dir}"/>
-		<delete file="${jar.dir}/${step.jar.name}" />
-		<delete>
-		    <fileset dir="${step.bin.dir}">
-		        <include name="**/*.class"/>
-		    </fileset>
-		</delete>
-	</target>
-
 	<!-- Cleans all previously built files (leaves doc) -->
-	<target name="clean" depends="clean.step" description="Remove existing build products" >
+	<target name="clean" description="Remove existing build products" >
 		<delete dir="${basedir}/sfc-build/bin" />
 		<delete dir="${basedir}/sfc-build/modules" />
 		<delete dir="${basedir}/sfc-build/release" />
 		<delete dir="${basedir}/sfc-build/temp_modl" />   
 	</target>	
-	
-	<!-- Compile the step Definition library -->
-	<target name="step.build" description="Compile the source">
-		<mkdir dir="${step.bin.dir}"/>
-		<javac destdir="${step.bin.dir}" debug="true" includeantruntime="false">
-			<src path="${step.src.dir}"/>
-			<classpath refid="CustomSteps.classpath"/>
-		</javac>
-	</target>
-	<target name ="step.jar" description="Create a jar for the step Definition library">
-		<jar destfile="${jar.dir}/${step.jar.name}" includes="**/*.class" basedir="${step.bin.dir}"/>
-	</target>
-	
-	
+		
 	<!-- Builds the toolkit module jars and the final .modl file -->
 	<target name="build"   description="Compile the source">
 		<echo message="${ils.sfc.name} ${ils.sfc.version}" />	
@@ -107,18 +79,7 @@
 			<param name="javacSource" value="1.7" />
 			<param name="module.build.classpath" value="sfc.common.classpath"/>
 		</antcall>
-		
-		<!-- Compile the step Definition library -->
-		<echo message="Compiling step definitions" />
-		<mkdir dir="${step.bin.dir}"/>
-		<javac destdir="${step.bin.dir}" debug="true" includeantruntime="false">
-				<src path="${step.src.dir}"/>
-				<classpath refid="CustomSteps.classpath"/>
-		</javac>
-		<echo message="Creating the step definition jar file" />
-		<jar destfile="${jar.dir}/${step.jar.name}" includes="**/*.class" basedir="${step.bin.dir}"/>
-	
-		
+				
 		<!-- sfc-gateway jar -->
 		<antcall target="MakeProject">
 			<param name="modName" value="${ils.sfc.name}_Gateway" />

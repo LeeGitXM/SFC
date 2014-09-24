@@ -2,7 +2,7 @@ package com.ils.sfc.designer;
 
 import javax.swing.JTextField;
 
-import com.ils.sfc.common.MessageQueueStepProperties;
+import com.ils.sfc.common.TestStepProperties;
 import com.inductiveautomation.ignition.client.util.gui.HeaderLabel;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.designer.api.AbstractStepEditor;
@@ -13,8 +13,8 @@ import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
 import net.miginfocom.swing.MigLayout;
 
-public class MessageQueueStepEditor extends AbstractStepEditor implements
-		MessageQueueStepProperties {
+public class TestStepEditor extends AbstractStepEditor implements
+		TestStepProperties {
 
 	private static final long serialVersionUID = 1L;
 
@@ -22,7 +22,7 @@ public class MessageQueueStepEditor extends AbstractStepEditor implements
 
 	private JTextField textField;
 
-	public MessageQueueStepEditor(DesignerContext context, ChartUIModel chartModel) {
+	public TestStepEditor(DesignerContext context, ChartUIModel chartModel) {
 		super(new MigLayout(), chartModel);
 		this.context = context;
 
@@ -51,7 +51,7 @@ public class MessageQueueStepEditor extends AbstractStepEditor implements
 	public static class DesignerStepEditorFactory implements StepConfigFactory {
 
 		private final DesignerContext context;
-		MessageQueueStepEditor editor;
+		TestStepEditor editor;
 
 		public DesignerStepEditorFactory(DesignerContext context) {
 			this.context = context;
@@ -61,7 +61,7 @@ public class MessageQueueStepEditor extends AbstractStepEditor implements
 		public ElementEditor createConfigUI(ChartUIModel model,
 				ChartUIElement element) {
 			if (editor == null || editor.model != model) {
-				editor = new MessageQueueStepEditor(context, model);
+				editor = new TestStepEditor(context, model);
 			}
 			editor.setElement(element);
 			return editor;

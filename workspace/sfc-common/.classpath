@@ -3,10 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Ignition-77"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-client-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-common-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-designer-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-gateway-api-7.7.1-rc2.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-common.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

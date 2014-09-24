@@ -13,7 +13,9 @@
 
 		<!-- Add the module dependencies for each scope -->
 		<!-- NOTE: Build fails here if we specify a Gateway dependency -->
-		<depends scope="D">fpmi</depends>
+		<depends scope="G">com.inductiveautomation.sfc</depends>
+		<depends scope="C">com.inductiveautomation.sfc</depends>
+		<depends scope="D">com.inductiveautomation.sfc</depends>
 		
 		<!-- Load in our jars for each scope -->
 		<jar scope="CD">ils-sfc-client.jar.pack.gz</jar>

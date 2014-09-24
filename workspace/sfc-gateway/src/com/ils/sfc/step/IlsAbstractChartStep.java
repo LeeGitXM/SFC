@@ -5,10 +5,10 @@ import org.slf4j.LoggerFactory;
 
 import com.ils.sfc.step.annotation.ILSStep;
 import com.ils.sfc.util.IlsSfcIOIF;
-import com.inductiveautomation.sfc.api.AbstractBlockingStep;
 import com.inductiveautomation.sfc.api.ChartContext;
-import com.inductiveautomation.sfc.api.ChartStep;
 import com.inductiveautomation.sfc.api.PyChartScope;
+import com.inductiveautomation.sfc.api.elements.AbstractChartElement;
+import com.inductiveautomation.sfc.api.elements.StepElement;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 /**
@@ -19,7 +19,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
  * available executable block types.
  */
 @ILSStep
-public abstract class IlsAbstractChartStep extends AbstractBlockingStep implements ChartStep {
+public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefinition> implements StepElement {
 	private static final Logger logger = LoggerFactory.getLogger(IlsAbstractChartStep.class);
 	
 	// keys into the scope dictionary:

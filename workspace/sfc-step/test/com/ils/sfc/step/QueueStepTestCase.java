@@ -4,9 +4,9 @@ import java.util.UUID;
 
 import junit.framework.TestCase;
 
-import com.ils.sfc.common.MessageQueueStepProperties;
+import com.ils.sfc.common.TestStepProperties;
 import com.ils.sfc.step.IlsAbstractChartStep;
-import com.ils.sfc.step.MessageQueueStep;
+import com.ils.sfc.step.TestStep;
 import com.ils.sfc.util.IlsSfcIOIF;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
@@ -21,8 +21,8 @@ public class QueueStepTestCase extends TestCase {
 	public void setUp() {
 		chartContext.getChartScope().setVariable(IlsSfcIOIF.SCOPE_KEY, stubIO);
 	}
-	
-	/** Test the onStart action--the message-queueing function. */
+/*	
+	// Test the onStart action--the message-queueing function. 
 	public void testMessageQueueStepOnStart() {
 		String message = "Hi, Rob";
 		String queueId = "msqQueue";
@@ -31,14 +31,14 @@ public class QueueStepTestCase extends TestCase {
 		// set the step's message:
 		stepProperties.set(MessageQueueStepProperties.MESSAGE_PROPERTY, message);
 		// execute the step's function:
-		MessageQueueStep messageQueueStep = new MessageQueueStep(chartContext, definition);
+		TestStep messageQueueStep = new TestStep(chartContext, definition);
 		messageQueueStep.onStart();
 		// verify that the message was put in the proper queue:
 		assertEquals(1, stubIO.getMessageQueue(queueId).size());
 		assertEquals(message, stubIO.getMessageQueue(queueId).get(0));
 	}
 
-	/** Test the onStart action--the message-queueing function. */
+	// Test the onStart action--the message-queueing function. 
 	public void testClearQueueStepOnStart() {
 		String message = "Hi, Rob";
 		String queueId = "msqQueue";
@@ -51,7 +51,7 @@ public class QueueStepTestCase extends TestCase {
 		assertEquals(0, stubIO.getMessageQueue(queueId).size());
 	}
 
-	/** Test the onStart action--the message-queueing function. */
+	// Test the onStart action--the message-queueing function. 
 	public void testSetQueueStepOnStart() {
 		String queueId = "msqQueue";
 		// define the message queue id for this step in the chart scope:
@@ -62,5 +62,5 @@ public class QueueStepTestCase extends TestCase {
 		// verify that the scope contains the queue
 		assertEquals(queueId, setQueueStep.getCurrentMessageQueue());
 	}
-	
+	*/
 }

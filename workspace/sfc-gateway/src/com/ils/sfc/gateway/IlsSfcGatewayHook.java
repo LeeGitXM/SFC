@@ -3,12 +3,17 @@
  */
 package com.ils.sfc.gateway;
 
+//import com.ils.sfc.step.TestStepFactory;
+import com.ils.sfc.common.TestStepProperties;
+import com.ils.sfc.step.TestStepFactory;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
 import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
+import com.inductiveautomation.sfc.SFCModule;
+import com.inductiveautomation.sfc.api.SfcGatewayHook;
 
 //import com.ils.sfc.step.IlsSfcIO;
 
@@ -31,11 +36,13 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 	@Override
 	public void setup(GatewayContext ctxt) {
 		this.context = ctxt;
+		SfcGatewayHook sfcHook = (SfcGatewayHook) context.getModule(SFCModule.MODULE_ID);
+		sfcHook.getStepRegistry().register(new TestStepFactory());
 	}
 
 	@Override
 	public void startup(LicenseState licenseState) {
-	    log.infof("%s: Startup complete.",TAG);
+ 	    log.infof("%s: Startup complete.",TAG);
 	}
 
 	@Override

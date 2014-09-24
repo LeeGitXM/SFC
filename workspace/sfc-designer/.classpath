@@ -5,9 +5,8 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/sfc-common"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sfc-client"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Ignition-77"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-client-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-common-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-designer-7.7.1-rc2.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-gateway-api-7.7.1-rc2.jar"/>
+	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-client.jar"/>
+	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-common.jar"/>
+	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-designer.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
