@@ -4,6 +4,7 @@
 package com.ils.sfc.gateway;
 
 import com.ils.sfc.step.TestStepFactory;
+import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -34,6 +35,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 	@Override
 	public void setup(GatewayContext ctxt) {
 		this.context = ctxt;
+		PythonCall.setScriptMgr(ctxt.getScriptManager());
 		
 		// register the step factories:
 		SfcGatewayHook sfcHook = (SfcGatewayHook) context.getModule(SFCModule.MODULE_ID);
