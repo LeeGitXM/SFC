@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ils.sfc.step.annotation.ILSStep;
 import com.ils.sfc.util.IlsSfcIOIF;
+import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.elements.AbstractChartElement;
@@ -66,10 +67,16 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		return (IlsSfcIOIF) getObjectFromScopeTree(IlsSfcIOIF.SCOPE_KEY);
 	}
 	
-	/** Return a description of this step -- name ,id, etc. */
-	public String toString() {
-		// TODO: make a better name--maybe chart id, a name hierarchy and a unique step id...
-		return getClass().getName();
+	public String getStringProperty(Property<String> prop) {
+		return getDefinition().getProperties().getOrDefault(prop);
+	}
+
+	public Double getDoubleProperty(Property<Double> prop) {
+		return getDefinition().getProperties().getOrDefault(prop);
+	}
+
+	public Integer getIntProperty(Property<Integer> prop) {
+		return getDefinition().getProperties().getOrDefault(prop);
 	}
 	
 }
