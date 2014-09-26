@@ -29,6 +29,7 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 		stepRegistry.register(QueueMessageStepUI.FACTORY);
 		stepRegistry.register(SetQueueStepUI.FACTORY);
 		stepRegistry.register(ShowQueueStepUI.FACTORY);
+		stepRegistry.register(ClearQueueStepUI.FACTORY);
      }
 
     @Override
