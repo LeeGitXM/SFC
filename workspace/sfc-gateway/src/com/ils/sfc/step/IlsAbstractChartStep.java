@@ -1,5 +1,6 @@
 package com.ils.sfc.step;
 
+import org.python.core.Py;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +63,10 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		}
 	}
 
+	protected void setObjectInScopeTree(String key, Object value) {
+		getContext().getChartScope().__set__(Py.java2py(key), Py.java2py(value));
+	}
+	
 	/** Get the IO object, going to parent context if necessary. */
 	public IlsSfcIOIF getIO() {
 		return (IlsSfcIOIF) getObjectFromScopeTree(IlsSfcIOIF.SCOPE_KEY);

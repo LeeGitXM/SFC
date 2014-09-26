@@ -46,12 +46,16 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcGatewayHook).getStepRegistry();
 		stepRegistry.register(TestStepUI.FACTORY);
 		stepRegistry.register(QueueMessageStepUI.FACTORY);
+		stepRegistry.register(SetQueueStepUI.FACTORY);
+		stepRegistry.register(ShowQueueStepUI.FACTORY);
     	
 		// register the config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory();
     	StepConfigRegistry configRegistry = (StepConfigRegistry) context.getModule(SFCModule.MODULE_ID);
     	configRegistry.register(TestStepProperties.FACTORY_ID, editorFactory);
     	configRegistry.register(QueueMessageStepProperties.FACTORY_ID, editorFactory);
+    	configRegistry.register(SetQueueStepProperties.FACTORY_ID, editorFactory);
+    	configRegistry.register(ShowQueueStepProperties.FACTORY_ID, editorFactory);
 	}
 		
 	@Override

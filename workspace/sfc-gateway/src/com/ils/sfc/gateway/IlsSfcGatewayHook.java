@@ -3,7 +3,7 @@
  */
 package com.ils.sfc.gateway;
 
-import com.ils.sfc.step.TestStepFactory;
+import com.ils.sfc.step.*;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -40,6 +40,9 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 		// register the step factories:
 		SfcGatewayHook sfcHook = (SfcGatewayHook) context.getModule(SFCModule.MODULE_ID);
 		sfcHook.getStepRegistry().register(new TestStepFactory());
+		sfcHook.getStepRegistry().register(new QueueMessageStepFactory());
+		sfcHook.getStepRegistry().register(new SetQueueStepFactory());
+		sfcHook.getStepRegistry().register(new ShowQueueStepFactory());
 	}
 
 	@Override
