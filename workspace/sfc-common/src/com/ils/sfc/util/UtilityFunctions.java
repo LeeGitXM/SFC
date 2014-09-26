@@ -12,28 +12,21 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
  *  functions. This class carries no state.
  */
 public class UtilityFunctions  {
-	private final static String TAG = "UtilityFunctions: ";
-	private final LoggerEx log;
-	/**
-	 * No-argument constructor. 
-	 */
-	public UtilityFunctions() {
-		log = LogUtil.getLogger(getClass().getPackage().getName());
-	}
-	
+	private final static String TAG = "UtilityFunctions";
+	private static final LoggerEx log = LogUtil.getLogger(TAG);	
 	
 	/**
 	 * Safely parse a double. Catch and report a format exception.
 	 * @return the double equivalent of the input. If the input
 	 *         could not be parsed then return Double.NaN. 
 	 */
-	public double parseDouble(String val) {
+	public static double parseDouble(String val) {
 		double result = Double.NaN;
 		try{
 			result = Double.parseDouble(val);
 		}
 		catch(NumberFormatException nfe) {
-			log.error(TAG+"parseDouble: Format exception "+nfe.getLocalizedMessage(),nfe);    // Prints stack trace
+			log.error(TAG+": parseDouble: Format exception "+nfe.getLocalizedMessage(),nfe);    // Prints stack trace
 		}
 		return result;
 	}
@@ -43,7 +36,7 @@ public class UtilityFunctions  {
 	 * @return  the integer equivalent of the input. If the input
 	 *         could not be parsed then return zero.
 	 */
-	public int parseInteger(String val) {
+	public static int parseInteger(String val) {
 		int result = 0;
 		try{
 			result = Integer.parseInt(val);
@@ -57,7 +50,7 @@ public class UtilityFunctions  {
 	/**
 	 * Force a Double, Integer or String to a boolean.
 	 */
-	public boolean coerceToBoolean(Object val) {
+	public static boolean coerceToBoolean(Object val) {
 		boolean result = false;
 		if( val!=null ) {
 			if( val instanceof Boolean)      result = ((Boolean)val).booleanValue();
@@ -72,7 +65,7 @@ public class UtilityFunctions  {
 	 * Force a Double, Integer or String to a double. Throws NumberFormatException
 	 * for bad input - and sets result to 0.0.
 	 */
-	public double coerceToDouble(Object val) {
+	public static double coerceToDouble(Object val) {
 		double result = 0.0;
 		if( val!=null ) {
 			if( val instanceof Double)       result = ((Double)val).doubleValue();
@@ -86,7 +79,7 @@ public class UtilityFunctions  {
 	 * Force a Double, Integer or String to an int. Throws NumberFormatException
 	 * for bad input - and sets result to 0.
 	 */
-	public int coerceToInteger(Object val) {
+	public static int coerceToInteger(Object val) {
 		int result = 0;
 		if( val !=null ) {
 			if( val instanceof Integer)      result = ((Integer)val).intValue();
@@ -99,7 +92,7 @@ public class UtilityFunctions  {
 	 * Force a Double, Integer or String to a String. 
 	 * Guarantee the return is not null. 
 	 */
-	public String coerceToString(Object val) {
+	public static String coerceToString(Object val) {
 		String result = "";
 		if( val!=null ) result = val.toString();
 		return result;

@@ -1,12 +1,22 @@
 package com.ils.sfc.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.stream.XMLStreamWriter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.ils.sfc.common.TestStepProperties;
+import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
+import com.inductiveautomation.ignition.common.config.PropertySet;
+import com.inductiveautomation.ignition.common.config.PropertyValue;
+import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** Misc. utilities that don't fit into any ILS class or superclass. */
 public class IlsSfcCommonUtils {
@@ -52,6 +62,70 @@ public class IlsSfcCommonUtils {
 		}
 	}
 
+	public static void toXML(XMLStreamWriter writer, ChartUIElement element) {
+		try {
+			for(PropertyValue<?> pvalue: element) {
+				writer.writeStartElement(pvalue.getProperty().getName());
+				writer.writeCharacters(pvalue.getValue().toString());
+				writer.writeEndElement();			
+			}
+		}
+		catch(Exception e) {
+			logger.error("Error serializing step properties", e);
+		}
+	}
+
+	public static void fromXML(Element dom, ChartUIElement ui, Property<?>[] properties) {
+		for(Property<?> property: properties) {
+			String stringValue = getPropertyAsString(property, dom);
+			Object value = parseProperty(property, stringValue);
+			ui.setDirect(property, value);
+		}
+	}
+
+	public static Object parseProperty(Property<?> property, String stringValue) {
+		if(property.getType() == String.class) {
+			return stringValue;
+		}
+		else if(property.getType() == Integer.class) {
+			return UtilityFunctions.parseInteger(stringValue);
+		}
+		else if(property.getType() == Double.class) {
+			return UtilityFunctions.parseDouble(stringValue);
+		}
+		else {
+			return stringValue;
+		}
+	}
+
+	public static Object getDefaultValue(Property<?> prop) {
+		if(prop.getDefaultValue() != null) {
+			return prop.getDefaultValue();
+		}
+		else {
+			if(prop.getType() == String.class) {
+				return "";
+			}
+			else if(prop.getType() == Double.class) {
+				return Double.valueOf(0.);
+			}
+			else if(prop.getType() == Integer.class) {
+				return Integer.valueOf(0);
+			}
+			else {
+				return null;
+			}
+		}
+	}
+
+	public static PropertySet createPropertySet(Property<?>[] properties) {
+       	Map<Property<?>,Object> pmap = new HashMap<Property<?>,Object>();
+    	for(Property<?> prop: TestStepProperties.properties) {
+    		pmap.put(prop, IlsSfcCommonUtils.getDefaultValue(prop));
+    	}
+    	BasicPropertySet propSet = new BasicPropertySet(pmap);
+    	return propSet;
+	}
 
 
 }

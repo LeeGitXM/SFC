@@ -26,6 +26,7 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 		Object iaSfcGatewayHook = context.getModule(SFCModule.MODULE_ID);
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcGatewayHook).getStepRegistry();
 		stepRegistry.register(TestStepUI.FACTORY);
+		stepRegistry.register(QueueMessageStepUI.FACTORY);
      }
 
     @Override

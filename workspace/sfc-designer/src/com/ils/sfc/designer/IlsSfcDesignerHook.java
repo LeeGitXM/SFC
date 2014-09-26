@@ -3,9 +3,8 @@
  */
 package com.ils.sfc.designer;
 
-import com.ils.sfc.client.TestStepUI;
-import com.ils.sfc.common.IlsSfcProperties;
-import com.ils.sfc.common.TestStepProperties;
+import com.ils.sfc.client.*;
+import com.ils.sfc.common.*;
 import com.ils.sfc.util.IlsGatewayScriptsIF;
 import com.inductiveautomation.ignition.client.gateway_interface.ModuleRPCFactory;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
@@ -46,15 +45,17 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		Object iaSfcGatewayHook = context.getModule(SFCModule.MODULE_ID);
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcGatewayHook).getStepRegistry();
 		stepRegistry.register(TestStepUI.FACTORY);
+		stepRegistry.register(QueueMessageStepUI.FACTORY);
     	
 		// register the config factories (ie the editors)
+		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory();
     	StepConfigRegistry configRegistry = (StepConfigRegistry) context.getModule(SFCModule.MODULE_ID);
-    	configRegistry.register(TestStepProperties.FACTORY_ID, new TestStepEditor.DesignerStepEditorFactory(context));
+    	configRegistry.register(TestStepProperties.FACTORY_ID, editorFactory);
+    	configRegistry.register(QueueMessageStepProperties.FACTORY_ID, editorFactory);
 	}
 		
 	@Override
 	public void shutdown() {	
 	}
-
 
 }

@@ -14,9 +14,9 @@ import com.inductiveautomation.ignition.common.script.ScriptManager;
  *  Also holds static objects for particular calls. */
 public class PythonCall {
 	private static final String RESULT_NAME = "pyCallResult";
-	private String methodName; // package + method name
-	private String[] argNames; // args to the method, if any
-	private Class<?> returnType;	// is null if no return value
+	private final String methodName; // package + method name
+	private final String[] argNames; // args to the method, if any
+	private final Class<?> returnType;	// is null if no return value
 	private PyCode compiledCode;	// cached compiled code
 	
 	private static ScriptManager scriptMgr;
