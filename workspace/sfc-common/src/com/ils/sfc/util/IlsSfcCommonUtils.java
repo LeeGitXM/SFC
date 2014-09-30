@@ -120,7 +120,7 @@ public class IlsSfcCommonUtils {
 
 	public static PropertySet createPropertySet(Property<?>[] properties) {
        	Map<Property<?>,Object> pmap = new HashMap<Property<?>,Object>();
-    	for(Property<?> prop: TestStepProperties.properties) {
+    	for(Property<?> prop: properties) {
     		pmap.put(prop, IlsSfcCommonUtils.getDefaultValue(prop));
     	}
     	BasicPropertySet propSet = new BasicPropertySet(pmap);

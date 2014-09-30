@@ -84,4 +84,14 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		return getDefinition().getProperties().getOrDefault(prop);
 	}
 	
+	protected void exec(PythonCall pcall) {
+		try {
+			logger.trace(pcall.getMethodName());
+			pcall.exec(getContext().getChartScope(), getDefinition().getProperties());
+		} catch (Exception e) {
+			logger.error("Error calling " + pcall.getMethodName(), e);
+		}
+	}
+
+	
 }

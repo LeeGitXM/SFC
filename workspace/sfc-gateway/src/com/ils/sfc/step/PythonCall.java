@@ -1,4 +1,4 @@
-package com.ils.sfc.util;
+package com.ils.sfc.step;
 
 import org.python.core.CompileMode;
 import org.python.core.CompilerFlags;
@@ -20,14 +20,28 @@ public class PythonCall {
 	private PyCode compiledCode;	// cached compiled code
 	
 	private static ScriptManager scriptMgr;
-
-	public static final PythonCall QUEUE_INSERT = new PythonCall("ils.queue.message.insert", 
-		null, new String[]{"queue", "status", "message"});
+	private static final String[] stepArgs = new String[]{"chartScope", "stepProperties"};
 	
+	public static final PythonCall QUEUE_INSERT = new PythonCall("ils.sfc.steps.queueInsert", 
+		null, stepArgs);
+
+	public static final PythonCall CLEAR_QUEUE = new PythonCall("ils.sfc.steps.clearQueue", 
+		null, stepArgs);
+
+	public static final PythonCall SET_QUEUE = new PythonCall("ils.sfc.steps.setQueue", 
+		null, stepArgs);
+
+	public static final PythonCall SHOW_QUEUE = new PythonCall("ils.sfc.steps.showQueue", 
+		null, stepArgs);
+
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;
 		this.returnType = returnType;
+	}
+	
+	public String getMethodName() {
+		return methodName;
 	}
 	
 	/** Execute this method and return the result. */
@@ -70,5 +84,7 @@ public class PythonCall {
 	public static void setScriptMgr(ScriptManager scriptManager) {
 		scriptMgr = scriptManager;
 	}
+
+	
 	
 }

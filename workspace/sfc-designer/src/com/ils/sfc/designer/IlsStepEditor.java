@@ -41,7 +41,6 @@ public class IlsStepEditor extends AbstractStepEditor {
 			if (editor == null || editor.model != model) {
 				editor = new IlsStepEditor(model);
 			}
-			System.out.println("setting element");
 			editor.setElement(element);
 			return editor;
 		}

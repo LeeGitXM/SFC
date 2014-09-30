@@ -4,11 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ils.sfc.common.TestStepProperties;
-import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
-import com.ils.sfc.util.IlsSfcIOIF;
-import com.ils.sfc.util.PythonCall;
 
 public class TestStep extends IlsAbstractChartStep implements TestStepProperties {
 	private static final Logger logger = LoggerFactory.getLogger(TestStep.class);

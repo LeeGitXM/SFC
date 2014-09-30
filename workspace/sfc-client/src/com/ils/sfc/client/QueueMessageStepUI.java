@@ -3,6 +3,7 @@ package com.ils.sfc.client;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import com.ils.sfc.client.AbstractIlsStepUI.PaletteTabs;
 import com.ils.sfc.common.QueueMessageStepDelegate;
 import com.ils.sfc.util.IlsSfcCommonUtils;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
@@ -10,14 +11,19 @@ import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public class QueueMessageStepUI extends AbstractIlsStepUI {
+	protected static Icon queueIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/queue.png"));
   
     public static final ClientStepFactory FACTORY = new QueueMessageStepFactory();
-
+    
+   	@Override
+	protected Icon getIcon() { return messageIcon; }
+	
+	@Override
+	protected String getText() { return "<html><b>Queue</html>"; }
+	
     public static final class QueueMessageStepFactory extends QueueMessageStepDelegate implements ClientStepFactory {
     	private QueueMessageStepUI UI = new QueueMessageStepUI();
-    	private Icon icon = new ImageIcon(getClass().getResource("/images/auction_hammer.png"));
-    	private Icon rollover = new ImageIcon(getClass().getResource("/images/auction_hammer.png"));
-
+ 
         @Override
         public StepUI createStepUI(ChartUIElement element) {
             return UI;
@@ -25,22 +31,22 @@ public class QueueMessageStepUI extends AbstractIlsStepUI {
 
         @Override
         public Icon getPaletteIcon() {
-            return null; //icon;
+            return queueIcon; //icon;
         }
 
         @Override
         public Icon getRolloverPaletteIcon() {
-            return null; // rollover;
+            return queueIcon;
         }
 
         @Override
         public String getPaletteText() {
-            return "Queue Message";
+            return "Post  Message to Queue";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return "Insert a message into a Queue";
+            return getPaletteText();
         }
 
         @Override
@@ -50,7 +56,7 @@ public class QueueMessageStepUI extends AbstractIlsStepUI {
 	
 		@Override
 		public String getCategory() {
-			return "EMC";
+			return PaletteTabs.Messages.toString();
 		}
 
     }

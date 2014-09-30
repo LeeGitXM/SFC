@@ -100,7 +100,6 @@ public class PropertyTableModel extends AbstractTableModel {
     
     public void setValueAt(Object value, int row, int col) {
     	PropertyRow pRow = rows.get(row);
-		System.out.println("set value " + value);
 
     	try {
 			pRow.setValueFormatted((String)value);
@@ -115,14 +114,11 @@ public class PropertyTableModel extends AbstractTableModel {
 	public void setElement(ChartUIElement element) {
 		this.element = element;		
 		rows.clear();
-		System.out.println("b4 set rows");
 		for(PropertyValue<?> value: element) {
 			if(!ignoreProperties.contains(value.getProperty().getName())){
 				rows.add(new PropertyRow(value, null));
 			}
 		}
-		System.out.println("after set rows");
 		fireTableStructureChanged();
-		System.out.println("after fire");
 	}
 }
