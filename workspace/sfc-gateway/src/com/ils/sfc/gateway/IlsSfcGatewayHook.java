@@ -34,17 +34,19 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 	@Override
 	public void setup(GatewayContext ctxt) {
 		this.context = ctxt;
-		PythonCall.setScriptMgr(ctxt.getScriptManager());
 		
-		// register the step factories:
-		SfcGatewayHook sfcHook = (SfcGatewayHook) context.getModule(SFCModule.MODULE_ID);
-		sfcHook.getStepRegistry().register(new QueueMessageStepFactory());
-		sfcHook.getStepRegistry().register(new SetQueueStepFactory());
-		sfcHook.getStepRegistry().register(new ShowQueueStepFactory());
 	}
 
 	@Override
 	public void startup(LicenseState licenseState) {
+		// register the step factories:
+		PythonCall.setScriptMgr(context.getScriptManager());
+		
+		SfcGatewayHook sfcHook = (SfcGatewayHook) context.getModule(SFCModule.MODULE_ID);
+		sfcHook.getStepRegistry().register(new QueueMessageStepFactory());
+		sfcHook.getStepRegistry().register(new SetQueueStepFactory());
+		sfcHook.getStepRegistry().register(new ShowQueueStepFactory());
+		sfcHook.getStepRegistry().register(new ClearQueueStepFactory());
  	    log.infof("%s: Startup complete.",TAG);
 	}
 
