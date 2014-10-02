@@ -5,7 +5,6 @@ package com.ils.sfc.designer;
 
 import com.ils.sfc.client.*;
 import com.ils.sfc.common.*;
-import com.ils.sfc.util.IlsGatewayScriptsIF;
 import com.inductiveautomation.ignition.client.gateway_interface.ModuleRPCFactory;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
@@ -33,7 +32,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void initializeScriptManager(ScriptManager mgr) {
 		super.initializeScriptManager(mgr);
-    	mgr.addScriptModule("ils.sfc", ModuleRPCFactory.create(IlsSfcProperties.MODULE_ID, IlsGatewayScriptsIF.class));
 		//mgr.addScriptModule(SFCProperties.APPLICATION_SCRIPT_PACKAGE,ApplicationScriptFunctions.class);
 	}
 	
@@ -42,8 +40,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		this.context = ctx;
 
     	// register step factories. this is duplicated in IlsSfcClientHook.
-		Object iaSfcGatewayHook = context.getModule(SFCModule.MODULE_ID);
-		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcGatewayHook).getStepRegistry();
+		Object iaSfcHook = context.getModule(SFCModule.MODULE_ID);
+		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
 		stepRegistry.register(QueueMessageStepUI.FACTORY);
 		stepRegistry.register(SetQueueStepUI.FACTORY);
 		stepRegistry.register(ShowQueueStepUI.FACTORY);

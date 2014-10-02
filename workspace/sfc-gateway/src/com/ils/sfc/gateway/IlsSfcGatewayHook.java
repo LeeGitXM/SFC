@@ -5,6 +5,7 @@ package com.ils.sfc.gateway;
 
 import com.ils.sfc.step.*;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
+import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
@@ -34,29 +35,26 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 	@Override
 	public void setup(GatewayContext ctxt) {
 		this.context = ctxt;
+		PythonCall.setScriptMgr(context.getScriptManager());
+		
 		
 	}
 
 	@Override
 	public void startup(LicenseState licenseState) {
+		ScriptManager.asynchInit("C:/Program Files/Inductive Automation/Ignition/user-lib/pylib");		
+ 	    log.infof("%s: Startup complete.",TAG);
 		// register the step factories:
-		PythonCall.setScriptMgr(context.getScriptManager());
-		
 		SfcGatewayHook sfcHook = (SfcGatewayHook) context.getModule(SFCModule.MODULE_ID);
 		sfcHook.getStepRegistry().register(new QueueMessageStepFactory());
 		sfcHook.getStepRegistry().register(new SetQueueStepFactory());
 		sfcHook.getStepRegistry().register(new ShowQueueStepFactory());
 		sfcHook.getStepRegistry().register(new ClearQueueStepFactory());
- 	    log.infof("%s: Startup complete.",TAG);
 	}
 
 	@Override
 	public void shutdown() {
 	}
 
-	@Override
-	public Object getRPCHandler(ClientReqSession session, Long projectId) {
-		return new IlsGatewayScripts(context);
-	}
 
 }

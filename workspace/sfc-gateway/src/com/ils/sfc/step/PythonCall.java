@@ -34,6 +34,9 @@ public class PythonCall {
 	public static final PythonCall SHOW_QUEUE = new PythonCall("ils.sfc.steps.showQueue", 
 		null, stepArgs);
 
+	public static final PythonCall OLD_QUEUE_INSERT = new PythonCall("ils.queue.message.insert", 
+			null, new String[]{"queue", "status", "message"});
+
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;
@@ -49,12 +52,13 @@ public class PythonCall {
 		if(compiledCode == null) {
 			compileCode();
 		}
-		PyStringMap map = scriptMgr.createLocalsMap();
+		PyStringMap localMap = scriptMgr.createLocalsMap();
+		PyStringMap globalsMap = scriptMgr.getGlobals();
 		for(int i = 0; i < argNames.length; i++) {
-			map.__setitem__(argNames[i], Py.java2py(argValues[i]));
+			localMap.__setitem__(argNames[i], Py.java2py(argValues[i]));
 		}
-		scriptMgr.runCode(compiledCode, map);
-		PyObject pyResult = map.__getitem__(RESULT_NAME);
+		scriptMgr.runCode(compiledCode, localMap, globalsMap);
+		PyObject pyResult = localMap.__getitem__(RESULT_NAME);
 		return returnType != null ? pyResult.__tojava__(returnType) : null;
 	}
 

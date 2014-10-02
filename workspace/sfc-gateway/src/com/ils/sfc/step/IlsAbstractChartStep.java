@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ils.sfc.step.annotation.ILSStep;
-import com.ils.sfc.util.IlsSfcIOIF;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.PyChartScope;
@@ -66,12 +65,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	protected void setObjectInScopeTree(String key, Object value) {
 		getContext().getChartScope().__set__(Py.java2py(key), Py.java2py(value));
 	}
-	
-	/** Get the IO object, going to parent context if necessary. */
-	public IlsSfcIOIF getIO() {
-		return (IlsSfcIOIF) getObjectFromScopeTree(IlsSfcIOIF.SCOPE_KEY);
-	}
-	
+		
 	public String getStringProperty(Property<String> prop) {
 		return getDefinition().getProperties().getOrDefault(prop);
 	}
