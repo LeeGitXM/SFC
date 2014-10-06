@@ -5,6 +5,7 @@ package com.ils.sfc.designer;
 
 import com.ils.sfc.client.*;
 import com.ils.sfc.common.*;
+import com.ils.sfc.util.IlsSfcScripts;
 import com.inductiveautomation.ignition.client.gateway_interface.ModuleRPCFactory;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
@@ -32,7 +33,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void initializeScriptManager(ScriptManager mgr) {
 		super.initializeScriptManager(mgr);
-		//mgr.addScriptModule(SFCProperties.APPLICATION_SCRIPT_PACKAGE,ApplicationScriptFunctions.class);
+		mgr.addScriptModule("system.ils.sfc", IlsSfcScripts.class);		
 	}
 	
 	@Override
@@ -46,7 +47,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		stepRegistry.register(SetQueueStepUI.FACTORY);
 		stepRegistry.register(ShowQueueStepUI.FACTORY);
 		stepRegistry.register(ClearQueueStepUI.FACTORY);
-    	
+		stepRegistry.register(YesNoStepUI.FACTORY);
+   	
 		// register the config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory();
     	StepConfigRegistry configRegistry = (StepConfigRegistry) context.getModule(SFCModule.MODULE_ID);
@@ -54,6 +56,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	configRegistry.register(SetQueueStepProperties.FACTORY_ID, editorFactory);
     	configRegistry.register(ShowQueueStepProperties.FACTORY_ID, editorFactory);
     	configRegistry.register(ClearQueueStepProperties.FACTORY_ID, editorFactory);
+    	configRegistry.register(YesNoStepProperties.FACTORY_ID, editorFactory);
 	}
 		
 	@Override

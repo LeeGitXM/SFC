@@ -16,8 +16,9 @@ import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	protected static Icon messageIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/message.png"));
+	protected static Icon questionIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/question.png"));
 	private JLabel label = new JLabel();
-	protected enum PaletteTabs { Messages };
+	protected enum PaletteTabs { Messages, Input };
 	
 	protected AbstractIlsStepUI() {
     	label.setText(getText());

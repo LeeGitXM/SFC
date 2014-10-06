@@ -4,6 +4,7 @@
 package com.ils.sfc.gateway;
 
 import com.ils.sfc.step.*;
+import com.ils.sfc.util.IlsSfcScripts;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -35,11 +36,14 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 	@Override
 	public void setup(GatewayContext ctxt) {
 		this.context = ctxt;
-		PythonCall.setScriptMgr(context.getScriptManager());
-		
-		
 	}
 
+	@Override
+	public void initializeScriptManager(ScriptManager manager) {
+		PythonCall.setScriptMgr(manager);
+		manager.addScriptModule("system.ils.sfc", IlsSfcScripts.class);				
+	};
+	
 	@Override
 	public void startup(LicenseState licenseState) {
 		ScriptManager.asynchInit("C:/Program Files/Inductive Automation/Ignition/user-lib/pylib");		
@@ -50,6 +54,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 		sfcHook.getStepRegistry().register(new SetQueueStepFactory());
 		sfcHook.getStepRegistry().register(new ShowQueueStepFactory());
 		sfcHook.getStepRegistry().register(new ClearQueueStepFactory());
+		sfcHook.getStepRegistry().register(new YesNoStepFactory());
 	}
 
 	@Override

@@ -34,8 +34,8 @@ public class PythonCall {
 	public static final PythonCall SHOW_QUEUE = new PythonCall("ils.sfc.steps.showQueue", 
 		null, stepArgs);
 
-	public static final PythonCall OLD_QUEUE_INSERT = new PythonCall("ils.queue.message.insert", 
-			null, new String[]{"queue", "status", "message"});
+	public static final PythonCall YES_NO = new PythonCall("ils.sfc.steps.yesNo", 
+			null, stepArgs);
 
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
