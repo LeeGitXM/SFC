@@ -22,7 +22,6 @@ public class PropertyTableModel extends AbstractTableModel {
 	private ChartUIElement element;
 	private static final Set<String> ignoreProperties = new HashSet<String>();
 	static {
-		ignoreProperties.add("name");
 		ignoreProperties.add("location");
 		ignoreProperties.add("location-adjustment");
 		ignoreProperties.add("id");

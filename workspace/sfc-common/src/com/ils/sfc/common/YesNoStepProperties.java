@@ -11,11 +11,12 @@ import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 public interface YesNoStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.yesNoStep";
 	
-    public static final Property<String> PROMPT = new BasicProperty<String>("prompt", String.class, "");
-    public static final Property<String> RECIPE_LOCATION = new BasicProperty<String>("recipeLocation", String.class, "");
-    public static final Property<String> KEY = new BasicProperty<String>("key", String.class, "");
+    public static final Property<String> PROMPT = new BasicProperty<String>(IlsSfcNames.PROMPT, String.class, "");
+    public static final Property<String> RECIPE_LOCATION = new BasicProperty<String>(IlsSfcNames.RECIPE_LOCATION, String.class, "");
+    public static final Property<String> KEY = new BasicProperty<String>(IlsSfcNames.KEY, String.class, "");
+    public static final Property<String> DESCRIPTION = new BasicProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
      
     public static final Property<?>[] properties = { 
-    	PROMPT, RECIPE_LOCATION, KEY
+    	DESCRIPTION, PROMPT, RECIPE_LOCATION, KEY
     };
 }

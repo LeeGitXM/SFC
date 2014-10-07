@@ -6,8 +6,10 @@ import java.util.Map;
 
 import org.python.core.PyDictionary;
 
-/** Java methods exposed as scripts in Ignition */
-public class IlsSfcScripts {	
+/** Handles receiving and caching SFC-related responses from clients.
+ *  This was implemented in Java because I couldn't get a persistent global in Jython */
+// TODO: should responses be persisted, so they survive a gateway restart??
+public class IlsResponseManager {	
 	private static Map<String,PyDictionary> repliesById = Collections.synchronizedMap(
 		new HashMap<String,PyDictionary>());
 	

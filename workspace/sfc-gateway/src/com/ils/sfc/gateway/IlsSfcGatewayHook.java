@@ -4,7 +4,7 @@
 package com.ils.sfc.gateway;
 
 import com.ils.sfc.step.*;
-import com.ils.sfc.util.IlsSfcScripts;
+import com.ils.sfc.util.IlsResponseManager;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -41,7 +41,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 	@Override
 	public void initializeScriptManager(ScriptManager manager) {
 		PythonCall.setScriptMgr(manager);
-		manager.addScriptModule("system.ils.sfc", IlsSfcScripts.class);				
+		manager.addScriptModule("system.ils.sfc", IlsResponseManager.class);				
 	};
 	
 	@Override

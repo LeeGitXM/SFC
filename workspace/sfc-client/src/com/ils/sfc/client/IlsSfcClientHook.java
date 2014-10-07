@@ -1,7 +1,7 @@
 package com.ils.sfc.client;
 
 import com.ils.sfc.common.IlsSfcProperties;
-import com.ils.sfc.util.IlsSfcScripts;
+import com.ils.sfc.util.IlsResponseManager;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
 import com.inductiveautomation.ignition.client.gateway_interface.ModuleRPCFactory;
 import com.inductiveautomation.ignition.client.model.ClientContext;
@@ -37,7 +37,7 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
     @Override
     public void initializeScriptManager(ScriptManager manager) {
 		super.initializeScriptManager(manager);
-		manager.addScriptModule("system.ils.sfc", IlsSfcScripts.class);		
+		manager.addScriptModule("system.ils.sfc", IlsResponseManager.class);		
     }
 
 }

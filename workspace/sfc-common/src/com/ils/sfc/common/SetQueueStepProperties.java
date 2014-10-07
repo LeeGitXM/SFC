@@ -12,8 +12,9 @@ import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 public interface SetQueueStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.setQueueStep";
 	
-    public static final Property<String> QUEUE_PROPERTY = new BasicProperty<String>("queue", String.class, "");
+    public static final Property<String> QUEUE_PROPERTY = new BasicProperty<String>(IlsSfcNames.QUEUE, String.class, "");
+    public static final Property<String> DESCRIPTION = new BasicProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
     
     public static final Property<?>[] properties = { 
-    	QUEUE_PROPERTY };
+    	DESCRIPTION, QUEUE_PROPERTY };
 }

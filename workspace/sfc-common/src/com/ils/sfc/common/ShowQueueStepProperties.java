@@ -1,5 +1,6 @@
 package com.ils.sfc.common;
 
+import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 
@@ -10,5 +11,7 @@ import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 public interface ShowQueueStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.showQueueStep";
 	
-    public static final Property<?>[] properties = { };
+    public static final Property<String> DESCRIPTION = new BasicProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
+
+    public static final Property<?>[] properties = { DESCRIPTION };
 }

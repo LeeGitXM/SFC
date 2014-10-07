@@ -1,0 +1,16 @@
+package com.ils.sfc.common;
+
+/** A single place to define names that need to be shared between Java and Jython. */
+public interface IlsSfcNames {
+
+	String NAME = "name";
+	String DESCRIPTION = "description";
+	String KEY = "key";
+	String MESSAGE = "message";
+	String PROMPT = "prompt";
+	String QUEUE = "queue";
+	String RECIPE_LOCATION = "recipeLocation";
+	String STATUS = "status";
+
+	String MESSAGE_ID = "messageId";
+}
