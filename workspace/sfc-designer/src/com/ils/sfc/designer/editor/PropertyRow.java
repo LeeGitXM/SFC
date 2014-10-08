@@ -45,6 +45,10 @@ public class PropertyRow {
 		this.choices = choices;
 	}
 
+	public Property<?> getUnitProperty() {
+		return unitPropertyValue.getProperty();
+	}
+
 	public Property<?> getProperty() {
 		return propertyValue.getProperty();
 	}
@@ -62,8 +66,19 @@ public class PropertyRow {
 		Object value = IlsSfcCommonUtils.parseProperty(getProperty(), stringValue);
 		setValue(value);
 	}
-	
+
+	/** Regardless of underlying type, set the value from a string representation. */
+	public void setUnitValueFormatted(String stringValue) throws ParseException {
+		Object value = IlsSfcCommonUtils.parseProperty(getUnitProperty(), stringValue);
+		setUnitValue(value);
+	}
+
 	public void setValue(Object value) {
 		propertyValue = new PropertyValue(getProperty(), value);		
 	}
+	
+	public void setUnitValue(Object value) {
+		unitPropertyValue = new PropertyValue(getUnitProperty(), value);		
+	}
+
 }

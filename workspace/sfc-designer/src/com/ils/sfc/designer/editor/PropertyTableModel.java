@@ -128,8 +128,14 @@ public class PropertyTableModel extends AbstractTableModel {
     	PropertyRow pRow = rows.get(row);
 
     	try {
-			pRow.setValueFormatted((String)value);
-			element.set(pRow.getPropertyValue());
+    		if(col == 1) {
+				pRow.setValueFormatted((String)value);
+				element.set(pRow.getPropertyValue());
+    		}
+    		else if(col == 2) {
+				pRow.setUnitValueFormatted((String)value);
+				element.set(pRow.getUnitPropertyValue());    			
+    		}
 	    	hasChanged = true;
 	        fireTableCellUpdated(row, col);
 		} catch (ParseException e) {
