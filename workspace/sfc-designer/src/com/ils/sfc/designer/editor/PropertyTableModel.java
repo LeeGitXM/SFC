@@ -6,29 +6,53 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
+import com.ils.sfc.common.IlsSfcNames;
+import com.inductiveautomation.ignition.common.config.BasicDescriptiveProperty;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 @SuppressWarnings("serial")
 public class PropertyTableModel extends AbstractTableModel {
+	private static final String UNIT_SUFFIX = "Unit";
 	private static final String[] columnNames = {"Property", "Value", "Units"};
 	private List<PropertyRow> rows = new ArrayList<PropertyRow>();
 	private boolean hasChanged;
 	private ChartUIElement element;
 	private static final Set<String> ignoreProperties = new HashSet<String>();
+	private static Map<String,List<String>> unitsByType = new HashMap<String,List<String>>();
+	private static Map<String,String> typesByUnit = new HashMap<String,String>();
+	
 	static {
 		ignoreProperties.add("location");
 		ignoreProperties.add("location-adjustment");
 		ignoreProperties.add("id");
 		ignoreProperties.add("type");
 		ignoreProperties.add("factory-id");
+		List<String> timeUnits = new ArrayList<String>();
+		timeUnits.add("seconds");
+		timeUnits.add("minutes");
+		timeUnits.add("hours");
+		unitsByType.put(IlsSfcNames.TIME_UNIT_TYPE, timeUnits);
+		for(Entry<String,List<String>> entry: unitsByType.entrySet()) {
+			for(String unit: entry.getValue()) {
+				typesByUnit.put(unit, entry.getKey());
+			}
+		}
 	}
  
+	private List<String> getOtherUnits(String unit) {
+		String type = typesByUnit.get(unit);
+		List<String> others = unitsByType.get(type);
+		System.out.println("other units for " + unit + ": " + others);
+		return others;
+	}
+	
 	public String getColumnName(int col) {
         return columnNames[col];
     }
@@ -95,7 +119,9 @@ public class PropertyTableModel extends AbstractTableModel {
     }
     
     public boolean isCellEditable(int row, int col) { 
-    	return col == 1 && !getRowObject(row).isCategory();
+    	PropertyRow rowObj = getRowObject(row);
+    	return (col == 1 && !rowObj.isCategory()) ||
+    		(col == 2 && rowObj.getChoices() != null);
     }
     
     public void setValueAt(Object value, int row, int col) {
@@ -114,9 +140,25 @@ public class PropertyTableModel extends AbstractTableModel {
 	public void setElement(ChartUIElement element) {
 		this.element = element;		
 		rows.clear();
-		for(PropertyValue<?> value: element) {
-			if(!ignoreProperties.contains(value.getProperty().getName())){
-				rows.add(new PropertyRow(value, null));
+		Map<String,PropertyValue<?>> propsByName = new HashMap<String,PropertyValue<?>>();
+		for(PropertyValue<?> pValue: element) {
+			propsByName.put(pValue.getProperty().getName(), pValue);
+		}
+		for(PropertyValue<?> pValue: element) {
+			String name = pValue.getProperty().getName();
+			if( !ignoreProperties.contains(name) &&
+				!name.endsWith(UNIT_SUFFIX)) {
+				PropertyValue<?> unitValueOrNull = propsByName.get(name + UNIT_SUFFIX);
+				PropertyRow newRow = new PropertyRow(pValue, unitValueOrNull);
+				rows.add(newRow);
+				
+				// add unit if present
+				if(unitValueOrNull != null) {
+					String unit = unitValueOrNull.getValue().toString();
+					List<String> unitChoices = getOtherUnits(unit);
+					newRow.setChoices(unitChoices);
+				}
+				
 			}
 		}
 		fireTableStructureChanged();

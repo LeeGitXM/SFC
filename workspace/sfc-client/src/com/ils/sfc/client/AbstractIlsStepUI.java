@@ -18,7 +18,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	protected static Icon messageIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/message.png"));
 	protected static Icon questionIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/question.png"));
 	private JLabel label = new JLabel();
-	protected enum PaletteTabs { Messages, Input };
+	protected enum PaletteTabs { Messages, Input, Control, Notification };
 	
 	protected AbstractIlsStepUI() {
     	label.setText(getText());

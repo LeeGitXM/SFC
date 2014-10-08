@@ -1,14 +1,16 @@
 package com.ils.sfc.designer.editor;
 
 import java.text.ParseException;
+import java.util.List;
 
 import com.ils.sfc.util.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 public class PropertyRow {
-	PropertyValue<?> propertyValue;
-	PropertyValue<?> unitPropertyValue; // may be null
+	private PropertyValue<?> propertyValue;
+	private PropertyValue<?> unitPropertyValue; // may be null
+	private List<?> choices;
 	
 	public PropertyRow(PropertyValue<?> propertyValue, PropertyValue<?> unitPropertyValue) {
 		this.propertyValue = propertyValue;
@@ -20,15 +22,11 @@ public class PropertyRow {
 	}
 
 	public String getUnitName() {
-		return null;
+		return unitPropertyValue != null ? unitPropertyValue.getValue().toString() : "";
 	}
 	
 	public Object getValue() {
 		return propertyValue.getValue();
-	}
-
-	public Object[] getChoices(Property<?> p) {
-		return null;
 	}
 	
 	public String getCategory() {
@@ -37,6 +35,14 @@ public class PropertyRow {
 	
 	public boolean isCategory() {
 		return false;
+	}
+
+	public List<?> getChoices() {
+		return choices;
+	}
+
+	public void setChoices(List<?> choices) {
+		this.choices = choices;
 	}
 
 	public Property<?> getProperty() {

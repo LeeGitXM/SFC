@@ -37,6 +37,15 @@ public class PythonCall {
 	public static final PythonCall YES_NO = new PythonCall("ils.sfc.steps.yesNo", 
 			null, stepArgs);
 
+	public static final PythonCall ABORT = new PythonCall("ils.sfc.steps.abort", 
+			null, stepArgs);
+
+	public static final PythonCall PAUSE = new PythonCall("ils.sfc.steps.pause", 
+			null, stepArgs);
+
+	public static final PythonCall CONTROL_PANEL_MESSAGE = new PythonCall("ils.sfc.steps.controlPanelMessage", 
+			null, stepArgs);
+
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;
