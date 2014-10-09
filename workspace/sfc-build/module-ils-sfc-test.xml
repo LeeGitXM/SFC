@@ -24,7 +24,6 @@
 		<jar scope="G">ils-common.jar</jar>
 		<jar scope="G">ils-sfc-common.jar</jar> 
 		<jar scope="G">ils-sfc-gateway.jar</jar>
-		<jar scope="G">ils-sfc-steps.jar</jar>
 		<jar scope="GD">jackson-core-2.2.3.jar</jar>
 		<jar scope="GD">jackson-databind-2.2.3.jar</jar>
 		<jar scope="GD">jackson-annotations-2.2.3.jar</jar>
