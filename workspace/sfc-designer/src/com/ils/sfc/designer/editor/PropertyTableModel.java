@@ -49,7 +49,6 @@ public class PropertyTableModel extends AbstractTableModel {
 	private List<String> getOtherUnits(String unit) {
 		String type = typesByUnit.get(unit);
 		List<String> others = unitsByType.get(type);
-		System.out.println("other units for " + unit + ": " + others);
 		return others;
 	}
 	
@@ -121,7 +120,7 @@ public class PropertyTableModel extends AbstractTableModel {
     public boolean isCellEditable(int row, int col) { 
     	PropertyRow rowObj = getRowObject(row);
     	return (col == 1 && !rowObj.isCategory()) ||
-    		(col == 2 && rowObj.getChoices() != null);
+    		(col == 2 && rowObj.getUnitPropertyValue() != null);
     }
     
     public void setValueAt(Object value, int row, int col) {
@@ -162,7 +161,7 @@ public class PropertyTableModel extends AbstractTableModel {
 				if(unitValueOrNull != null) {
 					String unit = unitValueOrNull.getValue().toString();
 					List<String> unitChoices = getOtherUnits(unit);
-					newRow.setChoices(unitChoices);
+					newRow.setUnitChoices(unitChoices);
 				}
 				
 			}

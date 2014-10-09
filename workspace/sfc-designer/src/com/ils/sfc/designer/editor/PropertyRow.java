@@ -11,6 +11,7 @@ public class PropertyRow {
 	private PropertyValue<?> propertyValue;
 	private PropertyValue<?> unitPropertyValue; // may be null
 	private List<?> choices;
+	private List<?> unitChoices;
 	
 	public PropertyRow(PropertyValue<?> propertyValue, PropertyValue<?> unitPropertyValue) {
 		this.propertyValue = propertyValue;
@@ -43,6 +44,14 @@ public class PropertyRow {
 
 	public void setChoices(List<?> choices) {
 		this.choices = choices;
+	}
+
+	public List<?> getUnitChoices() {
+		return unitChoices;
+	}
+
+	public void setUnitChoices(List<?> unitChoices) {
+		this.unitChoices = unitChoices;
 	}
 
 	public Property<?> getUnitProperty() {

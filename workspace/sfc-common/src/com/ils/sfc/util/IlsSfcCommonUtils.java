@@ -93,6 +93,9 @@ public class IlsSfcCommonUtils {
 		else if(property.getType() == Double.class) {
 			return UtilityFunctions.parseDouble(stringValue);
 		}
+		else if(property.getType() == Boolean.class) {
+			return Boolean.valueOf(stringValue);
+		}
 		else {
 			return stringValue;
 		}

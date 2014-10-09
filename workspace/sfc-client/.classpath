@@ -3,10 +3,18 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sfc-common"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Ignition-77"/>
+	<classpathentry kind="lib" path="C:/root/Ignition/Ignition-ModuleSDK-7.7.1-rc3/IgnitionSDK/client-api-7.7.1-rc3.jar"/>
+	<classpathentry kind="lib" path="C:/root/Ignition/Ignition-ModuleSDK-7.7.1-rc3/IgnitionSDK/ignition-common-7.7.1-rc3.jar"/>
+	<classpathentry kind="lib" path="C:/root/Ignition/Ignition-ModuleSDK-7.7.1-rc3/IgnitionSDK/alarm-notification-common-7.7.1-rc3.jar"/>
+	<classpathentry kind="lib" path="C:/root/Ignition/Ignition-ModuleSDK-7.7.1-rc3/IgnitionSDK/alarm-notification-designer-7.7.1-rc3.jar"/>
+	<classpathentry kind="lib" path="C:/root/Ignition/Ignition-ModuleSDK-7.7.1-rc3/IgnitionSDK/alarm-notification-gateway-api-7.7.1-rc3.jar"/>
+	<classpathentry kind="lib" path="C:/root/Ignition/Ignition-ModuleSDK-7.7.1-rc3/IgnitionSDK/designer-api-7.7.1-rc3.jar"/>
+	<classpathentry kind="lib" path="C:/root/Ignition/Ignition-ModuleSDK-7.7.1-rc3/IgnitionSDK/driver-api-7.7.1-rc3.jar"/>
+	<classpathentry kind="lib" path="C:/root/Ignition/Ignition-ModuleSDK-7.7.1-rc3/IgnitionSDK/gateway-api-7.7.1-rc3.jar"/>
+	<classpathentry kind="lib" path="C:/root/Ignition/Ignition-ModuleSDK-7.7.1-rc3/IgnitionSDK/vision-client-api-7.7.1-rc3.jar"/>
+	<classpathentry kind="lib" path="C:/root/Ignition/Ignition-ModuleSDK-7.7.1-rc3/IgnitionSDK/vision-common-7.7.1-rc3.jar"/>
+	<classpathentry kind="lib" path="C:/root/Ignition/Ignition-ModuleSDK-7.7.1-rc3/IgnitionSDK/vision-designer-api-7.7.1-rc3.jar"/>
 	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-client.jar"/>
 	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-common.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/client-api.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/ignition-common.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
