@@ -33,7 +33,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void initializeScriptManager(ScriptManager mgr) {
 		super.initializeScriptManager(mgr);
-		mgr.addScriptModule("system.ils.sfc", IlsResponseManager.class);		
+		//mgr.addScriptModule("system.ils.sfc", IlsResponseManager.class);		
+		mgr.addStaticFields("system.ils.sfc", IlsSfcNames.class);
 	}
 	
 	@Override

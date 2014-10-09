@@ -1,5 +1,6 @@
 package com.ils.sfc.client;
 
+import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.IlsSfcProperties;
 import com.ils.sfc.util.IlsResponseManager;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
@@ -39,7 +40,8 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
     @Override
     public void initializeScriptManager(ScriptManager manager) {
 		super.initializeScriptManager(manager);
-		manager.addScriptModule("system.ils.sfc", IlsResponseManager.class);		
+		//manager.addScriptModule("system.ils.sfc", IlsResponseManager.class);		
+		manager.addStaticFields("system.ils.sfc", IlsSfcNames.class);
     }
 
 }
