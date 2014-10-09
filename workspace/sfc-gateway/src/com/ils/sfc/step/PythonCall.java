@@ -46,6 +46,9 @@ public class PythonCall {
 	public static final PythonCall CONTROL_PANEL_MESSAGE = new PythonCall("ils.sfc.steps.controlPanelMessage", 
 			null, stepArgs);
 
+	public static final PythonCall TIMED_DELAY = new PythonCall("ils.sfc.steps.timedDelay", 
+			null, stepArgs);
+
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;

@@ -60,6 +60,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 		sfcHook.getStepRegistry().register(new AbortStepFactory());
 		sfcHook.getStepRegistry().register(new PauseStepFactory());
 		sfcHook.getStepRegistry().register(new ControlPanelMessageStepFactory());
+		sfcHook.getStepRegistry().register(new TimedDelayStepFactory());
 	}
 
 	@Override

@@ -15,7 +15,7 @@ public interface ControlPanelMessageStepProperties extends ChartStepProperties {
     public static final Property<String> DESCRIPTION = new BasicProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
 
     public static final Property<String> MESSAGE = new BasicProperty<String>(IlsSfcNames.MESSAGE, String.class, "");
-    public static final Property<String> ACKNOWLEDGEMENT_REQUIRED = new BasicProperty<String>(IlsSfcNames.ACKNOWLEDGEMENT_REQUIRED, String.class, "");
+    public static final Property<Boolean> ACKNOWLEDGEMENT_REQUIRED = new BasicProperty<Boolean>(IlsSfcNames.ACKNOWLEDGEMENT_REQUIRED, Boolean.class, Boolean.FALSE);
     public static final Property<String> PRIORITY = new BasicProperty<String>(IlsSfcNames.PRIORITY, String.class, "");
     public static final Property<Boolean> POST_TO_QUEUE = new BasicProperty<Boolean>(IlsSfcNames.POST_TO_QUEUE, Boolean.class, Boolean.FALSE);
     public static final Property<Integer> TIMEOUT = new BasicProperty<Integer>(IlsSfcNames.TIMEOUT, Integer.class, 0);
