@@ -126,7 +126,6 @@
 		<pack200 src="${basedir}/sfc-build/bin/${ils.sfc.name}_Client/dist/ils-sfc-client.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-client.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		<pack200 src="${basedir}/sfc-build/bin/${ils.sfc.name}_Designer/dist/ils-sfc-designer.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-designer.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		<pack200 src="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/ils-sfc-common.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-common.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
-		<pack200 src="${basedir}/../../external/lib/ils-sfc-steps.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-steps.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		
 		
 		<!-- Copy gateway jar -->
@@ -135,7 +134,6 @@
 		
 		<!-- Copy dependent jars -->
 		<copy file="${basedir}/../../external/lib/commons-math3-3.1.1.jar" todir="${basedir}/sfc-build/temp_modl/" />
-		<copy file="${basedir}/../../external/lib/ils-sfc-steps.jar" todir="${basedir}/sfc-build/temp_modl/" />
 
 		<!-- Copy license file and javadoc into the bundle -->
 		<mkdir dir="${basedir}/sfc-build/doc" />
@@ -144,7 +142,7 @@
 		    <fileset dir="${basedir}/sfc-build/doc"/>
 		</copy>
 		<!-- Echo the version into .version in the bundle and to be saved -->
-		<echo message="${ils.sfc.name}-${ils.sfc.version}:${ils.sfc.release}" file="${basedir}/sfc-build/temp_modl/.version" append="false"/>
+		<echo message="${ils.sfc.name}-${ils.sfc.version}" file="${basedir}/sfc-build/temp_modl/.version" append="false"/>
 		<echo message="${ils.sfc.name}-${ils.sfc.name}:${ils.sfc.release}" file="${basedir}/sfc-build/.version" append="false"/>
 		
 		<!-- Zip it all up -->
