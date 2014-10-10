@@ -1,9 +1,13 @@
-package com.ils.sfc.step;
+package com.ils.sfc.util;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.python.core.CompileMode;
 import org.python.core.CompilerFlags;
 import org.python.core.Py;
 import org.python.core.PyCode;
+import org.python.core.PyList;
 import org.python.core.PyObject;
 import org.python.core.PyStringMap;
 
@@ -48,6 +52,9 @@ public class PythonCall {
 
 	public static final PythonCall TIMED_DELAY = new PythonCall("ils.sfc.steps.timedDelay", 
 			null, stepArgs);
+
+	public static final PythonCall OTHER_UNITS = new PythonCall("ils.common.units.unitsOfSameType", 
+			PyList.class,  new String[]{"unit"} );
 
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
@@ -100,7 +107,13 @@ public class PythonCall {
 	public static void setScriptMgr(ScriptManager scriptManager) {
 		scriptMgr = scriptManager;
 	}
-
 	
-	
+	public static List<String> toStringList(Object o) {
+		PyList pylist = (PyList)o;
+		List<String> jlist = new ArrayList<String>();
+		for(int i = 0; i < pylist.size(); i++) {
+			jlist.add((String)pylist.get(i));
+		}
+		return jlist;
+	}
 }

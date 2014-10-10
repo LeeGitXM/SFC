@@ -63,6 +63,8 @@ public class IlsSfcCommonUtils {
 	}
 
 	public static void toXML(XMLStreamWriter writer, ChartUIElement element) {
+		// TODO: XMLStreamWriter's escaping of characters is incomplete; e.g.
+		// it doesn't handle single quotes. Should we handle that?
 		try {
 			for(PropertyValue<?> pvalue: element) {
 				writer.writeStartElement(pvalue.getProperty().getName());

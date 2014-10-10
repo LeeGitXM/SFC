@@ -24,4 +24,10 @@ public class IlsSfcNames {
 	public static final String TIMEOUT = "timeout";
 	public static final String TIMEOUT_UNIT = "timeoutUnit";
 	public static final String TIME_UNIT_TYPE = "Time";
+
+	// These must correspond to the actual unit names in the DB:
+	public static final String SECOND= "SECOND";
+	public static final String MINUTE = "MINUTE";
+	public static final String HOUR = "HOUR";
+
 }

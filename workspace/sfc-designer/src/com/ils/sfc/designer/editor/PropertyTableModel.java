@@ -12,9 +12,16 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
+import org.python.core.PyList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.ils.sfc.common.IlsSfcNames;
+import com.ils.sfc.util.IlsSfcCommonUtils;
+import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.config.BasicDescriptiveProperty;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 @SuppressWarnings("serial")
@@ -25,33 +32,16 @@ public class PropertyTableModel extends AbstractTableModel {
 	private boolean hasChanged;
 	private ChartUIElement element;
 	private static final Set<String> ignoreProperties = new HashSet<String>();
-	private static Map<String,List<String>> unitsByType = new HashMap<String,List<String>>();
-	private static Map<String,String> typesByUnit = new HashMap<String,String>();
-	
+	private static final Logger logger = LoggerFactory.getLogger(PropertyTableModel.class);
+
 	static {
 		ignoreProperties.add("location");
 		ignoreProperties.add("location-adjustment");
 		ignoreProperties.add("id");
 		ignoreProperties.add("type");
 		ignoreProperties.add("factory-id");
-		List<String> timeUnits = new ArrayList<String>();
-		timeUnits.add("seconds");
-		timeUnits.add("minutes");
-		timeUnits.add("hours");
-		unitsByType.put(IlsSfcNames.TIME_UNIT_TYPE, timeUnits);
-		for(Entry<String,List<String>> entry: unitsByType.entrySet()) {
-			for(String unit: entry.getValue()) {
-				typesByUnit.put(unit, entry.getKey());
-			}
-		}
 	}
  
-	private List<String> getOtherUnits(String unit) {
-		String type = typesByUnit.get(unit);
-		List<String> others = unitsByType.get(type);
-		return others;
-	}
-	
 	public String getColumnName(int col) {
         return columnNames[col];
     }
@@ -160,7 +150,13 @@ public class PropertyTableModel extends AbstractTableModel {
 				// add unit if present
 				if(unitValueOrNull != null) {
 					String unit = unitValueOrNull.getValue().toString();
-					List<String> unitChoices = getOtherUnits(unit);
+					List<String> unitChoices = null;
+					try {
+						unitChoices = PythonCall.toStringList(
+							PythonCall.OTHER_UNITS.exec(unit));
+					} catch (JythonExecException e) {
+						logger.error("Exception getting units", e);
+					}
 					newRow.setUnitChoices(unitChoices);
 				}
 				

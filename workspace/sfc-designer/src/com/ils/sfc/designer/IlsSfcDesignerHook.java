@@ -6,6 +6,7 @@ package com.ils.sfc.designer;
 import com.ils.sfc.client.*;
 import com.ils.sfc.common.*;
 import com.ils.sfc.util.IlsResponseManager;
+import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.client.gateway_interface.ModuleRPCFactory;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
@@ -33,7 +34,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void initializeScriptManager(ScriptManager mgr) {
 		super.initializeScriptManager(mgr);
-		//mgr.addScriptModule("system.ils.sfc", IlsResponseManager.class);		
+		//mgr.addScriptModule("system.ils.sfc", IlsResponseManager.class);
+		PythonCall.setScriptMgr(mgr);
 		mgr.addStaticFields("system.ils.sfc", IlsSfcNames.class);
 	}
 	
