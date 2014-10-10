@@ -56,6 +56,12 @@ public class PythonCall {
 	public static final PythonCall OTHER_UNITS = new PythonCall("ils.common.units.unitsOfSameType", 
 			PyList.class,  new String[]{"unit"} );
 
+	public static final PythonCall DELETE_DELAY_NOTIFICATION = new PythonCall("ils.sfc.steps.deleteDelayNotification", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall POST_DELAY_NOTIFICATION = new PythonCall("ils.sfc.steps.postDelayNotification", 
+			PyList.class,  stepArgs );
+
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;
@@ -108,12 +114,12 @@ public class PythonCall {
 		scriptMgr = scriptManager;
 	}
 	
-	public static List<String> toStringList(Object o) {
+	public static String[] toArray(Object o) {
 		PyList pylist = (PyList)o;
-		List<String> jlist = new ArrayList<String>();
+		String[] array = new String[pylist.size()];
 		for(int i = 0; i < pylist.size(); i++) {
-			jlist.add((String)pylist.get(i));
+			array[i] = (String)pylist.get(i);
 		}
-		return jlist;
+		return array;
 	}
 }

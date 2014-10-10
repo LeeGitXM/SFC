@@ -10,8 +10,8 @@ import com.inductiveautomation.ignition.common.config.PropertyValue;
 public class PropertyRow {
 	private PropertyValue<?> propertyValue;
 	private PropertyValue<?> unitPropertyValue; // may be null
-	private List<?> choices;
-	private List<?> unitChoices;
+	private Object[] choices;
+	private Object[] unitChoices;
 	
 	public PropertyRow(PropertyValue<?> propertyValue, PropertyValue<?> unitPropertyValue) {
 		this.propertyValue = propertyValue;
@@ -38,19 +38,19 @@ public class PropertyRow {
 		return false;
 	}
 
-	public List<?> getChoices() {
+	public Object[] getChoices() {
 		return choices;
 	}
 
-	public void setChoices(List<?> choices) {
+	public void setChoices(Object[] choices) {
 		this.choices = choices;
 	}
 
-	public List<?> getUnitChoices() {
+	public Object[] getUnitChoices() {
 		return unitChoices;
 	}
 
-	public void setUnitChoices(List<?> unitChoices) {
+	public void setUnitChoices(Object[] unitChoices) {
 		this.unitChoices = unitChoices;
 	}
 

@@ -21,9 +21,9 @@ class PropertyCellEditor extends AbstractCellEditor implements TableCellEditor{
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected,
 		int row, int col) {
 		PropertyRow rowObj = ((PropertyTableModel) table.getModel()).getRowObject(row);
-		List<?> choicesOrNull = col == 1 ? rowObj.getChoices() : rowObj.getUnitChoices();
+		Object[] choicesOrNull = col == 1 ? rowObj.getChoices() : rowObj.getUnitChoices();
 		if(choicesOrNull != null) {
-			JComboBox<Object> combo = new JComboBox<Object>(choicesOrNull.toArray());
+			JComboBox<Object> combo = new JComboBox<Object>(choicesOrNull);
 			combo.setBackground(java.awt.Color.white);
 			return component = combo;
 		}

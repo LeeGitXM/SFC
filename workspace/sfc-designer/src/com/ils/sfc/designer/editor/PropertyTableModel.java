@@ -146,13 +146,18 @@ public class PropertyTableModel extends AbstractTableModel {
 				PropertyValue<?> unitValueOrNull = propsByName.get(name + UNIT_SUFFIX);
 				PropertyRow newRow = new PropertyRow(pValue, unitValueOrNull);
 				rows.add(newRow);
+	
+				// add choices where appropriate
+				if(pValue.getProperty().getName().equals(IlsSfcNames.RECIPE_LOCATION)) {
+					newRow.setChoices(IlsSfcNames.RECIPE_LOCATION_CHOICES);
+				}
 				
-				// add unit if present
+				// add unit choices if present
 				if(unitValueOrNull != null) {
 					String unit = unitValueOrNull.getValue().toString();
-					List<String> unitChoices = null;
+					Object[] unitChoices = null;
 					try {
-						unitChoices = PythonCall.toStringList(
+						unitChoices = PythonCall.toArray(
 							PythonCall.OTHER_UNITS.exec(unit));
 					} catch (JythonExecException e) {
 						logger.error("Exception getting units", e);
