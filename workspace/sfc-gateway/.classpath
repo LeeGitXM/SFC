@@ -3,10 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/sfc-common"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-common.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-gateway.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-gateway-api.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/gateway-api.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/ignition-common.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Ignition-77"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
