@@ -46,7 +46,9 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
     public void initializeScriptManager(ScriptManager manager) {
 		super.initializeScriptManager(manager);
 		PythonCall.setScriptMgr(manager);
-   }
+		manager.addScriptModule("system.ils.sfc", IlsResponseManager.class);		
+		manager.addStaticFields("system.ils.sfc", IlsSfcNames.class);
+    }
 
 }
 

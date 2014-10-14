@@ -35,6 +35,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	public void initializeScriptManager(ScriptManager mgr) {
 		super.initializeScriptManager(mgr);
 		PythonCall.setScriptMgr(mgr);
+		mgr.addScriptModule("system.ils.sfc", IlsResponseManager.class);
+		mgr.addStaticFields("system.ils.sfc", IlsSfcNames.class);
 	}
 	
 	@Override

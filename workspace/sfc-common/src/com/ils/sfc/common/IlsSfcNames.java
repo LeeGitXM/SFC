@@ -12,7 +12,6 @@ public class IlsSfcNames {
 	public static final String DELAY_UNIT = "delayUnit";
 	public static final String KEY = "key";
 	public static final String MESSAGE = "message";
-	public static final String MESSAGE_ID = "messageId";
 	public static final String NAME = "name";
 	public static final String POST_TO_QUEUE = "postToQueue";
 	public static final String POST_NOTIFICATION = "postNotification";
@@ -43,5 +42,8 @@ public class IlsSfcNames {
 	public static final String MINUTE = "MINUTE";
 	public static final String HOUR = "HOUR";
 	public static final String TIME_UNIT_TYPE = "TIME";
+
+	// other
+	public static final String MESSAGE_ID = "messageId";
 
 }
