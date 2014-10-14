@@ -3,6 +3,7 @@ package com.ils.sfc.common;
 /** A single place to define names that need to be shared between Java and Jython. */
 public class IlsSfcNames {
 
+	// step properties:
 	public static final String ACKNOWLEDGEMENT_REQUIRED = "acknowledge";
 	public static final String CALLBACK = "callback";
 	public static final String COMMAND = "callback";
@@ -18,13 +19,15 @@ public class IlsSfcNames {
 	public static final String PRIORITY = "priority";
 	public static final String PROMPT = "prompt";
 	public static final String QUEUE = "queue";
-	public static final String RESPONSE_HANDLER = "sfcInputResponse";
 	public static final String STATUS = "status";
 	public static final String STRATEGY = "strategy";
 	public static final String TIMEOUT = "timeout";
 	public static final String TIMEOUT_UNIT = "timeoutUnit";
-	public static final String TIME_UNIT_TYPE = "Time";
 
+	// message handlers:
+	public static final String RESPONSE_HANDLER = "sfcInputResponse";
+
+	// scopes for recipe data:
 	public static final String RECIPE_LOCATION = "recipeLocation";
 	public static final String LOCAL = "Local";
 	public static final String PREVIOUS = "Previous";
@@ -36,10 +39,12 @@ public class IlsSfcNames {
 	public static final String[] RECIPE_LOCATION_CHOICES = {
 		LOCAL, PREVIOUS, SUPERIOR, NAMED, PROCEDURE, PHASE, OPERATION};
 
-			
+	
+	// frequently used units
 	// These must correspond to the actual unit names in the DB:
 	public static final String SECOND= "SECOND";
 	public static final String MINUTE = "MINUTE";
 	public static final String HOUR = "HOUR";
+	public static final String TIME_UNIT_TYPE = "Time";
 
 }

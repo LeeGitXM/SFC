@@ -6,20 +6,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
-import org.python.core.PyList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ils.sfc.common.IlsSfcNames;
-import com.ils.sfc.util.IlsSfcCommonUtils;
 import com.ils.sfc.util.PythonCall;
-import com.inductiveautomation.ignition.common.config.BasicDescriptiveProperty;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
@@ -94,7 +90,7 @@ public class PropertyTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int col) {
     	PropertyRow pRow = rows.get(row);
         if(col == 0) {
-        	return pRow.getName();
+        	return pRow.getDisplayLabel();
         }
         else if(col == 1) {
         	return pRow.getValue();

@@ -12,10 +12,27 @@ public class PropertyRow {
 	private PropertyValue<?> unitPropertyValue; // may be null
 	private Object[] choices;
 	private Object[] unitChoices;
+	private String displayLabel;
 	
 	public PropertyRow(PropertyValue<?> propertyValue, PropertyValue<?> unitPropertyValue) {
 		this.propertyValue = propertyValue;
 		this.unitPropertyValue = unitPropertyValue;
+		displayLabel = createDisplayLabel();
+	}
+
+	/** Create a user-friendly label for this property */
+	private String createDisplayLabel() {
+		// break up the camel-case, replacing caps by spaces
+		StringBuilder buf = new StringBuilder();
+		String camelCaseName = getName();
+		for(int i = 0; i < camelCaseName.length(); i++) {
+			char c = camelCaseName.charAt(i);
+			if(Character.isUpperCase(c)) {
+				buf.append(' ');
+			}
+			buf.append(Character.toLowerCase(c));
+		}
+		return buf.toString();
 	}
 
 	public String getName() {
@@ -88,6 +105,10 @@ public class PropertyRow {
 	
 	public void setUnitValue(Object value) {
 		unitPropertyValue = new PropertyValue(getUnitProperty(), value);		
+	}
+
+	public String getDisplayLabel() {
+		return displayLabel;
 	}
 
 }
