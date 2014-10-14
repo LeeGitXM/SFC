@@ -2,11 +2,12 @@
 # Process all of the json files in the repository "g2" area.
 # Save the results in the json storate area for ignition.
 #
-SFC=~/Development/ils/repo/sfc
+SFC=~/Development/ils/src/sfc
 APP=${SFC}/migration/translate
 cd ${SFC}/migration/samples
+DIR=`pwd`
 for fil in *.txt
 do
 	echo "Processing $fil..."
-    $APP $fil
+    $APP $DIR/$fil
 done

@@ -7,7 +7,7 @@
 #!/bin/sh
 #set -x
 DB=lookup.db
-REPO_ROOT=~/Development/ils/repo
+REPO_ROOT=~/Development/ils/src
 BIN=$REPO_ROOT/sfc/migration/db
 TARGETDIR=$REPO_ROOT/sfc/migration/db
 mkdir -p ${TARGETDIR}

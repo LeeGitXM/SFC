@@ -7,7 +7,7 @@ then
     echo "USAGE: migrate <file>"
 	exit 2
 fi
-REPO=~/Development/ils/repo
+REPO=~/Development/ils/src
 cd $REPO/sfc
 SFC=`pwd`
 LIB=$REPO/external/lib
