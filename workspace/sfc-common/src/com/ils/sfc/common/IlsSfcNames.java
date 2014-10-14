@@ -45,5 +45,6 @@ public class IlsSfcNames {
 
 	// other
 	public static final String MESSAGE_ID = "messageId";
+	public static final String BY_NAME = "stepsByName";
 
 }
