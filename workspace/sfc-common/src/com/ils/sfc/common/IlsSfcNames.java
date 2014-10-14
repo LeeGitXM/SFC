@@ -24,9 +24,6 @@ public class IlsSfcNames {
 	public static final String TIMEOUT = "timeout";
 	public static final String TIMEOUT_UNIT = "timeoutUnit";
 
-	// message handlers:
-	public static final String RESPONSE_HANDLER = "sfcInputResponse";
-
 	// scopes for recipe data:
 	public static final String RECIPE_LOCATION = "recipeLocation";
 	public static final String LOCAL = "Local";
@@ -45,6 +42,6 @@ public class IlsSfcNames {
 	public static final String SECOND= "SECOND";
 	public static final String MINUTE = "MINUTE";
 	public static final String HOUR = "HOUR";
-	public static final String TIME_UNIT_TYPE = "Time";
+	public static final String TIME_UNIT_TYPE = "TIME";
 
 }
