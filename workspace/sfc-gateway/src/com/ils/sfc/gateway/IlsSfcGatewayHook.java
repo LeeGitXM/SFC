@@ -65,6 +65,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 		sfcHook.getStepRegistry().register(new DeleteDelayNotificationStepFactory());
 		sfcHook.getStepRegistry().register(new PostDelayNotificationStepFactory());
 		sfcHook.getStepRegistry().register(new EnableDisableStepFactory());
+		sfcHook.getStepRegistry().register(new SelectInputStepFactory());
 	}
 
 	@Override

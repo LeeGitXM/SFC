@@ -144,7 +144,8 @@ public class PropertyTableModel extends AbstractTableModel {
 				rows.add(newRow);
 	
 				// add choices where appropriate
-				if(pValue.getProperty().getName().equals(IlsSfcNames.RECIPE_LOCATION)) {
+				if(newRow.getName().equals(IlsSfcNames.RECIPE_LOCATION) || 
+				   newRow.getName().equals(IlsSfcNames.CHOICES_RECIPE_LOCATION)) {
 					newRow.setChoices(IlsSfcNames.RECIPE_LOCATION_CHOICES);
 				}
 				

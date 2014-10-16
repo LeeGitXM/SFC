@@ -7,24 +7,29 @@ public class IlsSfcNames {
 	public static final String ACKNOWLEDGEMENT_REQUIRED = "acknowledge";
 	public static final String CALLBACK = "callback";
 	public static final String COMMAND = "callback";
+	public static final String CHOICES= "choices";
+	public static final String CHOICES_KEY = "choicesKey";
+	public static final String CHOICES_RECIPE_LOCATION = "choicesRecipeLocation";
 	public static final String DESCRIPTION = "description";
 	public static final String DELAY = "delay";
 	public static final String DELAY_UNIT = "delayUnit";
 	public static final String KEY = "key";
 	public static final String MESSAGE = "message";
+	public static final String MINIMUM_VALUE = "minimumValue";
+	public static final String MAXIMUM_VALUE = "maximumValue";
 	public static final String NAME = "name";
 	public static final String POST_TO_QUEUE = "postToQueue";
 	public static final String POST_NOTIFICATION = "postNotification";
 	public static final String PRIORITY = "priority";
 	public static final String PROMPT = "prompt";
 	public static final String QUEUE = "queue";
+	public static final String RECIPE_LOCATION = "recipeLocation";
 	public static final String STATUS = "status";
 	public static final String STRATEGY = "strategy";
 	public static final String TIMEOUT = "timeout";
 	public static final String TIMEOUT_UNIT = "timeoutUnit";
 
 	// scopes for recipe data:
-	public static final String RECIPE_LOCATION = "recipeLocation";
 	public static final String LOCAL = "Local";
 	public static final String PREVIOUS = "Previous";
 	public static final String SUPERIOR = "Superior";

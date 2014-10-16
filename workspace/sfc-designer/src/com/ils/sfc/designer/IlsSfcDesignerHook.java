@@ -58,6 +58,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		stepRegistry.register(DeleteDelayNotificationStepUI.FACTORY);
 		stepRegistry.register(PostDelayNotificationStepUI.FACTORY);
 		stepRegistry.register(EnableDisableStepUI.FACTORY);
+		stepRegistry.register(SelectInputStepUI.FACTORY);
+		stepRegistry.register(LimitedInputStepUI.FACTORY);
 		    	
 		// register the config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory();
@@ -74,6 +76,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	configRegistry.register(DeleteDelayNotificationStepProperties.FACTORY_ID, editorFactory);
     	configRegistry.register(PostDelayNotificationStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(EnableDisableStepProperties.FACTORY_ID, editorFactory);
+       	configRegistry.register(SelectInputStepProperties.FACTORY_ID, editorFactory);
+       	configRegistry.register(LimitedInputStepProperties.FACTORY_ID, editorFactory);
 	}
 		
 	@Override

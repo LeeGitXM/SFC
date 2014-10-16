@@ -13,7 +13,8 @@ public interface PostDelayNotificationStepProperties extends ChartStepProperties
 	public static final String FACTORY_ID = "com.ils.postDelayNotification";
 
     public static final Property<String> DESCRIPTION = new BasicProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
-   
+    public static final Property<String> MESSAGE = new BasicProperty<String>(IlsSfcNames.MESSAGE, String.class, "");
+  
     public static final Property<?>[] properties = { 
-    	DESCRIPTION };
+    	DESCRIPTION, MESSAGE };
 }

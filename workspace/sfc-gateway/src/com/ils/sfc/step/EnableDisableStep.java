@@ -12,7 +12,7 @@ public class EnableDisableStep extends IlsAbstractChartStep implements EnableDis
 
 	@Override
 	public void activateStep() {
-		exec(PythonCall.QUEUE_INSERT);
+		exec(PythonCall.ENABLE_DISABLE);
 	}
 
 	@Override

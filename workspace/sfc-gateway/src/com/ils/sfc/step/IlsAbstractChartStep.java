@@ -32,16 +32,26 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 @ILSStep
 public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefinition> implements StepElement {
 	private static final Logger logger = LoggerFactory.getLogger(IlsAbstractChartStep.class);
-	private static final BasicProperty<String> nameProperty = new BasicProperty<String>("Name", String.class);
+	private static final BasicProperty<String> nameProperty = new BasicProperty<String>(IlsSfcNames.NAME, String.class);
 	
 	protected IlsAbstractChartStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 		
+	@Override
+	public void pauseStep() {
+		System.out.println("pauseStep");
+	}
+
+	@Override
+	public void resumeStep() {
+		System.out.println("resumeStep");		
+	}
+
 	protected void exec(PythonCall pcall) {
 		try {
 			logger.trace(pcall.getMethodName());
-			// indexElements(getContext());
+			indexElements(getContext());
 			pcall.exec(getContext().getChartScope(), getDefinition().getProperties());
 		} catch (Exception e) {
 			logger.error("Error calling " + pcall.getMethodName(), e);
@@ -71,6 +81,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 						stepProperties.put(propertyValue.getProperty().getName(),
 							propertyValue.getValue());
 					}
+					System.out.println("indexing " + name + ": " + stepProperties);
 					byName.put(name, stepProperties);
 				}
 			}
@@ -104,6 +115,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 					String successorName = getName((StepDefinition)successor.getDefinition());
 					PyDictionary successorProperties = (PyDictionary)byName.get(successorName);
 					successorProperties.put(IlsSfcNames.PREVIOUS, predecessorProperties);
+					System.out.println("indexing predecessor " + predecessorProperties + ": successor " + successorName);
 				}
 				else {  // not a step; recurse
 					setPredecessor(successor, byName, predecessorProperties);
