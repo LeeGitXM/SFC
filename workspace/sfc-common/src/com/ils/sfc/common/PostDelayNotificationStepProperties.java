@@ -12,9 +12,9 @@ import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 public interface PostDelayNotificationStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.postDelayNotification";
 
-    public static final Property<String> DESCRIPTION = new BasicProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
-    public static final Property<String> MESSAGE = new BasicProperty<String>(IlsSfcNames.MESSAGE, String.class, "");
+    public static final IlsProperty<String> DESCRIPTION = new IlsProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
+    public static final IlsProperty<String> MESSAGE = new IlsProperty<String>(IlsSfcNames.MESSAGE, String.class, "");
   
-    public static final Property<?>[] properties = { 
+    public static final IlsProperty<?>[] properties = { 
     	DESCRIPTION, MESSAGE };
 }

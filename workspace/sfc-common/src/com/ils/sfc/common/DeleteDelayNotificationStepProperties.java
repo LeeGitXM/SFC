@@ -12,9 +12,9 @@ import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 public interface DeleteDelayNotificationStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.deleteDelayNotification";
 
-    public static final Property<String> DESCRIPTION = new BasicProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
-    public static final Property<String> COMMAND = new BasicProperty<String>(IlsSfcNames.COMMAND, String.class, "");
+    public static final IlsProperty<String> DESCRIPTION = new IlsProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
+    public static final IlsProperty<String> COMMAND = new IlsProperty<String>(IlsSfcNames.COMMAND, String.class, "");
   
-    public static final Property<?>[] properties = { 
+    public static final IlsProperty<?>[] properties = { 
     	DESCRIPTION };
 }

@@ -11,11 +11,11 @@ import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 public interface QueueMessageStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.queueMessageStep";
 	
-    public static final Property<String> DESCRIPTION = new BasicProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
-    public static final Property<String> MESSAGE = new BasicProperty<String>(IlsSfcNames.MESSAGE, String.class, "");
-    public static final Property<String> STATUS = new BasicProperty<String>(IlsSfcNames.STATUS, String.class, "Info");
+    public static final IlsProperty<String> DESCRIPTION = new IlsProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
+    public static final IlsProperty<String> MESSAGE = new IlsProperty<String>(IlsSfcNames.MESSAGE, String.class, "");
+    public static final IlsProperty<String> STATUS = new IlsProperty<String>(IlsSfcNames.STATUS, String.class, "Info");
     
-    public static final Property<?>[] properties = { 
+    public static final IlsProperty<?>[] properties = { 
     	DESCRIPTION,
     	MESSAGE,
     	STATUS };
