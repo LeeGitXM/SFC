@@ -74,6 +74,18 @@ public class PythonCall {
 	public static final PythonCall DIALOG_MESSAGE = new PythonCall("ils.sfc.steps.dialogMessage", 
 			PyList.class, stepArgs );
 
+	public static final PythonCall COLLECT_DATA = new PythonCall("ils.sfc.steps.collectData", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall GET_INPUT = new PythonCall("ils.sfc.steps.getInput", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall RAW_QUERY = new PythonCall("ils.sfc.steps.rawQuery", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall SIMPLE_QUERY = new PythonCall("ils.sfc.steps.simpleQuery", 
+			PyList.class, stepArgs );
+
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.util.IlsSfcCommonUtils;
+import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
@@ -43,8 +44,12 @@ public class PropertyRow {
 		return unitPropertyValue != null ? unitPropertyValue.getValue().toString() : "";
 	}
 	
+	public Object getDefaultValue() {
+		return getProperty() instanceof BasicProperty ? ((BasicProperty<?>)getProperty()).getDefaultValue() : null;
+	}
+	
 	public Object getValue() {
-		return propertyValue.getValue();
+		return propertyValue.getValue() != null ? propertyValue.getValue() : getDefaultValue();
 	}
 	
 	public String getCategory() {

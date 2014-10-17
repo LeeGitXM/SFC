@@ -10,15 +10,21 @@ public class IlsSfcNames {
 	public static final String CHOICES= "choices";
 	public static final String CHOICES_KEY = "choicesKey";
 	public static final String CHOICES_RECIPE_LOCATION = "choicesRecipeLocation";
+	public static final String DATABASE = "database";
 	public static final String DESCRIPTION = "description";
 	public static final String DELAY = "delay";
 	public static final String DELAY_UNIT = "delayUnit";
 	public static final String DIALOG = "dialog";
+	public static final String DYNAMIC = "dynamic";
+	public static final String ENABLE = "enable";
+	public static final String FETCH_MODE = "fetchMode";
 	public static final String KEY = "key";
+	public static final String KEY_MODE = "keyMode";
 	public static final String MESSAGE = "message";
 	public static final String METHOD = "method";
 	public static final String MINIMUM_VALUE = "minimumValue";
 	public static final String MAXIMUM_VALUE = "maximumValue";
+	public static final String MULTIPLE = "multiple";
 	public static final String NAME = "name";
 	public static final String POST_TO_QUEUE = "postToQueue";
 	public static final String POST_NOTIFICATION = "postNotification";
@@ -26,12 +32,18 @@ public class IlsSfcNames {
 	public static final String PROMPT = "prompt";
 	public static final String QUEUE = "queue";
 	public static final String RECIPE = "recipe";
-	public static final String RECIPE_LOCATION = "recipeLocation";
+	public static final String RECIPE_LOCATION = "recipeLocation"; 
+	public static final String RESULTS_MODE = "resultsMode"; 
+	public static final String SINGLE = "single";
+	public static final String SQL = "sql";
 	public static final String STATIC = "static";
 	public static final String STATUS = "status";
 	public static final String STRATEGY = "strategy";
+	public static final String TAG_PATH = "tagPath";
 	public static final String TIMEOUT = "timeout";
 	public static final String TIMEOUT_UNIT = "timeoutUnit";
+	public static final String UPDATE = "update";
+	public static final String UPDATE_OR_CREATE = "updateOrCreate";
 
 
 	// scopes for recipe data:
@@ -60,4 +72,7 @@ public class IlsSfcNames {
 	public static final String[] RECIPE_LOCATION_CHOICES = {
 		LOCAL, PREVIOUS, SUPERIOR, NAMED, PROCEDURE, PHASE, OPERATION};
 	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {RECIPE, STATIC};
+	public static final String[] RESULTS_MODE_CHOICES = {UPDATE, UPDATE_OR_CREATE};
+	public static final String[] FETCH_MODE_CHOICES = {SINGLE, MULTIPLE};
+	public static final String[] KEY_MODE_CHOICES = {STATIC, DYNAMIC};
 }
