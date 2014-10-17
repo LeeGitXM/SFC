@@ -3,10 +3,10 @@ package com.ils.sfc.common;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-public class TestStepDelegate extends AbstractIlsStepDelegate implements
-		TestStepProperties {
+public class DialogMessageStepDelegate extends AbstractIlsStepDelegate implements
+DialogMessageStepProperties {
 
-	protected TestStepDelegate() {
+	protected DialogMessageStepDelegate() {
 		super(properties);
 	}
 

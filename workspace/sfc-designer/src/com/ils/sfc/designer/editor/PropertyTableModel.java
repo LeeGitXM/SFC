@@ -146,12 +146,6 @@ public class PropertyTableModel extends AbstractTableModel {
 				PropertyRow newRow = new PropertyRow(pValue, unitValueOrNull);
 				rows.add(newRow);
 	
-				// add choices where appropriate
-				if(newRow.getName().equals(IlsSfcNames.RECIPE_LOCATION) || 
-				   newRow.getName().equals(IlsSfcNames.CHOICES_RECIPE_LOCATION)) {
-					newRow.setChoices(IlsSfcNames.RECIPE_LOCATION_CHOICES);
-				}
-				
 				// add unit choices if present
 				if(unitValueOrNull != null) {
 					String unit = unitValueOrNull.getValue().toString();
@@ -168,7 +162,12 @@ public class PropertyTableModel extends AbstractTableModel {
 			}
 		}
 		
-		// sort the rows in the order that the property array was declared
+		sortRows();
+		fireTableStructureChanged();
+	}
+
+	/** sort the rows in the order that the property array was declared */
+	private void sortRows() {
 		Collections.sort(rows, new Comparator<PropertyRow>() {
 			public int compare(PropertyRow o1, PropertyRow o2) {
 				if(!(o1.getProperty() instanceof IlsProperty)) {
@@ -185,6 +184,5 @@ public class PropertyTableModel extends AbstractTableModel {
 			}
 			
 		});
-		fireTableStructureChanged();
 	}
 }

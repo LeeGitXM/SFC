@@ -1,7 +1,6 @@
 package com.ils.sfc.client;
 
 import com.ils.sfc.common.IlsSfcNames;
-import com.ils.sfc.common.IlsSfcProperties;
 import com.ils.sfc.util.IlsResponseManager;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
@@ -28,7 +27,6 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 		Object iaSfcHook = context.getModule(SFCModule.MODULE_ID);
 		System.out.println("iaSfcHook " + iaSfcHook);
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
-		stepRegistry.register(TestStepUI.FACTORY);
 		stepRegistry.register(QueueMessageStepUI.FACTORY);
 		stepRegistry.register(SetQueueStepUI.FACTORY);
 		stepRegistry.register(ShowQueueStepUI.FACTORY);
@@ -42,6 +40,7 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 		stepRegistry.register(EnableDisableStepUI.FACTORY);
 		stepRegistry.register(SelectInputStepUI.FACTORY);
 		stepRegistry.register(LimitedInputStepUI.FACTORY);
+		stepRegistry.register(DialogMessageStepUI.FACTORY);
 		      }
 
     @Override

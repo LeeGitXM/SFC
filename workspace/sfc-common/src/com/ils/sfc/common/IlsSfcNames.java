@@ -13,8 +13,10 @@ public class IlsSfcNames {
 	public static final String DESCRIPTION = "description";
 	public static final String DELAY = "delay";
 	public static final String DELAY_UNIT = "delayUnit";
+	public static final String DIALOG = "dialog";
 	public static final String KEY = "key";
 	public static final String MESSAGE = "message";
+	public static final String METHOD = "method";
 	public static final String MINIMUM_VALUE = "minimumValue";
 	public static final String MAXIMUM_VALUE = "maximumValue";
 	public static final String NAME = "name";
@@ -23,11 +25,14 @@ public class IlsSfcNames {
 	public static final String PRIORITY = "priority";
 	public static final String PROMPT = "prompt";
 	public static final String QUEUE = "queue";
+	public static final String RECIPE = "recipe";
 	public static final String RECIPE_LOCATION = "recipeLocation";
+	public static final String STATIC = "static";
 	public static final String STATUS = "status";
 	public static final String STRATEGY = "strategy";
 	public static final String TIMEOUT = "timeout";
 	public static final String TIMEOUT_UNIT = "timeoutUnit";
+
 
 	// scopes for recipe data:
 	public static final String LOCAL = "Local";
@@ -37,8 +42,6 @@ public class IlsSfcNames {
 	public static final String PROCEDURE = "Procedure";
 	public static final String PHASE = "Phase";
 	public static final String OPERATION = "Operation";	
-	public static final String[] RECIPE_LOCATION_CHOICES = {
-		LOCAL, PREVIOUS, SUPERIOR, NAMED, PROCEDURE, PHASE, OPERATION};
 
 	
 	// frequently used units
@@ -52,4 +55,9 @@ public class IlsSfcNames {
 	public static final String MESSAGE_ID = "messageId";
 	public static final String BY_NAME = "stepsByName";
 
+	// choices:
+	public static final String[] RECIPE_STATIC_STRATEGY_CHOICES = {STATIC, RECIPE};
+	public static final String[] RECIPE_LOCATION_CHOICES = {
+		LOCAL, PREVIOUS, SUPERIOR, NAMED, PROCEDURE, PHASE, OPERATION};
+	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {RECIPE, STATIC};
 }

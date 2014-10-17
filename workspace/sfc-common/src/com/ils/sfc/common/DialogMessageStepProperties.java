@@ -1,6 +1,5 @@
 package com.ils.sfc.common;
 
-
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 import static com.ils.sfc.common.IlsProperty.*;
 
@@ -8,9 +7,10 @@ import static com.ils.sfc.common.IlsProperty.*;
  * This interface just exists to store some constants for the step's properties and factory id
  *
  */
-public interface PostDelayNotificationStepProperties extends ChartStepProperties {
-	public static final String FACTORY_ID = "com.ils.postDelayNotification";
-
+public interface DialogMessageStepProperties extends ChartStepProperties {
+	public static final String FACTORY_ID = "com.ils.dialogMessageStep";
+	
     public static final IlsProperty<?>[] properties = { 
-    	DESCRIPTION, MESSAGE };
+    	DESCRIPTION, RECIPE_STATIC_STRATEGY, RECIPE_LOCATION, KEY, DIALOG, METHOD, MESSAGE, ACKNOWLEDGEMENT_REQUIRED, TIMEOUT, TIMEOUT_UNIT
+    };
 }

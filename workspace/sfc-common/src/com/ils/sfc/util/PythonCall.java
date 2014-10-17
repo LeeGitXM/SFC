@@ -71,6 +71,9 @@ public class PythonCall {
 	public static final PythonCall GET_LIMITED_INPUT = new PythonCall("ils.sfc.steps.getLimitedInput", 
 			PyList.class, stepArgs );
 
+	public static final PythonCall DIALOG_MESSAGE = new PythonCall("ils.sfc.steps.dialogMessage", 
+			PyList.class, stepArgs );
+
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;

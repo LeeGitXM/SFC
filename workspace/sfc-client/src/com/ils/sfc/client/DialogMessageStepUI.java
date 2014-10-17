@@ -3,20 +3,25 @@ package com.ils.sfc.client;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import com.ils.sfc.common.TestStepDelegate;
+import com.ils.sfc.common.DialogMessageStepDelegate;
 import com.ils.sfc.util.IlsSfcCommonUtils;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-public class TestStepUI extends AbstractIlsStepUI {
+public class DialogMessageStepUI extends AbstractIlsStepUI {
+	protected static Icon dialogMessageIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/dialogMessage.png"));
   
-    public static final ClientStepFactory FACTORY = new TestStepFactory();
+    public static final ClientStepFactory FACTORY = new DialogMessageStepFactory();
 
-    public static final class TestStepFactory extends TestStepDelegate implements ClientStepFactory {
-    	private TestStepUI UI = new TestStepUI();
-    	private Icon icon = new ImageIcon(getClass().getResource("/images/auction_hammer.png"));
-    	private Icon rollover = new ImageIcon(getClass().getResource("/images/auction_hammer.png"));
+   	@Override
+	protected Icon getIcon() { return asteriskIcon; }
+	
+	@Override
+	protected String getText() { return "<html><b>Notify<br>Dialog</html>"; }
+
+    public static final class DialogMessageStepFactory extends DialogMessageStepDelegate implements ClientStepFactory {
+    	private DialogMessageStepUI UI = new DialogMessageStepUI();
 
         @Override
         public StepUI createStepUI(ChartUIElement element) {
@@ -25,22 +30,22 @@ public class TestStepUI extends AbstractIlsStepUI {
 
         @Override
         public Icon getPaletteIcon() {
-            return null; //icon;
+            return dialogMessageIcon; 
         }
 
         @Override
         public Icon getRolloverPaletteIcon() {
-            return null; // rollover;
+            return getPaletteIcon(); 
         }
 
         @Override
         public String getPaletteText() {
-            return "Test Step";
+            return "Post Message to Dialog";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return "A test step";
+            return getPaletteText();
         }
 
         @Override
@@ -50,7 +55,7 @@ public class TestStepUI extends AbstractIlsStepUI {
 	
 		@Override
 		public String getCategory() {
-			return "EMC";
+			return PaletteTabs.Notification.toString();
 		}
 
     }
