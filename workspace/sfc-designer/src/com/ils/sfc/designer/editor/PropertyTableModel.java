@@ -2,6 +2,8 @@ package com.ils.sfc.designer.editor;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +16,7 @@ import javax.swing.table.AbstractTableModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
@@ -143,11 +146,6 @@ public class PropertyTableModel extends AbstractTableModel {
 				PropertyRow newRow = new PropertyRow(pValue, unitValueOrNull);
 				rows.add(newRow);
 	
-				// add choices where appropriate
-				if(pValue.getProperty().getName().equals(IlsSfcNames.RECIPE_LOCATION)) {
-					newRow.setChoices(IlsSfcNames.RECIPE_LOCATION_CHOICES);
-				}
-				
 				// add unit choices if present
 				if(unitValueOrNull != null) {
 					String unit = unitValueOrNull.getValue().toString();
@@ -163,6 +161,28 @@ public class PropertyTableModel extends AbstractTableModel {
 				
 			}
 		}
+		
+		sortRows();
 		fireTableStructureChanged();
+	}
+
+	/** sort the rows in the order that the property array was declared */
+	private void sortRows() {
+		Collections.sort(rows, new Comparator<PropertyRow>() {
+			public int compare(PropertyRow o1, PropertyRow o2) {
+				if(!(o1.getProperty() instanceof IlsProperty)) {
+					return -1; // put IA properties first
+				}
+				else if(!(o2.getProperty() instanceof IlsProperty)) {
+					return 1;
+				}
+				else {
+					IlsProperty<?> p1 = (IlsProperty<?>) o1.getProperty();
+					IlsProperty<?> p2 = (IlsProperty<?>) o2.getProperty();
+					return Integer.compare(p1.getSortOrder(), p2.getSortOrder());
+				}
+			}
+			
+		});
 	}
 }

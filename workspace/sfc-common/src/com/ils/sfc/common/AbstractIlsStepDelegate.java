@@ -14,10 +14,14 @@ import com.inductiveautomation.sfc.api.XMLParseException;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public abstract class AbstractIlsStepDelegate implements StepDelegate {
-	private final Property<?>[] properties;
+	private final IlsProperty<?>[] properties;
 	
-	protected AbstractIlsStepDelegate(Property<?>[] properties) {
+	protected AbstractIlsStepDelegate(IlsProperty<?>[] properties) {
 		this.properties = properties;
+		// initialize sort order
+		for(int i = 0; i < properties.length; i++) {
+			properties[i].setSortOrder(i);
+		}
 	}
 	
 	@Override
@@ -35,6 +39,10 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	@Override
 	public List<Property<?>> getCompilationAlteringProperties() {
 		return null;
+	}
+
+	public Property<?>[] getProperties() {
+		return properties;
 	}
 
 }

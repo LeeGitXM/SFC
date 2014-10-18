@@ -7,7 +7,6 @@ import com.ils.sfc.client.*;
 import com.ils.sfc.common.*;
 import com.ils.sfc.util.IlsResponseManager;
 import com.ils.sfc.util.PythonCall;
-import com.inductiveautomation.ignition.client.gateway_interface.ModuleRPCFactory;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -21,9 +20,6 @@ import com.inductiveautomation.sfc.client.api.ClientStepRegistryProvider;
 import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
 
 public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook {
-	public static String HOOK_BUNDLE_NAME   = "designer";      // Properties file is designer.properties
-	public static String PREFIX = IlsSfcProperties.BUNDLE_PREFIX; // Properties are accessed by this prefix
-
 	private DesignerContext context = null;
 	private final LoggerEx log;
 	
@@ -34,8 +30,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void initializeScriptManager(ScriptManager mgr) {
 		super.initializeScriptManager(mgr);
-		//mgr.addScriptModule("system.ils.sfc", IlsResponseManager.class);
 		PythonCall.setScriptMgr(mgr);
+		mgr.addScriptModule("system.ils.sfc", IlsResponseManager.class);
 		mgr.addStaticFields("system.ils.sfc", IlsSfcNames.class);
 	}
 	
@@ -58,6 +54,13 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		stepRegistry.register(DeleteDelayNotificationStepUI.FACTORY);
 		stepRegistry.register(PostDelayNotificationStepUI.FACTORY);
 		stepRegistry.register(EnableDisableStepUI.FACTORY);
+		stepRegistry.register(SelectInputStepUI.FACTORY);
+		stepRegistry.register(LimitedInputStepUI.FACTORY);
+		stepRegistry.register(DialogMessageStepUI.FACTORY);
+		stepRegistry.register(CollectDataStepUI.FACTORY);
+		stepRegistry.register(InputStepUI.FACTORY);
+		stepRegistry.register(RawQueryStepUI.FACTORY);
+		stepRegistry.register(SimpleQueryStepUI.FACTORY);
 		    	
 		// register the config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory();
@@ -74,6 +77,13 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	configRegistry.register(DeleteDelayNotificationStepProperties.FACTORY_ID, editorFactory);
     	configRegistry.register(PostDelayNotificationStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(EnableDisableStepProperties.FACTORY_ID, editorFactory);
+       	configRegistry.register(SelectInputStepProperties.FACTORY_ID, editorFactory);
+       	configRegistry.register(LimitedInputStepProperties.FACTORY_ID, editorFactory);
+       	configRegistry.register(DialogMessageStepProperties.FACTORY_ID, editorFactory);
+       	configRegistry.register(CollectDataStepProperties.FACTORY_ID, editorFactory);
+       	configRegistry.register(InputStepProperties.FACTORY_ID, editorFactory);
+       	configRegistry.register(RawQueryStepProperties.FACTORY_ID, editorFactory);
+       	configRegistry.register(SimpleQueryStepProperties.FACTORY_ID, editorFactory);
 	}
 		
 	@Override

@@ -3,20 +3,25 @@ package com.ils.sfc.client;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import com.ils.sfc.common.TestStepDelegate;
+import com.ils.sfc.common.CollectDataStepDelegate;
 import com.ils.sfc.util.IlsSfcCommonUtils;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-public class TestStepUI extends AbstractIlsStepUI {
+public class CollectDataStepUI extends AbstractIlsStepUI {
+	protected static Icon collectDataIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/collectData.png"));
   
-    public static final ClientStepFactory FACTORY = new TestStepFactory();
+    public static final ClientStepFactory FACTORY = new CollectDataStepFactory();
 
-    public static final class TestStepFactory extends TestStepDelegate implements ClientStepFactory {
-    	private TestStepUI UI = new TestStepUI();
-    	private Icon icon = new ImageIcon(getClass().getResource("/images/auction_hammer.png"));
-    	private Icon rollover = new ImageIcon(getClass().getResource("/images/auction_hammer.png"));
+   	@Override
+	protected Icon getIcon() { return null; }
+	
+	@Override
+	protected String getText() { return "<html><center><b>Collect<br>Data</html>"; }
+
+    public static final class CollectDataStepFactory extends CollectDataStepDelegate implements ClientStepFactory {
+    	private CollectDataStepUI UI = new CollectDataStepUI();
 
         @Override
         public StepUI createStepUI(ChartUIElement element) {
@@ -25,22 +30,22 @@ public class TestStepUI extends AbstractIlsStepUI {
 
         @Override
         public Icon getPaletteIcon() {
-            return null; //icon;
+            return collectDataIcon; 
         }
 
         @Override
         public Icon getRolloverPaletteIcon() {
-            return null; // rollover;
+            return getPaletteIcon(); 
         }
 
         @Override
         public String getPaletteText() {
-            return "Test Step";
+            return "Collect Data";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return "A test step";
+            return "Read data from a tag";
         }
 
         @Override
@@ -50,7 +55,7 @@ public class TestStepUI extends AbstractIlsStepUI {
 	
 		@Override
 		public String getCategory() {
-			return "EMC";
+			return PaletteTabs.IO.toString();
 		}
 
     }

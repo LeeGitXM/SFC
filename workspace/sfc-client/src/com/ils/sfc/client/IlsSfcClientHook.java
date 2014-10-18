@@ -1,7 +1,6 @@
 package com.ils.sfc.client;
 
 import com.ils.sfc.common.IlsSfcNames;
-import com.ils.sfc.common.IlsSfcProperties;
 import com.ils.sfc.util.IlsResponseManager;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
@@ -28,7 +27,6 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 		Object iaSfcHook = context.getModule(SFCModule.MODULE_ID);
 		System.out.println("iaSfcHook " + iaSfcHook);
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
-		stepRegistry.register(TestStepUI.FACTORY);
 		stepRegistry.register(QueueMessageStepUI.FACTORY);
 		stepRegistry.register(SetQueueStepUI.FACTORY);
 		stepRegistry.register(ShowQueueStepUI.FACTORY);
@@ -40,13 +38,20 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 		stepRegistry.register(DeleteDelayNotificationStepUI.FACTORY);
 		stepRegistry.register(PostDelayNotificationStepUI.FACTORY);
 		stepRegistry.register(EnableDisableStepUI.FACTORY);
+		stepRegistry.register(SelectInputStepUI.FACTORY);
+		stepRegistry.register(LimitedInputStepUI.FACTORY);
+		stepRegistry.register(DialogMessageStepUI.FACTORY);
+		stepRegistry.register(CollectDataStepUI.FACTORY);
+		stepRegistry.register(InputStepUI.FACTORY);
+		stepRegistry.register(RawQueryStepUI.FACTORY);
+		stepRegistry.register(SimpleQueryStepUI.FACTORY);
 		      }
 
     @Override
     public void initializeScriptManager(ScriptManager manager) {
 		super.initializeScriptManager(manager);
-		//manager.addScriptModule("system.ils.sfc", IlsResponseManager.class);		
 		PythonCall.setScriptMgr(manager);
+		manager.addScriptModule("system.ils.sfc", IlsResponseManager.class);		
 		manager.addStaticFields("system.ils.sfc", IlsSfcNames.class);
     }
 

@@ -3,10 +3,10 @@ package com.ils.sfc.common;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-public class TestStepDelegate extends AbstractIlsStepDelegate implements
-		TestStepProperties {
+public class InputStepDelegate extends AbstractIlsStepDelegate implements
+InputStepProperties {
 
-	protected TestStepDelegate() {
+	protected InputStepDelegate() {
 		super(properties);
 	}
 
