@@ -1,6 +1,6 @@
 package com.ils.sfc.step;
 
-import com.ils.sfc.common.DeleteDelayNotificationStepProperties;
+import com.ils.sfc.common.step.DeleteDelayNotificationStepProperties;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.definitions.StepDefinition;

@@ -3,9 +3,9 @@
  */
 package com.ils.sfc.gateway;
 
-import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.step.*;
 import com.ils.sfc.util.IlsResponseManager;
+import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
@@ -70,6 +70,8 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 		sfcHook.getStepRegistry().register(new DialogMessageStepFactory());
 		sfcHook.getStepRegistry().register(new CollectDataStepFactory());
 		sfcHook.getStepRegistry().register(new InputStepFactory());
+		sfcHook.getStepRegistry().register(new SimpleQueryStepFactory());
+		sfcHook.getStepRegistry().register(new DebugPropertiesStepFactory());
 	}
 
 	@Override

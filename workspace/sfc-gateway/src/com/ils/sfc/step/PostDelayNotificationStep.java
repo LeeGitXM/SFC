@@ -1,6 +1,6 @@
 package com.ils.sfc.step;
 
-import com.ils.sfc.common.PostDelayNotificationStepProperties;
+import com.ils.sfc.common.step.PostDelayNotificationStepProperties;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.definitions.StepDefinition;

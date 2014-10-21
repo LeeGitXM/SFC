@@ -10,7 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ils.sfc.step.annotation.ILSStep;
-import com.ils.sfc.common.IlsSfcNames;
+import com.ils.sfc.util.IlsProperty;
+import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
@@ -78,10 +79,12 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 					namedStepElements.add(element);
 					PyDictionary stepProperties = new PyDictionary();
 					for(PropertyValue<?> propertyValue: definition.getProperties()) {
-						stepProperties.put(propertyValue.getProperty().getName(),
-							propertyValue.getValue());
+						String propName = propertyValue.getProperty().getName();
+						if(!IlsProperty.ignoreProperties.contains(propName)) {
+							stepProperties.put(propName,propertyValue.getValue());
+						}
 					}
-					System.out.println("indexing " + name + ": " + stepProperties);
+					//System.out.println("indexing " + name + ": " + stepProperties);
 					byName.put(name, stepProperties);
 				}
 			}
@@ -90,9 +93,8 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		// wire the predecessors
 		for(ChartElement<?> element: namedStepElements) {
 			StepDefinition definition = (StepDefinition) element.getDefinition();
-			String name = getName(definition);
-			PyDictionary stepProperties = (PyDictionary)byName.get(name);
-			setPredecessor(element, byName, stepProperties);
+			String predecessorName = getName(definition);
+			setPredecessor(element, byName, predecessorName);
 		}
 		
 		// try to be pseudo-transactional by putting everything in at once:
@@ -107,18 +109,18 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	/** Set each step's closest _step_ predecessor (i.e. not a transition etc) 
 	 *  in its local scope. If there is more than one such predecessor, one is 
 	 *  chosen at random.  */
-	private void setPredecessor(ChartElement<?> element, PyDictionary byName, PyDictionary predecessorProperties) {
+	private void setPredecessor(ChartElement<?> element, PyDictionary byName, String predecessorName) {
 		for(Object obj: element.getNextElements()) {
 			if(obj instanceof ChartElement) {
 				ChartElement<?> successor = (ChartElement<?>)obj;
 				if(successor.getDefinition() instanceof StepDefinition) {
 					String successorName = getName((StepDefinition)successor.getDefinition());
 					PyDictionary successorProperties = (PyDictionary)byName.get(successorName);
-					successorProperties.put(IlsSfcNames.PREVIOUS, predecessorProperties);
-					System.out.println("indexing predecessor " + predecessorProperties + ": successor " + successorName);
+					successorProperties.put(IlsSfcNames.PREVIOUS, predecessorName);
+					//System.out.println("indexing predecessor " + predecessorProperties + ": successor " + successorName);
 				}
 				else {  // not a step; recurse
-					setPredecessor(successor, byName, predecessorProperties);
+					setPredecessor(successor, byName, predecessorName);
 				}
 			}
 		}		

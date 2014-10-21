@@ -86,6 +86,9 @@ public class PythonCall {
 	public static final PythonCall SIMPLE_QUERY = new PythonCall("ils.sfc.steps.simpleQuery", 
 			PyList.class, stepArgs );
 
+	public static final PythonCall DEBUG_PROPERTIES = new PythonCall("ils.sfc.steps.debugProperties", 
+			PyList.class, stepArgs );
+
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;

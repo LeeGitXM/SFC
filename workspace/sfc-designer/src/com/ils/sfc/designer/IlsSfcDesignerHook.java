@@ -3,9 +3,29 @@
  */
 package com.ils.sfc.designer;
 
-import com.ils.sfc.client.*;
-import com.ils.sfc.common.*;
+import com.ils.sfc.client.step.*;
+import com.ils.sfc.common.step.AbortStepProperties;
+import com.ils.sfc.common.step.ClearQueueStepProperties;
+import com.ils.sfc.common.step.CollectDataStepProperties;
+import com.ils.sfc.common.step.ControlPanelMessageStepProperties;
+import com.ils.sfc.common.step.DebugPropertiesStepProperties;
+import com.ils.sfc.common.step.DeleteDelayNotificationStepProperties;
+import com.ils.sfc.common.step.DialogMessageStepProperties;
+import com.ils.sfc.common.step.EnableDisableStepProperties;
+import com.ils.sfc.common.step.InputStepProperties;
+import com.ils.sfc.common.step.LimitedInputStepProperties;
+import com.ils.sfc.common.step.PauseStepProperties;
+import com.ils.sfc.common.step.PostDelayNotificationStepProperties;
+import com.ils.sfc.common.step.QueueMessageStepProperties;
+import com.ils.sfc.common.step.RawQueryStepProperties;
+import com.ils.sfc.common.step.SelectInputStepProperties;
+import com.ils.sfc.common.step.SetQueueStepProperties;
+import com.ils.sfc.common.step.ShowQueueStepProperties;
+import com.ils.sfc.common.step.SimpleQueryStepProperties;
+import com.ils.sfc.common.step.TimedDelayStepProperties;
+import com.ils.sfc.common.step.YesNoStepProperties;
 import com.ils.sfc.util.IlsResponseManager;
+import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
@@ -61,6 +81,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		stepRegistry.register(InputStepUI.FACTORY);
 		stepRegistry.register(RawQueryStepUI.FACTORY);
 		stepRegistry.register(SimpleQueryStepUI.FACTORY);
+		stepRegistry.register(DebugPropertiesStepUI.FACTORY);
 		    	
 		// register the config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory();
@@ -84,6 +105,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
        	configRegistry.register(InputStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(RawQueryStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(SimpleQueryStepProperties.FACTORY_ID, editorFactory);
+       	configRegistry.register(DebugPropertiesStepProperties.FACTORY_ID, editorFactory);
 	}
 		
 	@Override

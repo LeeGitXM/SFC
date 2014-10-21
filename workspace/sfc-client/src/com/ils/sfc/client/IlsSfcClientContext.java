@@ -24,8 +24,8 @@ public class IlsSfcClientContext implements PushNotificationListener {
 
 	@Override
 	public void receiveNotification(PushNotification notification) {
-		JOptionPane.showMessageDialog(null, "got notification #" + ++msgCount + ": " + notification.getMessage().toString());
-		
+		// this will catch messages sent to Python--might be useful
+		// JOptionPane.showMessageDialog(null, "got notification #" + ++msgCount + ": " + notification.getMessage().toString());		
 	}
 
 }

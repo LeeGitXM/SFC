@@ -16,8 +16,8 @@ import javax.swing.table.AbstractTableModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.IlsSfcNames;
+import com.ils.sfc.util.IlsProperty;
+import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
@@ -30,16 +30,7 @@ public class PropertyTableModel extends AbstractTableModel {
 	private List<PropertyRow> rows = new ArrayList<PropertyRow>();
 	private boolean hasChanged;
 	private ChartUIElement element;
-	private static final Set<String> ignoreProperties = new HashSet<String>();
 	private static final Logger logger = LoggerFactory.getLogger(PropertyTableModel.class);
-
-	static {
-		ignoreProperties.add("location");
-		ignoreProperties.add("location-adjustment");
-		ignoreProperties.add("id");
-		ignoreProperties.add("type");
-		ignoreProperties.add("factory-id");
-	}
  
 	public String getColumnName(int col) {
         return columnNames[col];
@@ -140,7 +131,7 @@ public class PropertyTableModel extends AbstractTableModel {
 		}
 		for(PropertyValue<?> pValue: element) {
 			String name = pValue.getProperty().getName();
-			if( !ignoreProperties.contains(name) &&
+			if( !IlsProperty.ignoreProperties.contains(name) &&
 				!name.endsWith(UNIT_SUFFIX)) {
 				PropertyValue<?> unitValueOrNull = propsByName.get(name + UNIT_SUFFIX);
 				PropertyRow newRow = new PropertyRow(pValue, unitValueOrNull);

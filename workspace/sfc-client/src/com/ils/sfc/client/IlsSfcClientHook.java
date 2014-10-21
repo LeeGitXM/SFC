@@ -1,10 +1,10 @@
 package com.ils.sfc.client;
 
-import com.ils.sfc.common.IlsSfcNames;
+import com.ils.sfc.client.step.*;
 import com.ils.sfc.util.IlsResponseManager;
+import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
-import com.inductiveautomation.ignition.client.gateway_interface.ModuleRPCFactory;
 import com.inductiveautomation.ignition.client.model.ClientContext;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
@@ -45,6 +45,7 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 		stepRegistry.register(InputStepUI.FACTORY);
 		stepRegistry.register(RawQueryStepUI.FACTORY);
 		stepRegistry.register(SimpleQueryStepUI.FACTORY);
+		stepRegistry.register(DebugPropertiesStepUI.FACTORY);
 		      }
 
     @Override

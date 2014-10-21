@@ -1,6 +1,6 @@
 package com.ils.sfc.step;
 
-import com.ils.sfc.common.DeleteDelayNotificationStepDelegate;
+import com.ils.sfc.common.step.DeleteDelayNotificationStepDelegate;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ChartStepFactory;
 import com.inductiveautomation.sfc.api.elements.StepElement;
