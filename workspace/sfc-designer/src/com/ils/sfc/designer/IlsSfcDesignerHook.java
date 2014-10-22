@@ -38,6 +38,7 @@ import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistryProvider;
 import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
+import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 
 public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook {
 	private DesignerContext context = null;
@@ -82,6 +83,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		stepRegistry.register(RawQueryStepUI.FACTORY);
 		stepRegistry.register(SimpleQueryStepUI.FACTORY);
 		stepRegistry.register(DebugPropertiesStepUI.FACTORY);
+		stepRegistry.register(IlsEnclosingStepUI.FACTORY);
 		    	
 		// register the config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory();
@@ -106,6 +108,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
        	configRegistry.register(RawQueryStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(SimpleQueryStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(DebugPropertiesStepProperties.FACTORY_ID, editorFactory);
+       	//configRegistry.register(EnclosingStepProperties.FACTORY_ID, editorFactory);
 	}
 		
 	@Override

@@ -6,7 +6,7 @@ import java.util.Set;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 
 @SuppressWarnings("serial")
-public class IlsProperty<T> extends BasicProperty<T> {
+public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializable {
 	private int sortOrder;
 	private String[] choices;
 	
@@ -25,6 +25,8 @@ public class IlsProperty<T> extends BasicProperty<T> {
     public static final IlsProperty<String> CHOICES_KEY = new IlsProperty<String>(IlsSfcNames.CHOICES_KEY, String.class, "");
     public static final IlsProperty<String> COMMAND = new IlsProperty<String>(IlsSfcNames.COMMAND, String.class, "");
     public static final IlsProperty<String> DATABASE = new IlsProperty<String>(IlsSfcNames.DATABASE, String.class, "");
+    public static final IlsProperty<Integer> DELAY = new IlsProperty<Integer>(IlsSfcNames.DELAY, Integer.class, 0);
+    public static final IlsProperty<String> DELAY_UNIT = new IlsProperty<String>(IlsSfcNames.DELAY_UNIT, String.class, IlsSfcNames.MINUTE);  
     public static final IlsProperty<String> DESCRIPTION = new IlsProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
     public static final IlsProperty<String> DIALOG = new IlsProperty<String>(IlsSfcNames.DIALOG, String.class, "");
     public static final IlsProperty<Boolean> ENABLE = new IlsProperty<Boolean>(IlsSfcNames.ENABLE, Boolean.class, Boolean.TRUE);
@@ -35,6 +37,7 @@ public class IlsProperty<T> extends BasicProperty<T> {
     public static final IlsProperty<String> MESSAGE = new IlsProperty<String>(IlsSfcNames.MESSAGE, String.class, "");
     public static final IlsProperty<String> METHOD = new IlsProperty<String>(IlsSfcNames.METHOD, String.class, "");
     public static final IlsProperty<Double> MINIMUM_VALUE = new IlsProperty<Double>(IlsSfcNames.MINIMUM_VALUE, Double.class, 0.);
+    public static final IlsProperty<Boolean> POST_NOTIFICATION = new IlsProperty<Boolean>(IlsSfcNames.POST_NOTIFICATION, Boolean.class, Boolean.FALSE);
     public static final IlsProperty<Boolean> POST_TO_QUEUE = new IlsProperty<Boolean>(IlsSfcNames.POST_TO_QUEUE, Boolean.class, Boolean.FALSE);
     public static final IlsProperty<String> PROMPT = new IlsProperty<String>(IlsSfcNames.PROMPT, String.class, "");
     public static final IlsProperty<String> PRIORITY = new IlsProperty<String>(IlsSfcNames.PRIORITY, String.class, "");
@@ -49,6 +52,8 @@ public class IlsProperty<T> extends BasicProperty<T> {
     public static final IlsProperty<Integer> TIMEOUT = new IlsProperty<Integer>(IlsSfcNames.TIMEOUT, Integer.class, 0);
     public static final IlsProperty<String> TIMEOUT_UNIT = new IlsProperty<String>(IlsSfcNames.TIMEOUT_UNIT, String.class, IlsSfcNames.MINUTE);
 
+    public IlsProperty() {}
+    
 	public IlsProperty(String name, Class<T> clazz, T defaultValue) {
 		super(name, clazz, defaultValue);
 	}

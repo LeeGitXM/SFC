@@ -13,7 +13,7 @@ public class InputStep extends IlsAbstractChartStep implements InputStepProperti
 
 	@Override
 	public void activateStep() {
-		exec(PythonCall.GET_LIMITED_INPUT);	
+		exec(PythonCall.GET_INPUT);	
 	}
 
 	@Override

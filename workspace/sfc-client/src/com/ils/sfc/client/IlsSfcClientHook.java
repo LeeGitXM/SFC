@@ -1,11 +1,17 @@
 package com.ils.sfc.client;
 
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
 import com.ils.sfc.client.step.*;
 import com.ils.sfc.util.IlsResponseManager;
 import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
+import com.inductiveautomation.ignition.client.images.ImageLoader;
 import com.inductiveautomation.ignition.client.model.ClientContext;
+import com.inductiveautomation.ignition.client.util.ClientIconUtil;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.sfc.SFCModule;
@@ -22,7 +28,7 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
         this.context = context;
     	IlsSfcClientContext.getInstance().setClientContext(context);
     	GatewayConnectionManager.getInstance().addPushNotificationListener(IlsSfcClientContext.getInstance());
-    	
+    	Image image = ImageLoader.getInstance().loadImage("/Builtin/Pump/Pump 1");
     	// register step factories. this is duplicated in IlsSfcDesignerHook.
 		Object iaSfcHook = context.getModule(SFCModule.MODULE_ID);
 		System.out.println("iaSfcHook " + iaSfcHook);
@@ -46,6 +52,7 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 		stepRegistry.register(RawQueryStepUI.FACTORY);
 		stepRegistry.register(SimpleQueryStepUI.FACTORY);
 		stepRegistry.register(DebugPropertiesStepUI.FACTORY);
+		stepRegistry.register(IlsEnclosingStepUI.FACTORY);
 		      }
 
     @Override
