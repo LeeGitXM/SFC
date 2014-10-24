@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# Save the source tree for ils-sfc into a zip repository.
+# Do not intentionally include build products. Make clean before 
+# running this script.
+#
+#set -x
+REPO_ROOT=~/Development/ils/src
+SVN=~/Development/ils/svn/EMChemicals
+VERS=`cat $SVN/Release/VERS`
+TMP=$REPO_ROOT/$VERS
+# Cleanup
+rm -rf $TMP
+cd $REPO_ROOT
+rm -rf sfc/workspace/*/doc/*
+rm -rf sfc/workspace/*/bin/*
+rm -rf sfc/workspace/*/temp_modl
+mkdir $TMP
+
+mkdir $REPO_ROOT/sfc
+cd $REPO_ROOT/sfc; cp -a workspace $TMP/sfc
+
+
+# Now zip and copy to subversion
+cd $REPO_ROOT/$VERS
+zip -r $VERS.zip *
+cp $VERS.zip $SVN/Release/src
+rm -rf $TMP

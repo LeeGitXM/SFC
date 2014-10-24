@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# Save the source tree for sfc and common into a zip repository.
+# Do not intentionally include build products. Make clean before 
+# running this script.
+#
+#set -x
+REPO_ROOT=~/Development/ils/repo
+SVN=~/Development/ils/svn/EMChemicals/Release/src
+VERS=TRANSLATION
+TMP=$REPO_ROOT/$VERS
+# Cleanup
+rm -rf $TMP
+cd $REPO_ROOT
+mkdir $TMP
+cd $REPO_ROOT/sfc/migration
+rm -f db/*.db
+cp -a * $TMP
+cd db
+./mkdatabase
+cd ..
+./translate-all
+cd ..
+cp -a out $TMP
+
+# Now zip and copy to subversion
+cd $REPO_ROOT
+zip -r sfc-migration.zip $VERS
+cp sfc-migration.zip $SVN
+rm -rf $TMP
