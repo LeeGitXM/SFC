@@ -57,7 +57,7 @@
 	<!-- Cleans all previously built files (leaves doc) -->
 	<target name="clean" description="Remove existing build products" >
 		<delete dir="${basedir}/sfc-build/bin" />
-		<delete dir="${basedir}/sfc-build/modules" />
+		<delete file="${basedir}/sfc-build/modules/${ils.sfc.name}-module-unsigned.modl" />
 		<delete dir="${basedir}/sfc-build/release" />
 		<delete dir="${basedir}/sfc-build/temp_modl" />   
 	</target>	

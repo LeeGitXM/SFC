@@ -11,8 +11,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
-import com.inductiveautomation.ignition.common.config.PropertyValue;
-
 /** A table cell editor for the property grid */
 class PropertyCellRenderer implements TableCellRenderer {
 	private DefaultTableCellRenderer defaultRenderer = new DefaultTableCellRenderer();

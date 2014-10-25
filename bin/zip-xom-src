@@ -7,7 +7,7 @@
 #set -x
 REPO_ROOT=~/Development/ils/src
 SVN=~/Development/ils/svn/EMChemicals
-VERS=`cat $SVN/Release/VERS`
+VERS=sfc-`cat $SVN/Release/VERS`
 TMP=$REPO_ROOT/$VERS
 # Cleanup
 rm -rf $TMP
@@ -17,7 +17,7 @@ rm -rf sfc/workspace/*/bin/*
 rm -rf sfc/workspace/*/temp_modl
 mkdir $TMP
 
-mkdir $REPO_ROOT/sfc
+mkdir $TMP/sfc
 cd $REPO_ROOT/sfc; cp -a workspace $TMP/sfc
 
 

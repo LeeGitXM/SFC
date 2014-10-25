@@ -2,19 +2,15 @@ package com.ils.sfc.designer.editor;
 
 import java.awt.BorderLayout;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import com.inductiveautomation.ignition.common.config.BasicProperty;
-import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
-import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
 
 /** A property editor grid/table */

@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Save build products to the Subversion area for packaging.
+# Make sure that the release area has been cleaned and
+# VERS, DATE files updated
+#
+#set -x
+REPO_ROOT=~/Development/ils/src
+SVN=~/Development/ils/svn/Lafarge/Release/src
+# Prepare directories
+mkdir -p $SVN/project
+mkdir -p $SVN/data
+cd $REPO_ROOT/sfc
+cp -a data $SVN
+cd $REPO_ROOT/sfc/project
+cp sfc_demo_proj.proj $SVN/project
+SVN=~/Development/ils/svn/Lafarge/Ignition
+cp ILS-SFC-module-*.modl $SVN
