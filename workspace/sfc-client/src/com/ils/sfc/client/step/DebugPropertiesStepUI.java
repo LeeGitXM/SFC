@@ -10,7 +10,7 @@ import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public class DebugPropertiesStepUI extends AbstractIlsStepUI {
-	//protected static Icon debugPropertiesIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/debugProperties.png"));
+	protected static Icon debugPropertiesIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/debugProperties.png"));
   
     public static final ClientStepFactory FACTORY = new DebugPropertiesStepFactory();
 
@@ -30,7 +30,7 @@ public class DebugPropertiesStepUI extends AbstractIlsStepUI {
 
         @Override
         public Icon getPaletteIcon() {
-            return null; // debugPropertiesIcon; 
+            return debugPropertiesIcon; // debugPropertiesIcon; 
         }
 
         @Override

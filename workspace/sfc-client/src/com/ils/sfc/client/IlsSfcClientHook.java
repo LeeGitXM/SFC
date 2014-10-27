@@ -28,7 +28,6 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
         this.context = context;
     	IlsSfcClientContext.getInstance().setClientContext(context);
     	GatewayConnectionManager.getInstance().addPushNotificationListener(IlsSfcClientContext.getInstance());
-    	Image image = ImageLoader.getInstance().loadImage("/Builtin/Pump/Pump 1");
     	// register step factories. this is duplicated in IlsSfcDesignerHook.
 		Object iaSfcHook = context.getModule(SFCModule.MODULE_ID);
 		System.out.println("iaSfcHook " + iaSfcHook);
