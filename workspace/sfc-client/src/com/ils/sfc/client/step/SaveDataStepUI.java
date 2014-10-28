@@ -3,25 +3,25 @@ package com.ils.sfc.client.step;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import com.ils.sfc.common.step.DebugPropertiesStepDelegate;
+import com.ils.sfc.common.step.SaveDataStepDelegate;
 import com.ils.sfc.util.IlsSfcCommonUtils;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-public class DebugPropertiesStepUI extends AbstractIlsStepUI {
-	protected static Icon debugPropertiesIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/debugProperties.png"));
+public class SaveDataStepUI extends AbstractIlsStepUI {
+	protected static Icon saveDataIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/saveData.png"));
   
-    public static final ClientStepFactory FACTORY = new DebugPropertiesStepFactory();
+    public static final ClientStepFactory FACTORY = new SaveDataStepFactory();
 
    	@Override
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b>Debug<br>Properties!</html>"; }
+	protected String getText() { return "<html><center><b>Save<br>Data</html>"; }
 
-    public static final class DebugPropertiesStepFactory extends DebugPropertiesStepDelegate implements ClientStepFactory {
-    	private DebugPropertiesStepUI UI = new DebugPropertiesStepUI();
+    public static final class SaveDataStepFactory extends SaveDataStepDelegate implements ClientStepFactory {
+    	private SaveDataStepUI UI = new SaveDataStepUI();
 
         @Override
         public StepUI createStepUI(ChartUIElement element) {
@@ -30,7 +30,7 @@ public class DebugPropertiesStepUI extends AbstractIlsStepUI {
 
         @Override
         public Icon getPaletteIcon() {
-            return debugPropertiesIcon; // debugPropertiesIcon; 
+            return saveDataIcon; 
         }
 
         @Override
@@ -40,7 +40,7 @@ public class DebugPropertiesStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Debug Properties";
+            return "Save Recipe Data to File";
         }
 
         @Override
@@ -55,7 +55,7 @@ public class DebugPropertiesStepUI extends AbstractIlsStepUI {
 	
 		@Override
 		public String getCategory() {
-			return PaletteTabs.Debug.toString();
+			return PaletteTabs.File.toString();
 		}
 
     }

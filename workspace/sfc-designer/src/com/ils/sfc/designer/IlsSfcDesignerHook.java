@@ -10,7 +10,7 @@ import com.ils.sfc.client.step.AbortStepUI;
 import com.ils.sfc.client.step.ClearQueueStepUI;
 import com.ils.sfc.client.step.CollectDataStepUI;
 import com.ils.sfc.client.step.ControlPanelMessageStepUI;
-import com.ils.sfc.client.step.DebugPropertiesStepUI;
+import com.ils.sfc.client.step.SaveDataStepUI;
 import com.ils.sfc.client.step.DeleteDelayNotificationStepUI;
 import com.ils.sfc.client.step.DialogMessageStepUI;
 import com.ils.sfc.client.step.EnableDisableStepUI;
@@ -31,7 +31,7 @@ import com.ils.sfc.common.step.AbortStepProperties;
 import com.ils.sfc.common.step.ClearQueueStepProperties;
 import com.ils.sfc.common.step.CollectDataStepProperties;
 import com.ils.sfc.common.step.ControlPanelMessageStepProperties;
-import com.ils.sfc.common.step.DebugPropertiesStepProperties;
+import com.ils.sfc.common.step.SaveDataStepProperties;
 import com.ils.sfc.common.step.DeleteDelayNotificationStepProperties;
 import com.ils.sfc.common.step.DialogMessageStepProperties;
 import com.ils.sfc.common.step.EnableDisableStepProperties;
@@ -120,7 +120,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		stepRegistry.register(InputStepUI.FACTORY);
 		stepRegistry.register(RawQueryStepUI.FACTORY);
 		stepRegistry.register(SimpleQueryStepUI.FACTORY);
-		stepRegistry.register(DebugPropertiesStepUI.FACTORY);
+		stepRegistry.register(SaveDataStepUI.FACTORY);
 		stepRegistry.register(IlsEnclosingStepUI.FACTORY);
 		    	
 		// register the config factories (ie the editors)
@@ -145,7 +145,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
        	configRegistry.register(InputStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(RawQueryStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(SimpleQueryStepProperties.FACTORY_ID, editorFactory);
-       	configRegistry.register(DebugPropertiesStepProperties.FACTORY_ID, editorFactory);
+       	configRegistry.register(SaveDataStepProperties.FACTORY_ID, editorFactory);
        	//configRegistry.register(EnclosingStepProperties.FACTORY_ID, editorFactory);
        	
        	

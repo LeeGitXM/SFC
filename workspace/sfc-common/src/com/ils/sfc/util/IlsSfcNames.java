@@ -10,14 +10,19 @@ public class IlsSfcNames {
 	public static final String CHOICES= "choices";
 	public static final String CHOICES_KEY = "choicesKey";
 	public static final String CHOICES_RECIPE_LOCATION = "choicesRecipeLocation";
+	public static final String DATA = "data";
 	public static final String DATABASE = "database";
 	public static final String DESCRIPTION = "description";
 	public static final String DELAY = "delay";
 	public static final String DELAY_UNIT = "delayUnit";
 	public static final String DIALOG = "dialog";
+	public static final String DIRECTORY = "directory";
 	public static final String DYNAMIC = "dynamic";
 	public static final String ENABLE = "enable";
+	public static final String EXTENSION = "extension";
 	public static final String FETCH_MODE = "fetchMode";
+	public static final String FILENAME = "filename";
+	public static final String FILEPATH = "filepath";
 	public static final String KEY = "key";
 	public static final String KEY_MODE = "keyMode";
 	public static final String MESSAGE = "message";
@@ -28,6 +33,7 @@ public class IlsSfcNames {
 	public static final String NAME = "name";
 	public static final String POST_TO_QUEUE = "postToQueue";
 	public static final String POST_NOTIFICATION = "postNotification";
+	public static final String PRINT_FILE = "printFile";
 	public static final String PRIORITY = "priority";
 	public static final String PROMPT = "prompt";
 	public static final String QUEUE = "queue";
@@ -42,8 +48,10 @@ public class IlsSfcNames {
 	public static final String TAG_PATH = "tagPath";
 	public static final String TIMEOUT = "timeout";
 	public static final String TIMEOUT_UNIT = "timeoutUnit";
+	public static final String TIMESTAMP = "timestamp";
 	public static final String UPDATE = "update";
 	public static final String UPDATE_OR_CREATE = "updateOrCreate";
+	public static final String VIEW_FILE = "viewFile";
 
 
 	// scopes for recipe data:
