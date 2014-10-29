@@ -9,16 +9,13 @@ import static com.ils.sfc.util.IlsProperty.*;
  * This interface just exists to store some constants for the step's properties and factory id
  *
  */
-public interface SaveDataStepProperties extends ChartStepProperties {
-	public static final String FACTORY_ID = "com.ils.saveDataStep";
+public interface PrintFileStepProperties extends ChartStepProperties {
+	public static final String FACTORY_ID = "com.ils.printFileStep";
 	
     public static final IlsProperty<?>[] properties = {
     	DESCRIPTION,
-    	RECIPE_LOCATION,
-    	DIRECTORY,
+    	COMPUTER,
     	FILENAME,
-    	EXTENSION,
-    	TIMESTAMP,
     	PRINT_FILE,
     	VIEW_FILE
     	};

@@ -6,47 +6,8 @@ package com.ils.sfc.designer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ils.sfc.client.step.AbortStepUI;
-import com.ils.sfc.client.step.ClearQueueStepUI;
-import com.ils.sfc.client.step.CollectDataStepUI;
-import com.ils.sfc.client.step.ControlPanelMessageStepUI;
-import com.ils.sfc.client.step.SaveDataStepUI;
-import com.ils.sfc.client.step.DeleteDelayNotificationStepUI;
-import com.ils.sfc.client.step.DialogMessageStepUI;
-import com.ils.sfc.client.step.EnableDisableStepUI;
-import com.ils.sfc.client.step.IlsEnclosingStepUI;
-import com.ils.sfc.client.step.InputStepUI;
-import com.ils.sfc.client.step.LimitedInputStepUI;
-import com.ils.sfc.client.step.PauseStepUI;
-import com.ils.sfc.client.step.PostDelayNotificationStepUI;
-import com.ils.sfc.client.step.QueueMessageStepUI;
-import com.ils.sfc.client.step.RawQueryStepUI;
-import com.ils.sfc.client.step.SelectInputStepUI;
-import com.ils.sfc.client.step.SetQueueStepUI;
-import com.ils.sfc.client.step.ShowQueueStepUI;
-import com.ils.sfc.client.step.SimpleQueryStepUI;
-import com.ils.sfc.client.step.TimedDelayStepUI;
-import com.ils.sfc.client.step.YesNoStepUI;
-import com.ils.sfc.common.step.AbortStepProperties;
-import com.ils.sfc.common.step.ClearQueueStepProperties;
-import com.ils.sfc.common.step.CollectDataStepProperties;
-import com.ils.sfc.common.step.ControlPanelMessageStepProperties;
-import com.ils.sfc.common.step.SaveDataStepProperties;
-import com.ils.sfc.common.step.DeleteDelayNotificationStepProperties;
-import com.ils.sfc.common.step.DialogMessageStepProperties;
-import com.ils.sfc.common.step.EnableDisableStepProperties;
-import com.ils.sfc.common.step.InputStepProperties;
-import com.ils.sfc.common.step.LimitedInputStepProperties;
-import com.ils.sfc.common.step.PauseStepProperties;
-import com.ils.sfc.common.step.PostDelayNotificationStepProperties;
-import com.ils.sfc.common.step.QueueMessageStepProperties;
-import com.ils.sfc.common.step.RawQueryStepProperties;
-import com.ils.sfc.common.step.SelectInputStepProperties;
-import com.ils.sfc.common.step.SetQueueStepProperties;
-import com.ils.sfc.common.step.ShowQueueStepProperties;
-import com.ils.sfc.common.step.SimpleQueryStepProperties;
-import com.ils.sfc.common.step.TimedDelayStepProperties;
-import com.ils.sfc.common.step.YesNoStepProperties;
+import com.ils.sfc.client.step.*;
+import com.ils.sfc.common.step.*;
 import com.ils.sfc.designer.browser.IlsBrowserFrame;
 import com.ils.sfc.util.IlsResponseManager;
 import com.ils.sfc.util.IlsSfcNames;
@@ -122,6 +83,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		stepRegistry.register(SimpleQueryStepUI.FACTORY);
 		stepRegistry.register(SaveDataStepUI.FACTORY);
 		stepRegistry.register(IlsEnclosingStepUI.FACTORY);
+		stepRegistry.register(PrintFileStepUI.FACTORY);
 		    	
 		// register the config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory();
@@ -146,9 +108,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
        	configRegistry.register(RawQueryStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(SimpleQueryStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(SaveDataStepProperties.FACTORY_ID, editorFactory);
-       	//configRegistry.register(EnclosingStepProperties.FACTORY_ID, editorFactory);
-       	
-       	
+       	configRegistry.register(PrintFileStepProperties.FACTORY_ID, editorFactory);
+       	//configRegistry.register(EnclosingStepProperties.FACTORY_ID, editorFactory);       	
 	}
 		
 

@@ -10,6 +10,7 @@ public class IlsSfcNames {
 	public static final String CHOICES= "choices";
 	public static final String CHOICES_KEY = "choicesKey";
 	public static final String CHOICES_RECIPE_LOCATION = "choicesRecipeLocation";
+	public static final String COMPUTER = "computer";
 	public static final String DATA = "data";
 	public static final String DATABASE = "database";
 	public static final String DESCRIPTION = "description";
@@ -40,6 +41,7 @@ public class IlsSfcNames {
 	public static final String RECIPE = "recipe";
 	public static final String RECIPE_LOCATION = "recipeLocation"; 
 	public static final String RESULTS_MODE = "resultsMode"; 
+	public static final String SERVER = "server";
 	public static final String SINGLE = "single";
 	public static final String SQL = "sql";
 	public static final String STATIC = "static";
@@ -83,4 +85,5 @@ public class IlsSfcNames {
 	public static final String[] RESULTS_MODE_CHOICES = {UPDATE, UPDATE_OR_CREATE};
 	public static final String[] FETCH_MODE_CHOICES = {SINGLE, MULTIPLE};
 	public static final String[] KEY_MODE_CHOICES = {STATIC, DYNAMIC};
+	public static final String[] COMPUTER_CHOICES = {SERVER, LOCAL};
 }
