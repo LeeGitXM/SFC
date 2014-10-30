@@ -42,6 +42,7 @@ public class IlsSfcNames {
 	public static final String RECIPE_LOCATION = "recipeLocation"; 
 	public static final String RESULTS_MODE = "resultsMode"; 
 	public static final String SERVER = "server";
+	public static final String SHOW_PRINT_DIALOG = "showPrintDialog";
 	public static final String SINGLE = "single";
 	public static final String SQL = "sql";
 	public static final String STATIC = "static";
@@ -54,6 +55,7 @@ public class IlsSfcNames {
 	public static final String UPDATE = "update";
 	public static final String UPDATE_OR_CREATE = "updateOrCreate";
 	public static final String VIEW_FILE = "viewFile";
+	public static final String WINDOW = "window";
 
 
 	// scopes for recipe data:
