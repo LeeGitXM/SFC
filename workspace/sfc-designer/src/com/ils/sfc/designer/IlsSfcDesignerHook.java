@@ -85,6 +85,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		stepRegistry.register(IlsEnclosingStepUI.FACTORY);
 		stepRegistry.register(PrintFileStepUI.FACTORY);
 		stepRegistry.register(PrintWindowStepUI.FACTORY);
+		stepRegistry.register(CloseWindowStepUI.FACTORY);
+		stepRegistry.register(ShowWindowStepUI.FACTORY);
 		    	
 		// register the config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory();
@@ -111,6 +113,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
        	configRegistry.register(SaveDataStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(PrintFileStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(PrintWindowStepProperties.FACTORY_ID, editorFactory);
+       	configRegistry.register(CloseWindowStepProperties.FACTORY_ID, editorFactory);
+       	configRegistry.register(ShowWindowStepProperties.FACTORY_ID, editorFactory);
        	//configRegistry.register(EnclosingStepProperties.FACTORY_ID, editorFactory);       	
 	}
 		

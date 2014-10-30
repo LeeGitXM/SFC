@@ -9,10 +9,11 @@ import static com.ils.sfc.util.IlsProperty.*;
  * This interface just exists to store some constants for the step's properties and factory id
  *
  */
-public interface DialogMessageStepProperties extends ChartStepProperties {
-	public static final String FACTORY_ID = "com.ils.dialogMessageStep";
+public interface CloseWindowStepProperties extends ChartStepProperties {
+	public static final String FACTORY_ID = "com.ils.CloseWindowStep";
 	
     public static final IlsProperty<?>[] properties = { 
-    	DESCRIPTION, RECIPE_STATIC_STRATEGY, RECIPE_LOCATION, KEY, DIALOG, METHOD, MESSAGE, ACKNOWLEDGEMENT_REQUIRED, TIMEOUT, TIMEOUT_UNIT, POSITION, SCALE
+    	DESCRIPTION,
+    	WINDOW
     };
 }

@@ -95,6 +95,12 @@ public class PythonCall {
 	public static final PythonCall PRINT_WINDOW = new PythonCall("ils.sfc.steps.printWindow", 
 			PyList.class, stepArgs );
 
+	public static final PythonCall SHOW_WINDOW = new PythonCall("ils.sfc.steps.showWindow", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall CLOSE_WINDOW = new PythonCall("ils.sfc.steps.closeWindow", 
+			PyList.class, stepArgs );
+
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;
