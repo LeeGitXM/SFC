@@ -35,6 +35,7 @@
 		<fileset dir="${basedir}/../../external/lib" includes="commons-math3*.jar" />
 		 <fileset dir="${basedir}/../../external/lib" includes="jackson-*.jar" />
 		 <fileset dir="${basedir}/../../external/lib" includes="sfc-*.jar" />
+		<fileset dir="${basedir}/../../external/lib" includes="prefuse.jar" />
 	</path>
 	
 	<!-- Generic Buildfile: Reference Via Antcalls -->
