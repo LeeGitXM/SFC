@@ -1,6 +1,9 @@
 .recommenders/
 .metadata
 .version
+*.db
+*.modl
 bin/
+out/
 modules/
 temp_modl/

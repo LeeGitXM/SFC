@@ -88,6 +88,8 @@ public class ChartTreeDataModel {
 				}
 			}
 		}
+		// Make table legal if it was empty
+		if(nodes.getRowCount()==0)  configureNodesAsEmpty();
 	}
 	
 	/**
@@ -97,6 +99,15 @@ public class ChartTreeDataModel {
 		return new Tree(nodes,edges,Graph.DEFAULT_NODE_KEY,Graph.DEFAULT_SOURCE_KEY,Graph.DEFAULT_TARGET_KEY);
 	}
 	
+	// Configure the nodes table to display something reasonable
+	// if it is otherwise empty.
+	private void configureNodesAsEmpty() {
+		nodes.addRow();
+		nodes.setInt(0,Graph.DEFAULT_NODE_KEY,0);
+		nodes.setString(0,ID,"Not-a-uuid");
+		nodes.setLong(0,RESOURCE,-1);
+		nodes.setString(0,NAME,"No charts");
+	}
 	/**
 	 * Class to hold UI element link information.
 	 */
