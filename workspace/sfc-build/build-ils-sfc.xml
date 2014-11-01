@@ -127,7 +127,7 @@
 		<pack200 src="${basedir}/sfc-build/bin/${ils.sfc.name}_Designer/dist/ils-sfc-designer.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-designer.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		<pack200 src="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/ils-sfc-common.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-common.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		<pack200 src="${root.dir}/external/lib/lucene-1.4.3.jar" destfile="${basedir}/sfc-build/temp_modl/lucene-1.4.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
-		<pack200 src="${root.dir}/external/lib/prefuse.jar" destfile="${basedir}/sfc-build/temp_modl/prefuse.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
+		<pack200 src="${root.dir}/external/lib/prefuse-1.0.1.jar" destfile="${basedir}/sfc-build/temp_modl/prefuse-1.0.1.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		
 		
 		<!-- Copy gateway jar -->

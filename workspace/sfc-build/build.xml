@@ -36,7 +36,7 @@
 		 <fileset dir="${basedir}/../../external/lib" includes="jackson-*.jar" />
 		 <fileset dir="${basedir}/../../external/lib" includes="lucene-*.jar" />
 		 <fileset dir="${basedir}/../../external/lib" includes="sfc-*.jar" />
-		<fileset dir="${basedir}/../../external/lib" includes="prefuse.jar" />
+		<fileset dir="${basedir}/../../external/lib" includes="prefuse*.jar" />
 	</path>
 	
 	<!-- Generic Buildfile: Reference Via Antcalls -->

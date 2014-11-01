@@ -41,7 +41,7 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 	}
 
 	/**
-	 * Initialze the UI
+	 * Initialize the UI
 	 */
 	private void init() {
 		setTitle(TITLE);
@@ -57,7 +57,7 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 		if( view!=null ) contentPanel.remove(view);
 		this.view = createChartTreeView();
 		contentPanel.add(view,BorderLayout.CENTER);
-		contentPanel.validate();
+		//contentPanel.validate();
 	}
 	
 	private ChartTreeView createChartTreeView() {
