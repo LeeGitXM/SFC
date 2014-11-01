@@ -34,10 +34,11 @@ public class ChartTreeDataModel {
 	private static final String TAG = "ChartTreeDataModel";
 	public static final String CHART_RESOURCE_TYPE="sfc-chart-ui-model";
 	// Table column names
-	private static final String ID       = "Id";       // Chart UUID as String
-	private static final String NAME     = "Name";
-	private static final String PARENT   = "Parent";
-	private static final String RESOURCE = "Resource"; // ResourceId
+	private static final String ID      = "Id";       // Chart UUID as String
+	public static final String KEY      = "Key";
+	public static final String NAME     = "Name";
+	public static final String PARENT   = "Parent";
+	public static final String RESOURCE = "Resource"; // ResourceId
 	private final Map<String,Integer> idMap;                 // index given UUID string
 	private final List<LinkHolder> links;    // link elements
 	
@@ -52,16 +53,16 @@ public class ChartTreeDataModel {
 		idMap = new HashMap<>();
 		links = new ArrayList<>();
 		nodes = new Table();
-		nodes.addColumn(Graph.DEFAULT_NODE_KEY, int.class,new Integer(0));   // Table row
+		nodes.addColumn(NAME, String.class);
+		nodes.addColumn(KEY, int.class);            // Table row - key
 		nodes.addColumn(ID, String.class);
 		nodes.addColumn(RESOURCE, long.class);
-		nodes.addColumn(NAME, String.class);
 		
 		edges = new Table();
 		// The keys match the node key in the node table
 		// The node direction is from parent to child.
-		edges.addColumn(Graph.DEFAULT_SOURCE_KEY, int.class,new Integer(0));
-		edges.addColumn(Graph.DEFAULT_TARGET_KEY, int.class,new Integer(0));
+		edges.addColumn(Graph.DEFAULT_SOURCE_KEY, int.class);
+		edges.addColumn(Graph.DEFAULT_TARGET_KEY, int.class);
 		
 		initialize();
 	}
@@ -93,17 +94,20 @@ public class ChartTreeDataModel {
 	}
 	
 	/**
-	 * @return the chart resources as a tree.
+	 * @return a tree constructed out of the nodes and edges.
 	 */
 	public Tree getTree() {
-		return new Tree(nodes,edges,Graph.DEFAULT_NODE_KEY,Graph.DEFAULT_SOURCE_KEY,Graph.DEFAULT_TARGET_KEY);
+		Tree tree = new Tree(nodes,edges,KEY,Graph.DEFAULT_SOURCE_KEY,Graph.DEFAULT_TARGET_KEY);
+		return tree;
 	}
 	
 	// Configure the nodes table to display something reasonable
 	// if it is otherwise empty.
 	private void configureNodesAsEmpty() {
 		nodes.addRow();
-		nodes.setInt(0,Graph.DEFAULT_NODE_KEY,0);
+		log.warnf("%s.configureNodesAsEmpty. %s", TAG,Graph.DEFAULT_NODE_KEY);
+		nodes.setString(0,NAME,"No charts");
+		nodes.setInt(0,KEY,0);
 		nodes.setString(0,ID,"Not-a-uuid");
 		nodes.setLong(0,RESOURCE,-1);
 		nodes.setString(0,NAME,"No charts");

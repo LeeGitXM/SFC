@@ -62,7 +62,7 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 	
 	private ChartTreeView createChartTreeView() {
 		ChartTreeDataModel model = new ChartTreeDataModel(context);
-		return new ChartTreeView(model,"SFC Chart View");
+		return new ChartTreeView(model,ChartTreeDataModel.NAME);
 	}
 	
 	@Override

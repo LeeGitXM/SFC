@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/sfc-client"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Ignition-77"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/External"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/prefuse"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

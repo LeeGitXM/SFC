@@ -36,9 +36,6 @@ import prefuse.controls.PanControl;
 import prefuse.controls.WheelZoomControl;
 import prefuse.controls.ZoomControl;
 import prefuse.controls.ZoomToFitControl;
-import prefuse.data.Tuple;
-import prefuse.data.event.TupleSetListener;
-import prefuse.data.search.PrefixSearchTupleSet;
 import prefuse.data.tuple.TupleSet;
 import prefuse.render.AbstractShapeRenderer;
 import prefuse.render.DefaultRendererFactory;
@@ -47,8 +44,13 @@ import prefuse.render.LabelRenderer;
 import prefuse.util.ColorLib;
 import prefuse.util.FontLib;
 import prefuse.visual.VisualItem;
+import prefuse.visual.VisualTable;
+import prefuse.visual.VisualTree;
 import prefuse.visual.expression.InGroupPredicate;
 import prefuse.visual.sort.TreeDepthItemSorter;
+
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 
 /**
@@ -58,9 +60,9 @@ import prefuse.visual.sort.TreeDepthItemSorter;
  * @author <a href="http://jheer.org">jeffrey heer</a>
  */
 public class ChartTreeView extends Display {
-	private static final long serialVersionUID = 3253162293683958357L;
-
-	public static final String TREE_CHI = "/chi-ontology.xml.gz";
+	private static final long serialVersionUID = 3253162293683958367L;
+	private static final String TAG = "ChartTreeView";
+	private final LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
     
     private static final String tree = "tree";
     private static final String treeNodes = "tree.nodes";
@@ -69,19 +71,22 @@ public class ChartTreeView extends Display {
     private LabelRenderer m_nodeRenderer;
     private EdgeRenderer m_edgeRenderer;
     
-    private String m_label = "label";
     private int m_orientation = Constants.ORIENT_LEFT_RIGHT;
     
-    public ChartTreeView(ChartTreeDataModel model, String label) {
+    public ChartTreeView(ChartTreeDataModel model,String textField) {
         super(new Visualization());
-        m_label = label;
-
-        m_vis.add(tree, model.getTree());
         
-        m_nodeRenderer = new LabelRenderer(m_label);
+        // NOTE: Returns a VisualTree, node/edge tables are VisualTables
+        //                             node items are TableNodeItems
+        m_vis.addTree(tree, model.getTree());
+        
+
+        // NOTE: No images to render.
+        m_nodeRenderer = new LabelRenderer(textField,null);
         m_nodeRenderer.setRenderType(AbstractShapeRenderer.RENDER_TYPE_FILL);
         m_nodeRenderer.setHorizontalAlignment(Constants.LEFT);
         m_nodeRenderer.setRoundedCorner(8,8);
+
         m_edgeRenderer = new EdgeRenderer(Constants.EDGE_TYPE_CURVE);
         
         DefaultRendererFactory rf = new DefaultRendererFactory(m_nodeRenderer);
@@ -161,7 +166,7 @@ public class ChartTreeView extends Display {
         // ------------------------------------------------
         
         // initialize the display
-        setSize(700,600);
+        setSize(200,600);
         setItemSorter(new TreeDepthItemSorter());
         addControlListener(new ZoomToFitControl());
         addControlListener(new ZoomControl());
@@ -188,15 +193,7 @@ public class ChartTreeView extends Display {
         setOrientation(m_orientation);
         m_vis.run("filter");
         
-        TupleSet search = new PrefixSearchTupleSet(); 
-        m_vis.addFocusGroup(Visualization.SEARCH_ITEMS, search);
-        search.addTupleSetListener(new TupleSetListener() {
-            public void tupleSetChanged(TupleSet t, Tuple[] add, Tuple[] rem) {
-                m_vis.cancel("animatePaint");
-                m_vis.run("fullPaint");
-                m_vis.run("animatePaint");
-            }
-        });
+        // Leave out any search capabilities
     }
     
     // ------------------------------------------------------------------------
@@ -249,87 +246,7 @@ public class ChartTreeView extends Display {
     }
     
     // ------------------------------------------------------------------------
-    /*
-    public static void main(String argv[]) {
-        String infile = TREE_CHI;
-        String label = "name";
-        if ( argv.length > 1 ) {
-            infile = argv[0];
-            label = argv[1];
-        }
-        JComponent treeview = demo(infile, label);
-        
-        JFrame frame = new JFrame("p r e f u s e  |  t r e e v i e w");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setContentPane(treeview);
-        frame.pack();
-        frame.setVisible(true);
-    }
-    
-    public static JComponent demo() {
-        return demo(TREE_CHI, "name");
-    }
-    
-    public static JComponent demo(String datafile, final String label) {
-        Color BACKGROUND = Color.WHITE;
-        Color FOREGROUND = Color.BLACK;
-        
-        Tree t = null;
-        try {
-            t = (Tree)new TreeMLReader().readGraph(datafile);
-        } catch ( Exception e ) {
-            e.printStackTrace();
-            System.exit(1);
-        }
- 
-        // create a new treemap
-        final ChartTreeView tview = new ChartTreeView(t, label);
-        tview.setBackground(BACKGROUND);
-        tview.setForeground(FOREGROUND);
-        
-        // create a search panel for the tree map
-        JSearchPanel search = new JSearchPanel(tview.getVisualization(),
-            treeNodes, Visualization.SEARCH_ITEMS, label, true, true);
-        search.setShowResultCount(true);
-        search.setBorder(BorderFactory.createEmptyBorder(5,5,4,0));
-        search.setFont(FontLib.getFont("Tahoma", Font.PLAIN, 11));
-        search.setBackground(BACKGROUND);
-        search.setForeground(FOREGROUND);
-        
-        final JFastLabel title = new JFastLabel("                 ");
-        title.setPreferredSize(new Dimension(350, 20));
-        title.setVerticalAlignment(SwingConstants.BOTTOM);
-        title.setBorder(BorderFactory.createEmptyBorder(3,0,0,0));
-        title.setFont(FontLib.getFont("Tahoma", Font.PLAIN, 16));
-        title.setBackground(BACKGROUND);
-        title.setForeground(FOREGROUND);
-        
-        tview.addControlListener(new ControlAdapter() {
-            public void itemEntered(VisualItem item, MouseEvent e) {
-                if ( item.canGetString(label) )
-                    title.setText(item.getString(label));
-            }
-            public void itemExited(VisualItem item, MouseEvent e) {
-                title.setText(null);
-            }
-        });
-
-        Box box = new Box(BoxLayout.X_AXIS);
-        box.add(Box.createHorizontalStrut(10));
-        box.add(title);
-        box.add(Box.createHorizontalGlue());
-        box.add(search);
-        box.add(Box.createHorizontalStrut(3));
-        box.setBackground(BACKGROUND);
-        
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(BACKGROUND);
-        panel.setForeground(FOREGROUND);
-        panel.add(tview, BorderLayout.CENTER);
-        panel.add(box, BorderLayout.SOUTH);
-        return panel;
-    }
-    */
+   
     // ------------------------------------------------------------------------
    
     public class OrientAction extends AbstractAction {
@@ -378,7 +295,8 @@ public class ChartTreeView extends Display {
                 m_cur.setLocation(getWidth()/2, getHeight()/2);
                 getAbsoluteCoordinate(m_cur, m_start);
                 m_end.setLocation(vi.getX()+xbias, vi.getY()+ybias);
-            } else {
+            } 
+            else {
                 m_cur.setLocation(m_start.getX() + frac*(m_end.getX()-m_start.getX()),
                                   m_start.getY() + frac*(m_end.getY()-m_start.getY()));
                 panToAbs(m_cur);
