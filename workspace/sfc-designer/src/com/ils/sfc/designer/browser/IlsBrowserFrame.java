@@ -54,13 +54,16 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 	}
 	
 	private void updateChartView() {
-		if( view!=null ) contentPanel.remove(view);
+		contentPanel.removeAll();
+		contentPanel.invalidate();
 		this.view = createChartTreeView();
 		contentPanel.add(view,BorderLayout.CENTER);
-		//contentPanel.validate();
+		contentPanel.validate();
+		contentPanel.setVisible(true);
 	}
 	
 	private ChartTreeView createChartTreeView() {
+		log.infof("%s.createChartTreeView: New view ....",TAG);
 		ChartTreeDataModel model = new ChartTreeDataModel(context);
 		return new ChartTreeView(model,ChartTreeDataModel.NAME);
 	}

@@ -37,12 +37,12 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		
 	@Override
 	public List<DockableFrame> getFrames() {
-		// Add a frame for our custom browser
+		// Add a frame for our custom chart browser
        	List<DockableFrame> frames = new ArrayList<>();
        	browser = new IlsBrowserFrame(context);
-       	browser.setInitMode(DockContext.STATE_FRAMEDOCKED);
+       	browser.setInitMode(DockContext.STATE_AUTOHIDE);
        	browser.setInitSide(DockContext.DOCK_SIDE_WEST);
-       	browser.setInitIndex(2);
+       	browser.setInitIndex(1);
        	frames.add(browser);
        	return frames;
 	}
