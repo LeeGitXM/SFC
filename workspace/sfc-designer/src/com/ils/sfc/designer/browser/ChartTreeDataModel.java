@@ -41,28 +41,30 @@ public class ChartTreeDataModel {
 	private static final String TAG = "ChartTreeDataModel";
 	public static final String CHART_RESOURCE_TYPE="sfc-chart-ui-model";
 	public static final String FOLDER_RESOURCE_TYPE="__folder";
+	private int ROOT_ROW = 0;           // Number of the root row
+	private static final long STEP_RESOURCE = -2;       // Stand-in id for enclosing step
 	// Table column names
-	private static final String PATH    = "Path";       // Chart identifier
+	private static final String CXNS    = "Cxns";       // Incoming connection count
 	public static final String KEY      = "Key";
 	public static final String NAME     = "Name";
 	public static final String PARENT   = "Parent";
+	private static final String PATH    = "Path";       // Chart identifier
 	public static final String RESOURCE = "Resource"; // ResourceId
-	private final Map<String,Integer> idMap;                 // index given UUID string
-	private final List<LinkHolder> links;    // link elements
-	private final Map<UUID,FolderHolder> folderHierarchy;
+
+	private final Map<String,Integer>  rowLookup;    // Find node row by path
+	private final Map<String,FolderHolder> folderHierarchy;
 	
 	private final DesignerContext context;
 	private final LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
 	private final Table nodes;
 	private final Table edges;
-	private int nodeCount = 0;
 	
 	public ChartTreeDataModel(DesignerContext ctx) {
 		context = ctx;
-		idMap = new HashMap<>();
-		links = new ArrayList<>();
 		folderHierarchy = new HashMap<>();
+		rowLookup = new HashMap<>();
 		nodes = new Table();
+		nodes.addColumn(CXNS, int.class);   // Count of linked connections
 		nodes.addColumn(NAME, String.class);
 		nodes.addColumn(KEY, int.class);            // Table row - key
 		nodes.addColumn(PATH, String.class);
@@ -87,13 +89,15 @@ public class ChartTreeDataModel {
 		ClientStepRegistry registry = ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
 		// Initialize the folder hierachy
 		UUID root = ChartUIModel.ROOT_FOLDER;
+		log.tracef("%s.initialize: ROOT_FOLDER = %s",TAG,root.toString());
+		configureRootNode();
 		FolderHolder rootHolder = new FolderHolder(root,null,"");
 		rootHolder.setPath("");
-		folderHierarchy.put(root, rootHolder);
+		folderHierarchy.put(root.toString(), rootHolder);
 		
 		for(ProjectResource res:resources) {
 			if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
-				log.infof("%s.initialize: found chart %s, parent = %s", TAG,res.getName(),res.getParentUuid().toString());
+				log.tracef("%s.initialize: found chart %s, parent = %s", TAG,res.getName(),res.getParentUuid().toString());
 
 				try {
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(res.getData()));
@@ -102,7 +106,8 @@ public class ChartTreeDataModel {
 					ChartCompilationResults ccr = compiler.compile();
 					if(ccr.isSuccessful()) {
 						ChartDefinition definition = ccr.getChartDefinition();
-						int row = addTableRow(res.getName(),res.getResourceId());
+						int row = addNodeTableRow(res.getName(),res.getResourceId());
+						nodes.setString(row, PARENT, res.getParentUuid().toString());
 						checkForEnclosingStep(row,definition.getBeginElement());
 					}
 					else {
@@ -120,8 +125,8 @@ public class ChartTreeDataModel {
 			else if( res.getResourceType().equals(FOLDER_RESOURCE_TYPE)) {
 				UUID self = res.getDataAsUUID();
 				FolderHolder holder = new FolderHolder(res.getDataAsUUID(),res.getParentUuid(),res.getName());
-				folderHierarchy.put(self,holder);
-				log.infof("%s.initialize: folder resource %s (%s) (%s, parent %s)", TAG,res.getName(),res.getResourceType(),
+				folderHierarchy.put(self.toString(),holder);
+				log.tracef("%s.initialize: folder resource %s (%s) (%s, parent %s)", TAG,res.getName(),res.getResourceType(),
 						self.toString(),res.getParentUuid().toString());
 				resolvePath(holder);  // High likelihood of success if we're traversing down the tree
 			}
@@ -132,12 +137,14 @@ public class ChartTreeDataModel {
 		}
 		else {
 			// Resolve any folder paths
-			//configureRootNode();
 			resolveFolderHierarchy();
-			//resolveFolderPaths();
-			//connectLinkElements();
-			//resolveRootConnections();
+			resolveFolderPaths();
+			connectLinkElements();
+			resolveRootConnections();
+			rowLookup.clear();   // Free memory
+			folderHierarchy.clear();
 		}
+		log.tracef("%s.initialize ...COMPLETE", TAG);
 	}
 	
 	/**
@@ -153,9 +160,14 @@ public class ChartTreeDataModel {
 	private void checkForEnclosingStep(int parentRow,ElementDefinition step) {
 		StepDefinition stepDef = (StepDefinition)step;
 		if( stepDef.getFactoryId().equals(EnclosingStepProperties.FACTORY_ID)) {
-			log.infof("%s.checkForEnclosingStep: enclosing step %s = %s", TAG,
-					stepDef.getProperties().get(EnclosingStepProperties.Name),
-					stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH));
+			String name = stepDef.getProperties().get(EnclosingStepProperties.Name);
+			String path = stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH);
+			log.infof("%s.checkForEnclosingStep: enclosing step %s = %s", TAG,name,path);
+				// Create the step-that-is-an-enclosure node
+			int row = addNodeTableRow(name,STEP_RESOURCE);
+			nodes.setInt(row, CXNS, 1);     // Incoming connection from parent chart
+			nodes.setString(row, PATH, path);
+			addEdgeTableRow(parentRow,row);
 		}
 				
 		// Check descendents
@@ -165,26 +177,82 @@ public class ChartTreeDataModel {
 		}
 	}
 	
+	// Create a connection between nodes
+	// @return the row corresponding to the newly created connection.
+	private int addEdgeTableRow(int sourceRow,int destinationRow) {
+		int row = edges.getRowCount();
+		log.infof("%s.addEdgeTableRow: %d -> %d", TAG,sourceRow,destinationRow);
+		edges.addRow();
+		edges.setInt(row,Graph.DEFAULT_SOURCE_KEY,sourceRow);
+		edges.setInt(row,Graph.DEFAULT_TARGET_KEY,destinationRow);
+		return row;
+	}
 	// We've found a chart resource. Add it to the table
     // @param resourceId if negative, then this row corresponds to
 	// @return the row corresponding to the newly discovered chart.
-	private int addTableRow(String name,long resourceId) {
+	private int addNodeTableRow(String name,long resourceId) {
 		int row = nodes.getRowCount();
-		log.infof("%s.addTableRow: %d = %s", TAG,row,name);
+		log.infof("%s.addNodeTableRow: %d = %s", TAG,row,name);
 		nodes.addRow();
+		nodes.setInt(row,CXNS,0); 
 		nodes.setString(row,NAME,name);
 		nodes.setInt(row,KEY,row);
 		//nodes.setString(row,ID,"Not-a-uuid");
 		nodes.setLong(row,RESOURCE,resourceId);
 		return row;
 	}
+	// Loop through all of the nodes-that-are-links and
+	// create connections between the link nodes and the
+	// charts that they point to. 
+	private void connectLinkElements() {
+		log.infof("%s.connectLinkElements ...", TAG);
+		int maxRow = nodes.getRowCount();
+		int row = 0;
+		while(row<maxRow) {
+			long rowResource = nodes.getLong(row, RESOURCE);
+			if( rowResource==STEP_RESOURCE ) {
+				String path = nodes.getString(row, PATH);
+				if( path!=null ) {
+					Integer targetRow = rowLookup.get(path);
+					if( targetRow!=null) {
+						long resourceId = nodes.getLong(targetRow.intValue(), RESOURCE);
+						nodes.setLong(row, RESOURCE, resourceId);     // Set resource in the link row
+						addEdgeTableRow(row,targetRow.intValue());    // Connect enclosing step to chart
+						// Increment the connection count in the target row
+						int connections = nodes.getInt(targetRow, CXNS);
+						nodes.setInt(targetRow, CXNS,connections+1);
+					}
+					else {
+						log.warnf("%s.connectLinkElements. No chart entry for path %s", TAG,path);
+					}
+				}
+				else if( row!=ROOT_ROW ){
+					log.warnf("%s.connectLinkElements. No path in node table for row %d", TAG,row);
+				}
+			}
+			row++;
+		}
+	}
+	// Configure the nodes table to display something reasonable
+	// if it is otherwise empty.
+	private void configureRootNode() {
+		ROOT_ROW = nodes.getRowCount();
+		nodes.addRow();
+		log.infof("%s.configureRootNode. root", TAG);
+		nodes.setString(ROOT_ROW,NAME,"root");
+		nodes.setInt(ROOT_ROW,CXNS,0);
+		nodes.setInt(ROOT_ROW,KEY,ROOT_ROW);
+		nodes.setString(ROOT_ROW,PATH,"");
+		nodes.setLong(ROOT_ROW,RESOURCE,-1);
+	}
 	// Configure the nodes table to display something reasonable
 	// if it is otherwise empty.
 	private void configureNodesAsEmpty() {
 		int row = 0;
 		nodes.addRow();
-		log.warnf("%s.configureNodesAsEmpty. %s", TAG,Graph.DEFAULT_NODE_KEY);
+		log.warnf("%s.configureNodesAsEmpty. No charts", TAG);
 		nodes.setString(row,NAME,"No charts");
+		nodes.setInt(row,CXNS,0);
 		nodes.setInt(row,KEY,0);
 		nodes.setString(row,PATH,"/");
 		nodes.setLong(row,RESOURCE,-1);
@@ -192,6 +260,7 @@ public class ChartTreeDataModel {
 	
 	// Resolve folder hierarchy
 	private void resolveFolderHierarchy() {
+		log.infof("%s.resolveFolderHierarchy ...", TAG);
 		int MAX_DEPTH = 100;
 		int depth = 0;
 		boolean success = false;
@@ -207,10 +276,43 @@ public class ChartTreeDataModel {
 		if(!success) log.warnf("%s.resolveFolderHierarchy. Failed to find paths for all folders", TAG);
 	}
 	
+	// Loop through all of the nodes-that-are-charts and
+	// set the path.
+	private void resolveFolderPaths() {
+		log.infof("%s.resolveFolderPaths ...", TAG);
+		int maxRow = nodes.getRowCount();
+		int row = 0;
+		while(row<maxRow) {
+			long resourceId = nodes.getLong(row, RESOURCE);
+			if( resourceId>=0) {
+				String parent = nodes.getString(row, PARENT);
+				if( parent !=null ) {
+					FolderHolder fh = folderHierarchy.get(parent);
+					String path = fh.getPath();   // Parent path
+					if( path!=null) {
+						String name = nodes.getString(row, NAME);
+						if( path.length()==0) path = name;
+						else path = String.format("%s/%s",path,name);
+						nodes.setString(row, PATH, path);
+						log.infof("%s.resolveFolderPaths ... %d is %s", TAG,row,path);
+						rowLookup.put(path,new Integer(row));   // So we can find this for links 
+					}
+					else {
+						log.warnf("%s.resolveFolderPaths. No path for resource %d (parent=%s)", TAG,resourceId,parent);
+					}
+				}
+				else {
+					log.warnf("%s.resolveFolderPaths. Unknown parent for resource %d", TAG,resourceId);
+				}
+			}
+			row++;
+		}
+	}
+	
 	private boolean resolvePath(FolderHolder holder) {
 		boolean success = false;
 		UUID parent = holder.getParent();
-		FolderHolder parentHolder = folderHierarchy.get(parent);
+		FolderHolder parentHolder = folderHierarchy.get(parent.toString());
 		if( parentHolder!=null ) {
 			String path = parentHolder.getPath();
 			if( path!=null) {
@@ -220,19 +322,27 @@ public class ChartTreeDataModel {
 				success = true;
 			}
 		}
+		else {
+			// We expect all to be resolved immediately, but are not assured of this.
+			log.tracef("%s.resolvePath. Unresolved parent %s for folder %s", TAG,holder.getParent().toString(),holder.getId().toString());
+		}
 		return success;
 	}
-	
-	/**
-	 * Class to hold UI element link information.
-	 */
-	private class LinkHolder {
-		public LinkHolder(String parentId,ChartUIElement element) {
-			
+
+	// Loop through all of the nodes. If they haven't been connected to by anything,
+	// then they should be connected to the root node.
+	private void resolveRootConnections() {
+		log.infof("%s.resolveRootConnections ...", TAG);
+		int maxRow = nodes.getRowCount();
+		int row = 0;
+		while(row<maxRow) {
+			int connections = nodes.getInt(row,CXNS);
+			if( connections==0 && row!=ROOT_ROW) {
+				addEdgeTableRow(ROOT_ROW,row);
+			}
+			row++;
 		}
-		
 	}
-	
 	/**
 	 * Helper class for use in trying to resolve folder paths
 	 */
@@ -246,6 +356,7 @@ public class ChartTreeDataModel {
 			this.parentId = parentUUId;
 			this.name = folderName;
 		}
+		public UUID getId() { return id; }
 		public String getName() { return name;}
 		public String getPath() { return path; }
 		public UUID getParent() { return parentId; }
