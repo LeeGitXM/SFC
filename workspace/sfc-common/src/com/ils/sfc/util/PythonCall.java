@@ -25,80 +25,81 @@ public class PythonCall {
 	
 	private static ScriptManager scriptMgr;
 	private static final String[] stepArgs = new String[]{"chartScope", "stepProperties"};
+	private static final String STEPS_PKG = "ils.sfc.gateway.steps.";
 	
-	public static final PythonCall QUEUE_INSERT = new PythonCall("ils.sfc.steps.queueInsert", 
+	public static final PythonCall QUEUE_INSERT = new PythonCall(STEPS_PKG + "queueInsert", 
 		null, stepArgs);
 
-	public static final PythonCall CLEAR_QUEUE = new PythonCall("ils.sfc.steps.clearQueue", 
+	public static final PythonCall CLEAR_QUEUE = new PythonCall(STEPS_PKG + "clearQueue", 
 		null, stepArgs);
 
-	public static final PythonCall SET_QUEUE = new PythonCall("ils.sfc.steps.setQueue", 
+	public static final PythonCall SET_QUEUE = new PythonCall(STEPS_PKG + "setQueue", 
 		null, stepArgs);
 
-	public static final PythonCall SHOW_QUEUE = new PythonCall("ils.sfc.steps.showQueue", 
+	public static final PythonCall SHOW_QUEUE = new PythonCall(STEPS_PKG + "showQueue", 
 		null, stepArgs);
 
-	public static final PythonCall YES_NO = new PythonCall("ils.sfc.steps.yesNo", 
+	public static final PythonCall YES_NO = new PythonCall(STEPS_PKG + "yesNo", 
 			null, stepArgs);
 
-	public static final PythonCall ABORT = new PythonCall("ils.sfc.steps.abort", 
+	public static final PythonCall CANCEL = new PythonCall(STEPS_PKG + "cancel", 
 			null, stepArgs);
 
-	public static final PythonCall PAUSE = new PythonCall("ils.sfc.steps.pause", 
+	public static final PythonCall PAUSE = new PythonCall(STEPS_PKG + "pause", 
 			null, stepArgs);
 
-	public static final PythonCall CONTROL_PANEL_MESSAGE = new PythonCall("ils.sfc.steps.controlPanelMessage", 
+	public static final PythonCall CONTROL_PANEL_MESSAGE = new PythonCall(STEPS_PKG + "controlPanelMessage", 
 			null, stepArgs);
 
-	public static final PythonCall TIMED_DELAY = new PythonCall("ils.sfc.steps.timedDelay", 
+	public static final PythonCall TIMED_DELAY = new PythonCall(STEPS_PKG + "timedDelay", 
 			null, stepArgs);
 
 	public static final PythonCall OTHER_UNITS = new PythonCall("ils.common.units.unitsOfSameType", 
 			PyList.class,  new String[]{"unit"} );
 
-	public static final PythonCall DELETE_DELAY_NOTIFICATION = new PythonCall("ils.sfc.steps.deleteDelayNotifications", 
+	public static final PythonCall DELETE_DELAY_NOTIFICATION = new PythonCall(STEPS_PKG + "deleteDelayNotifications", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall POST_DELAY_NOTIFICATION = new PythonCall("ils.sfc.steps.postDelayNotification", 
+	public static final PythonCall POST_DELAY_NOTIFICATION = new PythonCall(STEPS_PKG + "postDelayNotification", 
 			PyList.class,  stepArgs );
 
-	public static final PythonCall ENABLE_DISABLE = new PythonCall("ils.sfc.steps.enableDisable", 
+	public static final PythonCall ENABLE_DISABLE = new PythonCall(STEPS_PKG + "enableDisable", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall SELECT_INPUT = new PythonCall("ils.sfc.steps.selectInput", 
+	public static final PythonCall SELECT_INPUT = new PythonCall(STEPS_PKG + "selectInput", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall GET_LIMITED_INPUT = new PythonCall("ils.sfc.steps.getLimitedInput", 
+	public static final PythonCall GET_LIMITED_INPUT = new PythonCall(STEPS_PKG + "getLimitedInput", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall DIALOG_MESSAGE = new PythonCall("ils.sfc.steps.dialogMessage", 
+	public static final PythonCall DIALOG_MESSAGE = new PythonCall(STEPS_PKG + "dialogMessage", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall COLLECT_DATA = new PythonCall("ils.sfc.steps.collectData", 
+	public static final PythonCall COLLECT_DATA = new PythonCall(STEPS_PKG + "collectData", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall GET_INPUT = new PythonCall("ils.sfc.steps.getInput", 
+	public static final PythonCall GET_INPUT = new PythonCall(STEPS_PKG + "getInput", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall RAW_QUERY = new PythonCall("ils.sfc.steps.rawQuery", 
+	public static final PythonCall RAW_QUERY = new PythonCall(STEPS_PKG + "rawQuery", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall SIMPLE_QUERY = new PythonCall("ils.sfc.steps.simpleQuery", 
+	public static final PythonCall SIMPLE_QUERY = new PythonCall(STEPS_PKG + "simpleQuery", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall SAVE_DATA = new PythonCall("ils.sfc.steps.saveData", 
+	public static final PythonCall SAVE_DATA = new PythonCall(STEPS_PKG + "saveData", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall PRINT_FILE = new PythonCall("ils.sfc.steps.printFile", 
+	public static final PythonCall PRINT_FILE = new PythonCall(STEPS_PKG + "printFile", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall PRINT_WINDOW = new PythonCall("ils.sfc.steps.printWindow", 
+	public static final PythonCall PRINT_WINDOW = new PythonCall(STEPS_PKG + "printWindow", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall SHOW_WINDOW = new PythonCall("ils.sfc.steps.showWindow", 
+	public static final PythonCall SHOW_WINDOW = new PythonCall(STEPS_PKG + "showWindow", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall CLOSE_WINDOW = new PythonCall("ils.sfc.steps.closeWindow", 
+	public static final PythonCall CLOSE_WINDOW = new PythonCall(STEPS_PKG + "closeWindow", 
 			PyList.class, stepArgs );
 
 	public PythonCall(String methodName, Class<?> returnType, String...args) {

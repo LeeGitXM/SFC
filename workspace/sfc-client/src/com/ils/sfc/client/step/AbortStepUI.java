@@ -10,7 +10,7 @@ import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public class AbortStepUI extends AbstractIlsStepUI {
-	protected static Icon abortIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/abort.png"));
+	protected static Icon cancelIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/abort.png"));
   
     public static final ClientStepFactory FACTORY = new AbortStepFactory();
 
@@ -18,7 +18,7 @@ public class AbortStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b><font color=red>Abort!</html>"; }
+	protected String getText() { return "<html><b><font color=red>Cancel!</html>"; }
 
     public static final class AbortStepFactory extends AbortStepDelegate implements ClientStepFactory {
     	private AbortStepUI UI = new AbortStepUI();
@@ -29,17 +29,17 @@ public class AbortStepUI extends AbstractIlsStepUI {
         }
 
         @Override        public Icon getPaletteIcon() {
-            return abortIcon; 
+            return cancelIcon; 
         }
 
         @Override
         public Icon getRolloverPaletteIcon() {
-            return abortIcon; 
+            return cancelIcon; 
         }
 
         @Override
         public String getPaletteText() {
-            return "Abort Recipe";
+            return "Cancel Recipe";
         }
 
         @Override

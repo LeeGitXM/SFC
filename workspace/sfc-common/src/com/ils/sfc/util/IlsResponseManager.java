@@ -1,10 +1,13 @@
 package com.ils.sfc.util;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.python.core.PyDictionary;
+import org.python.core.PyList;
 
 /** Handles receiving and caching SFC-related responses from clients.
  *  This was implemented in Java because I couldn't get a persistent global in Jython */

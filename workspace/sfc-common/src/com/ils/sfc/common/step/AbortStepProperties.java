@@ -14,5 +14,6 @@ public interface AbortStepProperties extends ChartStepProperties {
 	
     public static final IlsProperty<?>[] properties = {
     	DESCRIPTION, 
+    	ACK_REQUIRED,
     	MESSAGE };
 }

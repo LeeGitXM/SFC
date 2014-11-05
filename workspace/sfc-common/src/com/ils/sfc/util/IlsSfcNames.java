@@ -4,7 +4,7 @@ package com.ils.sfc.util;
 public class IlsSfcNames {
 
 	// step properties:
-	public static final String ACKNOWLEDGEMENT_REQUIRED = "acknowledge";
+	public static final String ACK_REQUIRED = "ackRequired";
 	public static final String BOTTOM_CENTER = "bottomCenter";
 	public static final String BOTTOM_LEFT = "bottomLeft";
 	public static final String BOTTOM_RIGHT = "bottomRight";
