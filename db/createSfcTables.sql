@@ -12,11 +12,12 @@ CREATE INDEX idx_sfc_sessions on SfcSessions (operator, status)
 GO
 
 create table ControlPanelMsgs (
-  id INT IDENTITY PRIMARY KEY,
-  chartRunId [varchar](64)   not null,
+  id [varchar](36) PRIMARY KEY,
+  chartRunId [varchar](36)   not null,
   message [varchar](256)    not null,
   createTime    [datetime]  not null,
   ackRequired[bit]    not null,
+  ackTimedOut[bit]  default 0  not null,
   ackTime    [datetime]    null,
 )
 GO

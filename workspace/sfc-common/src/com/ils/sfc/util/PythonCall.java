@@ -102,6 +102,9 @@ public class PythonCall {
 	public static final PythonCall CLOSE_WINDOW = new PythonCall(STEPS_PKG + "closeWindow", 
 			PyList.class, stepArgs );
 
+	public static final PythonCall HANDLE_UNEXPECTED_ERROR = new PythonCall("ils.sfc.gateway.util." + "handleUnexpectedError", 
+			PyList.class,  new String[]{"chartProps", "msg"} );
+
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;
@@ -122,9 +125,27 @@ public class PythonCall {
 		for(int i = 0; i < argNames.length; i++) {
 			localMap.__setitem__(argNames[i], Py.java2py(argValues[i]));
 		}
-		scriptMgr.runCode(compiledCode, localMap, globalsMap);
-		PyObject pyResult = localMap.__getitem__(RESULT_NAME);
-		return returnType != null ? pyResult.__tojava__(returnType) : null;
+		try {
+			scriptMgr.runCode(compiledCode, localMap, globalsMap);
+			if (returnType != null) {
+				PyObject pyResult = localMap.__getitem__(RESULT_NAME);
+				Object result = pyResult.__tojava__(returnType);
+				return result;
+			}
+			else {
+				return null;
+			}
+		}
+		catch(JythonExecException ex) {
+			if(this != HANDLE_UNEXPECTED_ERROR) {  // avoid recursion
+				String msg = ex.toString();
+				HANDLE_UNEXPECTED_ERROR.exec(argValues[0], msg);
+			}
+			else {
+				System.out.println("Couldn't invoke handleUnexpectedError script : " + ex.toString());
+			}
+			return null;
+		}
 	}
 
 	/** Compile and cache code to call this method. */
