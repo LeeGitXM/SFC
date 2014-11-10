@@ -4,7 +4,6 @@
 package com.ils.sfc.designer.browser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,6 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartCompiler;
-import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
 /** 
@@ -158,22 +156,24 @@ public class ChartTreeDataModel {
 	// Check and see if the referenced element is an enclosing step
 	// @param parentRow the row in the nodes table corresponding to the enclosing block
 	private void checkForEnclosingStep(int parentRow,ElementDefinition step) {
-		StepDefinition stepDef = (StepDefinition)step;
-		if( stepDef.getFactoryId().equals(EnclosingStepProperties.FACTORY_ID)) {
-			String name = stepDef.getProperties().get(EnclosingStepProperties.Name);
-			String path = stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH);
-			log.infof("%s.checkForEnclosingStep: enclosing step %s = %s", TAG,name,path);
+		if( step instanceof StepDefinition ) {
+			StepDefinition stepDef = (StepDefinition)step;
+			if( stepDef.getFactoryId().equals(EnclosingStepProperties.FACTORY_ID)) {
+				String name = stepDef.getProperties().get(EnclosingStepProperties.Name);
+				String path = stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH);
+				log.infof("%s.checkForEnclosingStep: enclosing step %s = %s", TAG,name,path);
 				// Create the step-that-is-an-enclosure node
-			int row = addNodeTableRow(name,STEP_RESOURCE);
-			nodes.setInt(row, CXNS, 1);     // Incoming connection from parent chart
-			nodes.setString(row, PATH, path);
-			addEdgeTableRow(parentRow,row);
-		}
-				
-		// Check descendents
-		List<ElementDefinition> nextSteps = step.getNextElements();
-		for( ElementDefinition ce:nextSteps) {
-			checkForEnclosingStep(parentRow,ce);
+				int row = addNodeTableRow(name,STEP_RESOURCE);
+				nodes.setInt(row, CXNS, 1);     // Incoming connection from parent chart
+				nodes.setString(row, PATH, path);
+				addEdgeTableRow(parentRow,row);
+			}
+
+			// Check descendents
+			List<ElementDefinition> nextSteps = step.getNextElements();
+			for( ElementDefinition ce:nextSteps) {
+				checkForEnclosingStep(parentRow,ce);
+			}
 		}
 	}
 	
