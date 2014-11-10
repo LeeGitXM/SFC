@@ -8,7 +8,7 @@ create table SfcSessions (
   lastChangeTime datetime not null
 )
 GO
-CREATE INDEX idx_sfc_sessions on SfcSessions (operator, status)
+CREATE INDEX idx_sfc_sessions on SfcSessions (userName, status)
 GO
 
 create table ControlPanelMsgs (
@@ -40,4 +40,10 @@ create table UnitAliases (
 )
 GO
 
+insert into Units (name, isBaseUnit, type, description, m) values ('SECOND', 1, 'TIME', 'Second', 0)
+GO
+insert into Units (name, isBaseUnit, type, description, m) values ('MINUTE', 0, 'TIME', 'Minute', 0.0166666666666667)
+GO
+insert into Units (name, isBaseUnit, type, description, m) values ('HOUR', 0, 'TIME', 'Hour', 0.000277777777777778)
+GO
 

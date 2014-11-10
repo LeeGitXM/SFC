@@ -24,10 +24,12 @@ public class IlsSfcNames {
 	public static final String DIRECTORY = "directory";
 	public static final String DYNAMIC = "dynamic";
 	public static final String ENABLE = "enable";
+	public static final String ERROR = "Error";
 	public static final String EXTENSION = "extension";
 	public static final String FETCH_MODE = "fetchMode";
 	public static final String FILENAME = "filename";
 	public static final String FILEPATH = "filepath";
+	public static final String INFO = "Info";
 	public static final String KEY = "key";
 	public static final String KEY_MODE = "keyMode";
 	public static final String LABEL = "label";
@@ -56,7 +58,6 @@ public class IlsSfcNames {
 	public static final String SINGLE = "single";
 	public static final String SQL = "sql";
 	public static final String STATIC = "static";
-	public static final String STATUS = "status";
 	public static final String STRATEGY = "strategy";
 	public static final String TAG_PATH = "tagPath";
 	public static final String TIMEOUT = "timeout";
@@ -69,6 +70,7 @@ public class IlsSfcNames {
 	public static final String UPDATE_OR_CREATE = "updateOrCreate";
 	public static final String VALUE = "value";
 	public static final String VIEW_FILE = "viewFile";
+	public static final String WARNING = "Warning";
 	public static final String WINDOW = "window";
 
 
@@ -105,4 +107,5 @@ public class IlsSfcNames {
 	public static final String[] COMPUTER_CHOICES = {SERVER, LOCAL};
 	public static final String[] POSITION_CHOICES = {CENTER, TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT};
 	public static final String[] SECURITY_CHOICES = {PUBLIC, PRIVATE};
+	public static final String[] PRIORITY_CHOICES = {INFO, WARNING, ERROR};
 }
