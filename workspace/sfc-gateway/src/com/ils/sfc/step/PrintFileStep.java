@@ -13,10 +13,8 @@ public class PrintFileStep extends IlsAbstractChartStep implements PrintFileStep
 
 	@Override
 	public void activateStep() {
+		super.activateStep();
 		exec(PythonCall.PRINT_FILE);	
 	}
 
-	@Override
-	public void deactivateStep() {
-	}
 }

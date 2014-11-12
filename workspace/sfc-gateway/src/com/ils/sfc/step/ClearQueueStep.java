@@ -13,11 +13,8 @@ public class ClearQueueStep extends IlsAbstractChartStep implements ClearQueueSt
 
 	@Override
 	public void activateStep() {
+		super.activateStep();
 		exec(PythonCall.CLEAR_QUEUE);
-	}
-
-	@Override
-	public void deactivateStep() {
 	}
 
 }

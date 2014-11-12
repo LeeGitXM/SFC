@@ -13,11 +13,8 @@ public class ShowQueueStep extends IlsAbstractChartStep implements ShowQueueStep
 
 	@Override
 	public void activateStep() {
+		super.activateStep();
 		exec(PythonCall.SHOW_QUEUE);
-	}
-
-	@Override
-	public void deactivateStep() {
 	}
 
 }

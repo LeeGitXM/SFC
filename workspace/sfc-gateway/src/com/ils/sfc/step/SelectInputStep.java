@@ -13,10 +13,8 @@ public class SelectInputStep extends IlsAbstractChartStep implements SelectInput
 
 	@Override
 	public void activateStep() {
+		super.activateStep();
 		exec(PythonCall.SELECT_INPUT);	
 	}
 
-	@Override
-	public void deactivateStep() {
-	}
 }

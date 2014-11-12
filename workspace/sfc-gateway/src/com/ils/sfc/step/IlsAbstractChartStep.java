@@ -34,19 +34,64 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefinition> implements StepElement {
 	private static final Logger logger = LoggerFactory.getLogger(IlsAbstractChartStep.class);
 	private static final BasicProperty<String> nameProperty = new BasicProperty<String>(IlsSfcNames.NAME, String.class);
+	private String auditLevel = IlsSfcNames.OFF;
+	private long startTime;
 	
 	protected IlsAbstractChartStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
-		
+
+	private void setAuditLevel() {
+		for(PropertyValue<?> propertyValue: getDefinition().getProperties()) {
+			String propName = propertyValue.getProperty().getName();
+			if(IlsSfcNames.AUDIT_LEVEL.equals(propName)) {
+				auditLevel = (String) propertyValue.getValue();
+			}
+		}
+	}
+	
+	public String getName() {
+		return getName(getDefinition());
+	}
+	
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " " + getName(); 
+	}
+	
+	private boolean auditOn() {
+		return !auditLevel.equals(IlsSfcNames.OFF);
+	}
+	
+	@Override
+	public void activateStep() {
+		setAuditLevel();
+		startTime = System.currentTimeMillis();
+		if(auditOn()) {
+			logger.debug(toString() + " activated");
+		}
+	}
+
+	@Override
+	public void deactivateStep() {
+		long elapsedMillis = System.currentTimeMillis() - startTime;
+		if(auditOn()) {
+			logger.debug(toString() + " deactivated; elapsed time " + (elapsedMillis/1000.) + " sec ");
+		}
+	}
+
 	@Override
 	public void pauseStep() {
-		System.out.println("pauseStep");
+		if(auditOn()) {
+			logger.debug(toString() + " paused");
+		}
 	}
 
 	@Override
 	public void resumeStep() {
-		System.out.println("resumeStep");		
+		if(auditOn()) {
+			logger.debug(toString() + " resumed");
+		}
 	}
 
 	protected void exec(PythonCall pcall) {

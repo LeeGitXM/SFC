@@ -13,10 +13,8 @@ public class LimitedInputStep extends IlsAbstractChartStep implements LimitedInp
 
 	@Override
 	public void activateStep() {
+		super.activateStep();
 		exec(PythonCall.GET_LIMITED_INPUT);	
 	}
 
-	@Override
-	public void deactivateStep() {
-	}
 }

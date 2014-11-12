@@ -13,10 +13,8 @@ public class PrintWindowStep extends IlsAbstractChartStep implements PrintWindow
 
 	@Override
 	public void activateStep() {
+		super.activateStep();
 		exec(PythonCall.PRINT_WINDOW);	
 	}
 
-	@Override
-	public void deactivateStep() {
-	}
 }

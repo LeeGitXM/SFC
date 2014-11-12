@@ -13,10 +13,8 @@ public class CollectDataStep extends IlsAbstractChartStep implements CollectData
 
 	@Override
 	public void activateStep() {
+		super.activateStep();
 		exec(PythonCall.COLLECT_DATA);	
 	}
 
-	@Override
-	public void deactivateStep() {
-	}
 }

@@ -13,10 +13,8 @@ public class SaveDataStep extends IlsAbstractChartStep implements SaveDataStepPr
 
 	@Override
 	public void activateStep() {
+		super.activateStep();
 		exec(PythonCall.SAVE_DATA);	
 	}
 
-	@Override
-	public void deactivateStep() {
-	}
 }

@@ -13,11 +13,8 @@ public class AbortStep extends IlsAbstractChartStep implements AbortStepProperti
 
 	@Override
 	public void activateStep() {
+		super.activateStep();
 		exec(PythonCall.CANCEL);
-	}
-
-	@Override
-	public void deactivateStep() {
 	}
 
 }
