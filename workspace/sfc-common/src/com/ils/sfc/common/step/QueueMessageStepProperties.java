@@ -15,5 +15,5 @@ public interface QueueMessageStepProperties extends ChartStepProperties {
     public static final IlsProperty<?>[] properties = { 
     	DESCRIPTION,
     	MESSAGE,
-    	STATUS };
+    	PRIORITY};
 }
