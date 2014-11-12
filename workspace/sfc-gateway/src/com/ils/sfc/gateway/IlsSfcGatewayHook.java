@@ -75,6 +75,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 		sfcHook.getStepRegistry().register(new PrintFileStepFactory());
 		sfcHook.getStepRegistry().register(new PrintWindowStepFactory());
 		sfcHook.getStepRegistry().register(new IlsEnclosingStepFactory());
+		sfcHook.getStepRegistry().register(new ShowWindowStepFactory());
 		sfcHook.getStepRegistry().register(new CloseWindowStepFactory());
 	}
 

@@ -13,7 +13,6 @@ public interface QueueMessageStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.queueMessageStep";
 	
     public static final IlsProperty<?>[] properties = { 
-    	DESCRIPTION,
     	MESSAGE,
     	PRIORITY};
 }

@@ -13,6 +13,6 @@ public interface YesNoStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.yesNoStep";
 	
     public static final IlsProperty<?>[] properties = { 
-    	DESCRIPTION, PROMPT, RECIPE_LOCATION, KEY
+    	PROMPT, RECIPE_LOCATION, KEY
     };
 }

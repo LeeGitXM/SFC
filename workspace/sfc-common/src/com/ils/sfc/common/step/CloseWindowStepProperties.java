@@ -13,7 +13,6 @@ public interface CloseWindowStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.CloseWindowStep";
 	
     public static final IlsProperty<?>[] properties = { 
-    	DESCRIPTION,
     	WINDOW
     };
 }

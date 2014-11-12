@@ -13,7 +13,6 @@ public interface ShowWindowStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.showWindowStep";
 	
     public static final IlsProperty<?>[] properties = { 
-    	DESCRIPTION,
     	WINDOW,
     	SECURITY,
     	LABEL,

@@ -2,6 +2,7 @@ package com.ils.sfc.step;
 
 import com.ils.sfc.common.step.YesNoStepProperties;
 import com.ils.sfc.util.PythonCall;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 

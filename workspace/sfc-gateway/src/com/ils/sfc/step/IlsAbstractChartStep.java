@@ -99,6 +99,9 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		
 		// try to be pseudo-transactional by putting everything in at once:
 		chartScope.put(IlsSfcNames.BY_NAME, byName);
+		if(context.getChartScope().get(IlsSfcNames.BY_NAME) == null ) {
+			logger.error("update of step properties in chart scope failed");
+		}
 	}
 
 	/** Get the name of a step from its definition */

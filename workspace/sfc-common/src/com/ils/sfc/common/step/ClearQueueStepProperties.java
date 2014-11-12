@@ -12,5 +12,5 @@ import static com.ils.sfc.util.IlsProperty.*;
 public interface ClearQueueStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.clearQueueStep";
 	
-    public static final IlsProperty<?>[] properties = { DESCRIPTION };
+    public static final IlsProperty<?>[] properties = {};
 }

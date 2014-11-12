@@ -13,6 +13,6 @@ public interface LimitedInputStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.limitedInputStep";
 
     public static final IlsProperty<?>[] properties = { 
-    	DESCRIPTION, PROMPT, RECIPE_LOCATION, KEY, MINIMUM_VALUE, MAXIMUM_VALUE
+    	PROMPT, RECIPE_LOCATION, KEY, MINIMUM_VALUE, MAXIMUM_VALUE
     };
 }

@@ -105,6 +105,9 @@ public class PythonCall {
 	public static final PythonCall HANDLE_UNEXPECTED_ERROR = new PythonCall("ils.sfc.gateway.util." + "handleUnexpectedError", 
 			PyList.class,  new String[]{"chartProps", "msg"} );
 
+	public static final PythonCall INVOKE_STEP = new PythonCall("ils.sfc.gateway.steps." + "invokeStep", 
+		PyList.class,  new String[]{"chartProperties", "stepProperties", "methodName"} );
+
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;
@@ -146,6 +149,7 @@ public class PythonCall {
 			}
 			return null;
 		}
+
 	}
 
 	/** Compile and cache code to call this method. */

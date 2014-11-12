@@ -67,7 +67,12 @@ public class IlsSfcCommonUtils {
 		try {
 			for(PropertyValue<?> pvalue: element) {
 				writer.writeStartElement(pvalue.getProperty().getName());
-				writer.writeCharacters(pvalue.getValue().toString());
+				if(pvalue.getValue() != null) {
+					writer.writeCharacters(pvalue.getValue().toString());
+				}
+				else {
+					logger.warn("null value for property " + pvalue.getProperty().getName());
+				}
 				writer.writeEndElement();			
 			}
 		}

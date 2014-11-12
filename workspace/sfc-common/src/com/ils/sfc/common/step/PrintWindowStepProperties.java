@@ -13,7 +13,6 @@ public interface PrintWindowStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.PrintWindowStep";
 	
     public static final IlsProperty<?>[] properties = {
-    	DESCRIPTION,
     	WINDOW,
     	SHOW_PRINT_DIALOG,
     	};

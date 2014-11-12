@@ -13,6 +13,5 @@ import static com.ils.sfc.util.IlsProperty.*;
 public interface DeleteDelayNotificationStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.deleteDelayNotification";
 
-    public static final IlsProperty<?>[] properties = { 
-    	DESCRIPTION };
+    public static final IlsProperty<?>[] properties = { };
 }

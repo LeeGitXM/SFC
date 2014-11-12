@@ -1,5 +1,7 @@
 package com.ils.sfc.common.step;
 
+import static com.ils.sfc.common.step.YesNoStepProperties.properties;
+
 import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
@@ -10,16 +12,30 @@ import org.w3c.dom.Element;
 import com.ils.sfc.util.IlsProperty;
 import com.ils.sfc.util.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.config.Property;
+import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.sfc.api.StepDelegate;
 import com.inductiveautomation.sfc.api.XMLParseException;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public abstract class AbstractIlsStepDelegate implements StepDelegate {
-	private final IlsProperty<?>[] properties;
+	private static final IlsProperty<?>[] commonProperties = {
+		com.ils.sfc.util.IlsProperty.DESCRIPTION, 
+		com.ils.sfc.util.IlsProperty.AUDIT_LEVEL
+	};
+	private IlsProperty<?>[] properties;
 	
-	protected AbstractIlsStepDelegate(IlsProperty<?>[] properties) {
-		this.properties = properties;
+	protected AbstractIlsStepDelegate(IlsProperty<?>[] uncommonProperties) {
 		// initialize sort order
+		int numProperties = uncommonProperties.length + commonProperties.length;
+		properties = new IlsProperty<?>[numProperties];
+		int p = 0;
+		for(; p < commonProperties.length; p++) {
+			properties[p] = commonProperties[p];
+		}
+		for(int i=0; i < uncommonProperties.length; i++, p++) {
+			properties[p] = uncommonProperties[i];
+		}
+		// Set the sort order--common properties first, then as given
 		for(int i = 0; i < properties.length; i++) {
 			properties[i].setSortOrder(i);
 		}
@@ -42,9 +58,8 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 		return null;
 	}
 
-	public Property<?>[] getProperties() {
-		return properties;
+	public PropertySet getPropertySet() {
+		return IlsSfcCommonUtils.createPropertySet(properties);
 	}
-
 }
 

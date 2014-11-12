@@ -5,6 +5,7 @@ public class IlsSfcNames {
 
 	// step properties:
 	public static final String ACK_REQUIRED = "ackRequired";
+	public static final String AUDIT_LEVEL = "auditLevel";
 	public static final String BOTTOM_CENTER = "bottomCenter";
 	public static final String BOTTOM_LEFT = "bottomLeft";
 	public static final String BOTTOM_RIGHT = "bottomRight";
@@ -29,7 +30,9 @@ public class IlsSfcNames {
 	public static final String FETCH_MODE = "fetchMode";
 	public static final String FILENAME = "filename";
 	public static final String FILEPATH = "filepath";
+	public static final String HIGH = "High";
 	public static final String INFO = "Info";
+	public static final String LOW = "Low";
 	public static final String KEY = "key";
 	public static final String KEY_MODE = "keyMode";
 	public static final String LABEL = "label";
@@ -39,6 +42,7 @@ public class IlsSfcNames {
 	public static final String MAXIMUM_VALUE = "maximumValue";
 	public static final String MULTIPLE = "multiple";
 	public static final String NAME = "name";
+	public static final String OFF = "Off";
 	public static final String POSITION = "position";
 	public static final String POST_TO_QUEUE = "postToQueue";
 	public static final String POST_NOTIFICATION = "postNotification";
@@ -108,4 +112,5 @@ public class IlsSfcNames {
 	public static final String[] POSITION_CHOICES = {CENTER, TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT};
 	public static final String[] SECURITY_CHOICES = {PUBLIC, PRIVATE};
 	public static final String[] PRIORITY_CHOICES = {INFO, WARNING, ERROR};
+	public static final String[] AUDIT_LEVEL_CHOICES = {OFF, LOW, HIGH};
 }

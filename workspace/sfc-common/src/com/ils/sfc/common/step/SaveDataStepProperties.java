@@ -13,7 +13,6 @@ public interface SaveDataStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.saveDataStep";
 	
     public static final IlsProperty<?>[] properties = {
-    	DESCRIPTION,
     	RECIPE_LOCATION,
     	DIRECTORY,
     	FILENAME,

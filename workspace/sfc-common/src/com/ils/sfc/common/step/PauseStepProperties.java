@@ -12,5 +12,5 @@ import static com.ils.sfc.util.IlsProperty.*;
 public interface PauseStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.pauseStep";
 	
-    public static final IlsProperty<?>[] properties = { DESCRIPTION };
+    public static final IlsProperty<?>[] properties = {};
 }

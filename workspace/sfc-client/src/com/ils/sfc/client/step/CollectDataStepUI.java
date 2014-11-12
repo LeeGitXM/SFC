@@ -50,7 +50,7 @@ public class CollectDataStepUI extends AbstractIlsStepUI {
 
         @Override
         public void initializeStep(ChartUIElement element) {
-        	element.merge(IlsSfcCommonUtils.createPropertySet(properties));
+        	element.merge(getPropertySet());
         }		
 	
 		@Override

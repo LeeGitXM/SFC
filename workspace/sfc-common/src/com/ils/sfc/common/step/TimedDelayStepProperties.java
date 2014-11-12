@@ -14,5 +14,5 @@ public interface TimedDelayStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.TimedDelayStep";
 
     public static final IlsProperty<?>[] properties = { 
-    	DESCRIPTION, TIME_DELAY_STRATEGY, CALLBACK, KEY, RECIPE_LOCATION, DELAY, DELAY_UNIT, POST_NOTIFICATION };
+    	TIME_DELAY_STRATEGY, CALLBACK, KEY, RECIPE_LOCATION, DELAY, DELAY_UNIT, POST_NOTIFICATION };
 }
