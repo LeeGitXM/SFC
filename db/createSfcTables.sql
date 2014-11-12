@@ -29,8 +29,8 @@ create table Units (
   isBaseUnit    [bit]    not null,
   type        [varchar](64)    not null,
   description    [varchar](2000)    not null,
-  m        [float](53),
-  b        [float](53),
+  m        [float](53) default 0,
+  b        [float](53) default 0,
 )
 GO
  

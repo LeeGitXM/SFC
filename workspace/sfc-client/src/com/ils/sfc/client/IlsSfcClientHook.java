@@ -12,6 +12,7 @@ import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnecti
 import com.inductiveautomation.ignition.client.images.ImageLoader;
 import com.inductiveautomation.ignition.client.model.ClientContext;
 import com.inductiveautomation.ignition.client.util.ClientIconUtil;
+import com.inductiveautomation.ignition.client.util.EDTUtil;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.sfc.SFCModule;
@@ -28,6 +29,17 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
         this.context = context;
     	IlsSfcClientContext.getInstance().setClientContext(context);
     	GatewayConnectionManager.getInstance().addPushNotificationListener(IlsSfcClientContext.getInstance());
+    	
+    	Runnable r = new Runnable() {
+            @Override
+            public void run() {
+            	registerSteps();
+            }
+        };
+        EDTUtil.invokeAfterJoin(r, Thread.currentThread());
+    }
+
+    private void registerSteps() {
     	// register step factories. this is duplicated in IlsSfcDesignerHook.
 		Object iaSfcHook = context.getModule(SFCModule.MODULE_ID);
 		System.out.println("iaSfcHook " + iaSfcHook);
@@ -48,6 +60,7 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 		stepRegistry.register(DialogMessageStepUI.FACTORY);
 		stepRegistry.register(CollectDataStepUI.FACTORY);
 		stepRegistry.register(InputStepUI.FACTORY);
+		stepRegistry.register(PauseStepUI.FACTORY);
 		stepRegistry.register(RawQueryStepUI.FACTORY);
 		stepRegistry.register(SimpleQueryStepUI.FACTORY);
 		stepRegistry.register(SaveDataStepUI.FACTORY);
@@ -56,8 +69,8 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 		stepRegistry.register(PrintWindowStepUI.FACTORY);
 		stepRegistry.register(CloseWindowStepUI.FACTORY);
 		stepRegistry.register(ShowWindowStepUI.FACTORY);
-		      }
-
+    }
+    
     @Override
     public void initializeScriptManager(ScriptManager manager) {
 		super.initializeScriptManager(manager);

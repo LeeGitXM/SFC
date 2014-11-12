@@ -50,13 +50,13 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<Boolean> PRINT_FILE = new IlsProperty<Boolean>(IlsSfcNames.PRINT_FILE, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<String> PRIORITY = new IlsProperty<String>(IlsSfcNames.PRIORITY, String.class, IlsSfcNames.PRIORITY_CHOICES[0], IlsSfcNames.PRIORITY_CHOICES);
     public static final IlsProperty<String> QUEUE = new IlsProperty<String>(IlsSfcNames.QUEUE, String.class, "");
-    public static final IlsProperty<String> RECIPE_LOCATION = new IlsProperty<String>(IlsSfcNames.RECIPE_LOCATION, String.class, "", IlsSfcNames.RECIPE_LOCATION_CHOICES);
+    public static final IlsProperty<String> RECIPE_LOCATION = new IlsProperty<String>(IlsSfcNames.RECIPE_LOCATION, String.class, IlsSfcNames.RECIPE_LOCATION_CHOICES[0], IlsSfcNames.RECIPE_LOCATION_CHOICES);
     public static final IlsProperty<String> RESULTS_MODE = new IlsProperty<String>(IlsSfcNames.RESULTS_MODE, String.class, "", IlsSfcNames.RESULTS_MODE_CHOICES);
     public static final IlsProperty<String> SECURITY = new IlsProperty<String>(IlsSfcNames.SECURITY, String.class, IlsSfcNames.SECURITY_CHOICES[0], IlsSfcNames.SECURITY_CHOICES);
     public static final IlsProperty<Boolean> SHOW_PRINT_DIALOG = new IlsProperty<Boolean>(IlsSfcNames.SHOW_PRINT_DIALOG, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<String> SQL = new IlsProperty<String>(IlsSfcNames.SQL, String.class, "");
     public static final IlsProperty<String> TAG_PATH = new IlsProperty<String>(IlsSfcNames.TAG_PATH, String.class, "");
-    public static final IlsProperty<String> TIME_DELAY_STRATEGY = new IlsProperty<String>(IlsSfcNames.STRATEGY, String.class, "", IlsSfcNames.TIME_DELAY_STRATEGY_CHOICES);
+    public static final IlsProperty<String> TIME_DELAY_STRATEGY = new IlsProperty<String>(IlsSfcNames.STRATEGY, String.class, IlsSfcNames.TIME_DELAY_STRATEGY_CHOICES[0], IlsSfcNames.TIME_DELAY_STRATEGY_CHOICES);
     public static final IlsProperty<String> RECIPE_STATIC_STRATEGY = new IlsProperty<String>(IlsSfcNames.STRATEGY, String.class, "", IlsSfcNames.RECIPE_STATIC_STRATEGY_CHOICES);
     public static final IlsProperty<Double> SCALE = new IlsProperty<Double>(IlsSfcNames.SCALE, Double.class, .5);
     public static final IlsProperty<Integer> TIMEOUT = new IlsProperty<Integer>(IlsSfcNames.TIMEOUT, Integer.class, 0);
