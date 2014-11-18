@@ -1,15 +1,22 @@
 package com.ils.sfc.designer.editor;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import com.ils.sfc.util.IlsProperty;
+import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 
@@ -19,10 +26,17 @@ public class PropertyEditor extends JPanel {
 	private final PropertyTableModel tableModel = new PropertyTableModel();
 	private final JTable table = new JTable(tableModel);
 	private boolean okPressed;
+	JButton testButton = new JButton("Test");
 	
 	public PropertyEditor() {
 		setLayout(new BorderLayout());
 		add(new JScrollPane(table), BorderLayout.CENTER);
+		JPanel testPanel = new JPanel(new FlowLayout());
+		testPanel.add(testButton);
+		add(testPanel, BorderLayout.SOUTH);
+		testButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {doTest();}
+		});
 		table.setDefaultEditor(Object.class, new PropertyCellEditor());
 		table.setDefaultRenderer(Object.class, new PropertyCellRenderer());
 		table.setRowSelectionAllowed(false);
@@ -30,6 +44,18 @@ public class PropertyEditor extends JPanel {
 		table.setCellSelectionEnabled(false);
 		table.setRowHeight(20);
 		table.setRowMargin(3);	
+	}
+	
+	private void doTest() {
+		ChartUIElement element = tableModel.getElement();
+		String sql = element.getOrDefault(IlsProperty.SQL);
+		String database = element.getOrDefault(IlsProperty.DATABASE);
+		Object[] args = {sql, database};
+		try {
+			PythonCall.TEST_QUERY.exec(args);
+		} catch (JythonExecException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public PropertyTableModel getTableModel() {
@@ -68,6 +94,10 @@ public class PropertyEditor extends JPanel {
 
 	public void setElement(ChartUIElement element) {
 		tableModel.setElement(element);
+		// HACK!! "testable" and "doTest" should be more general, but for now
+		// we special-case it to be just SQL queries...
+		testButton.setVisible(element.contains(IlsProperty.SQL) && 
+			element.contains(IlsProperty.DATABASE));
 	}
 	
 	public List<PropertyValue> getValues() {

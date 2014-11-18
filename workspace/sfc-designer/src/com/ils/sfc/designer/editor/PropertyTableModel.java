@@ -119,6 +119,10 @@ public class PropertyTableModel extends AbstractTableModel {
 		}
     }
 
+    public ChartUIElement getElement() {
+    	return element;
+    }
+    
 	public void setElement(ChartUIElement element) {
 		this.element = element;		
 		rows.clear();

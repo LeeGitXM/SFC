@@ -111,6 +111,9 @@ public class PythonCall {
 	public static final PythonCall INVOKE_STEP = new PythonCall("ils.sfc.gateway.steps." + "invokeStep", 
 		PyList.class,  new String[]{"chartProperties", "stepProperties", "methodName"} );
 
+	public static final PythonCall TEST_QUERY = new PythonCall("ils.sfc.client.util." + "testQuery", 
+			PyList.class,  new String[]{"query", "database"} );
+
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;

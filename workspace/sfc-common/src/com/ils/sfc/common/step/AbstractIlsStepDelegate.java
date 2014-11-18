@@ -59,5 +59,6 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	public PropertySet getPropertySet() {
 		return IlsSfcCommonUtils.createPropertySet(properties);
 	}
+
 }
 
