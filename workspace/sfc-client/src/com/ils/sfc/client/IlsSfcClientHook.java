@@ -5,7 +5,6 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 
 import com.ils.sfc.client.step.*;
-import com.ils.sfc.util.IlsResponseManager;
 import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
@@ -75,7 +74,6 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
     public void initializeScriptManager(ScriptManager manager) {
 		super.initializeScriptManager(manager);
 		PythonCall.setScriptMgr(manager);
-		manager.addScriptModule("system.ils.sfc", IlsResponseManager.class);		
 		manager.addStaticFields("system.ils.sfc", IlsSfcNames.class);
     }
 

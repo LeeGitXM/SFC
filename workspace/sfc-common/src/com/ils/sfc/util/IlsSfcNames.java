@@ -24,7 +24,9 @@ public class IlsSfcNames {
 	public static final String DIALOG = "dialog";
 	public static final String DIRECTORY = "directory";
 	public static final String DYNAMIC = "dynamic";
-	public static final String ENABLE = "enable";
+	public static final String ENABLE_PAUSE = "enablePause";
+	public static final String ENABLE_RESUME = "enableResume";
+	public static final String ENABLE_CANCEL = "enableCancel";
 	public static final String ERROR = "Error";
 	public static final String EXTENSION = "extension";
 	public static final String FETCH_MODE = "fetchMode";

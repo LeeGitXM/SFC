@@ -9,7 +9,6 @@ import java.util.List;
 import com.ils.sfc.client.step.*;
 import com.ils.sfc.common.step.*;
 import com.ils.sfc.designer.browser.IlsBrowserFrame;
-import com.ils.sfc.util.IlsResponseManager;
 import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
@@ -51,7 +50,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	public void initializeScriptManager(ScriptManager mgr) {
 		super.initializeScriptManager(mgr);
 		PythonCall.setScriptMgr(mgr);
-		mgr.addScriptModule("system.ils.sfc", IlsResponseManager.class);
 		mgr.addStaticFields("system.ils.sfc", IlsSfcNames.class);
 	}
 	

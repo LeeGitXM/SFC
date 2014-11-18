@@ -1,7 +1,5 @@
 package com.ils.sfc.common.step;
 
-import static com.ils.sfc.common.step.YesNoStepProperties.properties;
-
 import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
