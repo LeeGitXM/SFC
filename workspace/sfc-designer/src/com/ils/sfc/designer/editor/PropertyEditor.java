@@ -157,6 +157,7 @@ public class PropertyEditor extends JPanel {
 		// we special-case it to be just SQL queries...
 		testButton.setVisible(element.contains(IlsProperty.SQL) && 
 			element.contains(IlsProperty.DATABASE));
+		setColumnWidths();
 	}
 	
 	public List<PropertyValue> getValues() {
