@@ -13,30 +13,25 @@ import com.inductiveautomation.ignition.common.config.PropertyValue;
  *  property types.
  */
 public class PropertyCellComponentFactory {
-	private JCheckBox checkBox = new JCheckBox();
-	private JTextField textField = new JTextField();
 	
 	public PropertyCellComponentFactory() {
+
+ 	}
+
+	private JTextField createTextField() {
+		JTextField textField = new JTextField();
+    	textField.setBorder(null);	
+    	return textField;
+	}
+	
+	private JCheckBox createCheckBox() {
+		JCheckBox checkBox = new JCheckBox();
     	checkBox.setBackground(Color.white);
     	checkBox.setBorder(null);
     	checkBox.setHorizontalAlignment(SwingConstants.CENTER);
-		
-    	textField.setBorder(null);
-    	/*
-    	textField.addFocusListener(new FocusListener() {
-			public void focusGained(FocusEvent e) {}
-			public void focusLost(FocusEvent e) {
-				System.out.println("focus Lost");
-				ActionEvent ae = new ActionEvent(textField,0,textField.getText());
-				for(ActionListener listener: textField.getActionListeners()) {
-					listener.actionPerformed(ae);
-				}
-			}
-    		
-    	});
-    	*/
- 	}
-
+    	return checkBox;
+	}
+	
 	/** Get the appropriate horizontal alignment for elements
 	 *  in a particular column of the property grid.
 	 */
@@ -55,14 +50,17 @@ public class PropertyCellComponentFactory {
 	 */
 	protected Component getComponentForValue(PropertyValue<?> pvalue, int alignment) {
 	    if(pvalue.getProperty().getType() == Boolean.class) {
+	    	JCheckBox checkBox = createCheckBox();
 	    	boolean value = pvalue.getValue() != null ? ((Boolean)pvalue.getValue()).booleanValue() : false;
 	    	checkBox.setSelected(value);
 	    	return checkBox;
 	    }
 	    else {
+	    	JTextField textField = createTextField();
 	    	textField.setHorizontalAlignment(alignment);
 	    	String value = pvalue.getValue() != null ? pvalue.getValue().toString() : "";
 	    	textField.setText(value.toString());
+	    	textField.setToolTipText(value.toString());
 	    	return textField;
 	    }		
 	}

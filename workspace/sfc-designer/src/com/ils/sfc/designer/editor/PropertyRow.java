@@ -38,6 +38,10 @@ public class PropertyRow {
 	public String getName() {
 		return propertyValue.getProperty().getName();
 	}
+	
+	public boolean isEditableString() {
+		return getProperty().getType() == String.class && getChoices() == null;
+	}
 
 	public String getUnitName() {
 		return unitPropertyValue != null ? unitPropertyValue.getValue().toString() : "";

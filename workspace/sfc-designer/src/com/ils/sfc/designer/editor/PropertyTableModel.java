@@ -23,7 +23,7 @@ import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 @SuppressWarnings("serial")
 public class PropertyTableModel extends AbstractTableModel {
 	private static final String UNIT_SUFFIX = "Unit";
-	private static final String[] columnNames = {"Property", "Value", "Units"};
+	private static final String[] columnNames = {"Property", "Value", "Units", ""};
 	private List<PropertyRow> rows = new ArrayList<PropertyRow>();
 	private boolean hasChanged;
 	private ChartUIElement element;
@@ -74,24 +74,31 @@ public class PropertyTableModel extends AbstractTableModel {
 		this.fireTableDataChanged();
 	}
 
+    public Class<?> getPropertyType(int rowIndex) {
+    	PropertyRow row = rows.get(rowIndex);
+    	return row.getProperty().getType();
+    }
+    
 	public int getRowCount() { return rows.size(); }
     
     public int getColumnCount() { return columnNames.length; }
     
     public Object getValueAt(int row, int col) {
     	PropertyRow pRow = rows.get(row);
+    	Object value = null;
         if(col == 0) {
-        	return pRow.getDisplayLabel();
+        	value = pRow.getDisplayLabel();
         }
         else if(col == 1) {
-        	return pRow.getValue();
+        	value = pRow.getValue();
         }
         else if(col == 2) {
-        	return pRow.getUnitName();
+        	value = pRow.getUnitName();
         }
         else {
-        	return ""; // won't happen, but keep the compiler happy
+        	value = ""; // the button row; value not important
         }
+        return value;
     }
     
     public boolean isCellEditable(int row, int col) { 
@@ -113,7 +120,8 @@ public class PropertyTableModel extends AbstractTableModel {
 				element.set(pRow.getUnitPropertyValue());    			
     		}
 	    	hasChanged = true;
-	        fireTableCellUpdated(row, col);
+	        //fireTableCellUpdated(row, col);
+	    	fireTableDataChanged();
 		} catch (ParseException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Illegal Value", JOptionPane.WARNING_MESSAGE);
 		}
