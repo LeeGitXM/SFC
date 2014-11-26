@@ -16,4 +16,4 @@ cp -a data $SVN
 cd $REPO_ROOT/sfc/project
 cp sfc_demo_proj.proj $SVN/project
 SVN=~/Development/ils/svn/EMChemicals/Ignition
-cp *.modl $SVN
+cp $REPO_ROOT/sfc/workspace/sfc-build/modules/*.modl $SVN
