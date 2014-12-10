@@ -15,4 +15,4 @@ cp -a data $SVN
 cd $REPO_ROOT/sfc/project
 cp sfc_demo_proj.proj $SVN/project
 SVN=~/Development/ils/svn/Lafarge/Ignition
-cp ILS-SFC-module-*.modl $SVN
+cp $REPO_ROOT/sfc/workspace/sfc-build/modules/ILS-SFC-module-*.modl $SVN
