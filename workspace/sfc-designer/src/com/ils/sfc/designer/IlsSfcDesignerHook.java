@@ -3,25 +3,50 @@
  */
 package com.ils.sfc.designer;
 
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.swing.JComponent;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import com.ils.sfc.client.step.*;
 import com.ils.sfc.common.step.*;
 import com.ils.sfc.designer.browser.IlsBrowserFrame;
+import com.ils.sfc.designer.recipeEditor.RecipeDataBrowser;
 import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
+import com.ils.sfc.util.RecipeDataManager;
+import com.inductiveautomation.ignition.common.config.BasicProperty;
+import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
+import com.inductiveautomation.ignition.designer.designable.IDesignTool;
+import com.inductiveautomation.ignition.designer.designable.tools.SelectionTool;
 import com.inductiveautomation.ignition.designer.model.AbstractDesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.DesignerModuleHook;
 import com.inductiveautomation.sfc.SFCModule;
+import com.inductiveautomation.sfc.api.elements.StepElement;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistryProvider;
+import com.inductiveautomation.sfc.client.ui.StepComponent;
+import com.inductiveautomation.sfc.designer.SFCDesignerHook;
 import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
+import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
+import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
 
@@ -29,7 +54,12 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private DesignerContext context = null;
 	private final LoggerEx log;
 	private IlsBrowserFrame browser = null;
-	
+	private SFCWorkspace sfcWorkspace;
+	private JPopupMenu stepPopup;
+	private SFCDesignerHook iaSfcHook;
+	private BasicProperty<String> nameProperty = new BasicProperty<String>("name", String.class);
+	private BasicProperty<String> idProperty = new BasicProperty<String>("id", String.class);
+
 	public IlsSfcDesignerHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
@@ -56,9 +86,12 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void startup(DesignerContext ctx, LicenseState activationState) throws Exception {
 		this.context = ctx;
-
     	// register step factories. this is duplicated in IlsSfcClientHook.
-		Object iaSfcHook = context.getModule(SFCModule.MODULE_ID);
+		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
+		RecipeDataManager.setDesignerContext(context);
+		initializeStepPopup();
+	    
+		
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
 		stepRegistry.register(QueueMessageStepUI.FACTORY);
 		stepRegistry.register(SetQueueStepUI.FACTORY);
@@ -115,9 +148,65 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
        	configRegistry.register(ShowWindowStepProperties.FACTORY_ID, editorFactory);
        	//configRegistry.register(EnclosingStepProperties.FACTORY_ID, editorFactory);       	
 	}
+
+	private void initializeStepPopup() {
+		stepPopup = new JPopupMenu();
+		JMenuItem createRecipeDataItem = new JMenuItem("Edit Recipe Data");
+		createRecipeDataItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				StepComponent stepComponent =  (StepComponent) stepPopup.getInvoker();
+				ChartUIElement element = stepComponent.getElement();
+				String name = element.getOrDefault(nameProperty);
+				String id = element.getOrDefault(idProperty);
+				String dummyChartId = "xxx";
+				RecipeDataBrowser.open(dummyChartId, name, context.getFrame());
+				/*
+				for(PropertyValue<?> v: element.getValues()) {
+					System.out.println(v.getProperty().getName() + ": " + v.getValue());
+				}
+				*/
+				
+			}			
+		});
+	    //JMenuItem menuItem.addActionListener(this);
+		stepPopup.add(createRecipeDataItem);
+
+		sfcWorkspace = iaSfcHook.getWorkspace();		
+		final IDesignTool tool = sfcWorkspace.getCurrentTool();
+		ClassLoader cl = tool.getClass().getClassLoader();
+		Class<?>[] interfaces = { IDesignTool.class, IDesignTool.ToolbarInitializer.class };
+		IDesignTool wrapper = (IDesignTool)Proxy.newProxyInstance(cl, interfaces, 
+			new InvocationHandler() {
+				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {				
+					Object result = method.invoke(tool, args);
+						if(method.getName().equals("onPopupTrigger")) {		
+						for(JComponent comp: sfcWorkspace.getSelectedItems()) {
+							if(comp instanceof StepComponent) {
+								stepPopup.show(comp, 0, 0);
+							}
+						}
+					}
+					return result;
+				}			
+		});
+		sfcWorkspace.setCurrentTool(wrapper);
+	}
 		
 
 	
+	private void printComponents(JComponent parent, int level) {
+		for(Component child: parent.getComponents()) {
+			if(child instanceof JComponent) {
+				for(int i = 0; i < level; i++) {
+					System.out.print("   ");
+				}
+				System.out.println(child.getClass().getSimpleName());
+				printComponents((JComponent)child, level + 1);
+			}
+		}
+		
+	}
+
 	@Override
 	public void shutdown() {	
 	}

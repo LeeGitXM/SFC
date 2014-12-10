@@ -42,7 +42,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 	public static String TAG = "SFCGatewayHook";
 	private final LoggerEx log;
 	private GatewayContext context = null;
-	private ChartManager chartManager = ChartManager.get();
 	private Map<UUID, PyDictionary> statusesById = Collections.synchronizedMap(
 		new HashMap<UUID, PyDictionary>());
 
@@ -108,6 +107,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 		if(IlsGatewayScripts.getSfcProjectName() == null) {
 			return; // no context yet
 		}
+		ChartManager chartManager = ChartManager.get();
 		List<ChartInfo> runningCharts = chartManager.getRunningCharts();
 		PyDictionary payload = new PyDictionary();
 		PyDictionary status = new PyDictionary();
@@ -127,11 +127,9 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 			pyChartInfo.put("project", IlsGatewayScripts.getSfcProjectName());
 			pyChartInfo.put("database", IlsGatewayScripts.getSfcDatabaseName());
 		}
-		Set<UUID> nonRunningIds = new HashSet();
 		for(UUID chartId: statusesById.keySet()) {
 			if(!runningIds.contains(chartId)) {
 				// the chart is no longer running--see if we can get a status...
-				nonRunningIds.add(chartId);
 				Optional<ChartStatus> chartStatus = chartManager.getChartStatus(chartId, false);
 				if(chartStatus.isPresent()) {
 					PyDictionary lastInfo = statusesById.get(chartId);
