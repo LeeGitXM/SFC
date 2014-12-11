@@ -20,7 +20,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	protected static Icon clockIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/clock.png"));
 	protected static Icon asteriskIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/asterisk.png"));
 	private JLabel label = new JLabel();
-	protected enum PaletteTabs { Messages, Input, Control, Notification, IO, Query, File, Window };
+	protected enum PaletteTabs { Foundation, Messages, Input, Control, Notification, IO, Query, File, Window };
 	
 	protected AbstractIlsStepUI() {
     	label.setText(getText());

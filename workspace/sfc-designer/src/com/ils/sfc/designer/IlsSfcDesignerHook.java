@@ -21,12 +21,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import com.ils.sfc.client.step.*;
+import com.ils.sfc.common.recipe.RecipeDataManager;
 import com.ils.sfc.common.step.*;
 import com.ils.sfc.designer.browser.IlsBrowserFrame;
 import com.ils.sfc.designer.recipeEditor.RecipeDataBrowser;
 import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
-import com.ils.sfc.util.RecipeDataManager;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
@@ -44,9 +44,12 @@ import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistryProvider;
 import com.inductiveautomation.sfc.client.ui.StepComponent;
 import com.inductiveautomation.sfc.designer.SFCDesignerHook;
+import com.inductiveautomation.sfc.designer.api.StepConfigFactory;
 import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
 import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
+import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
+import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
 
@@ -57,8 +60,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private SFCWorkspace sfcWorkspace;
 	private JPopupMenu stepPopup;
 	private SFCDesignerHook iaSfcHook;
-	private BasicProperty<String> nameProperty = new BasicProperty<String>("name", String.class);
-	private BasicProperty<String> idProperty = new BasicProperty<String>("id", String.class);
 
 	public IlsSfcDesignerHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
@@ -90,7 +91,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
 		RecipeDataManager.setDesignerContext(context);
 		initializeStepPopup();
-	    
 		
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
 		stepRegistry.register(QueueMessageStepUI.FACTORY);
@@ -118,6 +118,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		stepRegistry.register(PrintWindowStepUI.FACTORY);
 		stepRegistry.register(CloseWindowStepUI.FACTORY);
 		stepRegistry.register(ShowWindowStepUI.FACTORY);
+		stepRegistry.register(ProcedureStepUI.FACTORY);
+		stepRegistry.register(OperationStepUI.FACTORY);
+		stepRegistry.register(PhaseStepUI.FACTORY);
 		    	
 		// register the config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory();
@@ -146,8 +149,11 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
        	configRegistry.register(PrintWindowStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(CloseWindowStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(ShowWindowStepProperties.FACTORY_ID, editorFactory);
-       	//configRegistry.register(EnclosingStepProperties.FACTORY_ID, editorFactory);       	
-	}
+       	StepConfigFactory encFactory = iaSfcHook.getConfigFactory(EnclosingStepProperties.FACTORY_ID);
+        configRegistry.register(ProcedureStepProperties.FACTORY_ID, encFactory);       	
+        configRegistry.register(OperationStepProperties.FACTORY_ID, encFactory);       	
+        configRegistry.register(PhaseStepProperties.FACTORY_ID, encFactory);       	
+}
 
 	private void initializeStepPopup() {
 		stepPopup = new JPopupMenu();
@@ -156,16 +162,16 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			public void actionPerformed(ActionEvent e) {
 				StepComponent stepComponent =  (StepComponent) stepPopup.getInvoker();
 				ChartUIElement element = stepComponent.getElement();
-				String name = element.getOrDefault(nameProperty);
-				String id = element.getOrDefault(idProperty);
-				String dummyChartId = "xxx";
-				RecipeDataBrowser.open(dummyChartId, name, context.getFrame());
-				/*
-				for(PropertyValue<?> v: element.getValues()) {
-					System.out.println(v.getProperty().getName() + ": " + v.getValue());
+				ChartUIModel model = stepComponent.getModel();
+				printProperties(element);
+				RecipeDataBrowser browser = new RecipeDataBrowser(context.getFrame(), element, model);
+				browser.setVisible(true);
+			}
+
+			private void printProperties(ChartUIElement element) {
+				for(PropertyValue<?> pv: element.getValues()) {
+					System.out.println(pv.getProperty().getName() + ": " + pv.getValue());
 				}
-				*/
-				
 			}			
 		});
 	    //JMenuItem menuItem.addActionListener(this);
@@ -191,9 +197,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		});
 		sfcWorkspace.setCurrentTool(wrapper);
 	}
-		
-
-	
+			
 	private void printComponents(JComponent parent, int level) {
 		for(Component child: parent.getComponents()) {
 			if(child instanceof JComponent) {
@@ -203,8 +207,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 				System.out.println(child.getClass().getSimpleName());
 				printComponents((JComponent)child, level + 1);
 			}
-		}
-		
+		}		
 	}
 
 	@Override

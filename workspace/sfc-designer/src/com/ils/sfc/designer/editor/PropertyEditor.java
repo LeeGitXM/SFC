@@ -36,8 +36,6 @@ import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-
-
 /** A property editor grid/table */
 @SuppressWarnings("serial")
 public class PropertyEditor extends JPanel {
@@ -80,11 +78,10 @@ public class PropertyEditor extends JPanel {
 				int row = table.rowAtPoint(pnt);
 				int col = table.columnAtPoint(pnt);
 				if(col == 3) {
-					int valueCol = 1;
-					String currentValue = (String)tableModel.getValueAt(row, valueCol);
+					PropertyRow rowObj = tableModel.getRowObject(row);
+					if(!rowObj.isEditableString()) return;
 					JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(table);
-					TextEditorDialog dlg = new TextEditorDialog(currentValue,
-						frame, tableModel, row, valueCol);
+					PropertyStringEditorDialog dlg = new PropertyStringEditorDialog(frame, tableModel, row);
 					dlg.setVisible(true);
 				}
 			}

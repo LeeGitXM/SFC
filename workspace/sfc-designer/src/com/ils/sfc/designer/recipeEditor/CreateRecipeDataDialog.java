@@ -30,6 +30,7 @@ import com.ils.sfc.designer.recipeEditor.RecipeDataBrowser.MapTreeNode;
 import static java.awt.GridBagConstraints.*;
 import static com.ils.sfc.designer.recipeEditor.RecipeDataTypes.*;
 
+@SuppressWarnings("serial")
 public class CreateRecipeDataDialog extends JDialog {
 	private JTextField keyField = new JTextField();
 	private JTextField labelField = new JTextField();

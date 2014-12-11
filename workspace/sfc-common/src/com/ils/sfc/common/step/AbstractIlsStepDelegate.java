@@ -13,6 +13,7 @@ import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.sfc.api.StepDelegate;
 import com.inductiveautomation.sfc.api.XMLParseException;
+import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public abstract class AbstractIlsStepDelegate implements StepDelegate {
@@ -56,6 +57,11 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 		return null;
 	}
 
+	@Override
+	public void validate(ChartUIElement element,
+            ChartCompilationResults compilationResults) {
+	}
+	
 	public PropertySet getPropertySet() {
 		return IlsSfcCommonUtils.createPropertySet(properties);
 	}

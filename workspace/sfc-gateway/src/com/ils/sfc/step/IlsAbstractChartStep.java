@@ -22,6 +22,8 @@ import com.inductiveautomation.sfc.api.elements.AbstractChartElement;
 import com.inductiveautomation.sfc.api.elements.ChartElement;
 import com.inductiveautomation.sfc.api.elements.StepElement;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
+import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
+import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /**
  * This abstract class is the basis of all custom steps. 
@@ -62,7 +64,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	private boolean auditOn() {
 		return !auditLevel.equals(IlsSfcNames.OFF);
 	}
-	
+            
 	@Override
 	public void activateStep() {
 		setAuditLevel();

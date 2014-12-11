@@ -22,6 +22,7 @@ import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 @SuppressWarnings("serial")
 public class PropertyTableModel extends AbstractTableModel {
+	public static final int VALUE_COLUMN = 1;
 	private static final String UNIT_SUFFIX = "Unit";
 	private static final String[] columnNames = {"Property", "Value", "Units", ""};
 	private List<PropertyRow> rows = new ArrayList<PropertyRow>();

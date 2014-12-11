@@ -16,6 +16,7 @@ import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
+import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
 /** Misc. utilities that don't fit into any ILS class or superclass. */
 public class IlsSfcCommonUtils {
@@ -136,5 +137,13 @@ public class IlsSfcCommonUtils {
     	return propSet;
 	}
 
+	public static Object getStepPropertyValue(ChartUIElement element, String name) {
+		for(PropertyValue<?> value: element.getValues()) {
+			if(value.getProperty().getName().equals(name)) {
+				return value.getValue();
+			}
+		}
+		return null;
+	}
 
 }

@@ -1,20 +1,21 @@
 package com.ils.sfc.designer.recipeEditor;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -26,15 +27,24 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import com.ils.sfc.util.RecipeDataManager;;
+import com.ils.sfc.common.recipe.RecipeDataManager;
+import com.ils.sfc.util.IlsSfcCommonUtils;
+import com.inductiveautomation.sfc.uimodel.ChartUIElement;
+import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
-public class RecipeDataBrowser extends JPanel {
+@SuppressWarnings("serial")
+public class RecipeDataBrowser extends JDialog {
+	final JButton addButton = new JButton("+");
+	final JButton editButton = new JButton("E");
+	final JButton removeButton = new JButton("-");
+	final JButton clearButton = new JButton("Clear");
+	public static final String ENCLOSING_STEP_FACTORY_ID = "enclosing-step";
 	private MapTreeNode top;
 	private JTree tree;
 	private DefaultTreeModel treeModel;
-	private Map<String,Object> data;
 	private MapTreeNode selectedNode;
-	
+	private Map<String,Object> recipeData;
+
 	@SuppressWarnings("serial")
 	static class MapTreeNode extends DefaultMutableTreeNode {
 		private String name;
@@ -82,37 +92,112 @@ public class RecipeDataBrowser extends JPanel {
 		}
 	}
 	
-	public RecipeDataBrowser(String topName) {
-		top = new MapTreeNode(topName, new HashMap<String,Object>());
-		top.setContentsEditable(true);
-		treeModel = new DefaultTreeModel(top);
-		tree = new JTree(top);
-		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		tree.setShowsRootHandles(true);
-		tree.setEditable(false);
-		this.setLayout(new BorderLayout());
-		add(new JScrollPane(tree), BorderLayout.CENTER);
+	public RecipeDataBrowser(Frame owner, ChartUIElement element, ChartUIModel model) {
+		super(owner,true);
+		recipeData = RecipeDataManager.getData();
+		setStepContext(element, model);
+		createMenu();
+		JPanel panel = new JPanel(new BorderLayout());
+		getContentPane().add(panel);
+		panel.add(new JScrollPane(tree), BorderLayout.CENTER);
+		createButtonPanel(panel);		
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				// TODO: should this be on a Swing worker?
+				// TODO: check for failure in updating data?
+				RecipeDataManager.updateData();
+			}
+		});
+		setTitle("Recipe Data Browser");
+		setSize(400, 200);
+		setLocation(owner.getX() + owner.getWidth()/2 - getWidth()/2, owner.getY() + owner.getHeight()/2 - getHeight()/2);
+	}
+
+	private void setStepContext(ChartUIElement element, ChartUIModel model) {
+		String stepName = IlsSfcCommonUtils.getStepPropertyValue(element, "name").toString();
+		String stepId = IlsSfcCommonUtils.getStepPropertyValue(element, "id").toString();
+		String factoryId = IlsSfcCommonUtils.getStepPropertyValue(element, "factory-id").toString();
+		String type = IlsSfcCommonUtils.getStepPropertyValue(element, "type").toString();
+		// Create initial step data if not there:
+		if(!recipeData.containsKey(stepId)) {
+			Map<String,Object> newStepData = createMap();
+			recipeData.put(stepId, newStepData);
+			newStepData.put(RecipeDataTypes.NAME, stepName);
+			newStepData.put(RecipeDataTypes.DATA, createMap());
+		}
+		createTree(stepId);
+	}
+	
+	private void createMenu() {
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu fileMenu = new JMenu("File");
+		menuBar.add(fileMenu);
+		JMenuItem saveAsItem = new JMenuItem("Save As...");
+		fileMenu.add(saveAsItem);
+		JMenuItem closeItem = new JMenuItem("Close");
+		fileMenu.add(closeItem);
+		closeItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				doClose();
+			}
+		});
+		
+		JMenu toolsMenu = new JMenu("Tools");
+		menuBar.add(toolsMenu);
+		JMenuItem findByIdItem = new JMenuItem("Find by ID...");
+		toolsMenu.add(findByIdItem);
+		
+		JMenu viewMenu = new JMenu("View");
+		menuBar.add(viewMenu);
+		JMenuItem allItem = new JMenuItem("All");
+		toolsMenu.add(allItem);
+	}
+
+	private void createButtonPanel(JPanel panel) {
 		JPanel buttonPanel = new JPanel(new FlowLayout());
-		add(buttonPanel, BorderLayout.SOUTH);
-		final JButton addButton = new JButton("+");
+		panel.add(buttonPanel, BorderLayout.SOUTH);
 		addButton.setEnabled(false);
 		buttonPanel.add(addButton);
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { doAdd();}
 		});
-		final JButton removeButton = new JButton("-");
 		buttonPanel.add(removeButton);
 		removeButton.setEnabled(false);
 		removeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { doRemove();}
 		});
-		final JButton editButton = new JButton("E");
 		editButton.setEnabled(false);
 		buttonPanel.add(editButton);
 		editButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { doEdit();}
 		});
 		
+		buttonPanel.add(clearButton);
+		clearButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { doClear();}
+		});
+	}
+
+	private Map<String,Object> createMap() {
+		return new HashMap<String,Object>();
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void createTree(String stepId) {
+		Map<String,Object> map = (Map<String,Object>)recipeData.get(stepId);
+		String rootName = map.containsKey(RecipeDataTypes.NAME) ? (String)map.get(RecipeDataTypes.NAME) : "All";
+		Map<String,Object> rootMap = map.containsKey(RecipeDataTypes.DATA) ? (Map<String,Object>)map.get(RecipeDataTypes.DATA) : map;
+		top = new MapTreeNode(rootName, rootMap );
+		top.setContentsEditable(true);
+		treeModel = new DefaultTreeModel(top);
+		tree = new JTree(top);
+		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.setShowsRootHandles(true);
+		tree.setEditable(false);
+		top.removeAllChildren();
+		addNodes(rootMap, top);
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
 				selectedNode = (MapTreeNode) tree.getLastSelectedPathComponent();
@@ -120,7 +205,7 @@ public class RecipeDataBrowser extends JPanel {
 				removeButton.setEnabled(canRemove());
 				editButton.setEnabled(canEdit());
 			}
-		});
+		});		
 	}
 	
 	private void doAdd() {
@@ -156,11 +241,25 @@ public class RecipeDataBrowser extends JPanel {
 		selectedNode = null;
 	}
 		
+	private void doClear() {
+		RecipeDataManager.clear();
+		dispose();
+	}
+	
 	private void doEdit() {
 		boolean inputValid = false;
 		do {
 			Object currentValue = selectedNode.getUserObject();
-			String newValueString = JOptionPane.showInputDialog(this, "Enter new value", currentValue);
+			String propertyName = selectedNode.name;
+			String newValueString = null;
+			if(currentValue instanceof String) {
+				RecipeStringEditorDialog dlg = new RecipeStringEditorDialog(this, (String)currentValue, "Edit " + propertyName);
+				dlg.setVisible(true);
+				newValueString = dlg.getResult();
+			}
+			else {
+				newValueString = JOptionPane.showInputDialog(this, "Enter new value for " + propertyName, currentValue);
+			}
 			if(newValueString != null) {
 				Object newValue = getValidValue(newValueString.trim(), currentValue);
 				if(newValue != null) {
@@ -206,26 +305,10 @@ public class RecipeDataBrowser extends JPanel {
 		}
 	}
 
-	private boolean nodeIsSelected() {
-		if(selectedNode == null) {
-			JOptionPane.showMessageDialog(this, "No node is selected");
-			return false;
-		}
-		else {
-			return true;
-		}
+	private void doClose() {
+		dispose();
 	}
 
-	public void setData(Map<String,Object> data, String node) {
-		top.removeAllChildren();
-		top.setUserObject(data);
-		addNodes(data, top);
-	}
-	
-	public Map<String,Object> getData() {
-		return data;
-	}
-	
 	@SuppressWarnings("unchecked")
 	private void addNodes(Map<String,Object> data, MapTreeNode parent) {
 		for(String key: data.keySet()) {
@@ -239,23 +322,6 @@ public class RecipeDataBrowser extends JPanel {
 				child.add(new MapTreeNode(value.toString(), value));
 			}
 		}
-	}
-	
-	public static void open(String chartId, String node, Frame owner) {
-		Map<String,Object> recipeData = RecipeDataManager.getData(chartId);
-		JDialog dialog = new JDialog(owner, true);
-		RecipeDataBrowser treePanel = new RecipeDataBrowser("Recipe Data");
-		treePanel.setData(recipeData, node);
-		dialog.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				// TODO: should this be on a Swing worker?
-				RecipeDataManager.updateData();
-			}
-		});
-		dialog.getContentPane().add(treePanel);
-		dialog.setTitle("Recipe Data Browser");
-		dialog.setSize(400, 200);
-		dialog.setVisible(true);
 	}
 
 }

@@ -1,46 +1,51 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Dimension;
+import java.awt.Image;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import com.ils.sfc.common.step.AbortStepDelegate;
-import com.ils.sfc.util.IlsSfcCommonUtils;
+import com.ils.sfc.common.step.ProcedureStepDelegate;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-public class AbortStepUI extends AbstractIlsStepUI {
-	protected static Icon cancelIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/abort.png"));
-  
-    public static final ClientStepFactory FACTORY = new AbortStepFactory();
+public class ProcedureStepUI extends AbstractIlsStepUI {
+	protected static Icon procedureIcon =  new ImageIcon(AbstractIlsStepUI.class.getResource("/images/procedure.png"));
 
+    public static final ClientStepFactory FACTORY = new ProcedureStepFactory();
+
+    public ProcedureStepUI() {
+	}
+		
    	@Override
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b><font color=red>Cancel!</html>"; }
+	protected String getText() { return "<html><b><c>Procedure</html>"; }
 
-    public static final class AbortStepFactory extends AbortStepDelegate implements ClientStepFactory {
-    	private AbortStepUI UI = new AbortStepUI();
+    public static final class ProcedureStepFactory extends ProcedureStepDelegate implements ClientStepFactory {
+    	private ProcedureStepUI UI = new ProcedureStepUI();
 
         @Override
         public StepUI createStepUI(ChartUIElement element) {
             return UI;
         }
 
-        @Override
+        @Override        
         public Icon getPaletteIcon() {
-            return cancelIcon; 
+            return procedureIcon; 
         }
 
         @Override
         public Icon getRolloverPaletteIcon() {
-            return cancelIcon; 
+            return getPaletteIcon(); 
         }
 
         @Override
         public String getPaletteText() {
-            return "Cancel Recipe";
+            return "Unit Procedure";
         }
 
         @Override
@@ -50,12 +55,12 @@ public class AbortStepUI extends AbstractIlsStepUI {
 
         @Override
         public void initializeStep(ChartUIElement element) {
-        	element.merge(getPropertySet());
+        	
         }		
 	
 		@Override
 		public String getCategory() {
-			return PaletteTabs.Control.toString();
+			return PaletteTabs.Foundation.toString();
 		}
 
     }

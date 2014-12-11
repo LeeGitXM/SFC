@@ -3,6 +3,7 @@ package com.ils.sfc.designer.editor;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -11,25 +12,18 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-public class TextEditorDialog extends JDialog {
+public abstract class AbstractStringEditorDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
-	private JTextArea textField = new JTextArea();
+	protected JTextArea textField = new JTextArea();
 	private JButton okButton = new JButton("OK");
 	private JButton cancelButton = new JButton("Cancel");
-	private PropertyTableModel model;
-	private int row;
-	private int col;
 	
 	/** A simple dialog for editing text. A null result indicates Cancel was pressed. */
-	public TextEditorDialog(String str, Frame owner, PropertyTableModel model, int row, int col) {
-		super(owner);
-		this.model = model;
-		this.row = row;
-		this.col = col;
+	public AbstractStringEditorDialog(Window owner) {
+		super(owner, ModalityType.APPLICATION_MODAL);
 		JPanel panel = new JPanel(new BorderLayout());
 		getContentPane().add(panel);
 		panel.add(textField, BorderLayout.CENTER);
-		textField.setText(str);
 		textField.setEditable(true);
 		textField.setLineWrap(true);
 		JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -45,13 +39,9 @@ public class TextEditorDialog extends JDialog {
 		this.setSize(400,200);
 	}
 	
-	private void doOK() {
-		model.setValueAt(textField.getText(), row, col);
-		this.dispose();
-	}
-	
-	private void doCancel() {
-		this.dispose();		
-	}
+	protected abstract void doOK();
+
+	protected abstract void doCancel();
+
 	
 }

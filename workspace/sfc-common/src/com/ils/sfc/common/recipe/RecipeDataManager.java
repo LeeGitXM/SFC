@@ -1,10 +1,11 @@
-package com.ils.sfc.util;
+package com.ils.sfc.common.recipe;
 
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ils.sfc.util.IlsSfcModule;
 import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -12,6 +13,10 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Management of Recipe Data, which is structured as a dictionary and stored as a
+ * project resource.
+ */
 public class RecipeDataManager {
 	private static Map<String,Object> _recipeData = null;
 	private static ProjectResource projectResource;
@@ -20,7 +25,7 @@ public class RecipeDataManager {
 
 	private static LoggerEx logger = LogUtil.getLogger(RecipeDataManager.class.getName());
 	
-	public static Map<String,Object> getData(String chartName) {
+	public static Map<String,Object> getData() {
 		if(_recipeData == null) {
 			loadData();
 			if(_recipeData == null) {
@@ -50,6 +55,10 @@ public class RecipeDataManager {
 				logger.error("Error loading recipe data", e);
 			}
 		}
+	}
+	
+	public static void clear() {
+		createData();
 	}
 	
 	public static void updateData() {

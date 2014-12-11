@@ -38,6 +38,8 @@ public class RecipeDataTypes {
 	
 	// Misc attributes
 	public static final String TYPE = "type";
+	public static final String NAME = "name";
+	public static final String DATA = "data";
 	
 	// Output attributes
 	public static final Attribute WRITE_CONFIRM = new Attribute("writeConfirm", Boolean.FALSE);
