@@ -146,4 +146,31 @@ public class IlsSfcCommonUtils {
 		return null;
 	}
 
+	public static Object getStepPropertyValue(PropertySet properties, String name) {
+		for(PropertyValue<?> value: properties.getValues()) {
+			if(value.getProperty().getName().equals(name)) {
+				return value.getValue();
+			}
+		}
+		return null;
+	}
+
+	public static void printSfcStepProperties(ChartUIElement element) {
+		for(PropertyValue<?> pv: element.getValues()) {
+			System.out.println(pv.getProperty().getName() + ": " + pv.getValue());
+		}
+	}			
+
+	/** null-tolerant equality check */
+	public static boolean equal(Object o1, Object o2) {
+		if(o1 == null && o2 == null) {
+			return true;
+		}
+		else if(o1 != null) {
+			return o1.equals(o2);
+		}
+		else {
+			return o2.equals(o1);
+		}
+	}
 }

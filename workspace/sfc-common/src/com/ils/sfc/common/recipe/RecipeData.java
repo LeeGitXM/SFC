@@ -4,174 +4,281 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.ils.sfc.common.chartStructure.IlsSfcChartStructureCompiler;
+import com.ils.sfc.common.chartStructure.IlsSfcChartStructureMgr;
+import com.ils.sfc.common.chartStructure.IlsSfcStepStructure;
+import com.ils.sfc.common.step.OperationStepProperties;
+import com.ils.sfc.common.step.PhaseStepProperties;
+import com.ils.sfc.common.step.ProcedureStepProperties;
 
 /**
- * A class wrapping a dictionary that holds recipe data for an entire site.
+ * A class that holds recipe data for an entire site (i.e. all SFC charts)
  * 
  * Questions/Issues:
  *    -is path access (key.key.val) just for within recipe data, or can chart 
  *       step hierarchies be accessed in the same way ?      
  *    -is Named scope data global (vs in the scope of a graph)?
  *    -need some examples of cross-graph references
- *    -how do we get the name of a graph?
  *    
- * Todo:
- *    -(re)compile a graph and update the recipe data, preserving any pre-existing data
- *       and removing any zombies
- *    -put serialization code in this class
- */
+*/
 public class RecipeData {
-	public static final String ENCLOSING_FACTORY_ID = "enclosing-step";
-	public static final String PROCEDURE_FACTORY_ID = "com.ils.procedureStep";
-	public static final String OPERATION_FACTORY_ID = "com.ils.operationStep";
-	public static final String PHASE_FACTORY_ID = "com.ils.phaseStep";
 
-	public static enum Scope {
-		Local,
-		Previous,
-		Superior,
-		Phase,
-		Operation,
-		UnitProcedure,
-		Named
-	};
+	private Map<String,RecipeDataMap> dataByStepId = new HashMap<String,RecipeDataMap>();
+	private RecipeDataMap globalNamedData = new RecipeDataMap();
+	@JsonIgnore
+	private IlsSfcChartStructureCompiler chartStructureCompiler; // not serialized
+	@JsonIgnore
+	private IlsSfcChartStructureMgr structureMgr;   // not serialized
 
-	private Map<String, StepData> stepsById = new HashMap<String, StepData>();
-	private RecipeDataMap globalData = new RecipeDataMap();
-	
-	public void addStep(StepData step) {
-		stepsById.put(step.getId(), step);
-	}
-	
-	public void removeStep(String stepId) {
-		stepsById.remove(stepId);
-	}
-	
-	public boolean stepExists(String stepId) {
-		return stepsById.containsKey(stepId);
-	}
-	
-	StepData getStep(String id) throws RecipeDataException {
-		if(stepsById.containsKey(id)) {
-			return stepsById.get(id);
-		}
-		else {
-			throw new RecipeDataException("no step for id " + id);
-		}
-	}
-	
-	StepData getParentWithFactoryId(String stepId, String factoryId) throws RecipeDataException {
-		StepData step = getStep(stepId);
-		if(factoryId.equals(step.getFactoryId())) {
-			return step;
-		}
-		else if(step.getParentId() != null) {
-			return getParentWithFactoryId(step.getParentId(), factoryId);
-		}
-		else {
-			throw new RecipeDataException("no parent for factory id " + factoryId);
-		}
+	/** Set a recipe value given a path from a step, and a scope. If "create" is true,
+	 *  intermediate dictionaries will be created as needed; otherwise any missing
+	 *  data will cause a RecipeDataException to be thrown. */
+	public void set(RecipeScope scope, String stepId, String path, Object value, boolean create) throws RecipeDataException {
+		if(scope == RecipeScope.Local ) setAtLocalScope(stepId, path, value, create);
+		else if(scope == RecipeScope.Previous) setAtPreviousScope(stepId, path, value, create);
+		else if(scope == RecipeScope.Superior) setAtSuperiorScope(stepId, path, value, create);
+		else if(scope == RecipeScope.Phase) setAtPhaseScope(stepId, path, value, create);
+		else if(scope == RecipeScope.Operation) setAtOperationScope(stepId, path, value, create);
+		else if(scope == RecipeScope.UnitProcedure) setAtProcedureScope(stepId, path, value, create);
+		else if(scope == RecipeScope.Named) setAtNamedScope(path, value, create);
 	}
 
-	public void set(Scope scope, String stepId, String path, Object value, boolean create) throws RecipeDataException {
-		if(scope == Scope.Local ) setLocal(stepId, path, value, create);
-		else if(scope == Scope.Previous) setPrevious(stepId, path, value, create);
-		else if(scope == Scope.Superior) setSuperior(stepId, path, value, create);
-		else if(scope == Scope.Phase) setPhase(stepId, path, value, create);
-		else if(scope == Scope.Operation) setOperation(stepId, path, value, create);
-		else if(scope == Scope.UnitProcedure) setProcedure(stepId, path, value, create);
-		else if(scope == Scope.Named) setNamed(path, value, create);
+	public IlsSfcChartStructureMgr getStructureMgr() {
+		return structureMgr;
 	}
-
-	public Object get(Scope scope, String stepId, String path) throws RecipeDataException {
-		if(scope == Scope.Local ) return getLocal(stepId, path);
-		else if(scope == Scope.Previous) return getPrevious(stepId, path);
-		else if(scope == Scope.Superior) return getSuperior(stepId, path);
-		else if(scope == Scope.Phase) return getPhase(stepId, path);
-		else if(scope == Scope.Operation) return getOperation(stepId, path);
-		else if(scope == Scope.UnitProcedure) return getProcedure(stepId, path);
-		else if(scope == Scope.Named) return getNamed(path);
+	
+	/** for UNIT TESTING ONLY!! */
+	void setStructureManager(IlsSfcChartStructureMgr mgr) {
+		structureMgr = mgr;
+	}
+	
+	@JsonIgnore
+	public boolean isInitialized() {
+		return structureMgr != null;
+	}
+	
+	public void compileStructure() {
+		structureMgr = chartStructureCompiler.compile();
+	}
+	
+	/** Get a recipe value given a path from a step, and a scope. */
+	public Object get(RecipeScope scope, String stepId, String path) throws RecipeDataException {
+		Object value = null;
+		if(scope == RecipeScope.Local ) value = getAtLocalScope(stepId, path);
+		else if(scope == RecipeScope.Previous) value = getAtPreviousScope(stepId, path);
+		else if(scope == RecipeScope.Superior) value = getAtSuperiorScope(stepId, path);
+		else if(scope == RecipeScope.Phase) value = getAtPhaseScope(stepId, path);
+		else if(scope == RecipeScope.Operation) value = getAtOperationScope(stepId, path);
+		else if(scope == RecipeScope.UnitProcedure) value = getAtProcedureScope(stepId, path);
+		else if(scope == RecipeScope.Named) value = getAtNamedScope(path);
 		else throw new RecipeDataException("bad Scope: " + scope);
+		if(value instanceof Object) {
+			return (Object) value;
+		}
+		else {
+			throw new RecipeDataException("bad value type: " + (value != null ? value.getClass().getName() : "null"));
+		}
+	}
+	
+	private RecipeDataMap getOrCreateStepData(IlsSfcStepStructure step) {
+		RecipeDataMap result = dataByStepId.get(step.getId());
+		if(result == null) {
+			result = new RecipeDataMap();
+			dataByStepId.put(step.getId(), result);
+		}
+		return result;
+	}
+	
+	private void setDataValue(IlsSfcStepStructure step, String path, Object value, boolean create) throws RecipeDataException {
+		getOrCreateStepData(step).pathPut(path, value, create);
 	}
 
-	public void setLocal(String stepId, String path, Object value, boolean create) throws RecipeDataException {
-		getStep(stepId).set(path, value, create);
+	private Object getDataValue(IlsSfcStepStructure step, String path) throws RecipeDataException {
+		return getOrCreateStepData(step).pathGet(path);
+	}
+
+	/** Get recipe data for a step, creating an empty dictionary if it doesn't exist. */
+	public RecipeDataMap getStepData(String stepId) {
+		if(!dataByStepId.containsKey(stepId)) {
+			IlsSfcStepStructure step =structureMgr.getStepWithId(stepId);
+			dataByStepId.put(stepId, getOrCreateStepData(step));
+		}
+		return dataByStepId.get(stepId);
 	}
 	
-	public void setPrevious(String stepId, String path, Object value, boolean create)  throws RecipeDataException {
-		StepData step = getStep(stepId);
-		StepData prevStep = getStep(step.getPreviousStepId());
-		prevStep.set(path, value, create);
+	/** Set method for Local scope. */
+	public void setAtLocalScope(String stepId, String path, Object value, boolean create) throws RecipeDataException {
+		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
+		setDataValue(step, path, value, create);
 	}
 	
-	public void setSuperior(String stepId, String path, Object value, boolean create)  throws RecipeDataException {
-		StepData step = getStep(stepId);
-		StepData parentStep = getStep(step.getParentId());
-		parentStep.set(path, value, create);		
+	/** Set method for Previous scope. */
+	public void setAtPreviousScope(String stepId, String path, Object value, boolean create)  throws RecipeDataException {
+		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
+		IlsSfcStepStructure prevStep = step.getPrevious();
+		if(prevStep == null) {
+			throw new RecipeDataException("step " + step.getName() + " does not have a previous step");
+		}
+		setDataValue(prevStep, path, value, create);
 	}
 	
-	public void setPhase(String stepId, String path, Object value, boolean create)  throws RecipeDataException {
-		getParentWithFactoryId(stepId, PHASE_FACTORY_ID).set(path, value, create);		
+	/** Set method for Superior scope. */
+	public void setAtSuperiorScope(String stepId, String path, Object value, boolean create)  throws RecipeDataException {
+		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
+		IlsSfcStepStructure parentStep = step.getParent();
+		if(parentStep == null) {
+			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing (superior) step");
+		}
+		setDataValue(parentStep, path, value, create);		
+	}
+	
+	/** Set method for Phase scope. */
+	public void setAtPhaseScope(String stepId, String path, Object value, boolean create)  throws RecipeDataException {
+		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
+		IlsSfcStepStructure phaseStep = step.findParentWithFactoryId(PhaseStepProperties.FACTORY_ID);
+		if(phaseStep == null) {
+			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing Phase");
+		}
+		setDataValue(phaseStep, path, value, create);		
     }
 
-	public void setOperation(String stepId, String path, Object value, boolean create)  throws RecipeDataException {
-		getParentWithFactoryId(stepId, OPERATION_FACTORY_ID).set(path, value, create);				
+	/** Set method for Operation scope. */
+	public void setAtOperationScope(String stepId, String path, Object value, boolean create)  throws RecipeDataException {
+		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
+		IlsSfcStepStructure operationStep = step.findParentWithFactoryId(OperationStepProperties.FACTORY_ID);
+		if(operationStep == null) {
+			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing Operation");
+		}
+		setDataValue(operationStep, path, value, create);		
 	}
 	
-	public void setProcedure(String stepId, String path, Object value, boolean create)  throws RecipeDataException {
-		getParentWithFactoryId(stepId, PROCEDURE_FACTORY_ID).set(path, value, create);				
+	/** Set method for UnitProcedure scope. */
+	public void setAtProcedureScope(String stepId, String path, Object value, boolean create)  throws RecipeDataException {
+		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
+		IlsSfcStepStructure procedureStep = step.findParentWithFactoryId(ProcedureStepProperties.FACTORY_ID);
+		if(procedureStep == null) {
+			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing Procedure");
+		}
+		setDataValue(procedureStep, path, value, create);		
 	}
 	
-	public void setNamed(String path, Object value, boolean create)  throws RecipeDataException {
-		globalData.pathPut(path, value, create);
+	/** Set method for global Named scope. */
+	public void setAtNamedScope(String path, Object value, boolean create)  throws RecipeDataException {
+		globalNamedData.pathPut(path, value, create);
 	}
 
-	public Object getLocal(String stepId, String path) throws RecipeDataException {
-		return getStep(stepId).get(path);
+	/** Get method for Local scope. */
+	public Object getAtLocalScope(String stepId, String path) throws RecipeDataException {
+		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
+		return getDataValue(step, path);
 	}
 	
-	public Object getPrevious(String stepId, String path)  throws RecipeDataException {
-		StepData step = getStep(stepId);
-		StepData prevStep = getStep(step.getPreviousStepId());
-		return prevStep.get(path);
+	/** Get method for Previous scope. */
+	public Object getAtPreviousScope(String stepId, String path)  throws RecipeDataException {
+		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
+		IlsSfcStepStructure prevStep = step.getPrevious();
+		if(prevStep == null) {
+			throw new RecipeDataException("step " + step.getName() + " does not have a previous step");
+		}
+		return getDataValue(prevStep,path);
 	}
 	
-	public Object getSuperior(String stepId, String path)  throws RecipeDataException {
-		StepData step = getStep(stepId);
-		StepData parentStep = getStep(step.getParentId());
-		return parentStep.get(path);		
+	/** Get method for Superior scope. */
+	public Object getAtSuperiorScope(String stepId, String path)  throws RecipeDataException {
+		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
+		IlsSfcStepStructure parentStep = step.getParent();
+		if(parentStep == null) {
+			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing (superior) step");
+		}
+		return getDataValue(parentStep, path);		
 	}
 	
-	public Object getPhase(String stepId, String path)  throws RecipeDataException {
-		return getParentWithFactoryId(stepId, PHASE_FACTORY_ID).get(path);		
+	/** Get method for Phase scope. */
+	public Object getAtPhaseScope(String stepId, String path)  throws RecipeDataException {
+		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
+		IlsSfcStepStructure phaseStep = step.findParentWithFactoryId(PhaseStepProperties.FACTORY_ID);
+		if(phaseStep == null) {
+			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing Phase");
+		}
+		return getDataValue(phaseStep, path);		
     }
 
-	public Object getOperation(String stepId, String path)  throws RecipeDataException {
-		return getParentWithFactoryId(stepId, OPERATION_FACTORY_ID).get(path);				
+	/** Get method for Operation scope. */
+	public Object getAtOperationScope(String stepId, String path)  throws RecipeDataException {
+		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
+		IlsSfcStepStructure operationStep = step.findParentWithFactoryId(OperationStepProperties.FACTORY_ID);
+		if(operationStep == null) {
+			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing Operation");
+		}
+		return getDataValue(operationStep, path);		
 	}
 	
-	public Object getProcedure(String stepId, String path)  throws RecipeDataException {
-		return getParentWithFactoryId(stepId, PROCEDURE_FACTORY_ID).get(path);				
+	/** Get method for Procedure scope. */
+	public Object getAtProcedureScope(String stepId, String path)  throws RecipeDataException {
+		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
+		IlsSfcStepStructure procedureStep = step.findParentWithFactoryId(ProcedureStepProperties.FACTORY_ID);
+		if(procedureStep == null) {
+			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing Procedure");
+		}
+		return getDataValue(procedureStep, path);		
 	}
 	
-	public Object getNamed(String path)  throws RecipeDataException {
-		return globalData.pathGet(path);
+	/** Get method for Named scope. */
+	public Object getAtNamedScope(String path)  throws RecipeDataException {
+		return globalNamedData.pathGet(path);
 	}
 	
+	/** Serialize this object into bytes. */
 	public byte[] serialize() throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		String json = mapper.writeValueAsString(this);
 		byte[] bytes = json.getBytes();
 		return bytes;
 	}
 
+	/** Deserialize an instance from bytes. */
 	public static RecipeData deserialize(byte[] bytes) throws JsonParseException, JsonMappingException, IOException { 
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		RecipeData recipeData = mapper.readValue(bytes, RecipeData.class);
 		return recipeData;
+	}
+
+	public void setCompiler(IlsSfcChartStructureCompiler compiler) {
+		chartStructureCompiler = compiler;
+	}
+
+	public RecipeDataMap getNamedData() {
+		return globalNamedData;
+	}
+
+	/** Only used by JSON de-serialization. */
+	public void setNamedData(RecipeDataMap map) {
+		globalNamedData = map;
+	}
+
+	public Map<String, RecipeDataMap> getDataByStepId() {
+		return dataByStepId;
+	}
+
+	public void setDataByStepId(Map<String, RecipeDataMap> dataByStepId) {
+		this.dataByStepId = dataByStepId;
+	}
+
+	public static void main(String[] args) {
+		RecipeData data = new RecipeData();
+		try {
+			System.out.println(new String(data.serialize()));
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

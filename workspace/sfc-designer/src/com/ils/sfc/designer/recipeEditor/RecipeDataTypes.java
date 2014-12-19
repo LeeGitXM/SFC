@@ -16,24 +16,24 @@ public class RecipeDataTypes {
 	public static final String SEQUENCE = "Sequence";
 	public static final String TEXT_LIST = "Text List";
 	public static final String VALUE_ARRAY = "Value Array";
-	public static final String VALUE = "Value";
+	public static final String SINGLE_VALUE = "Value";
 	public static final String[] RECIPE_DATA_TYPES = {GROUP, INPUT, OUTPUT,
 		OUTPUT_RAMP, MATRIX, QUANTITY_ARRAY, SQC, QUANTITY_LIST, SEQUENCE,
-		TEXT_LIST, VALUE_ARRAY, VALUE};
+		TEXT_LIST, VALUE_ARRAY, SINGLE_VALUE};
 	
 	// keys
 	public static final String UNITS = "units";
 	
 	// IO attributes
 	public static final Attribute TAG = new Attribute("tag", "");
-	public static final Attribute VAL = new Attribute("val", "");
-	public static final Attribute VAL_TYPE = new Attribute("valType", "");
+	public static final Attribute VALUE = new Attribute("value", "");
+	public static final Attribute VALUE_TYPE = new Attribute("valueType", "");
 	public static final Attribute ERROR_CODE = new Attribute("errorCode", "");
 	public static final Attribute ERROR_TEXT = new Attribute("errorText", "");
 	public static final Attribute PV_MONITOR_STATUS = new Attribute("pvMonitorStatus", "");
 	public static final Attribute PV_MONITOR_ACTIVE = new Attribute("pvMonitorActive", "");
 	public static final Attribute PV_VALUE = new Attribute("pvValue", "");
-	public static final Attribute[] IO_ATTRIBUTES = {TAG, VAL, VAL_TYPE, ERROR_CODE,
+	public static final Attribute[] IO_ATTRIBUTES = {TAG, VALUE, VALUE_TYPE, ERROR_CODE,
 		ERROR_TEXT, PV_MONITOR_STATUS, PV_MONITOR_ACTIVE, PV_VALUE};
 	
 	// Misc attributes

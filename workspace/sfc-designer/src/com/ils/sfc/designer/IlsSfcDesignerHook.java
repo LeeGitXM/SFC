@@ -15,16 +15,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import com.ils.sfc.client.step.*;
+import com.ils.sfc.common.recipe.RecipeData;
 import com.ils.sfc.common.recipe.RecipeDataManager;
+import com.ils.sfc.common.chartStructure.IlsSfcChartStructureCompiler;
+import com.ils.sfc.common.chartStructure.IlsSfcChartStructureMgr;
 import com.ils.sfc.common.step.*;
 import com.ils.sfc.designer.browser.IlsBrowserFrame;
 import com.ils.sfc.designer.recipeEditor.RecipeDataBrowser;
+import com.ils.sfc.util.IlsSfcCommonUtils;
 import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
@@ -90,6 +96,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	// register step factories. this is duplicated in IlsSfcClientHook.
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
 		RecipeDataManager.setDesignerContext(context);
+		RecipeDataManager.setGlobalProject(context.getGlobalProject().getProject());
+		RecipeDataManager.setStepRegistry(iaSfcHook.getStepRegistry());
 		initializeStepPopup();
 		
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
@@ -157,25 +165,48 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 
 	private void initializeStepPopup() {
 		stepPopup = new JPopupMenu();
+		
 		JMenuItem createRecipeDataItem = new JMenuItem("Edit Recipe Data");
 		createRecipeDataItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				StepComponent stepComponent =  (StepComponent) stepPopup.getInvoker();
-				ChartUIElement element = stepComponent.getElement();
-				ChartUIModel model = stepComponent.getModel();
-				printProperties(element);
-				RecipeDataBrowser browser = new RecipeDataBrowser(context.getFrame(), element, model);
-				browser.setVisible(true);
+				UUID stepId = (UUID)IlsSfcCommonUtils.getStepPropertyValue(stepComponent.getElement(), "id");				
+				RecipeData recipeData = RecipeDataManager.getData();
+				if(recipeData.isInitialized()) {
+					RecipeDataBrowser browser = new RecipeDataBrowser(context.getFrame(), stepId.toString());
+					browser.setVisible(true);
+				}
+				else {					
+					JOptionPane.showMessageDialog(stepComponent, "Recipe Data cannot be edited due to an initialization error");
+				}
 			}
 
-			private void printProperties(ChartUIElement element) {
-				for(PropertyValue<?> pv: element.getValues()) {
-					System.out.println(pv.getProperty().getName() + ": " + pv.getValue());
-				}
-			}			
 		});
-	    //JMenuItem menuItem.addActionListener(this);
 		stepPopup.add(createRecipeDataItem);
+
+		// TODO: remove this debug item when no longer needed:
+		JMenuItem compileItem = new JMenuItem("Compile Chart Structure");
+		compileItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				IlsSfcChartStructureCompiler compiler = new IlsSfcChartStructureCompiler(
+					context.getGlobalProject().getProject(), iaSfcHook.getStepRegistry());
+				IlsSfcChartStructureMgr structureMgr = compiler.compile();
+				for(String msg: compiler.getMessages()) {
+					System.out.println(msg);
+				}
+			}
+
+		});
+		stepPopup.add(compileItem);
+
+		JMenuItem clearItem = new JMenuItem("Clear Recipe Data");
+		clearItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RecipeDataManager.clear();
+			}
+
+		});
+		stepPopup.add(clearItem);
 
 		sfcWorkspace = iaSfcHook.getWorkspace();		
 		final IDesignTool tool = sfcWorkspace.getCurrentTool();

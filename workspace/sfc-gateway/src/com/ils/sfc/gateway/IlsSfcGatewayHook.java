@@ -139,6 +139,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 					String state = chartStatus.get().getChartState().toString();
 					lastInfo.put("status", state);
 					status.put(chartId, lastInfo);
+					// TODO: remove these debug messages
 					System.out.println("Updated saved status for " + chartId);
 				}
 				else {

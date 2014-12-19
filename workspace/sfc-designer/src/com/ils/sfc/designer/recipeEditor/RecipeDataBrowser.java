@@ -3,12 +3,10 @@ package com.ils.sfc.designer.recipeEditor;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Frame;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -27,25 +25,22 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.ils.sfc.common.chartStructure.IlsSfcStepStructure;
+import com.ils.sfc.common.recipe.RecipeData;
+import com.ils.sfc.common.recipe.RecipeDataMap;
 import com.ils.sfc.common.recipe.RecipeDataManager;
-import com.ils.sfc.util.IlsSfcCommonUtils;
-import com.inductiveautomation.sfc.uimodel.ChartUIElement;
-import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
 @SuppressWarnings("serial")
 public class RecipeDataBrowser extends JDialog {
 	final JButton addButton = new JButton("+");
 	final JButton editButton = new JButton("E");
 	final JButton removeButton = new JButton("-");
-	final JButton clearButton = new JButton("Clear");
-	public static final String ENCLOSING_STEP_FACTORY_ID = "enclosing-step";
-	private MapTreeNode top;
+	private MapTreeNode top = new MapTreeNode("", null);
 	private JTree tree;
 	private DefaultTreeModel treeModel;
 	private MapTreeNode selectedNode;
-	private Map<String,Object> recipeData;
+	private RecipeData recipeData;
 
-	@SuppressWarnings("serial")
 	static class MapTreeNode extends DefaultMutableTreeNode {
 		private String name;
 		private boolean isMap;
@@ -86,16 +81,17 @@ public class RecipeDataBrowser extends JDialog {
 			}
 			else {
 				buf.append(" = ");
-				buf.append(getUserObject().toString());
+				String valueString = getUserObject() != null ? getUserObject().toString() : "null";
+				buf.append(valueString);
 			}
 			return buf.toString();
 		}
 	}
 	
-	public RecipeDataBrowser(Frame owner, ChartUIElement element, ChartUIModel model) {
+	public RecipeDataBrowser(Frame owner, String stepId) {
 		super(owner,true);
 		recipeData = RecipeDataManager.getData();
-		setStepContext(element, model);
+		createTree(stepId);
 		createMenu();
 		JPanel panel = new JPanel(new BorderLayout());
 		getContentPane().add(panel);
@@ -113,19 +109,43 @@ public class RecipeDataBrowser extends JDialog {
 		setLocation(owner.getX() + owner.getWidth()/2 - getWidth()/2, owner.getY() + owner.getHeight()/2 - getHeight()/2);
 	}
 
-	private void setStepContext(ChartUIElement element, ChartUIModel model) {
-		String stepName = IlsSfcCommonUtils.getStepPropertyValue(element, "name").toString();
-		String stepId = IlsSfcCommonUtils.getStepPropertyValue(element, "id").toString();
-		String factoryId = IlsSfcCommonUtils.getStepPropertyValue(element, "factory-id").toString();
-		String type = IlsSfcCommonUtils.getStepPropertyValue(element, "type").toString();
-		// Create initial step data if not there:
-		if(!recipeData.containsKey(stepId)) {
-			Map<String,Object> newStepData = createMap();
-			recipeData.put(stepId, newStepData);
-			newStepData.put(RecipeDataTypes.NAME, stepName);
-			newStepData.put(RecipeDataTypes.DATA, createMap());
+	private void createTree(String stepId) {
+		top.setContentsEditable(false);
+		treeModel = new DefaultTreeModel(top);
+
+		createSubTree(stepId, "Local");
+		IlsSfcStepStructure step = recipeData.getStructureMgr().getStepWithId(stepId);
+		IlsSfcStepStructure parentStep = step.getParent();
+		IlsSfcStepStructure procedureStep = step.getProcedure();
+		IlsSfcStepStructure operationStep = step.getOperation();
+		IlsSfcStepStructure phaseStep = step.getPhase();
+		if(parentStep != null) {
+			createSubTree(step.getParent().getId(), "Superior");
 		}
-		createTree(stepId);
+		if(procedureStep != null) {
+			createSubTree(procedureStep.getId(), "Procedure");
+		}
+		if(operationStep != null) {
+			createSubTree(operationStep.getId(), "Operation");
+		}
+		if(phaseStep != null) {
+			createSubTree(phaseStep.getId(), "Phase");
+		}
+		createNamedSubtree();
+		
+		tree = new JTree(treeModel);
+		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.setRootVisible(false);
+		tree.setShowsRootHandles(true);
+		tree.setEditable(false);
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent e) {
+				selectedNode = (MapTreeNode) tree.getLastSelectedPathComponent();
+				addButton.setEnabled(canAdd());
+				removeButton.setEnabled(canRemove());
+				editButton.setEnabled(canEdit());
+			}
+		});		
 	}
 	
 	private void createMenu() {
@@ -174,38 +194,23 @@ public class RecipeDataBrowser extends JDialog {
 			public void actionPerformed(ActionEvent e) { doEdit();}
 		});
 		
-		buttonPanel.add(clearButton);
-		clearButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { doClear();}
-		});
 	}
 
-	private Map<String,Object> createMap() {
-		return new HashMap<String,Object>();
+	private void createNamedSubtree() {
+		RecipeDataMap dataMap = recipeData.getNamedData();
+		createSubtreeForMap("Named", dataMap);		
 	}
 	
-	@SuppressWarnings("unchecked")
-	private void createTree(String stepId) {
-		Map<String,Object> map = (Map<String,Object>)recipeData.get(stepId);
-		String rootName = map.containsKey(RecipeDataTypes.NAME) ? (String)map.get(RecipeDataTypes.NAME) : "All";
-		Map<String,Object> rootMap = map.containsKey(RecipeDataTypes.DATA) ? (Map<String,Object>)map.get(RecipeDataTypes.DATA) : map;
-		top = new MapTreeNode(rootName, rootMap );
-		top.setContentsEditable(true);
-		treeModel = new DefaultTreeModel(top);
-		tree = new JTree(top);
-		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		tree.setShowsRootHandles(true);
-		tree.setEditable(false);
-		top.removeAllChildren();
-		addNodes(rootMap, top);
-		tree.addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent e) {
-				selectedNode = (MapTreeNode) tree.getLastSelectedPathComponent();
-				addButton.setEnabled(canAdd());
-				removeButton.setEnabled(canRemove());
-				editButton.setEnabled(canEdit());
-			}
-		});		
+	private void createSubTree(String stepId, String name) {
+		RecipeDataMap stepDataMap = recipeData.getStepData(stepId);
+		createSubtreeForMap(name, stepDataMap);
+	}
+
+	private void createSubtreeForMap(String name, RecipeDataMap stepDataMap) {
+		MapTreeNode subTop = new MapTreeNode(name, stepDataMap );
+		top.add(subTop);
+		subTop.setContentsEditable(true);
+		addNodes(stepDataMap, subTop);
 	}
 	
 	private void doAdd() {
@@ -240,12 +245,7 @@ public class RecipeDataBrowser extends JDialog {
 		tree.updateUI();
 		selectedNode = null;
 	}
-		
-	private void doClear() {
-		RecipeDataManager.clear();
-		dispose();
-	}
-	
+
 	private void doEdit() {
 		boolean inputValid = false;
 		do {

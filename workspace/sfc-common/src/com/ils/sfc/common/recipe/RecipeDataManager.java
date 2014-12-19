@@ -1,31 +1,29 @@
 package com.ils.sfc.common.recipe;
 
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.ils.sfc.common.chartStructure.IlsSfcChartStructureCompiler;
 import com.ils.sfc.util.IlsSfcModule;
 import com.inductiveautomation.ignition.common.model.ApplicationScope;
+import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.inductiveautomation.sfc.api.StepRegistry;
 
 /**
- * Management of Recipe Data, which is structured as a dictionary and stored as a
- * project resource.
+ * Management of Recipe Data, which is stored as a (single) project resource.
  */
 public class RecipeDataManager {
-	private static Map<String,Object> _recipeData = null;
+	private static RecipeData _recipeData = null;
 	private static ProjectResource projectResource;
 	private static DesignerContext context;
-	private static final ObjectMapper mapper = new ObjectMapper();
+	private static Project globalProject;
+	private static StepRegistry stepRegistry;
 
 	private static LoggerEx logger = LogUtil.getLogger(RecipeDataManager.class.getName());
 	
-	public static Map<String,Object> getData() {
+	/** Get the recipe data, lazily initializing it if necessary. */
+	public static RecipeData getData() {
 		if(_recipeData == null) {
 			loadData();
 			if(_recipeData == null) {
@@ -35,39 +33,46 @@ public class RecipeDataManager {
 		return _recipeData;
 	}
 	
+	/** Load the persistent recipe data--if there is none, the _recipeData variable
+	 *  will continue to be null. This will over-write any unpersisted changes. */
 	@SuppressWarnings("unchecked")
 	public static void loadData() {
 		logger.info("loading recipe data");
-		List<ProjectResource> resources = context.getProject().getResourcesOfType(
-				IlsSfcModule.MODULE_ID, IlsSfcModule.RECIPE_RESOURCE_TYPE);
-		if(resources.size() >= 1) {
-			projectResource = resources.get(0);
-			if(resources.size() > 1) {
-				logger.error("More than one recipe data resource--deleting extras");
-				for(int i = 1; i < resources.size(); i++) {
-					ProjectResource res = resources.get(i);
-					context.deleteResource(res.getResourceId());
-				}
-			}
+		projectResource = getResourceProject().getResourceOfType(
+			IlsSfcModule.MODULE_ID, IlsSfcModule.RECIPE_RESOURCE_TYPE);
+		if(projectResource != null) {
 			try {
-				_recipeData = mapper.readValue(projectResource.getData(), HashMap.class);
+				_recipeData = RecipeData.deserialize(projectResource.getData());
+				initializeData();
 			} catch (Exception e) {
 				logger.error("Error loading recipe data", e);
 			}
 		}
 	}
 	
-	public static void clear() {
-		createData();
+	private static void initializeData() {
+		_recipeData.setCompiler(new IlsSfcChartStructureCompiler(globalProject, stepRegistry));
+		_recipeData.compileStructure();
 	}
 	
+	/** Re-initialize the recipe data. */
+	public static void clear() {
+		projectResource = null;
+		_recipeData = new RecipeData();
+		for(ProjectResource res: getResourceProject().getResourcesOfType(IlsSfcModule.MODULE_ID, IlsSfcModule.RECIPE_RESOURCE_TYPE)) {
+			getResourceProject().deleteResource(res.getResourceId());
+		}
+		createData();
+		updateData();
+	}
+	
+	/** Sync the persisted data with the in-memory data. */
 	public static void updateData() {
 		logger.info("updating recipe data");
 		try {
-			String json = mapper.writeValueAsString(_recipeData);
-			byte[] bytes = json.getBytes();
+			byte[] bytes = getData().serialize();
 			projectResource.setData(bytes);
-			context.updateResource(projectResource);
+			getResourceProject().putResource(projectResource);
 		} catch (Exception e) {
 			logger.error("Could not update recipe data", e);
 		}
@@ -77,17 +82,30 @@ public class RecipeDataManager {
 		context = _context;
 	}
 	
+	public static void setGlobalProject(Project globalProject) {
+		RecipeDataManager.globalProject = globalProject;
+	}
+
+	public static void setStepRegistry(StepRegistry stepRegistry) {
+		RecipeDataManager.stepRegistry = stepRegistry;
+	}
+
+	private static Project getResourceProject() {
+		return context.getGlobalProject().getProject();
+	}
+	
+	/** Create recipe data for the first time in this Gateway. */
 	private static void createData() {
 		logger.info("creating recipe data");
 		try {
-			_recipeData = new HashMap<String,Object>();
-			final long newId = context.newResourceId();	
-			String json = mapper.writeValueAsString(_recipeData);
-			byte[] bytes = json.getBytes();
+			_recipeData = new RecipeData();
+			initializeData();
+			byte[] bytes = _recipeData.serialize();
+			final long newId = context.newResourceId();
 			projectResource = new ProjectResource(newId,
 				IlsSfcModule.MODULE_ID, IlsSfcModule.RECIPE_RESOURCE_TYPE,
 				IlsSfcModule.RECIPE_RESOURCE_NAME, ApplicationScope.ALL, bytes);
-			context.updateResource(projectResource);
+			getResourceProject().putResource(projectResource);
 		} catch (Exception e) {
 			logger.error("Could not create recipe data", e);
 		}

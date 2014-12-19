@@ -14,6 +14,7 @@ public class RecipeDataMap extends HashMap<String,Object> {
 	@SuppressWarnings("unchecked")
 	private Map<String,Object> pathGetMap(String path, String[] keys, boolean create) throws RecipeDataException {
 		Map<String,Object> map = this;
+		// note that we skip the last key in the array...
 		for(int i = 0; i < keys.length - 1; i++ ) {
 			String key = keys[i];
 			Object value = map.get(key);
@@ -32,13 +33,16 @@ public class RecipeDataMap extends HashMap<String,Object> {
 					map = (Map<String,Object>)value;
 				}
 				else {
-					throwPathDoesNotExist(path);
+					// There's a problem with the type of the value--should be a map,
+					// but it isn't
+					throw new RecipeDataException("the key " + key + " in path " + path + " is not a dictionary; value: " + value);
 				}			
 			}
 		}
 		return map;
 	}
 	
+	/** Get a value from a nested hierarchy of dictionaries. */
 	@SuppressWarnings("unchecked")
 	public Object pathGet(String path) throws RecipeDataException {
 		String[] keys = splitPath(path);
@@ -52,15 +56,9 @@ public class RecipeDataMap extends HashMap<String,Object> {
 			return null; // keep the compiler happy
 		}
 	}
-	
-	private void throwPathDoesNotExist(String path) throws RecipeDataException {
-		throw new RecipeDataException("object " + path + " does not exist");
-	}
-	
-	private String[] splitPath(String path) {
-		return path.split("\\.");
-	}
-	
+
+	/** Put a value into a nested hierarchy of dictionaries. If "create" is true any
+	 *  missing parts of the hierarchy implied by the path will be created. */
 	@SuppressWarnings("unchecked")
 	public void pathPut(String path, Object value, boolean create) throws RecipeDataException {
 		String[] keys = splitPath(path);
@@ -73,4 +71,14 @@ public class RecipeDataMap extends HashMap<String,Object> {
 			throwPathDoesNotExist(path);
 		}
 	}
+	
+	private void throwPathDoesNotExist(String path) throws RecipeDataException {
+		throw new RecipeDataException("object " + path + " does not exist");
+	}
+	
+	/** Split a dot-separated path reference into the individual keys. */
+	private String[] splitPath(String path) {
+		return path.split("\\.");
+	}
+	
 }

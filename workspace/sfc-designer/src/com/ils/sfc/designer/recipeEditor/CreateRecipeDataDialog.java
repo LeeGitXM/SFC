@@ -188,7 +188,7 @@ public class CreateRecipeDataDialog extends JDialog {
 			addUnits(newNode);			
 			addValue(newNode);			
 		}
-		else if(type.equals(VALUE)) {
+		else if(type.equals(SINGLE_VALUE)) {
 			addUnits(newNode);			
 			addValue(newNode);			
 		}

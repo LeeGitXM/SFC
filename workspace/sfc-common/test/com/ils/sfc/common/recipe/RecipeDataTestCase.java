@@ -1,182 +1,109 @@
 package com.ils.sfc.common.recipe;
 
-import com.ils.sfc.common.recipe.RecipeData.Scope;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.ils.sfc.common.chartStructure.IlsSfcChartStructure;
+import com.ils.sfc.common.chartStructure.IlsSfcChartStructure.Parent;
+import com.ils.sfc.common.chartStructure.IlsSfcChartStructureMgr;
+import com.ils.sfc.common.chartStructure.IlsSfcStepStructure;
+import com.ils.sfc.common.step.OperationStepProperties;
+import com.ils.sfc.common.step.PhaseStepProperties;
+import com.ils.sfc.common.step.ProcedureStepProperties;
+import com.inductiveautomation.sfc.elements.steps.action.ActionStepProperties;
+import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 
 import junit.framework.TestCase;
 
 public class RecipeDataTestCase extends TestCase {
-	public static final String ID = "id";
-	public static final String OPERATION_ID = "opid";
-	public static final String PHASE_ID = "phid";
-	
-	public void testAddStep() throws RecipeDataException {
-		RecipeData recipeData = new RecipeData();
-		StepData stepData = new StepData("name", ID, "factoryString", "type" );
-		recipeData.addStep(stepData);
-		assertEquals(stepData, recipeData.getStep(ID));
-	}
+	private static final Object value = Integer.valueOf(2);
+	private static final String path = "folder.aValue";
 
-	public void testRemoveStep() throws RecipeDataException {
-		RecipeData recipeData = new RecipeData();
-		StepData stepData = new StepData("name", ID, "factoryString", "type" );
-		recipeData.addStep(stepData);
-		assertTrue(recipeData.stepExists(ID));
-		recipeData.removeStep(ID);
-		assertFalse(recipeData.stepExists(ID));
-		try {
-			recipeData.getStep(ID);
-			fail();
-		} 
-		catch(RecipeDataException e ) {}
+	// Some dummy data to mock up charts with the Procedure/Operation/Phase hierarchy:
+	private IlsSfcChartStructure procChart = new IlsSfcChartStructure();
+	private IlsSfcStepStructure procedureStep = new IlsSfcStepStructure(procChart, "procId", 
+		ProcedureStepProperties.FACTORY_ID, "procStep", null, Boolean.TRUE);
+	private IlsSfcChartStructure opChart = new IlsSfcChartStructure();
+	private IlsSfcStepStructure operationStep = new IlsSfcStepStructure(opChart, "opId", 
+		OperationStepProperties.FACTORY_ID, "opStep", null, Boolean.TRUE);
+	private IlsSfcChartStructure phaseChart = new IlsSfcChartStructure();
+	private IlsSfcStepStructure phaseStep = new IlsSfcStepStructure(phaseChart, "phaseId", 
+		PhaseStepProperties.FACTORY_ID, "phaseStep", null, Boolean.TRUE);
+	private IlsSfcChartStructure parentChart = new IlsSfcChartStructure();
+	private IlsSfcStepStructure parentStep = new IlsSfcStepStructure(parentChart, "parentId", 
+		EnclosingStepProperties.FACTORY_ID, "parentStep", null, Boolean.TRUE);
+	private IlsSfcChartStructure chart = new IlsSfcChartStructure();
+	private IlsSfcStepStructure predStep = new IlsSfcStepStructure(chart, "predId", 
+		ActionStepProperties.FACTORY_ID, "predStep", null, Boolean.FALSE);
+	private IlsSfcStepStructure childStep = new IlsSfcStepStructure(chart, "childId", 
+		ActionStepProperties.FACTORY_ID, "childStep", predStep, Boolean.FALSE);
+	private Map<String,IlsSfcChartStructure> chartMap = new HashMap<String,IlsSfcChartStructure> ();
+	private IlsSfcChartStructureMgr structureMgr = new IlsSfcChartStructureMgr(chartMap);
+	private RecipeData recipeData = new RecipeData();
+	
+	public void setUp() {
+		// Finish wiring together the dummy charts
+		recipeData.setStructureManager(structureMgr);
+		chartMap.put("procChart", procChart);
+		procChart.addStep(procedureStep);
+		procedureStep.setEnclosedChart(opChart);
+		chartMap.put("opChart", opChart);
+		opChart.addStep(operationStep);
+		operationStep.setEnclosedChart(phaseChart);
+		opChart.getParents().add(new Parent(procChart, procedureStep));
+		chartMap.put("phaseChart", phaseChart);
+		phaseChart.addStep(phaseStep);
+		phaseChart.getParents().add(new Parent(opChart, operationStep));
+		phaseStep.setEnclosedChart(parentChart);
+		chartMap.put("parentChart", parentChart);
+		parentChart.addStep(parentStep);
+		parentChart.getParents().add(new Parent(phaseChart, phaseStep));
+		parentStep.setEnclosedChart(chart);
+		chartMap.put("chart", chart);
+		chart.addStep(childStep);
+		chart.addStep(predStep);
+		chart.getParents().add(new Parent(parentChart, parentStep));
 	}
 	
-	public void testGetParentWithFactoryId() throws RecipeDataException {
-		RecipeData recipeData = new RecipeData();
-		StepData operationStepData = new StepData("name", OPERATION_ID, RecipeData.OPERATION_FACTORY_ID, "type" );
-		StepData phaseStepData = new StepData("name", PHASE_ID, RecipeData.PHASE_FACTORY_ID, "type" );
-		phaseStepData.setParentId(operationStepData.getId());
-		recipeData.addStep(operationStepData);
-		recipeData.addStep(phaseStepData);
-		// leaf level
-		assertEquals(phaseStepData, recipeData.getParentWithFactoryId(phaseStepData.getId(), RecipeData.PHASE_FACTORY_ID));
-		// parent
-		assertEquals(operationStepData, recipeData.getParentWithFactoryId(phaseStepData.getId(), RecipeData.OPERATION_FACTORY_ID));
-		try {
-			recipeData.getParentWithFactoryId(phaseStepData.getId(), "dummy");
-			fail();
-		} 
-		catch(RecipeDataException e ) {}	
-	}
-
 	public void testLocal() throws RecipeDataException {
-		RecipeData recipeData = new RecipeData();
-		StepData stepData = new StepData("name", ID, "factoryString", "type" );
-		recipeData.addStep(stepData);
-		Object value = Integer.valueOf(2);
-		String path = "folder.aValue";
-		recipeData.setLocal(ID, path, value, true);
-		assertEquals(value, recipeData.getLocal(ID, path));
-		assertEquals(value, recipeData.get(Scope.Local, ID, path));
-		assertEquals(value, stepData.get(path));
-		try {
-			recipeData.setLocal(ID, "nonexistent", value, false);
-			fail();
-		} 
-		catch(RecipeDataException e ) {}	
+		recipeData.set(RecipeScope.Local, childStep.getId(), path, value, true);
+		assertEquals(value, recipeData.getAtLocalScope(childStep.getId(),  path));
+		assertEquals(value, recipeData.get(RecipeScope.Local, childStep.getId(), path));
 	}
 
 	public void testPrevious() throws RecipeDataException {
-		RecipeData recipeData = new RecipeData();
-		StepData stepData = new StepData("name", ID, "factoryString", "type" );
-		StepData prevData = new StepData("name", "prevId", "factoryString", "type" );
-		stepData.setPreviousStepId(prevData.getId());
-		recipeData.addStep(stepData);
-		recipeData.addStep(prevData);
-		Object value = Integer.valueOf(2);
-		String path = "folder.aValue";
-		recipeData.setPrevious(ID, path, value, true);
-		assertEquals(value, recipeData.getPrevious(ID, path));
-		assertEquals(value, recipeData.get(Scope.Previous, ID, path));
-		assertEquals(value, prevData.get(path));
-		try {
-			recipeData.setPrevious(ID, "nonexistent", value, false);
-			fail();
-		} 
-		catch(RecipeDataException e ) {}	
+		recipeData.set(RecipeScope.Previous, childStep.getId(), path, value, true);
+		assertEquals(value, recipeData.getAtPreviousScope(childStep.getId(),  path));
+		assertEquals(value, recipeData.get(RecipeScope.Previous, childStep.getId(), path));
+		assertEquals(value, recipeData.get(RecipeScope.Local, predStep.getId(), path));
 	}
 
 	public void testSuperior() throws RecipeDataException {
-		RecipeData recipeData = new RecipeData();
-		StepData stepData = new StepData("name", ID, "factoryString", "type" );
-		StepData supData = new StepData("name", "supId", "factoryString", "type" );
-		stepData.setParentId(supData.getId());
-		recipeData.addStep(stepData);
-		recipeData.addStep(supData);
-		Object value = Integer.valueOf(2);
-		String path = "folder.aValue";
-		recipeData.setSuperior(ID, path, value, true);
-		assertEquals(value, recipeData.getSuperior(ID, path));
-		assertEquals(value, recipeData.get(Scope.Superior, ID, path));
-		assertEquals(value, supData.get(path));
-		try {
-			recipeData.setSuperior(ID, "nonexistent", value, false);
-			fail();
-		} 
-		catch(RecipeDataException e ) {}	
-	}
-	
-	public void testPhase() throws RecipeDataException {
-		RecipeData recipeData = new RecipeData();
-		StepData stepData = new StepData("name", ID, "factoryString", "type" );
-		StepData phaseData = new StepData("name", "phid", RecipeData.PHASE_FACTORY_ID, "type" );
-		stepData.setParentId(phaseData.getId());
-		recipeData.addStep(stepData);
-		recipeData.addStep(phaseData);
-		Object value = Integer.valueOf(2);
-		String path = "folder.aValue";
-		recipeData.setPhase(ID, path, value, true);
-		assertEquals(value, recipeData.getPhase(ID, path));
-		assertEquals(value, recipeData.get(Scope.Phase, ID, path));
-		assertEquals(value, phaseData.get(path));
-		try {
-			recipeData.setPhase(ID, "nonexistent", value, false);
-			fail();
-		} 
-		catch(RecipeDataException e ) {}	
-	}
-	
-	public void testOperation() throws RecipeDataException {
-		RecipeData recipeData = new RecipeData();
-		StepData stepData = new StepData("name", ID, "factoryString", "type" );
-		StepData opData = new StepData("name", "opid", RecipeData.OPERATION_FACTORY_ID, "type" );
-		stepData.setParentId(opData.getId());
-		recipeData.addStep(stepData);
-		recipeData.addStep(opData);
-		Object value = Integer.valueOf(2);
-		String path = "folder.aValue";
-		recipeData.setOperation(ID, path, value, true);
-		assertEquals(value, recipeData.getOperation(ID, path));
-		assertEquals(value, recipeData.get(Scope.Operation, ID, path));
-		assertEquals(value, opData.get(path));
-		try {
-			recipeData.setOperation(ID, "nonexistent", value, false);
-			fail();
-		} 
-		catch(RecipeDataException e ) {}	
-	}
-	
-	public void testProcedure() throws RecipeDataException {
-		RecipeData recipeData = new RecipeData();
-		StepData stepData = new StepData("name", ID, "factoryString", "type" );
-		StepData prData = new StepData("name", "prid", RecipeData.PROCEDURE_FACTORY_ID, "type" );
-		stepData.setParentId(prData.getId());
-		recipeData.addStep(stepData);
-		recipeData.addStep(prData);
-		Object value = Integer.valueOf(2);
-		String path = "folder.aValue";
-		recipeData.setProcedure(ID, path, value, true);
-		assertEquals(value, recipeData.getProcedure(ID, path));
-		assertEquals(value, recipeData.get(Scope.UnitProcedure, ID, path));
-		assertEquals(value, prData.get(path));
-		try {
-			recipeData.setProcedure(ID, "nonexistent", value, false);
-			fail();
-		} 
-		catch(RecipeDataException e ) {}	
+		recipeData.set(RecipeScope.Superior, childStep.getId(), path, value, true);
+		assertEquals(value, recipeData.getAtSuperiorScope(childStep.getId(),  path));
+		assertEquals(value, recipeData.get(RecipeScope.Superior, childStep.getId(), path));
+		assertEquals(value, recipeData.get(RecipeScope.Local, parentStep.getId(), path));
 	}
 
-	public void testNamed() throws RecipeDataException {
-		RecipeData recipeData = new RecipeData();
-		Object value = Integer.valueOf(2);
-		String path = "folder.aValue";
-		recipeData.setNamed(path, value, true);
-		assertEquals(value, recipeData.getNamed(path));
-		assertEquals(value, recipeData.get(Scope.Named, ID, path));
-		try {
-			recipeData.setNamed("nonexistent", value, false);
-			fail();
-		} 
-		catch(RecipeDataException e ) {}	
+	public void testPhase() throws RecipeDataException {
+		recipeData.set(RecipeScope.Phase, childStep.getId(), path, value, true);
+		assertEquals(value, recipeData.getAtPhaseScope(childStep.getId(),  path));
+		assertEquals(value, recipeData.get(RecipeScope.Phase, childStep.getId(), path));
+		assertEquals(value, recipeData.get(RecipeScope.Local, phaseStep.getId(), path));
+	}
+
+	public void testOperation() throws RecipeDataException {
+		recipeData.set(RecipeScope.Operation, childStep.getId(), path, value, true);
+		assertEquals(value, recipeData.getAtOperationScope(childStep.getId(),  path));
+		assertEquals(value, recipeData.get(RecipeScope.Operation, childStep.getId(), path));
+		assertEquals(value, recipeData.get(RecipeScope.Local, operationStep.getId(), path));
+	}
+
+	public void testProcedure() throws RecipeDataException {
+		recipeData.set(RecipeScope.UnitProcedure, childStep.getId(), path, value, true);
+		assertEquals(value, recipeData.getAtProcedureScope(childStep.getId(),  path));
+		assertEquals(value, recipeData.get(RecipeScope.UnitProcedure, childStep.getId(), path));
+		assertEquals(value, recipeData.get(RecipeScope.Local, procedureStep.getId(), path));
 	}
 
 }
