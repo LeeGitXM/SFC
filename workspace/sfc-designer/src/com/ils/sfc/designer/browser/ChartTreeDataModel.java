@@ -38,19 +38,8 @@ import com.inductiveautomation.sfc.uimodel.ChartUIModel;
  */
 public class ChartTreeDataModel {
 	private static final String TAG = "ChartTreeDataModel";
-	public static final String CHART_RESOURCE_TYPE="sfc-chart-ui-model";
-	public static final String FOLDER_RESOURCE_TYPE="__folder";
 	private int ROOT_ROW = 0;           // Number of the root row
 	
-	// Table column names
-	private static final String CXNS    = "Cxns";          // Incoming connection count
-	private static final String ENCLOSURES = "Enclosures"; // Refs to this as an enclosure
-	public static final String KEY      = "Key";
-	public static final String NAME     = "Name";
-	public static final String PARENT   = "Parent";
-	private static final String PATH    = "Path";       // Chart identifier
-	public static final String RESOURCE = "Resource"; // ResourceId
-
 	private final Map<Integer,List<Integer>> childrenLookup; // Find node children by parent row
 	private final Map<String,Integer>  rowLookup;            // Find node row by path
 	private final Map<String,FolderHolder> folderHierarchy;
@@ -67,13 +56,13 @@ public class ChartTreeDataModel {
 		folderHierarchy = new HashMap<>();
 		rowLookup = new HashMap<>();
 		nodes = new Table();
-		nodes.addColumn(CXNS, int.class);        // Count of linked connections 
-		nodes.addColumn(ENCLOSURES, int.class);  // Number of times this node has been used as an enclosure
-		nodes.addColumn(NAME, String.class);
-		nodes.addColumn(KEY, int.class);            // Table row - key
-		nodes.addColumn(PATH, String.class);
-		nodes.addColumn(PARENT, String.class);
-		nodes.addColumn(RESOURCE, long.class);
+		nodes.addColumn(BrowserConstants.CXNS, int.class);        // Count of linked connections 
+		nodes.addColumn(BrowserConstants.ENCLOSURES, int.class);  // Number of times this node has been used as an enclosure
+		nodes.addColumn(BrowserConstants.NAME, String.class);
+		nodes.addColumn(BrowserConstants.KEY, int.class);            // Table row - key
+		nodes.addColumn(BrowserConstants.PATH, String.class);
+		nodes.addColumn(BrowserConstants.PARENT, String.class);
+		nodes.addColumn(BrowserConstants.RESOURCE, long.class);
 		
 		edges = new Table();
 		// The keys match the node key in the node table
@@ -101,7 +90,7 @@ public class ChartTreeDataModel {
 		folderHierarchy.put(root.toString(), rootHolder);
 		
 		for(ProjectResource res:resources) {
-			if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
+			if( res.getResourceType().equals(BrowserConstants.CHART_RESOURCE_TYPE)) {
 				log.tracef("%s.initialize: found chart %s, parent = %s", TAG,res.getName(),res.getParentUuid().toString());
 
 				try {
@@ -112,8 +101,8 @@ public class ChartTreeDataModel {
 					if(ccr.isSuccessful()) {
 						ChartDefinition definition = ccr.getChartDefinition();
 						int row = addNodeTableRow(res.getName(),res.getResourceId());
-						nodes.setString(row, PARENT, res.getParentUuid().toString());
-						// Check steps in node for being enclosing steps
+						nodes.setString(row, BrowserConstants.PARENT, res.getParentUuid().toString());
+						// Check steps in chart for being enclosures
 						handleEnclosingSteps(row,null,definition.getBeginElement().getNextElements());
 					}
 					else {
@@ -128,7 +117,7 @@ public class ChartTreeDataModel {
 				}
 			}
 			// Handle the folder hierarchy
-			else if( res.getResourceType().equals(FOLDER_RESOURCE_TYPE)) {
+			else if( res.getResourceType().equals(BrowserConstants.FOLDER_RESOURCE_TYPE)) {
 				UUID self = res.getDataAsUUID();
 				FolderHolder holder = new FolderHolder(res.getDataAsUUID(),res.getParentUuid(),res.getName());
 				folderHierarchy.put(self.toString(),holder);
@@ -157,10 +146,9 @@ public class ChartTreeDataModel {
 	 * @return a tree constructed out of the nodes and edges.
 	 */
 	public Tree getTree() {
-		Tree tree = new Tree(nodes,edges,KEY,Graph.DEFAULT_SOURCE_KEY,Graph.DEFAULT_TARGET_KEY);
+		Tree tree = new Tree(nodes,edges,BrowserConstants.KEY,Graph.DEFAULT_SOURCE_KEY,Graph.DEFAULT_TARGET_KEY);
 		return tree;
 	}
-	
 
 	
 	// Create a connection between nodes. Update the connection count
@@ -168,8 +156,8 @@ public class ChartTreeDataModel {
 	// @return the row corresponding to the newly created connection.
 	private int addEdgeTableRow(int sourceRow,int destinationRow) {
 		// Update connection count for the destination
-		int count = nodes.getInt(destinationRow,CXNS);
-		nodes.setInt(destinationRow, CXNS, count+1);
+		int count = nodes.getInt(destinationRow,BrowserConstants.CXNS);
+		nodes.setInt(destinationRow, BrowserConstants.CXNS, count+1);
 		int row = edges.getRowCount();
 		log.infof("%s.addEdgeTableRow: %d -> %d", TAG,sourceRow,destinationRow);
 		edges.addRow();
@@ -177,6 +165,7 @@ public class ChartTreeDataModel {
 		edges.setInt(row,Graph.DEFAULT_TARGET_KEY,destinationRow);
 		return row;
 	}
+	
 	// We've found a chart resource. Add it to the table
     // @param resourceId if negative, then this row corresponds to
 	// @return the row corresponding to the newly discovered chart.
@@ -184,11 +173,11 @@ public class ChartTreeDataModel {
 		int row = nodes.getRowCount();
 		log.infof("%s.addNodeTableRow: %d = %s", TAG,row,name);
 		nodes.addRow();
-		nodes.setInt(row,CXNS,0); 
-		nodes.setInt(row,ENCLOSURES,0);  
-		nodes.setString(row,NAME,name);
-		nodes.setInt(row,KEY,row);
-		nodes.setLong(row,RESOURCE,resourceId);
+		nodes.setInt(row,BrowserConstants.CXNS,0); 
+		nodes.setInt(row,BrowserConstants.ENCLOSURES,0);  
+		nodes.setString(row,BrowserConstants.NAME,name);
+		nodes.setInt(row,BrowserConstants.KEY,row);
+		nodes.setLong(row,BrowserConstants.RESOURCE,resourceId);
 		return row;
 	}
 	// Configure a root node. Connect all nodes without other
@@ -197,11 +186,11 @@ public class ChartTreeDataModel {
 		ROOT_ROW = nodes.getRowCount();
 		nodes.addRow();
 		log.infof("%s.configureRootNode. root", TAG);
-		nodes.setString(ROOT_ROW,NAME,"root");
-		nodes.setInt(ROOT_ROW,CXNS,0);
-		nodes.setInt(ROOT_ROW,KEY,ROOT_ROW);
-		nodes.setString(ROOT_ROW,PATH,"");
-		nodes.setLong(ROOT_ROW,RESOURCE,-1);
+		nodes.setString(ROOT_ROW,BrowserConstants.NAME,"root");
+		nodes.setInt(ROOT_ROW,BrowserConstants.CXNS,0);
+		nodes.setInt(ROOT_ROW,BrowserConstants.KEY,ROOT_ROW);
+		nodes.setString(ROOT_ROW,BrowserConstants.PATH,"");
+		nodes.setLong(ROOT_ROW,BrowserConstants.RESOURCE,-1);
 	}
 	// Configure the nodes table to display something reasonable
 	// if it is otherwise empty.
@@ -209,11 +198,11 @@ public class ChartTreeDataModel {
 		int row = 0;
 		nodes.addRow();
 		log.warnf("%s.configureWhenEmpty. No charts", TAG);
-		nodes.setString(row,NAME,"No charts");
-		nodes.setInt(row,CXNS,0);
-		nodes.setInt(row,KEY,0);
-		nodes.setString(row,PATH,"/");
-		nodes.setLong(row,RESOURCE,-1);
+		nodes.setString(row,BrowserConstants.NAME,"No charts");
+		nodes.setInt(row,BrowserConstants.CXNS,0);
+		nodes.setInt(row,BrowserConstants.KEY,0);
+		nodes.setString(row,BrowserConstants.PATH,"/");
+		nodes.setLong(row,BrowserConstants.RESOURCE,-1);
 	}
 	
 	// Check and see if the referenced element is an enclosing step
@@ -227,8 +216,10 @@ public class ChartTreeDataModel {
 					String path = stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH);
 					log.infof("%s.handleEnclosingStep: enclosing step %d.%s = %s", TAG,parentRow,name,path);
 					// Create the step-that-is-an-enclosure node
-					// Create the base instance.
-					EnclosingStep es = new EnclosingStep(parentRow,name,path);
+					// Link it to the base and create an EnclosingStep reference.
+					int newRow = addNodeTableRow(name,BrowserConstants.NO_RESOURCE);
+					addEdgeTableRow(parentRow,newRow);
+					EnclosingStep es = new EnclosingStep(parentRow,newRow,name,path);
 					enclosingSteps.add(es);
 				}
 			}
@@ -237,55 +228,71 @@ public class ChartTreeDataModel {
 	}
 
 	// Loop through the enclosing steps, creating new linkages.
-	// The method called populates the entire tree under the
-	// enclosure. Each enclosing step is expanded separately
 	private void linkEnclosingNodes() {
 		for( EnclosingStep step:enclosingSteps) {
-			populateEnclosureReference(step.getParentRow(),step);	
+			populateEnclosureReference(step.getStepRow(),step);
 		}
 	}
-	// If this is other than the first time through, copy the
-	// existing node hierarchy as a completely new linkage.
+	
+	// Connect the stepRow to the node indicated on the enclosure.
 	// Stop should there be a circular reference.
-	//@param parentRow is the actual parent. This may or may not be the same node as 
+	//@param step contains actual parent, actual step. These may or may not be the same node as 
 	//       was found originally when the step was created.
-	private void populateEnclosureReference(int parentRow,EnclosingStep step) {
+	private void populateEnclosureReference(int newStepRow,EnclosingStep step) {
 		Integer refrow = rowLookup.get(step.getReferencePath());
+		Integer newRow = null;
 		if( refrow!=null ) {
-			String newName = String.format("%s:%s",step.getStepName(),step.getReferenceName());
-			int count = nodes.getInt(refrow, ENCLOSURES);
-			nodes.setInt(refrow,ENCLOSURES,count+1);
-			log.infof("%s.populateEnclosureReference: enclosure %d.%s->%d, count=%d", TAG,parentRow,newName,refrow,count);
-			// If this is other than the first reference to the
-			// enclosed node, then make a copy.
-			if( count>0) {
-				// For an enclosing step, copy the hierarchy of its
-				// descendant children. Stop should there be a circular reference.
-				refrow = addNodeTableRow( newName,nodes.getInt(refrow, RESOURCE));
-				addEdgeTableRow(parentRow,refrow);
+			int count = nodes.getInt(refrow, BrowserConstants.CXNS);
+			log.infof("%s.populateEnclosureReference: enclosure %d.%s->%d, count=%d", TAG,newStepRow,step.getStepName(),refrow,count);
+			if( count==0) {
+				// We're good to go, just make the connection
+				nodes.setInt(refrow,BrowserConstants.CXNS,count+1);
+				addEdgeTableRow(newStepRow,refrow);
 			}
 			else {
-				// Use the combined name from the step and referenced node
-				// and apply it to the node referenced by the enclosure
-				// create a link to the parent node.
-				nodes.setString(refrow,NAME,newName);
-				addEdgeTableRow(parentRow,refrow);
+				// Create a copy, then copy the rest of its node hierarchy as a completely new linkage.
+				newRow = addNodeTableRow( step.getStepName(),nodes.getInt(refrow, BrowserConstants.RESOURCE));
+				addEdgeTableRow(newStepRow,newRow);
 			}
 		}
 		else {
-			log.warnf("%s.populateEnclosureReference. Unable to find node %s referenced by enclosure %d:%s:%s", TAG,parentRow,step.getReferencePath(),step.getStepName());
+			log.warnf("%s.populateEnclosureReference. Unable to find node %s referenced by enclosure %d:%d:%s", TAG,
+					step.getReferenceName(),step.getParentRow(),step.getStepRow(),step.getStepName());
 		}
-		// Search the enclosing steps for enclosures under this parent
+		populateTargetNode(refrow.intValue());
+	}
+	private void populateTargetNode(int targetRow) {
+		// Search known enclosing steps for enclosures under the target
 		for( EnclosingStep es:enclosingSteps) {
-			if( es.getParentRow()==parentRow)	 {
-				populateEnclosureReference(refrow,es);
+			if( es.getParentRow()==targetRow)	 {
+				Integer refrow = rowLookup.get(es.getReferencePath());
+				Integer newRow = new Integer(es.getStepRow());
+				if( refrow!=null ) {
+					// Create or use the enclosing steps
+					int count = nodes.getInt(newRow, BrowserConstants.CXNS);
+					log.infof("%s.populateTargetNode: enclosure %d.%d->%d, count=%d", TAG,es.getParentRow(),es.getStepRow(),refrow,count);
+					if( count==0) {
+						// We're good to go, just make the connection
+						nodes.setInt(es.getStepRow(),BrowserConstants.CXNS,count+1);
+						addEdgeTableRow(refrow.intValue(),es.getStepRow());
+					}
+					else {
+						// Create a copy, then link to the parent
+						newRow = addNodeTableRow( es.getReferenceName(),nodes.getInt(refrow, BrowserConstants.RESOURCE));
+						addEdgeTableRow(targetRow,newRow.intValue());
+					}
+					populateEnclosureReference(newRow.intValue(),es);
+				}
+			}
+			else {
+				log.warnf("%s.populateTargetNode. Unable to find node %s referenced by target %d:%d:%s", TAG,
+						es.getReferencePath(),es.getParentRow(),es.getStepRow(),es.getStepName());
 			}
 		}
 	}
-
 	
 	// Resolve folder hierarchy
-	// Creates complete folder paths for each folder.
+	// Creates complete folder paths for each folder.r
 	// We expect the parents to be resolved before their children.
 	private void resolveFolderHierarchy() {
 		log.infof("%s.resolveFolderHierarchy ...", TAG);
@@ -331,17 +338,17 @@ public class ChartTreeDataModel {
 		int maxRow = nodes.getRowCount();
 		int row = 0;
 		while(row<maxRow) {
-			long resourceId = nodes.getLong(row, RESOURCE);
+			long resourceId = nodes.getLong(row, BrowserConstants.RESOURCE);
 			if( resourceId>=0) {
-				String parent = nodes.getString(row, PARENT);
+				String parent = nodes.getString(row, BrowserConstants.PARENT);
 				if( parent !=null ) {
 					FolderHolder fh = folderHierarchy.get(parent);
 					String path = fh.getPath();   // Parent path
 					if( path!=null) {
-						String name = nodes.getString(row, NAME);
+						String name = nodes.getString(row, BrowserConstants.NAME);
 						if( path.length()==0) path = name;
 						else path = String.format("%s/%s",path,name);
-						nodes.setString(row, PATH, path);
+						nodes.setString(row, BrowserConstants.PATH, path);
 						log.infof("%s.resolveFolderPaths ... %d is %s", TAG,row,path);
 						rowLookup.put(path,new Integer(row));   // So we can find this for links 
 					}
@@ -364,7 +371,7 @@ public class ChartTreeDataModel {
 		int maxRow = nodes.getRowCount();
 		int row = 0;
 		while(row<maxRow) {
-			int connections = nodes.getInt(row,CXNS);
+			int connections = nodes.getInt(row,BrowserConstants.CXNS);
 			if( connections==0 && row!=ROOT_ROW) {
 				addEdgeTableRow(ROOT_ROW,row);
 			}
@@ -398,10 +405,12 @@ public class ChartTreeDataModel {
 		private final String referenceName;
 		private final String stepName;
 		private final String path;
-		private final int parentRow;
+		private final int    parentRow;
+		private final int    stepRow;
 		
-		public EnclosingStep(int pRow,String sName,String referencePath ) {
+		public EnclosingStep(int pRow,int sRow,String sName,String referencePath ) {
 			this.parentRow = pRow;
+			this.stepRow = sRow;
 			this.referenceName = getLastPathElement(referencePath);
 			this.stepName   = sName;
 			this.path = referencePath;
@@ -410,6 +419,7 @@ public class ChartTreeDataModel {
 		public String getStepName() { return stepName; }     // May be null
 		public String getReferencePath() { return path; }
 		public int getParentRow() { return parentRow; }
+		public int getStepRow() { return stepRow; }
 		private String getLastPathElement(String path) {
 			String result = path;
 			int index = path.lastIndexOf("/");

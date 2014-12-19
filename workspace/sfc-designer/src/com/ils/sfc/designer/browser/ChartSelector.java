@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 import prefuse.controls.Control;
 import prefuse.controls.ControlAdapter;
 import prefuse.visual.VisualItem;
+import prefuse.visual.tuple.TableNodeItem;
 
 
 /**
@@ -18,37 +19,41 @@ import prefuse.visual.VisualItem;
  * Allow 500ms for a double-click which we do NOT act upon. 
  */
 public class ChartSelector extends ControlAdapter implements Control {
+	private final int OFFSET = 20;
 	private final int clickCount;
 	private int clicks;
 	public ChartSelector(int c) {
 		clickCount = c;
 		clicks = 0;
 	}
-    /**
-     * @see prefuse.controls.Control#itemClicked(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
-     */
-	public void itemClicked(final VisualItem item, MouseEvent e) {
-		if( clicks==0 ) {
-			// We've got the correct number of clicks, 
-			Timer t = new Timer("doubleclickTimer", false);
-			t.schedule(new TimerTask() {
-				@Override
-			     public void run() {
-			        	if( clicks==clickCount) {
-			        		final JDialog editor = (JDialog)new ChartSelectionDialog(item);
-			    			editor.pack();
-			    			SwingUtilities.invokeLater(new Runnable() {
-			    				public void run() {
-			    					editor.setLocationByPlatform(true);
-			    					editor.setVisible(true);
-			    				}
-			    			}); 
-			    		}
-			        	clicks = 0;
-			      	}
-			      }, 500);
-		}
-		clicks++;	
-			
+	/**
+	 * @see prefuse.controls.Control#itemClicked(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
+	 */
+	public void itemClicked(final VisualItem item, final MouseEvent e) {
+		if(e.isControlDown()) return;
+		if( item instanceof TableNodeItem && 
+			item.getInt(BrowserConstants.RESOURCE)!=BrowserConstants.NO_RESOURCE ) {
+			if( clicks==0 ) {
+				// We've got the correct number of clicks, 
+				Timer t = new Timer("doubleclickTimer", false);
+				t.schedule(new TimerTask() {
+					@Override
+					public void run() {
+						if( clicks==clickCount) {
+							final JDialog editor = (JDialog)new ChartSelectionDialog(item);
+							editor.pack();
+							editor.setLocation(e.getX()+OFFSET, e.getY()+OFFSET);
+							SwingUtilities.invokeLater(new Runnable() {
+								public void run() {
+									editor.setVisible(true);
+								}
+							}); 
+						}
+						clicks = 0;
+					}
+				}, 500);
+			}
+			clicks++;	
+		}	
 	}
 } 

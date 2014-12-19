@@ -46,16 +46,16 @@ import prefuse.util.FontLib;
 import prefuse.visual.VisualItem;
 import prefuse.visual.expression.InGroupPredicate;
 import prefuse.visual.sort.TreeDepthItemSorter;
+import prefuse.visual.tuple.TableNodeItem;
 
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 
 /**
- * Demonstration of a node-link tree viewer
- *
- * @version 1.0
- * @author <a href="http://jheer.org">jeffrey heer</a>
+ * Use the NodeLinkTreeLayout to show a tree view of the SFC charts.
+ * The layout requires a true Tree, so instead of directing multiple
+ * nodes into the same target, we fully replicate any enclosure targets.
  */
 public class ChartTreeView extends Display {
 	private static final long serialVersionUID = 3253162293683958367L;
@@ -76,8 +76,7 @@ public class ChartTreeView extends Display {
         
         // NOTE: Returns a VisualTree, node/edge tables are VisualTables
         //                             node items are TableNodeItems
-        m_vis.addTree(tree, model.getTree());
-        
+       m_vis.addTree(tree, model.getTree());
 
         // NOTE: No images to render.
         m_nodeRenderer = new LabelRenderer(textField,null);
@@ -98,7 +97,7 @@ public class ChartTreeView extends Display {
         m_vis.putAction("textColor", textColor);
         
         ItemAction edgeColor = new ColorAction(treeEdges,
-                VisualItem.STROKECOLOR, ColorLib.rgb(200,200,200));
+                VisualItem.STROKECOLOR, ColorLib.rgb(100,100,100));
         
         // quick repaint
         ActionList repaint = new ActionList();
@@ -117,9 +116,8 @@ public class ChartTreeView extends Display {
         animatePaint.add(new RepaintAction());
         m_vis.putAction("animatePaint", animatePaint);
         
-        // create the tree layout action
-        NodeLinkTreeLayout treeLayout = new NodeLinkTreeLayout(tree,
-                m_orientation, 50, 0, 8);
+        // create the tree layout action  --- args are:  Depth space, sibling space,subtree space
+        NodeLinkTreeLayout treeLayout = new NodeLinkTreeLayout(tree,m_orientation, 50, 6, 8);  //
         treeLayout.setLayoutAnchor(new Point2D.Double(25,300));
         m_vis.putAction("treeLayout", treeLayout);
         
@@ -196,7 +194,6 @@ public class ChartTreeView extends Display {
     }
     
     // ------------------------------------------------------------------------
-    
     public void setOrientation(int orientation) {
         NodeLinkTreeLayout rtl 
             = (NodeLinkTreeLayout)m_vis.getAction("treeLayout");
@@ -243,19 +240,20 @@ public class ChartTreeView extends Display {
     public int getOrientation() {
         return m_orientation;
     }
-    
+
     // ------------------------------------------------------------------------
    
     // ------------------------------------------------------------------------
    
     public class OrientAction extends AbstractAction {
-        private int orientation;
+		private static final long serialVersionUID = -6351310097126285640L;
+		private int orientation;
         
         public OrientAction(int orientation) {
             this.orientation = orientation;
         }
         public void actionPerformed(ActionEvent evt) {
-            setOrientation(orientation);
+            //setOrientation(orientation);
             getVisualization().cancel("orient");
             getVisualization().run("treeLayout");
             getVisualization().run("orient");
@@ -308,19 +306,24 @@ public class ChartTreeView extends Display {
         public NodeColorAction(String group) {
             super(group, VisualItem.FILLCOLOR);
         }
-        
+
+        @Override
         public int getColor(VisualItem item) {
+        	int color = ColorLib.rgba(255,255,255,0);    // White
             if ( m_vis.isInGroup(item, Visualization.SEARCH_ITEMS) )
-                return ColorLib.rgb(255,190,190);
+                color = ColorLib.rgb(255,190,190);
             else if ( m_vis.isInGroup(item, Visualization.FOCUS_ITEMS) )
-                return ColorLib.rgb(198,229,229);
+            	color = ColorLib.rgb(198,229,229);
             else if ( item.getDOI() > -1 )
-                return ColorLib.rgb(164,193,193);
-            else
-                return ColorLib.rgba(255,255,255,0);
+            	color = ColorLib.rgb(164,193,193);
+            else if (item instanceof TableNodeItem &&
+            		 item.getInt(BrowserConstants.RESOURCE) == BrowserConstants.NO_RESOURCE )
+            	color = ColorLib.rgb(255,230,58);  // Yellowish
+            
+            return color;
         }
         
-    } // end of inner class TreeMapColorAction
+    }
  
     
 } // end of class TreeMap

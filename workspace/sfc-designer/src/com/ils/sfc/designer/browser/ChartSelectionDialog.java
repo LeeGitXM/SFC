@@ -17,7 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import net.miginfocom.swing.MigLayout;
@@ -48,8 +47,6 @@ public class ChartSelectionDialog extends JDialog {
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.setPreferredSize(new Dimension(DIALOG_WIDTH,DIALOG_HEIGHT));
-		this.pack();
-		this.setLocation((int)item.getX(),(int)item.getY());
         initialize();
 
 	}
