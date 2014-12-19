@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
@@ -114,7 +115,7 @@ public class ChartTreeDataModel {
 						int row = addNodeTableRow(res.getName(),res.getResourceId());
 						nodes.setString(row, PARENT, res.getParentUuid().toString());
 						// Check steps in node for being enclosing steps
-						handleEnclosingSteps(row,null,definition.getBeginElement().getNextElements());
+						handleEnclosingSteps(row,null,definition.getBeginElement().getNextElements(), new java.util.HashSet<String>());
 					}
 					else {
 						log.warnf("%s.initialize: Chart %s has compilation errors", TAG,res.getName());
@@ -218,7 +219,9 @@ public class ChartTreeDataModel {
 	
 	// Check and see if the referenced element is an enclosing step
 	// @param parentRow the row in the nodes table corresponding to the enclosing block
-	private void handleEnclosingSteps(int parentRow,String stepName,List<ElementDefinition> steps) {
+	private void handleEnclosingSteps(int parentRow,String stepName,List<ElementDefinition> steps, Set<String> seen) {
+		if(seen.contains(stepName)) {return;}
+		seen.add(stepName);
 		for( ElementDefinition step:steps) {
 			if( step instanceof StepDefinition ) {
 				StepDefinition stepDef = (StepDefinition)step;
@@ -232,7 +235,7 @@ public class ChartTreeDataModel {
 					enclosingSteps.add(es);
 				}
 			}
-			handleEnclosingSteps(parentRow,stepName,step.getNextElements());
+			handleEnclosingSteps(parentRow,stepName,step.getNextElements(), seen);
 		}
 	}
 
@@ -271,15 +274,15 @@ public class ChartTreeDataModel {
 				nodes.setString(refrow,NAME,newName);
 				addEdgeTableRow(parentRow,refrow);
 			}
+			// Search the enclosing steps for enclosures under this parent
+			for( EnclosingStep es:enclosingSteps) {
+				if( es.getParentRow()==parentRow)	 {
+					populateEnclosureReference(refrow,es);
+				}
+			}
 		}
 		else {
-			log.warnf("%s.populateEnclosureReference. Unable to find node %s referenced by enclosure %d:%s:%s", TAG,parentRow,step.getReferencePath(),step.getStepName());
-		}
-		// Search the enclosing steps for enclosures under this parent
-		for( EnclosingStep es:enclosingSteps) {
-			if( es.getParentRow()==parentRow)	 {
-				populateEnclosureReference(refrow,es);
-			}
+			log.warnf("%s.populateEnclosureReference. Unable to find node %s referenced by enclosure %d:%s:%s", TAG,step.getReferencePath(), parentRow,step.getReferencePath(),step.getStepName());
 		}
 	}
 
