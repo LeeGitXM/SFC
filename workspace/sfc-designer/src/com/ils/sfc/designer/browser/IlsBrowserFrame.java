@@ -5,7 +5,6 @@ package com.ils.sfc.designer.browser;
 import java.awt.BorderLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.inductiveautomation.ignition.common.project.Project;
@@ -38,6 +37,7 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 		context = ctx;
 		contentPanel = new JPanel(new BorderLayout());
 		init();
+		context.addProjectChangeListener(this);
 	}
 
 	/**

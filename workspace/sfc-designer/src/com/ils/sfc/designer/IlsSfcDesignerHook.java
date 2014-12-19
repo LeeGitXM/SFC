@@ -164,8 +164,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 				ChartUIElement element = stepComponent.getElement();
 				ChartUIModel model = stepComponent.getModel();
 				printProperties(element);
-				RecipeDataBrowser browser = new RecipeDataBrowser(context.getFrame(), element, model);
-				browser.setVisible(true);
+				RecipeDataBrowser recipeBrowser = new RecipeDataBrowser(context.getFrame(), element, model);
+				recipeBrowser.setVisible(true);
 			}
 
 			private void printProperties(ChartUIElement element) {

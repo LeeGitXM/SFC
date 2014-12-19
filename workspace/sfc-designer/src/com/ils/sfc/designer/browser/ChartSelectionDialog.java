@@ -16,6 +16,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
@@ -37,16 +38,18 @@ public class ChartSelectionDialog extends JDialog {
 	private final int DIALOG_WIDTH = 240;
 	
 	private final VisualItem visualItem;
-	private JTextField textField;
+	private JTextArea textArea;
 	
 	public ChartSelectionDialog(VisualItem item) {
 		super();
 		this.visualItem = item;
-		this.setTitle("Choose active chart for display");
+		this.setTitle("Select active chart to display");
 		setModal(false);
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.setPreferredSize(new Dimension(DIALOG_WIDTH,DIALOG_HEIGHT));
+		this.pack();
+		this.setLocation((int)item.getX(),(int)item.getY());
         initialize();
 
 	}
@@ -58,9 +61,9 @@ public class ChartSelectionDialog extends JDialog {
 		JPanel internalPanel = new JPanel();
 	
 		internalPanel.setLayout(new MigLayout("ins 2","",""));
-		addSeparator(internalPanel,"Edit value");
-		textField = createTextField();
-		internalPanel.add(textField,"growx,wrap");
+		addSeparator(internalPanel,"Aactive charts corresponding to this node");
+		textArea = createTextArea();
+		internalPanel.add(textArea,"growx,wrap");
 		this.add(internalPanel, BorderLayout.CENTER);
 		
 		// The OK button simply closes the dialog
@@ -90,10 +93,11 @@ public class ChartSelectionDialog extends JDialog {
 	 * Initialize it with the block text property.
 	 * @return
 	 */
-	private JTextField createTextField()  {
-		JTextField field = new JTextField();
-		field.setEditable(true);
-		return field;
+	private JTextArea createTextArea()  {
+		JTextArea area = new JTextArea();
+		area.setEditable(true);
+		area.setPreferredSize(new Dimension(DIALOG_WIDTH-20,DIALOG_HEIGHT-50));
+		return area;
 	}
 	
 	/**
@@ -108,5 +112,4 @@ public class ChartSelectionDialog extends JDialog {
 		panel.add(separator, "growx,wrap");
 		return label;
 	}
-
 }
