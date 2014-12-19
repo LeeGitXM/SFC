@@ -44,8 +44,6 @@ import prefuse.render.LabelRenderer;
 import prefuse.util.ColorLib;
 import prefuse.util.FontLib;
 import prefuse.visual.VisualItem;
-import prefuse.visual.VisualTable;
-import prefuse.visual.VisualTree;
 import prefuse.visual.expression.InGroupPredicate;
 import prefuse.visual.sort.TreeDepthItemSorter;
 
@@ -168,11 +166,12 @@ public class ChartTreeView extends Display {
         // initialize the display
         setSize(200,600);
         setItemSorter(new TreeDepthItemSorter());
+        addControlListener(new ChartSelector(1));
         addControlListener(new ZoomToFitControl());
         addControlListener(new ZoomControl());
         addControlListener(new WheelZoomControl());
         addControlListener(new PanControl());
-        addControlListener(new FocusControl(1, "filter"));
+        addControlListener(new FocusControl(2, "filter"));
         
         registerKeyboardAction(
             new OrientAction(Constants.ORIENT_LEFT_RIGHT),
