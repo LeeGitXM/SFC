@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
@@ -25,6 +26,7 @@ import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistryProvider;
 import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
+import com.inductiveautomation.sfc.definitions.ParallelDefinition;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
@@ -223,6 +225,13 @@ public class ChartTreeDataModel {
 					enclosingSteps.add(es);
 				}
 			}
+			else if( step instanceof ParallelDefinition ) {
+				ParallelDefinition parallelDef = (ParallelDefinition)step;
+				List<ElementDefinition> starters = parallelDef.getStartElements();
+				for(ElementDefinition ed:starters) {
+					handleEnclosingSteps(parentRow,stepName,ed.getNextElements());
+				}
+			}
 			handleEnclosingSteps(parentRow,stepName,step.getNextElements());
 		}
 	}
@@ -230,63 +239,66 @@ public class ChartTreeDataModel {
 	// Loop through the enclosing steps, creating new linkages.
 	private void linkEnclosingNodes() {
 		for( EnclosingStep step:enclosingSteps) {
-			populateEnclosureReference(step.getStepRow(),step);
+			linkEnclosureStepToReferencedNode(step.getStepRow(),step);
 		}
 	}
 	
 	// Connect the stepRow to the node indicated on the enclosure.
-	// Stop should there be a circular reference.
-	//@param step contains actual parent, actual step. These may or may not be the same node as 
+	// @param step contains actual parent, actual step. These may or may not be the same node as 
 	//       was found originally when the step was created.
-	private void populateEnclosureReference(int newStepRow,EnclosingStep step) {
+	private void linkEnclosureStepToReferencedNode(int newStepRow,EnclosingStep step) {
 		Integer refrow = rowLookup.get(step.getReferencePath());
-		Integer newRow = null;
 		if( refrow!=null ) {
+			int targetRow = refrow.intValue();
 			int count = nodes.getInt(refrow, BrowserConstants.CXNS);
 			log.infof("%s.populateEnclosureReference: enclosure %d.%s->%d, count=%d", TAG,newStepRow,step.getStepName(),refrow,count);
 			if( count==0) {
 				// We're good to go, just make the connection
-				nodes.setInt(refrow,BrowserConstants.CXNS,count+1);
-				addEdgeTableRow(newStepRow,refrow);
+				addEdgeTableRow(newStepRow,refrow);   // Increments connection count
 			}
 			else {
 				// Create a copy, then copy the rest of its node hierarchy as a completely new linkage.
-				newRow = addNodeTableRow( step.getStepName(),nodes.getInt(refrow, BrowserConstants.RESOURCE));
-				addEdgeTableRow(newStepRow,newRow);
+				refrow = addNodeTableRow( step.getReferenceName(),nodes.getInt(refrow, BrowserConstants.RESOURCE));
+				addEdgeTableRow(newStepRow,refrow);
 			}
+			/*
+			// Search the enclosing steps for enclosures under this parent
+			for( EnclosingStep es:enclosingSteps) {
+				if( es.getParentRow()==targetRow)	 {
+					linkEnclosureStepToReferencedNode(refrow,es);
+				}
+			}
+			*/
+			populateTargetNode(targetRow,refrow.intValue());
 		}
 		else {
+
 			log.warnf("%s.populateEnclosureReference. Unable to find node %s referenced by enclosure %d:%d:%s", TAG,
 					step.getReferenceName(),step.getParentRow(),step.getStepRow(),step.getStepName());
 		}
-		populateTargetNode(refrow.intValue());
 	}
-	private void populateTargetNode(int targetRow) {
+	
+	// Search the node for enclosing steps. Link the node to the step,
+	// then expand the step.
+	private void populateTargetNode(int actualRow,int referenceRow) {
+		if( actualRow==referenceRow ) return;   // We're linked into an existing sub-tree.
 		// Search known enclosing steps for enclosures under the target
 		for( EnclosingStep es:enclosingSteps) {
-			if( es.getParentRow()==targetRow)	 {
-				Integer refrow = rowLookup.get(es.getReferencePath());
-				Integer newRow = new Integer(es.getStepRow());
-				if( refrow!=null ) {
-					// Create or use the enclosing steps
-					int count = nodes.getInt(newRow, BrowserConstants.CXNS);
-					log.infof("%s.populateTargetNode: enclosure %d.%d->%d, count=%d", TAG,es.getParentRow(),es.getStepRow(),refrow,count);
-					if( count==0) {
-						// We're good to go, just make the connection
-						nodes.setInt(es.getStepRow(),BrowserConstants.CXNS,count+1);
-						addEdgeTableRow(refrow.intValue(),es.getStepRow());
-					}
-					else {
-						// Create a copy, then link to the parent
-						newRow = addNodeTableRow( es.getReferenceName(),nodes.getInt(refrow, BrowserConstants.RESOURCE));
-						addEdgeTableRow(targetRow,newRow.intValue());
-					}
-					populateEnclosureReference(newRow.intValue(),es);
+			if( es.getParentRow()==referenceRow)	 {
+				int refStepRow = es.getStepRow();
+				int count = nodes.getInt(refStepRow, BrowserConstants.CXNS);
+				log.infof("%s.populateTargetNode: enclosure %d(%s)->%d, count=%d", TAG,es.getParentRow(),es.getStepName(),es.getStepRow(),count);
+				if( count==0) {
+					// We're good to go, just make the connection
+					addEdgeTableRow(actualRow,refStepRow);
 				}
-			}
-			else {
-				log.warnf("%s.populateTargetNode. Unable to find node %s referenced by target %d:%d:%s", TAG,
-						es.getReferencePath(),es.getParentRow(),es.getStepRow(),es.getStepName());
+				else {
+					// Create a copy, then link to the parent
+					Integer newRow = addNodeTableRow( es.getReferenceName(),BrowserConstants.NO_RESOURCE);
+					addEdgeTableRow(actualRow,newRow.intValue());
+					refStepRow = newRow.intValue();
+				}
+				linkEnclosureStepToReferencedNode(refStepRow,es);
 			}
 		}
 	}

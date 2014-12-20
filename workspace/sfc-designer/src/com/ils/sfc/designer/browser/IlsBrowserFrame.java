@@ -77,17 +77,17 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 	}
 	
 	// =============================== Project Change Listener ===================
-		@Override
-		public void projectResourceModified(ProjectResource res, ProjectChangeListener.ResourceModification changeType) {
-			log.infof("%s.projectResourceModified: %s = %d (%s:%s)", TAG,changeType.name(),res.getResourceId(),res.getName(),res.getResourceType());
-			if( res.getResourceType().equals(ChartTreeDataModel.CHART_RESOURCE_TYPE)) {
-				updateChartView();
-			}
-		}
-
-		@Override
-		public void projectUpdated(Project arg0) {
-			log.infof("%s.projectResourceUpdated", TAG);
+	@Override
+	public void projectResourceModified(ProjectResource res, ProjectChangeListener.ResourceModification changeType) {
+		log.infof("%s.projectResourceModified: %s = %d (%s:%s)", TAG,changeType.name(),res.getResourceId(),res.getName(),res.getResourceType());
+		if( res.getResourceType().equals(BrowserConstants.CHART_RESOURCE_TYPE)) {
 			updateChartView();
 		}
+	}
+
+	@Override
+	public void projectUpdated(Project arg0) {
+		log.infof("%s.projectResourceUpdated", TAG);
+		updateChartView();
+	}
 }
