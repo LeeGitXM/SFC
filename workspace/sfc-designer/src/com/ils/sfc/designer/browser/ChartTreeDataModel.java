@@ -42,8 +42,8 @@ public class ChartTreeDataModel {
 	private static final String TAG = "ChartTreeDataModel";
 	private int ROOT_ROW = 0;           // Number of the root row
 	
-	private final Map<Integer,List<Integer>> childrenLookup; // Find node children by parent row
-	private final Map<String,Integer>  rowLookup;            // Find node row by path
+	private final Map<Integer,Integer> lineage;       // Find parent given child
+	private final Map<String,Integer>  rowLookup;     // Find node row by path
 	private final Map<String,FolderHolder> folderHierarchy;
 	private final List<EnclosingStep> enclosingSteps;
 	
@@ -54,14 +54,14 @@ public class ChartTreeDataModel {
 	
 	public ChartTreeDataModel(DesignerContext ctx) {
 		context = ctx;
-		childrenLookup = new HashMap<>();
+		lineage = new HashMap<>();
 		folderHierarchy = new HashMap<>();
 		rowLookup = new HashMap<>();
 		nodes = new Table();
 		nodes.addColumn(BrowserConstants.CXNS, int.class);        // Count of linked connections 
-		nodes.addColumn(BrowserConstants.ENCLOSURES, int.class);  // Number of times this node has been used as an enclosure
+		nodes.addColumn(BrowserConstants.STATUS, int.class);      // Health of this node
 		nodes.addColumn(BrowserConstants.NAME, String.class);
-		nodes.addColumn(BrowserConstants.KEY, int.class);            // Table row - key
+		nodes.addColumn(BrowserConstants.KEY, int.class);         // Table row - key
 		nodes.addColumn(BrowserConstants.PATH, String.class);
 		nodes.addColumn(BrowserConstants.PARENT, String.class);
 		nodes.addColumn(BrowserConstants.RESOURCE, long.class);
@@ -103,6 +103,7 @@ public class ChartTreeDataModel {
 					if(ccr.isSuccessful()) {
 						ChartDefinition definition = ccr.getChartDefinition();
 						int row = addNodeTableRow(res.getName(),res.getResourceId());
+						lineage.put(new Integer(row), new Integer(ROOT_ROW));
 						nodes.setString(row, BrowserConstants.PARENT, res.getParentUuid().toString());
 						// Check steps in chart for being enclosures
 						handleEnclosingSteps(row,null,definition.getBeginElement().getNextElements());
@@ -161,7 +162,7 @@ public class ChartTreeDataModel {
 		int count = nodes.getInt(destinationRow,BrowserConstants.CXNS);
 		nodes.setInt(destinationRow, BrowserConstants.CXNS, count+1);
 		int row = edges.getRowCount();
-		log.infof("%s.addEdgeTableRow: %d -> %d", TAG,sourceRow,destinationRow);
+		log.debugf("%s.addEdgeTableRow: %d -> %d", TAG,sourceRow,destinationRow);
 		edges.addRow();
 		edges.setInt(row,Graph.DEFAULT_SOURCE_KEY,sourceRow);
 		edges.setInt(row,Graph.DEFAULT_TARGET_KEY,destinationRow);
@@ -173,10 +174,10 @@ public class ChartTreeDataModel {
 	// @return the row corresponding to the newly discovered chart.
 	private int addNodeTableRow(String name,long resourceId) {
 		int row = nodes.getRowCount();
-		log.infof("%s.addNodeTableRow: %d = %s", TAG,row,name);
+		log.debugf("%s.addNodeTableRow: %d = %s", TAG,row,name);
 		nodes.addRow();
 		nodes.setInt(row,BrowserConstants.CXNS,0); 
-		nodes.setInt(row,BrowserConstants.ENCLOSURES,0);  
+		nodes.setInt(row,BrowserConstants.STATUS,BrowserConstants.STATUS_OK);  
 		nodes.setString(row,BrowserConstants.NAME,name);
 		nodes.setInt(row,BrowserConstants.KEY,row);
 		nodes.setLong(row,BrowserConstants.RESOURCE,resourceId);
@@ -190,6 +191,7 @@ public class ChartTreeDataModel {
 		log.infof("%s.configureRootNode. root", TAG);
 		nodes.setString(ROOT_ROW,BrowserConstants.NAME,"root");
 		nodes.setInt(ROOT_ROW,BrowserConstants.CXNS,0);
+		nodes.setInt(ROOT_ROW,BrowserConstants.STATUS,BrowserConstants.STATUS_OK);
 		nodes.setInt(ROOT_ROW,BrowserConstants.KEY,ROOT_ROW);
 		nodes.setString(ROOT_ROW,BrowserConstants.PATH,"");
 		nodes.setLong(ROOT_ROW,BrowserConstants.RESOURCE,-1);
@@ -202,6 +204,7 @@ public class ChartTreeDataModel {
 		log.warnf("%s.configureWhenEmpty. No charts", TAG);
 		nodes.setString(row,BrowserConstants.NAME,"No charts");
 		nodes.setInt(row,BrowserConstants.CXNS,0);
+		nodes.setInt(row,BrowserConstants.STATUS,BrowserConstants.STATUS_OK);
 		nodes.setInt(row,BrowserConstants.KEY,0);
 		nodes.setString(row,BrowserConstants.PATH,"/");
 		nodes.setLong(row,BrowserConstants.RESOURCE,-1);
@@ -216,11 +219,12 @@ public class ChartTreeDataModel {
 				if( stepDef.getFactoryId().equals(EnclosingStepProperties.FACTORY_ID)) {
 					String name = stepDef.getProperties().get(EnclosingStepProperties.Name);
 					String path = stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH);
-					log.infof("%s.handleEnclosingStep: enclosing step %d.%s = %s", TAG,parentRow,name,path);
+					log.debugf("%s.handleEnclosingStep: enclosing step %d.%s = %s", TAG,parentRow,name,path);
 					// Create the step-that-is-an-enclosure node
 					// Link it to the base and create an EnclosingStep reference.
 					int newRow = addNodeTableRow(name,BrowserConstants.NO_RESOURCE);
 					addEdgeTableRow(parentRow,newRow);
+					lineage.put(new Integer(newRow), new Integer(parentRow));
 					EnclosingStep es = new EnclosingStep(parentRow,newRow,name,path);
 					enclosingSteps.add(es);
 				}
@@ -234,6 +238,21 @@ public class ChartTreeDataModel {
 			}
 			handleEnclosingSteps(parentRow,stepName,step.getNextElements());
 		}
+	}
+	
+	// The proposed row cannot appear anywhere in the lineage.
+	// Note that we are using a specific copy of the subtree.
+	private boolean isLoop(int row, Integer parent) {
+		boolean loop = false;
+		//log.infof("%s.isLoop: Testing %d against %d", TAG,row,parent.intValue());
+		while( parent!=null && parent.intValue()!=ROOT_ROW ) {
+			if( parent.intValue()==row) {
+				loop = true;
+				break;
+			}
+			parent = lineage.get(parent);
+		}
+		return loop;
 	}
 
 	// Loop through the enclosing steps, creating new linkages.
@@ -249,30 +268,30 @@ public class ChartTreeDataModel {
 	private void linkEnclosureStepToReferencedNode(int newStepRow,EnclosingStep step) {
 		Integer refrow = rowLookup.get(step.getReferencePath());
 		if( refrow!=null ) {
-			int targetRow = refrow.intValue();
-			int count = nodes.getInt(refrow, BrowserConstants.CXNS);
-			log.infof("%s.populateEnclosureReference: enclosure %d.%s->%d, count=%d", TAG,newStepRow,step.getStepName(),refrow,count);
-			if( count==0) {
-				// We're good to go, just make the connection
-				addEdgeTableRow(newStepRow,refrow);   // Increments connection count
+			if( !isLoop(step.getParentRow(),refrow) ) {
+				int targetRow = refrow.intValue();
+				int count = nodes.getInt(refrow, BrowserConstants.CXNS);
+				log.debugf("%s.populateEnclosureReference: enclosure %d.%s->%d, count=%d", TAG,newStepRow,step.getStepName(),refrow,count);
+				if( count==0) {
+					// We're good to go, just make the connection
+					addEdgeTableRow(newStepRow,refrow);   // Increments connection count
+				}
+				else {
+					// Create a copy, then copy the rest of its node hierarchy as a completely new linkage.
+					refrow = addNodeTableRow( step.getReferenceName(),nodes.getInt(refrow, BrowserConstants.RESOURCE));
+					lineage.put(new Integer(refrow), new Integer(step.getParentRow()));
+					addEdgeTableRow(newStepRow,refrow);
+				}
+				populateTargetNode(targetRow,refrow.intValue());
 			}
 			else {
-				// Create a copy, then copy the rest of its node hierarchy as a completely new linkage.
-				refrow = addNodeTableRow( step.getReferenceName(),nodes.getInt(refrow, BrowserConstants.RESOURCE));
-				addEdgeTableRow(newStepRow,refrow);
+				nodes.setInt(step.getStepRow(), BrowserConstants.STATUS, BrowserConstants.STATUS_LOOP);
+				log.warnf("%s.populateEnclosureReference. Detected loop at node %s referenced by enclosure %d:%d:%s", TAG,
+						step.getReferenceName(),step.getParentRow(),step.getStepRow(),step.getStepName());
 			}
-			/*
-			// Search the enclosing steps for enclosures under this parent
-			for( EnclosingStep es:enclosingSteps) {
-				if( es.getParentRow()==targetRow)	 {
-					linkEnclosureStepToReferencedNode(refrow,es);
-				}
-			}
-			*/
-			populateTargetNode(targetRow,refrow.intValue());
 		}
 		else {
-
+			nodes.setInt(step.getStepRow(), BrowserConstants.STATUS, BrowserConstants.STATUS_PATH);
 			log.warnf("%s.populateEnclosureReference. Unable to find node %s referenced by enclosure %d:%d:%s", TAG,
 					step.getReferenceName(),step.getParentRow(),step.getStepRow(),step.getStepName());
 		}
@@ -287,7 +306,7 @@ public class ChartTreeDataModel {
 			if( es.getParentRow()==referenceRow)	 {
 				int refStepRow = es.getStepRow();
 				int count = nodes.getInt(refStepRow, BrowserConstants.CXNS);
-				log.infof("%s.populateTargetNode: enclosure %d(%s)->%d, count=%d", TAG,es.getParentRow(),es.getStepName(),es.getStepRow(),count);
+				log.debugf("%s.populateTargetNode: enclosure %d(%s)->%d, count=%d", TAG,es.getParentRow(),es.getStepName(),es.getStepRow(),count);
 				if( count==0) {
 					// We're good to go, just make the connection
 					addEdgeTableRow(actualRow,refStepRow);
@@ -307,7 +326,7 @@ public class ChartTreeDataModel {
 	// Creates complete folder paths for each folder.r
 	// We expect the parents to be resolved before their children.
 	private void resolveFolderHierarchy() {
-		log.infof("%s.resolveFolderHierarchy ...", TAG);
+		log.debugf("%s.resolveFolderHierarchy ...", TAG);
 		int MAX_DEPTH = 100;
 		int depth = 0;
 		boolean success = false;
@@ -346,7 +365,7 @@ public class ChartTreeDataModel {
 	// Loop through all of the nodes-that-are-charts and
 	// set the path.
 	private void resolveFolderPaths() {
-		log.infof("%s.resolveFolderPaths ...", TAG);
+		log.debugf("%s.resolveFolderPaths ...", TAG);
 		int maxRow = nodes.getRowCount();
 		int row = 0;
 		while(row<maxRow) {
@@ -361,7 +380,7 @@ public class ChartTreeDataModel {
 						if( path.length()==0) path = name;
 						else path = String.format("%s/%s",path,name);
 						nodes.setString(row, BrowserConstants.PATH, path);
-						log.infof("%s.resolveFolderPaths ... %d is %s", TAG,row,path);
+						log.debugf("%s.resolveFolderPaths ... %d is %s", TAG,row,path);
 						rowLookup.put(path,new Integer(row));   // So we can find this for links 
 					}
 					else {
@@ -379,7 +398,7 @@ public class ChartTreeDataModel {
 	// Loop through all of the nodes. If they haven't been connected to by anything,
 	// then they should be connected to the root node.
 	private void resolveRootConnections() {
-		log.infof("%s.resolveRootConnections ...", TAG);
+		log.debugf("%s.resolveRootConnections ...", TAG);
 		int maxRow = nodes.getRowCount();
 		int row = 0;
 		while(row<maxRow) {

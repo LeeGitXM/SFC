@@ -35,7 +35,7 @@ public class ChartSelector extends ControlAdapter implements Control {
 			item.getInt(BrowserConstants.RESOURCE)!=BrowserConstants.NO_RESOURCE ) {
 			if( clicks==0 ) {
 				// We've got the correct number of clicks, 
-				Timer t = new Timer("doubleclickTimer", false);
+				Timer t = new Timer("clickTimer", false);
 				t.schedule(new TimerTask() {
 					@Override
 					public void run() {

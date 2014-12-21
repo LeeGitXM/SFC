@@ -310,16 +310,29 @@ public class ChartTreeView extends Display {
         @Override
         public int getColor(VisualItem item) {
         	int color = ColorLib.rgba(255,255,255,0);    // White
-            if ( m_vis.isInGroup(item, Visualization.SEARCH_ITEMS) )
-                color = ColorLib.rgb(255,190,190);
-            else if ( m_vis.isInGroup(item, Visualization.FOCUS_ITEMS) )
-            	color = ColorLib.rgb(198,229,229);
+        	if ( m_vis.isInGroup(item, Visualization.SEARCH_ITEMS) )
+        		color = ColorLib.rgb(255,190,190);
+        	else if ( m_vis.isInGroup(item, Visualization.FOCUS_ITEMS) ) {
+        		if (item instanceof TableNodeItem &&
+        				item.getInt(BrowserConstants.RESOURCE) == BrowserConstants.NO_RESOURCE ) {
+        			if( item.getInt(BrowserConstants.STATUS) == BrowserConstants.STATUS_OK )
+        				color = ColorLib.rgb(255,255,0);  // Yellow
+        			else 
+        				color = ColorLib.rgb(255,0,0);    // Red
+        		}
+        		else {
+        			color = ColorLib.rgb(198,229,229);
+        		}
+        	}
             else if ( item.getDOI() > -1 )
             	color = ColorLib.rgb(164,193,193);
             else if (item instanceof TableNodeItem &&
-            		 item.getInt(BrowserConstants.RESOURCE) == BrowserConstants.NO_RESOURCE )
-            	color = ColorLib.rgb(255,230,58);  // Yellowish
-            
+            		 item.getInt(BrowserConstants.RESOURCE) == BrowserConstants.NO_RESOURCE ) {
+            	if( item.getInt(BrowserConstants.STATUS) == BrowserConstants.STATUS_OK )
+            		color = ColorLib.rgb(255,230,58);  // Yellowish
+            	else 
+            		color = ColorLib.rgb(255,50,50);     // Redish
+            }
             return color;
         }
         

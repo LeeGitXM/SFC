@@ -14,14 +14,18 @@ public interface BrowserConstants   {
 	public static final String FOLDER_RESOURCE_TYPE="__folder";
 	// Table column names
 	public static final String CXNS    = "Cxns";          // Incoming connection count
-	public static final String ENCLOSURES = "Enclosures"; // Refs to this as an enclosure
 	public static final String KEY      = "Key";
 	public static final String NAME     = "Name";
 	public static final String PARENT   = "Parent";
 	public static final String PATH    = "Path";       // Chart identifier
 	public static final String RESOURCE = "Resource"; // ResourceId
+	public static final String STATUS   = "Status";   // Health of the node
 	
 	// Indicates a VisualItem resource that represents an enclosing chart step
 	public static final int NO_RESOURCE = -2;  // Enclosing step has no associated resource
+	// Status values
+	public static final int STATUS_OK   = 0;
+	public static final int STATUS_PATH = 1;    // Bad path references
+	public static final int STATUS_LOOP = 2;    // Infinite loop
 	
 }
