@@ -2,7 +2,7 @@
 
 	<import file="${basedir}/sfc-build/build.xml"/>
 
-	<property name="version.build" value="8" />	
+	<property name="version.build" value="9" />	
 	<!-- Change version.beta value to "" for release builds -->
 	<property name="version.beta" value="-development" />		
 	<property name="ils.sfc.version" value="1.0.0.${version.build}" />

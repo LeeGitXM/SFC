@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -35,12 +36,13 @@ public class ChartSelectionDialog extends JDialog {
 	private static final long serialVersionUID = 2002388376824434427L;
 	private final int DIALOG_HEIGHT = 180;
 	private final int DIALOG_WIDTH = 240;
+	private final Dimension TEXT_AREA_SIZE = new Dimension(220,100);
 	
 	private final VisualItem visualItem;
 	private JTextArea textArea;
 	
-	public ChartSelectionDialog(VisualItem item) {
-		super();
+	public ChartSelectionDialog(Frame frame,VisualItem item) {
+		super(frame);
 		this.visualItem = item;
 		this.setTitle("Select active chart to display");
 		setModal(false);
@@ -57,8 +59,8 @@ public class ChartSelectionDialog extends JDialog {
 		setLayout(new BorderLayout());
 		JPanel internalPanel = new JPanel();
 	
-		internalPanel.setLayout(new MigLayout("ins 2","",""));
-		addSeparator(internalPanel,"Aactive charts corresponding to this node");
+		internalPanel.setLayout(new MigLayout("ins 10 5 10 5","[]","[][]"));
+		addSeparator(internalPanel,"Active charts corresponding to this node");
 		textArea = createTextArea();
 		internalPanel.add(textArea,"growx,wrap");
 		this.add(internalPanel, BorderLayout.CENTER);
@@ -93,7 +95,7 @@ public class ChartSelectionDialog extends JDialog {
 	private JTextArea createTextArea()  {
 		JTextArea area = new JTextArea();
 		area.setEditable(true);
-		area.setPreferredSize(new Dimension(DIALOG_WIDTH-20,DIALOG_HEIGHT-50));
+		area.setPreferredSize(TEXT_AREA_SIZE);
 		return area;
 	}
 	

@@ -50,6 +50,7 @@ import prefuse.visual.tuple.TableNodeItem;
 
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
+import com.inductiveautomation.ignition.designer.model.DesignerContext;
 
 
 /**
@@ -61,7 +62,7 @@ public class ChartTreeView extends Display {
 	private static final long serialVersionUID = 3253162293683958367L;
 	private static final String TAG = "ChartTreeView";
 	private final LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
-    
+    private final DesignerContext context;
     private static final String tree = "tree";
     private static final String treeNodes = "tree.nodes";
     private static final String treeEdges = "tree.edges";
@@ -71,8 +72,9 @@ public class ChartTreeView extends Display {
     
     private int m_orientation = Constants.ORIENT_LEFT_RIGHT;
     
-    public ChartTreeView(ChartTreeDataModel model,String textField) {
+    public ChartTreeView(DesignerContext ctx,ChartTreeDataModel model,String textField) {
         super(new Visualization());
+        this.context = ctx;
         
         // NOTE: Returns a VisualTree, node/edge tables are VisualTables
         //                             node items are TableNodeItems
@@ -164,12 +166,12 @@ public class ChartTreeView extends Display {
         // initialize the display
         setSize(200,600);
         setItemSorter(new TreeDepthItemSorter());
-        addControlListener(new ChartSelector(1));
-        addControlListener(new ZoomToFitControl());
-        addControlListener(new ZoomControl());
-        addControlListener(new WheelZoomControl());
-        addControlListener(new PanControl());
-        addControlListener(new FocusControl(2, "filter"));
+        addControlListener(new ChartSelector(context,1));     // Control-click
+        addControlListener(new ZoomToFitControl());           // Right-click
+        addControlListener(new ZoomControl());                // Right-drag
+        addControlListener(new WheelZoomControl());           // (doesn't work so good)
+        addControlListener(new PanControl());                 // Drag
+        addControlListener(new FocusControl(2, "filter"));    // Double click
         
         registerKeyboardAction(
             new OrientAction(Constants.ORIENT_LEFT_RIGHT),

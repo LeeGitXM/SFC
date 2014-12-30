@@ -65,7 +65,7 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 	private ChartTreeView createChartTreeView() {
 		log.infof("%s.createChartTreeView: New view ....",TAG);
 		ChartTreeDataModel model = new ChartTreeDataModel(context);
-		return new ChartTreeView(model,BrowserConstants.NAME);
+		return new ChartTreeView(context,model,BrowserConstants.NAME);
 	}
 	
 	@Override
