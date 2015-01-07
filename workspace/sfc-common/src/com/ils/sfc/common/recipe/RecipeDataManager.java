@@ -7,7 +7,6 @@ import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
-import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.api.StepRegistry;
 
 /**
@@ -16,11 +15,17 @@ import com.inductiveautomation.sfc.api.StepRegistry;
 public class RecipeDataManager {
 	private static RecipeData _recipeData = null;
 	private static ProjectResource projectResource;
-	private static DesignerContext context;
-	private static Project globalProject;
+	private static Context context;
 	private static StepRegistry stepRegistry;
 
 	private static LoggerEx logger = LogUtil.getLogger(RecipeDataManager.class.getName());
+	
+	/** This class abstracts things we need from either the ClientContext or DesignerContext */
+	public static abstract class Context {
+		public abstract boolean isClient();
+		public abstract long createResourceId();  // only callable in Designer context !!!
+		public abstract Project getGlobalProject();
+	}
 	
 	/** Get the recipe data, lazily initializing it if necessary. */
 	public static RecipeData getData() {
@@ -51,7 +56,7 @@ public class RecipeDataManager {
 	}
 	
 	private static void initializeData() {
-		_recipeData.setCompiler(new IlsSfcChartStructureCompiler(globalProject, stepRegistry));
+		_recipeData.setCompiler(new IlsSfcChartStructureCompiler(context.getGlobalProject(), stepRegistry));
 		_recipeData.compileStructure();
 	}
 	
@@ -78,12 +83,8 @@ public class RecipeDataManager {
 		}
 	}
 
-	public static void setDesignerContext(DesignerContext _context) {
-		context = _context;
-	}
-	
-	public static void setGlobalProject(Project globalProject) {
-		RecipeDataManager.globalProject = globalProject;
+	public static void setContext(Context _context) {
+		RecipeDataManager.context = _context;
 	}
 
 	public static void setStepRegistry(StepRegistry stepRegistry) {
@@ -91,17 +92,21 @@ public class RecipeDataManager {
 	}
 
 	private static Project getResourceProject() {
-		return context.getGlobalProject().getProject();
+		return context.getGlobalProject();
 	}
 	
 	/** Create recipe data for the first time in this Gateway. */
 	private static void createData() {
+		if(context.isClient()) {
+			logger.error("Recipe data cannot be created in Client--only in Designer");
+			return;
+		}
 		logger.info("creating recipe data");
 		try {
 			_recipeData = new RecipeData();
 			initializeData();
 			byte[] bytes = _recipeData.serialize();
-			final long newId = context.newResourceId();
+			final long newId = context.createResourceId();
 			projectResource = new ProjectResource(newId,
 				IlsSfcModule.MODULE_ID, IlsSfcModule.RECIPE_RESOURCE_TYPE,
 				IlsSfcModule.RECIPE_RESOURCE_NAME, ApplicationScope.ALL, bytes);

@@ -11,6 +11,10 @@ import org.python.core.PyDictionary;
 import org.python.core.PyList;
 
 import com.google.common.base.Optional;
+import com.ils.sfc.common.recipe.RecipeData;
+import com.ils.sfc.common.recipe.RecipeDataException;
+import com.ils.sfc.common.recipe.RecipeDataManager;
+import com.ils.sfc.common.recipe.RecipeScope;
 import com.inductiveautomation.sfc.ChartManager;
 import com.inductiveautomation.sfc.ChartStateEnum;
 import com.inductiveautomation.sfc.rpc.ChartStatus;
@@ -69,4 +73,15 @@ public class IlsGatewayScripts {
 		repliesById.put(id, payload);
 	}
 	
+	public static Object getRecipeData(String scopeString, String stepId, String path) throws RecipeDataException {
+		RecipeData recipeData = RecipeDataManager.getData();
+		RecipeScope scope = RecipeScope.valueOf(scopeString);
+		return recipeData.get(scope,  stepId, path);
+	}
+
+	public static void setRecipeData(String scopeString, String stepId, String path, Object value, boolean create) throws RecipeDataException {
+		RecipeData recipeData = RecipeDataManager.getData();
+		RecipeScope scope = RecipeScope.valueOf(scopeString);
+		recipeData.set(scope,  stepId, path, value, create);
+	}
 }

@@ -1,6 +1,7 @@
 package com.ils.sfc.common.chartStructure;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -90,7 +91,10 @@ public class IlsSfcChartStructureCompiler {
 	 *  the errors were severe enough we couldn't get any useful info.
 	 */
 	public IlsSfcChartStructureMgr compile() {
-		if(!loadModels()) return null;  // if we can't load the resources we can't do much...
+		if(!loadModels()) {
+			logger.error("Could not compile SFC chart models");
+			return null;  // if we can't load the resources we can't do much...
+		}
 		createChartPathNames();
 		compileCharts();  // do the IA chart compilation
 		linkParents();
@@ -141,7 +145,9 @@ public class IlsSfcChartStructureCompiler {
 		for(ProjectResource res:resources) {
 			if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
 				try {
-					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(res.getData()));
+					byte[] chartResourceData = res.getData();					
+					//IlsSfcCommonUtils.printResource(data);					
+					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 					ChartUIModel uiModel = ChartUIModel.fromXML(xmlInput, stepRegistry );
 					uiModelInfos.add(new UIModelInfo(uiModel, res.getName(), res.getParentUuid()));
 				}

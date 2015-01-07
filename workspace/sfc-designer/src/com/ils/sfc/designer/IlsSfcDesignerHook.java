@@ -36,6 +36,7 @@ import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
+import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -93,10 +94,28 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void startup(DesignerContext ctx, LicenseState activationState) throws Exception {
 		this.context = ctx;
-    	// register step factories. this is duplicated in IlsSfcClientHook.
+        log.debug("starting up...");
+   	// register step factories. this is duplicated in IlsSfcClientHook.
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-		RecipeDataManager.setDesignerContext(context);
-		RecipeDataManager.setGlobalProject(context.getGlobalProject().getProject());
+		RecipeDataManager.setContext(new RecipeDataManager.Context() {
+			public long createResourceId() {
+				try {
+					return context.newResourceId();
+				} catch (Exception e) {
+					log.error("Error creating resource id", e);
+					return 0;
+				}
+			}
+			
+			public Project getGlobalProject() {
+				return context.getGlobalProject().getProject();
+			}
+
+			public boolean isClient() {
+				return false;
+			}
+			
+		});
 		RecipeDataManager.setStepRegistry(iaSfcHook.getStepRegistry());
 		initializeStepPopup();
 		

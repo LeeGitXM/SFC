@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -16,6 +15,8 @@ import com.ils.sfc.common.chartStructure.IlsSfcStepStructure;
 import com.ils.sfc.common.step.OperationStepProperties;
 import com.ils.sfc.common.step.PhaseStepProperties;
 import com.ils.sfc.common.step.ProcedureStepProperties;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 /**
  * A class that holds recipe data for an entire site (i.e. all SFC charts)
@@ -28,7 +29,7 @@ import com.ils.sfc.common.step.ProcedureStepProperties;
  *    
 */
 public class RecipeData {
-
+	private static LoggerEx logger = LogUtil.getLogger(RecipeData.class.getName());
 	private Map<String,RecipeDataMap> dataByStepId = new HashMap<String,RecipeDataMap>();
 	private RecipeDataMap globalNamedData = new RecipeDataMap();
 	@JsonIgnore
@@ -235,7 +236,7 @@ public class RecipeData {
 	}
 	
 	/** Serialize this object into bytes. */
-	public byte[] serialize() throws JsonProcessingException {
+	public byte[] serialize() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		String json = mapper.writeValueAsString(this);
@@ -276,7 +277,7 @@ public class RecipeData {
 		RecipeData data = new RecipeData();
 		try {
 			System.out.println(new String(data.serialize()));
-		} catch (JsonProcessingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

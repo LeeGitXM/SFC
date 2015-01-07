@@ -45,6 +45,7 @@ public class RecipeDataMap extends HashMap<String,Object> {
 	/** Get a value from a nested hierarchy of dictionaries. */
 	@SuppressWarnings("unchecked")
 	public Object pathGet(String path) throws RecipeDataException {
+		if(path == null) return this;
 		String[] keys = splitPath(path);
 		Map<String,Object> map = pathGetMap(path, keys, false);
 		String lastKey = keys[keys.length - 1];

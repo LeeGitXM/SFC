@@ -16,9 +16,11 @@ import java.util.UUID;
 import org.python.core.PyDictionary;
 
 import com.google.common.base.Optional;
+import com.ils.sfc.common.recipe.RecipeDataManager;
 import com.ils.sfc.step.*;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
+import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -28,6 +30,7 @@ import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 import com.inductiveautomation.sfc.ChartManager;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.api.SfcGatewayHook;
+import com.inductiveautomation.sfc.designer.SFCDesignerHook;
 import com.inductiveautomation.sfc.rpc.ChartStatus;
 import com.inductiveautomation.sfc.scripting.ChartInfo;
 
@@ -66,7 +69,30 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 	@Override
 	public void startup(LicenseState licenseState) {
 		ScriptManager.asynchInit("C:/Program Files/Inductive Automation/Ignition/user-lib/pylib");		
-  	    long timerPeriodMillis = 30 * 1000;
+
+		RecipeDataManager.setContext(new RecipeDataManager.Context() {
+			public long createResourceId() {
+				try {
+					return context.getProjectManager().getNewResourceId();
+				} catch (Exception e) {
+					log.error("Error creating new resource id", e);
+					return 0;
+				}
+			}
+			
+			public Project getGlobalProject() {
+				return context.getProjectManager().getGlobalProject(-1);
+			}
+
+			public boolean isClient() {
+				return false;
+			}
+			
+		});
+		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
+		RecipeDataManager.setStepRegistry(iaSfcHook.getStepRegistry());
+		
+		long timerPeriodMillis = 30 * 1000;
  	    Timer gatewayTimer = new Timer();
  	    gatewayTimer.schedule(new TimerTask() {
 			public void run() {

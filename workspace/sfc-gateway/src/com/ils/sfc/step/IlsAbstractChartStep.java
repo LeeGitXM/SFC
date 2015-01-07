@@ -99,8 +99,8 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	protected void exec(PythonCall pcall) {
 		try {
 			logger.trace(pcall.getMethodName());
-			indexElements(getContext());
-			pcall.exec(getContext().getChartScope(), getDefinition().getProperties());
+			//indexElements(getChartContext());
+			pcall.exec(getChartContext().getChartScope(), getDefinition().getProperties());
 		} catch (Exception e) {
 			logger.error("Error calling " + pcall.getMethodName(), e);
 		}
@@ -108,7 +108,6 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 
 	/** Lazily initialize chart properties with things we need, like local scopes
 	 *  and predecessors
-	 */
 	private void indexElements(ChartContext context) {
 		PyChartScope chartScope = context.getChartScope();
 		if(chartScope.get(IlsSfcNames.BY_NAME) != null) return;
@@ -150,7 +149,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 			logger.error("update of step properties in chart scope failed");
 		}
 	}
-
+*/
 	/** Get the name of a step from its definition */
 	private String getName(StepDefinition definition) {
 		return (String)definition.getProperties().getOrDefault(nameProperty);
@@ -158,7 +157,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	
 	/** Set each step's closest _step_ predecessor (i.e. not a transition etc) 
 	 *  in its local scope. If there is more than one such predecessor, one is 
-	 *  chosen at random.  */
+	 *  chosen at random.  
 	private void setPredecessor(ChartElement<?> element, PyDictionary byName, String predecessorName) {
 		for(Object obj: element.getNextElements()) {
 			if(obj instanceof ChartElement) {
@@ -176,5 +175,5 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		}		
 	}
 
-	
+*/	
 }

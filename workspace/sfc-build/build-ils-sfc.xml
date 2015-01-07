@@ -139,6 +139,9 @@
 		
 		<!-- Copy dependent jars -->
 		<copy file="${basedir}/../../external/lib/commons-math3-3.1.1.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${basedir}/../../external/lib/jackson-databind-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${basedir}/../../external/lib/jackson-core-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${basedir}/../../external/lib/jackson-annotations-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
 
 		<!-- Copy license file and javadoc into the bundle -->
 		<mkdir dir="${basedir}/sfc-build/doc" />

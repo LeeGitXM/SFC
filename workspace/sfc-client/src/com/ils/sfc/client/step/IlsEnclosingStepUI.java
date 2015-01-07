@@ -15,22 +15,13 @@ import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public class IlsEnclosingStepUI extends AbstractIlsStepUI {
-	static ImageIcon icon;
-
     public static final ClientStepFactory FACTORY = new IlsEnclosingStepFactory();
 
     public IlsEnclosingStepUI() {
-    	Dimension size = new Dimension(16,16);
-    	String path = "sfc/asterisk.png";
-		Image img = ImageLoader.getInstance().loadImage(path,size);
-		if( img !=null) icon = new ImageIcon(img);
-		if( icon==null ) {
-			System.out.println("No image!!");
-		}
 	}
 		
    	@Override
-	protected Icon getIcon() { return icon; }
+	protected Icon getIcon() { return null; }
 	
 	@Override
 	protected String getText() { return "<html><b><font color=red>IlsEnclosing!</html>"; }
@@ -45,7 +36,7 @@ public class IlsEnclosingStepUI extends AbstractIlsStepUI {
 
         @Override        
         public Icon getPaletteIcon() {
-            return icon; 
+            return null; 
         }
 
         @Override

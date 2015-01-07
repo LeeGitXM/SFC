@@ -1,7 +1,10 @@
 package com.ils.sfc.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 import javax.xml.stream.XMLStreamWriter;
 
@@ -62,14 +65,28 @@ public class IlsSfcCommonUtils {
 		}
 	}
 
+	/** A debug utility that prints out a gzipped text resource--e.g. the XML for a stored chart. */
+	public static void printResource(byte[] data) throws IOException {
+		java.io.BufferedReader test = new java.io.BufferedReader(new java.io.InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(data))));
+		StringBuilder bldr = new StringBuilder();
+		String line = null;
+		while((line = test.readLine()) != null) {
+			System.out.println(line);
+		}
+		System.out.println(bldr.toString());
+	}
+
 	public static void toXML(XMLStreamWriter writer, ChartUIElement element) {
 		// TODO: XMLStreamWriter's escaping of characters is incomplete; e.g.
 		// it doesn't handle single quotes. Should we handle that?
 		try {
 			for(PropertyValue<?> pvalue: element) {
+				if(IlsProperty.ignoreProperties.contains(pvalue.getProperty().getName())) continue;
 				writer.writeStartElement(pvalue.getProperty().getName());
 				if(pvalue.getValue() != null) {
-					writer.writeCharacters(pvalue.getValue().toString());
+					String saveValue = pvalue.getValue().toString();
+					System.out.println(pvalue.getProperty().getName() + ": " + saveValue);
+					writer.writeCharacters(saveValue);
 				}
 				else {
 					logger.warn("null value for property " + pvalue.getProperty().getName());
