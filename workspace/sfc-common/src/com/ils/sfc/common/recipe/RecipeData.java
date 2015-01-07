@@ -149,6 +149,19 @@ public class RecipeData {
 		setDataValue(phaseStep, path, value, create);		
     }
 
+	/** Get name of the operation that encloses the given step. */
+	public String getOperationName(String stepId)  throws RecipeDataException {
+		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
+		IlsSfcStepStructure operationStep = step.findParentWithFactoryId(OperationStepProperties.FACTORY_ID);
+		if(operationStep != null) {
+			return operationStep.getName();
+		}
+		else {
+			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing Operation");
+		}
+		
+	}
+	
 	/** Set method for Operation scope. */
 	public void setAtOperationScope(String stepId, String path, Object value, boolean create)  throws RecipeDataException {
 		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
@@ -252,6 +265,18 @@ public class RecipeData {
 		return recipeData;
 	}
 
+	public RecipeData copy() {
+		try {
+			// use serialization to do a deep copy (not too efficient, but convenient).
+			RecipeData copy =  deserialize(serialize());
+			copy.structureMgr = structureMgr;
+			return copy;
+		} catch (Exception e) {
+			logger.error("error making copy of recipe data", e);
+			return null;
+		} 
+	}
+	
 	public void setCompiler(IlsSfcChartStructureCompiler compiler) {
 		chartStructureCompiler = compiler;
 	}

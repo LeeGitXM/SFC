@@ -97,27 +97,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         log.debug("starting up...");
    	// register step factories. this is duplicated in IlsSfcClientHook.
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-		RecipeDataManager.setContext(new RecipeDataManager.Context() {
-			public long createResourceId() {
-				try {
-					return context.newResourceId();
-				} catch (Exception e) {
-					log.error("Error creating resource id", e);
-					return 0;
-				}
-			}
-			
-			public Project getGlobalProject() {
-				return context.getGlobalProject().getProject();
-			}
-
-			public boolean isClient() {
-				return false;
-			}
-			
-		});
-		RecipeDataManager.setStepRegistry(iaSfcHook.getStepRegistry());
-		initializeStepPopup();
+		initializeRecipeData();
 		
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
 		stepRegistry.register(QueueMessageStepUI.FACTORY);
@@ -181,6 +161,30 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         configRegistry.register(OperationStepProperties.FACTORY_ID, encFactory);       	
         configRegistry.register(PhaseStepProperties.FACTORY_ID, encFactory);       	
 }
+
+	private void initializeRecipeData() {
+		RecipeDataManager.setContext(new RecipeDataManager.Context() {
+			public long createResourceId() {
+				try {
+					return context.newResourceId();
+				} catch (Exception e) {
+					log.error("Error creating resource id", e);
+					return 0;
+				}
+			}
+			
+			public Project getGlobalProject() {
+				return context.getGlobalProject().getProject();
+			}
+
+			public boolean isClient() {
+				return false;
+			}
+			
+		});
+		RecipeDataManager.setStepRegistry(iaSfcHook.getStepRegistry());
+		initializeStepPopup();
+	}
 
 	private void initializeStepPopup() {
 		stepPopup = new JPopupMenu();

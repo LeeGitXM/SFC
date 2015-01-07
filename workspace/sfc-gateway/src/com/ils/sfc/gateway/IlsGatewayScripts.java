@@ -72,16 +72,22 @@ public class IlsGatewayScripts {
 	public static void setResponse(String id, PyDictionary payload) {
 		repliesById.put(id, payload);
 	}
-	
-	public static Object getRecipeData(String scopeString, String stepId, String path) throws RecipeDataException {
+
+	/** Get a working copy of the recipe data that can be modified. For instance, a SFC 
+	 *  chart gets its own working copy of the static data that it can then modify.
+	 */
+	public static RecipeData getWorkingRecipeData() throws RecipeDataException {
 		RecipeData recipeData = RecipeDataManager.getData();
-		RecipeScope scope = RecipeScope.valueOf(scopeString);
-		return recipeData.get(scope,  stepId, path);
+		return recipeData.copy();
 	}
 
-	public static void setRecipeData(String scopeString, String stepId, String path, Object value, boolean create) throws RecipeDataException {
-		RecipeData recipeData = RecipeDataManager.getData();
+	public static Object getRecipeData(RecipeData workingRecipeData, String scopeString, String stepId, String path) throws RecipeDataException {
 		RecipeScope scope = RecipeScope.valueOf(scopeString);
-		recipeData.set(scope,  stepId, path, value, create);
+		return workingRecipeData.get(scope,  stepId, path);
+	}
+
+	public static void setRecipeData(RecipeData workingRecipeData, String scopeString, String stepId, String path, Object value, boolean create) throws RecipeDataException {
+		RecipeScope scope = RecipeScope.valueOf(scopeString);
+		workingRecipeData.set(scope,  stepId, path, value, create);
 	}
 }

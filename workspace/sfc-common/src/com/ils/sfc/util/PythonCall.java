@@ -102,7 +102,7 @@ public class PythonCall {
 	public static final PythonCall CLOSE_WINDOW = new PythonCall(STEPS_PKG + "closeWindow", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall HANDLE_UNEXPECTED_ERROR = new PythonCall("ils.sfc.gateway.util." + "handleUnexpectedError", 
+	public static final PythonCall HANDLE_UNEXPECTED_ERROR = new PythonCall("ils.sfc.gateway.util." + "handleUnexpectedGatewayError", 
 			PyList.class,  new String[]{"chartProps", "msg"} );
 
 	public static final PythonCall SEND_CHART_STATUS = new PythonCall("ils.sfc.gateway.util." + "sendChartStatus", 

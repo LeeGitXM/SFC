@@ -39,10 +39,14 @@ public class RecipeDataManager {
 	}
 	
 	/** Load the persistent recipe data--if there is none, the _recipeData variable
-	 *  will continue to be null. This will over-write any unpersisted changes. */
+	 *  will continue to be null. This will over-write any unpersisted changes. 
+	 *  Call this to re-load the recipe data if some other process has changed it
+	 *  (e.g. a running chart may have changed it in the Gateway, so if a Designer
+	 *  is running it will need to refresh the (stale) cached data). */
 	@SuppressWarnings("unchecked")
-	public static void loadData() {
+	public static RecipeData loadData() {
 		logger.info("loading recipe data");
+		
 		projectResource = getResourceProject().getResourceOfType(
 			IlsSfcModule.MODULE_ID, IlsSfcModule.RECIPE_RESOURCE_TYPE);
 		if(projectResource != null) {
@@ -53,6 +57,12 @@ public class RecipeDataManager {
 				logger.error("Error loading recipe data", e);
 			}
 		}
+		
+		return _recipeData;
+	}
+	
+	public static RecipeData getWorkingCopy() {
+		return getData().copy();
 	}
 	
 	private static void initializeData() {
