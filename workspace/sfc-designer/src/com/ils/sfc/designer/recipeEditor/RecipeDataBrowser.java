@@ -60,8 +60,12 @@ public class RecipeDataBrowser extends JDialog {
 			return !name.equals(RecipeDataTypes.TYPE) && !isMap; // i.e. value is primitive type
 		}
 		
+		public boolean isBytes() {
+			return userObject instanceof byte[];
+		}
+		
 		public boolean contentsAreEditable() {
-			return contentsAreEditable;
+			return contentsAreEditable && !isBytes();
 		}
 
 		public void setContentsEditable(boolean isEditable) {
@@ -78,6 +82,9 @@ public class RecipeDataBrowser extends JDialog {
 					buf.append(type);
 					buf.append(")");
 				}
+			}
+			else if(isBytes()) {
+				buf.append("<bytes>");
 			}
 			else {
 				buf.append(" = ");

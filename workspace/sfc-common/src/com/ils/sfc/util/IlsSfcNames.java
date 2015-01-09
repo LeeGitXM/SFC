@@ -8,9 +8,14 @@ public class IlsSfcNames {
 	// step properties:
 	public static final String ACK_REQUIRED = "ackRequired";
 	public static final String AUDIT_LEVEL = "auditLevel";
+	public static final String AUTO_MODE = "autoMode";
+	public static final String AUTOMATIC = "automatic";
 	public static final String BOTTOM_CENTER = "bottomCenter";
 	public static final String BOTTOM_LEFT = "bottomLeft";
 	public static final String BOTTOM_RIGHT = "bottomRight";
+	public static final String BUTTON_LABEL = "buttonLabel";
+	public static final String BUTTON_KEY = "buttonKey";
+	public static final String BUTTON_KEY_LOCATION = "buttonKeyLocation";
 	public static final String CALLBACK = "callback";
 	public static final String CENTER = "center";
 	public static final String COMMAND = "callback";
@@ -24,7 +29,9 @@ public class IlsSfcNames {
 	public static final String DELAY = "delay";
 	public static final String DELAY_UNIT = "delayUnit";
 	public static final String DIALOG = "dialog";
+	public static final String DIALOG_TEMPLATE = "dialogTemplate";
 	public static final String DIRECTORY = "directory";
+	public static final String DISPLAY_MODE = "displayMode";
 	public static final String DYNAMIC = "dynamic";
 	public static final String ENABLE_PAUSE = "enablePause";
 	public static final String ENABLE_RESUME = "enableResume";
@@ -50,6 +57,7 @@ public class IlsSfcNames {
 	public static final String POSITION = "position";
 	public static final String POST_TO_QUEUE = "postToQueue";
 	public static final String POST_NOTIFICATION = "postNotification";
+	public static final String POSTING_METHOD = "postingMethod";
 	public static final String PRINT_FILE = "printFile";
 	public static final String PRIORITY = "priority";
 	public static final String PRIVATE = "private";
@@ -58,9 +66,14 @@ public class IlsSfcNames {
 	public static final String QUEUE = "queue";
 	public static final String RECIPE = "recipe";
 	public static final String RECIPE_LOCATION = "recipeLocation"; 
+	public static final String REGISTER_AND_DISPLAY = "registerAndDisplay";
+	public static final String REGISTER_ONLY = "registerOnly";
 	public static final String RESULTS_MODE = "resultsMode"; 
+	public static final String REVIEW_DATA = "reviewData"; 
 	public static final String SCALE = "scale";
+	public static final String SCREEN_HEADER = "screenHeader";
 	public static final String SECURITY = "security";
+	public static final String SEMI_AUTOMATIC = "semiAutomatic";
 	public static final String SERVER = "server";
 	public static final String SHOW_PRINT_DIALOG = "showPrintDialog";
 	public static final String SINGLE = "single";
@@ -117,9 +130,11 @@ public class IlsSfcNames {
 	public static final String[] RESULTS_MODE_CHOICES = {UPDATE, UPDATE_OR_CREATE};
 	public static final String[] FETCH_MODE_CHOICES = {SINGLE, MULTIPLE};
 	public static final String[] KEY_MODE_CHOICES = {STATIC, DYNAMIC};
+	public static final String[] AUTO_MODE_CHOICES = {AUTOMATIC, SEMI_AUTOMATIC};
 	public static final String[] COMPUTER_CHOICES = {SERVER, LOCAL};
 	public static final String[] POSITION_CHOICES = {CENTER, TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT};
 	public static final String[] SECURITY_CHOICES = {PUBLIC, PRIVATE};
 	public static final String[] PRIORITY_CHOICES = {INFO, WARNING, ERROR};
 	public static final String[] AUDIT_LEVEL_CHOICES = {OFF, LOW, HIGH};
+	public static final String[] DISPLAY_MODE_CHOICES = {REGISTER_AND_DISPLAY, REGISTER_ONLY};
 }

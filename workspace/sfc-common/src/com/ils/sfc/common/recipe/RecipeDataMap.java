@@ -74,7 +74,7 @@ public class RecipeDataMap extends HashMap<String,Object> {
 	}
 	
 	private void throwPathDoesNotExist(String path) throws RecipeDataException {
-		throw new RecipeDataException("object " + path + " does not exist");
+		throw new RecipeKeyException("key " + path + " does not exist");
 	}
 	
 	/** Split a dot-separated path reference into the individual keys. */

@@ -11,12 +11,10 @@ import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
 /** An editor for all ILS step types */
 public class IlsStepEditor extends AbstractStepEditor {
-
 	private static final long serialVersionUID = 1L;
-
 	private PropertyEditor propertyEditor = new PropertyEditor();
 	
-	public IlsStepEditor(ChartUIModel chartModel) {
+	public IlsStepEditor(ChartUIModel chartModel, ChartUIElement element) {
 		super(new BorderLayout(), chartModel);
 		add(propertyEditor);
 	}
@@ -39,7 +37,7 @@ public class IlsStepEditor extends AbstractStepEditor {
 		public ElementEditor createConfigUI(ChartUIModel model,
 				ChartUIElement element) {
 			if (editor == null || editor.model != model) {
-				editor = new IlsStepEditor(model);
+				editor = new IlsStepEditor(model, element);
 			}
 			editor.setElement(element);
 			return editor;

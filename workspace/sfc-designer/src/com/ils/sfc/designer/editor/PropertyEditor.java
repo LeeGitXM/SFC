@@ -29,12 +29,16 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumn;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
+import com.ils.sfc.client.step.ReviewDataStepUI;
+import com.ils.sfc.common.step.ReviewDataStepDelegate;
+import com.ils.sfc.designer.reviewDataEditor.ReviewDataEditorDialog;
 import com.ils.sfc.util.IlsProperty;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
+import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
 /** A property editor grid/table */
 @SuppressWarnings("serial")
@@ -79,10 +83,18 @@ public class PropertyEditor extends JPanel {
 				int col = table.columnAtPoint(pnt);
 				if(col == 3) {
 					PropertyRow rowObj = tableModel.getRowObject(row);
-					if(!rowObj.isEditableString()) return;
 					JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(table);
-					PropertyStringEditorDialog dlg = new PropertyStringEditorDialog(frame, tableModel, row);
-					dlg.setVisible(true);
+					if(rowObj.getProperty().equals(IlsProperty.REVIEW_DATA)) {
+						// kind of a hack here...REVIEW_DATA is a pseudo-property
+						// the complex values are held in the local recipe data of the step
+						ReviewDataEditorDialog dlg = new ReviewDataEditorDialog(frame, tableModel.getStepId());
+						dlg.setVisible(true);						
+					}
+					else {
+						if(!rowObj.isEditableString()) return;
+							PropertyStringEditorDialog dlg = new PropertyStringEditorDialog(frame, tableModel, row);
+						dlg.setVisible(true);
+					}
 				}
 			}
 		});

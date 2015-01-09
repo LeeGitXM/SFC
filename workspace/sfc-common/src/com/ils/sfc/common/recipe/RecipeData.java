@@ -27,6 +27,13 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
  *    -is Named scope data global (vs in the scope of a graph)?
  *    -need some examples of cross-graph references
  *    
+ * Limitation: if a chart is included by more than one parent chart, there may
+ * be some ambiguity at design time about which parent is at Superior, Operation, 
+ * Phase etc scopes. To resolve this we basically need to have an instance id and
+ * parent instance id for each step (IA builtins and ILS custom) at runtime.
+ * 
+ * How about this: a run-time request for recipe data supplies the step's design id
+ * and the chart instanceId hierarchy. A lookup is done to get the possible 
 */
 public class RecipeData {
 	private static LoggerEx logger = LogUtil.getLogger(RecipeData.class.getName());
@@ -36,6 +43,7 @@ public class RecipeData {
 	private IlsSfcChartStructureCompiler chartStructureCompiler; // not serialized
 	@JsonIgnore
 	private IlsSfcChartStructureMgr structureMgr;   // not serialized
+	public static final String REVIEW_DATA_KEY = "reviewData";
 
 	/** Set a recipe value given a path from a step, and a scope. If "create" is true,
 	 *  intermediate dictionaries will be created as needed; otherwise any missing
@@ -101,7 +109,8 @@ public class RecipeData {
 	}
 
 	private Object getDataValue(IlsSfcStepStructure step, String path) throws RecipeDataException {
-		return getOrCreateStepData(step).pathGet(path);
+		RecipeDataMap map = getOrCreateStepData(step);
+		return map.pathGet(path);
 	}
 
 	/** Get recipe data for a step, creating an empty dictionary if it doesn't exist. */
@@ -296,6 +305,37 @@ public class RecipeData {
 
 	public void setDataByStepId(Map<String, RecipeDataMap> dataByStepId) {
 		this.dataByStepId = dataByStepId;
+	}
+	
+	public ReviewDataConfig getReviewDataConfig(String stepId) {
+		try {
+			try {
+				byte[] bytes = (byte[])getAtLocalScope(stepId, REVIEW_DATA_KEY);
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+				ReviewDataConfig config = mapper.readValue(bytes, ReviewDataConfig.class);
+				return config;
+			}
+			catch(RecipeKeyException rke) {
+				// doesn't exist yet--create an empty config
+				return new ReviewDataConfig();
+			}
+		} catch (Exception e) {
+			logger.error("Exception getting review data config", e);
+			return null;
+		}
+	}
+
+	public void setReviewDataConfig(String stepId, ReviewDataConfig config) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+			String json = mapper.writeValueAsString(config);
+			byte[] bytes = json.getBytes();
+			setAtLocalScope(stepId, REVIEW_DATA_KEY, bytes, true);
+		} catch (Exception e) {
+			logger.error("Exception setting review data", e);
+		}
 	}
 
 	public static void main(String[] args) {

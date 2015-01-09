@@ -128,6 +128,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		stepRegistry.register(ProcedureStepUI.FACTORY);
 		stepRegistry.register(OperationStepUI.FACTORY);
 		stepRegistry.register(PhaseStepUI.FACTORY);
+		stepRegistry.register(ReviewDataStepUI.FACTORY);
 		    	
 		// register the config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory();
@@ -156,6 +157,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
        	configRegistry.register(PrintWindowStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(CloseWindowStepProperties.FACTORY_ID, editorFactory);
        	configRegistry.register(ShowWindowStepProperties.FACTORY_ID, editorFactory);
+        configRegistry.register(ReviewDataStepProperties.FACTORY_ID, editorFactory);       	
+      	
+       	// These steps are extensions of IA steps and use the same editor
        	StepConfigFactory encFactory = iaSfcHook.getConfigFactory(EnclosingStepProperties.FACTORY_ID);
         configRegistry.register(ProcedureStepProperties.FACTORY_ID, encFactory);       	
         configRegistry.register(OperationStepProperties.FACTORY_ID, encFactory);       	

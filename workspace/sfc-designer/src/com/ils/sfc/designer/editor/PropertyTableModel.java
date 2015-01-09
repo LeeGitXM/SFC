@@ -28,6 +28,7 @@ public class PropertyTableModel extends AbstractTableModel {
 	private List<PropertyRow> rows = new ArrayList<PropertyRow>();
 	private boolean hasChanged;
 	private ChartUIElement element;
+	private String stepId;
 	private static final Logger logger = LoggerFactory.getLogger(PropertyTableModel.class);
  
 	public String getColumnName(int col) {
@@ -83,6 +84,10 @@ public class PropertyTableModel extends AbstractTableModel {
 	public int getRowCount() { return rows.size(); }
     
     public int getColumnCount() { return columnNames.length; }
+    
+    public String getStepId() {
+    	return stepId;
+    }
     
     public Object getValueAt(int row, int col) {
     	PropertyRow pRow = rows.get(row);
@@ -141,6 +146,9 @@ public class PropertyTableModel extends AbstractTableModel {
 		}
 		for(PropertyValue<?> pValue: element) {
 			String name = pValue.getProperty().getName();
+			if(name.equals("id")) {
+				stepId = pValue.getValue().toString();
+			}
 			if( !IlsProperty.ignoreProperties.contains(name) &&
 				!name.endsWith(UNIT_SUFFIX)) {
 				PropertyValue<?> unitValueOrNull = propsByName.get(name + UNIT_SUFFIX);

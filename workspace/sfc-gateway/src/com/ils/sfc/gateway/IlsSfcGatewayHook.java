@@ -128,6 +128,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 		sfcHook.getStepRegistry().register(new ProcedureStepFactory());
 		sfcHook.getStepRegistry().register(new OperationStepFactory());
 		sfcHook.getStepRegistry().register(new PhaseStepFactory());
+		sfcHook.getStepRegistry().register(new ReviewDataStepFactory());
 		
 	    log.infof("%s: Startup complete.",TAG);
 	}
