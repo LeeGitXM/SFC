@@ -17,19 +17,19 @@ public class RecipeDataTestCase extends TestCase {
 	private static final String path = "folder.aValue";
 
 	// Some dummy data to mock up charts with the Procedure/Operation/Phase hierarchy:
-	private IlsSfcChartStructure procChart = new IlsSfcChartStructure();
+	private IlsSfcChartStructure procChart = new IlsSfcChartStructure("");
 	private IlsSfcStepStructure procedureStep = new IlsSfcStepStructure(procChart, "procId", 
 		"whatever", "Procedure", null, Boolean.TRUE);
-	private IlsSfcChartStructure opChart = new IlsSfcChartStructure();
+	private IlsSfcChartStructure opChart = new IlsSfcChartStructure("");
 	private IlsSfcStepStructure operationStep = new IlsSfcStepStructure(opChart, "opId", 
 		"whatever", "Operation", null, Boolean.TRUE);
-	private IlsSfcChartStructure phaseChart = new IlsSfcChartStructure();
+	private IlsSfcChartStructure phaseChart = new IlsSfcChartStructure("");
 	private IlsSfcStepStructure phaseStep = new IlsSfcStepStructure(phaseChart, "phaseId", 
 		"whatever", "Phase", null, Boolean.TRUE);
-	private IlsSfcChartStructure parentChart = new IlsSfcChartStructure();
+	private IlsSfcChartStructure parentChart = new IlsSfcChartStructure("");
 	private IlsSfcStepStructure parentStep = new IlsSfcStepStructure(parentChart, "parentId", 
 		EnclosingStepProperties.FACTORY_ID, "parentStep", null, Boolean.TRUE);
-	private IlsSfcChartStructure chart = new IlsSfcChartStructure();
+	private IlsSfcChartStructure chart = new IlsSfcChartStructure("");
 	private IlsSfcStepStructure predStep = new IlsSfcStepStructure(chart, "predId", 
 		ActionStepProperties.FACTORY_ID, "predStep", null, Boolean.FALSE);
 	private IlsSfcStepStructure childStep = new IlsSfcStepStructure(chart, "childId", 
