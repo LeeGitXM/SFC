@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class InputStep extends IlsAbstractChartStep implements InputStepProperties {
 	
-	protected InputStep(ChartContext context, StepDefinition definition) {
+	public InputStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 

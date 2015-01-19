@@ -7,9 +7,6 @@ import com.ils.sfc.common.chartStructure.IlsSfcChartStructure;
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructure.Parent;
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructureMgr;
 import com.ils.sfc.common.chartStructure.IlsSfcStepStructure;
-import com.ils.sfc.common.step.OperationStepProperties;
-import com.ils.sfc.common.step.PhaseStepProperties;
-import com.ils.sfc.common.step.ProcedureStepProperties;
 import com.inductiveautomation.sfc.elements.steps.action.ActionStepProperties;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 
@@ -22,13 +19,13 @@ public class RecipeDataTestCase extends TestCase {
 	// Some dummy data to mock up charts with the Procedure/Operation/Phase hierarchy:
 	private IlsSfcChartStructure procChart = new IlsSfcChartStructure();
 	private IlsSfcStepStructure procedureStep = new IlsSfcStepStructure(procChart, "procId", 
-		ProcedureStepProperties.FACTORY_ID, "procStep", null, Boolean.TRUE);
+		"whatever", "Procedure", null, Boolean.TRUE);
 	private IlsSfcChartStructure opChart = new IlsSfcChartStructure();
 	private IlsSfcStepStructure operationStep = new IlsSfcStepStructure(opChart, "opId", 
-		OperationStepProperties.FACTORY_ID, "opStep", null, Boolean.TRUE);
+		"whatever", "Operation", null, Boolean.TRUE);
 	private IlsSfcChartStructure phaseChart = new IlsSfcChartStructure();
 	private IlsSfcStepStructure phaseStep = new IlsSfcStepStructure(phaseChart, "phaseId", 
-		PhaseStepProperties.FACTORY_ID, "phaseStep", null, Boolean.TRUE);
+		"whatever", "Phase", null, Boolean.TRUE);
 	private IlsSfcChartStructure parentChart = new IlsSfcChartStructure();
 	private IlsSfcStepStructure parentStep = new IlsSfcStepStructure(parentChart, "parentId", 
 		EnclosingStepProperties.FACTORY_ID, "parentStep", null, Boolean.TRUE);

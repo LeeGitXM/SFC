@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class RawQueryStep extends IlsAbstractChartStep implements RawQueryStepProperties {
 	
-	protected RawQueryStep(ChartContext context, StepDefinition definition) {
+	public RawQueryStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 

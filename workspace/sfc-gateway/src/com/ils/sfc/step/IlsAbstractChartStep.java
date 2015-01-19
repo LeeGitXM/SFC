@@ -1,29 +1,17 @@
 package com.ils.sfc.step;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.python.core.PyDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ils.sfc.step.annotation.ILSStep;
-import com.ils.sfc.util.IlsProperty;
 import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
-import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.sfc.api.ChartContext;
-import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.elements.AbstractChartElement;
-import com.inductiveautomation.sfc.api.elements.ChartElement;
 import com.inductiveautomation.sfc.api.elements.StepElement;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
-import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
-import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /**
  * This abstract class is the basis of all custom steps. 

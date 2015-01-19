@@ -19,7 +19,6 @@ import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
-import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
 /** Misc. utilities that don't fit into any ILS class or superclass. */
 public class IlsSfcCommonUtils {
@@ -189,5 +188,10 @@ public class IlsSfcCommonUtils {
 		else {
 			return o2.equals(o1);
 		}
+	}
+	
+	/** A null-tolerant check for empty strings. */
+	public static boolean isEmpty(String str) {
+		return str == null || str.length() == 0;
 	}
 }

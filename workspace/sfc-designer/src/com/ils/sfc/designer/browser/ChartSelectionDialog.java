@@ -31,7 +31,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
  */
 
 public class ChartSelectionDialog extends JDialog {
-	private static String TAG = "LinkValueEditor";
+	//private static String TAG = "LinkValueEditor";
 	private final LoggerEx log;
 	private static final long serialVersionUID = 2002388376824434427L;
 	private final int DIALOG_HEIGHT = 180;

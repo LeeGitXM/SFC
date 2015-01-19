@@ -2,7 +2,6 @@ package com.ils.sfc.common.chartStructure;
 
 import java.util.Map;
 
-import com.ils.sfc.common.recipe.RecipeData;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 

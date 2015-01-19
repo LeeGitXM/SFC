@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class TimedDelayStep extends IlsAbstractChartStep implements TimedDelayStepProperties {
 	
-	protected TimedDelayStep(ChartContext context, StepDefinition definition) {
+	public TimedDelayStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 

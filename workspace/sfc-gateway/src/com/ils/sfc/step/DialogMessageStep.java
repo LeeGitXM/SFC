@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class DialogMessageStep extends IlsAbstractChartStep implements DialogMessageStepProperties {
 	
-	protected DialogMessageStep(ChartContext context, StepDefinition definition) {
+	public DialogMessageStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 

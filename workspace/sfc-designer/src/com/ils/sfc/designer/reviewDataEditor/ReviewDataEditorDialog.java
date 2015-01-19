@@ -13,6 +13,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import com.ils.sfc.common.recipe.RecipeDataManager;
@@ -24,40 +27,35 @@ public class ReviewDataEditorDialog extends JDialog {
 	private ReviewDataConfig config;
 	private JButton okButton = new JButton("OK");
 	private JButton cancelButton = new JButton("Cancel");
-	private JButton addButton = new JButton("+");
-	private JButton removeButton = new JButton("-");
+	private JButton addButton = new JButton("Add");
+	private JButton removeButton = new JButton("Remove");
 	private ReviewDataTableModel tableModel = new ReviewDataTableModel();
 	private JTable table = new JTable(tableModel);
 	
-	public ReviewDataEditorDialog(JFrame frame, String stepId) {
-		super(frame, ModalityType.APPLICATION_MODAL);
-		this.stepId = stepId;
-		
-		String errorMsg = null;
-		try {
-			config = RecipeDataManager.getData().getReviewDataConfig(stepId);
-			if(config == null ) {
-				errorMsg ="null configuration for stepId" + stepId;
-			}
-		}
-		catch(Exception e) {
-			errorMsg ="exception getting config for stepId" + stepId;
-		}
-		
-		if(config != null) {
-			tableModel.setConfig(config);
-		}
-		else {
-			JOptionPane.showConfirmDialog(frame, errorMsg, "Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
+	public ReviewDataEditorDialog(ReviewDataConfig config) {
+		initUI(config);
+	}
+
+	private void initUI(ReviewDataConfig config) {
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		table.setDefaultEditor(Object.class, new ReviewDataCellEditor());
+		table.setDefaultRenderer(Object.class, new ReviewDataCellRenderer());
+		table.setRowHeight(20);
+		table.setRowMargin(3);	
+		table.setShowGrid(true);
+		tableModel.setConfig(config);
 		JPanel panel = new JPanel(new BorderLayout());
 		getContentPane().add(panel);
 		
 		JPanel tablePanel = new JPanel(new BorderLayout());	
-		tablePanel.setBorder(new LineBorder(Color.black));
+		tablePanel.setBorder(new EmptyBorder(10,10,10,10));
 		panel.add(tablePanel, BorderLayout.CENTER);
-		tablePanel.add(new JScrollPane(table), BorderLayout.CENTER);
+		JScrollPane scroll = new JScrollPane(table);
+		scroll.setBorder(
+			new CompoundBorder(
+				new EmptyBorder(10,10,0,10), 
+				new LineBorder(Color.black)));
+		tablePanel.add(scroll, BorderLayout.CENTER);
 
 		JPanel addRemovePanel = new JPanel(new FlowLayout());
 		addRemovePanel.add(addButton);
@@ -70,7 +68,7 @@ public class ReviewDataEditorDialog extends JDialog {
 		});
 		tablePanel.add(addRemovePanel, BorderLayout.SOUTH);
 
-		JPanel buttonPanel = new JPanel(new FlowLayout());
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		buttonPanel.add(okButton);
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {doOK();}
@@ -80,8 +78,27 @@ public class ReviewDataEditorDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {doCancel();}
 		});
 		panel.add(buttonPanel, BorderLayout.SOUTH);
-		setTitle("Review Data");
-		this.setSize(400,200);
+		setTitle("Configure Review Data");
+		this.setSize(700,400);
+	}
+	
+	public ReviewDataEditorDialog(JFrame frame, String stepId) {
+		super(frame, ModalityType.APPLICATION_MODAL);
+		this.stepId = stepId;
+		String errorMsg = null;
+		try {
+			config = RecipeDataManager.getData().getReviewDataConfig(stepId);
+			if(config == null ) {
+				errorMsg ="null configuration for stepId" + stepId;
+			}
+		}
+		catch(Exception e) {
+			errorMsg ="exception getting config for stepId" + stepId;
+		}		
+		if(errorMsg != null) {
+			JOptionPane.showConfirmDialog(frame, errorMsg, "Configuration Error", JOptionPane.WARNING_MESSAGE);
+		}
+		initUI(config);
 	}
 	
 	private void doOK() {
@@ -102,5 +119,10 @@ public class ReviewDataEditorDialog extends JDialog {
 		tableModel.removeSelectedRow(selectedRow);
 	}
 
+	public static void main(String[] args) {
+		ReviewDataConfig config = new ReviewDataConfig();
+		ReviewDataEditorDialog dlg = new ReviewDataEditorDialog(config);
+		dlg.setVisible(true);
+	}
 }
 

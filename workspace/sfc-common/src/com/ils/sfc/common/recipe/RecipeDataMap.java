@@ -43,7 +43,6 @@ public class RecipeDataMap extends HashMap<String,Object> {
 	}
 	
 	/** Get a value from a nested hierarchy of dictionaries. */
-	@SuppressWarnings("unchecked")
 	public Object pathGet(String path) throws RecipeDataException {
 		if(path == null) return this;
 		String[] keys = splitPath(path);
@@ -60,12 +59,12 @@ public class RecipeDataMap extends HashMap<String,Object> {
 
 	/** Put a value into a nested hierarchy of dictionaries. If "create" is true any
 	 *  missing parts of the hierarchy implied by the path will be created. */
-	@SuppressWarnings("unchecked")
 	public void pathPut(String path, Object value, boolean create) throws RecipeDataException {
 		String[] keys = splitPath(path);
 		Map<String,Object> map = pathGetMap(path, keys, create);
 		String lastKey = keys[keys.length - 1];
 		if(map.containsKey(lastKey) || create) {
+//System.out.println("creating key " + lastKey + " for path " + path);
 			map.put(lastKey, value);
 		}
 		else {

@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class LimitedInputStep extends IlsAbstractChartStep implements LimitedInputStepProperties {
 	
-	protected LimitedInputStep(ChartContext context, StepDefinition definition) {
+	public LimitedInputStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 

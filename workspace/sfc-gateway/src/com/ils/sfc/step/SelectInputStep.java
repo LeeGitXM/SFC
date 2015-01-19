@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class SelectInputStep extends IlsAbstractChartStep implements SelectInputStepProperties {
 	
-	protected SelectInputStep(ChartContext context, StepDefinition definition) {
+	public SelectInputStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 

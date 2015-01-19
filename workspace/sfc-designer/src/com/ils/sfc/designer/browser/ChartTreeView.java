@@ -48,8 +48,6 @@ import prefuse.visual.expression.InGroupPredicate;
 import prefuse.visual.sort.TreeDepthItemSorter;
 import prefuse.visual.tuple.TableNodeItem;
 
-import com.inductiveautomation.ignition.common.util.LogUtil;
-import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 
 
@@ -60,8 +58,8 @@ import com.inductiveautomation.ignition.designer.model.DesignerContext;
  */
 public class ChartTreeView extends Display {
 	private static final long serialVersionUID = 3253162293683958367L;
-	private static final String TAG = "ChartTreeView";
-	private final LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
+	//private static final String TAG = "ChartTreeView";
+	//private final LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
     private final DesignerContext context;
     private static final String tree = "tree";
     private static final String treeNodes = "tree.nodes";

@@ -2,7 +2,7 @@ package com.ils.sfc.designer.recipeEditor;
 
 import java.awt.Window;
 
-import com.ils.sfc.designer.editor.AbstractStringEditorDialog;
+import com.ils.sfc.designer.propertyEditor.AbstractStringEditorDialog;
 
 @SuppressWarnings("serial")
 public class RecipeStringEditorDialog extends AbstractStringEditorDialog {

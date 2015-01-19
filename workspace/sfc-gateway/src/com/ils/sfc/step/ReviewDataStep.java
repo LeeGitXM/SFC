@@ -7,14 +7,14 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class ReviewDataStep extends IlsAbstractChartStep implements ReviewDataStepProperties {
 	
-	protected ReviewDataStep(ChartContext context, StepDefinition definition) {
+	public ReviewDataStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 
 	@Override
 	public void activateStep() {
 		super.activateStep();
-		exec(PythonCall.SET_QUEUE);	
+		exec(PythonCall.REVIEW_DATA);	
 	}
 
 }

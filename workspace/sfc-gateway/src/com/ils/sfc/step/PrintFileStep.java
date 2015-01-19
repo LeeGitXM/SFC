@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class PrintFileStep extends IlsAbstractChartStep implements PrintFileStepProperties {
 	
-	protected PrintFileStep(ChartContext context, StepDefinition definition) {
+	public PrintFileStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 

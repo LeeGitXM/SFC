@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class SetQueueStep extends IlsAbstractChartStep implements SetQueueStepProperties {
 	
-	protected SetQueueStep(ChartContext context, StepDefinition definition) {
+	public SetQueueStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 

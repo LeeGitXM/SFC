@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class CollectDataStep extends IlsAbstractChartStep implements CollectDataStepProperties {
 	
-	protected CollectDataStep(ChartContext context, StepDefinition definition) {
+	public CollectDataStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 

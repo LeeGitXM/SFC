@@ -11,6 +11,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 import com.inductiveautomation.sfc.client.api.ChartStatusContext;
+import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.ui.AbstractStepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
@@ -21,6 +22,35 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	protected static Icon asteriskIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/asterisk.png"));
 	private JLabel label = new JLabel();
 	protected enum PaletteTabs { Foundation, Messages, Input, Control, Notification, IO, Query, File, Window };
+	
+	public static ClientStepFactory[] clientStepFactories = {
+		QueueMessageStepUI.FACTORY,
+		SetQueueStepUI.FACTORY,
+		ShowQueueStepUI.FACTORY,
+		ClearQueueStepUI.FACTORY,
+		YesNoStepUI.FACTORY,
+		AbortStepUI.FACTORY,
+		PauseStepUI.FACTORY,
+		ControlPanelMessageStepUI.FACTORY,
+		TimedDelayStepUI.FACTORY,
+		DeleteDelayNotificationStepUI.FACTORY,
+		PostDelayNotificationStepUI.FACTORY,
+		EnableDisableStepUI.FACTORY,
+		SelectInputStepUI.FACTORY,
+		LimitedInputStepUI.FACTORY,
+		DialogMessageStepUI.FACTORY,
+		CollectDataStepUI.FACTORY,
+		InputStepUI.FACTORY,
+		RawQueryStepUI.FACTORY,
+		SimpleQueryStepUI.FACTORY,
+		SaveDataStepUI.FACTORY,
+		PrintFileStepUI.FACTORY,
+		PrintWindowStepUI.FACTORY,
+		CloseWindowStepUI.FACTORY,
+		ShowWindowStepUI.FACTORY,
+		ReviewDataStepUI.FACTORY,		
+		IlsEnclosingStepUI.FACTORY,
+	};
 	
 	protected AbstractIlsStepUI() {
     	label.setText(getText());

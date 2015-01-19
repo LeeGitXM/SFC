@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class ControlPanelMessageStep extends IlsAbstractChartStep implements ControlPanelMessageStepProperties {
 	
-	protected ControlPanelMessageStep(ChartContext context, StepDefinition definition) {
+	public ControlPanelMessageStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 

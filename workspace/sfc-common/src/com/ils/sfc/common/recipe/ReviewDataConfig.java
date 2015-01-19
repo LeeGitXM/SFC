@@ -17,6 +17,7 @@ public class ReviewDataConfig {
 		public String valueKey;
 		public String recipeScope;
 		public String prompt;
+		public String unitType;
 		public String units;
 	}
 

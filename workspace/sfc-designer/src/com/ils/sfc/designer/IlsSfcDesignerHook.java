@@ -6,15 +6,11 @@ package com.ils.sfc.designer;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.swing.JComponent;
@@ -22,31 +18,52 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
-import com.ils.sfc.client.step.*;
-import com.ils.sfc.common.recipe.RecipeData;
-import com.ils.sfc.common.recipe.RecipeDataManager;
+import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructureCompiler;
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructureMgr;
-import com.ils.sfc.common.step.*;
+import com.ils.sfc.common.recipe.RecipeData;
+import com.ils.sfc.common.recipe.RecipeDataManager;
+import com.ils.sfc.common.step.AbortStepProperties;
+import com.ils.sfc.common.step.ClearQueueStepProperties;
+import com.ils.sfc.common.step.CloseWindowStepProperties;
+import com.ils.sfc.common.step.CollectDataStepProperties;
+import com.ils.sfc.common.step.ControlPanelMessageStepProperties;
+import com.ils.sfc.common.step.DeleteDelayNotificationStepProperties;
+import com.ils.sfc.common.step.DialogMessageStepProperties;
+import com.ils.sfc.common.step.EnableDisableStepProperties;
+import com.ils.sfc.common.step.InputStepProperties;
+import com.ils.sfc.common.step.LimitedInputStepProperties;
+import com.ils.sfc.common.step.PauseStepProperties;
+import com.ils.sfc.common.step.PostDelayNotificationStepProperties;
+import com.ils.sfc.common.step.PrintFileStepProperties;
+import com.ils.sfc.common.step.PrintWindowStepProperties;
+import com.ils.sfc.common.step.QueueMessageStepProperties;
+import com.ils.sfc.common.step.RawQueryStepProperties;
+import com.ils.sfc.common.step.ReviewDataStepProperties;
+import com.ils.sfc.common.step.SaveDataStepProperties;
+import com.ils.sfc.common.step.SelectInputStepProperties;
+import com.ils.sfc.common.step.SetQueueStepProperties;
+import com.ils.sfc.common.step.ShowQueueStepProperties;
+import com.ils.sfc.common.step.ShowWindowStepProperties;
+import com.ils.sfc.common.step.SimpleQueryStepProperties;
+import com.ils.sfc.common.step.TimedDelayStepProperties;
+import com.ils.sfc.common.step.YesNoStepProperties;
 import com.ils.sfc.designer.browser.IlsBrowserFrame;
 import com.ils.sfc.designer.recipeEditor.RecipeDataBrowser;
 import com.ils.sfc.util.IlsSfcCommonUtils;
 import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
-import com.inductiveautomation.ignition.common.config.BasicProperty;
-import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.designable.IDesignTool;
-import com.inductiveautomation.ignition.designer.designable.tools.SelectionTool;
 import com.inductiveautomation.ignition.designer.model.AbstractDesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.DesignerModuleHook;
 import com.inductiveautomation.sfc.SFCModule;
-import com.inductiveautomation.sfc.api.elements.StepElement;
+import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistryProvider;
 import com.inductiveautomation.sfc.client.ui.StepComponent;
@@ -55,8 +72,6 @@ import com.inductiveautomation.sfc.designer.api.StepConfigFactory;
 import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
 import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
-import com.inductiveautomation.sfc.uimodel.ChartUIElement;
-import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
 
@@ -67,7 +82,36 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private SFCWorkspace sfcWorkspace;
 	private JPopupMenu stepPopup;
 	private SFCDesignerHook iaSfcHook;
-
+	//private ChartManagerService chartManager;
+	private static String[] editorFactoryIds = {
+    	QueueMessageStepProperties.FACTORY_ID,
+    	SetQueueStepProperties.FACTORY_ID,
+    	ShowQueueStepProperties.FACTORY_ID,
+    	ClearQueueStepProperties.FACTORY_ID,
+    	YesNoStepProperties.FACTORY_ID,
+    	AbortStepProperties.FACTORY_ID,
+    	PauseStepProperties.FACTORY_ID,
+    	ControlPanelMessageStepProperties.FACTORY_ID,
+    	TimedDelayStepProperties.FACTORY_ID,
+    	DeleteDelayNotificationStepProperties.FACTORY_ID,
+    	PostDelayNotificationStepProperties.FACTORY_ID,
+       	EnableDisableStepProperties.FACTORY_ID,
+       	SelectInputStepProperties.FACTORY_ID,
+       	LimitedInputStepProperties.FACTORY_ID,
+       	DialogMessageStepProperties.FACTORY_ID,
+       	CollectDataStepProperties.FACTORY_ID,
+       	InputStepProperties.FACTORY_ID,
+       	RawQueryStepProperties.FACTORY_ID,
+       	SimpleQueryStepProperties.FACTORY_ID,
+       	SaveDataStepProperties.FACTORY_ID,
+       	PrintFileStepProperties.FACTORY_ID,
+       	PrintWindowStepProperties.FACTORY_ID,
+       	CloseWindowStepProperties.FACTORY_ID,
+       	ShowWindowStepProperties.FACTORY_ID,
+        ReviewDataStepProperties.FACTORY_ID,   
+        // enclosing step uses IA editor
+	};
+	
 	public IlsSfcDesignerHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
@@ -100,71 +144,20 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		initializeRecipeData();
 		
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
-		stepRegistry.register(QueueMessageStepUI.FACTORY);
-		stepRegistry.register(SetQueueStepUI.FACTORY);
-		stepRegistry.register(ShowQueueStepUI.FACTORY);
-		stepRegistry.register(ClearQueueStepUI.FACTORY);
-		stepRegistry.register(YesNoStepUI.FACTORY);
-		stepRegistry.register(AbortStepUI.FACTORY);
-		stepRegistry.register(PauseStepUI.FACTORY);
-		stepRegistry.register(ControlPanelMessageStepUI.FACTORY);
-		stepRegistry.register(TimedDelayStepUI.FACTORY);
-		stepRegistry.register(DeleteDelayNotificationStepUI.FACTORY);
-		stepRegistry.register(PostDelayNotificationStepUI.FACTORY);
-		stepRegistry.register(EnableDisableStepUI.FACTORY);
-		stepRegistry.register(SelectInputStepUI.FACTORY);
-		stepRegistry.register(LimitedInputStepUI.FACTORY);
-		stepRegistry.register(DialogMessageStepUI.FACTORY);
-		stepRegistry.register(CollectDataStepUI.FACTORY);
-		stepRegistry.register(InputStepUI.FACTORY);
-		stepRegistry.register(RawQueryStepUI.FACTORY);
-		stepRegistry.register(SimpleQueryStepUI.FACTORY);
-		stepRegistry.register(SaveDataStepUI.FACTORY);
-		stepRegistry.register(IlsEnclosingStepUI.FACTORY);
-		stepRegistry.register(PrintFileStepUI.FACTORY);
-		stepRegistry.register(PrintWindowStepUI.FACTORY);
-		stepRegistry.register(CloseWindowStepUI.FACTORY);
-		stepRegistry.register(ShowWindowStepUI.FACTORY);
-		stepRegistry.register(ProcedureStepUI.FACTORY);
-		stepRegistry.register(OperationStepUI.FACTORY);
-		stepRegistry.register(PhaseStepUI.FACTORY);
-		stepRegistry.register(ReviewDataStepUI.FACTORY);
+		for(ClientStepFactory clientStepFactory: AbstractIlsStepUI.clientStepFactories) {
+			stepRegistry.register(clientStepFactory);
+		}
 		    	
 		// register the config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory();
     	StepConfigRegistry configRegistry = (StepConfigRegistry) context.getModule(SFCModule.MODULE_ID);
-    	configRegistry.register(QueueMessageStepProperties.FACTORY_ID, editorFactory);
-    	configRegistry.register(SetQueueStepProperties.FACTORY_ID, editorFactory);
-    	configRegistry.register(ShowQueueStepProperties.FACTORY_ID, editorFactory);
-    	configRegistry.register(ClearQueueStepProperties.FACTORY_ID, editorFactory);
-    	configRegistry.register(YesNoStepProperties.FACTORY_ID, editorFactory);
-    	configRegistry.register(AbortStepProperties.FACTORY_ID, editorFactory);
-    	configRegistry.register(PauseStepProperties.FACTORY_ID, editorFactory);
-    	configRegistry.register(ControlPanelMessageStepProperties.FACTORY_ID, editorFactory);
-    	configRegistry.register(TimedDelayStepProperties.FACTORY_ID, editorFactory);
-    	configRegistry.register(DeleteDelayNotificationStepProperties.FACTORY_ID, editorFactory);
-    	configRegistry.register(PostDelayNotificationStepProperties.FACTORY_ID, editorFactory);
-       	configRegistry.register(EnableDisableStepProperties.FACTORY_ID, editorFactory);
-       	configRegistry.register(SelectInputStepProperties.FACTORY_ID, editorFactory);
-       	configRegistry.register(LimitedInputStepProperties.FACTORY_ID, editorFactory);
-       	configRegistry.register(DialogMessageStepProperties.FACTORY_ID, editorFactory);
-       	configRegistry.register(CollectDataStepProperties.FACTORY_ID, editorFactory);
-       	configRegistry.register(InputStepProperties.FACTORY_ID, editorFactory);
-       	configRegistry.register(RawQueryStepProperties.FACTORY_ID, editorFactory);
-       	configRegistry.register(SimpleQueryStepProperties.FACTORY_ID, editorFactory);
-       	configRegistry.register(SaveDataStepProperties.FACTORY_ID, editorFactory);
-       	configRegistry.register(PrintFileStepProperties.FACTORY_ID, editorFactory);
-       	configRegistry.register(PrintWindowStepProperties.FACTORY_ID, editorFactory);
-       	configRegistry.register(CloseWindowStepProperties.FACTORY_ID, editorFactory);
-       	configRegistry.register(ShowWindowStepProperties.FACTORY_ID, editorFactory);
-        configRegistry.register(ReviewDataStepProperties.FACTORY_ID, editorFactory);       	
+    	for(String factoryId: editorFactoryIds) {
+    		configRegistry.register(factoryId, editorFactory);
+    	}
       	
        	// These steps are extensions of IA steps and use the same editor
        	StepConfigFactory encFactory = iaSfcHook.getConfigFactory(EnclosingStepProperties.FACTORY_ID);
-        configRegistry.register(ProcedureStepProperties.FACTORY_ID, encFactory);       	
-        configRegistry.register(OperationStepProperties.FACTORY_ID, encFactory);       	
-        configRegistry.register(PhaseStepProperties.FACTORY_ID, encFactory);       	
-}
+ }
 
 	private void initializeRecipeData() {
 		RecipeDataManager.setContext(new RecipeDataManager.Context() {
@@ -234,6 +227,15 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 
 		});
 		stepPopup.add(clearItem);
+
+		JMenuItem reloadItem = new JMenuItem("Reload Recipe Data");
+		reloadItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RecipeDataManager.loadData();
+			}
+
+		});
+		stepPopup.add(reloadItem);
 
 		sfcWorkspace = iaSfcHook.getWorkspace();		
 		final IDesignTool tool = sfcWorkspace.getCurrentTool();

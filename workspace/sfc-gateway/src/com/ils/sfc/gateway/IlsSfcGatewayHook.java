@@ -5,34 +5,54 @@ package com.ils.sfc.gateway;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 import org.python.core.PyDictionary;
 
-import com.google.common.base.Optional;
 import com.ils.sfc.common.recipe.RecipeDataManager;
-import com.ils.sfc.step.*;
+import com.ils.sfc.step.AbortStepFactory;
+import com.ils.sfc.step.ClearQueueStepFactory;
+import com.ils.sfc.step.CloseWindowStepFactory;
+import com.ils.sfc.step.CollectDataStepFactory;
+import com.ils.sfc.step.ControlPanelMessageStepFactory;
+import com.ils.sfc.step.DeleteDelayNotificationStepFactory;
+import com.ils.sfc.step.DialogMessageStepFactory;
+import com.ils.sfc.step.EnableDisableStepFactory;
+import com.ils.sfc.step.IlsEnclosingStepFactory;
+import com.ils.sfc.step.InputStepFactory;
+import com.ils.sfc.step.LimitedInputStepFactory;
+import com.ils.sfc.step.PauseStepFactory;
+import com.ils.sfc.step.PostDelayNotificationStepFactory;
+import com.ils.sfc.step.PrintFileStepFactory;
+import com.ils.sfc.step.PrintWindowStepFactory;
+import com.ils.sfc.step.QueueMessageStepFactory;
+import com.ils.sfc.step.RawQueryStepFactory;
+import com.ils.sfc.step.ReviewDataStepFactory;
+import com.ils.sfc.step.SaveDataStepFactory;
+import com.ils.sfc.step.SelectInputStepFactory;
+import com.ils.sfc.step.SetQueueStepFactory;
+import com.ils.sfc.step.ShowQueueStepFactory;
+import com.ils.sfc.step.ShowWindowStepFactory;
+import com.ils.sfc.step.SimpleQueryStepFactory;
+import com.ils.sfc.step.TimedDelayStepFactory;
+import com.ils.sfc.step.YesNoStepFactory;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.script.JythonExecException;
+import com.inductiveautomation.ignition.common.project.ProjectVersion;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
-import com.inductiveautomation.sfc.ChartManager;
+import com.inductiveautomation.ignition.gateway.project.ProjectListener;
+import com.inductiveautomation.ignition.gateway.services.ModuleServiceConsumer;
+//import com.inductiveautomation.sfc.ChartManager;
 import com.inductiveautomation.sfc.SFCModule;
+import com.inductiveautomation.sfc.api.ChartManagerService;
 import com.inductiveautomation.sfc.api.SfcGatewayHook;
-import com.inductiveautomation.sfc.designer.SFCDesignerHook;
-import com.inductiveautomation.sfc.rpc.ChartStatus;
-import com.inductiveautomation.sfc.scripting.ChartInfo;
+import com.inductiveautomation.sfc.api.elements.StepFactory;
 
 //import com.ils.sfc.step.IlsSfcIO;
 
@@ -41,13 +61,43 @@ import com.inductiveautomation.sfc.scripting.ChartInfo;
  * we obtain the gateway context. It serves as our entry point into the
  * Ignition core.
  */
-public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
+public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements ModuleServiceConsumer {
 	public static String TAG = "SFCGatewayHook";
 	private final LoggerEx log;
 	private GatewayContext context = null;
+	private ChartManagerService chartManager;
 	private Map<UUID, PyDictionary> statusesById = Collections.synchronizedMap(
 		new HashMap<UUID, PyDictionary>());
 
+	private StepFactory[] stepFactories = {
+		new QueueMessageStepFactory(),
+		new SetQueueStepFactory(),
+		new ShowQueueStepFactory(),
+		new ClearQueueStepFactory(),
+		new YesNoStepFactory(),
+		new AbortStepFactory(),
+		new PauseStepFactory(),
+		new ControlPanelMessageStepFactory(),
+		new TimedDelayStepFactory(),
+		new DeleteDelayNotificationStepFactory(),
+		new PostDelayNotificationStepFactory(),
+		new EnableDisableStepFactory(),
+		new SelectInputStepFactory(),
+		new LimitedInputStepFactory(),
+		new DialogMessageStepFactory(),
+		new CollectDataStepFactory(),
+		new InputStepFactory(),
+		new RawQueryStepFactory(),
+		new SimpleQueryStepFactory(),
+		new SaveDataStepFactory(),
+		new PrintFileStepFactory(),
+		new PrintWindowStepFactory(),
+		new ShowWindowStepFactory(),
+		new CloseWindowStepFactory(),
+		new ReviewDataStepFactory(),
+		new IlsEnclosingStepFactory(),
+	};
+	
 	public IlsSfcGatewayHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
@@ -57,6 +107,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 	@Override
 	public void setup(GatewayContext ctxt) {
 		this.context = ctxt;
+		context.getModuleServicesManager().subscribe(ChartManagerService.class, this);
 	}
 
 	@Override
@@ -69,7 +120,21 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 	@Override
 	public void startup(LicenseState licenseState) {
 		ScriptManager.asynchInit("C:/Program Files/Inductive Automation/Ignition/user-lib/pylib");		
+		
+		// Setup a listener so if recipe data gets modified by designer, 
+		// RecipeDataManager reloads
+		context.getProjectManager().addProjectListener(new ProjectListener() {
+			public void projectAdded(Project arg0, Project arg1) {}
+			public void projectDeleted(long arg0) {}
 
+			public void projectUpdated(Project project, ProjectVersion arg1) {
+				System.out.println("project changed " + project.getName());
+				if(project.getId() == -1) { // global project					
+					RecipeDataManager.loadData();
+				}
+			}
+			
+		});
 		RecipeDataManager.setContext(new RecipeDataManager.Context() {
 			public long createResourceId() {
 				try {
@@ -91,7 +156,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 		});
 		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
 		RecipeDataManager.setStepRegistry(iaSfcHook.getStepRegistry());
-		
+/*		
 		long timerPeriodMillis = 30 * 1000;
  	    Timer gatewayTimer = new Timer();
  	    gatewayTimer.schedule(new TimerTask() {
@@ -129,10 +194,10 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 		sfcHook.getStepRegistry().register(new OperationStepFactory());
 		sfcHook.getStepRegistry().register(new PhaseStepFactory());
 		sfcHook.getStepRegistry().register(new ReviewDataStepFactory());
-		
+*/		
 	    log.infof("%s: Startup complete.",TAG);
 	}
-
+/*
 	private void doTimer() {
 		if(IlsGatewayScripts.getSfcProjectName() == null) {
 			return; // no context yet
@@ -183,9 +248,27 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook  {
 			log.error("Could not send chart status", e);
 		}
 	} 	    	
-
+*/
 	@Override
 	public void shutdown() {
+	}
+
+	@Override
+	public void serviceReady(Class<?> serviceClass) {
+		if (serviceClass == ChartManagerService.class) {
+            chartManager = context.getModuleServicesManager().getService(ChartManagerService.class);
+    		for(StepFactory stepFactory: stepFactories) {
+    			chartManager.register(stepFactory);
+    		}
+        }
+	}
+
+	@Override
+	public void serviceShutdown(Class<?> arg0) {
+		for(StepFactory stepFactory: stepFactories) {
+			chartManager.unregister(stepFactory);
+		}
+		chartManager = null;
 	}
 
 

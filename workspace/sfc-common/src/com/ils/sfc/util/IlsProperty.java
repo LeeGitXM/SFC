@@ -34,7 +34,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> DELAY_UNIT = new IlsProperty<String>(IlsSfcNames.DELAY_UNIT, String.class, IlsSfcNames.MINUTE);  
     public static final IlsProperty<String> DESCRIPTION = new IlsProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
     public static final IlsProperty<String> DIALOG = new IlsProperty<String>(IlsSfcNames.DIALOG, String.class, "");
-    public static final IlsProperty<String> DIALOG_TEMPLATE = new IlsProperty<String>(IlsSfcNames.DIALOG_TEMPLATE, String.class, "");
+    public static final IlsProperty<String> DIALOG_TEMPLATE = new IlsProperty<String>(IlsSfcNames.DIALOG_TEMPLATE, String.class, "ReviewData");
     public static final IlsProperty<String> DIRECTORY = new IlsProperty<String>(IlsSfcNames.DIRECTORY, String.class, "");
     public static final IlsProperty<String> DISPLAY_MODE = new IlsProperty<String>(IlsSfcNames.DISPLAY_MODE, String.class, IlsSfcNames.DISPLAY_MODE_CHOICES[0], IlsSfcNames.DISPLAY_MODE_CHOICES);
     public static final IlsProperty<Boolean> ENABLE_PAUSE = new IlsProperty<Boolean>(IlsSfcNames.ENABLE_PAUSE, Boolean.class, Boolean.TRUE);

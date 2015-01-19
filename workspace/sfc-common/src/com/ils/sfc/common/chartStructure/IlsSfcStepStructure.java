@@ -1,14 +1,11 @@
 package com.ils.sfc.common.chartStructure;
 
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructure.Parent;
-import com.ils.sfc.common.step.OperationStepProperties;
-import com.ils.sfc.common.step.PhaseStepProperties;
-import com.ils.sfc.common.step.ProcedureStepProperties;
 
 /** A class to hold an SFC Step's relationships in a way that is handy for us. */
 public class IlsSfcStepStructure {
 	private final String id; // required
-	private final String name; // required; the full path name of the chart
+	private final String name; // required; unique within chart
 	private final String factoryId; // required
 	private final IlsSfcChartStructure chart; // the chart that contains this step; required
 	private final IlsSfcStepStructure previous; // preceding step, if any; nullable
@@ -84,29 +81,29 @@ public class IlsSfcStepStructure {
 	
 	/** Get the Procedure at or above this step in the hierarchy, else null. */
 	public IlsSfcStepStructure getProcedure() {
-		return this.findParentWithFactoryId(ProcedureStepProperties.FACTORY_ID);
+		return this.findParentWithNameEnding("Procedure");
 	}
 	
 	/** Get the Operation at or above this step in the hierarchy, else null. */
 	public IlsSfcStepStructure getOperation() {
-		return this.findParentWithFactoryId(OperationStepProperties.FACTORY_ID);
+		return this.findParentWithNameEnding("Operation");
 	}
 	
 	/** Get the Procedure at or above this step in the hierarchy, else null. */
 	public IlsSfcStepStructure getPhase() {
-		return this.findParentWithFactoryId(PhaseStepProperties.FACTORY_ID);
+		return this.findParentWithNameEnding("Phase");
 	}
 	
 	/** Find an enclosing parent (or self) with the given factory id. Returns null
 	 *  if none found. */
-	public IlsSfcStepStructure findParentWithFactoryId(String parentFactoryId) {
-		if(this.factoryId.equals(parentFactoryId)) {
+	public IlsSfcStepStructure findParentWithNameEnding(String ending) {
+		if(name.endsWith(ending)) {
 			return this;
 		}
 		else {
 			IlsSfcStepStructure result = null;
 			for(Parent parent: chart.getParents()) {
-				if((result = parent.step.findParentWithFactoryId(parentFactoryId)) != null) {
+				if((result = parent.step.findParentWithNameEnding(ending)) != null) {
 					return result;
 				}
 			}

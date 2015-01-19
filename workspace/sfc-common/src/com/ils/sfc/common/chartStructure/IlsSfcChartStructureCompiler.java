@@ -1,7 +1,6 @@
 package com.ils.sfc.common.chartStructure;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,7 +10,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
-import com.ils.sfc.common.recipe.RecipeDataManager;
 import com.ils.sfc.util.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
@@ -131,8 +129,8 @@ public class IlsSfcChartStructureCompiler {
 		FolderInfo folderInfo = folderInfosById.get(id);
 		if(!folderInfo.parentId.equals(ROOT_FOLDER_ID)) {
 			getParentPath(folderInfo.parentId, buf);
+			buf.append("/");
 		}
-		buf.append("/");
 		buf.append(folderInfo.name);
 		return true;
 	}
@@ -183,7 +181,7 @@ public class IlsSfcChartStructureCompiler {
 				messages.add("Chart " + uiModelInfo.path + " did not compile.");
 			}
 			
-			IlsSfcChartStructure newChart = new IlsSfcChartStructure();
+			IlsSfcChartStructure newChart = new IlsSfcChartStructure(uiModelInfo.path);
 			chartsByName.put(uiModelInfo.path, newChart);
 			Set<UUID> seen = new HashSet<UUID>();
 			for(ElementDefinition def: compiledChart.getRootDefinitions()) {

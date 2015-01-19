@@ -1,15 +1,8 @@
 package com.ils.sfc.client.step;
 
-import java.awt.Dimension;
-import java.awt.Image;
-
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 import com.ils.sfc.common.step.IlsEnclosingStepDelegate;
-import com.ils.sfc.util.IlsSfcCommonUtils;
-import com.inductiveautomation.ignition.client.images.ImageLoader;
-import com.inductiveautomation.ignition.designer.gui.IconUtil;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;

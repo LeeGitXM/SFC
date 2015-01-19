@@ -87,6 +87,7 @@ public class IlsSfcNames {
 	public static final String TOP_CENTER = "topCenter";
 	public static final String TOP_LEFT = "topLeft";
 	public static final String TOP_RIGHT = "topRight";
+	public static final String UNITS = "units";
 	public static final String UPDATE = "update";
 	public static final String UPDATE_OR_CREATE = "updateOrCreate";
 	public static final String VALUE = "value";

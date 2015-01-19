@@ -1,7 +1,5 @@
 package com.ils.sfc.client;
 
-import javax.swing.JOptionPane;
-
 import com.inductiveautomation.ignition.client.gateway_interface.PushNotificationListener;
 import com.inductiveautomation.ignition.client.model.ClientContext;
 import com.inductiveautomation.ignition.common.gateway.messages.PushNotification;

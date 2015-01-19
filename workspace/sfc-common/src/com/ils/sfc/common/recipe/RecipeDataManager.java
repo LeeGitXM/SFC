@@ -43,7 +43,6 @@ public class RecipeDataManager {
 	 *  Call this to re-load the recipe data if some other process has changed it
 	 *  (e.g. a running chart may have changed it in the Gateway, so if a Designer
 	 *  is running it will need to refresh the (stale) cached data). */
-	@SuppressWarnings("unchecked")
 	public static RecipeData loadData() {
 		logger.info("loading recipe data");
 		

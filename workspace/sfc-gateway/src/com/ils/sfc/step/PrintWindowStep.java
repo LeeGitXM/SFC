@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class PrintWindowStep extends IlsAbstractChartStep implements PrintWindowStepProperties {
 	
-	protected PrintWindowStep(ChartContext context, StepDefinition definition) {
+	public PrintWindowStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 

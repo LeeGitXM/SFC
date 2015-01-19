@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class SaveDataStep extends IlsAbstractChartStep implements SaveDataStepProperties {
 	
-	protected SaveDataStep(ChartContext context, StepDefinition definition) {
+	public SaveDataStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 

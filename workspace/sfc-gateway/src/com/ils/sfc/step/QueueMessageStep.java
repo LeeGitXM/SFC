@@ -6,6 +6,7 @@ import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class QueueMessageStep extends IlsAbstractChartStep implements QueueMessageStepProperties {
+	
 	public QueueMessageStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}

@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class PostDelayNotificationStep extends IlsAbstractChartStep implements PostDelayNotificationStepProperties {
 	
-	protected PostDelayNotificationStep(ChartContext context, StepDefinition definition) {
+	public PostDelayNotificationStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 

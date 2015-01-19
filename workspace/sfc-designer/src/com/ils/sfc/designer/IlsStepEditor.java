@@ -2,7 +2,7 @@ package com.ils.sfc.designer;
 
 import java.awt.BorderLayout;
 
-import com.ils.sfc.designer.editor.PropertyEditor;
+import com.ils.sfc.designer.propertyEditor.PropertyEditor;
 import com.inductiveautomation.sfc.designer.api.AbstractStepEditor;
 import com.inductiveautomation.sfc.designer.api.ElementEditor;
 import com.inductiveautomation.sfc.designer.api.StepConfigFactory;

@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class DeleteDelayNotificationStep extends IlsAbstractChartStep implements DeleteDelayNotificationStepProperties {
 	
-	protected DeleteDelayNotificationStep(ChartContext context, StepDefinition definition) {
+	public DeleteDelayNotificationStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 

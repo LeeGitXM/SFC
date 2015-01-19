@@ -17,6 +17,10 @@ public class IlsSfcChartStructure {
 		}
 	}
 	
+	public IlsSfcChartStructure(String name) {
+		this.name = name;
+	}
+	
 	private String name; // the name of this chart
 	// All the steps in this chart:
 	private List<IlsSfcStepStructure> steps = new ArrayList<IlsSfcStepStructure>();	// the steps in this chart
@@ -25,10 +29,6 @@ public class IlsSfcChartStructure {
 	
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public void addParent(IlsSfcChartStructure chart, IlsSfcStepStructure step) {

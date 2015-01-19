@@ -1,8 +1,5 @@
 package com.ils.sfc.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.python.core.CompileMode;
 import org.python.core.CompilerFlags;
 import org.python.core.Py;
@@ -57,6 +54,12 @@ public class PythonCall {
 	public static final PythonCall OTHER_UNITS = new PythonCall("ils.common.units.unitsOfSameType", 
 			PyList.class,  new String[]{"unit"} );
 
+	public static final PythonCall GET_UNIT_TYPES = new PythonCall("ils.common.units.getUnitTypes", 
+			PyList.class,  new String[]{} );
+
+	public static final PythonCall GET_UNITS_OF_TYPE = new PythonCall("ils.common.units.getUnitsOfType", 
+			PyList.class,  new String[]{"unitType"} );
+
 	public static final PythonCall DELETE_DELAY_NOTIFICATION = new PythonCall(STEPS_PKG + "deleteDelayNotifications", 
 			PyList.class, stepArgs );
 
@@ -100,6 +103,9 @@ public class PythonCall {
 			PyList.class, stepArgs );
 
 	public static final PythonCall CLOSE_WINDOW = new PythonCall(STEPS_PKG + "closeWindow", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall REVIEW_DATA = new PythonCall(STEPS_PKG + "reviewData", 
 			PyList.class, stepArgs );
 
 	public static final PythonCall HANDLE_UNEXPECTED_ERROR = new PythonCall("ils.sfc.gateway.util." + "handleUnexpectedGatewayError", 
@@ -148,7 +154,13 @@ public class PythonCall {
 		catch(JythonExecException ex) {
 			if(this != HANDLE_UNEXPECTED_ERROR) {  // avoid recursion
 				String msg = ex.toString();
-				HANDLE_UNEXPECTED_ERROR.exec(argValues[0], msg);
+				if(argValues.length > 0 && "chartScope".equals(argValues[0])) {
+					HANDLE_UNEXPECTED_ERROR.exec(argValues[0], msg);
+				}
+				else {
+					// TODO: log instead of print
+					System.out.println("Error invoking script : " + msg);					
+				}
 			}
 			else {
 				System.out.println("Couldn't invoke handleUnexpectedError script : " + ex.toString());

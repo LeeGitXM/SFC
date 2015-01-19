@@ -12,9 +12,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructureCompiler;
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructureMgr;
 import com.ils.sfc.common.chartStructure.IlsSfcStepStructure;
-import com.ils.sfc.common.step.OperationStepProperties;
-import com.ils.sfc.common.step.PhaseStepProperties;
-import com.ils.sfc.common.step.ProcedureStepProperties;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
@@ -151,7 +148,7 @@ public class RecipeData {
 	/** Set method for Phase scope. */
 	public void setAtPhaseScope(String stepId, String path, Object value, boolean create)  throws RecipeDataException {
 		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
-		IlsSfcStepStructure phaseStep = step.findParentWithFactoryId(PhaseStepProperties.FACTORY_ID);
+		IlsSfcStepStructure phaseStep = step.getPhase();
 		if(phaseStep == null) {
 			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing Phase");
 		}
@@ -161,7 +158,7 @@ public class RecipeData {
 	/** Get name of the operation that encloses the given step. */
 	public String getOperationName(String stepId)  throws RecipeDataException {
 		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
-		IlsSfcStepStructure operationStep = step.findParentWithFactoryId(OperationStepProperties.FACTORY_ID);
+		IlsSfcStepStructure operationStep = step.getOperation();
 		if(operationStep != null) {
 			return operationStep.getName();
 		}
@@ -174,7 +171,7 @@ public class RecipeData {
 	/** Set method for Operation scope. */
 	public void setAtOperationScope(String stepId, String path, Object value, boolean create)  throws RecipeDataException {
 		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
-		IlsSfcStepStructure operationStep = step.findParentWithFactoryId(OperationStepProperties.FACTORY_ID);
+		IlsSfcStepStructure operationStep = step.getOperation();
 		if(operationStep == null) {
 			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing Operation");
 		}
@@ -184,7 +181,7 @@ public class RecipeData {
 	/** Set method for UnitProcedure scope. */
 	public void setAtProcedureScope(String stepId, String path, Object value, boolean create)  throws RecipeDataException {
 		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
-		IlsSfcStepStructure procedureStep = step.findParentWithFactoryId(ProcedureStepProperties.FACTORY_ID);
+		IlsSfcStepStructure procedureStep = step.getProcedure();
 		if(procedureStep == null) {
 			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing Procedure");
 		}
@@ -225,7 +222,7 @@ public class RecipeData {
 	/** Get method for Phase scope. */
 	public Object getAtPhaseScope(String stepId, String path)  throws RecipeDataException {
 		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
-		IlsSfcStepStructure phaseStep = step.findParentWithFactoryId(PhaseStepProperties.FACTORY_ID);
+		IlsSfcStepStructure phaseStep = step.getPhase();
 		if(phaseStep == null) {
 			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing Phase");
 		}
@@ -235,7 +232,7 @@ public class RecipeData {
 	/** Get method for Operation scope. */
 	public Object getAtOperationScope(String stepId, String path)  throws RecipeDataException {
 		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
-		IlsSfcStepStructure operationStep = step.findParentWithFactoryId(OperationStepProperties.FACTORY_ID);
+		IlsSfcStepStructure operationStep = step.getOperation();
 		if(operationStep == null) {
 			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing Operation");
 		}
@@ -245,7 +242,7 @@ public class RecipeData {
 	/** Get method for Procedure scope. */
 	public Object getAtProcedureScope(String stepId, String path)  throws RecipeDataException {
 		IlsSfcStepStructure step = structureMgr.getStepWithId(stepId);
-		IlsSfcStepStructure procedureStep = step.findParentWithFactoryId(ProcedureStepProperties.FACTORY_ID);
+		IlsSfcStepStructure procedureStep = step.getProcedure();
 		if(procedureStep == null) {
 			throw new RecipeDataException("step " + step.getName() + " does not have an enclosing Procedure");
 		}
@@ -310,10 +307,10 @@ public class RecipeData {
 	public ReviewDataConfig getReviewDataConfig(String stepId) {
 		try {
 			try {
-				byte[] bytes = (byte[])getAtLocalScope(stepId, REVIEW_DATA_KEY);
+				String reviewData = (String)getAtLocalScope(stepId, REVIEW_DATA_KEY);
 				ObjectMapper mapper = new ObjectMapper();
 				mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-				ReviewDataConfig config = mapper.readValue(bytes, ReviewDataConfig.class);
+				ReviewDataConfig config = mapper.readValue(reviewData, ReviewDataConfig.class);
 				return config;
 			}
 			catch(RecipeKeyException rke) {
@@ -322,7 +319,7 @@ public class RecipeData {
 			}
 		} catch (Exception e) {
 			logger.error("Exception getting review data config", e);
-			return null;
+			return  new ReviewDataConfig();
 		}
 	}
 
@@ -331,8 +328,7 @@ public class RecipeData {
 			ObjectMapper mapper = new ObjectMapper();
 			mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 			String json = mapper.writeValueAsString(config);
-			byte[] bytes = json.getBytes();
-			setAtLocalScope(stepId, REVIEW_DATA_KEY, bytes, true);
+			setAtLocalScope(stepId, REVIEW_DATA_KEY, json, true);
 		} catch (Exception e) {
 			logger.error("Exception setting review data", e);
 		}

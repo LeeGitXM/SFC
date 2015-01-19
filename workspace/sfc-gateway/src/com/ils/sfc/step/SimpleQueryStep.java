@@ -7,7 +7,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class SimpleQueryStep extends IlsAbstractChartStep implements SimpleQueryStepProperties {
 	
-	protected SimpleQueryStep(ChartContext context, StepDefinition definition) {
+	public SimpleQueryStep(ChartContext context, StepDefinition definition) {
 		super(context, definition);
 	}
 
