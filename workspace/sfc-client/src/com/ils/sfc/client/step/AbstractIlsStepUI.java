@@ -49,6 +49,8 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 		CloseWindowStepUI.FACTORY,
 		ShowWindowStepUI.FACTORY,
 		ReviewDataStepUI.FACTORY,		
+		ReviewDataWithAdviceStepUI.FACTORY,		
+		ReviewFlowsStepUI.FACTORY,		
 		IlsEnclosingStepUI.FACTORY,
 	};
 	

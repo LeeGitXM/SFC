@@ -11,32 +11,7 @@ import java.util.UUID;
 import org.python.core.PyDictionary;
 
 import com.ils.sfc.common.recipe.RecipeDataManager;
-import com.ils.sfc.step.AbortStepFactory;
-import com.ils.sfc.step.ClearQueueStepFactory;
-import com.ils.sfc.step.CloseWindowStepFactory;
-import com.ils.sfc.step.CollectDataStepFactory;
-import com.ils.sfc.step.ControlPanelMessageStepFactory;
-import com.ils.sfc.step.DeleteDelayNotificationStepFactory;
-import com.ils.sfc.step.DialogMessageStepFactory;
-import com.ils.sfc.step.EnableDisableStepFactory;
-import com.ils.sfc.step.IlsEnclosingStepFactory;
-import com.ils.sfc.step.InputStepFactory;
-import com.ils.sfc.step.LimitedInputStepFactory;
-import com.ils.sfc.step.PauseStepFactory;
-import com.ils.sfc.step.PostDelayNotificationStepFactory;
-import com.ils.sfc.step.PrintFileStepFactory;
-import com.ils.sfc.step.PrintWindowStepFactory;
-import com.ils.sfc.step.QueueMessageStepFactory;
-import com.ils.sfc.step.RawQueryStepFactory;
-import com.ils.sfc.step.ReviewDataStepFactory;
-import com.ils.sfc.step.SaveDataStepFactory;
-import com.ils.sfc.step.SelectInputStepFactory;
-import com.ils.sfc.step.SetQueueStepFactory;
-import com.ils.sfc.step.ShowQueueStepFactory;
-import com.ils.sfc.step.ShowWindowStepFactory;
-import com.ils.sfc.step.SimpleQueryStepFactory;
-import com.ils.sfc.step.TimedDelayStepFactory;
-import com.ils.sfc.step.YesNoStepFactory;
+import com.ils.sfc.step.*;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.project.Project;
@@ -95,6 +70,8 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		new ShowWindowStepFactory(),
 		new CloseWindowStepFactory(),
 		new ReviewDataStepFactory(),
+		new ReviewDataWithAdviceStepFactory(),
+		new ReviewFlowsStepFactory(),
 		new IlsEnclosingStepFactory(),
 	};
 	

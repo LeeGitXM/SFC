@@ -87,6 +87,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
        	CloseWindowStepProperties.FACTORY_ID,
        	ShowWindowStepProperties.FACTORY_ID,
         ReviewDataStepProperties.FACTORY_ID,   
+        ReviewDataWithAdviceStepProperties.FACTORY_ID,   
+        ReviewFlowsStepProperties.FACTORY_ID,   
         // enclosing step uses IA editor
 	};
 	
