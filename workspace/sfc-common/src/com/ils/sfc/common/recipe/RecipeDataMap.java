@@ -50,7 +50,6 @@ public class RecipeDataMap extends HashMap<String,Object> {
 		String lastKey = keys[keys.length - 1];
 		if(map.containsKey(lastKey)) {
 			Object value = map.get(lastKey);
-			System.out.println("pathGet " + path + " = " + value);
 			return value;
 		}
 		else {
@@ -67,7 +66,6 @@ public class RecipeDataMap extends HashMap<String,Object> {
 		String lastKey = keys[keys.length - 1];
 		if(map.containsKey(lastKey) || create) {
 //System.out.println("creating key " + lastKey + " for path " + path);
-System.out.println("pathPut " + path + " = " + value);
 
 			map.put(lastKey, value);
 		}

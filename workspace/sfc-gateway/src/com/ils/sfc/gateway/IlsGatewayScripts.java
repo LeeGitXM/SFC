@@ -85,8 +85,9 @@ public class IlsGatewayScripts {
 	 *  chart gets its own working copy of the static data that it can then modify.
 	 */
 	public static RecipeData getWorkingRecipeData() throws RecipeDataException {
-		RecipeData recipeData = RecipeDataManager.getData();
-		return recipeData.copy();
+		// TODO: remove this forced reload when we get change management working
+		//System.out.println("DEBUG!! Reloading recipe data for working copy...");
+		return RecipeDataManager.getWorkingCopy();
 	}
 
 	public static Object getRecipeData(RecipeData workingRecipeData, String scopeString, String stepId, String path) throws RecipeDataException {

@@ -269,6 +269,7 @@ public class RecipeDataBrowser extends JDialog {
 			}
 			if(newValueString != null) {
 				Object newValue = getValidValue(newValueString.trim(), currentValue);
+System.out.println("new valid value " + newValue);
 				if(newValue != null) {
 					selectedNode.setUserObject(newValue);
 					inputValid = true;
