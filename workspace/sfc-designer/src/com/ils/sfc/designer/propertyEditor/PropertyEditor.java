@@ -75,7 +75,13 @@ public class PropertyEditor extends JPanel {
 					if(rowObj.getProperty().equals(IlsProperty.REVIEW_DATA)) {
 						// kind of a hack here...REVIEW_DATA is a pseudo-property
 						// the complex values are held in the local recipe data of the step
-						ReviewDataEditorDialog dlg = new ReviewDataEditorDialog(frame, tableModel.getStepId());
+						ReviewDataEditorDialog dlg = new ReviewDataEditorDialog(frame, tableModel.getStepId(), false);
+						dlg.setVisible(true);						
+					}
+					else if(rowObj.getProperty().equals(IlsProperty.REVIEW_DATA_WITH_ADVICE)) {
+						// kind of a hack here...REVIEW_DATA_WITH_ADVICE is a pseudo-property
+						// the complex values are held in the local recipe data of the step
+						ReviewDataEditorDialog dlg = new ReviewDataEditorDialog(frame, tableModel.getStepId(), true);
 						dlg.setVisible(true);						
 					}
 					else {

@@ -23,6 +23,6 @@ public interface ReviewDataWithAdviceStepProperties extends ChartStepProperties 
     	BUTTON_KEY_LOCATION,
     	POSITION,
     	SCALE,
-    	REVIEW_DATA
+    	REVIEW_DATA_WITH_ADVICE
     };
 }

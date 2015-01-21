@@ -60,7 +60,9 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> QUEUE = new IlsProperty<String>(IlsSfcNames.QUEUE, String.class, "");
     public static final IlsProperty<String> RECIPE_LOCATION = new IlsProperty<String>(IlsSfcNames.RECIPE_LOCATION, String.class, IlsSfcNames.RECIPE_LOCATION_CHOICES[0], IlsSfcNames.RECIPE_LOCATION_CHOICES);
     public static final IlsProperty<String> RESULTS_MODE = new IlsProperty<String>(IlsSfcNames.RESULTS_MODE, String.class, "", IlsSfcNames.RESULTS_MODE_CHOICES);
+    public static final IlsProperty<String> REVIEW_FLOWS = new IlsProperty<String>(IlsSfcNames.REVIEW_FLOWS, String.class, null);
     public static final IlsProperty<String> REVIEW_DATA = new IlsProperty<String>(IlsSfcNames.REVIEW_DATA, String.class, null);
+    public static final IlsProperty<String> REVIEW_DATA_WITH_ADVICE = new IlsProperty<String>(IlsSfcNames.REVIEW_DATA_WITH_ADVICE, String.class, null);
     public static final IlsProperty<String> SCREEN_HEADER = new IlsProperty<String>(IlsSfcNames.SCREEN_HEADER, String.class, "");
     public static final IlsProperty<String> SECURITY = new IlsProperty<String>(IlsSfcNames.SECURITY, String.class, IlsSfcNames.SECURITY_CHOICES[0], IlsSfcNames.SECURITY_CHOICES);
     public static final IlsProperty<Boolean> SHOW_PRINT_DIALOG = new IlsProperty<Boolean>(IlsSfcNames.SHOW_PRINT_DIALOG, Boolean.class, Boolean.TRUE);

@@ -20,19 +20,21 @@ import javax.swing.JPopupMenu;
 
 import com.ils.sfc.client.step.*;
 import com.ils.sfc.common.step.*;
-
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructureCompiler;
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructureMgr;
 import com.ils.sfc.common.recipe.RecipeData;
 import com.ils.sfc.common.recipe.RecipeDataManager;
-
 import com.ils.sfc.designer.browser.IlsBrowserFrame;
 import com.ils.sfc.designer.recipeEditor.RecipeDataBrowser;
 import com.ils.sfc.util.IlsSfcCommonUtils;
+import com.ils.sfc.util.IlsSfcModule;
 import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.project.Project;
+import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
+import com.inductiveautomation.ignition.common.project.ProjectResource;
+import com.inductiveautomation.ignition.common.project.ProjectVersion;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -40,6 +42,7 @@ import com.inductiveautomation.ignition.designer.designable.IDesignTool;
 import com.inductiveautomation.ignition.designer.model.AbstractDesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.DesignerModuleHook;
+import com.inductiveautomation.ignition.gateway.project.ProjectListener;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
@@ -119,16 +122,29 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	public void startup(DesignerContext ctx, LicenseState activationState) throws Exception {
 		this.context = ctx;
         log.debug("starting up...");
-   	// register step factories. this is duplicated in IlsSfcClientHook.
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-		initializeRecipeData();
+       
+        // Initialize recipe data, and create a listener that will reload data if 
+        // charts change
+		initializeRecipeData();  // note: this needs iaSfcHook
+		context.getGlobalProject().addProjectChangeListener(new ProjectChangeListener() {
+			@Override
+			public void projectResourceModified(ProjectResource resource,ResourceModification arg1) {
+				if(resource.getModuleId().equals(SFCModule.MODULE_ID)) {
+					RecipeDataManager.setStale();
+				}
+			}
+			@Override public void projectUpdated(Project arg0) {}
+		});
+
 		
+		// Register steps
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
 		for(ClientStepFactory clientStepFactory: AbstractIlsStepUI.clientStepFactories) {
 			stepRegistry.register(clientStepFactory);
 		}
 		    	
-		// register the config factories (ie the editors)
+		// register the step config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory();
     	StepConfigRegistry configRegistry = (StepConfigRegistry) context.getModule(SFCModule.MODULE_ID);
     	for(String factoryId: editorFactoryIds) {

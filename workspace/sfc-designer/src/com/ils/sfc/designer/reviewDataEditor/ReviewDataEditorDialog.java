@@ -29,14 +29,16 @@ public class ReviewDataEditorDialog extends JDialog {
 	private JButton cancelButton = new JButton("Cancel");
 	private JButton addButton = new JButton("Add");
 	private JButton removeButton = new JButton("Remove");
-	private ReviewDataTableModel tableModel = new ReviewDataTableModel();
-	private JTable table = new JTable(tableModel);
+	private ReviewDataTableModel tableModel;
+	private JTable table;
 	
-	public ReviewDataEditorDialog(ReviewDataConfig config) {
-		initUI(config);
+	public ReviewDataEditorDialog(ReviewDataConfig config, boolean showAdvice) {
+		initUI(config, showAdvice);
 	}
 
-	private void initUI(ReviewDataConfig config) {
+	private void initUI(ReviewDataConfig config, boolean showAdvice) {
+		tableModel = new ReviewDataTableModel(showAdvice);
+		table = new JTable(tableModel);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setDefaultEditor(Object.class, new ReviewDataCellEditor());
 		table.setDefaultRenderer(Object.class, new ReviewDataCellRenderer());
@@ -82,7 +84,7 @@ public class ReviewDataEditorDialog extends JDialog {
 		this.setSize(700,400);
 	}
 	
-	public ReviewDataEditorDialog(JFrame frame, String stepId) {
+	public ReviewDataEditorDialog(JFrame frame, String stepId, boolean showAdvice) {
 		super(frame, ModalityType.APPLICATION_MODAL);
 		this.stepId = stepId;
 		String errorMsg = null;
@@ -98,7 +100,7 @@ public class ReviewDataEditorDialog extends JDialog {
 		if(errorMsg != null) {
 			JOptionPane.showConfirmDialog(frame, errorMsg, "Configuration Error", JOptionPane.WARNING_MESSAGE);
 		}
-		initUI(config);
+		initUI(config, showAdvice);
 	}
 	
 	private void doOK() {
@@ -119,10 +121,5 @@ public class ReviewDataEditorDialog extends JDialog {
 		tableModel.removeSelectedRow(selectedRow);
 	}
 
-	public static void main(String[] args) {
-		ReviewDataConfig config = new ReviewDataConfig();
-		ReviewDataEditorDialog dlg = new ReviewDataEditorDialog(config);
-		dlg.setVisible(true);
-	}
 }
 

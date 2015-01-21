@@ -22,12 +22,13 @@ class ReviewDataCellEditor extends AbstractCellEditor implements TableCellEditor
 
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected,
 		int row, int col) {
-		if(col == 2 || col == 4 || col == 5) {
+		ReviewDataTableModel tableModel = (ReviewDataTableModel)table.getModel();
+		if(tableModel.isComboColumn(col)) {
 			Object[] choices = null;
-			if(col == 2) { // recipe scope
+			if(tableModel.isDestinationColumn(col)) { // recipe scope
 				choices = IlsSfcNames.RECIPE_LOCATION_CHOICES;
 			}
-			else if(col == 4) { // unit types
+			else if(tableModel.isUnitTypesColumn(col)) { // unit types
 				try {
 					choices = PythonCall.toArray(PythonCall.GET_UNIT_TYPES.exec());
 				} catch (JythonExecException e) {
@@ -36,7 +37,6 @@ class ReviewDataCellEditor extends AbstractCellEditor implements TableCellEditor
 			}
 			else {//  units
 				try {
-					ReviewDataTableModel tableModel = (ReviewDataTableModel)table.getModel();
 					Row rowObj = tableModel.getRowObject(row);
 					if(!IlsSfcCommonUtils.isEmpty(rowObj.unitType)) {
 						System.out.println("unit type " + rowObj.unitType);

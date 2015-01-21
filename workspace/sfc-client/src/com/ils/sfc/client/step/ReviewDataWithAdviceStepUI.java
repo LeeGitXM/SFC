@@ -9,7 +9,7 @@ import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public class ReviewDataWithAdviceStepUI extends AbstractIlsStepUI {
-	protected static Icon reviewDataWithAdviceIcon = null; // new ImageIcon(AbstractIlsStepUI.class.getResource("/images/ReviewDataWithAdvice.png"));
+	protected static Icon reviewDataWithAdviceIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/reviewDataStar.png"));
 
     public static final ClientStepFactory FACTORY = new ReviewDataWithAdviceStepFactory();
 

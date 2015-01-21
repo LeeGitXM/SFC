@@ -84,7 +84,6 @@ public class IlsSfcCommonUtils {
 				writer.writeStartElement(pvalue.getProperty().getName());
 				if(pvalue.getValue() != null) {
 					String saveValue = pvalue.getValue().toString();
-					System.out.println(pvalue.getProperty().getName() + ": " + saveValue);
 					writer.writeCharacters(saveValue);
 				}
 				else {

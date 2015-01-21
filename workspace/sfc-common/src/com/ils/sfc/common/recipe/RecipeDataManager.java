@@ -17,6 +17,7 @@ public class RecipeDataManager {
 	private static ProjectResource projectResource;
 	private static Context context;
 	private static StepRegistry stepRegistry;
+	private static boolean isStale;
 
 	private static LoggerEx logger = LogUtil.getLogger(RecipeDataManager.class.getName());
 	
@@ -34,6 +35,10 @@ public class RecipeDataManager {
 			if(_recipeData == null) {
 				createData();
 			}
+		}
+		else if(isStale) {
+			loadData();
+			isStale = false;
 		}
 		return _recipeData;
 	}
@@ -58,6 +63,14 @@ public class RecipeDataManager {
 		}
 		
 		return _recipeData;
+	}
+	
+	public static boolean isStale() {
+		return isStale;
+	}
+	
+	public static void setStale() {
+		isStale = true;
 	}
 	
 	public static RecipeData getWorkingCopy() {

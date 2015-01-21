@@ -105,9 +105,10 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 			public void projectDeleted(long arg0) {}
 
 			public void projectUpdated(Project project, ProjectVersion arg1) {
-				System.out.println("project changed " + project.getName());
+				// this is overly broad, but if we see a change in the global project
+				// we assume an SFC may have changed an set the recipe data stale:
 				if(project.getId() == -1) { // global project					
-					RecipeDataManager.loadData();
+					RecipeDataManager.setStale();
 				}
 			}
 			

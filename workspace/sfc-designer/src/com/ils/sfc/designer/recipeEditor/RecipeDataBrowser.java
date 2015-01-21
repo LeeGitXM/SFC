@@ -117,15 +117,22 @@ public class RecipeDataBrowser extends JDialog {
 	}
 
 	private void createTree(String stepId) {
+		// Check that the step exists--if it doesn't we are probably out of sync:
+		IlsSfcStepStructure step = recipeData.getStructureMgr().getStepWithId(stepId);
+		if(step == null) {
+			JOptionPane.showMessageDialog(this, "Recipe Data for this step was not found. Please save changes and try again.");
+			doClose();
+			return;
+		}
+		
 		top.setContentsEditable(false);
 		treeModel = new DefaultTreeModel(top);
-
 		createSubTree(stepId, "Local");
-		IlsSfcStepStructure step = recipeData.getStructureMgr().getStepWithId(stepId);
 		IlsSfcStepStructure parentStep = step.getParent();
 		IlsSfcStepStructure procedureStep = step.getProcedure();
 		IlsSfcStepStructure operationStep = step.getOperation();
 		IlsSfcStepStructure phaseStep = step.getPhase();
+		IlsSfcStepStructure previousStep = step.getPrevious();
 		if(parentStep != null) {
 			createSubTree(step.getParent().getId(), "Superior");
 		}
@@ -137,6 +144,9 @@ public class RecipeDataBrowser extends JDialog {
 		}
 		if(phaseStep != null) {
 			createSubTree(phaseStep.getId(), "Phase");
+		}
+		if(previousStep != null) {
+			createSubTree(previousStep.getId(), "Previous");
 		}
 		createNamedSubtree();
 		

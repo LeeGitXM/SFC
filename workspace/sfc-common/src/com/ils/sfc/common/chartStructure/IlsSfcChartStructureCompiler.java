@@ -203,10 +203,12 @@ public class IlsSfcChartStructureCompiler {
 		if(elDef.getElementType() == ElementDefinition.ElementType.Step) {
 			StepDefinition stepDef = (StepDefinition)elDef;
 			IlsSfcStepStructure thisStep = getOrCreateStep(chart, stepDef, previousStep);
+			// by only setting "previousStep" if the object we are looking at is a step,
+			// we can skip over intervening non-step objects like transitions...
 			previousStep = thisStep;
 		}
 		for(ElementDefinition nextDef: elDef.getNextElements()) {
-			createSteps(chart, nextDef, null, seen);
+			createSteps(chart, nextDef, previousStep, seen);
 		}
 	}
 	

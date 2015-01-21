@@ -70,6 +70,8 @@ public class IlsSfcNames {
 	public static final String REGISTER_ONLY = "registerOnly";
 	public static final String RESULTS_MODE = "resultsMode"; 
 	public static final String REVIEW_DATA = "reviewData"; 
+	public static final String REVIEW_DATA_WITH_ADVICE = "reviewDataWithAdvice"; 
+	public static final String REVIEW_FLOWS = "reviewFlows"; 
 	public static final String SCALE = "scale";
 	public static final String SCREEN_HEADER = "screenHeader";
 	public static final String SECURITY = "security";

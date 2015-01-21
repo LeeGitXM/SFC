@@ -100,14 +100,18 @@ public class IlsGatewayScripts {
 		workingRecipeData.set(scope,  stepId, path, value, create);
 	}
 	
-	public static PyList getReviewDataConfig(String stepId) {
+	public static PyList getReviewDataConfig(String stepId, boolean addAdvice) {
 		PyList result = new PyList();
 	    RecipeData recipeData = RecipeDataManager.getData();
 	    ReviewDataConfig dataConfig = recipeData.getReviewDataConfig(stepId);
+       	System.out.println("addAdvice: " + addAdvice);
 	    for(ReviewDataConfig.Row row: dataConfig.getRows()) {
 	    	PyList rowConfig = new PyList();
 	        result.add(rowConfig);
 	        rowConfig.add(row.prompt);
+ 	        if(addAdvice) {
+	        	rowConfig.add(row.advice);
+	        }
 	        RecipeScope scopeEnum = RecipeScope.valueOf(row.recipeScope);
 	        Object value = null;
 			try {
