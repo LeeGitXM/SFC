@@ -1,7 +1,7 @@
 /**
  * Copyright 2014. ILS Automation. All rights reserved.
  */
-package com.ils.sfc.designer.browser;
+package com.ils.sfc.browser;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;

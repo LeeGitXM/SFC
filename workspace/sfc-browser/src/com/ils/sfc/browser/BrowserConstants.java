@@ -1,7 +1,7 @@
 /**
  *   (c) 2014  ILS Automation. All rights reserved.
  */
-package com.ils.sfc.designer.browser;
+package com.ils.sfc.browser;
 
 
 

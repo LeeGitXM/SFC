@@ -6,7 +6,7 @@
  * 
  * @author <a href="http://jheer.org">jeffrey heer</a>
  */
-package com.ils.sfc.designer.browser;
+package com.ils.sfc.browser;
 
 import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
@@ -189,8 +189,6 @@ public class ChartTreeView extends Display {
         // filter graph and perform layout
         setOrientation(m_orientation);
         m_vis.run("filter");
-        
-        // Leave out any search capabilities
     }
     
     // ------------------------------------------------------------------------

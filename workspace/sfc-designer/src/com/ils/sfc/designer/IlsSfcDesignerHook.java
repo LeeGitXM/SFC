@@ -9,8 +9,6 @@ import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import javax.swing.JComponent;
@@ -18,23 +16,46 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
-import com.ils.sfc.client.step.*;
-import com.ils.sfc.common.step.*;
+import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructureCompiler;
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructureMgr;
 import com.ils.sfc.common.recipe.RecipeData;
 import com.ils.sfc.common.recipe.RecipeDataManager;
-import com.ils.sfc.designer.browser.IlsBrowserFrame;
+import com.ils.sfc.common.step.AbortStepProperties;
+import com.ils.sfc.common.step.ClearQueueStepProperties;
+import com.ils.sfc.common.step.CloseWindowStepProperties;
+import com.ils.sfc.common.step.CollectDataStepProperties;
+import com.ils.sfc.common.step.ControlPanelMessageStepProperties;
+import com.ils.sfc.common.step.DeleteDelayNotificationStepProperties;
+import com.ils.sfc.common.step.DialogMessageStepProperties;
+import com.ils.sfc.common.step.EnableDisableStepProperties;
+import com.ils.sfc.common.step.InputStepProperties;
+import com.ils.sfc.common.step.LimitedInputStepProperties;
+import com.ils.sfc.common.step.PauseStepProperties;
+import com.ils.sfc.common.step.PostDelayNotificationStepProperties;
+import com.ils.sfc.common.step.PrintFileStepProperties;
+import com.ils.sfc.common.step.PrintWindowStepProperties;
+import com.ils.sfc.common.step.QueueMessageStepProperties;
+import com.ils.sfc.common.step.RawQueryStepProperties;
+import com.ils.sfc.common.step.ReviewDataStepProperties;
+import com.ils.sfc.common.step.ReviewDataWithAdviceStepProperties;
+import com.ils.sfc.common.step.ReviewFlowsStepProperties;
+import com.ils.sfc.common.step.SaveDataStepProperties;
+import com.ils.sfc.common.step.SelectInputStepProperties;
+import com.ils.sfc.common.step.SetQueueStepProperties;
+import com.ils.sfc.common.step.ShowQueueStepProperties;
+import com.ils.sfc.common.step.ShowWindowStepProperties;
+import com.ils.sfc.common.step.SimpleQueryStepProperties;
+import com.ils.sfc.common.step.TimedDelayStepProperties;
+import com.ils.sfc.common.step.YesNoStepProperties;
 import com.ils.sfc.designer.recipeEditor.RecipeDataBrowser;
 import com.ils.sfc.util.IlsSfcCommonUtils;
-import com.ils.sfc.util.IlsSfcModule;
 import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
-import com.inductiveautomation.ignition.common.project.ProjectVersion;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -42,7 +63,6 @@ import com.inductiveautomation.ignition.designer.designable.IDesignTool;
 import com.inductiveautomation.ignition.designer.model.AbstractDesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.DesignerModuleHook;
-import com.inductiveautomation.ignition.gateway.project.ProjectListener;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
@@ -53,13 +73,10 @@ import com.inductiveautomation.sfc.designer.api.StepConfigFactory;
 import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
 import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
-import com.jidesoft.docking.DockContext;
-import com.jidesoft.docking.DockableFrame;
 
 public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook {
 	private DesignerContext context = null;
 	private final LoggerEx log;
-	private IlsBrowserFrame browser = null;
 	private SFCWorkspace sfcWorkspace;
 	private JPopupMenu stepPopup;
 	private SFCDesignerHook iaSfcHook;
@@ -99,17 +116,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
 		
-	@Override
-	public List<DockableFrame> getFrames() {
-		// Add a frame for our custom chart browser
-       	List<DockableFrame> frames = new ArrayList<>();
-       	browser = new IlsBrowserFrame(context);
-       	browser.setInitMode(DockContext.STATE_AUTOHIDE);
-       	browser.setInitSide(DockContext.DOCK_SIDE_WEST);
-       	browser.setInitIndex(1);
-       	frames.add(browser);
-       	return frames;
-	}
 	
 	@Override
 	public void initializeScriptManager(ScriptManager mgr) {

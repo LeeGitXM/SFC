@@ -12,7 +12,6 @@
 		<documentation>index.html</documentation>
 
 		<!-- Add the module dependencies for each scope -->
-		<!-- NOTE: Build fails here if we specify a Gateway dependency -->
 		<depends scope="G">com.inductiveautomation.sfc</depends>
 		<depends scope="C">com.inductiveautomation.sfc</depends>
 		<depends scope="D">com.inductiveautomation.sfc</depends>
@@ -21,8 +20,6 @@
 		<jar scope="CD">ils-sfc-client.jar.pack.gz</jar>
 		<jar scope="D">ils-sfc-designer.jar.pack.gz</jar>
 		<jar scope="CD">ils-sfc-common.jar.pack.gz</jar>
-		<jar scope="CD">lucene-1.4.3.jar.pack.gz</jar>
-		<jar scope="CD">prefuse-1.0.1.jar.pack.gz</jar>
 		<jar scope="CD">jackson-databind-2.2.3.jar.pack.gz</jar>
 		<jar scope="CD">jackson-core-2.2.3.jar.pack.gz</jar>
 		<jar scope="CD">jackson-annotations-2.2.3.jar.pack.gz</jar>

@@ -2,7 +2,7 @@
  *   (c) 2014  ILS Automation. All rights reserved.
  *   http://docs.oracle.com/javase/tutorial/displayCode.html?code=http://docs.oracle.com/javase/tutorial/uiswing/examples/components/SharedModelDemoProject/src/components/SharedModelDemo.java
  */
-package com.ils.sfc.designer.browser;
+package com.ils.sfc.browser;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
