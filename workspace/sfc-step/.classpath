@@ -8,10 +8,5 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/sfc-common"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Ignition-77"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-client.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-common.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-designer.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-gateway.jar"/>
-	<classpathentry kind="lib" path="/Ignition-77/lib/sfc-gateway-api.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

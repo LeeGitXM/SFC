@@ -13,6 +13,8 @@ import prefuse.visual.VisualItem;
 import prefuse.visual.tuple.TableNodeItem;
 
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
+import com.inductiveautomation.sfc.SFCModule;
+import com.inductiveautomation.sfc.designer.SFCDesignerHook;
 
 
 /**
@@ -44,14 +46,9 @@ public class ChartSelector extends ControlAdapter implements Control {
 					@Override
 					public void run() {
 						if( clicks==clickCount) {
-							final JDialog editor = (JDialog)new ChartSelectionDialog(context.getFrame(),item);
-							editor.pack();
-							editor.setLocation(e.getX()-OFFSET, e.getY()-OFFSET);
-							SwingUtilities.invokeLater(new Runnable() {
-								public void run() {
-									editor.setVisible(true);
-								}
-							}); 
+							 SFCDesignerHook hook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
+							 
+							 hook.getWorkspace().openChart(item.getInt(BrowserConstants.RESOURCE));
 						}
 						clicks = 0;
 					}

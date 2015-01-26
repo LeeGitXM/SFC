@@ -20,7 +20,6 @@ public interface BrowserConstants   {
 	public static final String PATH    = "Path";       // Chart identifier
 	public static final String RESOURCE = "Resource"; // ResourceId
 	public static final String STATUS   = "Status";   // Health of the node
-	
 	// Indicates a VisualItem resource that represents an enclosing chart step
 	public static final int NO_RESOURCE = -2;  // Enclosing step has no associated resource
 	// Status values

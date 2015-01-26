@@ -3,9 +3,12 @@
  */
 package com.ils.sfc.browser;
 import java.awt.BorderLayout;
+import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
@@ -25,35 +28,47 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 	private static final long serialVersionUID = 4278524462387470494L;
 	private static final String TAG = "IlsBrowserFrame";
 	private static final String DOCKING_KEY = "SfcChartBrowserFrame";
-	private static final String TITLE = "Chart Browser";
-	private static final String SHORT_TITLE = "Charts";
+	private ResourceBundle rb = null;
 	private final DesignerContext context;
 	private final LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
 	private final JPanel contentPanel;
+	private final JPanel legendPanel;
 	private ChartTreeView view = null;
 	
 	public IlsBrowserFrame(DesignerContext ctx) {
 		super(DOCKING_KEY);  // Pinned icon
 		context = ctx;
 		contentPanel = new JPanel(new BorderLayout());
-		init();
+		legendPanel  = createLegendPanel();
+		rb = ResourceBundle.getBundle("com.ils.sfc.browser.browser");
+		JTabbedPane mainPanel = createTabPane(contentPanel,legendPanel);
+		init(mainPanel);
+		updateContentPanel();
 		context.addProjectChangeListener(this);
 	}
 
 	/**
-	 * Initialize the UI
+	 * Initialize the tabbed panel as the window's content pane
 	 */
-	private void init() {
-		setTitle(TITLE);
-		setSideTitle(SHORT_TITLE);
-		setTabTitle(SHORT_TITLE);
-		setContentPane(contentPanel);
-		
-		contentPanel.setBorder(BorderFactory.createEtchedBorder());
-		updateChartView();
+	private void init(JTabbedPane mainPanel) {
+		setTitle(rb.getString("chart.tab.title"));
+		setSideTitle(rb.getString("chart.tab.short.title"));
+		setTabTitle(rb.getString("chart.tab.short.title"));
+		setContentPane(mainPanel);
+		mainPanel.setBorder(BorderFactory.createEtchedBorder());
 	}
 	
-	private void updateChartView() {
+	private JTabbedPane createTabPane(JPanel content,JPanel legend) {
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
+		tabbedPane.addTab(rb.getString("main.tab.tree"),null,content,
+		                  rb.getString("main.tab.tree.tooltip"));
+		tabbedPane.addTab(rb.getString("main.tab.legend"),null,legend,
+                          rb.getString("main.tab.legend.tooltip"));
+		tabbedPane.setSelectedIndex(0);
+		
+		return tabbedPane;
+	}
+	private void updateContentPanel() {
 		contentPanel.removeAll();
 		contentPanel.invalidate();
 		this.view = createChartTreeView();
@@ -66,6 +81,22 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 		log.infof("%s.createChartTreeView: New view ....",TAG);
 		ChartTreeDataModel model = new ChartTreeDataModel(context);
 		return new ChartTreeView(context,model,BrowserConstants.NAME);
+	}
+	
+	private JPanel createLegendPanel() {
+		JPanel lp = new JPanel(new BorderLayout());
+		JLabel label = new JLabel();
+		String html = 
+			"<html><head>"
+			+ "<title>ILS Chart Browser for SFC's</title></head>"
+			+ "<H2>Summary</H2>"
+			+ "<P> The <UL>ILS Chart Browser</UL> provides a logical view of what may be a complicated Sequential Function Chart diagram."
+			+ "<H2>Gestures</H2>"
+			+ "<H2>Legend</H2>"
+			+ "</html>";
+		label.setText(html);
+		lp.add(label,BorderLayout.CENTER);
+		return lp;
 	}
 	
 	@Override
@@ -81,13 +112,13 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 	public void projectResourceModified(ProjectResource res, ProjectChangeListener.ResourceModification changeType) {
 		log.infof("%s.projectResourceModified: %s = %d (%s:%s)", TAG,changeType.name(),res.getResourceId(),res.getName(),res.getResourceType());
 		if( res.getResourceType().equals(BrowserConstants.CHART_RESOURCE_TYPE)) {
-			updateChartView();
+			updateContentPanel();
 		}
 	}
 
 	@Override
 	public void projectUpdated(Project arg0) {
 		log.infof("%s.projectResourceUpdated", TAG);
-		updateChartView();
+		updateContentPanel();
 	}
 }

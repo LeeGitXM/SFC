@@ -12,21 +12,18 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.AbstractDesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.DesignerModuleHook;
-import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.designer.SFCDesignerHook;
-import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
 import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
 
 
 public class IlsSfcBrowserHook extends AbstractDesignerModuleHook implements DesignerModuleHook {
+	private final static String TAG = "IlsSfcBrowserHook";
 	private DesignerContext context = null;
 	private final LoggerEx log;
 	private IlsBrowserFrame browser = null;
-	private SFCWorkspace sfcWorkspace;
 	private SFCDesignerHook iaSfcHook = null;
 
-	
 	
 	public IlsSfcBrowserHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
@@ -44,16 +41,13 @@ public class IlsSfcBrowserHook extends AbstractDesignerModuleHook implements Des
        	return frames;
 	}
 	
+	// We would like to add the browser to the Standard SFC frames here, but the 
+	// IA SFC Hook doesn't have its frames created yet, plus it's not clear that you
+	// can augment another module's frames.
 	@Override
 	public void startup(DesignerContext ctx, LicenseState activationState) throws Exception {
 		this.context = ctx;
-        log.debug("starting up...");
-        SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-		browser = new IlsBrowserFrame(context);
-       	browser.setInitMode(DockContext.STATE_AUTOHIDE);
-       	browser.setInitSide(DockContext.DOCK_SIDE_WEST);
-       	browser.setInitIndex(1);
-       	iaSfcHook.getFrames().add(browser);
+        log.infof("%s.startup...",TAG);
 	}
 
 	@Override

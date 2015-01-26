@@ -12,7 +12,7 @@
 		<documentation>index.html</documentation>
 		
 		<!-- Add the module dependencies for each scope -->
-		<depends scope="D">ilssfc</depends>
+		<depends scope="D">com.ils.sfc</depends>
 		
 		<!-- Load in our jars for each scope -->
 		<jar scope="CD">ils-sfc-browser.jar.pack.gz</jar>
