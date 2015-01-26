@@ -12,7 +12,7 @@
 	<property name="root.dir" value="${basedir}/../.." />
 	<property name="jar.dir" value="${root.dir}/external/lib" />
 	<property name="sdk.dir" value="${root.dir}/ignition-77/lib" />
-	<property name="browser.jar.name" value="ils-sfc.browser.jar" />
+	<property name="browser.jar.name" value="ils-sfc.browser" />
 	<property name="browser.bin.dir" value="${basedir}/${sfc.browser.name}/bin" />
 	<property name="browser.src.dir" value="${basedir}/${sfc.browser.name}/src" />
 	<property name="ant.build.javac.source" value="1.7"/>
@@ -45,7 +45,7 @@
 		</javac>
 	</target>
 	<target name ="browser.jar" description="Create a jar for the ILS SFC Browser">
-	    <jar destfile="${jar.dir}/${browser.jar.name}" includes="**/*.class" basedir="${browser.bin.dir}"/>
+	    <jar destfile="${jar.dir}/${browser.jar.name}.jar" includes="**/*.class" basedir="${browser.bin.dir}"/>
 	</target>
 	
 	<!-- Builds the toolkit module jars and the final .modl file -->
@@ -81,7 +81,10 @@
 		<replace file="${basedir}/sfc-build/temp_modl/module.xml" token="@VERSION@" value="${sfc.browser.version}" />
 
 		<!-- Pack200 and then copy the designer, client jars -->
+		<pack200 src="${basedir}/sfc-build/bin/${sfc.browser.name}/dist/${browser.jar.name}.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-browser.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		<pack200 src="${basedir}/../../external/lib/ils-common.jar" destfile="${basedir}/sfc-build/temp_modl/ils-common.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
+		<pack200 src="${root.dir}/external/lib/lucene-1.4.3.jar" destfile="${basedir}/sfc-build/temp_modl/lucene-1.4.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
+		<pack200 src="${root.dir}/external/lib/prefuse-1.0.1.jar" destfile="${basedir}/sfc-build/temp_modl/prefuse-1.0.1.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		<pack200 src="${basedir}/../../external/lib/jackson-core-2.2.3.jar" destfile="${basedir}/sfc-build/temp_modl/jackson-core-2.2.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		<pack200 src="${basedir}/../../external/lib/jackson-databind-2.2.3.jar" destfile="${basedir}/sfc-build/temp_modl/jackson-databind-2.2.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		<pack200 src="${basedir}/../../external/lib/jackson-annotations-2.2.3.jar" destfile="${basedir}/sfc-build/temp_modl/jackson-annotations-2.2.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
