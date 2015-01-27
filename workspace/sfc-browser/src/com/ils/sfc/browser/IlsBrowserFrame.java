@@ -3,6 +3,7 @@
  */
 package com.ils.sfc.browser;
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
@@ -72,7 +73,8 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 		contentPanel.removeAll();
 		contentPanel.invalidate();
 		this.view = createChartTreeView();
-		contentPanel.add(view,BorderLayout.CENTER);
+		//contentPanel.add(view,BorderLayout.CENTER);
+		contentPanel.add(view);
 		contentPanel.validate();
 		contentPanel.setVisible(true);
 	}
@@ -84,7 +86,8 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 	}
 	
 	private JPanel createLegendPanel() {
-		JPanel lp = new JPanel(new BorderLayout());
+		//JPanel lp = new JPanel(new BorderLayout());
+		JPanel lp = new JPanel();  
 		JLabel label = new JLabel();
 		String html = 
 			"<html><head>"
@@ -96,17 +99,19 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
             + "</style> </head><body>"
             + "<div>"
 			+ "<h3>Summary</h3>"
-			+ "<P> The <u>ILS Chart Browser</u> provides an alternate layout for Sequential Function Charts."
+			+ "<P> The <u>ILS Chart Browser</u> provides an alternate layout for Sequential Function Charts. "
 			+ "The folder structure used to organize the Inductive Automation chart resources is ignored in favor"
-			+ " of a logical tree view that expands the enclosure hierarchy into a single navigable tree." 
+			+ " of a logical tree view that expands the enclosure hierarchy into a single navigable tree. " 
+			+ "If an enclosure is referenced more than once in the charts, then it will appear multiple times in the tree."
 			+ "<h3>Gestures</h3>"
 			+ "<ul>"
 			+ "<li>double-click - display the selected chart in the SFC editor.</li>"
+			+ "<li>drag - pan the view.</li>"
 			+ "</ul>"
 			+ "<h3>Legend</h3>"
 			+ "<ul>"
-			+ "<li><em background=\"red\">red</em> - step or chart with an error. The browser detects logical loops and unresolved references to enclosures.</li>"
-			+ "<li><em background=\"yellow\">yellow</em> - encapsulation step</li>"
+			+ "<li><span style=\"background-color:#ff0000\">red</span> - step or chart with an error. The browser detects logical loops and unresolved references to enclosures.</li>"
+			+ "<li><span style=\"background-color:#ffff00\">yellow</span> - encapsulation step</li>"
 			+ "</ul>"
 			+ "</div>"
 			+ "</body></html>";

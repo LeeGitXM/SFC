@@ -56,8 +56,8 @@
 			</delete>
 		</target>
 	
-	<!-- Compile the Migration Tool -->
-	<target name="migration.build" description="Compile the migration tool">
+	<!-- Compile the Migration Tools -->
+	<target name="migration.build" description="Compile the Converter tool">
 		<mkdir dir="${migration.bin.dir}"/>
 		<javac destdir="${migration.bin.dir}" debug="true" includeantruntime="false">
 			<src path="${migration.src.dir}"/>

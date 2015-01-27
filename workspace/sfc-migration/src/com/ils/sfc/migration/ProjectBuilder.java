@@ -1,5 +1,5 @@
 /**
- *   (c) 2014  ILS Automation. All rights reserved.
+ *   (c) 2015  ILS Automation. All rights reserved.
  */
 package com.ils.sfc.migration;
 
@@ -17,66 +17,32 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.sqlite.JDBC;
 
+import com.ils.sfc.migration.block.G2Chart;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
 import com.ils.sfc.migration.map.TagMapper;
 import com.inductiveautomation.sfc.api.elements.ChartElement;
-
-public class Migrator {
-	private final static String TAG = "Migrator";
-	private static final String USAGE = "Usage: migrator <database>";
-	@SuppressWarnings("unused")
-	private final static JDBC driver = new JDBC(); // Force driver to be loaded
-	private final static int MINX = 50;              // Allow whitespace around diagram.
-	private final static int MINY = 50;
-	private final static double SCALE_FACTOR = 1.25; // Scale G2 to Ignition positions
+/**
+ * Traverse the tree of Ignition-ready XML files that represent
+ * SFC charts. Bundle the result in an Ignition project file,
+ * ready for impprt into the global project.
+ *
+ */
+public class ProjectBuilder {
+	private final static String TAG = "ProjectBuilder";
+	private static final String USAGE = "Usage: builder <database>";
 	private boolean ok = true;                     // Allows us to short circuit processing
-	private G2Chart g2chart = null;                // G2 Chart read from XML
-	private ChartElement chart = null;             // The result
-	private final ClassNameMapper classMapper;
-	private final ProcedureMapper procedureMapper;
-	private final PropertyMapper propertyMapper;
-	private final TagMapper tagMapper;
 
 
 	 
-	public Migrator() {
-		classMapper = new ClassNameMapper();
-		procedureMapper = new ProcedureMapper();
-		propertyMapper = new PropertyMapper();
-		tagMapper = new TagMapper();
+	public ProjectBuilder() {
 	}
 	
 	public void processDatabase(String path) {
 		String connectPath = "jdbc:sqlite:"+path;
 
-		// Read database to generate conversion maps
-		@SuppressWarnings("resource")
-		Connection connection = null;
-		try {
-			connection = DriverManager.getConnection(connectPath);
-			classMapper.createMap(connection);
-			procedureMapper.createMap(connection);
-			propertyMapper.createMap(connection);
-			tagMapper.createMap(connection);
-		}
-		catch(SQLException e) {
-			// if the error message is "out of memory", 
-			// it probably means no database file is found
-			System.err.println(TAG+": "+e.getMessage());
-			ok = false;
-		}
-		finally {
-			try {
-				if(connection != null)
-					connection.close();
-			} 
-			catch(SQLException e) {
-				// connection close failed.
-				System.err.println(TAG+": "+e.getMessage());
-			}
-		}
+		
 	}
 	
 	/**
@@ -155,7 +121,7 @@ public class Migrator {
         Logger.getRootLogger().setLevel(level); //set log level
         
       
-		Migrator m = new Migrator();
+		ProjectBuilder m = new ProjectBuilder();
 		String path = args[0];
 		// In case we've been fed a Windows path, convert
 		path = path.replace("\\", "/");

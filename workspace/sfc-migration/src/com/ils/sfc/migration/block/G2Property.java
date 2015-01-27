@@ -1,4 +1,4 @@
-package com.ils.sfc.migration;
+package com.ils.sfc.migration.block;
 
 /**
  * Hold an attribute of a chart as a name-value pair.
