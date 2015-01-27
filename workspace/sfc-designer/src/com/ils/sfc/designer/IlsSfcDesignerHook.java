@@ -6,6 +6,8 @@ package com.ils.sfc.designer;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -25,11 +27,13 @@ import com.ils.sfc.common.chartStructure.IlsSfcChartStructureMgr;
 import com.ils.sfc.common.recipe.RecipeData;
 import com.ils.sfc.common.recipe.RecipeDataManager;
 import com.ils.sfc.designer.browser.IlsBrowserFrame;
-import com.ils.sfc.designer.recipeEditor.RecipeDataBrowser;
+import com.ils.sfc.designer.oldRecipeEditor.RecipeDataBrowser;
+import com.ils.sfc.designer.oldRecipeEditor.RecipeDataEditorFrame;
 import com.ils.sfc.util.IlsSfcCommonUtils;
 import com.ils.sfc.util.IlsSfcModule;
 import com.ils.sfc.util.IlsSfcNames;
 import com.ils.sfc.util.PythonCall;
+import com.inductiveautomation.ignition.client.designable.DesignableContainer;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
@@ -38,6 +42,7 @@ import com.inductiveautomation.ignition.common.project.ProjectVersion;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
+import com.inductiveautomation.ignition.designer.designable.DesignableWorkspaceListener;
 import com.inductiveautomation.ignition.designer.designable.IDesignTool;
 import com.inductiveautomation.ignition.designer.model.AbstractDesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
@@ -63,6 +68,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private SFCWorkspace sfcWorkspace;
 	private JPopupMenu stepPopup;
 	private SFCDesignerHook iaSfcHook;
+	private RecipeDataEditorFrame recipeEditor = new RecipeDataEditorFrame();
+	
 	//private ChartManagerService chartManager;
 	private static String[] editorFactoryIds = {
     	QueueMessageStepProperties.FACTORY_ID,
@@ -103,11 +110,15 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	public List<DockableFrame> getFrames() {
 		// Add a frame for our custom chart browser
        	List<DockableFrame> frames = new ArrayList<>();
+       	
        	browser = new IlsBrowserFrame(context);
        	browser.setInitMode(DockContext.STATE_AUTOHIDE);
        	browser.setInitSide(DockContext.DOCK_SIDE_WEST);
        	browser.setInitIndex(1);
        	frames.add(browser);
+       	
+       	frames.add(recipeEditor);
+       	
        	return frames;
 	}
 	
@@ -189,8 +200,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 				UUID stepId = (UUID)IlsSfcCommonUtils.getStepPropertyValue(stepComponent.getElement(), "id");				
 				RecipeData recipeData = RecipeDataManager.getData();
 				if(recipeData.isInitialized()) {
-					RecipeDataBrowser browser = new RecipeDataBrowser(context.getFrame(), stepId.toString());
-					browser.setVisible(true);
+					//RecipeDataBrowser browser = new RecipeDataBrowser(context.getFrame(), stepId.toString());
+					//browser.setVisible(true);
 				}
 				else {					
 					JOptionPane.showMessageDialog(stepComponent, "Recipe Data cannot be edited due to an initialization error");
@@ -233,7 +244,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		});
 		stepPopup.add(reloadItem);
 
-		sfcWorkspace = iaSfcHook.getWorkspace();		
+		sfcWorkspace = iaSfcHook.getWorkspace();
+		sfcWorkspace.getInnerWorkspace().addDesignableWorkspaceListener(recipeEditor);
 		final IDesignTool tool = sfcWorkspace.getCurrentTool();
 		ClassLoader cl = tool.getClass().getClassLoader();
 		Class<?>[] interfaces = { IDesignTool.class, IDesignTool.ToolbarInitializer.class };

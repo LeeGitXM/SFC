@@ -64,6 +64,8 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 			}
 			
 		});
+		registerSteps();
+		/*
     	Runnable r = new Runnable() {
             @Override
             public void run() {
@@ -71,6 +73,7 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
             }
         };
         EDTUtil.invokeAfterJoin(r, Thread.currentThread());
+        */
     }
 
     private void registerSteps() {
