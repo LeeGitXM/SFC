@@ -1,2 +1,4 @@
-insert into ClassMap values ('EM-GDA-ABSOLUTE-COMPARE','com.ils.block.CompareAbsolute');
-insert into ClassMap values ('EM-GDA-BAD-DATA-HANDLER','com.ils.block.DataConditioner');
+-- Fields aare:  G2 class name, Ignition class
+insert into ClassMap values ('S88-BEGIN','com.inductiveautomation.??');
+insert into ClassMap values ('S88-TIME-DELAY','com.ils.??');
+insert into ClassMap values ('S88-UNIT-PROCEDURE','com.ils.??');
