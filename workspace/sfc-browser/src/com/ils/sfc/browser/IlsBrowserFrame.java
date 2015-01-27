@@ -88,12 +88,28 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 		JLabel label = new JLabel();
 		String html = 
 			"<html><head>"
-			+ "<title>ILS Chart Browser for SFC's</title></head>"
-			+ "<H2>Summary</H2>"
-			+ "<P> The <UL>ILS Chart Browser</UL> provides a logical view of what may be a complicated Sequential Function Chart diagram."
-			+ "<H2>Gestures</H2>"
-			+ "<H2>Legend</H2>"
-			+ "</html>";
+			+ "<title>ILS Chart Browser for SFC's</title>"
+			+ "<style type=\"text/css\">"
+			// Style applies to all divs - this is the default
+			+ "div { background:#fbfbfb; border:3px solid; color:black;margin:10px;padding:5px }" 
+            + "h3 { padding-top: 10px; padding-right: 0px; padding-bottom:3px;padding-left:0px; }"  
+            + "</style> </head><body>"
+            + "<div>"
+			+ "<h3>Summary</h3>"
+			+ "<P> The <u>ILS Chart Browser</u> provides an alternate layout for Sequential Function Charts."
+			+ "The folder structure used to organize the Inductive Automation chart resources is ignored in favor"
+			+ " of a logical tree view that expands the enclosure hierarchy into a single navigable tree." 
+			+ "<h3>Gestures</h3>"
+			+ "<ul>"
+			+ "<li>double-click - display the selected chart in the SFC editor.</li>"
+			+ "</ul>"
+			+ "<h3>Legend</h3>"
+			+ "<ul>"
+			+ "<li><em background=\"red\">red</em> - step or chart with an error. The browser detects logical loops and unresolved references to enclosures.</li>"
+			+ "<li><em background=\"yellow\">yellow</em> - encapsulation step</li>"
+			+ "</ul>"
+			+ "</div>"
+			+ "</body></html>";
 		label.setText(html);
 		lp.add(label,BorderLayout.CENTER);
 		return lp;
