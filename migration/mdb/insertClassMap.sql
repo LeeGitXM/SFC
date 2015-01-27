@@ -31,6 +31,7 @@ insert into ClassMap values ('S88-SAVE-RECIPE-DATA-TO-CSV','com.ils.saveDataStep
 insert into ClassMap values ('S88-SELECT-INPUT-TASK','com.ils.selectInputStep');
 insert into ClassMap values ('S88-SET-QUEUE-TASK','com.ils.setQueueStep');
 insert into ClassMap values ('S88-SHOW-QUEUE-TASK','com.ils.showQueueStep');
+insert into ClassMap values ('S88-STOP-TASK','com.ils.abortStep');
 insert into ClassMap values ('S88-DATABASE-SIMPLE-QUERY-TASK','com.ils.simpleQueryStep');
 insert into ClassMap values ('S88-WRITE-FILE-TASK','com.ils.writeFileStep');
 insert into ClassMap values ('S88-WRITE-OUTPUTS-TASK','com.ils.writeOutputsStep');
