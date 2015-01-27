@@ -4,9 +4,6 @@ import java.awt.event.MouseEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.JDialog;
-import javax.swing.SwingUtilities;
-
 import prefuse.controls.Control;
 import prefuse.controls.ControlAdapter;
 import prefuse.visual.VisualItem;

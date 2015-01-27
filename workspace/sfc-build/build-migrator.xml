@@ -11,7 +11,7 @@
 	<property name="common.src.dir" value="${root.dir}/common/workspace/ILS_Common/src" />
 	<property name="migration.jar.name" value="sfc-migration.jar" />
 	<property name="migration.bin.dir" value="${root.dir}/sfc/workspace/sfc-migration/bin" />
-	<property name="migration.src.dir" value="${root.dir}/sfc" />
+	<property name="migration.src.dir" value="${root.dir}/sfc/workspace/sfc-migration/src" />
 	<property name="ant.build.javac.source" value="1.7"/>
 	<property name="ant.build.javac.target" value="1.7"/>
 		
@@ -29,7 +29,7 @@
 	
 	<!-- Common jar classpath -->
 	<!-- The gateway, designer and clients depend on the Common -->
-	<path id="BLT_Common.classpath">
+	<path id="sfc-common.classpath">
 		<path refid="Ignition_SDK.classpath" />
 		<path refid="ExternalJar.classpath" />
 	</path>
@@ -37,9 +37,8 @@
 	<!-- Migration jar classpath -->
 	<path id="sfc-migration.classpath">
 		<path refid="sfc-common.classpath" />
-		<path refid="ExternalJar.classpath" />
-		<fileset dir="${basedir}/sfc-build/bin/sfc-common/dist/" includes="*.jar" />
-		<fileset dir="${basedir}/sfc-build/bin/sfc-designer/dist/" includes="*.jar" />
+		<fileset dir="${basedir}/sfc-build/bin/ILS-SFC_Common/dist/" includes="*.jar" />
+		<fileset dir="${basedir}/sfc-build/bin/ILS-SFC_Designer/dist/" includes="*.jar" />
 	</path>
 	
 	<!-- This target will build the toolkit module and deploy it to the local Ignition gateway -->
@@ -74,8 +73,8 @@
 			<zipgroupfileset dir="${sdk.dir}" includes="designer-api.jar"/>
 			<zipgroupfileset dir="${sdk.dir}" includes="client-api.jar"/>
 			<zipgroupfileset dir="${jar.dir}" includes="ils-common.jar"/>
-			<zipgroupfileset dir="${basedir}/BLT_Build/bin/sfc-common/dist/" includes="*.jar"/>
-			<zipgroupfileset dir="${basedir}/BLT_Build/bin/sfc-designer/dist/" includes="*.jar"/>
+			<zipgroupfileset dir="${basedir}/sfc-build/bin/ILS-SFC_Common/dist/" includes="*.jar"/>
+			<zipgroupfileset dir="${basedir}/sfc-build/bin/ILS-SFC_Designer/dist/" includes="*.jar"/>
 		</jar>
 	</target>
 

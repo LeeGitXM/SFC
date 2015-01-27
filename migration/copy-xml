@@ -1,0 +1,13 @@
+#!/bin/sh
+# Copy the JSON files from svn into our project
+# for viewing in Eclipse.
+#
+BIN=`pwd`
+UNIT=Test\ Diagram
+SVN=~/Development/ils/svn/EMChemicals/G2Artifacts/Sequential\ Control
+REPO=~/Development/ils/src/sfc/xml
+mkdir -p $REPO/g2/
+mkdir -p $REPO/ignition
+cp -a "${SVN}"/"${UNIT}" $REPO/g2
+# Clean up the non-xml
+find "${REPO}"/g2 -type f ! -name "*.xml" -exec rm {}  \; 

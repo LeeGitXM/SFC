@@ -1,7 +1,7 @@
 package com.ils.sfc.migration;
 
 /**
- * Hold an attribute of a block as a name-value pair.
+ * Hold an attribute of a chart as a name-value pair.
  */
 public class G2Property {
 	private String name;

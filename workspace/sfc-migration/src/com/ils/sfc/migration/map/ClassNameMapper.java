@@ -7,9 +7,6 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.ils.blt.common.serializable.SerializableBlock;
-import com.ils.sfc.migration.G2Block;
-
 /**
  * Convert a G2 classname into a BLT classname
  */
@@ -55,24 +52,6 @@ public class ClassNameMapper {
 				try { rs.close(); } catch(SQLException ignore) {}
 			}
 		}
-	}
-	
-	/**
-	 * Use our map to get the Ignition class name. Set the discovered
-	 * name in the ignition block object. On error, print a warning
-	 * message and insert a default class name. (This allows us to
-	 * continue processing and collect all the errors at once).
-	 * 
-	 * @param g2block incoming G2 block
-	 * @param iblock outgoing Ignition equivalent
-	 */
-	public void setClassName(G2Block g2block,SerializableBlock iblock) {
-		String cname = classMap.get(g2block.getClassName());
-		if( cname==null) {
-			cname = UNDEFINED_NAME;
-			System.err.println(TAG+".setClassName: "+g2block.getClassName()+" has no Ignition equivalent");
-		}
-		iblock.setClassName(cname);
 	}
 	
 	

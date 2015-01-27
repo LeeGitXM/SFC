@@ -1,0 +1,26 @@
+#!/bin/sh
+#  Build a database for migration of diagnostics applications. Copy into the migration
+#  directory of the project tree.
+#
+#  -- must be run in the same directory as the insert script.
+#
+#!/bin/sh
+#set -x
+DB=conversion.db
+REPO_ROOT=~/Development/ils/src
+BIN=$REPO_ROOT/blt/migration/mdb
+TARGETDIR=$REPO_ROOT/blt/migration/mdb
+mkdir -p ${TARGETDIR}
+
+
+cd ${TARGETDIR}
+rm -f $DB
+sqlite3 $DB < ${BIN}/createTables.sql
+sqlite3 $DB < ${BIN}/insertClassMap.sql
+sqlite3 $DB < ${BIN}/insertAnchorMap.sql
+sqlite3 $DB < ${BIN}/insertClassProperties.sql
+sqlite3 $DB < ${BIN}/insertProcedures.sql
+sqlite3 $DB < ${BIN}/insertPreferences.sql
+sqlite3 $DB < ${BIN}/insertProperties.sql
+sqlite3 $DB < ${BIN}/insertPythonProperties.sql
+sqlite3 $DB < ${BIN}/insertTags.sql
