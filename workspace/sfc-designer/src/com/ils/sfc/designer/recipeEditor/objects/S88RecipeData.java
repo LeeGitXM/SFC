@@ -68,14 +68,30 @@ public abstract class S88RecipeData {
 		}
 	}
 	
+	/** Compose objects from the Ignition step property. */
+	public void fromIgnition(String json) {
+		// TODO: deserialize the json to a map
+		Map<String,String> map = null;
+		fromMap(map);
+	}
+	
+	/** Initialize this object from a map. */
 	public void fromMap(Map<String,String> map) {
 		for(IlsProperty<?> property: properties) {
 			String svalue = map.get(property.getName());
 			Object value = IlsSfcCommonUtils.parseProperty(property, svalue);
 			valuesByProperty.put(property, value);
-		}
+		}		
+	}
+
+	/** Export objects into the text format for an Ignition step property */
+	public String toIgnition() {
+		 Map<String,String> map = toMap();
+		 // TODO: json serialize map
+		 return null;
 	}
 	
+	/** Export objects to a map format */
 	public Map<String,String> toMap() {
 		Map<String,String> map = new HashMap<String,String>();
 		for(IlsProperty<?> property: properties) {
@@ -83,6 +99,25 @@ public abstract class S88RecipeData {
 			map.put(property.getName(), value != null ? value.toString() : null);
 		}
 		return map;
+	}
+	
+	/** Translate from G2 export to Ignition step property. Example of G2 XML element:
+	 * <recipe key="bar" label="bar" description="A barby piece of recipe data" help="More useless help" advice="More useless advice" units="DEGC" type="float" category="Simple Constant" val="37.567" high-limit="" low-limit=""  />
+	 */
+	@SuppressWarnings("deprecation")
+	public static String fromG2(String g2Xml) {
+		Map<String,String> g2Attributes = new HashMap<String,String>();
+		int eqIndex = -1;
+		while((eqIndex = g2Xml.indexOf('"', eqIndex)) != -1) {
+			int keyIndex = eqIndex - 1;
+			while(!Character.isSpace(g2Xml.charAt(keyIndex))) keyIndex--;
+			String key = g2Xml.substring(keyIndex + 1, eqIndex);
+			int valueIndex = eqIndex + 2;
+			while(g2Xml.charAt(keyIndex) != '"') ++keyIndex;
+			String value = g2Xml.substring(eqIndex + 2, valueIndex);
+			g2Attributes.put(key, value);
+		}
+		return null;
 	}
 
 	

@@ -22,8 +22,8 @@ public class S88RecipeValueData extends S88RecipeDataWithUnits {
 	public static final String LOW_LIMIT = "lowLimit";
 	
 	public S88RecipeValueData() {
-		addProperty(TYPE, String.class, "Quantity");
-		addProperty(CATEGORY, String.class, "Operator Input");
+		addProperty(TYPE, String.class, "Quantity"); // other possibilities: "float", ?
+		addProperty(CATEGORY, String.class, "Operator Input");  // other possibilities: "Simple Constant"
 		addProperty(VAL, Double.class, 0.);
 		addProperty(HIGH_LIMIT, Double.class, 0.);
 		addProperty(LOW_LIMIT, Double.class, 0.);

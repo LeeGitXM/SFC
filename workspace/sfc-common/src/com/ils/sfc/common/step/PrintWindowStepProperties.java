@@ -10,7 +10,7 @@ import static com.ils.sfc.util.IlsProperty.*;
  *
  */
 public interface PrintWindowStepProperties extends ChartStepProperties {
-	public static final String FACTORY_ID = "com.ils.PrintWindowStep";
+	public static final String FACTORY_ID = "com.ils.printWindowStep";
 	
     public static final IlsProperty<?>[] properties = {
     	WINDOW,
