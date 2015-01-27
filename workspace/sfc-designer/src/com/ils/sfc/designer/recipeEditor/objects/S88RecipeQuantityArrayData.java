@@ -1,0 +1,14 @@
+package com.ils.sfc.designer.recipeEditor.objects;
+
+/**
+superiorClass: sequence (the symbol S88-RECIPE-ARRAY-DATA)
+attributes:sequence (structure (ATTRIBUTE-NAME: the symbol VAL,
+    ATTRIBUTE-TYPE-SPECIFICATION: the symbol S88-PERMANENT-QUANTITY-ARRAY,
+    ATTRIBUTE-INITIAL-ITEM-CLASS: the symbol S88-PERMANENT-QUANTITY-ARRAY))
+ */
+public class S88RecipeQuantityArrayData extends S88RecipeArrayData {
+
+	public S88RecipeQuantityArrayData() {
+		addProperty(VAL, String.class, "[]");
+	}
+}

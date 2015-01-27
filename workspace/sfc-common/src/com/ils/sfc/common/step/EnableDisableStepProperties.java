@@ -11,7 +11,7 @@ import static com.ils.sfc.util.IlsProperty.*;
  *
  */
 public interface EnableDisableStepProperties extends ChartStepProperties {
-	public static final String FACTORY_ID = "com.ils.enableDisable";
+	public static final String FACTORY_ID = "com.ils.enableDisableStep";
 
     public static final IlsProperty<?>[] properties = { 
     	ENABLE_PAUSE, ENABLE_RESUME, ENABLE_CANCEL };
