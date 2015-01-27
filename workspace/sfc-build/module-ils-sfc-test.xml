@@ -13,7 +13,7 @@
 		
 		<!-- Add the module dependencies for each scope -->
 		<!-- NOTE: Build fails here if we specify a Gateway dependency -->
-		<depends scope="D">ilssfc</depends>
+		<depends scope="D">com.ils.sfc</depends>
 		
 		<!-- Load in our jars for each scope -->
 		<jar scope="CD">sfc-test-client.jar.pack.gz</jar>

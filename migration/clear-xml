@@ -1,0 +1,9 @@
+#!/bin/sh
+# Remove all of the xml files from the migration target area.
+# We do this to make sure there are no residual files from a 
+# previous copy.
+#
+BIN=`pwd`
+REPO=~/Development/ils/src/sfc/xml
+rm -rf ${REPO}/g2
+rm -rf ${REPO}/ignition

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modules>
+	<module>
+		<id>sfc-browser</id>
+		<name>@NAME@</name>
+		<description>@DESCRIPTION@</description>
+		<version>@VERSION@</version>
+		<license>browser-license.html</license>
+		<requiredignitionversion>7.7.2</requiredignitionversion>
+		<requiredframeworkversion>6</requiredframeworkversion>
+		<freemodule>true</freemodule>
+		<documentation>index.html</documentation>
+		
+		<!-- Add the module dependencies for each scope -->
+		<depends scope="D">com.ils.sfc</depends>
+		
+		<!-- Load in our jars for each scope -->
+		<jar scope="CD">ils-sfc-browser.jar.pack.gz</jar>
+		<jar scope="CD">lucene-1.4.3.jar.pack.gz</jar>
+		<jar scope="CD">prefuse-1.0.1.jar.pack.gz</jar>
+		<jar scope="D">jackson-core-2.2.3.jar</jar>
+		<jar scope="D">jackson-databind-2.2.3.jar</jar>
+		<jar scope="D">jackson-annotations-2.2.3.jar</jar>
+		<!-- Tell the Gateway and/or Designer where to find the hooks -->
+		<hook scope="D">com.ils.sfc.browser.IlsSfcBrowserHook</hook>
+	</module>
+</modules>

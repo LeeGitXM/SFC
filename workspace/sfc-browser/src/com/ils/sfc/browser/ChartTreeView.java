@@ -6,7 +6,7 @@
  * 
  * @author <a href="http://jheer.org">jeffrey heer</a>
  */
-package com.ils.sfc.designer.browser;
+package com.ils.sfc.browser;
 
 import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
@@ -129,7 +129,7 @@ public class ChartTreeView extends Display {
         
         // create the filtering and layout
         ActionList filter = new ActionList();
-        filter.add(new FisheyeTreeFilter(tree, 2));
+        filter.add(new FisheyeTreeFilter(tree, 3));
         filter.add(new FontAction(treeNodes, FontLib.getFont("Tahoma", 16)));
         filter.add(treeLayout);
         filter.add(subLayout);
@@ -164,12 +164,12 @@ public class ChartTreeView extends Display {
         // initialize the display
         setSize(200,600);
         setItemSorter(new TreeDepthItemSorter());
-        addControlListener(new ChartSelector(context,1));     // Control-click
-        addControlListener(new ZoomToFitControl());           // Right-click
-        addControlListener(new ZoomControl());                // Right-drag
+        addControlListener(new ChartSelector(context,2));     // Double-click
+        //addControlListener(new ZoomToFitControl());           // Right-click
+        //addControlListener(new ZoomControl());                // Right-drag
         addControlListener(new WheelZoomControl());           // (doesn't work so good)
         addControlListener(new PanControl());                 // Drag
-        addControlListener(new FocusControl(2, "filter"));    // Double click
+        //addControlListener(new FocusControl(2, "filter"));    // Double click
         
         registerKeyboardAction(
             new OrientAction(Constants.ORIENT_LEFT_RIGHT),
@@ -189,8 +189,6 @@ public class ChartTreeView extends Display {
         // filter graph and perform layout
         setOrientation(m_orientation);
         m_vis.run("filter");
-        
-        // Leave out any search capabilities
     }
     
     // ------------------------------------------------------------------------

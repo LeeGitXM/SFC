@@ -1,11 +1,8 @@
-package com.ils.sfc.designer.browser;
+package com.ils.sfc.browser;
 
 import java.awt.event.MouseEvent;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.swing.JDialog;
-import javax.swing.SwingUtilities;
 
 import prefuse.controls.Control;
 import prefuse.controls.ControlAdapter;
@@ -13,6 +10,8 @@ import prefuse.visual.VisualItem;
 import prefuse.visual.tuple.TableNodeItem;
 
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
+import com.inductiveautomation.sfc.SFCModule;
+import com.inductiveautomation.sfc.designer.SFCDesignerHook;
 
 
 /**
@@ -21,10 +20,10 @@ import com.inductiveautomation.ignition.designer.model.DesignerContext;
  * Allow 500ms for a double-click which we do NOT act upon. 
  */
 public class ChartSelector extends ControlAdapter implements Control {
-	private final int OFFSET = 25;
 	private final DesignerContext context;
 	private final int clickCount;
 	private int clicks;
+	
 	public ChartSelector(DesignerContext ctx,int c) {
 		context = ctx;
 		clickCount = c;
@@ -34,7 +33,7 @@ public class ChartSelector extends ControlAdapter implements Control {
 	 * @see prefuse.controls.Control#itemClicked(prefuse.visual.VisualItem, java.awt.event.MouseEvent)
 	 */
 	public void itemClicked(final VisualItem item, final MouseEvent e) {
-		if(!e.isControlDown()) return;
+		if(e.isControlDown()) return;
 		if( item instanceof TableNodeItem && 
 			item.getInt(BrowserConstants.RESOURCE)!=BrowserConstants.NO_RESOURCE ) {
 			if( clicks==0 ) {
@@ -44,18 +43,13 @@ public class ChartSelector extends ControlAdapter implements Control {
 					@Override
 					public void run() {
 						if( clicks==clickCount) {
-							final JDialog editor = (JDialog)new ChartSelectionDialog(context.getFrame(),item);
-							editor.pack();
-							editor.setLocation(e.getX()-OFFSET, e.getY()-OFFSET);
-							SwingUtilities.invokeLater(new Runnable() {
-								public void run() {
-									editor.setVisible(true);
-								}
-							}); 
+							 SFCDesignerHook hook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
+							 
+							 hook.getWorkspace().openChart(item.getInt(BrowserConstants.RESOURCE));
 						}
 						clicks = 0;
 					}
-				}, 250);    // Wait 1/4 of a second for click-count
+				}, 200);    // Wait 1/5 of a second for click-count
 			}
 			clicks++;	
 		}	
