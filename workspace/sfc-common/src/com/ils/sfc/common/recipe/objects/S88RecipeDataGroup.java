@@ -1,4 +1,4 @@
-package com.ils.sfc.designer.recipeEditor.objects;
+package com.ils.sfc.common.recipe.objects;
 
 /**
 superiorClass: sequence (the symbol S88-RECIPE-DATA)

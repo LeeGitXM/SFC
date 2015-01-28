@@ -1,4 +1,4 @@
-package com.ils.sfc.designer.recipeEditor.objects;
+package com.ils.sfc.common.recipe.objects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
