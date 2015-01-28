@@ -2,7 +2,7 @@
 # SFC project debug script.
 # -- options for log.level:  INFO,DEBUG,TRACE
 #
-if [ $# -lt 2 ]
+if [ $# -lt 1 ]
 then
     echo "USAGE: debug-project <inpath>"
 	exit 2
@@ -14,4 +14,4 @@ LIB=$REPO/external/lib
 JAR=${LIB}/sfc-migration.jar
 # Use for debugging - ruins output file however.
 #cat $1 | java -cp ${JAR} -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Dlog.level=INFO -Droot.class=APPLICATION com.ils.blt.migration.Migrator ${DB}
-cat $1 | java -cp ${JAR} -Dlog.level=INFO com.ils.sfc.migration.ProjectDebugger $1 > $2
+cat $1 | java -cp ${JAR} -Dlog.level=INFO com.ils.sfc.migration.ProjectDebugger $1 

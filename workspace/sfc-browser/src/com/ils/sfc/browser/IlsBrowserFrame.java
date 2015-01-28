@@ -3,7 +3,6 @@
  */
 package com.ils.sfc.browser;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
@@ -73,8 +72,7 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 		contentPanel.removeAll();
 		contentPanel.invalidate();
 		this.view = createChartTreeView();
-		//contentPanel.add(view,BorderLayout.CENTER);
-		contentPanel.add(view);
+		contentPanel.add(view,BorderLayout.CENTER);
 		contentPanel.validate();
 		contentPanel.setVisible(true);
 	}
@@ -86,8 +84,7 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 	}
 	
 	private JPanel createLegendPanel() {
-		//JPanel lp = new JPanel(new BorderLayout());
-		JPanel lp = new JPanel();  
+		JPanel lp = new JPanel(new BorderLayout()); 
 		JLabel label = new JLabel();
 		String html = 
 			"<html><head>"
@@ -105,13 +102,18 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 			+ "If an enclosure is referenced more than once in the charts, then it will appear multiple times in the tree."
 			+ "<h3>Gestures</h3>"
 			+ "<ul>"
-			+ "<li>double-click - display the selected chart in the SFC editor.</li>"
+			+ "<li>double-click - display the selected chart in the SFC editor. <br>"
+			+ "NOTE: This has an effect only if the SFC workspace is current.</li>"
 			+ "<li>drag - pan the view.</li>"
+			+ "<li>mouse-wheel - zoom the view.</li>"
+			+ "<li>right-click - zoom to fit, centers the display and zooms to fit,</li>"
+			+ "<li>single-click - bring the selected node into focus and centered,</li>"
 			+ "</ul>"
 			+ "<h3>Legend</h3>"
 			+ "<ul>"
-			+ "<li><span style=\"background-color:#ff0000\">red</span> - step or chart with an error. The browser detects logical loops and unresolved references to enclosures.</li>"
-			+ "<li><span style=\"background-color:#ffff00\">yellow</span> - encapsulation step</li>"
+			+ "<li><span style=\"background-color:#00dd00;\">light-green</span> - chart that has focus.</li>"
+			+ "<li><span style=\"background-color:#ff0000;\">red </span> - step or chart with an error. The browser detects logical loops and unresolved references to enclosures.</li>"
+			+ "<li><span style=\"background-color:#ffff00;opacity:0.9;\">yellow</span> - encapsulation step</li>"
 			+ "</ul>"
 			+ "</div>"
 			+ "</body></html>";
