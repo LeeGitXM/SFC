@@ -9,6 +9,6 @@ attributes:sequence (structure (ATTRIBUTE-NAME: the symbol VAL,
 public class S88RecipeQuantityArrayData extends S88RecipeArrayData {
 
 	public S88RecipeQuantityArrayData() {
-		addProperty(VAL, String.class, "[]");
+		// TODO: what value property here ?
 	}
 }

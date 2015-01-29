@@ -10,7 +10,7 @@ attributes:sequence (structure (
 public class S88RecipeSequenceData extends S88RecipeData {
 	
 	public S88RecipeSequenceData() {
-		addProperty(VAL, String.class, "[]");
+		// TODO: what value property here ?
 	}
 	
 }

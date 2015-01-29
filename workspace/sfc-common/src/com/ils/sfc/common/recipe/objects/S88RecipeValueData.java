@@ -1,5 +1,7 @@
 package com.ils.sfc.common.recipe.objects;
 
+import com.ils.sfc.util.IlsProperty;
+
 /**
 superiorClass: sequence (the symbol S88-RECIPE-DATA-WITH-UNITS)
 attributes:sequence (
@@ -16,16 +18,12 @@ attributes:sequence (
   structure (ATTRIBUTE-NAME: the symbol LOW-LIMIT))
  */
 public class S88RecipeValueData extends S88RecipeDataWithUnits {
-	public static final String TYPE = "type";
-	public static final String CATEGORY = "category";
-	public static final String HIGH_LIMIT = "highLimit";
-	public static final String LOW_LIMIT = "lowLimit";
 	
 	public S88RecipeValueData() {
-		addProperty(TYPE, String.class, "Quantity"); // other possibilities: "float", ?
-		addProperty(CATEGORY, String.class, "Operator Input");  // other possibilities: "Simple Constant"
-		addProperty(VAL, Double.class, 0.);
-		addProperty(HIGH_LIMIT, Double.class, 0.);
-		addProperty(LOW_LIMIT, Double.class, 0.);
+		properties.add(IlsProperty.TYPE); // , String.class, "Quantity"); // other possibilities: "float", ?
+		properties.add(IlsProperty.CATEGORY); // "Operator Input");  // other possibilities: "Simple Constant"
+		properties.add(IlsProperty.VALUE);
+		properties.add(IlsProperty.HIGH_LIMIT);
+		properties.add(IlsProperty.LOW_LIMIT);
 	}
 }

@@ -7,6 +7,7 @@ public class IlsSfcNames {
 
 	// step properties:
 	public static final String ACK_REQUIRED = "ackRequired";
+	public static final String ADVICE = "advice";
 	public static final String AUDIT_LEVEL = "auditLevel";
 	public static final String AUTO_MODE = "autoMode";
 	public static final String AUTOMATIC = "automatic";
@@ -17,7 +18,10 @@ public class IlsSfcNames {
 	public static final String BUTTON_KEY = "buttonKey";
 	public static final String BUTTON_KEY_LOCATION = "buttonKeyLocation";
 	public static final String CALLBACK = "callback";
+	public static final String CATEGORY = "category";
 	public static final String CENTER = "center";
+	public static final String CHILDREN = "children";
+	public static final String CLASS = "class";
 	public static final String COMMAND = "callback";
 	public static final String CHOICES= "choices";
 	public static final String CHOICES_KEY = "choicesKey";
@@ -32,21 +36,31 @@ public class IlsSfcNames {
 	public static final String DIALOG_TEMPLATE = "dialogTemplate";
 	public static final String DIRECTORY = "directory";
 	public static final String DISPLAY_MODE = "displayMode";
+	public static final String DOWNLOAD = "download";
+	public static final String DOWNLOAD_STATUS = "downloadStatus";		
 	public static final String DYNAMIC = "dynamic";
 	public static final String ENABLE_PAUSE = "enablePause";
 	public static final String ENABLE_RESUME = "enableResume";
 	public static final String ENABLE_CANCEL = "enableCancel";
 	public static final String ERROR = "Error";
+	public static final String ERROR_CODE = "errorCode";
+	public static final String ERROR_TEXT = "errorText";
 	public static final String EXTENSION = "extension";
 	public static final String FETCH_MODE = "fetchMode";
 	public static final String FILENAME = "filename";
 	public static final String FILEPATH = "filepath";
+	public static final String GUI_LABEL = "guiLabel";
+	public static final String GUI_UNITS = "guiUnits";
+	public static final String HELP = "help";
 	public static final String HIGH = "High";
+	public static final String HIGH_LIMIT = "highLimit";
 	public static final String INFO = "Info";
+	public static final String LOW_LIMIT = "lowLimit";
 	public static final String LOW = "Low";
 	public static final String KEY = "key";
 	public static final String KEY_MODE = "keyMode";
 	public static final String LABEL = "label";
+	public static final String MAX_TIMING = "maxTiming";
 	public static final String MESSAGE = "message";
 	public static final String METHOD = "method";
 	public static final String MINIMUM_VALUE = "minimumValue";
@@ -63,7 +77,11 @@ public class IlsSfcNames {
 	public static final String PRIVATE = "private";
 	public static final String PROMPT = "prompt";
 	public static final String PUBLIC = "public";
+	public static final String PV_VALUE = "pvValue";
+	public static final String PV_MONITOR_ACTIVE = "pvMonitorActive";
+	public static final String PV_MONITOR_STATUS = "pvMonitorStatus";
 	public static final String QUEUE = "queue";
+	public static final String RAMP_TIME = "rampTime";
 	public static final String RECIPE = "recipe";
 	public static final String RECIPE_LOCATION = "recipeLocation"; 
 	public static final String REGISTER_AND_DISPLAY = "registerAndDisplay";
@@ -81,21 +99,30 @@ public class IlsSfcNames {
 	public static final String SINGLE = "single";
 	public static final String SQL = "sql";
 	public static final String STATIC = "static";
+	public static final String STEP_TIME = "stepTime";
+	public static final String STEP_TIMESTAMP = "stepTimestamp";
 	public static final String STRATEGY = "strategy";
+	public static final String TAG = "tag";
 	public static final String TAG_PATH = "tagPath";
+	public static final String TARGET_VALUE = "targetValue";
+	public static final String TIMING = "timing";
 	public static final String TIMEOUT = "timeout";
 	public static final String TIMEOUT_UNIT = "timeoutUnit";
 	public static final String TIMESTAMP = "timestamp";
 	public static final String TOP_CENTER = "topCenter";
 	public static final String TOP_LEFT = "topLeft";
 	public static final String TOP_RIGHT = "topRight";
+	public static final String TYPE = "type";
 	public static final String UNITS = "units";
 	public static final String UPDATE = "update";
+	public static final String UPDATE_FREQUENCY = "updateFrequency";
 	public static final String UPDATE_OR_CREATE = "updateOrCreate";
 	public static final String VALUE = "value";
 	public static final String VIEW_FILE = "viewFile";
 	public static final String WARNING = "Warning";
 	public static final String WINDOW = "window";
+	public static final String WRITE_CONFIRM = "writeConfirm";
+	public static final String WRITE_CONFIRMED = "writeConfirmed";
 
 
 	// scopes for recipe data:

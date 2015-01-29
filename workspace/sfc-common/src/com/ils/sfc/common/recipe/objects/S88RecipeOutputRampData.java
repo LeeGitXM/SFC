@@ -1,5 +1,7 @@
 package com.ils.sfc.common.recipe.objects;
 
+import com.ils.sfc.util.IlsProperty;
+
 /**
 superiorClass: sequence (the symbol S88-RECIPE-OUTPUT-DATA)
 attributes:sequence (structure (
@@ -12,11 +14,9 @@ attributes:sequence (structure (
     ATTRIBUTE-INITIAL-VALUE: 10.0))
  */
 public class S88RecipeOutputRampData extends S88RecipeOutputData {
-	public static final String RAMP_TIME = "rampTime";
-	public static final String UPDATE_FREQUENCY = "updateFrequency";
 
 	public S88RecipeOutputRampData() {
-		addProperty(RAMP_TIME, Double.class, 5.0);
-		addProperty(UPDATE_FREQUENCY, Double.class, 10.0);
+		properties.add(IlsProperty.RAMP_TIME); // 5.0);
+		properties.add(IlsProperty.UPDATE_FREQUENCY); // 10.0);
 	}
 }

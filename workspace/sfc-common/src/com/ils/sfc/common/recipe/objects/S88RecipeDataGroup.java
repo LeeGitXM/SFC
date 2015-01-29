@@ -7,6 +7,7 @@ attributes:sequence (structure (ATTRIBUTE-NAME: the symbol RECIPE-DATA-V2,
     ATTRIBUTE-INITIAL-ITEM-CLASS: the symbol S88-RECIPE-DATA-LIST))
  */
 public class S88RecipeDataGroup extends S88RecipeData {
+	public static final String className = "S88-RECIPE-DATA-GROUP";
 	
 	public S88RecipeDataGroup() {
 		// in G2, this has a S88-RECIPE-DATA-LIST

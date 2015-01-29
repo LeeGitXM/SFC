@@ -24,6 +24,7 @@ import com.ils.sfc.designer.reviewDataEditor.ReviewDataEditorDialog;
 import com.ils.sfc.util.IlsProperty;
 import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
+import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
@@ -109,9 +110,9 @@ public class PropertyEditor extends JPanel {
 	}
 	
 	private void doTest() {
-		ChartUIElement element = tableModel.getElement();
-		String sql = element.getOrDefault(IlsProperty.SQL);
-		String database = element.getOrDefault(IlsProperty.DATABASE);
+		BasicPropertySet propertyValues = tableModel.getPropertyValues();
+		String sql = propertyValues.getOrDefault(IlsProperty.SQL);
+		String database = propertyValues.getOrDefault(IlsProperty.DATABASE);
 		Object[] args = {sql, database};
 		try {
 			PythonCall.TEST_QUERY.exec(args);
@@ -154,17 +155,17 @@ public class PropertyEditor extends JPanel {
 
 	}
 
-	public void setElement(ChartUIElement element) {
-		tableModel.setElement(element);
+	public void setPropertyValues(BasicPropertySet propertyValues) {
+		tableModel.setPropertyValues(propertyValues);
 		// HACK!! "testable" and "doTest" should be more general, but for now
 		// we special-case it to be just SQL queries...
-		testButton.setVisible(element.contains(IlsProperty.SQL) && 
-			element.contains(IlsProperty.DATABASE));
+		testButton.setVisible(propertyValues.contains(IlsProperty.SQL) && 
+				propertyValues.contains(IlsProperty.DATABASE));
 		setColumnWidths();
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public List<PropertyValue> getValues() {
+	public List<PropertyValue> getPropertyValues() {
 		List<PropertyValue> values = new ArrayList<PropertyValue>();
 		for(PropertyRow row: tableModel.getRows()) {
 			values.add(row.getPropertyValue());

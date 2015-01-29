@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ils.sfc.util.IlsProperty;
 import com.ils.sfc.util.PythonCall;
+import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
@@ -27,7 +28,7 @@ public class PropertyTableModel extends AbstractTableModel {
 	private static final String[] columnNames = {"Property", "Value", "Units", ""};
 	private List<PropertyRow> rows = new ArrayList<PropertyRow>();
 	private boolean hasChanged;
-	private ChartUIElement element;
+	private BasicPropertySet propertyValues;
 	private String stepId;
 	private static final Logger logger = LoggerFactory.getLogger(PropertyTableModel.class);
  
@@ -119,11 +120,11 @@ public class PropertyTableModel extends AbstractTableModel {
     	try {
     		if(col == 1) {
 				pRow.setValueFormatted((String)value);
-				element.set(pRow.getPropertyValue());
+				propertyValues.set(pRow.getPropertyValue());
     		}
     		else if(col == 2) {
 				pRow.setUnitValueFormatted((String)value);
-				element.set(pRow.getUnitPropertyValue());    			
+				propertyValues.set(pRow.getUnitPropertyValue());    			
     		}
 	    	hasChanged = true;
 	        //fireTableCellUpdated(row, col);
@@ -133,18 +134,18 @@ public class PropertyTableModel extends AbstractTableModel {
 		}
     }
 
-    public ChartUIElement getElement() {
-    	return element;
+    public BasicPropertySet getPropertyValues() {
+    	return propertyValues;
     }
     
-	public void setElement(ChartUIElement element) {
-		this.element = element;		
+	public void setPropertyValues(BasicPropertySet propertyValues) {
+		this.propertyValues = propertyValues;		
 		rows.clear();
 		Map<String,PropertyValue<?>> propsByName = new HashMap<String,PropertyValue<?>>();
-		for(PropertyValue<?> pValue: element) {
+		for(PropertyValue<?> pValue: propertyValues) {
 			propsByName.put(pValue.getProperty().getName(), pValue);
 		}
-		for(PropertyValue<?> pValue: element) {
+		for(PropertyValue<?> pValue: propertyValues) {
 			String name = pValue.getProperty().getName();
 			if(name.equals("id")) {
 				stepId = pValue.getValue().toString();

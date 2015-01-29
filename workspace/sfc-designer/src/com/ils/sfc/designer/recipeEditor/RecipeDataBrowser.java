@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.Box;
@@ -17,14 +18,17 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
-import com.ils.sfc.common.recipe.RecipeData;
-import com.ils.sfc.common.recipe.RecipeDataManager;
 import com.ils.sfc.common.recipe.RecipeDataMap;
+import com.ils.sfc.common.recipe.objects.S88RecipeData;
+import com.ils.sfc.common.recipe.objects.S88RecipeDataGroup;
+import com.ils.sfc.util.IlsSfcNames;
+import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 
 @SuppressWarnings("serial")
 public class RecipeDataBrowser extends JPanel {
@@ -34,35 +38,54 @@ public class RecipeDataBrowser extends JPanel {
 	final JButton addButton = new JButton(addIcon);
 	final JButton editButton = new JButton(editIcon);
 	final JButton removeButton = new JButton(removeIcon);
-	private RecipeDataTreeNode top = new RecipeDataTreeNode("", null);
 	private JTree tree;
 	private DefaultTreeModel treeModel;
 	private RecipeDataTreeNode selectedNode;
-	private RecipeData recipeData;
-	private RecipeDataMap stepDataMap;
+	private Map<String,Object> recipeData;
 	private final RecipeEditorController controller;
 
+	@SuppressWarnings("serial")
+	private static class RecipeDataTreeNode extends DefaultMutableTreeNode {
+		private String name;
+		private boolean isFolder;
+		
+		public RecipeDataTreeNode(String name, Map<String,Object> map, boolean isFolder) {
+			super(map);
+			this.name = name;
+			this.isFolder = isFolder;
+		}
+		
+		@SuppressWarnings("unchecked") 
+		Map<String,Object> getMap() {
+			return (Map<String,Object>)getUserObject();
+		}
+
+		public boolean isFolder() {return isFolder;}
+
+		//public boolean isLeaf() { return getUserObject() == null; }
+		
+		public String getName() {
+			return name;
+		}
+
+		public String toString() {
+			return name;
+		}
+		
+	}
 	/** This ctor is just for testing */
-	public RecipeDataBrowser(RecipeDataMap stepDataMap ) {
+	public RecipeDataBrowser() {
 		setLayout(new BorderLayout());
-		this.stepDataMap = stepDataMap;
 		controller = null;
-		createButtonPanel();				
-		createTree();
 	}
 
 	public RecipeDataBrowser(RecipeEditorController controller) {
 		this.controller = controller;
 		setLayout(new BorderLayout());
-		recipeData = RecipeDataManager.getData();
 	}
 	
-	public void setStep(String stepId) {
-		setStepDataMap(recipeData.getStepData(stepId));
-	}
-	
-	public void setStepDataMap(RecipeDataMap map){
-		stepDataMap = map;
+	public void setRecipeData(Map<String,Object> recipeData){
+		this.recipeData = recipeData;
 		this.removeAll();
 		createButtonPanel();				
 		createTree();
@@ -72,41 +95,52 @@ public class RecipeDataBrowser extends JPanel {
 	
 	private void createTree() {		
 		// Check that the step exists--if it doesn't we are probably out of sync:
-		top.setContentsEditable(true);
-		treeModel = new DefaultTreeModel(top);
-		
-		addNodes(stepDataMap, top);	
+		treeModel = new DefaultTreeModel(null);
+		addLayer(recipeData, null);
 		tree = new JTree(treeModel);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		tree.setRootVisible(false);
+		tree.setRootVisible(true);
 		tree.setShowsRootHandles(true);
 		tree.setEditable(false);
 		tree.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
 				selectedNode = (RecipeDataTreeNode) tree.getLastSelectedPathComponent();
-				addButton.setEnabled(canAdd());
-				removeButton.setEnabled(canRemove());
-				editButton.setEnabled(canEdit());
+				boolean nodeIsSelected = selectedNode != null;
+				addButton.setEnabled(nodeIsSelected && selectedNode.isFolder());
+				removeButton.setEnabled(nodeIsSelected && !selectedNode.isLeaf());
+				editButton.setEnabled(nodeIsSelected && !selectedNode.isFolder() && !selectedNode.isLeaf());
 			}
 		});		
 		this.add(new JScrollPane(tree), BorderLayout.CENTER);
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void addNodes(Map<String,Object> data, RecipeDataTreeNode parent) {
-		for(String key: data.keySet()) {
-			Object value = data.get(key);
-			RecipeDataTreeNode child = new RecipeDataTreeNode(key, value);
-			parent.add(child);
-			if(value instanceof Map) {
-				addNodes((Map<String,Object>)value, child);
-			}
-			else {
-				child.add(new RecipeDataTreeNode(value.toString(), value));
+	private void addLayer(Map<String,Object> map, RecipeDataTreeNode parent) {
+		String name = (String)map.get(IlsSfcNames.KEY);
+		boolean isFolder = S88RecipeDataGroup.className.equals(map.get(IlsSfcNames.CLASS));
+		RecipeDataTreeNode node = null;
+		if(isFolder) {
+			node = new RecipeDataTreeNode(name, map, true);
+			List<Map<String,Object>> children = (List<Map<String,Object>>)map.get(IlsSfcNames.CHILDREN);
+			for(Map<String,Object> childMap: children) {
+				addLayer(childMap, node);
 			}
 		}
+		else {  // leaf node
+			node = new RecipeDataTreeNode(name, map, false);
+			for(String key: map.keySet()) {
+				Object value = map.get(key);
+				node.add(new RecipeDataTreeNode(key + "=" + value, null, false));
+			}
+		}
+		if(parent == null) {
+			treeModel.setRoot(node);
+		}
+		else {
+			parent.add(node);
+		}
 	}
-
+	
 	private void createButtonPanel() {
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
@@ -143,31 +177,19 @@ public class RecipeDataBrowser extends JPanel {
 		
 	}
 	
-	private void doAdd() {
-		// TODO: slide the pane, new pane can call this to get selected node etc
+	public void addToSelectedNode(Map<String,Object> map) {
 		if(selectedNode.getChildCount() == 1) {
 			// make the new subtree visible
 			tree.makeVisible(new TreePath(((RecipeDataTreeNode)selectedNode.getChildAt(0)).getPath()));
 		}
-		tree.updateUI();
-	}
-
-	private boolean canAdd() {
-		return selectedNode != null && selectedNode.contentsAreEditable();
+		tree.updateUI();		
 	}
 	
-	private boolean canRemove() {
-		return selectedNode != null && selectedNode != top &&
-			((RecipeDataTreeNode)selectedNode.getParent()).contentsAreEditable();
-	}
-	
-	private boolean canEdit() {
-		return selectedNode != null && selectedNode.valueIsEditable();
+	private void doAdd() {				
+		controller.slideToCreator();
 	}
 	
 	private void doRemove() {
-		int response = JOptionPane.showConfirmDialog(this, "Do you really want to remove " + selectedNode + "?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
-		if(response == JOptionPane.NO_OPTION) return;
 		RecipeDataTreeNode parent = (RecipeDataTreeNode)selectedNode.getParent();
 		parent.getMap().remove(selectedNode.getName());
 		treeModel.removeNodeFromParent(selectedNode);
@@ -232,17 +254,6 @@ public class RecipeDataBrowser extends JPanel {
 		else {
 			return null; // keep the compiler happy
 		}
-	}
-
-	public static void main(String[] args) {
-		javax.swing.JFrame frame = new javax.swing.JFrame();
-		RecipeDataMap map = new RecipeDataMap();
-		map.put("key", "value");
-		RecipeDataBrowser browser = new RecipeDataBrowser(map);
-		frame.setContentPane(browser);
-		frame.setSize(200,200);
-		frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
 	}
 
 }

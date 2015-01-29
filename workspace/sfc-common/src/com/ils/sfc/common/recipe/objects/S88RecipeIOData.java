@@ -1,5 +1,7 @@
 package com.ils.sfc.common.recipe.objects;
 
+import com.ils.sfc.util.IlsProperty;
+
 /**
 superiorClass: sequence (the symbol S88-RECIPE-DATA-WITH-UNITS)
 attributes:sequence (structure (
@@ -37,26 +39,17 @@ attributes:sequence (structure (
     ATTRIBUTE-INITIAL-VALUE: ""))
  */
 public abstract class S88RecipeIOData extends S88RecipeDataWithUnits {
-	public static final String TAG = "tag";
-	public static final String ERROR_CODE = "errorCode";
-	public static final String ERROR_TEXT = "errorText";
-	public static final String PV_MONITOR_STATUS = "pvMonitorStatus";
-	public static final String PV_MONITOR_ACTIVE = "pvMonitorActive";
-	public static final String PV_VALUE = "pvValue";
-	public static final String TARGET_VALUE = "targetValue";
-	public static final String GUI_UNITS = "guiUnits";
-	public static final String GUI_LABEL = "guiLabel";
 
 	public S88RecipeIOData() {
-		addProperty(TAG, String.class, "G2");
-		addProperty(VAL, Double.class, 0.);
-		addProperty(ERROR_CODE, Double.class, 0.);
-		addProperty(ERROR_TEXT, String.class, "");
-		addProperty(PV_MONITOR_STATUS, String.class, "");
-		addProperty(PV_MONITOR_ACTIVE, String.class, "");
-		addProperty(PV_VALUE, Double.class, 0.);
-		addProperty(TARGET_VALUE, Double.class, 0.);
-		addProperty(GUI_UNITS, String.class, "");
-		addProperty(GUI_LABEL, String.class, "");
+		properties.add(IlsProperty.TAG);
+		properties.add(IlsProperty.VALUE);
+		properties.add(IlsProperty.ERROR_CODE);
+		properties.add(IlsProperty.ERROR_TEXT);
+		properties.add(IlsProperty.PV_MONITOR_STATUS);
+		properties.add(IlsProperty.PV_MONITOR_ACTIVE);
+		properties.add(IlsProperty.PV_VALUE);
+		properties.add(IlsProperty.TARGET_VALUE);
+		properties.add(IlsProperty.GUI_UNITS);
+		properties.add(IlsProperty.GUI_LABEL);
 	}
 }

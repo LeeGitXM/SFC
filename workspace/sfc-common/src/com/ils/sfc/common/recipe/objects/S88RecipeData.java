@@ -1,10 +1,19 @@
 package com.ils.sfc.common.recipe.objects;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.inductiveautomation.ignition.common.config.BasicProperty;
+import com.inductiveautomation.ignition.common.config.BasicPropertySet;
+import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.ils.sfc.util.IlsProperty;
 import com.ils.sfc.util.IlsSfcCommonUtils;
 
@@ -29,66 +38,62 @@ attributes:sequence (structure (
   structure (ATTRIBUTE-NAME: the symbol LAST-UPDATE-TIMESTAMP,
     ATTRIBUTE-TYPE-SPECIFICATION: the symbol FLOAT,
     ATTRIBUTE-INITIAL-VALUE: 0.0))
+    
+    Use cases:
+       1. Translate G2 export xml to Ignition recipe data (JSON-serialized map)
+       2a. Translate Ignition recipe data to map "model" for RecipeDataBrowser       
+       2b. Translate map "model" for RecipeDataBrowser to Ignition recipe data
+       3. For a single object, produce a map that can be added to the map "model" for RecipeDataBrowser       
+       4a. For a single object in the map "model", produce a list of PropertyRow objects to feed the PropertyEditor
+       4b. From a list of PropertyRow objects from the PropertyEditor, produce a map that can be added to the map "model" for RecipeDataBrowser
  */
 public abstract class S88RecipeData {
-	private List<IlsProperty<?>> properties = new ArrayList<IlsProperty<?>>();
+	protected List<IlsProperty<?>> properties = new ArrayList<IlsProperty<?>>();
 	private Map<IlsProperty<?>,Object> valuesByProperty = new HashMap<IlsProperty<?>,Object>();
 	public static final String CLASS = "class";	// Not in S88 spec; the name of the Java class
 	// KEY attribute not needed (?), is held separately in dictionary
-	public static final String LABEL = "label";
-	public static final String DESCRIPTION = "description";
-	public static final String HELP = "help";
-	public static final String ADVICE = "advice";
 	
 	public static final String VAL = "val";  // added by leaf classes
 	
+	private static Class<?>[] concreteClasses = {
+		S88RecipeDataGroup.class,
+		S88RecipeQuantityArrayData.class,
+		S88RecipeValueArrayData.class,
+		S88RecipeInputData.class,
+		S88RecipeOutputData.class,
+		S88RecipeOutputRampData.class,
+		S88RecipeMatrixData.class,
+		S88RecipeQuantityListData.class,
+		S88RecipeSQCData.class,
+		S88RecipeValueData.class,
+		S88RecipeTextListData.class,
+		S88RecipeSequenceData.class,
+		S88RecipeStructureData.class
+	};
+	
 	public S88RecipeData() {
-		addProperty(CLASS, String.class, "");
-		addProperty(LABEL, String.class, "");
-		addProperty(DESCRIPTION, String.class, "");
-		addProperty(HELP, String.class, "");
-		addProperty(ADVICE, String.class, "");
+		properties.add(IlsProperty.CLASS);
+		properties.add(IlsProperty.LABEL);
+		properties.add(IlsProperty.DESCRIPTION);
+		properties.add(IlsProperty.HELP);
+		properties.add(IlsProperty.ADVICE);
 	}
 	
-	/** subclasses should extend this, ie extract their properties then call
-	 *  super.fromMap()
-	 */
-	public static S88RecipeData createFromMap(Map<String,String> map) {
-		String className = (String) map.get(CLASS);
-		S88RecipeData data;
-		try {
-			data = (S88RecipeData) Class.forName(className).newInstance();
-			data.fromMap(map);
-			return data;
-		} catch (InstantiationException | IllegalAccessException
-				| ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+	/** de-serialize the Ignition step property to a map. The map may have deep structure */
+	@SuppressWarnings("unchecked")
+	public static HashMap<String,Object> ignitionToMap(String json) throws JsonParseException, JsonMappingException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+		HashMap<String,Object> map = (HashMap<String,Object>) mapper.readValue(json, HashMap.class);
+		return map;
 	}
 	
-	/** Compose objects from the Ignition step property. */
-	public void fromIgnition(String json) {
-		// TODO: deserialize the json to a map
-		Map<String,String> map = null;
-		fromMap(map);
-	}
-	
-	/** Initialize this object from a map. */
-	public void fromMap(Map<String,String> map) {
-		for(IlsProperty<?> property: properties) {
-			String svalue = map.get(property.getName());
-			Object value = IlsSfcCommonUtils.parseProperty(property, svalue);
-			valuesByProperty.put(property, value);
-		}		
-	}
-
-	/** Export objects into the text format for an Ignition step property */
-	public String toIgnition() {
-		 Map<String,String> map = toMap();
-		 // TODO: json serialize map
-		 return null;
+	/** Serialize a map to the Ignition step property */
+	public static String mapToIgnition(Map<String,Object> map) throws JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+		String json = mapper.writeValueAsString(map);
+		return json;
 	}
 	
 	/** Export objects to a map format */
@@ -120,13 +125,59 @@ public abstract class S88RecipeData {
 		return null;
 	}
 
-	
-	@SuppressWarnings("unchecked")
-	protected void addProperty(String name, Class<?> aClass, Object defaultValueOrNull) {
-		@SuppressWarnings("rawtypes")
-		IlsProperty<?> property = new IlsProperty(name, aClass, defaultValueOrNull);
-		properties.add(property);
-		valuesByProperty.put(property, defaultValueOrNull);
+	/** */
+	private static S88RecipeData createFromMap(Map<String, String> map) {
+		String className = (String) map.get(CLASS);
+		S88RecipeData data;
+		try {
+			data = (S88RecipeData) Class.forName(className).newInstance();
+			data.initFromMap(map);
+			return data;
+		} catch (InstantiationException | IllegalAccessException
+				| ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
+	
+
+	/** Initialize this object from a map. */
+	private void initFromMap(Map<String,String> map) {
+		for(IlsProperty<?> property: properties) {
+			String svalue = map.get(property.getName());
+			Object value = IlsSfcCommonUtils.parseProperty(property, svalue);
+			valuesByProperty.put(property, value);
+		}		
+	}
+
+	public static BasicPropertySet mapToProperties(Map<String,Object> map) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static Class<?>[] getTypes() {
+		return concreteClasses;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public static BasicPropertySet getPropertiesForType(String key, Class aClass) throws Exception {
+		S88RecipeData recipeData = (S88RecipeData) aClass.newInstance();
+		BasicPropertySet propertyValues = new BasicPropertySet();
+		for(IlsProperty property: recipeData.properties) {
+			propertyValues.set(property, property.getDefaultValue());
+		}
+		return propertyValues;
+	}
+
+	public static Map<String, Object> propertiesToMap(List<PropertyValue> propertyValues) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		for(PropertyValue value: propertyValues) {
+			map.put(value.getProperty().getName(), value.getValue());
+		}
+		return map;
+	}
+	
+	
 		
 }

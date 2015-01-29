@@ -1,5 +1,7 @@
 package com.ils.sfc.common.recipe.objects;
 
+import com.ils.sfc.util.IlsProperty;
+
 /**
 superiorClass: sequence (the symbol S88-RECIPE-DATA)
 attributes:sequence (structure (
@@ -8,9 +10,8 @@ attributes:sequence (structure (
     ATTRIBUTE-INITIAL-VALUE: "")) 
  */
 public abstract class S88RecipeDataWithUnits extends S88RecipeData {
-	public static final String UNITS = "units";
 
 	public S88RecipeDataWithUnits() {
-		addProperty(UNITS, String.class, "");
+		properties.add(IlsProperty.UNITS);
 	}
 }
