@@ -9,11 +9,11 @@ import java.util.UUID;
 import org.python.core.PyDictionary;
 import org.python.core.PyList;
 
+import com.ils.sfc.common.ReviewDataConfig;
 import com.ils.sfc.common.recipe.RecipeData;
 import com.ils.sfc.common.recipe.RecipeDataException;
 import com.ils.sfc.common.recipe.RecipeDataManager;
 import com.ils.sfc.common.recipe.RecipeScope;
-import com.ils.sfc.common.recipe.ReviewDataConfig;
 import com.ils.sfc.step.IlsAbstractChartStep;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;

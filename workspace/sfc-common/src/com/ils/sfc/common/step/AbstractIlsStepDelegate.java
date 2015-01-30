@@ -7,8 +7,8 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.w3c.dom.Element;
 
-import com.ils.sfc.util.IlsProperty;
-import com.ils.sfc.util.IlsSfcCommonUtils;
+import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.sfc.api.StepDelegate;
@@ -18,8 +18,8 @@ import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	private static final IlsProperty<?>[] commonProperties = {
-		com.ils.sfc.util.IlsProperty.DESCRIPTION, 
-		com.ils.sfc.util.IlsProperty.AUDIT_LEVEL
+		com.ils.sfc.common.IlsProperty.DESCRIPTION, 
+		com.ils.sfc.common.IlsProperty.AUDIT_LEVEL
 	};
 	private IlsProperty<?>[] properties;
 	

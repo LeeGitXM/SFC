@@ -1,10 +1,10 @@
 package com.ils.sfc.client;
 
 import com.ils.sfc.client.step.*;
+import com.ils.sfc.common.IlsSfcModule;
+import com.ils.sfc.common.IlsSfcNames;
+import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.recipe.RecipeDataManager;
-import com.ils.sfc.util.IlsSfcModule;
-import com.ils.sfc.util.IlsSfcNames;
-import com.ils.sfc.util.PythonCall;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
 import com.inductiveautomation.ignition.client.model.ClientContext;
 import com.inductiveautomation.ignition.client.util.EDTUtil;

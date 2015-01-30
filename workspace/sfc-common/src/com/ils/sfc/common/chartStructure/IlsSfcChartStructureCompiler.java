@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
-import com.ils.sfc.util.IlsSfcCommonUtils;
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.util.LogUtil;

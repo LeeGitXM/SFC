@@ -1,7 +1,7 @@
 package com.ils.sfc.common.step;
 
 
-import com.ils.sfc.util.IlsProperty;
+import com.ils.sfc.common.IlsProperty;
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 
 /**

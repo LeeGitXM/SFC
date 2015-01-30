@@ -2,7 +2,7 @@ package com.ils.sfc.designer.reviewDataEditor;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.ils.sfc.common.recipe.ReviewDataConfig;
+import com.ils.sfc.common.ReviewDataConfig;
 
 @SuppressWarnings("serial")
 public class ReviewDataTableModel extends AbstractTableModel {

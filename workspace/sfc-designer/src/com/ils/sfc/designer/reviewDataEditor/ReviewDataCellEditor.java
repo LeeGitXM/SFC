@@ -9,10 +9,10 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
 
-import com.ils.sfc.common.recipe.ReviewDataConfig.Row;
-import com.ils.sfc.util.IlsSfcCommonUtils;
-import com.ils.sfc.util.IlsSfcNames;
-import com.ils.sfc.util.PythonCall;
+import com.ils.sfc.common.IlsSfcCommonUtils;
+import com.ils.sfc.common.IlsSfcNames;
+import com.ils.sfc.common.PythonCall;
+import com.ils.sfc.common.ReviewDataConfig.Row;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 
 /** A table cell editor for the property grid */

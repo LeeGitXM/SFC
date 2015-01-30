@@ -2,8 +2,8 @@ package com.ils.sfc.designer.propertyEditor;
 
 import java.text.ParseException;
 
-import com.ils.sfc.util.IlsProperty;
-import com.ils.sfc.util.IlsSfcCommonUtils;
+import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;

@@ -22,7 +22,7 @@ public class IlsStepEditor extends AbstractStepEditor {
 	@Override
 	public void setElement(ChartUIElement element) {
 		super.setElement(element);
-		propertyEditor.setPropertyValues(element);
+		propertyEditor.setPropertyValues(element, true);
 	}
 
 	@Override

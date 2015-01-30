@@ -14,8 +14,9 @@ import javax.swing.table.AbstractTableModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ils.sfc.util.IlsProperty;
-import com.ils.sfc.util.PythonCall;
+import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.PythonCall;
+import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
@@ -47,7 +48,7 @@ public class PropertyTableModel extends AbstractTableModel {
     public PropertyRow getRowObject(int i) {
     	return rows.get(i);
     }
-    
+/*    
     public void setProperties(List<PropertyRow> newPropertyValues) {
     	hasChanged = false;
     	rows.clear();
@@ -76,6 +77,7 @@ public class PropertyTableModel extends AbstractTableModel {
     	}
 		this.fireTableDataChanged();
 	}
+*/
 
     public Class<?> getPropertyType(int rowIndex) {
     	PropertyRow row = rows.get(rowIndex);
@@ -138,7 +140,7 @@ public class PropertyTableModel extends AbstractTableModel {
     	return propertyValues;
     }
     
-	public void setPropertyValues(BasicPropertySet propertyValues) {
+	public void setPropertyValues(BasicPropertySet propertyValues, boolean sortInternal) {
 		this.propertyValues = propertyValues;		
 		rows.clear();
 		Map<String,PropertyValue<?>> propsByName = new HashMap<String,PropertyValue<?>>();
@@ -172,12 +174,28 @@ public class PropertyTableModel extends AbstractTableModel {
 			}
 		}
 		
-		sortRows();
+		if(sortInternal) {
+			sortRowsInternal();
+		}
+		else{
+			sortRowsAlphabetical();
+		}
 		fireTableStructureChanged();
 	}
 
+	private void sortRowsAlphabetical() {
+		Collections.sort(rows, new Comparator<PropertyRow>() {
+			public int compare(PropertyRow o1, PropertyRow o2) {
+				BasicProperty<?> p1 = (BasicProperty<?>) o1.getProperty();
+				BasicProperty<?> p2 = (BasicProperty<?>) o2.getProperty();
+				return p1.getName().compareTo(p2.getName());
+			}
+			
+		});
+	}
+
 	/** sort the rows in the order that the property array was declared */
-	private void sortRows() {
+	private void sortRowsInternal() {
 		Collections.sort(rows, new Comparator<PropertyRow>() {
 			public int compare(PropertyRow o1, PropertyRow o2) {
 				if(!(o1.getProperty() instanceof IlsProperty)) {

@@ -18,8 +18,8 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import com.ils.sfc.common.ReviewDataConfig;
 import com.ils.sfc.common.recipe.RecipeDataManager;
-import com.ils.sfc.common.recipe.ReviewDataConfig;
 
 public class ReviewDataEditorDialog extends JDialog {
 	private static final long serialVersionUID = 1L;

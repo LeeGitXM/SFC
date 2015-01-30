@@ -1,7 +1,7 @@
 package com.ils.sfc.common.recipe;
 
+import com.ils.sfc.common.IlsSfcModule;
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructureCompiler;
-import com.ils.sfc.util.IlsSfcModule;
 import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
