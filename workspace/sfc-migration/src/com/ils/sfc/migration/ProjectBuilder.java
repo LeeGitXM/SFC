@@ -4,25 +4,21 @@
 package com.ils.sfc.migration;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-import org.sqlite.JDBC;
-
-import com.ils.sfc.migration.block.G2Chart;
-import com.ils.sfc.migration.map.ClassNameMapper;
-import com.ils.sfc.migration.map.ProcedureMapper;
-import com.ils.sfc.migration.map.PropertyMapper;
-import com.ils.sfc.migration.map.TagMapper;
-import com.inductiveautomation.sfc.api.elements.ChartElement;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 /**
  * Traverse the tree of Ignition-ready XML files that represent
  * SFC charts. Bundle the result in an Ignition project file,
@@ -31,44 +27,44 @@ import com.inductiveautomation.sfc.api.elements.ChartElement;
  */
 public class ProjectBuilder {
 	private final static String TAG = "ProjectBuilder";
-	private static final String USAGE = "Usage: builder <database>";
+	private static final String USAGE = "Usage: builder <dir>";
 	private boolean ok = true;                     // Allows us to short circuit processing
-
-
 	 
 	public ProjectBuilder() {
 	}
 	
-	public void processDatabase(String path) {
-		String connectPath = "jdbc:sqlite:"+path;
-
-		
+	public Document readXML(String path) {
+		Document doc = null;
+		File file = new File(path);
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder;
+		try {
+			docBuilder = docFactory.newDocumentBuilder();
+			doc = docBuilder.parse(file);
+			doc.getDocumentElement().normalize();
+		} 
+		catch (ParserConfigurationException pce) {
+			System.out.println("ProjectBuilder.readXML: ParserConfigurationException ("+pce.getLocalizedMessage()+")");
+			ok = false;
+		} 
+		catch (SAXException saxe) {
+			System.out.println("ProjectBuilder.readXML: SAXException ("+saxe.getLocalizedMessage()+")");
+			ok = false;
+		} 
+		catch (IOException ioe) {
+			System.out.println("ProjectBuilder.readXML: IOException ("+ioe.getLocalizedMessage()+")");
+			ok = false;
+		}
+		return doc;
 	}
 	
 	/**
 	 * Read standard input. Convert into G2 Chart and steps
 	 */
-	public void processInput() {
+	public void processInput(Document doc) {
 		if( !ok ) return;
 		
-		// Read of stdin is expected to be from a re-directed file. 
-		// We gobble the whole thing here. Scrub out CR
-		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		StringBuffer input = new StringBuffer();
-		String s = null;
-		try{
-			while ((s = in.readLine()) != null && s.length() != 0) {
-				s = s.replaceAll("\r", "");
-				input.append(s);
-			}
-		}
-		catch(IOException ignore) {}
-		
-		
-		catch(Exception ex) {
-			System.err.println(String.format("%s: Deserialization exception (%s)",TAG,ex.getMessage()));
-			ok = false;
-		}
+
 	}
 	
 	
@@ -126,8 +122,8 @@ public class ProjectBuilder {
 		// In case we've been fed a Windows path, convert
 		path = path.replace("\\", "/");
 		try {
-			m.processDatabase(path);
-			m.processInput();
+			Document doc = m.readXML(path);
+			m.processInput(doc);
 			m.migrateCharts();
 			m.createOutput();
 		}

@@ -165,11 +165,10 @@ public class ChartTreeView extends Display {
         setSize(200,600);
         setItemSorter(new TreeDepthItemSorter());
         addControlListener(new ChartSelector(context,2));     // Double-click
-        //addControlListener(new ZoomToFitControl());           // Right-click
-        //addControlListener(new ZoomControl());                // Right-drag
-        addControlListener(new WheelZoomControl());           // (doesn't work so good)
+        addControlListener(new ZoomToFitControl());           // Right-click
+        addControlListener(new WheelZoomControl());           // Mouse-wheel
         addControlListener(new PanControl());                 // Drag
-        //addControlListener(new FocusControl(2, "filter"));    // Double click
+        addControlListener(new FocusControl(1,"filter"));     // Single click
         
         registerKeyboardAction(
             new OrientAction(Constants.ORIENT_LEFT_RIGHT),
