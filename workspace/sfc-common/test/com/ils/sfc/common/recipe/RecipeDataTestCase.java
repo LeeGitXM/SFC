@@ -7,6 +7,9 @@ import com.ils.sfc.common.chartStructure.IlsSfcChartStructure;
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructure.Parent;
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructureMgr;
 import com.ils.sfc.common.chartStructure.IlsSfcStepStructure;
+import com.ils.sfc.common.oldRecipe.RecipeData;
+import com.ils.sfc.common.oldRecipe.RecipeDataException;
+import com.ils.sfc.common.oldRecipe.RecipeScope;
 import com.inductiveautomation.sfc.elements.steps.action.ActionStepProperties;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 

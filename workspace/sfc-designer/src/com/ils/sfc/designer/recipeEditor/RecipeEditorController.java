@@ -9,7 +9,7 @@ import java.util.Map;
 import javax.swing.JPanel;
 
 import com.ils.sfc.common.IlsSfcNames;
-import com.ils.sfc.common.recipe.RecipeDataMap;
+import com.ils.sfc.common.oldRecipe.RecipeDataMap;
 import com.ils.sfc.common.recipe.objects.Group;
 import com.ils.sfc.designer.propertyEditor.PropertyEditor;
 import com.inductiveautomation.ignition.client.util.gui.SlidingPane;

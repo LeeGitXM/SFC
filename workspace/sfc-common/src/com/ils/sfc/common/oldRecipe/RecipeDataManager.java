@@ -1,4 +1,4 @@
-package com.ils.sfc.common.recipe;
+package com.ils.sfc.common.oldRecipe;
 
 import com.ils.sfc.common.IlsSfcModule;
 import com.ils.sfc.common.chartStructure.IlsSfcChartStructureCompiler;

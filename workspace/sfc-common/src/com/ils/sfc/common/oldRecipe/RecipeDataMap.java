@@ -1,4 +1,4 @@
-package com.ils.sfc.common.recipe;
+package com.ils.sfc.common.oldRecipe;
 
 import java.util.HashMap;
 import java.util.Map;

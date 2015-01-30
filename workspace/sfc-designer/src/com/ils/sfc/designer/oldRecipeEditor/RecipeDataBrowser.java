@@ -32,9 +32,9 @@ import javax.swing.tree.TreeSelectionModel;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.chartStructure.IlsSfcStepStructure;
-import com.ils.sfc.common.recipe.RecipeData;
-import com.ils.sfc.common.recipe.RecipeDataMap;
-import com.ils.sfc.common.recipe.RecipeDataManager;
+import com.ils.sfc.common.oldRecipe.RecipeData;
+import com.ils.sfc.common.oldRecipe.RecipeDataManager;
+import com.ils.sfc.common.oldRecipe.RecipeDataMap;
 import com.inductiveautomation.ignition.client.util.gui.SlidingPane;
 
 @SuppressWarnings("serial")

@@ -1,4 +1,5 @@
-package com.ils.sfc.common.recipe;
+package com.ils.sfc.common.oldRecipe;
+
 
 /** An exception indicating a key does not exist */
 @SuppressWarnings("serial")

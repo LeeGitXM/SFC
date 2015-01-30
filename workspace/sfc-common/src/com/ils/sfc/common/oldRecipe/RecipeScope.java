@@ -1,4 +1,4 @@
-package com.ils.sfc.common.recipe;
+package com.ils.sfc.common.oldRecipe;
 
 public enum RecipeScope {
 	Local,
