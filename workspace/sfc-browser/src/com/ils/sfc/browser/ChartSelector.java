@@ -49,7 +49,7 @@ public class ChartSelector extends ControlAdapter implements Control {
 						}
 						clicks = 0;
 					}
-				}, 200);    // Wait 1/5 of a second for click-count
+				}, 500);    // Wait 1/2 of a second for click-count
 			}
 			clicks++;	
 		}	
