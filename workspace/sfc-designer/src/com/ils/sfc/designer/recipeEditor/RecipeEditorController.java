@@ -27,7 +27,8 @@ public class RecipeEditorController {
 	static final int TEXT_EDITOR = 4;
 	static final int MESSAGE = 5;
 	static final int TAG_BROWSER = 6;
-	static final int EMPTY_PANE = 7;
+	static final int UNIT_CHOOSER = 7;
+	static final int EMPTY_PANE = 8;
 	
 	// The sub-panes:
 	private BrowserPane browser = new BrowserPane(this);
@@ -37,6 +38,7 @@ public class RecipeEditorController {
 	private MessagePane messagePane = new MessagePane(this);
 	private FieldCreatorPane fieldCreator = new FieldCreatorPane(this);
 	private TagBrowserPane tagBrowser;
+	private UnitChooserPane unitChooser = new UnitChooserPane(this);
 	
 	public RecipeEditorController() {
 		tagBrowser = new TagBrowserPane(this);
@@ -48,6 +50,7 @@ public class RecipeEditorController {
 		slidingPane.add(textEditor);
 		slidingPane.add(messagePane);
 		slidingPane.add(tagBrowser);
+		slidingPane.add(unitChooser);
 		slidingPane.add(new JPanel());  // a blank pane
 		slideTo(EMPTY_PANE);
 	}
@@ -90,6 +93,15 @@ public class RecipeEditorController {
 
 	public TagBrowserPane getTagBrowser() {
 		return tagBrowser;
+	}
+	
+	public UnitChooserPane getUnitChooser() {
+		return unitChooser;
+	}
+
+	public void showMessage(String message, int returnPanelIndex) {
+		messagePane.setText(message, returnPanelIndex);
+		messagePane.activate();
 	}
 
 	public static void main(String[] args) {

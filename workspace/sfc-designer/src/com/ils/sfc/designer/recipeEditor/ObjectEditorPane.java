@@ -60,6 +60,10 @@ public class ObjectEditorPane extends JPanel implements RecipeEditorController.R
 			editor.stopCellEditing();
 			controller.getTagBrowser().activate();
 		}
+		else if(selectedPropertyValue.getProperty().equals(IlsProperty.UNITS)) {
+			editor.stopCellEditing();
+			controller.getUnitChooser().activate();
+		}
 		else if(selectedPropertyValue.getProperty().getType() == String.class) {
 			editor.stopCellEditing();
 			controller.getTextEditor().setText((String)selectedPropertyValue.getValue());

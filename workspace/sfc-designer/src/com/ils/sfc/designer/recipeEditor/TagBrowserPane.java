@@ -49,7 +49,6 @@ public class TagBrowserPane extends JPanel implements RecipeEditorController.Rec
 
 	public void doAccept() {
 		String tagPath = tagBrowser.getTagPath();
-		System.out.println(tagPath);
 		controller.getEditor().getPropertyEditor().setSelectedValue(tagPath);
 		controller.getEditor().activate();
 	}
