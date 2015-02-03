@@ -31,7 +31,7 @@ import com.inductiveautomation.sfc.api.elements.ChartElement;
  */
 public class Converter {
 	private final static String TAG = "Converter";
-	private static final String USAGE = "Usage: converter <database>";
+	private static final String USAGE = "Usage: converter <database> <from> <to>";
 	@SuppressWarnings("unused")
 	private final static JDBC driver = new JDBC(); // Force driver to be loaded
 	private final static int MINX = 50;              // Allow whitespace around diagram.
@@ -54,6 +54,10 @@ public class Converter {
 		tagMapper = new TagMapper();
 	}
 	
+	/**
+	 * 
+	 * @param path
+	 */
 	public void processDatabase(String path) {
 		String connectPath = "jdbc:sqlite:"+path;
 
