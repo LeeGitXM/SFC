@@ -19,7 +19,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import com.ils.sfc.common.ReviewDataConfig;
-import com.ils.sfc.common.oldRecipe.RecipeDataManager;
 
 public class ReviewDataEditorDialog extends JDialog {
 	private static final long serialVersionUID = 1L;
@@ -89,7 +88,7 @@ public class ReviewDataEditorDialog extends JDialog {
 		this.stepId = stepId;
 		String errorMsg = null;
 		try {
-			config = RecipeDataManager.getData().getReviewDataConfig(stepId);
+			//config = RecipeDataManager.getData().getReviewDataConfig(stepId);
 			if(config == null ) {
 				errorMsg ="null configuration for stepId" + stepId;
 			}
@@ -104,7 +103,7 @@ public class ReviewDataEditorDialog extends JDialog {
 	}
 	
 	private void doOK() {
-		RecipeDataManager.getData().setReviewDataConfig(stepId, config);
+		//RecipeDataManager.getData().setReviewDataConfig(stepId, config);
 		this.dispose();		
 	}
 	

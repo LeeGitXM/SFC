@@ -90,7 +90,6 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> SQL = new IlsProperty<String>(IlsSfcNames.SQL, String.class, "");
     public static final IlsProperty<Double> STEP_TIME = new IlsProperty<Double>(IlsSfcNames.STEP_TIME, Double.class, 0.);
     public static final IlsProperty<String> STEP_TIMESTAMP = new IlsProperty<String>(IlsSfcNames.STEP_TIMESTAMP, String.class, "");
-    public static final IlsProperty<String> TAG = new IlsProperty<String>(IlsSfcNames.TAG, String.class, "");
     public static final IlsProperty<String> TAG_PATH = new IlsProperty<String>(IlsSfcNames.TAG_PATH, String.class, "");
     public static final IlsProperty<String> TIME_DELAY_STRATEGY = new IlsProperty<String>(IlsSfcNames.STRATEGY, String.class, IlsSfcNames.TIME_DELAY_STRATEGY_CHOICES[0], IlsSfcNames.TIME_DELAY_STRATEGY_CHOICES);
     public static final IlsProperty<Double> TIMING = new IlsProperty<Double>(IlsSfcNames.TIMING, Double.class, 0.);

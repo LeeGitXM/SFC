@@ -1,82 +1,95 @@
 package com.ils.sfc.designer.recipeEditor;
 
-import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
-import java.util.Map;
 
 import javax.swing.JPanel;
 
-import com.ils.sfc.common.IlsSfcNames;
-import com.ils.sfc.common.oldRecipe.RecipeDataMap;
-import com.ils.sfc.common.recipe.objects.Group;
-import com.ils.sfc.designer.propertyEditor.PropertyEditor;
 import com.inductiveautomation.ignition.client.util.gui.SlidingPane;
+import com.inductiveautomation.ignition.designer.model.DesignerContext;
 
+/** A controller for all the sliding panes that are involved in editing recipe data. */
 public class RecipeEditorController {
+	public static java.awt.Color background = new java.awt.Color(238,238,238);
+	
 	interface RecipeEditorPane {
-		public void onShow();
+		/** show yourself, after doing any necessary preparation. */
+		public void activate();
 	}
-	//private SlidingPane slidingPane = new SlidingPane();
-	private RecipeDataBrowser browser = new RecipeDataBrowser(this);
-	private RecipeObjectCreator creator = new RecipeObjectCreator(this);
-	private PropertyEditorPane editor = new PropertyEditorPane(this);
+	
+	private SlidingPane slidingPane = new SlidingPane();
+	
+	// indices for the sub-panes:
+	static final int BROWSER = 0;
+	static final int OBJECT_CREATOR = 1;
+	static final int EDITOR = 2;
+	static final int FIELD_CREATOR = 3;
+	static final int TEXT_EDITOR = 4;
+	static final int MESSAGE = 5;
+	static final int TAG_BROWSER = 6;
+	static final int EMPTY_PANE = 7;
+	
+	// The sub-panes:
+	private BrowserPane browser = new BrowserPane(this);
+	private ObjectCreatorPane creator = new ObjectCreatorPane(this);
+	private ObjectEditorPane editor = new ObjectEditorPane(this);
 	private StringEditorPane textEditor = new StringEditorPane(this);
 	private MessagePane messagePane = new MessagePane(this);
-	private StructureFieldCreator fieldCreator = new StructureFieldCreator(this);
-	
-	java.awt.CardLayout cardLayout = new java.awt.CardLayout();
-	private JPanel slidingPane = new JPanel(cardLayout);
+	private FieldCreatorPane fieldCreator = new FieldCreatorPane(this);
+	private TagBrowserPane tagBrowser;
 	
 	public RecipeEditorController() {
-		browser.setName("browser");
-		creator.setName("creator");
-		fieldCreator.setName("fieldCreator");
-		editor.setName("editor");
-		textEditor.setName("textEditor");
-		messagePane.setName("message");
-		// TEMPORARY: use a card layout
-		slidingPane.add(browser, browser.getName());
-		slidingPane.add(creator, creator.getName());
-		slidingPane.add(editor, editor.getName());
-		slidingPane.add(fieldCreator, fieldCreator.getName());
-		slidingPane.add(textEditor, textEditor.getName());
-		slidingPane.add(messagePane, messagePane.getName());
+		tagBrowser = new TagBrowserPane(this);
+		// sub-panes added according to the indexes above:
+		slidingPane.add(browser);
+		slidingPane.add(creator);
+		slidingPane.add(editor);
+		slidingPane.add(fieldCreator);
+		slidingPane.add(textEditor);
+		slidingPane.add(messagePane);
+		slidingPane.add(tagBrowser);
+		slidingPane.add(new JPanel());  // a blank pane
+		slideTo(EMPTY_PANE);
+		
+		// hook into the property editor's string edit action so that
+		// we can do our own thing:
 		editor.getPropertyEditor().setStringEditListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {doStringEdit();}			
 		});
 	}
 	
+	public void setContext(DesignerContext context) {
+		tagBrowser.setContext(context);
+	}
+	
+	/** Invoke our string editor pane on the property editor's string value. */
 	private void doStringEdit() {
 		String value = (String)editor.getPropertyEditor().getStringEditValue();
 		textEditor.setText(value);
-		slideTo(textEditor);
+		textEditor.activate();
 	}
 	
-	public void slideTo(Container container) {
-		// slidingPane.setSelectedPane(index);
-		((RecipeEditorPane)container).onShow();
-		cardLayout.show(slidingPane, container.getName());		
+	public void slideTo(int index) {
+		slidingPane.setSelectedPane(index);	
 	}	
 	
 	public JPanel getSlidingPane() {
 		return slidingPane;
 	}
 
-	public RecipeDataBrowser getBrowser() {
+	public BrowserPane getBrowser() {
 		return browser;
 	}
 
-	public RecipeObjectCreator getCreator() {
+	public ObjectCreatorPane getCreator() {
 		return creator;
 	}
 
-	public StructureFieldCreator getFieldCreator() {
+	public FieldCreatorPane getFieldCreator() {
 		return fieldCreator;
 	}
 
-	public PropertyEditorPane getEditor() {
+	public ObjectEditorPane getEditor() {
 		return editor;
 	}
 
@@ -88,14 +101,13 @@ public class RecipeEditorController {
 		return messagePane;
 	}
 
+	public TagBrowserPane getTagBrowser() {
+		return tagBrowser;
+	}
+
 	public static void main(String[] args) {
-		RecipeEditorController controller = new RecipeEditorController();
-		
+		RecipeEditorController controller = new RecipeEditorController();		
 		javax.swing.JFrame frame = new javax.swing.JFrame();
-		Group topGroup = new Group();
-		topGroup.setKey("Top");
-		RecipeDataBrowser browser = controller.getBrowser();
-		browser.setRecipeData(topGroup);
 		frame.setContentPane(controller.getSlidingPane());
 		frame.setSize(300,200);
 		frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);

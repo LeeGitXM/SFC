@@ -4,7 +4,6 @@ import com.ils.sfc.client.step.*;
 import com.ils.sfc.common.IlsSfcModule;
 import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
-import com.ils.sfc.common.oldRecipe.RecipeDataManager;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
 import com.inductiveautomation.ignition.client.model.ClientContext;
 import com.inductiveautomation.ignition.client.util.EDTUtil;
@@ -46,41 +45,13 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
     			IlsSfcModule.MODULE_ID, IlsSfcModule.RECIPE_RESOURCE_TYPE);
         System.out.println("recipe resource: " + recipeDataResource);
         log.debug("starting up...");
-    	IlsSfcClientContext.getInstance().setClientContext(context);
-    	GatewayConnectionManager.getInstance().addPushNotificationListener(IlsSfcClientContext.getInstance());
-		RecipeDataManager.setContext(new RecipeDataManager.Context() {
-			public long createResourceId() {
-				String errMsg = "Recipe Data not present in client! Must be created in Designer.";
-				log.error(errMsg);
-				throw new UnsupportedOperationException(errMsg);
-			}
-			
-			public Project getGlobalProject() {
-				return context.getGlobalProject().getProject();
-			}
-
-			public boolean isClient() {
-				return true;
-			}
-			
-		});
 		registerSteps();
-		/*
-    	Runnable r = new Runnable() {
-            @Override
-            public void run() {
-            	registerSteps();
-            }
-        };
-        EDTUtil.invokeAfterJoin(r, Thread.currentThread());
-        */
     }
 
     private void registerSteps() {
     	// register step factories. this is duplicated in IlsSfcDesignerHook.
 		Object iaSfcHook = context.getModule(SFCModule.MODULE_ID);
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
-		RecipeDataManager.setStepRegistry(stepRegistry);
 		for(ClientStepFactory clientStepFactory: AbstractIlsStepUI.clientStepFactories) {
 			stepRegistry.register(clientStepFactory);
 		}

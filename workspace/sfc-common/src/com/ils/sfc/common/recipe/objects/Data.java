@@ -1,10 +1,8 @@
 package com.ils.sfc.common.recipe.objects;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -12,11 +10,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.inductiveautomation.ignition.common.config.BasicProperty;
-import com.inductiveautomation.ignition.common.config.BasicPropertySet;
-import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.IlsSfcCommonUtils;
+import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 
 /**
 superiorClass: sequence (the symbol S88-OBJECT)
@@ -109,7 +104,7 @@ public abstract class Data {
 		properties.set(property, property.getDefaultValue());
 	}
 	
-	/** de-serialize the Ignition step property to a hierarchy of objects */
+	/** de-serialize the Ignition step property to a hierarchical map */
 	@SuppressWarnings("unchecked")
 	public static HashMap<String,Object> jsonToMap(String json) throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
@@ -118,14 +113,22 @@ public abstract class Data {
 		return ignitionMap;
 	}
 	
-	/** Serialize a hierarchy to the Ignition step property */
+	/** Serialize a hierarchical map to the Ignition step property */
 	public static String mapToJson(Map<String,Object> ignitionMap) throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 		String json = mapper.writeValueAsString(ignitionMap);
 		return json;
 	}
+	
+	public static Data fromMap(Map<String,Object> ignitionMap) {
+		return null;
+	}
 		
+	public Map<String,Object> toMap() {
+		return null;
+	}
+	
 	/** Translate from G2 export to ignition map. Example of G2 XML element:
 	 * <recipe key="bar" label="bar" description="A barby piece of recipe data" help="More useless help" advice="More useless advice" units="DEGC" type="float" category="Simple Constant" val="37.567" high-limit="" low-limit=""  />
 	 */
