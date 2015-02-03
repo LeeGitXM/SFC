@@ -1,10 +1,12 @@
 #!/bin/sh
-#  SFC conversion script
+# SFC project build script.
+# -- walk the directory hierarchy of the converted
+#    tree and create a project file.
 # -- options for log.level:  INFO,DEBUG,TRACE
 #
 if [ $# -lt 2 ]
 then
-    echo "USAGE: migrate <inpath> <outpath>"
+    echo "USAGE: build-project <indir> <outfile>"
 	exit 2
 fi
 REPO=~/Development/ils/src
@@ -12,7 +14,6 @@ cd $REPO/sfc
 SFC=`pwd`
 LIB=$REPO/external/lib
 JAR=${LIB}/sfc-migration.jar
-DB=${SFC}/migration/mdb/conversion.db
 # Use for debugging - ruins output file however.
 #cat $1 | java -cp ${JAR} -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Dlog.level=INFO -Droot.class=APPLICATION com.ils.blt.migration.Migrator ${DB}
-cat $1 | java -cp ${JAR} -Dlog.level=INFO com.ils.sfc.migration.Converter ${DB} $1 $2
+cat $1 | java -cp ${JAR} -Dlog.level=INFO com.ils.sfc.migration.ProjectBuilder $1 $2
