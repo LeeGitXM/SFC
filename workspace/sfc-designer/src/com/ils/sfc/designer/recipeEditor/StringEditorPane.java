@@ -37,7 +37,7 @@ public class StringEditorPane extends JPanel implements RecipeEditorController.R
 	}
 	
 	public void doOK() {
-		controller.getEditor().getPropertyEditor().setStringEditValue(textField.getText());
+		controller.getEditor().getPropertyEditor().setSelectedValue(textField.getText());
 		controller.getEditor().activate();
 	}
 	

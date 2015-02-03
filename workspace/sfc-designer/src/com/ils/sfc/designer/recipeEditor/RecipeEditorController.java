@@ -50,23 +50,10 @@ public class RecipeEditorController {
 		slidingPane.add(tagBrowser);
 		slidingPane.add(new JPanel());  // a blank pane
 		slideTo(EMPTY_PANE);
-		
-		// hook into the property editor's string edit action so that
-		// we can do our own thing:
-		editor.getPropertyEditor().setStringEditListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {doStringEdit();}			
-		});
 	}
 	
 	public void setContext(DesignerContext context) {
 		tagBrowser.setContext(context);
-	}
-	
-	/** Invoke our string editor pane on the property editor's string value. */
-	private void doStringEdit() {
-		String value = (String)editor.getPropertyEditor().getStringEditValue();
-		textEditor.setText(value);
-		textEditor.activate();
 	}
 	
 	public void slideTo(int index) {

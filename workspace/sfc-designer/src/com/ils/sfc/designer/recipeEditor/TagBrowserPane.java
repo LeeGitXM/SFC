@@ -42,12 +42,15 @@ public class TagBrowserPane extends JPanel implements RecipeEditorController.Rec
 			tagBrowser = new TagBrowser(context);
 			add(tagBrowser, BorderLayout.CENTER);
 			validate();
+			initialized = true;
 		}
 		controller.slideTo(RecipeEditorController.TAG_BROWSER);
 	}
 
 	public void doAccept() {
-		controller.getEditor().getPropertyEditor().setStringEditValue(tagBrowser.getTagPath());
+		String tagPath = tagBrowser.getTagPath();
+		System.out.println(tagPath);
+		controller.getEditor().getPropertyEditor().setSelectedValue(tagPath);
 		controller.getEditor().activate();
 	}
 }
