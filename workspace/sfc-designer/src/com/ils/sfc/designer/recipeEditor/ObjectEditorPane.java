@@ -11,7 +11,6 @@ import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Structure;
 import com.ils.sfc.designer.ButtonPanel;
 import com.ils.sfc.designer.propertyEditor.PropertyEditor;
-import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 /** A thin wrapper for a PropertyEditor that adds an accept action.
@@ -58,12 +57,15 @@ public class ObjectEditorPane extends JPanel implements RecipeEditorController.R
 		PropertyValue<?> selectedPropertyValue = getPropertyEditor().getSelectedPropertyValue();
 		if(selectedPropertyValue == null) return;
 		if(selectedPropertyValue.getProperty().equals(IlsProperty.TAG_PATH)) {
+			editor.stopCellEditing();
 			controller.getTagBrowser().activate();
 		}
 		else if(selectedPropertyValue.getProperty().getType() == String.class) {
+			editor.stopCellEditing();
 			controller.getTextEditor().setText((String)selectedPropertyValue.getValue());
 			controller.getTextEditor().activate();
 		}
+		// else do nothing
 	}
 	
 	private void doRemove() {
@@ -86,9 +88,8 @@ public class ObjectEditorPane extends JPanel implements RecipeEditorController.R
 	public void setRecipeData(Data recipeData) {
 		this.recipeData = recipeData;
 		boolean isStructure = recipeData instanceof Structure;
-		buttonPanel.getAddButton().setVisible(isStructure);
-		buttonPanel.getRemoveButton().setVisible(isStructure);
-		validate();
+		buttonPanel.getAddButton().setEnabled(isStructure);
+		buttonPanel.getRemoveButton().setEnabled(isStructure);
 		getPropertyEditor().setPropertyValues(recipeData.getProperties(), false);
 	}
 

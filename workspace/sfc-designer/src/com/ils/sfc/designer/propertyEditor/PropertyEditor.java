@@ -21,11 +21,6 @@ public class PropertyEditor extends JPanel {
 	private final PropertyTableModel tableModel = new PropertyTableModel();
 	private final JTable table = new JTable(tableModel);
 	
-	// some support for modeless external string editing:
-	private String stringEditValue;
-	private int stringEditRow;
-	private ActionListener stringEditListener;
-	
 	public PropertyEditor() {
 		setLayout(new BorderLayout());
 		add(new JScrollPane(table), BorderLayout.CENTER);
@@ -38,13 +33,6 @@ public class PropertyEditor extends JPanel {
 		table.setRowHeight(20);
 		table.setRowMargin(3);	
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-	}
-
-	/** Set a listener that will be invoked for external string editing (in
-	 *  place of the normal default behavior)
-	 */
-	public void setStringEditListener(ActionListener stringEditListener) {
-		this.stringEditListener = stringEditListener;
 	}
 
 	private void doEdit(int row, int col) {
@@ -62,28 +50,25 @@ public class PropertyEditor extends JPanel {
 			ReviewDataEditorDialog dlg = new ReviewDataEditorDialog(frame, tableModel.getStepId(), true);
 			dlg.setVisible(true);						
 		}
-		else {
-			if(stringEditListener == null) {
-				if(!stringEditRowObject.isEditableString()) return;
-					PropertyStringEditorDialog dlg = new PropertyStringEditorDialog(frame, tableModel, row);
-				dlg.setVisible(true);
-			}
-			else {
-				stringEditRow = row;
-				stringEditValue = (String) tableModel.getValueAt(row, col);
-				stringEditListener.actionPerformed(null);
-			}
-		}
 	}
 
+	public PropertyRow getSelectedRow() {
+		int selectionIndex = table.getSelectedRow();
+		return selectionIndex >= 0 ? tableModel.getRowObject(selectionIndex) : null;
+	}
+	
 	/** Get the row that external string editing was last invoked on. */
-	public String getStringEditValue() {
-		return stringEditValue;
+	public Object getSelectedValue() {
+		PropertyRow selectedRow = getSelectedRow();
+		return selectedRow != null ? selectedRow.getValue() : null;
 	}
 	
 	/** set the externally edited string */
-	public void setStringEditValue(String value) {
-		tableModel.setValueAt(value, stringEditRow, 1);
+	public void setSelectedValue(Object value) {
+		int selectionIndex = table.getSelectedRow();
+		if(selectionIndex >= 0) {
+			tableModel.setValueAt(value, selectionIndex, PropertyTableModel.VALUE_COLUMN);
+		}
 	}
 	
 	public PropertyTableModel getTableModel() {
@@ -104,13 +89,13 @@ public class PropertyEditor extends JPanel {
 	}
 
 	public PropertyValue<?> getSelectedPropertyValue() {
-		int selectedRow = table.getSelectedRow();
-		if(selectedRow > 0) {
-			PropertyRow selectedRowObject = tableModel.getRowObject(selectedRow);
-			return selectedRowObject.getPropertyValue();
-		}
-		else {
-			return null;
+		PropertyRow selectedRow = getSelectedRow();
+		return selectedRow != null ? selectedRow.getPropertyValue() : null;
+	}
+
+	public void stopCellEditing() {
+		if(table.getCellEditor() != null) {
+			table.getCellEditor().stopCellEditing();
 		}
 	}
 	

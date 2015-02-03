@@ -91,8 +91,8 @@ public class PropertyTableModel extends AbstractTableModel {
 				propertyValues.set(pRow.getPropertyValue());
     		}
 	    	hasChanged = true;
-	        //fireTableCellUpdated(row, col);
-	    	fireTableDataChanged();
+	        fireTableCellUpdated(row, col);
+	    	//fireTableDataChanged();
 		} catch (ParseException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Illegal Value", JOptionPane.WARNING_MESSAGE);
 		}
