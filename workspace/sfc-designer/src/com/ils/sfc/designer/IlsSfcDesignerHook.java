@@ -3,65 +3,18 @@
  */
 package com.ils.sfc.designer;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import javax.swing.JComponent;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
-import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
-import com.ils.sfc.common.chartStructure.IlsSfcChartStructureCompiler;
-import com.ils.sfc.common.chartStructure.IlsSfcChartStructureMgr;
-import com.ils.sfc.common.oldRecipe.RecipeData;
-import com.ils.sfc.common.oldRecipe.RecipeDataManager;
-import com.ils.sfc.designer.oldRecipeEditor.RecipeDataEditorFrame;
-import com.ils.sfc.common.step.AbortStepProperties;
-import com.ils.sfc.common.step.ClearQueueStepProperties;
-import com.ils.sfc.common.step.CloseWindowStepProperties;
-import com.ils.sfc.common.step.CollectDataStepProperties;
-import com.ils.sfc.common.step.ControlPanelMessageStepProperties;
-import com.ils.sfc.common.step.DeleteDelayNotificationStepProperties;
-import com.ils.sfc.common.step.DialogMessageStepProperties;
-import com.ils.sfc.common.step.EnableDisableStepProperties;
-import com.ils.sfc.common.step.InputStepProperties;
-import com.ils.sfc.common.step.LimitedInputStepProperties;
-import com.ils.sfc.common.step.PauseStepProperties;
-import com.ils.sfc.common.step.PostDelayNotificationStepProperties;
-import com.ils.sfc.common.step.PrintFileStepProperties;
-import com.ils.sfc.common.step.PrintWindowStepProperties;
-import com.ils.sfc.common.step.QueueMessageStepProperties;
-import com.ils.sfc.common.step.RawQueryStepProperties;
-import com.ils.sfc.common.step.ReviewDataStepProperties;
-import com.ils.sfc.common.step.ReviewDataWithAdviceStepProperties;
-import com.ils.sfc.common.step.ReviewFlowsStepProperties;
-import com.ils.sfc.common.step.SaveDataStepProperties;
-import com.ils.sfc.common.step.SelectInputStepProperties;
-import com.ils.sfc.common.step.SetQueueStepProperties;
-import com.ils.sfc.common.step.ShowQueueStepProperties;
-import com.ils.sfc.common.step.ShowWindowStepProperties;
-import com.ils.sfc.common.step.SimpleQueryStepProperties;
-import com.ils.sfc.common.step.TimedDelayStepProperties;
-import com.ils.sfc.common.step.YesNoStepProperties;
+import com.ils.sfc.common.step.*;
+import com.ils.sfc.designer.recipeEditor.RecipeDataEditorFrame;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
-import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
-import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
-import com.inductiveautomation.ignition.designer.designable.IDesignTool;
 import com.inductiveautomation.ignition.designer.model.AbstractDesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.DesignerModuleHook;
@@ -69,21 +22,17 @@ import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistryProvider;
-import com.inductiveautomation.sfc.client.ui.StepComponent;
 import com.inductiveautomation.sfc.designer.SFCDesignerHook;
-import com.inductiveautomation.sfc.designer.api.StepConfigFactory;
 import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
-import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
-import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.jidesoft.docking.DockableFrame;
 
 public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook {
 	private DesignerContext context = null;
 	private final LoggerEx log;
-	private SFCWorkspace sfcWorkspace;
-	private JPopupMenu stepPopup;
+	//private SFCWorkspace sfcWorkspace;
+	//private JPopupMenu stepPopup;
 	private SFCDesignerHook iaSfcHook;
-	private RecipeDataEditorFrame recipeEditor = new RecipeDataEditorFrame();
+	private RecipeDataEditorFrame recipeEditorFrame = new RecipeDataEditorFrame();
 	
 	//private ChartManagerService chartManager;
 	private static String[] editorFactoryIds = {
@@ -124,7 +73,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public List<DockableFrame> getFrames() {
       	List<DockableFrame> frames = new ArrayList<>();
-       	frames.add(recipeEditor);       	
+       	frames.add(recipeEditorFrame);       	
        	return frames;
 	}
 	
@@ -140,20 +89,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		this.context = ctx;
         log.debug("IlsSfcDesignerHook.startup...");
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-       
-        // Initialize recipe data, and create a listener that will reload data if 
-        // charts change
-		initializeRecipeData();  // note: this needs iaSfcHook
-		context.getGlobalProject().addProjectChangeListener(new ProjectChangeListener() {
-			@Override
-			public void projectResourceModified(ProjectResource resource,ResourceModification arg1) {
-				if(resource.getModuleId().equals(SFCModule.MODULE_ID)) {
-					RecipeDataManager.setStale();
-				}
-			}
-			@Override public void projectUpdated(Project arg0) {}
-		});
-
+      	iaSfcHook.getWorkspace().getInnerWorkspace().addDesignableWorkspaceListener(recipeEditorFrame);
+		recipeEditorFrame.getController().setContext(context);
 		
 		// Register steps
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
@@ -166,124 +103,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	StepConfigRegistry configRegistry = (StepConfigRegistry) context.getModule(SFCModule.MODULE_ID);
     	for(String factoryId: editorFactoryIds) {
     		configRegistry.register(factoryId, editorFactory);
-    	}
-      	
-       	// These steps are extensions of IA steps and use the same editor
-       	StepConfigFactory encFactory = iaSfcHook.getConfigFactory(EnclosingStepProperties.FACTORY_ID);
- }
-
-	private void initializeRecipeData() {
-		RecipeDataManager.setContext(new RecipeDataManager.Context() {
-			public long createResourceId() {
-				try {
-					return context.newResourceId();
-				} catch (Exception e) {
-					log.error("Error creating resource id", e);
-					return 0;
-				}
-			}
-			
-			public Project getGlobalProject() {
-				return context.getGlobalProject().getProject();
-			}
-
-			public boolean isClient() {
-				return false;
-			}
-			
-		});
-		RecipeDataManager.setStepRegistry(iaSfcHook.getStepRegistry());
-		initializeStepPopup();
+    	}    	
 	}
-
-	private void initializeStepPopup() {
-		stepPopup = new JPopupMenu();
-		
-		JMenuItem createRecipeDataItem = new JMenuItem("Edit Recipe Data");
-		createRecipeDataItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				StepComponent stepComponent =  (StepComponent) stepPopup.getInvoker();
-				UUID stepId = (UUID)IlsSfcCommonUtils.getStepPropertyValue(stepComponent.getElement(), "id");				
-				RecipeData recipeData = RecipeDataManager.getData();
-				if(recipeData.isInitialized()) {
-					//RecipeDataBrowser browser = new RecipeDataBrowser(context.getFrame(), stepId.toString());
-					//browser.setVisible(true);
-				}
-				else {					
-					JOptionPane.showMessageDialog(stepComponent, "Recipe Data cannot be edited due to an initialization error");
-				}
-			}
-
-		});
-		stepPopup.add(createRecipeDataItem);
-
-		// TODO: remove this debug item when no longer needed:
-		JMenuItem compileItem = new JMenuItem("Compile Chart Structure");
-		compileItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				IlsSfcChartStructureCompiler compiler = new IlsSfcChartStructureCompiler(
-					context.getGlobalProject().getProject(), iaSfcHook.getStepRegistry());
-				IlsSfcChartStructureMgr structureMgr = compiler.compile();
-				for(String msg: compiler.getMessages()) {
-					System.out.println(msg);
-				}
-			}
-
-		});
-		stepPopup.add(compileItem);
-
-		JMenuItem clearItem = new JMenuItem("Clear Recipe Data");
-		clearItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				RecipeDataManager.clear();
-			}
-
-		});
-		stepPopup.add(clearItem);
-
-		JMenuItem reloadItem = new JMenuItem("Reload Recipe Data");
-		reloadItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				RecipeDataManager.loadData();
-			}
-
-		});
-		stepPopup.add(reloadItem);
-
-		sfcWorkspace = iaSfcHook.getWorkspace();
-		sfcWorkspace.getInnerWorkspace().addDesignableWorkspaceListener(recipeEditor);
-		final IDesignTool tool = sfcWorkspace.getCurrentTool();
-		ClassLoader cl = tool.getClass().getClassLoader();
-		Class<?>[] interfaces = { IDesignTool.class, IDesignTool.ToolbarInitializer.class };
-		IDesignTool wrapper = (IDesignTool)Proxy.newProxyInstance(cl, interfaces, 
-			new InvocationHandler() {
-				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {				
-					Object result = method.invoke(tool, args);
-						if(method.getName().equals("onPopupTrigger")) {		
-						for(JComponent comp: sfcWorkspace.getSelectedItems()) {
-							if(comp instanceof StepComponent) {
-								stepPopup.show(comp, 0, 0);
-							}
-						}
-					}
-					return result;
-				}			
-		});
-		sfcWorkspace.setCurrentTool(wrapper);
-	}
-			
-	private void printComponents(JComponent parent, int level) {
-		for(Component child: parent.getComponents()) {
-			if(child instanceof JComponent) {
-				for(int i = 0; i < level; i++) {
-					System.out.print("   ");
-				}
-				System.out.println(child.getClass().getSimpleName());
-				printComponents((JComponent)child, level + 1);
-			}
-		}		
-	}
-
+	
 	@Override
 	public void shutdown() {	
 	}

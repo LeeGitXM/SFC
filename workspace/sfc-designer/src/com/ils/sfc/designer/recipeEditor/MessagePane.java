@@ -5,41 +5,45 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JTextArea;
+
+import com.ils.sfc.designer.ButtonPanel;
 
 /** A sliding pane for displaying a message */
+@SuppressWarnings("serial")
 public class MessagePane extends JPanel implements RecipeEditorController.RecipeEditorPane {
+	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, RecipeEditorController.background);
 	private RecipeEditorController controller;
-	private JTextField textField = new JTextField();
-	private JButton okButton = new JButton("OK");
-	private Container returnPane;
+	private JTextArea textField = new JTextArea();
+	private int returnIndex;
 	
 	public MessagePane(RecipeEditorController controller) {
 		super(new BorderLayout());
 		this.controller = controller;
 		textField.setEditable(false);
 		add(textField, BorderLayout.CENTER);
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.add(okButton);
-		add(buttonPanel, BorderLayout.SOUTH);
-		okButton.addActionListener(new ActionListener() {
+		add(buttonPanel, BorderLayout.NORTH);
+		buttonPanel.getAddButton().setVisible(false);
+		buttonPanel.getEditButton().setVisible(false);
+		buttonPanel.getRemoveButton().setVisible(false);
+		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {doOK();}		
 		});
 	}
 	
-	/** Do anything that needs to be done before re-showing this. */
-	public void onShow() {
+	@Override
+	public void activate() {
+		controller.slideTo(RecipeEditorController.MESSAGE);
 	}
 	
-	public void setText(String text, Container returnPane) {
+	public void setText(String text, int returnIndex) {
 		textField.setText(text);
-		this.returnPane = returnPane;
+		this.returnIndex = returnIndex;
 	}
 	
 	public void doOK() {
-		controller.slideTo(returnPane);
+		controller.slideTo(returnIndex);
 	}
 	
 }

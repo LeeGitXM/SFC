@@ -20,13 +20,13 @@ import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
-import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 @SuppressWarnings("serial")
 public class PropertyTableModel extends AbstractTableModel {
-	public static final int VALUE_COLUMN = 1;
 	private static final String UNIT_SUFFIX = "Unit";
-	private static final String[] columnNames = {"Property", "Value", "Units", ""};
+	private static final String[] columnNames = {"Property", "Value"};
+	static final int NAME_COLUMN = 0;
+	static final int VALUE_COLUMN = 1;
 	private List<PropertyRow> rows = new ArrayList<PropertyRow>();
 	private boolean hasChanged;
 	private BasicPropertySet propertyValues;
@@ -48,36 +48,6 @@ public class PropertyTableModel extends AbstractTableModel {
     public PropertyRow getRowObject(int i) {
     	return rows.get(i);
     }
-/*    
-    public void setProperties(List<PropertyRow> newPropertyValues) {
-    	hasChanged = false;
-    	rows.clear();
-    	Map<String,List<PropertyRow>> propertiesByCategory = new HashMap<String,List<PropertyRow>>();
-    	for(PropertyRow row: newPropertyValues) {
-    		if(row.getCategory() == null) {
-    			rows.add(row);
-    		}
-    		else {
-    			String category = row.getCategory();
-    			List<PropertyRow> categoryProperties = propertiesByCategory.get(category);
-    			if(categoryProperties == null) {
-    				categoryProperties = new ArrayList<PropertyRow>();
-    				propertiesByCategory.put(category, categoryProperties);
-    			}
-    			categoryProperties.add(row);
-    		}
-    	}
-    	for(String category: propertiesByCategory.keySet()) {
-    		// TODO: reflect the property name and isCategory property:
-    		PropertyRow newRow = new PropertyRow(null, null);
-    		rows.add(newRow);
-    		for(PropertyRow propValue: propertiesByCategory.get(category)) {
-        		rows.add(propValue);   			
-    		}
-    	}
-		this.fireTableDataChanged();
-	}
-*/
 
     public Class<?> getPropertyType(int rowIndex) {
     	PropertyRow row = rows.get(rowIndex);
@@ -95,38 +65,30 @@ public class PropertyTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int col) {
     	PropertyRow pRow = rows.get(row);
     	Object value = null;
-        if(col == 0) {
+        if(col == NAME_COLUMN) {
         	value = pRow.getDisplayLabel();
         }
-        else if(col == 1) {
+        else if(col == VALUE_COLUMN) {
         	value = pRow.getValue();
         }
-        else if(col == 2) {
-        	value = pRow.getUnitName();
-        }
-        else {
-        	value = ""; // the button row; value not important
+       else {
+        	value = ""; // the edit row; value not important
         }
         return value;
     }
     
     public boolean isCellEditable(int row, int col) { 
     	PropertyRow rowObj = getRowObject(row);
-    	return (col == 1 && !rowObj.isCategory()) ||
-    		(col == 2 && rowObj.getUnitPropertyValue() != null);
+    	return col == VALUE_COLUMN && !rowObj.isCategory();
     }
     
     public void setValueAt(Object value, int row, int col) {
     	PropertyRow pRow = rows.get(row);
 
     	try {
-    		if(col == 1) {
+    		if(col == VALUE_COLUMN) {
 				pRow.setValueFormatted((String)value);
 				propertyValues.set(pRow.getPropertyValue());
-    		}
-    		else if(col == 2) {
-				pRow.setUnitValueFormatted((String)value);
-				propertyValues.set(pRow.getUnitPropertyValue());    			
     		}
 	    	hasChanged = true;
 	        //fireTableCellUpdated(row, col);
@@ -152,15 +114,13 @@ public class PropertyTableModel extends AbstractTableModel {
 			if(name.equals("id")) {
 				stepId = pValue.getValue().toString();
 			}
-			if( !IlsProperty.ignoreProperties.contains(name) &&
-				!name.endsWith(UNIT_SUFFIX)) {
-				PropertyValue<?> unitValueOrNull = propsByName.get(name + UNIT_SUFFIX);
-				PropertyRow newRow = new PropertyRow(pValue, unitValueOrNull);
+			if( !IlsProperty.ignoreProperties.contains(name)) {
+				PropertyRow newRow = new PropertyRow(pValue);
 				rows.add(newRow);
 	
 				// add unit choices if present
-				if(unitValueOrNull != null) {
-					String unit = unitValueOrNull.getValue().toString();
+				if(name.endsWith(UNIT_SUFFIX)) {
+					String unit = (String) pValue.getValue();
 					Object[] unitChoices = null;
 					try {
 						unitChoices = PythonCall.toArray(
@@ -168,7 +128,7 @@ public class PropertyTableModel extends AbstractTableModel {
 					} catch (JythonExecException e) {
 						logger.error("Exception getting units", e);
 					}
-					newRow.setUnitChoices(unitChoices);
+					newRow.setChoices(unitChoices);
 				}
 				
 			}

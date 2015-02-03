@@ -41,7 +41,7 @@ attributes:sequence (structure (
 public abstract class IO extends DataWithUnits {
 
 	public IO() {
-		addProperty(IlsProperty.TAG);
+		addProperty(IlsProperty.TAG_PATH);
 		addProperty(IlsProperty.VALUE);
 		addProperty(IlsProperty.ERROR_CODE);
 		addProperty(IlsProperty.ERROR_TEXT);

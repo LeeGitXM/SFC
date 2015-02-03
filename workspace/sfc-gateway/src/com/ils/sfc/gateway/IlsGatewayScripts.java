@@ -10,10 +10,6 @@ import org.python.core.PyDictionary;
 import org.python.core.PyList;
 
 import com.ils.sfc.common.ReviewDataConfig;
-import com.ils.sfc.common.oldRecipe.RecipeData;
-import com.ils.sfc.common.oldRecipe.RecipeDataException;
-import com.ils.sfc.common.oldRecipe.RecipeDataManager;
-import com.ils.sfc.common.oldRecipe.RecipeScope;
 import com.ils.sfc.step.IlsAbstractChartStep;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
@@ -80,27 +76,10 @@ public class IlsGatewayScripts {
 	public static void setResponse(String id, PyDictionary payload) {
 		repliesById.put(id, payload);
 	}
-
-	/** Get a working copy of the recipe data that can be modified. For instance, a SFC 
-	 *  chart gets its own working copy of the static data that it can then modify.
-	 */
-	public static RecipeData getWorkingRecipeData() throws RecipeDataException {
-		// TODO: remove this forced reload when we get change management working
-		//System.out.println("DEBUG!! Reloading recipe data for working copy...");
-		return RecipeDataManager.getWorkingCopy();
-	}
-
-	public static Object getRecipeData(RecipeData workingRecipeData, String scopeString, String stepId, String path) throws RecipeDataException {
-		RecipeScope scope = RecipeScope.valueOf(scopeString);
-		return workingRecipeData.get(scope,  stepId, path);
-	}
-
-	public static void setRecipeData(RecipeData workingRecipeData, String scopeString, String stepId, String path, Object value, boolean create) throws RecipeDataException {
-		RecipeScope scope = RecipeScope.valueOf(scopeString);
-		workingRecipeData.set(scope,  stepId, path, value, create);
-	}
 	
 	public static PyList getReviewDataConfig(String stepId, boolean addAdvice) {
+		return null;
+		/*
 		PyList result = new PyList();
 	    RecipeData recipeData = RecipeDataManager.getData();
 	    ReviewDataConfig dataConfig = recipeData.getReviewDataConfig(stepId);
@@ -123,6 +102,7 @@ public class IlsGatewayScripts {
 	        rowConfig.add(row.units);
 	    }
 	        return result;
+	        */
 	}
 	
 	/** For testing, create an instance of the given step and run the action method on it, 

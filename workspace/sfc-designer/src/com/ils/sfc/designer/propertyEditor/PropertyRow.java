@@ -2,7 +2,6 @@ package com.ils.sfc.designer.propertyEditor;
 
 import java.text.ParseException;
 
-import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
@@ -10,13 +9,11 @@ import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 public class PropertyRow {
 	private PropertyValue<?> propertyValue;
-	private PropertyValue<?> unitPropertyValue; // may be null
-	private Object[] unitChoices;
+	private Object[] choices;
 	private String displayLabel;
 	
-	public PropertyRow(PropertyValue<?> propertyValue, PropertyValue<?> unitPropertyValue) {
+	public PropertyRow(PropertyValue<?> propertyValue) {
 		this.propertyValue = propertyValue;
-		this.unitPropertyValue = unitPropertyValue;
 		displayLabel = createDisplayLabel();
 	}
 
@@ -43,10 +40,6 @@ public class PropertyRow {
 		return getProperty().getType() == String.class && getChoices() == null;
 	}
 
-	public String getUnitName() {
-		return unitPropertyValue != null ? unitPropertyValue.getValue().toString() : "";
-	}
-	
 	public Object getDefaultValue() {
 		return getProperty() instanceof BasicProperty ? ((BasicProperty<?>)getProperty()).getDefaultValue() : null;
 	}
@@ -55,6 +48,10 @@ public class PropertyRow {
 		return propertyValue.getValue() != null ? propertyValue.getValue() : getDefaultValue();
 	}
 	
+	public Object[] getChoices() {
+		return choices;
+	}
+
 	public String getCategory() {
 		return null;
 	}
@@ -63,21 +60,8 @@ public class PropertyRow {
 		return false;
 	}
 
-	public Object[] getChoices() {
-		return getProperty() instanceof IlsProperty ? 
-			((IlsProperty<?>)getProperty()).getChoices() : null;
-	}
-
-	public Object[] getUnitChoices() {
-		return unitChoices;
-	}
-
-	public void setUnitChoices(Object[] unitChoices) {
-		this.unitChoices = unitChoices;
-	}
-
-	public Property<?> getUnitProperty() {
-		return unitPropertyValue.getProperty();
+	public void setChoices(Object[] choices) {
+		this.choices = choices;
 	}
 
 	public Property<?> getProperty() {
@@ -88,20 +72,10 @@ public class PropertyRow {
 		return propertyValue;
 	}
 
-	public PropertyValue<?> getUnitPropertyValue() {
-		return unitPropertyValue;
-	}
-
 	/** Regardless of underlying type, set the value from a string representation. */
 	public void setValueFormatted(String stringValue) throws ParseException {
 		Object value = IlsSfcCommonUtils.parseProperty(getProperty(), stringValue);
 		setValue(value);
-	}
-
-	/** Regardless of underlying type, set the value from a string representation. */
-	public void setUnitValueFormatted(String stringValue) throws ParseException {
-		Object value = IlsSfcCommonUtils.parseProperty(getUnitProperty(), stringValue);
-		setUnitValue(value);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -109,11 +83,6 @@ public class PropertyRow {
 		propertyValue = new PropertyValue(getProperty(), value);		
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public void setUnitValue(Object value) {
-		unitPropertyValue = new PropertyValue(getUnitProperty(), value);		
-	}
-
 	public String getDisplayLabel() {
 		return displayLabel;
 	}

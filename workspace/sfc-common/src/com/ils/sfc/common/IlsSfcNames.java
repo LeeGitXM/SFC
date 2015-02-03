@@ -1,6 +1,5 @@
 package com.ils.sfc.common;
 
-import com.ils.sfc.common.oldRecipe.RecipeScope;
 
 /** A single place to define names that need to be shared between Java and Jython. */
 public class IlsSfcNames {
@@ -149,13 +148,8 @@ public class IlsSfcNames {
 
 	// choices:
 	public static final String[] RECIPE_STATIC_STRATEGY_CHOICES = {STATIC, RECIPE};
-	public static String[] RECIPE_LOCATION_CHOICES = {};
-	static {
-		RECIPE_LOCATION_CHOICES = new String[RecipeScope.values().length];
-		for(int i = 0; i < RECIPE_LOCATION_CHOICES.length; i++) {
-			RECIPE_LOCATION_CHOICES[i] = (RecipeScope.values()[i]).toString();
-		}
-	};
+	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, PREVIOUS, SUPERIOR,
+		PHASE, OPERATION, PROCEDURE,};
 	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK};
 	public static final String[] RESULTS_MODE_CHOICES = {UPDATE, UPDATE_OR_CREATE};
 	public static final String[] FETCH_MODE_CHOICES = {SINGLE, MULTIPLE};

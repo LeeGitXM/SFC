@@ -4,37 +4,32 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JTextArea;
 
+import com.ils.sfc.designer.ButtonPanel;
 
+/** Basically just a big text area for editing long strings. */
 @SuppressWarnings("serial")
 public class StringEditorPane extends JPanel implements RecipeEditorController.RecipeEditorPane {
 	private RecipeEditorController controller;
-	private JTextField textField = new JTextField();
-	private JButton okButton = new JButton("OK");
-	private JButton cancelButton = new JButton("Cancel");
+	private JTextArea textField = new JTextArea();
+	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, RecipeEditorController.background);
 	
 	public StringEditorPane(RecipeEditorController controller) {
 		super(new BorderLayout());
 		this.controller = controller;
 		add(textField, BorderLayout.CENTER);
-		JPanel buttonPanel = new JPanel();
-		buttonPanel.add(okButton);
-		buttonPanel.add(cancelButton);
-		add(buttonPanel, BorderLayout.SOUTH);
-		okButton.addActionListener(new ActionListener() {
+		add(buttonPanel, BorderLayout.NORTH);
+		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {doOK();}		
-		});
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {doCancel();}		
 		});
 	}
 
 	/** Do anything that needs to be done before re-showing this. */
-	public void onShow() {
+	public void activate() {
 		textField.requestFocus();
+		controller.slideTo(RecipeEditorController.TEXT_EDITOR);
 	}
 
 	public void setText(String text) {
@@ -43,11 +38,7 @@ public class StringEditorPane extends JPanel implements RecipeEditorController.R
 	
 	public void doOK() {
 		controller.getEditor().getPropertyEditor().setStringEditValue(textField.getText());
-		controller.slideTo(controller.getEditor());
+		controller.getEditor().activate();
 	}
 	
-	public void doCancel() {
-		controller.slideTo(controller.getEditor());
-	}
-
 }
