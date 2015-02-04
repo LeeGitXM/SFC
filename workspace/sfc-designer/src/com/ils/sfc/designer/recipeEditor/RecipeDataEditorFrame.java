@@ -6,6 +6,7 @@ import javax.swing.JComponent;
 
 import com.ils.sfc.common.recipe.objects.Data;
 import com.inductiveautomation.ignition.client.designable.DesignableContainer;
+import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.designer.designable.DesignableWorkspaceListener;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.ResourceWorkspaceFrame;
@@ -48,26 +49,30 @@ public class RecipeDataEditorFrame extends com.jidesoft.docking.DockableFrame im
 	}
 
 	public void itemSelectionChanged(List<JComponent> selectedComponents) {
+		controller.commit();
 		JComponent selectedComponent = selectedComponents.size() == 1 ? selectedComponents.get(0) : null;
-		if(selectedComponent == null) {
-			controller.slideTo(RecipeEditorController.EMPTY_PANE);
-		}
-		else if(selectedComponent instanceof StepComponent) {
+		if(selectedComponent instanceof StepComponent) {
 			StepComponent stepComponent = (StepComponent) selectedComponent;
-			// TODO: get step's "other stuff" property and deserialize JSON to map
-			// Map<String,Object> map = Data.jsonToMap(json);
-			// Data recipeData = Data.fromMap(map);
-			// controller.getBrowser().setRecipeData(recipeData);
-			 controller.getBrowser().activate();
+			controller.setElement(stepComponent.getElement());
+			controller.getBrowser().activate();
 		}
 		else {
-			// nothing?
+			// either no step was selected, or it was a multiple selection
+			controller.slideTo(RecipeEditorController.EMPTY_PANE);
 		}
 			
 	}
 	
-	public void containerClosed(DesignableContainer arg0) {}
-	public void containerOpened(DesignableContainer arg0) {}
-	public void containerSelected(DesignableContainer arg0) {}
+	public void containerClosed(DesignableContainer arg0) {
+		controller.commit();
+	}
+	
+	public void containerOpened(DesignableContainer arg0) {
+		controller.commit();
+	}
+	
+	public void containerSelected(DesignableContainer arg0) {
+		controller.commit();
+	}
 
 }

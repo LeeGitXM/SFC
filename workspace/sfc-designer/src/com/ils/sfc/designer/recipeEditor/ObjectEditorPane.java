@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 
 import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Structure;
 import com.ils.sfc.designer.ButtonPanel;
@@ -45,7 +46,7 @@ public class ObjectEditorPane extends JPanel implements RecipeEditorController.R
 
 	@Override
 	public void activate() {
-		controller.slideTo(RecipeEditorController.EDITOR);
+		controller.slideTo(RecipeEditorController.OBJECT_EDITOR);
 	}
 	
 	private void doAdd() {
@@ -82,7 +83,12 @@ public class ObjectEditorPane extends JPanel implements RecipeEditorController.R
 	
 	private void doOK() {
 		recipeData.setProperties(editor.getPropertyValues());
-		controller.getBrowser().activate();
+		if(IlsSfcCommonUtils.isEmpty(recipeData.getKey())) {
+			controller.showMessage("A key is required", RecipeEditorController.OBJECT_EDITOR);
+		}
+		else {
+			controller.getBrowser().activate();			
+		}
 	}
 
 	public PropertyEditor getPropertyEditor() {

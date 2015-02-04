@@ -28,9 +28,8 @@ public class BrowserPane extends JPanel implements RecipeEditorController.Recipe
 	private JScrollPane treeScroll;
 	private DefaultTreeModel treeModel;
 	private RecipeDataTreeNode selectedNode;
-	private Group recipeDataHolder = new Group();
 	private final RecipeEditorController controller;
-	private final RecipeDataTreeNode rootNode = new RecipeDataTreeNode(recipeDataHolder);
+	private RecipeDataTreeNode rootNode;
 
 	/** Helper class to show recipe data objects as tree nodes. */
 	private static class RecipeDataTreeNode extends DefaultMutableTreeNode {
@@ -70,17 +69,8 @@ public class BrowserPane extends JPanel implements RecipeEditorController.Recipe
 		});		
 	}
 	
-	public void setRecipeData(List<Data> recipeData){
-		recipeDataHolder.getChildren().clear();
-		recipeDataHolder.getChildren().addAll(recipeData);
-		rebuildTree();
-	}
-	
-	public List<Data> getRecipeData() {
-		return recipeDataHolder.getChildren();
-	}
-	
 	private void createTree() {		
+		rootNode = new RecipeDataTreeNode(controller.getRecipeData());
 		selectedNode = rootNode;
 		treeModel = new DefaultTreeModel(rootNode);
 		rootNode.removeAllChildren();

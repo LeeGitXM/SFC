@@ -1,12 +1,16 @@
 package com.ils.sfc.designer.recipeEditor;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JPanel;
 
+import org.json.JSONObject;
+
+import com.ils.sfc.common.recipe.objects.Data;
+import com.ils.sfc.common.recipe.objects.Group;
 import com.inductiveautomation.ignition.client.util.gui.SlidingPane;
+import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
+import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
+import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** A controller for all the sliding panes that are involved in editing recipe data. */
 public class RecipeEditorController {
@@ -22,7 +26,7 @@ public class RecipeEditorController {
 	// indices for the sub-panes:
 	static final int BROWSER = 0;
 	static final int OBJECT_CREATOR = 1;
-	static final int EDITOR = 2;
+	static final int OBJECT_EDITOR = 2;
 	static final int FIELD_CREATOR = 3;
 	static final int TEXT_EDITOR = 4;
 	static final int MESSAGE = 5;
@@ -40,6 +44,10 @@ public class RecipeEditorController {
 	private TagBrowserPane tagBrowser;
 	private UnitChooserPane unitChooser = new UnitChooserPane(this);
 	
+	// The step whose recipe data we are editing:
+	private ChartUIElement element;
+	private Group recipeData;
+	
 	public RecipeEditorController() {
 		tagBrowser = new TagBrowserPane(this);
 		// sub-panes added according to the indexes above:
@@ -53,8 +61,17 @@ public class RecipeEditorController {
 		slidingPane.add(unitChooser);
 		slidingPane.add(new JPanel());  // a blank pane
 		slideTo(EMPTY_PANE);
-	}
+	}	
 	
+	public void setRecipeData(Group recipeData) {
+		this.recipeData = recipeData;
+		browser.rebuildTree();
+	}
+
+	public Group getRecipeData() {
+		return recipeData;
+	}
+
 	public void setContext(DesignerContext context) {
 		tagBrowser.setContext(context);
 	}
@@ -111,6 +128,42 @@ public class RecipeEditorController {
 		frame.setSize(300,200);
 		frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
+	}
+
+	public void setElement(ChartUIElement element) {
+		this.element = element;
+		if(element.getRawValueMap().containsKey(ChartStepProperties.AssociatedData)) {
+			System.out.println("step has associated data");
+		}
+		else {
+			System.out.println("step does not have associated data");			
+		}
+		if(element.contains(ChartStepProperties.AssociatedData)) {
+			JSONObject associatedData = element.getOrDefault(ChartStepProperties.AssociatedData);
+			try {
+				Group group = (Group)Data.fromJson(associatedData);
+				setRecipeData(group);
+			} catch (Exception e) {
+				showMessage("Error getting associated recipe data: " + e.getMessage(), BROWSER);
+			}
+		}
+		else {
+			Group group = new Group();
+			group.setKey("data");
+			setRecipeData(group);			
+		}
+	}
+	
+	public void commit() {
+		if(recipeData == null) return;
+		
+		try {
+			JSONObject associatedData = recipeData.toJSON();
+			System.out.println("setting data to: " + associatedData);
+			element.set(ChartStepProperties.AssociatedData, associatedData);
+		} catch (Exception e) {
+			showMessage("Error setting associated recipe data: " + e.getMessage(), BROWSER);
+		}
 	}
 
 }

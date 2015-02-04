@@ -1,7 +1,11 @@
 package com.ils.sfc.common.recipe.objects;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
 superiorClass: sequence (the symbol S88-RECIPE-DATA)
@@ -19,4 +23,41 @@ public class Group extends Data {
 	public List<Data> getChildren() {
 		return children;
 	}
+
+	protected void print(int level) {
+		super.print(level);
+		for(Data data: children) {
+			data.print(level + 1);
+		}
+	}
+			
+	@Override
+	public JSONObject toJSON() throws JSONException {
+		JSONObject jobj = super.toJSON();
+		for(Data child: children) {
+			jobj.put(child.getKey(), child.toJSON());
+		}
+		return jobj;
+	}
+
+	@Override
+	protected void setFromJson(JSONObject jsonObj) throws Exception {
+		super.setFromJson(jsonObj);
+		@SuppressWarnings("unchecked")
+		Iterator<String> keyIter = jsonObj.keys();
+		while(keyIter.hasNext()) {
+			String key = keyIter.next();
+			Object value = jsonObj.get(key);
+			if(value instanceof JSONObject) {
+				JSONObject childJSONObj = (JSONObject) value;
+				children.add(Data.fromJson(childJSONObj));
+			}
+		}
+	}
+
+	// Create a Group that is the root recipe data object for a step
+	public static JSONObject getStepData() throws JSONException {
+		return (new Group()).toJSON();
+	}
+
 }
