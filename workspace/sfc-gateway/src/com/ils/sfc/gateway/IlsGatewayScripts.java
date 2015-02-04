@@ -20,6 +20,7 @@ import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ExecutionQueue;
 import com.inductiveautomation.sfc.api.PyChartScope;
+import com.inductiveautomation.sfc.api.ScopeLocator;
 import com.inductiveautomation.sfc.api.elements.ChartElement;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 
@@ -121,6 +122,8 @@ public class IlsGatewayScripts {
 				public GatewayContext getGatewayContext() {return null;}
 				public ScriptManager getScriptManager() {return null;}
 				public void pause() {}
+				public ScopeLocator getScopeLocator() {return null;}
+				public boolean isRunning() {return false;}
 
 			};
 			BasicPropertySet propertySet = new BasicPropertySet();
