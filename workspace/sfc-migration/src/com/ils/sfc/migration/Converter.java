@@ -27,6 +27,8 @@ import com.ils.sfc.migration.file.CopyWalker;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.elements.ChartElement;
 /**
  * Copy charts from the G2 chart tree, convert them to Ignition SFC-compliant
@@ -38,6 +40,7 @@ public class Converter {
 	private final static String TAG = "Converter";
 	private static final String USAGE = "Usage: converter [-x] <database> <from> <to>";
 	public static boolean haltOnError = false;
+	private static final LoggerEx log = LogUtil.getLogger(Converter.class.getPackage().getName());;
 	
 	@SuppressWarnings("unused")
 	private final static JDBC driver = new JDBC(); // Force driver to be loaded
@@ -61,7 +64,7 @@ public class Converter {
 	 */
 	public void processDatabase(Path path) {
 		String connectPath = "jdbc:sqlite:"+path.toString();
-
+		log.infof("%s.processDatabase: database path = %s",TAG,path.toString());
 		// Read database to generate conversion maps
 		@SuppressWarnings("resource")
 		Connection connection = null;
@@ -107,7 +110,7 @@ public class Converter {
 			}
 		}
 		// Check for directory
-		else if (Files.isDirectory(dir)) {
+		else if (!Files.isDirectory(dir)) {
 			ok = false;
 			System.err.println(String.format("%s: Target output exists, but is not a directory (%s)",TAG,dir.toString()));
 		}
@@ -127,6 +130,14 @@ public class Converter {
 		if( !ok ) return;
 		
 		CopyWalker walker = new CopyWalker(indir,outdir,this);
+		try {
+			System.err.println("processInput ... walking\n");
+			Files.walkFileTree(indir, walker);
+			System.err.println("processInput ... done\n");
+		}
+		catch(IOException ioe) {
+			System.err.println(String.format("%s: Walk failed (%s)",TAG,ioe.getMessage()));
+		}
 	}
 	
 	/**
@@ -137,7 +148,7 @@ public class Converter {
 	 *                file name before writing.
 	 */
 	public void convertFile(Path infile,Path outfile) {
-		
+		log.infof("%s.convertFile ...%s",TAG,infile.getFileName().toString());
 	}
 
 	/**
@@ -201,7 +212,9 @@ public class Converter {
 		try {
 			m.processDatabase(pathFromString(args[argi++]));
 			Path indir = pathFromString(args[argi++]);
+			log.infof("%s.maim: indir = %s",TAG,indir.toString());
 			Path outdir = pathFromString(args[argi++]);
+			log.infof("%s.maim: outdir = %s",TAG,outdir.toString());
 			m.prepareOutput(outdir);
 			m.processInput(indir,outdir);
 		}
@@ -209,6 +222,7 @@ public class Converter {
 			System.err.println(String.format("%s.main: UncaughtException (%s)",TAG,ex.getMessage()));
 			ex.printStackTrace(System.err);
 		}
+		log.infof("%s.maim: COMPLETE",TAG);
 	}
 
 }

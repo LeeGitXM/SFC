@@ -1,0 +1,9 @@
+#!/bin/sh
+#  Use this version when debugging a single file.
+#
+SFC=~/Development/ils/src/sfc
+DIRIN="TestDiagram"
+PROJ="testdiagram.proj"
+INDIR="$SFC/xml/ignition/$DIRIN"
+OUTFIL=$SFC/xml/$PROJ
+$SFC/migration/build-project "$INDIR" "$OUTFIL"

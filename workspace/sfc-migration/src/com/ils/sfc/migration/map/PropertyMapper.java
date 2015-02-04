@@ -37,10 +37,10 @@ public class PropertyMapper {
 			rs = statement.executeQuery("select * from PropertyMap");
 			while(rs.next())
 			{
-				String g2Class = rs.getString("G2Class");
+				String factoryId = rs.getString("FactoryId");
 				String g2Property = rs.getString("G2Property");
 				String iProperty = rs.getString("Name");
-				String key = makePropertyMapKey(g2Class,g2Property);
+				String key = makePropertyMapKey(factoryId,g2Property);
 				propertyMap.put(key,iProperty);
 			}
 			rs.close();

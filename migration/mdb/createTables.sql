@@ -16,7 +16,7 @@ CREATE TABLE PropertyMap(
 -- Convert G2 procedute names into Python module names.
 CREATE TABLE ProcedureMap(
     G2Procedure text NOT NULL,
-    IgnitonProcedure text NOT NULL
+    IgnitionProcedure text NOT NULL
 );
 -- Map G2 GSI names to Ignition tags
 CREATE TABLE TagMap(
