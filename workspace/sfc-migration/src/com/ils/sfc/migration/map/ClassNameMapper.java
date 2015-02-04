@@ -37,7 +37,7 @@ public class ClassNameMapper {
 			while(rs.next())
 			{
 				String g2 = rs.getString("G2Class");
-				String ignition = rs.getString("IgnitionClass");
+				String ignition = rs.getString("FactoryId");
 				classMap.put(g2, ignition);
 			}
 			rs.close();

@@ -1,4 +1,4 @@
--- Fields aare:  G2 class name, Ignition class
+-- Fields aare:  G2 class name, Ignition factory-id
 insert into ClassMap values ('S88-BEGIN','begin-step');
 insert into ClassMap values ('S88-TIME-DELAY','com.ils.TimedDelayStep');
 insert into ClassMap values ('S88-ABORT-TASK', 'com.ils.abortStep');
@@ -36,3 +36,4 @@ insert into ClassMap values ('S88-DATABASE-SIMPLE-QUERY-TASK','com.ils.simpleQue
 insert into ClassMap values ('S88-WRITE-FILE-TASK','com.ils.writeFileStep');
 insert into ClassMap values ('S88-WRITE-OUTPUTS-TASK','com.ils.writeOutputsStep');
 insert into ClassMap values ('S88-YES-NO-TASK','com.ils.yesNoStep');
+insert into ClassMap values ('S88-UNIT-PROCEDURE','enclosing-step');
