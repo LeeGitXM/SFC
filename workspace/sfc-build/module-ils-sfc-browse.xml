@@ -9,7 +9,6 @@
 		<requiredignitionversion>7.7.2</requiredignitionversion>
 		<requiredframeworkversion>6</requiredframeworkversion>
 		<freemodule>true</freemodule>
-		<documentation>index.html</documentation>
 		
 		<!-- We depend on IA's SFC Module -->
 		<depends scope="D">com.inductiveautomation.sfc</depends>
