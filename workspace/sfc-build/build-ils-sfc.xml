@@ -31,23 +31,23 @@
 		
 	<!-- Gateway jar classpath -->
 	<path id="sfc.gateway.classpath">
+		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/" includes="*.jar" />
 		<path refid="ExternalJar.classpath" />
 		<path refid="Ignition_SDK.classpath" />
-		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/" includes="*.jar" />
 	</path>	
 	<!-- Client jar classpath -->
 	<path id="sfc.client.classpath">
+		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/" includes="*.jar" />
 		<path refid="ExternalJar.classpath" />
 		<path refid="Ignition_SDK.classpath" />
-		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/" includes="*.jar" />
 	</path>
 	
 	<!-- Designer jar classpath -->
 	<path id="sfc.designer.classpath">
-		<path refid="ExternalJar.classpath" />
-		<path refid="Ignition_SDK.classpath" />
 		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/" includes="*.jar" />
 		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Client/dist/" includes="*.jar" />
+		<path refid="ExternalJar.classpath" />
+		<path refid="Ignition_SDK.classpath" />
 	</path>
 
 	
