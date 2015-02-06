@@ -13,6 +13,6 @@ public class ShowQueueStepFactory extends ShowQueueStepDelegate implements StepF
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new ShowQueueStep(chartContext, definition);
+        return new ShowQueueStep(chartContext, scopeContext, definition);
     }
 }

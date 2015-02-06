@@ -13,6 +13,6 @@ public class InputStepFactory extends InputStepDelegate implements StepFactory {
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     		StepDefinition definition) {
-        return new InputStep(chartContext, definition);
+        return new InputStep(chartContext, scopeContext, definition);
     }
 }

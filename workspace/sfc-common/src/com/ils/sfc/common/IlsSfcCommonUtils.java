@@ -110,10 +110,10 @@ public class IlsSfcCommonUtils {
 			return stringValue;
 		}
 		else if(property.getType() == Integer.class) {
-			return UtilityFunctions.parseInteger(stringValue);
+			return Integer.parseInt(stringValue);
 		}
 		else if(property.getType() == Double.class) {
-			return UtilityFunctions.parseDouble(stringValue);
+			return Double.parseDouble(stringValue);
 		}
 		else if(property.getType() == Boolean.class) {
 			return Boolean.valueOf(stringValue);

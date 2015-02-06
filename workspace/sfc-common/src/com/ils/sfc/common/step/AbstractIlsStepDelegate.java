@@ -71,12 +71,14 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	public PropertySet getPropertySet() {
 		// add the ILS properties
 		PropertySet props = IlsSfcCommonUtils.createPropertySet(properties);
+		/*
 		try {
 			props.set(ChartStepProperties.AssociatedData, Group.getStepData());
 			System.out.println("added initial step data to custom step");
 		} catch (JSONException e) {
 			log.error("error creating recipe data", e);
 		}
+		*/
 		return props;
 	}
 

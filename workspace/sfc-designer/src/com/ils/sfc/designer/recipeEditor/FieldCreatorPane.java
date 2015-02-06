@@ -27,7 +27,7 @@ import com.ils.sfc.designer.DesignerUtil;
 @SuppressWarnings("serial")
 public class FieldCreatorPane extends JPanel implements RecipeEditorController.RecipeEditorPane {
 	private RecipeEditorController controller;
-	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, RecipeEditorController.background);
+	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false, RecipeEditorController.background);
 	private JTextField nameField = new JTextField();
 	private JComboBox<ComboWrapper> typesCombo = new JComboBox<ComboWrapper>();
 	private JComboBox<ComboWrapper> unitTypesCombo = new JComboBox<ComboWrapper>();

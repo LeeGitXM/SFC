@@ -13,6 +13,6 @@ public class ReviewFlowsStepFactory extends ReviewFlowsStepDelegate implements S
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new ReviewFlowsStep(chartContext, definition);
+        return new ReviewFlowsStep(chartContext, scopeContext, definition);
     }
 }

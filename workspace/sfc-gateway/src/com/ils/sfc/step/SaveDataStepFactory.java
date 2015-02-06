@@ -13,6 +13,6 @@ public class SaveDataStepFactory extends SaveDataStepDelegate implements StepFac
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new SaveDataStep(chartContext, definition);
+        return new SaveDataStep(chartContext, scopeContext, definition);
     }
 }

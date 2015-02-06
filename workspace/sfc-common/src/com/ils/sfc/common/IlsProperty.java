@@ -84,6 +84,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> REVIEW_FLOWS = new IlsProperty<String>(IlsSfcNames.REVIEW_FLOWS, String.class, null);
     public static final IlsProperty<String> REVIEW_DATA = new IlsProperty<String>(IlsSfcNames.REVIEW_DATA, String.class, null);
     public static final IlsProperty<String> REVIEW_DATA_WITH_ADVICE = new IlsProperty<String>(IlsSfcNames.REVIEW_DATA_WITH_ADVICE, String.class, null);
+    public static final IlsProperty<String> S88_LEVEL = new IlsProperty<String>(IlsSfcNames.S88_LEVEL, String.class, IlsSfcNames.S88_LEVEL_CHOICES[0], IlsSfcNames.S88_LEVEL_CHOICES);
     public static final IlsProperty<String> SCREEN_HEADER = new IlsProperty<String>(IlsSfcNames.SCREEN_HEADER, String.class, "");
     public static final IlsProperty<String> SECURITY = new IlsProperty<String>(IlsSfcNames.SECURITY, String.class, IlsSfcNames.SECURITY_CHOICES[0], IlsSfcNames.SECURITY_CHOICES);
     public static final IlsProperty<Boolean> SHOW_PRINT_DIALOG = new IlsProperty<Boolean>(IlsSfcNames.SHOW_PRINT_DIALOG, Boolean.class, Boolean.TRUE);

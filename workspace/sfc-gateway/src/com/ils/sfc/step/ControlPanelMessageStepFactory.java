@@ -13,6 +13,6 @@ public class ControlPanelMessageStepFactory extends ControlPanelMessageStepDeleg
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new ControlPanelMessageStep(chartContext, definition);
+        return new ControlPanelMessageStep(chartContext, scopeContext, definition);
     }
 }

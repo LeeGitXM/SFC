@@ -13,6 +13,6 @@ public class EnableDisableStepFactory extends EnableDisableStepDelegate implemen
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new EnableDisableStep(chartContext, definition);
+        return new EnableDisableStep(chartContext, scopeContext, definition);
     }
 }

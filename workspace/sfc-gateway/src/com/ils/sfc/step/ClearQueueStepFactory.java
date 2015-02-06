@@ -13,6 +13,6 @@ public class ClearQueueStepFactory extends ClearQueueStepDelegate implements Ste
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new ClearQueueStep(chartContext, definition);
+        return new ClearQueueStep(chartContext, scopeContext, definition);
     }
 }

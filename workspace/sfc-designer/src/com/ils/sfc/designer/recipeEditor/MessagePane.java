@@ -13,7 +13,7 @@ import com.ils.sfc.designer.ButtonPanel;
 /** A sliding pane for displaying a message */
 @SuppressWarnings("serial")
 public class MessagePane extends JPanel implements RecipeEditorController.RecipeEditorPane {
-	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, RecipeEditorController.background);
+	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false, RecipeEditorController.background);
 	private RecipeEditorController controller;
 	private JTextArea textField = new JTextArea();
 	private int returnIndex;

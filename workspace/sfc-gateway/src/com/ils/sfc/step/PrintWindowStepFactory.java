@@ -13,6 +13,6 @@ public class PrintWindowStepFactory extends PrintWindowStepDelegate implements S
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new PrintWindowStep(chartContext, definition);
+        return new PrintWindowStep(chartContext, scopeContext, definition);
     }
 }

@@ -11,8 +11,8 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 public class LimitedInputStepFactory extends LimitedInputStepDelegate implements StepFactory {
 
     @Override
-    public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
+    public StepElement create(ChartContext chartContext, ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new LimitedInputStep(chartContext, definition);
+        return new LimitedInputStep(chartContext, scopeContext, definition);
     }
 }

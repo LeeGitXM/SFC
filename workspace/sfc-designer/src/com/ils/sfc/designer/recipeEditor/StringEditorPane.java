@@ -14,7 +14,7 @@ import com.ils.sfc.designer.ButtonPanel;
 public class StringEditorPane extends JPanel implements RecipeEditorController.RecipeEditorPane {
 	private RecipeEditorController controller;
 	private JTextArea textField = new JTextArea();
-	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, RecipeEditorController.background);
+	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false, RecipeEditorController.background);
 	
 	public StringEditorPane(RecipeEditorController controller) {
 		super(new BorderLayout());

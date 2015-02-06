@@ -30,7 +30,7 @@ public class ObjectCreatorPane extends JPanel implements RecipeEditorController.
 	private RecipeEditorController controller;
 	private JComboBox<ComboWrapper> typesCombo = new JComboBox<ComboWrapper>();
 	private JTextField keyTextField = new JTextField();
-	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, RecipeEditorController.background);
+	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false, RecipeEditorController.background);
 	
 	public ObjectCreatorPane(RecipeEditorController controller) {
 		this.controller = controller;

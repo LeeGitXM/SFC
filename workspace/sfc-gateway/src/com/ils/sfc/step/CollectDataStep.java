@@ -3,12 +3,14 @@ package com.ils.sfc.step;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.step.CollectDataStepProperties;
 import com.inductiveautomation.sfc.api.ChartContext;
+import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class CollectDataStep extends IlsAbstractChartStep implements CollectDataStepProperties {
 	
-	public CollectDataStep(ChartContext context, StepDefinition definition) {
-		super(context, definition);
+	public CollectDataStep(ChartContext context, ScopeContext scopeContext, StepDefinition definition) {
+		super(context, scopeContext, definition);
+		this.scopeContext = scopeContext;
 	}
 
 	@Override

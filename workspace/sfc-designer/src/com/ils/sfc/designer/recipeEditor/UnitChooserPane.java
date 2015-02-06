@@ -32,7 +32,7 @@ public class UnitChooserPane extends JPanel implements RecipeEditorController.Re
 	private RecipeEditorController controller;
 	private JComboBox<String> typesCombo = new JComboBox<String>();
 	private JComboBox<String> unitsCombo = new JComboBox<String>();
-	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, RecipeEditorController.background);
+	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false, RecipeEditorController.background);
 	private boolean initialized;
 	
 	public UnitChooserPane(RecipeEditorController controller) {

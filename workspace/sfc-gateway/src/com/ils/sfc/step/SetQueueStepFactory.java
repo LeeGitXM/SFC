@@ -13,6 +13,6 @@ public class SetQueueStepFactory extends SetQueueStepDelegate implements StepFac
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new SetQueueStep(chartContext, definition);
+        return new SetQueueStep(chartContext, scopeContext, definition);
     }
 }

@@ -13,6 +13,6 @@ public class CloseWindowStepFactory extends CloseWindowStepDelegate implements S
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new CloseWindowStep(chartContext, definition);
+        return new CloseWindowStep(chartContext, scopeContext, definition);
     }
 }

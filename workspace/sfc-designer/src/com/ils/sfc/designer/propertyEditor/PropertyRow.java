@@ -72,8 +72,9 @@ public class PropertyRow {
 		return propertyValue;
 	}
 
-	/** Regardless of underlying type, set the value from a string representation. */
-	public void setValueFormatted(String stringValue) throws ParseException {
+	/** Regardless of underlying type, set the value from a string representation. 
+	 *  throws NumberFormatException for bad numbers */
+	public void setValueFormatted(String stringValue) {
 		Object value = IlsSfcCommonUtils.parseProperty(getProperty(), stringValue);
 		setValue(value);
 	}

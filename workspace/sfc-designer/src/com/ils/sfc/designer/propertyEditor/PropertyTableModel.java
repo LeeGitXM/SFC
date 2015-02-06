@@ -1,5 +1,6 @@
 package com.ils.sfc.designer.propertyEditor;
 
+import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +33,12 @@ public class PropertyTableModel extends AbstractTableModel {
 	private BasicPropertySet propertyValues;
 	private String stepId;
 	private static final Logger logger = LoggerFactory.getLogger(PropertyTableModel.class);
- 
+	private ErrorHandler errorHandler;
+	
+	public interface ErrorHandler {
+		public void handleError(String msg);
+	}
+	
 	public String getColumnName(int col) {
         return columnNames[col];
     }
@@ -45,7 +51,11 @@ public class PropertyTableModel extends AbstractTableModel {
     	return hasChanged;
     }
     
-    public PropertyRow getRowObject(int i) {
+	public void setErrorHandler(ErrorHandler errorHandler) {
+		this.errorHandler = errorHandler;
+	}
+
+	public PropertyRow getRowObject(int i) {
     	return rows.get(i);
     }
 
@@ -85,17 +95,19 @@ public class PropertyTableModel extends AbstractTableModel {
     public void setValueAt(Object value, int row, int col) {
     	PropertyRow pRow = rows.get(row);
 
-    	try {
-    		if(col == VALUE_COLUMN) {
+		if(col == VALUE_COLUMN) {
+			try {
 				pRow.setValueFormatted((String)value);
 				propertyValues.set(pRow.getPropertyValue());
-    		}
-	    	hasChanged = true;
-	        fireTableCellUpdated(row, col);
-	    	//fireTableDataChanged();
-		} catch (ParseException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage(), "Illegal Value", JOptionPane.WARNING_MESSAGE);
+			}
+			catch(NumberFormatException e) {
+				if(errorHandler != null) {
+					errorHandler.handleError("Bad number format: " + value);
+				}
+			}
 		}
+    	hasChanged = true;
+        fireTableCellUpdated(row, col);
     }
 
     public BasicPropertySet getPropertyValues() {

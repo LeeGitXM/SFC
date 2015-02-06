@@ -13,6 +13,6 @@ public class ReviewDataStepFactory extends ReviewDataStepDelegate implements Ste
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new ReviewDataStep(chartContext, definition);
+        return new ReviewDataStep(chartContext, scopeContext, definition);
     }
 }

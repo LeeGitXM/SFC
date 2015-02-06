@@ -45,6 +45,7 @@ attributes:sequence (structure (
  */
 public abstract class Data {
 	protected BasicPropertySet properties = new BasicPropertySet();
+	protected String s88Level;
 	
 	private static Map<String, Class<?>> concreteClassesByG2Name = new HashMap<String, Class<?>>();
 	static {
@@ -78,6 +79,14 @@ public abstract class Data {
 		properties.set(IlsProperty.CLASS, getClass().getSimpleName());
 	}
 
+	public String getS88Level() {
+		return s88Level;
+	}
+
+	public void setS88Level(String s88Level) {
+		this.s88Level = s88Level;
+	}
+
 	public String getKey() {
 		return (String) properties.get(IlsProperty.KEY);
 	}
@@ -104,11 +113,13 @@ public abstract class Data {
 		properties.set(property, property.getDefaultValue());
 	}
 	
-	/** Translate from G2 export to ignition map. Example of G2 XML element:
+	/** Translate from G2 export to ignition AdditionalData property. Example of G2 XML element:
 	 * <recipe key="bar" label="bar" description="A barby piece of recipe data" help="More useless help" advice="More useless advice" units="DEGC" type="float" category="Simple Constant" val="37.567" high-limit="" low-limit=""  />
 	 */
 	@SuppressWarnings("deprecation")
-	public static Map<String, Object> fromG2(String g2Xml) {
+	public static JSONObject fromG2(String g2Xml) {
+		// TODO: implement
+		/*
 		Map<String,String> g2Attributes = new HashMap<String,String>();
 		int eqIndex = -1;
 		while((eqIndex = g2Xml.indexOf('"', eqIndex)) != -1) {
@@ -120,6 +131,7 @@ public abstract class Data {
 			String value = g2Xml.substring(eqIndex + 2, valueIndex);
 			g2Attributes.put(key, value);
 		}
+		*/
 		return null;
 	}
 		
@@ -130,6 +142,9 @@ public abstract class Data {
 			if(pvalue.getValue() != null) {
 				jsonObj.put(pvalue.getProperty().getName(), pvalue.getValue());
 			}
+		}
+		if(s88Level != null) {
+			jsonObj.put(IlsSfcNames.S88_LEVEL, s88Level);
 		}
 		return jsonObj;
 	}
@@ -154,6 +169,9 @@ public abstract class Data {
 				rawValueMap.put(prop, jsonObj.get(prop.getName()));
 			}
 		}
+		if(jsonObj.has(IlsSfcNames.S88_LEVEL)) {
+			s88Level = (String)jsonObj.get(IlsSfcNames.S88_LEVEL);
+		}	
 	}
 	
 	protected void printSpace(int count) {

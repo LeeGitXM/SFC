@@ -13,6 +13,6 @@ public class DeleteDelayNotificationStepFactory extends DeleteDelayNotificationS
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new DeleteDelayNotificationStep(chartContext, definition);
+        return new DeleteDelayNotificationStep(chartContext, scopeContext, definition);
     }
 }

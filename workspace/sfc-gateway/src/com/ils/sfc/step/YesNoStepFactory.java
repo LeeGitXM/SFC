@@ -13,6 +13,6 @@ public class YesNoStepFactory extends YesNoStepDelegate implements StepFactory {
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new YesNoStep(chartContext, definition);
+        return new YesNoStep(chartContext, scopeContext, definition);
     }
 }

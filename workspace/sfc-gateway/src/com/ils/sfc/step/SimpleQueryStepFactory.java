@@ -13,6 +13,6 @@ public class SimpleQueryStepFactory extends SimpleQueryStepDelegate implements S
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new SimpleQueryStep(chartContext, definition);
+        return new SimpleQueryStep(chartContext, scopeContext, definition);
     }
 }

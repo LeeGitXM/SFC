@@ -13,6 +13,6 @@ public class PostDelayNotificationStepFactory extends PostDelayNotificationStepD
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new PostDelayNotificationStep(chartContext, definition);
+        return new PostDelayNotificationStep(chartContext, scopeContext, definition);
     }
 }

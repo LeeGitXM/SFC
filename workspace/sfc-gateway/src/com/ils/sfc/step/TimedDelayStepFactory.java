@@ -13,6 +13,6 @@ public class TimedDelayStepFactory extends TimedDelayStepDelegate implements Ste
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new TimedDelayStep(chartContext, definition);
+        return new TimedDelayStep(chartContext, scopeContext, definition);
     }
 }

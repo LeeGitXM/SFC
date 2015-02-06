@@ -21,7 +21,7 @@ public class PythonCall {
 	private PyCode compiledCode;	// cached compiled code
 	
 	private static ScriptManager scriptMgr;
-	private static final String[] stepArgs = new String[]{"chartScope", "stepProperties"};
+	private static final String[] stepArgs = new String[]{"scopeContext", "stepProperties"};
 	private static final String STEPS_PKG = "ils.sfc.gateway.steps.";
 	
 	public static final PythonCall QUEUE_INSERT = new PythonCall(STEPS_PKG + "queueInsert", 

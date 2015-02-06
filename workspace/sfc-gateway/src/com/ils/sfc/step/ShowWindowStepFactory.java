@@ -13,6 +13,6 @@ public class ShowWindowStepFactory extends ShowWindowStepDelegate implements Ste
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new ShowWindowStep(chartContext, definition);
+        return new ShowWindowStep(chartContext, scopeContext, definition);
     }
 }

@@ -13,6 +13,6 @@ public class IlsEnclosingStepFactory extends IlsEnclosingStepDelegate implements
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new IlsEnclosingStep(chartContext, definition);
+        return new IlsEnclosingStep(chartContext, scopeContext, definition);
     }
 }

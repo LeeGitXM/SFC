@@ -15,6 +15,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Group;
 import com.ils.sfc.designer.ButtonPanel;
@@ -23,7 +24,7 @@ import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 /** Provide a tree view of all recipe data. */
 @SuppressWarnings("serial")
 public class BrowserPane extends JPanel implements RecipeEditorController.RecipeEditorPane {
-	private ButtonPanel buttonPanel = new ButtonPanel(false, true, true, true, false, RecipeEditorController.background);
+	private ButtonPanel buttonPanel = new ButtonPanel(false, true, true, true, false, true, RecipeEditorController.background);
 	private JTree tree;
 	private JScrollPane treeScroll;
 	private DefaultTreeModel treeModel;
@@ -66,6 +67,13 @@ public class BrowserPane extends JPanel implements RecipeEditorController.Recipe
 		});
 		buttonPanel.getEditButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { doEdit();}
+		});		
+		buttonPanel.getComboLabel().setText("S88Level:");
+		for(String level: IlsSfcNames.S88_LEVEL_CHOICES) {
+			buttonPanel.getComboBox().addItem(level);
+		}
+		buttonPanel.getComboBox().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { doSetS88Level();}
 		});		
 	}
 	
@@ -131,8 +139,19 @@ public class BrowserPane extends JPanel implements RecipeEditorController.Recipe
 		controller.getEditor().activate();
 	}
 
+	private void doSetS88Level() {
+		controller.getRecipeData().setS88Level((String)buttonPanel.getComboBox().getSelectedItem());
+	}
+	
 	/** Rebuild the tree in response to a change in recipe data. */
 	public void rebuildTree() {
+		if(controller.getRecipeData().getS88Level() != null) {
+			buttonPanel.getComboBox().setSelectedItem(
+				controller.getRecipeData().getS88Level());
+		}
+		else {
+			buttonPanel.getComboBox().setSelectedItem(IlsSfcNames.NONE);
+		}
 		if(treeScroll != null) {
 			this.remove(treeScroll);	
 		}

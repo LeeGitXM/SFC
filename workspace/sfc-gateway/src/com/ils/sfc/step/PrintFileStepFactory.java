@@ -13,6 +13,6 @@ public class PrintFileStepFactory extends PrintFileStepDelegate implements StepF
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new PrintFileStep(chartContext, definition);
+        return new PrintFileStep(chartContext, scopeContext, definition);
     }
 }

@@ -13,6 +13,6 @@ public class QueueMessageStepFactory extends QueueMessageStepDelegate implements
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new QueueMessageStep(chartContext, definition);
+        return new QueueMessageStep(chartContext, scopeContext, definition);
     }
 }

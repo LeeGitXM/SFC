@@ -13,6 +13,6 @@ public class DialogMessageStepFactory extends DialogMessageStepDelegate implemen
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new DialogMessageStep(chartContext, definition);
+        return new DialogMessageStep(chartContext, scopeContext, definition);
     }
 }

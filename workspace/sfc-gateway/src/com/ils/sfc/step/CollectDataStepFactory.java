@@ -13,6 +13,6 @@ public class CollectDataStepFactory extends CollectDataStepDelegate implements S
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new CollectDataStep(chartContext, definition);
+        return new CollectDataStep(chartContext, scopeContext, definition);
     }
 }

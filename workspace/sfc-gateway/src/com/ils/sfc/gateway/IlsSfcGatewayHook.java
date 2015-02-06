@@ -15,6 +15,9 @@ import com.inductiveautomation.ignition.gateway.services.ModuleServiceConsumer;
 //import com.inductiveautomation.sfc.ChartManager;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.api.ChartManagerService;
+import com.inductiveautomation.sfc.api.PyChartScope;
+import com.inductiveautomation.sfc.api.ScopeContext;
+import com.inductiveautomation.sfc.api.ScopeLocator;
 import com.inductiveautomation.sfc.api.SfcGatewayHook;
 import com.inductiveautomation.sfc.api.elements.StepFactory;
 
@@ -30,6 +33,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private final LoggerEx log;
 	private GatewayContext context = null;
 	private ChartManagerService chartManager;
+	private IlsScopeLocator scopeLocator = new IlsScopeLocator();
 
 	private StepFactory[] stepFactories = {
 		new QueueMessageStepFactory(),
@@ -96,7 +100,8 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public void serviceReady(Class<?> serviceClass) {
 		if (serviceClass == ChartManagerService.class) {
             chartManager = context.getModuleServicesManager().getService(ChartManagerService.class);
-    		for(StepFactory stepFactory: stepFactories) {
+    		chartManager.registerScopeLocator(scopeLocator);
+            for(StepFactory stepFactory: stepFactories) {
     			chartManager.register(stepFactory);
     		}
         }
@@ -104,6 +109,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 	@Override
 	public void serviceShutdown(Class<?> arg0) {
+		chartManager.unregisterScopeLocator(scopeLocator);
 		for(StepFactory stepFactory: stepFactories) {
 			chartManager.unregister(stepFactory);
 		}

@@ -16,7 +16,7 @@ import com.inductiveautomation.ignition.designer.model.DesignerContext;
 @SuppressWarnings("serial")
 public class TagBrowserPane extends JPanel implements RecipeEditorController.RecipeEditorPane  {
 	private final RecipeEditorController controller;
-	private final ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false,  RecipeEditorController.background);
+	private final ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false,  false, RecipeEditorController.background);
 	private TagBrowser tagBrowser;
 	private DesignerContext context;
 	private boolean initialized;

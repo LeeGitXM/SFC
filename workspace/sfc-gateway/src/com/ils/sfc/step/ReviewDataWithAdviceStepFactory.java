@@ -13,6 +13,6 @@ public class ReviewDataWithAdviceStepFactory extends ReviewDataWithAdviceStepDel
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new ReviewDataWithAdviceStep(chartContext, definition);
+        return new ReviewDataWithAdviceStep(chartContext, scopeContext, definition);
     }
 }

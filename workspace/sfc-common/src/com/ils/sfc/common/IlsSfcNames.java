@@ -66,6 +66,7 @@ public class IlsSfcNames {
 	public static final String MAXIMUM_VALUE = "maximumValue";
 	public static final String MULTIPLE = "multiple";
 	public static final String NAME = "name";
+	public static final String NONE = "none";
 	public static final String OFF = "Off";
 	public static final String POSITION = "position";
 	public static final String POST_TO_QUEUE = "postToQueue";
@@ -89,6 +90,7 @@ public class IlsSfcNames {
 	public static final String REVIEW_DATA = "reviewData"; 
 	public static final String REVIEW_DATA_WITH_ADVICE = "reviewDataWithAdvice"; 
 	public static final String REVIEW_FLOWS = "reviewFlows"; 
+	public static final String S88_LEVEL = "s88Level";
 	public static final String SCALE = "scale";
 	public static final String SCREEN_HEADER = "screenHeader";
 	public static final String SECURITY = "security";
@@ -128,7 +130,7 @@ public class IlsSfcNames {
 	public static final String LOCAL = "local";
 	public static final String PREVIOUS = "previous";
 	public static final String SUPERIOR = "superior";
-	public static final String NAMED = "named";
+	//public static final String NAMED = "named";
 	public static final String GLOBAL = "global";
 	public static final String PROCEDURE = "procedure";
 	public static final String PHASE = "phase";
@@ -161,4 +163,5 @@ public class IlsSfcNames {
 	public static final String[] PRIORITY_CHOICES = {INFO, WARNING, ERROR};
 	public static final String[] AUDIT_LEVEL_CHOICES = {OFF, LOW, HIGH};
 	public static final String[] DISPLAY_MODE_CHOICES = {REGISTER_AND_DISPLAY, REGISTER_ONLY};
+	public static final String[] S88_LEVEL_CHOICES = {NONE, PROCEDURE, OPERATION, PHASE};
 }

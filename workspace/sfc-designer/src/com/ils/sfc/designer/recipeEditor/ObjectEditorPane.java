@@ -21,7 +21,7 @@ import com.inductiveautomation.ignition.common.config.PropertyValue;
 public class ObjectEditorPane extends JPanel implements RecipeEditorController.RecipeEditorPane {
 	private RecipeEditorController controller;
 	private PropertyEditor editor = new PropertyEditor();
-	private ButtonPanel buttonPanel = new ButtonPanel(true, true, true, true, false,  RecipeEditorController.background);
+	private ButtonPanel buttonPanel = new ButtonPanel(true, true, true, true, false,  false, RecipeEditorController.background);
 
 	private Data recipeData;
 	

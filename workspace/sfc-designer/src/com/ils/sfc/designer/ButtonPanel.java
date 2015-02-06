@@ -9,6 +9,8 @@ import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
@@ -27,12 +29,16 @@ public class ButtonPanel extends JPanel {
 	final JButton removeButton = new JButton(removeIcon);
 	final JButton acceptButton = new JButton(checkIcon);
 	final JButton execButton = new JButton(execIcon);
+	final JLabel comboLabel = new JLabel();
+	final JComboBox<String> comboBox = new JComboBox<String>();
 	final Dimension buttonDimension = new Dimension(16,16);
 
-	public ButtonPanel(boolean showAccept, boolean showAdd, boolean showRemove, boolean showEdit, boolean showExec, Color background) {
+	public ButtonPanel(boolean showAccept, boolean showAdd, boolean showRemove, 
+		boolean showEdit, boolean showExec, boolean showCombo, Color background) {
 		setBackground(background);
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		setPreferredSize(new Dimension(100,20));
+		comboBox.setEditable(false);
 		addButton.setToolTipText("Add");
 		editButton.setToolTipText("Edit");
 		removeButton.setToolTipText("Remove");
@@ -43,10 +49,15 @@ public class ButtonPanel extends JPanel {
 		if(showRemove) addButton(removeButton);
 		if(showEdit) addButton(editButton);
 		if(showExec) addButton(execButton);
+		if(showCombo) {
+			add(Box.createRigidArea(new Dimension(50,10)));
+			add(comboLabel);
+			add(comboBox);
+		}
 	}
 	
 	public ButtonPanel() {
-		this(true, true, true, true, true, Color.white);
+		this(true, true, true, true, true, true, Color.white);
 	}
 
 	private void addButton(JButton button) {
@@ -76,4 +87,13 @@ public class ButtonPanel extends JPanel {
 	public JButton getExecButton() {
 		return execButton;
 	}
+
+	public JLabel getComboLabel() {
+		return comboLabel;
+	}
+
+	public JComboBox<String> getComboBox() {
+		return comboBox;
+	}
+
 }

@@ -13,6 +13,6 @@ public class SelectInputStepFactory extends SelectInputStepDelegate implements S
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new SelectInputStep(chartContext, definition);
+        return new SelectInputStep(chartContext, scopeContext, definition);
     }
 }

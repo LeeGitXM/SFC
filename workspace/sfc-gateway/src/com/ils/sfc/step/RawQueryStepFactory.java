@@ -13,6 +13,6 @@ public class RawQueryStepFactory extends RawQueryStepDelegate implements StepFac
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new RawQueryStep(chartContext, definition);
+        return new RawQueryStep(chartContext, scopeContext, definition);
     }
 }

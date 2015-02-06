@@ -9,6 +9,7 @@ import com.ils.sfc.step.annotation.ILSStep;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.sfc.api.ChartContext;
+import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.api.elements.AbstractChartElement;
 import com.inductiveautomation.sfc.api.elements.StepElement;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
@@ -25,10 +26,12 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	private static final Logger logger = LoggerFactory.getLogger(IlsAbstractChartStep.class);
 	private static final BasicProperty<String> nameProperty = new BasicProperty<String>(IlsSfcNames.NAME, String.class);
 	private String auditLevel = IlsSfcNames.OFF;
+	protected ScopeContext scopeContext;
 	private long startTime;
 	
-	protected IlsAbstractChartStep(ChartContext context, StepDefinition definition) {
+	protected IlsAbstractChartStep(ChartContext context,  ScopeContext scopeContext, StepDefinition definition) {
 		super(context, definition);
+		this.scopeContext = scopeContext;
 	}
 
 	private void setAuditLevel() {
@@ -88,7 +91,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		try {
 			logger.trace(pcall.getMethodName());
 			//indexElements(getChartContext());
-			pcall.exec(getChartContext().getChartScope(), getDefinition().getProperties());
+			pcall.exec(scopeContext, getDefinition().getProperties());
 		} catch (Exception e) {
 			logger.error("Error calling " + pcall.getMethodName(), e);
 		}

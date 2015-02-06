@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Group;
+import com.ils.sfc.designer.propertyEditor.PropertyTableModel;
 import com.inductiveautomation.ignition.client.util.gui.SlidingPane;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
@@ -13,7 +14,7 @@ import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** A controller for all the sliding panes that are involved in editing recipe data. */
-public class RecipeEditorController {
+public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 	public static java.awt.Color background = new java.awt.Color(238,238,238);
 	
 	interface RecipeEditorPane {
@@ -37,7 +38,7 @@ public class RecipeEditorController {
 	// The sub-panes:
 	private BrowserPane browser = new BrowserPane(this);
 	private ObjectCreatorPane creator = new ObjectCreatorPane(this);
-	private ObjectEditorPane editor = new ObjectEditorPane(this);
+	private ObjectEditorPane objectEditor = new ObjectEditorPane(this);
 	private StringEditorPane textEditor = new StringEditorPane(this);
 	private MessagePane messagePane = new MessagePane(this);
 	private FieldCreatorPane fieldCreator = new FieldCreatorPane(this);
@@ -50,10 +51,11 @@ public class RecipeEditorController {
 	
 	public RecipeEditorController() {
 		tagBrowser = new TagBrowserPane(this);
+		objectEditor.getPropertyEditor().getTableModel().setErrorHandler(this);
 		// sub-panes added according to the indexes above:
 		slidingPane.add(browser);
 		slidingPane.add(creator);
-		slidingPane.add(editor);
+		slidingPane.add(objectEditor);
 		slidingPane.add(fieldCreator);
 		slidingPane.add(textEditor);
 		slidingPane.add(messagePane);
@@ -97,7 +99,7 @@ public class RecipeEditorController {
 	}
 
 	public ObjectEditorPane getEditor() {
-		return editor;
+		return objectEditor;
 	}
 
 	public StringEditorPane getTextEditor() {
@@ -132,12 +134,6 @@ public class RecipeEditorController {
 
 	public void setElement(ChartUIElement element) {
 		this.element = element;
-		if(element.getRawValueMap().containsKey(ChartStepProperties.AssociatedData)) {
-			System.out.println("step has associated data");
-		}
-		else {
-			System.out.println("step does not have associated data");			
-		}
 		if(element.contains(ChartStepProperties.AssociatedData)) {
 			JSONObject associatedData = element.getOrDefault(ChartStepProperties.AssociatedData);
 			try {
@@ -159,11 +155,16 @@ public class RecipeEditorController {
 		
 		try {
 			JSONObject associatedData = recipeData.toJSON();
-			System.out.println("setting data to: " + associatedData);
 			element.set(ChartStepProperties.AssociatedData, associatedData);
 		} catch (Exception e) {
 			showMessage("Error setting associated recipe data: " + e.getMessage(), BROWSER);
 		}
+	}
+
+	/** Handler for bad format errors in property editor */
+	@Override
+	public void handleError(String msg) {
+		showMessage(msg, OBJECT_EDITOR);		
 	}
 
 }
