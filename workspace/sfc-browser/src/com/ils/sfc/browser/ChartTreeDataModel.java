@@ -188,7 +188,7 @@ public class ChartTreeDataModel {
 		ROOT_ROW = nodes.getRowCount();
 		nodes.addRow();
 		log.infof("%s.configureRootNode. root", TAG);
-		nodes.setString(ROOT_ROW,BrowserConstants.NAME,"root");
+		nodes.setString(ROOT_ROW,BrowserConstants.NAME,".");
 		nodes.setInt(ROOT_ROW,BrowserConstants.CXNS,0);
 		nodes.setInt(ROOT_ROW,BrowserConstants.STATUS,BrowserConstants.STATUS_OK);
 		nodes.setInt(ROOT_ROW,BrowserConstants.KEY,ROOT_ROW);

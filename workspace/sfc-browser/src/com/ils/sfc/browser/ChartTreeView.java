@@ -34,7 +34,6 @@ import prefuse.activity.SlowInSlowOutPacer;
 import prefuse.controls.FocusControl;
 import prefuse.controls.PanControl;
 import prefuse.controls.WheelZoomControl;
-import prefuse.controls.ZoomControl;
 import prefuse.controls.ZoomToFitControl;
 import prefuse.data.tuple.TupleSet;
 import prefuse.render.AbstractShapeRenderer;
@@ -141,7 +140,8 @@ public class ChartTreeView extends Display {
         // animated transition
         ActionList animate = new ActionList(1000);
         animate.setPacingFunction(new SlowInSlowOutPacer());
-        animate.add(autoPan);
+        // NOTE: Removing the autopan allows a selection without centering the selected node
+        //animate.add(autoPan);
         animate.add(new QualityControlAnimator());
         animate.add(new VisibilityAnimator(tree));
         animate.add(new LocationAnimator(treeNodes));
@@ -168,7 +168,7 @@ public class ChartTreeView extends Display {
         addControlListener(new ZoomToFitControl());           // Right-click
         addControlListener(new WheelZoomControl());           // Mouse-wheel
         addControlListener(new PanControl());                 // Drag
-        addControlListener(new FocusControl(1,"filter"));     // Single click
+        addControlListener(new FocusControl(1,"filter"));     // Single-click
         
         registerKeyboardAction(
             new OrientAction(Constants.ORIENT_LEFT_RIGHT),

@@ -43,13 +43,13 @@ public class ChartSelector extends ControlAdapter implements Control {
 					@Override
 					public void run() {
 						if( clicks==clickCount) {
-							 SFCDesignerHook hook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-							 
-							 hook.getWorkspace().openChart(item.getInt(BrowserConstants.RESOURCE));
+							e.consume();
+							SFCDesignerHook hook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
+							hook.getWorkspace().openChart(item.getInt(BrowserConstants.RESOURCE));
 						}
 						clicks = 0;
 					}
-				}, 500);    // Wait 1/2 of a second for click-count
+				}, 300);    // Wait 1/2 of a second for click-count
 			}
 			clicks++;	
 		}	
