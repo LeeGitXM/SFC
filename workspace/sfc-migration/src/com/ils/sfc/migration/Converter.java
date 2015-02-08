@@ -3,6 +3,7 @@
  */
 package com.ils.sfc.migration;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,7 +41,7 @@ public class Converter {
 	private final static String TAG = "Converter";
 	private static final String USAGE = "Usage: converter [-x] <database> <from> <to>";
 	public static boolean haltOnError = false;
-	private static final LoggerEx log = LogUtil.getLogger(Converter.class.getPackage().getName());;
+	private static final LoggerEx log = LogUtil.getLogger(Converter.class.getPackage().getName());
 	
 	@SuppressWarnings("unused")
 	private final static JDBC driver = new JDBC(); // Force driver to be loaded
@@ -114,9 +115,17 @@ public class Converter {
 			ok = false;
 			System.err.println(String.format("%s: Target output exists, but is not a directory (%s)",TAG,dir.toString()));
 		}
-		else if (dir.toFile().listFiles().length>0) {
-			ok = false;
-			System.err.println(String.format("%s: Output directory exists, but is not empty (%s)",TAG,dir.toString()));
+		else {
+			// Look in the directory for any non-hidden files
+			File[] files = dir.toFile().listFiles();
+			int index = 0;
+			while(index<files.length) {
+				if( !files[index].isHidden() ) {
+					ok = false;
+					System.err.println(String.format("%s: Output directory exists, but is not empty (%s)",TAG,dir.toString()));
+				}
+				index++;
+			}
 		}
 	}
 
@@ -150,7 +159,50 @@ public class Converter {
 	public void convertFile(Path infile,Path outfile) {
 		log.infof("%s.convertFile ...%s",TAG,infile.getFileName().toString());
 	}
-
+	
+	/**
+	 * Alter the last segment of a complete path. This
+	 * may be a directory name of file name. Re-assemble 
+	 * the path.
+	 * @param inpath
+	 * @return
+	 */
+	public Path mungeFileName(Path inpath) {
+		Path lastSegment = inpath.getFileName();
+		Path outpath = Paths.get(inpath.toString(),toCamelCase(lastSegment.toString()));
+		return outpath;
+	}
+	
+	/**
+	 * Remove dashes and spaces. Convert to camel-case.
+	 * @param input
+	 * @return
+	 */
+	private String toCamelCase(String input) {
+	    StringBuilder camelCase = new StringBuilder();
+	    boolean nextTitleCase = true;
+	    log.infof("toCamelCase: %s",input);
+	    for (char c : input.toCharArray()) {
+	        if (Character.isSpaceChar(c)) {
+	            nextTitleCase = true;
+	            continue;
+	        } 
+	        // remove illegal characters
+	        else if (Character.getNumericValue(c)==Character.getNumericValue('-') ||
+	        		 Character.getNumericValue(c)==Character.getNumericValue('#') ||
+	        		 Character.getNumericValue(c)==Character.getNumericValue('.')    ) {
+	            nextTitleCase = true;
+	            c = '_';
+	        } 
+	        else if (nextTitleCase) {
+	            c = Character.toTitleCase(c);
+	            nextTitleCase = false;
+	        }
+	        camelCase.append(c);
+	    }
+	    log.infof("toCamelCase: result %s",camelCase.toString());
+	    return camelCase.toString();
+	}	
 	/**
 	 * Usage: Converter [-f] <databasepath> <indir> <outdir>
 	 */
@@ -167,7 +219,6 @@ public class Converter {
 	
 	/**
 	 * Entry point for the application. 
-	 *  
 	 * 
 	 * NOTE: For Windows, specify path as: C:/home/work/migrate.db
 	 *       For Mac/Linux:    /home/work/migrate.db
@@ -212,9 +263,13 @@ public class Converter {
 		try {
 			m.processDatabase(pathFromString(args[argi++]));
 			Path indir = pathFromString(args[argi++]);
-			log.infof("%s.maim: indir = %s",TAG,indir.toString());
+			log.infof("%s.main: indir = %s",TAG,indir.toString());
+			// Create an output directory, munging the name
+			// Create the name from the last segment of the input
+			Path lastSegment = indir.getFileName();
 			Path outdir = pathFromString(args[argi++]);
-			log.infof("%s.maim: outdir = %s",TAG,outdir.toString());
+			outdir = Paths.get(outdir.toString(),m.toCamelCase(lastSegment.toString()));
+			log.infof("%s.main: outdir = %s",TAG,outdir.toString());
 			m.prepareOutput(outdir);
 			m.processInput(indir,outdir);
 		}
@@ -222,7 +277,7 @@ public class Converter {
 			System.err.println(String.format("%s.main: UncaughtException (%s)",TAG,ex.getMessage()));
 			ex.printStackTrace(System.err);
 		}
-		log.infof("%s.maim: COMPLETE",TAG);
+		log.infof("%s.main: COMPLETE",TAG);
 	}
 
 }

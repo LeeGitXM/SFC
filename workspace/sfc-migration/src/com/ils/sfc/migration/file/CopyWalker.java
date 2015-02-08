@@ -48,7 +48,7 @@ public class CopyWalker implements FileVisitor<Path>  {
 		
 		// before visiting entries in a directory we copy the directory
 		Path newdir = outdir.resolve(indir.relativize(dir));
-		newdir = mungePath(newdir);
+		newdir = delegate.mungeFileName(newdir);
 		log.infof("%s.preVisitDirectory: creating %s",TAG,newdir.toString());
 		Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwxr-xr-x");
 		FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
@@ -84,13 +84,6 @@ public class CopyWalker implements FileVisitor<Path>  {
 	@Override
 	public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
 		return FileVisitResult.CONTINUE;
-	}
-	
-	// Remove embedded spaces from path and file names
-	private Path mungePath(Path inpath) {
-		String path = inpath.toString();
-		path = path.replace(" ", "");
-		return Paths.get(path);
 	}
 	
 }

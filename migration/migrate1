@@ -3,8 +3,8 @@
 #
 SFC=~/Development/ils/src/sfc
 DIRIN="Test Diagram"
-DIROUT=""
 INDIR="$SFC/xml/g2/$DIRIN"
-OUTDIR=$SFC/xml/ignition/$DIROUT
+OUTDIR=$SFC/xml/ignition
 mkdir -p $OUTDIR
+rm -rf $OUTDIR/*
 $SFC/migration/migrate "$INDIR" "$OUTDIR"
