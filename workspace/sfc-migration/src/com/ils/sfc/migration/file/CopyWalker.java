@@ -68,9 +68,16 @@ public class CopyWalker implements FileVisitor<Path>  {
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 		String relative = relativize(inRoot,delegate.toCamelCase(file.toString()));
 		Path newfile = Paths.get(outRoot.toString(),relative);
-		log.infof("%s.visitFile: %s -> %s",TAG,file.toString(),newfile.toString());
+		
 		// Make sure that the new file does not exist ... 
-		// if so try append alpha until we get a free name. 
+		// if so try append alpha until we get a free name.
+		int version = 0;
+		Path target = newfile;
+		while(Files.exists(target)) {
+			target = Paths.get(String.format("%s%c",newfile.toString(),'a'+version));
+		}
+		log.infof("%s.visitFile: %s -> %s",TAG,file.toString(),target.toString());
+		delegate.convertFile(file, target);
 		return FileVisitResult.CONTINUE;
 	}
 

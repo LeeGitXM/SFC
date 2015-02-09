@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
@@ -16,12 +17,18 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Set;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.sqlite.JDBC;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import com.ils.sfc.migration.block.G2Chart;
 import com.ils.sfc.migration.file.CopyWalker;
@@ -153,14 +160,43 @@ public class Converter {
 	}
 	
 	/**
-	 * This is where the real conversion takes place
+	 * This is where the real conversion takes place. Create an XML document out
+	 * of the input. Create an XML document that represents the output, then
+	 * write it.
 	 * 
 	 * @param infile
-	 * @param outfile file location in which to write the output. We will munge the 
-	 *                file name before writing.
+	 * @param outfile file location in which to write the output. 
 	 */
 	public void convertFile(Path infile,Path outfile) {
 		log.infof("%s.convertFile ...%s",TAG,infile.getFileName().toString());
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = null;
+		Document doc = null;
+		try {
+			docBuilder = docFactory.newDocumentBuilder();
+			doc = docBuilder.parse(infile.toFile());
+			doc.getDocumentElement().normalize();
+			
+			Document outDoc = convertXML(doc);
+			
+			// Add .xml to outpat
+			outfile = Paths.get(outfile.toString()+".xml");
+			Files.write(outfile, outDoc.toString().getBytes(), StandardOpenOption.CREATE_NEW,StandardOpenOption.WRITE);
+		}
+		catch(IOException ioe) {
+			log.errorf("%s.convertFile: Error reading %s (%s)",TAG,infile.toString(),ioe.getMessage());
+		} 
+		catch (ParserConfigurationException pce) {
+			log.errorf("%s.convertFile: Error parsing %s (%s)",TAG,infile.toString(),pce.getMessage());
+		}
+		catch (SAXException sax) {
+			log.errorf("%s.convertFile: Error walking %s (%s)",TAG,infile.toString(),sax.getMessage());
+		}
+	}
+	
+	private Document convertXML(Document in) {
+		Document out = in;
+		return out;
 	}
 	
 	/**

@@ -54,7 +54,7 @@ public class ProjectDebugger {
 			doc.getDocumentElement().normalize();
 		} 
 		catch (ParserConfigurationException pce) {
-			System.out.println("ProjectBuilder.readXML: ParserConfigurationException ("+pce.getLocalizedMessage()+")");
+			System.out.println(TAG+".readXML: ParserConfigurationException ("+pce.getLocalizedMessage()+")");
 			ok = false;
 		} 
 		catch (SAXException saxe) {
