@@ -2,15 +2,16 @@
 # Process all of the json files in the repository "g2" area.
 # Save the results in the json storate area for ignition.
 #
-BLT=~/Development/ils/src/blt
-APP=$BLT/migration/migrate
-INDIR=$BLT/json/g2
-OUTDIR=$BLT/json/ignition
+SFC=~/Development/ils/src/sfc
+APP=$SFC/migration/migrate
+INDIR=$SFC/xml/g2
+OUTDIR=$SFC/xml/ignition
 mkdir -p $INDIR
 mkdir -p $OUTDIR
+rm -rf $OUTDIR/*
 cd $INDIR
-for fil in *.json
+for dir in *
 do
 	echo "Processing $fil..."
-    $APP $INDIR/$fil $OUTDIR/$fil
+    $APP $INDIR/$dir $OUTDIR/$dir
 done

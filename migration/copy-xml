@@ -8,6 +8,6 @@ SVN=~/Development/ils/svn/EMChemicals/G2Artifacts/Sequential\ Control
 REPO=~/Development/ils/src/sfc/xml
 mkdir -p $REPO/g2/
 mkdir -p $REPO/ignition
-cp -a "${SVN}"/"${UNIT}" $REPO/g2
+cp -a "${SVN}"/* $REPO/g2
 # Clean up the non-xml
-find "${REPO}"/g2 -type f ! -name "*.xml" -exec rm {}  \; 
+find ${REPO}/g2 -type f ! -name "*.xml" -exec rm {}  \; 

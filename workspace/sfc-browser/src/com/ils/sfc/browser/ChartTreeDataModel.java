@@ -188,7 +188,7 @@ public class ChartTreeDataModel {
 		ROOT_ROW = nodes.getRowCount();
 		nodes.addRow();
 		log.infof("%s.configureRootNode. root", TAG);
-		nodes.setString(ROOT_ROW,BrowserConstants.NAME,"root");
+		nodes.setString(ROOT_ROW,BrowserConstants.NAME,".");
 		nodes.setInt(ROOT_ROW,BrowserConstants.CXNS,0);
 		nodes.setInt(ROOT_ROW,BrowserConstants.STATUS,BrowserConstants.STATUS_OK);
 		nodes.setInt(ROOT_ROW,BrowserConstants.KEY,ROOT_ROW);
@@ -373,17 +373,22 @@ public class ChartTreeDataModel {
 				String parent = nodes.getString(row, BrowserConstants.PARENT);
 				if( parent !=null ) {
 					FolderHolder fh = folderHierarchy.get(parent);
-					String path = fh.getPath();   // Parent path
-					if( path!=null) {
-						String name = nodes.getString(row, BrowserConstants.NAME);
-						if( path.length()==0) path = name;
-						else path = String.format("%s/%s",path,name);
-						nodes.setString(row, BrowserConstants.PATH, path);
-						log.debugf("%s.resolveFolderPaths ... %d is %s", TAG,row,path);
-						rowLookup.put(path,new Integer(row));   // So we can find this for links 
+					if( fh !=null ) {
+						String path = fh.getPath();   // Parent path
+						if( path!=null) {
+							String name = nodes.getString(row, BrowserConstants.NAME);
+							if( path.length()==0) path = name;
+							else path = String.format("%s/%s",path,name);
+							nodes.setString(row, BrowserConstants.PATH, path);
+							log.debugf("%s.resolveFolderPaths ... %d is %s", TAG,row,path);
+							rowLookup.put(path,new Integer(row));   // So we can find this for links 
+						}
+						else {
+							log.warnf("%s.resolveFolderPaths. No path for resource %d (parent=%s)", TAG,resourceId,parent);
+						}
 					}
 					else {
-						log.warnf("%s.resolveFolderPaths. No path for resource %d (parent=%s)", TAG,resourceId,parent);
+						log.warnf("%s.resolveFolderPaths. No parent found for resource %d (parent=%s)", TAG,resourceId,parent);
 					}
 				}
 				else {
