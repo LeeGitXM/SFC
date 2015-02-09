@@ -2,9 +2,10 @@
 #  Use this version when debugging a single file.
 #
 SFC=~/Development/ils/src/sfc
-DIRIN="Test Diagram"
-INDIR="$SFC/xml/g2/$DIRIN"
+#START="Test Diagram"
+START="Test-Unit-Procedure-2"
+INDIR="$SFC/xml/g2"
 OUTDIR=$SFC/xml/ignition
 mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
-$SFC/migration/migrate "$INDIR" "$OUTDIR"
+$SFC/migration/migrate "$INDIR" "$OUTDIR" "$START"

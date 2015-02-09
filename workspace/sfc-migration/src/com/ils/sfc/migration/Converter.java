@@ -39,7 +39,7 @@ import com.inductiveautomation.sfc.api.elements.ChartElement;
  */
 public class Converter {
 	private final static String TAG = "Converter";
-	private static final String USAGE = "Usage: converter [-x] <database> <from> <to>";
+	private static final String USAGE = "Usage: converter [-x] <database> <from> <to> <start>";
 	public static boolean haltOnError = false;
 	private static final LoggerEx log = LogUtil.getLogger(Converter.class.getPackage().getName());
 	
@@ -78,7 +78,7 @@ public class Converter {
 		catch(SQLException e) {
 			// if the error message is "out of memory", 
 			// it probably means no database file is found
-			System.err.println(TAG+": "+e.getMessage());
+			log.errorf("%s.processDatabase: Database error (%s)",TAG,e.getMessage());
 			ok = false;
 		}
 		finally {
@@ -88,7 +88,7 @@ public class Converter {
 			} 
 			catch(SQLException e) {
 				// connection close failed.
-				System.err.println(TAG+": "+e.getMessage());
+				log.errorf("%s.processDatabase: Error closing database (%s)",TAG,e.getMessage());
 			}
 		}
 	}
@@ -135,17 +135,20 @@ public class Converter {
 	 *         place them in the output structure. Each .xml file represents
 	 *         a chart.
 	 */
-	public void processInput(Path indir,Path outdir) {
+	public void processInput(Path indir,Path outdir,String start) {
 		if( !ok ) return;
 		
+		// Create the copy walker with the root
 		CopyWalker walker = new CopyWalker(indir,outdir,this);
 		try {
-			System.err.println("processInput ... walking\n");
-			Files.walkFileTree(indir, walker);
-			System.err.println("processInput ... done\n");
+			
+			Path startpath = Paths.get(indir.toString(), start);
+			log.infof("%s.processInput: Walking %s",TAG,startpath.toString());
+			Files.walkFileTree(startpath, walker);
+			log.infof("%s.processInput: walking comlete.",TAG);
 		}
 		catch(IOException ioe) {
-			System.err.println(String.format("%s: Walk failed (%s)",TAG,ioe.getMessage()));
+			log.infof("%s.processInput: Walk failed (%s)",TAG,ioe.getMessage());
 		}
 	}
 	
@@ -176,31 +179,43 @@ public class Converter {
 	/**
 	 * Remove dashes and spaces. Convert to camel-case.
 	 * @param input
-	 * @return
+	 * @return munged name
 	 */
-	private String toCamelCase(String input) {
+	public String toCamelCase(String input) {
+		// Replace XXX with an underscore
+		input = input.replace("-XXX-", "_");
+		//Strip off the .xml
+		input = input.replace(".xml", "");
 	    StringBuilder camelCase = new StringBuilder();
 	    boolean nextTitleCase = true;
-	    log.infof("toCamelCase: %s",input);
+	    //log.tracef("toCamelCase: %s",input);
 	    for (char c : input.toCharArray()) {
-	        if (Character.isSpaceChar(c)) {
+	    	// Apparently a / to TitleCase is '_'. Just pass as-is
+	    	if (c=='/'  ) {
+	    		nextTitleCase = true;
+	            ;
+	        }
+	    	else if (Character.isSpaceChar(c)) {
 	            nextTitleCase = true;
 	            continue;
 	        } 
 	        // remove illegal characters
-	        else if (Character.getNumericValue(c)==Character.getNumericValue('-') ||
-	        		 Character.getNumericValue(c)==Character.getNumericValue('#') ||
-	        		 Character.getNumericValue(c)==Character.getNumericValue('.')    ) {
+	        else if (c=='-' ||
+	        		 c=='#' ||
+	        		 c=='.'    ) {
 	            nextTitleCase = true;
-	            c = '_';
+	            continue;
 	        } 
 	        else if (nextTitleCase) {
-	            c = Character.toTitleCase(c);
+	            c = Character.toUpperCase(c);
 	            nextTitleCase = false;
+	        }
+	        else {
+	        	c = Character.toLowerCase(c);
 	        }
 	        camelCase.append(c);
 	    }
-	    log.infof("toCamelCase: result %s",camelCase.toString());
+	    log.tracef("toCamelCase: result %s",camelCase.toString());
 	    return camelCase.toString();
 	}	
 	/**
@@ -255,7 +270,7 @@ public class Converter {
         }
       
 		Converter m = new Converter();
-        if (args.length - argi < 3) {
+        if (args.length - argi < 4) {
             usage();
         }
         
@@ -264,14 +279,11 @@ public class Converter {
 			m.processDatabase(pathFromString(args[argi++]));
 			Path indir = pathFromString(args[argi++]);
 			log.infof("%s.main: indir = %s",TAG,indir.toString());
-			// Create an output directory, munging the name
-			// Create the name from the last segment of the input
-			Path lastSegment = indir.getFileName();
+			// The output directory is the root holder for the new tree that will be created.
 			Path outdir = pathFromString(args[argi++]);
-			outdir = Paths.get(outdir.toString(),m.toCamelCase(lastSegment.toString()));
 			log.infof("%s.main: outdir = %s",TAG,outdir.toString());
 			m.prepareOutput(outdir);
-			m.processInput(indir,outdir);
+			m.processInput(indir,outdir,args[argi]);
 		}
 		catch(Exception ex) {
 			System.err.println(String.format("%s.main: UncaughtException (%s)",TAG,ex.getMessage()));

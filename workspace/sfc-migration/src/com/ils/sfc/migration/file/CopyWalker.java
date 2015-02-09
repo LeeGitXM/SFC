@@ -23,8 +23,8 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
  */
 public class CopyWalker implements FileVisitor<Path>  {
 	private final static String TAG = "CopyWalker";
-	private final Path indir;
-	private final Path outdir;
+	private final String inRoot;    // Original root directory (munged)
+	private final Path outRoot;
 	private final Converter delegate;   // Delegate for migrating individual files
 	private final LoggerEx log;
 
@@ -33,11 +33,11 @@ public class CopyWalker implements FileVisitor<Path>  {
 	  * @param in
 	  * @param out
 	  */
-	public CopyWalker(Path in,Path out,Converter migrator) {
-		this.indir = in;
-		this.outdir = out;
+	public CopyWalker(Path g2Root,Path igRoot, Converter migrator) {
 		this.delegate = migrator;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
+		this.inRoot = delegate.toCamelCase(g2Root.toString());
+		this.outRoot = igRoot;
 	}
 
 	/** 
@@ -45,11 +45,11 @@ public class CopyWalker implements FileVisitor<Path>  {
 	 */
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-		
-		// before visiting entries in a directory we copy the directory
-		Path newdir = outdir.resolve(indir.relativize(dir));
-		newdir = delegate.mungeFileName(newdir);
-		log.infof("%s.preVisitDirectory: creating %s",TAG,newdir.toString());
+		log.infof("%s.preVisitDirectory: visiting %s",TAG,dir.toString());
+		String relative = relativize(inRoot,delegate.toCamelCase(dir.toString()));
+		// Before visiting entries in a directory we create the output directory
+		Path newdir = Paths.get(outRoot.toString(),relative);
+		log.infof("%s.preVisitDirectory: resolved/creating %s",TAG,newdir.toString());
 		Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwxr-xr-x");
 		FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
 		try {
@@ -66,8 +66,12 @@ public class CopyWalker implements FileVisitor<Path>  {
 	
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-		delegate.convertFile(file, outdir.resolve(indir.relativize(file)));
-       return FileVisitResult.CONTINUE;
+		String relative = relativize(inRoot,delegate.toCamelCase(file.toString()));
+		Path newfile = Paths.get(outRoot.toString(),relative);
+		log.infof("%s.visitFile: %s -> %s",TAG,file.toString(),newfile.toString());
+		// Make sure that the new file does not exist ... 
+		// if so try append alpha until we get a free name. 
+		return FileVisitResult.CONTINUE;
 	}
 
 	@Override
@@ -86,4 +90,21 @@ public class CopyWalker implements FileVisitor<Path>  {
 		return FileVisitResult.CONTINUE;
 	}
 	
+	/**
+	 * The FileVisitor's relativize didn't perform like I expected. Here we simply
+	 * subtract off the root from the extended path. Both paths have been "camelized".
+	 * 
+	 * @param root
+	 * @param extended
+	 * @return
+	 */
+	private String relativize(String root,String extended) {
+		log.infof("%s.relativize: %s to %s",TAG,root,extended);
+		String result = extended;
+		if( extended.length()>root.length()+1) {
+			result = extended.substring(root.length()+1);
+		}
+		log.infof("%s.relativize: yields %s",TAG,result);
+		return result;
+	}
 }

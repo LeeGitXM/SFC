@@ -30,7 +30,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 public class ProjectBuilder {
 	private final static String TAG = "ProjectBuilder";
 	private static final String USAGE = "Usage: builder <dir> <project_file>";
-	private static final LoggerEx log = LogUtil.getLogger(Converter.class.getPackage().getName());;
+	private static final LoggerEx log = LogUtil.getLogger(Converter.class.getPackage().getName());
 	public static boolean haltOnError = false;
 	PrintWriter out = null;
 	private boolean ok = true;                     // Allows us to short circuit processing
