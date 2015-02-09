@@ -34,6 +34,7 @@ public class IlsGatewayScripts {
 	private static Map<String,PyDictionary> repliesById = Collections.synchronizedMap(
 		new HashMap<String,PyDictionary>());
 	//private static ChartManager chartManager = ChartManager.get();
+	/*
 	private static String sfcProjectName = null;
 	private static String sfcDatabaseName = null;
 	
@@ -49,6 +50,7 @@ public class IlsGatewayScripts {
 	public static String getSfcDatabaseName() {
 		return sfcDatabaseName;
 	}
+	*/
 /*
 	public static String getChartState(UUID uuid) {
 		Optional<ChartStatus> opt = chartManager.getChartStatus(uuid, false);

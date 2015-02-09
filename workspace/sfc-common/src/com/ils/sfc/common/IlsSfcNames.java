@@ -139,9 +139,8 @@ public class IlsSfcNames {
 	
 	// frequently used units
 	// These must correspond to the actual unit names in the DB:
-	public static final String SECOND= "SECOND";
-	public static final String MINUTE = "MINUTE";
-	public static final String HOUR = "HOUR";
+	public static final String SECOND= "SEC";
+	public static final String MINUTE = "MIN";
 	public static final String TIME_UNIT_TYPE = "TIME";
 
 	// other
