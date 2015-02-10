@@ -68,6 +68,7 @@ public class IlsSfcNames {
 	public static final String NAME = "name";
 	public static final String NONE = "none";
 	public static final String OFF = "Off";
+	public static final String PARENT = "parent";
 	public static final String POSITION = "position";
 	public static final String POST_TO_QUEUE = "postToQueue";
 	public static final String POST_NOTIFICATION = "postNotification";
@@ -145,6 +146,8 @@ public class IlsSfcNames {
 	// other
 	public static final String MESSAGE_ID = "messageId";
 	public static final String BY_NAME = "stepsByName";
+	public static final String ENCLOSING_STEP_SCOPE_KEY = "enclosingStepScope";
+	public static final String S88_LEVEL_KEY = "s88Level";
 
 	// choices:
 	public static final String[] RECIPE_STATIC_STRATEGY_CHOICES = {STATIC, RECIPE};
