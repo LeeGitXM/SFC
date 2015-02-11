@@ -68,6 +68,7 @@ public class IlsSfcNames {
 	public static final String NAME = "name";
 	public static final String NONE = "none";
 	public static final String OFF = "Off";
+	public static final String PARENT = "parent";
 	public static final String POSITION = "position";
 	public static final String POST_TO_QUEUE = "postToQueue";
 	public static final String POST_NOTIFICATION = "postNotification";
@@ -132,26 +133,26 @@ public class IlsSfcNames {
 	public static final String SUPERIOR = "superior";
 	//public static final String NAMED = "named";
 	public static final String GLOBAL = "global";
-	public static final String PROCEDURE = "procedure";
-	public static final String PHASE = "phase";
 	public static final String OPERATION = "operation";	
+	public static final String PHASE = "phase";
 
 	
 	// frequently used units
 	// These must correspond to the actual unit names in the DB:
-	public static final String SECOND= "SECOND";
-	public static final String MINUTE = "MINUTE";
-	public static final String HOUR = "HOUR";
+	public static final String SECOND= "SEC";
+	public static final String MINUTE = "MIN";
 	public static final String TIME_UNIT_TYPE = "TIME";
 
 	// other
 	public static final String MESSAGE_ID = "messageId";
 	public static final String BY_NAME = "stepsByName";
+	public static final String ENCLOSING_STEP_SCOPE_KEY = "enclosingStepScope";
+	public static final String S88_LEVEL_KEY = "s88Level";
 
 	// choices:
 	public static final String[] RECIPE_STATIC_STRATEGY_CHOICES = {STATIC, RECIPE};
 	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, PREVIOUS, SUPERIOR,
-		PHASE, OPERATION, PROCEDURE,};
+		GLOBAL, OPERATION, PHASE};
 	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK};
 	public static final String[] RESULTS_MODE_CHOICES = {UPDATE, UPDATE_OR_CREATE};
 	public static final String[] FETCH_MODE_CHOICES = {SINGLE, MULTIPLE};
@@ -163,5 +164,5 @@ public class IlsSfcNames {
 	public static final String[] PRIORITY_CHOICES = {INFO, WARNING, ERROR};
 	public static final String[] AUDIT_LEVEL_CHOICES = {OFF, LOW, HIGH};
 	public static final String[] DISPLAY_MODE_CHOICES = {REGISTER_AND_DISPLAY, REGISTER_ONLY};
-	public static final String[] S88_LEVEL_CHOICES = {NONE, PROCEDURE, OPERATION, PHASE};
+	public static final String[] S88_LEVEL_CHOICES = {NONE, GLOBAL, OPERATION, PHASE};
 }

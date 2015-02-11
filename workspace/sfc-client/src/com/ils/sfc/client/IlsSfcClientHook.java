@@ -41,9 +41,6 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 				System.out.println("projectUpdated");				
 			}        	
         });
-        ProjectResource recipeDataResource = context.getGlobalProject().getProject().getResourceOfType(
-    			IlsSfcModule.MODULE_ID, IlsSfcModule.RECIPE_RESOURCE_TYPE);
-        System.out.println("recipe resource: " + recipeDataResource);
         log.debug("starting up...");
 		registerSteps();
     }

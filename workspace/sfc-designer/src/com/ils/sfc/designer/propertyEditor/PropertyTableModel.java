@@ -137,10 +137,10 @@ public class PropertyTableModel extends AbstractTableModel {
 					try {
 						unitChoices = PythonCall.toArray(
 							PythonCall.OTHER_UNITS.exec(unit));
-					} catch (JythonExecException e) {
+						newRow.setChoices(unitChoices);
+					} catch (Exception e) {
 						logger.error("Exception getting units", e);
 					}
-					newRow.setChoices(unitChoices);
 				}
 				
 			}
