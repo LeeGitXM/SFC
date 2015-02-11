@@ -15,6 +15,8 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -58,11 +60,12 @@ public class Converter {
 	private final ClassNameMapper classMapper;
 	private final ProcedureMapper procedureMapper;
 	private final PropertyMapper propertyMapper;
+	
  
 	public Converter() {
-		classMapper = new ClassNameMapper();
-		procedureMapper = new ProcedureMapper();
-		propertyMapper = new PropertyMapper();
+		this.classMapper = new ClassNameMapper();
+		this.procedureMapper = new ProcedureMapper();
+		this.propertyMapper = new PropertyMapper();
 	}
 	
 	/**
@@ -168,7 +171,6 @@ public class Converter {
 	 * @param outfile file location in which to write the output. 
 	 */
 	public void convertFile(Path infile,Path outfile) {
-		log.infof("%s.convertFile ...%s",TAG,infile.getFileName().toString());
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = null;
 		Document doc = null;
@@ -181,6 +183,7 @@ public class Converter {
 			
 			// Add .xml to outpat
 			outfile = Paths.get(outfile.toString()+".xml");
+			log.infof("%s.convertFile writing...%s",TAG,outfile.toString());
 			Files.write(outfile, outDoc.toString().getBytes(), StandardOpenOption.CREATE_NEW,StandardOpenOption.WRITE);
 		}
 		catch(IOException ioe) {

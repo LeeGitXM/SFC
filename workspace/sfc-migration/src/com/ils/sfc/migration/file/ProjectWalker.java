@@ -3,22 +3,31 @@
  */
 package com.ils.sfc.migration.file;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import com.ils.sfc.migration.ProjectBuilder;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 /**
  * Walk the output directory collecting files for incorporation
  * into the output project.
  */
 public class ProjectWalker implements FileVisitor<Path>  {
 	private final static String TAG = "ProjectWalker";
+	private final static String ROOT = "947a0c86-3b70-45bf-b8f2-829d108ab928";  // SFC root node
+	private final LoggerEx log;
 	private final Path indir;
 	private final ProjectBuilder delegate;   // Delegate for migrating individual files
-
+	private Path currentDirectory = null;              // Current parent directory
+	private final Map<String,String> uuidForPath;
 
 	 /**
 	  * 
@@ -28,36 +37,53 @@ public class ProjectWalker implements FileVisitor<Path>  {
 	public ProjectWalker(Path in,ProjectBuilder builder) {
 		this.indir = in;
 		this.delegate = builder;
+		this.uuidForPath = new HashMap<>();
+		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
 
 	/** 
-	 * Create any necessary output subdirectories, if needed
+	 * Each time we visit a directory, we create a corresponding folder in the project.
+	 * We assume a top-down search which allows us to look up our parent's UUID.
 	 */
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-		// before visiting entries in a directory we copy the directory
-		/*
-		Path newdir = outdir.resolve(indir.relativize(dir));
-		Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwxr-xr-x");
-		FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
-		try {
-			Files.createDirectory(newdir,attr);
+		// The root folder has ROOT as its parent
+		log.infof("%s.previsitDirectory: %s ...",TAG,dir.toString());
+		String dirname = "";
+		String dirString = dir.toString();
+		int index = dirString.lastIndexOf(File.separator);
+		if( index>0 ) {
+			dirname= dirString.substring(index+1);
 		}
-		catch(IOException ioe) {
-			System.err.format("preVisitDirectory.Unable to create: %s (%s)", newdir,ioe.getMessage());
-			return FileVisitResult.SKIP_SUBTREE;
+		String parentId = ROOT;
+		if( dir.compareTo(indir)!=0) {
+			// If not root,lookup parent Id
+			String parent = dirString;
+			if( index>0 ) {
+				parent = dirString.substring(0,index);	
+			}
+			parentId = uuidForPath.get(parent);
 		}
-		*/
+		if( parentId!=null) {
+			currentDirectory = dir;
+			String uuid = UUID.randomUUID().toString();
+			uuidForPath.put(dirString, uuid);
+			log.infof("%s.previsitDirectory: %s = %s.",TAG,dirString,uuid);
+			delegate.addFolder(dirname,uuid,parentId);
+		}
+		else {
+			log.errorf("%s.previsitDirectory: Error: No parent found for %s",TAG,dirString);
+		}
 		return FileVisitResult.CONTINUE;
 	}
 	
 
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-		/*
-		delegate.convertFile(file, outdir.resolve(indir.relativize(file)));
-		*/
-       return FileVisitResult.CONTINUE;
+		// Look up the UUID of the parent directory
+		String parentUUID = uuidForPath.get(currentDirectory);
+		delegate.addChart(file,parentUUID);
+        return FileVisitResult.CONTINUE;
 	}
 
 

@@ -49,7 +49,7 @@ public class CopyWalker implements FileVisitor<Path>  {
 		String relative = relativize(inRoot,delegate.toCamelCase(dir.toString()));
 		// Before visiting entries in a directory we create the output directory
 		Path newdir = Paths.get(outRoot.toString(),relative);
-		log.infof("%s.preVisitDirectory: resolved/creating %s",TAG,newdir.toString());
+		//log.infof("%s.preVisitDirectory: resolved/creating %s",TAG,newdir.toString());
 		Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwxr-xr-x");
 		FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
 		try {
@@ -58,7 +58,7 @@ public class CopyWalker implements FileVisitor<Path>  {
 			}
 		}
 		catch(IOException ioe) {
-			System.err.format("preVisitDirectory.Unable to create: %s\n", newdir);
+			log.errorf("%s.previsitDirectory: Unable to create: %s",TAG, newdir.toString());
 			return FileVisitResult.SKIP_SUBTREE;
 		}
 		return FileVisitResult.CONTINUE;
@@ -68,7 +68,6 @@ public class CopyWalker implements FileVisitor<Path>  {
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 		String relative = relativize(inRoot,delegate.toCamelCase(file.toString()));
 		Path newfile = Paths.get(outRoot.toString(),relative);
-		
 		// Make sure that the new file does not exist ... 
 		// if so try append alpha until we get a free name.
 		int version = 0;
@@ -76,7 +75,7 @@ public class CopyWalker implements FileVisitor<Path>  {
 		while(Files.exists(target)) {
 			target = Paths.get(String.format("%s%c",newfile.toString(),'a'+version));
 		}
-		log.infof("%s.visitFile: %s -> %s",TAG,file.toString(),target.toString());
+		log.tracef("%s.visitFile: %s -> %s",TAG,file.toString(),target.toString());
 		delegate.convertFile(file, target);
 		return FileVisitResult.CONTINUE;
 	}
@@ -106,12 +105,12 @@ public class CopyWalker implements FileVisitor<Path>  {
 	 * @return
 	 */
 	private String relativize(String root,String extended) {
-		log.infof("%s.relativize: %s to %s",TAG,root,extended);
+		//log.infof("%s.relativize: %s to %s",TAG,root,extended);
 		String result = extended;
 		if( extended.length()>root.length()+1) {
 			result = extended.substring(root.length()+1);
 		}
-		log.infof("%s.relativize: yields %s",TAG,result);
+		log.tracef("%s.relativize: yields %s",TAG,result);
 		return result;
 	}
 }

@@ -27,6 +27,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.inductiveautomation.ignition.common.Base64;
+import com.inductiveautomation.ignition.common.model.ApplicationScope;
+import com.inductiveautomation.ignition.common.project.ProjectResource;
 
 /**
  * Given an Ignition project file, scan for CDATA elements. 
@@ -106,11 +108,13 @@ public class ProjectDebugger {
 									}
 									System.out.println("\n" + xml.toString());
 								}
+								// If we get an exception, then try without the Gzip
 								catch(IOException ioe) {
-									System.out.println("ProjectBuilder.processInput: IOException ("+ioe.getLocalizedMessage()+")");
+									ProjectResource pr = new ProjectResource(42L,"com.inductiveautomation.sfc","FolderName",
+											ProjectResource.FOLDER_RESOURCE_TYPE,ApplicationScope.DESIGNER,bytes);
+									System.out.println("\n" + pr.getDataAsUUID().toString());
 								}
 							}
-							
 						}
 			        }
 			    }
