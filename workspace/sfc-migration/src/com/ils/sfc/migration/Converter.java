@@ -15,8 +15,7 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -30,16 +29,15 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.sqlite.JDBC;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import com.ils.sfc.migration.block.G2Chart;
-import com.ils.sfc.migration.file.CopyWalker;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
+import com.ils.sfc.migration.visitor.CopyWalker;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
-import com.inductiveautomation.sfc.api.elements.ChartElement;
 /**
  * Copy charts from the G2 chart tree, convert them to Ignition SFC-compliant
  * XML. Store the results in a directory tree ready for subsequent conversion
@@ -55,8 +53,6 @@ public class Converter {
 	@SuppressWarnings("unused")
 	private final static JDBC driver = new JDBC(); // Force driver to be loaded
 	private boolean ok = true;                     // Allows us to short circuit processing
-	private G2Chart g2chart = null;                // G2 Chart read from XML
-	private ChartElement chart = null;             // The result
 	private final ClassNameMapper classMapper;
 	private final ProcedureMapper procedureMapper;
 	private final PropertyMapper propertyMapper;
@@ -163,43 +159,53 @@ public class Converter {
 	}
 	
 	/**
-	 * This is where the real conversion takes place. Create an XML document out
-	 * of the input. Create an XML document that represents the output, then
-	 * write it.
+	 * This is where the real conversion takes place. This method gets called
+	 * as we walk the tree. Create an XML document out of the G2 input file. 
+	 * Create an XML document that represents the Ignition equivalent, then 
+	 * write it to the output. Each output file represents a SFC chart.
 	 * 
 	 * @param infile
 	 * @param outfile file location in which to write the output. 
 	 */
 	public void convertFile(Path infile,Path outfile) {
+		// Get the name from the path
+		String name = chartNameFromPath(outfile);
+		// First create the G2 chart as an XML document.
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = null;
-		Document doc = null;
+
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
-			doc = docBuilder.parse(infile.toFile());
-			doc.getDocumentElement().normalize();
+
+			Document g2doc = docBuilder.parse(infile.toFile());
+			g2doc.getDocumentElement().normalize();
+
+			Document chartdoc = docBuilder.newDocument();  // This is the Ignition version
+			initializeChart(chartdoc);
+			updateChartForG2(chartdoc,g2doc);
 			
-			Document outDoc = convertXML(doc);
-			
-			// Add .xml to outpat
-			outfile = Paths.get(outfile.toString()+".xml");
-			log.infof("%s.convertFile writing...%s",TAG,outfile.toString());
-			Files.write(outfile, outDoc.toString().getBytes(), StandardOpenOption.CREATE_NEW,StandardOpenOption.WRITE);
+			// Write the chart to the output
+			Files.write(outfile, chartdoc.toString().getBytes(), StandardOpenOption.CREATE_NEW);
 		}
-		catch(IOException ioe) {
-			log.errorf("%s.convertFile: Error reading %s (%s)",TAG,infile.toString(),ioe.getMessage());
-		} 
 		catch (ParserConfigurationException pce) {
-			log.errorf("%s.convertFile: Error parsing %s (%s)",TAG,infile.toString(),pce.getMessage());
+			log.errorf("%s.addChart: Error parsing %s (%s)",TAG,infile.toString(),pce.getMessage());
 		}
 		catch (SAXException sax) {
-			log.errorf("%s.convertFile: Error walking %s (%s)",TAG,infile.toString(),sax.getMessage());
+			log.errorf("%s.addChart: Error analyzing %s (%s)",TAG,infile.toString(),sax.getMessage());
 		}
+		catch (IOException ioe) {
+			log.errorf("%s.addChart: Failure to read %s or write %s (%s)",TAG,infile.toString(),outfile.toString(),ioe.getMessage());
+		}
+		
 	}
 	
-	private Document convertXML(Document in) {
-		Document out = in;
-		return out;
+	/**
+	 * Update the contents of an Ignition chart document based on a corresponding G2 version.
+	 * @param chart the result
+	 * @param g2doc the G2 export
+	 */
+	private void updateChartForG2(Document chart,Document g2doc) {
+
 	}
 	
 	/**
@@ -256,7 +262,31 @@ public class Converter {
 	    }
 	    log.tracef("toCamelCase: result %s",camelCase.toString());
 	    return camelCase.toString();
-	}	
+	}
+	
+	private String chartNameFromPath(Path path) {
+		String name = path.toString();
+		int index = name.lastIndexOf(File.separator);
+		if( index>0) name = name.substring(index+1);
+		// Strip off extension
+		index = name.lastIndexOf(".");
+		if( index>0 ) name = name.substring(0,index);
+		return name;
+	}
+	
+	// Add a single chart element to the document
+	private void initializeChart(Document doc) {
+		Element chart = doc.createElement("sfc");
+		chart.setAttribute("canvas", "20 20");
+		chart.setAttribute("execution-mode", "Callable");
+		chart.setAttribute("hot-editable", "false");
+		chart.setAttribute("persist-state", "true");
+		chart.setAttribute("timestamp", new Date().toString());
+		chart.setAttribute("version", "7.7.2 (b2014121709)");
+		chart.setAttribute("zoom", "1.0");
+		doc.appendChild(chart);
+	}
+	
 	/**
 	 * Usage: Converter [-f] <databasepath> <indir> <outdir>
 	 */

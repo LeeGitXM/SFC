@@ -3,8 +3,10 @@
  */
 package com.ils.sfc.migration;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,10 +15,7 @@ import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import java.util.zip.GZIPOutputStream;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.ConsoleAppender;
@@ -25,9 +24,8 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
-import com.ils.sfc.migration.file.ProjectWalker;
+import com.ils.sfc.migration.visitor.ProjectWalker;
 import com.inductiveautomation.ignition.common.Base64;
 import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
@@ -37,7 +35,6 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
  * Traverse the tree of Ignition-ready XML files that represent
  * SFC charts. Bundle the result in an Ignition project file,
  * ready for import into the global project.
- *
  */
 public class ProjectBuilder {
 	private final static String TAG = "ProjectBuilder";
@@ -130,41 +127,24 @@ public class ProjectBuilder {
 	public void addChart(Path filepath,String parentuuidString) {
 		resid++;
 		// Get the name from the path
-		String name = filenameFromPath(filepath);
+		String name = resourceNameFromPath(filepath);
 		log.infof("%s.addChart: %s (%d)",TAG,name,resid);
 		out.printf("<resource id='%d' name='%s' module='com.inductiveautomation.sfc'",resid,name);
 		out.printf(" modver=''  ver='0' dirty='true' editcount='1' type='sfc-chart-ui-model' ");
 		out.printf(" parent='%s' oemlocked='false' scope='%s' protected='false'>\n",parentuuidString,ApplicationScope.DESIGNER);
 		out.println("<doc></doc>");
-		// We construct a project resource so that we can get the serialized value that we need to store.
-		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder docBuilder = null;
-		Document g2doc = null;
-		Document ignitiondoc = null;
+		// The file represents a chart. Zip and Base64 encode it. 
 		try {
-			docBuilder = docFactory.newDocumentBuilder();
-			ignitiondoc = docBuilder.newDocument();
-			initializeChart(ignitiondoc);
-			g2doc = docBuilder.parse(filepath.toFile());
-			g2doc.getDocumentElement().normalize();
-			
-			
-			
-			
-			//out.printf("<bytes><![CDATA[%s]]></bytes>",Base64.encodeBytes(bytes));
+			byte[] chartBytes = Files.readAllBytes(filepath);
+			ByteArrayOutputStream baos=new ByteArrayOutputStream();
+		    OutputStream zipper=new GZIPOutputStream(baos);
+		    zipper.write(chartBytes);
+		    zipper.close();
+			out.printf("<bytes><![CDATA[%s]]></bytes>",Base64.encodeBytes(baos.toByteArray()));
 		}
 		catch(IOException ioe) {
 			log.errorf("%s.addChart: Error reading %s (%s)",TAG,filepath.toString(),ioe.getMessage());
 		} 
-		catch (ParserConfigurationException pce) {
-			log.errorf("%s.addChart: Error parsing %s (%s)",TAG,filepath.toString(),pce.getMessage());
-		}
-		catch (SAXException sax) {
-			log.errorf("%s.addChart: Error analyzing %s (%s)",TAG,filepath.toString(),sax.getMessage());
-		}
-		
-
-		
 		out.println("</resource>");
 	}
 	
@@ -214,7 +194,8 @@ public class ProjectBuilder {
 
     	return buffer;
     }
-	private String filenameFromPath(Path path) {
+	
+	private String resourceNameFromPath(Path path) {
 		String name = path.toString();
 		int index = name.lastIndexOf(File.separator);
 		if( index>0) name = name.substring(index+1);
@@ -223,21 +204,7 @@ public class ProjectBuilder {
 		if( index>0 ) name = name.substring(0,index);
 		return name;
 	}
-	
-	// Add a single chart element to the document
-	private void initializeChart(Document doc) {
-		Element chart = doc.createElement("sfc");
-		
-		chart.setAttribute("canvas", "20 20");
-		chart.setAttribute("execution-mode", "Callable");
-		chart.setAttribute("hot-editable", "false");
-		chart.setAttribute("persist-state", "true");
-		chart.setAttribute("timestamp", new Date().toString());
-		chart.setAttribute("version", "7.7.2 (b2014121709)");
-		chart.setAttribute("zoom", "1.0");
-		doc.appendChild(chart);
-	}
-	
+
 	private static Path pathFromString(String spath) {
 		// In case we've been fed a Windows path, convert
 		spath = spath.replace("\\", "/");

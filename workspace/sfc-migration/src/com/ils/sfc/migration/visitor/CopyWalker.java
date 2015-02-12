@@ -1,7 +1,7 @@
 /**
  *   (c) 2015  ILS Automation. All rights reserved.
  */
-package com.ils.sfc.migration.file;
+package com.ils.sfc.migration.visitor;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
