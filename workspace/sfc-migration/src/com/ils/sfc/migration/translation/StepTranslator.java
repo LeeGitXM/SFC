@@ -20,8 +20,6 @@ public class StepTranslator {
 	
 	private final Converter delegate;
 
-	
- 
 	public StepTranslator(Converter converter) {
 		this.delegate = converter;
 	}
@@ -34,9 +32,9 @@ public class StepTranslator {
 	 * @param g2block
 	 * @return
 	 */
-	public Element translate(Document chart,Element g2block,UUID uuid,int x,int y) {
+	public Element translate(Document chart,Element g2block,int x,int y) {
 		Element step = chart.createElement("step");
-		step.setAttribute("id", uuid.toString());
+
 		step.setAttribute("location", String.format("%d %d", x,y));
 		
 		if( g2block.getElementsByTagName("block").getLength()==0) {
@@ -46,6 +44,8 @@ public class StepTranslator {
 		Element block = (Element)(g2block.getElementsByTagName("block").item(0));
 		// Get attributes from the block element
 		String name = makeName(block.getAttribute("name"));
+		String uuid = block.getAttribute("uuid");
+		if( uuid==null ) uuid = UUID.randomUUID().toString();
 		String claz = block.getAttribute("class");
 		String factoryId = "action-step";     // Generic action step as default
 		boolean isEnclosure = false;
@@ -68,20 +68,54 @@ public class StepTranslator {
 		}
 	
 		step.setAttribute("name", name);
+		step.setAttribute("id", uuid);
 		step.setAttribute("factory-id", factoryId);
 		return step;
 	}
 	
 	/**
-	 * Names of steps look better with spaces.
+	 * Remove dashes and spaces. Convert to camel-case.
+	 * Attempt to shorten.
+	 * 
 	 * @param filename dash-delimited name from G2
-	 * @return
+	 * @return munged name
 	 */
-	private String makeName(String filename) {
+	public String makeName(String filename) {
 		String name = filename;
 		if( name==null || name.length()==0 ) name = "?";
-		return name;
-				
+
+		// Replace XXX with an underscore
+		name = name.replace("-XXX-", "_");
+		name = name.replace("PROCEDURE", "");
+
+	    StringBuilder camelCase = new StringBuilder();
+	    boolean nextTitleCase = true;
+	    //log.tracef("toCamelCase: %s",input);
+	    for (char c : name.toCharArray()) {
+	    	if (Character.isSpaceChar(c)) {
+	            nextTitleCase = true;
+	            continue;
+	        } 
+	        // remove illegal characters
+	        else if (c=='-' ||
+	        		 c=='#' ||
+	        		 c=='/' ||
+	        		 c==':' ||
+	        		 c=='.'    ) {
+	            nextTitleCase = true;
+	            continue;
+	        } 
+	        else if (nextTitleCase) {
+	            c = Character.toUpperCase(c);
+	            nextTitleCase = false;
+	        }
+	        else {
+	        	c = Character.toLowerCase(c);
+	        }
+	        camelCase.append(c);
+	    }
+	    log.tracef("toCamelCase: result %s",camelCase.toString());
+	    return camelCase.toString();
 	}
 	
 }
