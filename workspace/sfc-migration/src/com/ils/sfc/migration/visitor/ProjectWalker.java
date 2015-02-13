@@ -80,6 +80,8 @@ public class ProjectWalker implements FileVisitor<Path>  {
 
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+		//Ignore the OSX resource marker
+		if(file.toString().endsWith(".DS_Store")) return FileVisitResult.CONTINUE;
 		// Look up the UUID of the parent directory
 		String parentUUID = uuidForPath.get(currentDirectory);
 		log.infof("%s.visitFile: parent for %s = %s.",TAG,currentDirectory,parentUUID);

@@ -66,6 +66,9 @@ public class CopyWalker implements FileVisitor<Path>  {
 	
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+		//Ignore the OSX resource marker
+		if(file.toString().endsWith(".DS_Store")) return FileVisitResult.CONTINUE;
+		
 		String relative = relativize(inRoot,delegate.toCamelCase(file.toString()));
 		Path newfile = Paths.get(outRoot.toString(),relative);
 		// Make sure that the new file does not exist ... 

@@ -50,6 +50,8 @@ public class PathWalker implements FileVisitor<Path>  {
 	
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+		//Ignore the OSX resource marker
+		if(file.toString().endsWith(".DS_Store")) return FileVisitResult.CONTINUE;
 		String chartName = delegate.chartNameFromPath(file);
 		pathMap.put(chartName, currentPartialPath);
 		return FileVisitResult.CONTINUE;
