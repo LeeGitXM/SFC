@@ -41,13 +41,14 @@ import org.apache.log4j.PatternLayout;
 import org.sqlite.JDBC;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
+import com.ils.sfc.migration.translation.GridPoint;
+import com.ils.sfc.migration.translation.StepLayoutManager;
 import com.ils.sfc.migration.translation.StepTranslator;
 import com.ils.sfc.migration.visitor.CopyWalker;
 import com.ils.sfc.migration.visitor.PathWalker;
@@ -251,6 +252,19 @@ public class Converter {
 			Element block = (Element)steps.item(0);
 			updateChartForSingletonStep(chart,block);
 		}
+		else {
+			StepLayoutManager layout = new StepLayoutManager(g2doc);
+			Element root = chart.getDocumentElement();   // "sfc"
+			Map<String,Element> blockMap = createBlockMap(root);
+			Map<String,GridPoint> gridMap = layout.getGridMap();
+			for(String uuid:gridMap.keySet()) {
+				GridPoint gp = gridMap.get(uuid);
+				//g2block element has child "block", plus one or more recipes
+				Element g2block = blockMap.get(uuid);
+				root.appendChild(stepTranslator.translate(chart,g2block,gp.x,gp.y));
+			}
+			root.setAttribute("zoom", String.valueOf(layout.getZoom()));
+		}
 	}
 	/**
 	 * The G2 chart has only a single block. Add begin, end steps.
@@ -260,7 +274,7 @@ public class Converter {
 	private void updateChartForSingletonStep(Document chart,Element g2block) {
 		Element root = chart.getDocumentElement();   // "sfc"
 		root.appendChild(createBeginStep(chart,UUID.randomUUID(),5,1));
-		root.appendChild(stepTranslator.translate(chart,g2block,UUID.randomUUID(),5,2));
+		root.appendChild(stepTranslator.translate(chart,g2block,5,2));
 		root.appendChild(createEndStep(chart,UUID.randomUUID(),5,3));
 	}
 	
@@ -386,6 +400,22 @@ public class Converter {
 		doc.appendChild(chart);
 	}
 	
+	private Map<String,Element> createBlockMap(Element root) {
+		Map<String,Element> blockMap = new HashMap<>();
+		// Rely that the return is document order and 
+		// data and block are 1:1. The uuid is in the block.
+		NodeList data = root.getElementsByTagName("data");
+		NodeList blocks = root.getElementsByTagName("block");
+		int index = 0;
+		while( index < blocks.getLength() ) {
+			Element block = (Element)blocks.item(index);
+			Element datum = (Element)data.item(index);
+			String uuid = block.getAttribute("uuid");
+			if( uuid!=null) blockMap.put(uuid, datum);
+			index++;
+		}
+		return blockMap;
+	}
 	/**
 	 * Usage: Converter [-f] <databasepath> <indir> <outdir>
 	 */
