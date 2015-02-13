@@ -13,3 +13,4 @@ cp -a "${SVN}"/* $REPO/g2
 find ${REPO}/g2 -type f ! -name "*.xml" -exec rm {}  \; 
 rm -r `find ${REPO}/g2 -type d -name Diagrams`  2&>/dev/null
 rm -r `find ${REPO}/g2 -type d -name diagrams`  2&>/dev/null
+rm -r `find ${REPO}/g2 -type d -name callbacks`  2&>/dev/null

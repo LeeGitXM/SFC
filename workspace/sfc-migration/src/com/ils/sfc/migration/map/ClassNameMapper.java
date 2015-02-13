@@ -12,13 +12,14 @@ import java.util.Map;
  */
 public class ClassNameMapper {
 	private static final String TAG = "ClassNameMapper";
-	private static final String UNDEFINED_NAME = "com.ils.block.UNDEFINED";
 	private final Map<String,String> classMap;     // Lookup by G2 classname
+	private final Map<String,String> enclosureMap;     // Lookup by G2 classname
 	/** 
 	 * Constructor: 
 	 */
 	public ClassNameMapper() {
 		classMap = new HashMap<String,String>();
+		enclosureMap = new HashMap<String,String>();
 	}
 	
 	
@@ -39,6 +40,8 @@ public class ClassNameMapper {
 				String g2 = rs.getString("G2Class");
 				String ignition = rs.getString("FactoryId");
 				classMap.put(g2, ignition);
+				String encloses = rs.getString("Encloses");
+				enclosureMap.put(g2, encloses);
 			}
 			rs.close();
 		}
@@ -54,5 +57,29 @@ public class ClassNameMapper {
 		}
 	}
 	
+	
+	/**
+	 * 
+	 * @param className the G2 class name
+	 * @return the corresponding Ignition factoryId
+	 */
+	public String factoryIdForClass(String className) {
+		String factId = classMap.get(className);
+		return factId;
+	}
+	
+	/**
+	 * 
+	 * @param className the G2 class name
+	 * @return whether or not this class is an enclosure
+	 */
+	public boolean isClassAnEnclosure(String className) {
+		boolean flag = false;  // default
+		String result = enclosureMap.get(className);
+		if( result!=null ) {
+			flag = result.equalsIgnoreCase("true");
+		}
+		return flag;
+	}
 	
 }

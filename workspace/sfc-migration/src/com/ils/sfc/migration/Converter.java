@@ -48,6 +48,7 @@ import org.xml.sax.SAXException;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
+import com.ils.sfc.migration.translation.StepTranslator;
 import com.ils.sfc.migration.visitor.CopyWalker;
 import com.ils.sfc.migration.visitor.PathWalker;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -71,14 +72,18 @@ public class Converter {
 	private final ProcedureMapper procedureMapper;
 	private final PropertyMapper propertyMapper;
 	private final Map<String,String> pathForFile;     // A map of the complete path indexed by file name
-	
+	private final StepTranslator stepTranslator;
  
 	public Converter() {
 		this.classMapper = new ClassNameMapper();
 		this.procedureMapper = new ProcedureMapper();
 		this.propertyMapper = new PropertyMapper();
 		this.pathForFile = new HashMap<>();
+		this.stepTranslator = new StepTranslator(this);
 	}
+	
+	public ClassNameMapper getClassMapper() { return classMapper; }
+	public String getPathForFile(String filename)  { return pathForFile.get(filename); }
 	
 	/**
 	 * Step 1: Read the database and create maps between various elements.
@@ -89,7 +94,6 @@ public class Converter {
 		String connectPath = "jdbc:sqlite:"+path.toString();
 		log.infof("%s.processDatabase: database path = %s",TAG,path.toString());
 		// Read database to generate conversion maps
-		@SuppressWarnings("resource")
 		Connection connection = null;
 		try {
 			connection = DriverManager.getConnection(connectPath);
@@ -241,11 +245,11 @@ public class Converter {
 	 * @param g2doc the G2 export
 	 */
 	private void updateChartForG2(Document chart,Document g2doc) {
-		NodeList steps = g2doc.getElementsByTagName("block");
+		NodeList steps = g2doc.getElementsByTagName("data");
 		// A common idiom is a single block in the chart. We need to add begin/end.
 		if(steps.getLength()==1) {
-			Node block = steps.item(0);
-			updateChartForSingletonStep(chart,g2doc,block);
+			Element block = (Element)steps.item(0);
+			updateChartForSingletonStep(chart,block);
 		}
 	}
 	/**
@@ -253,10 +257,11 @@ public class Converter {
 	 * @param chart the result
 	 * @param g2doc the G2 export
 	 */
-	private void updateChartForSingletonStep(Document chart,Document g2doc,Node block) {
+	private void updateChartForSingletonStep(Document chart,Element g2block) {
 		Element root = chart.getDocumentElement();   // "sfc"
 		root.appendChild(createBeginStep(chart,UUID.randomUUID(),5,1));
-		root.appendChild(createEndStep(chart,UUID.randomUUID(),5,2));
+		root.appendChild(stepTranslator.translate(chart,g2block,UUID.randomUUID(),5,2));
+		root.appendChild(createEndStep(chart,UUID.randomUUID(),5,3));
 	}
 	
 	
