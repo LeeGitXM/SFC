@@ -80,8 +80,8 @@ public class BrowserPane extends JPanel implements RecipeEditorController.Recipe
 	private void createTree() {		
 		rootNode = new RecipeDataTreeNode(controller.getRecipeData());
 		selectedNode = rootNode;
-		treeModel = new DefaultTreeModel(rootNode);
 		rootNode.removeAllChildren();
+		treeModel = new DefaultTreeModel(rootNode);
 		addLayer(rootNode);
 		tree = new JTree(treeModel);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);

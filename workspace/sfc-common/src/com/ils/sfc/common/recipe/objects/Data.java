@@ -1,11 +1,19 @@
 package com.ils.sfc.common.recipe.objects;
 
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xml.sax.SAXException;
+import org.xml.sax.Attributes;
+import org.xml.sax.helpers.DefaultHandler;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcNames;
@@ -68,6 +76,10 @@ public abstract class Data {
 		return concreteClassesByG2Name.values();
 	}
 
+	public static Class<?> getConcreteClassForG2Class(String g2ClassName) {
+		return concreteClassesByG2Name.get(g2ClassName);
+	}
+	
 	public Data() {
 		addProperty(IlsProperty.CLASS);
 		addProperty(IlsProperty.KEY);
@@ -117,8 +129,32 @@ public abstract class Data {
 	 * <recipe key="bar" label="bar" description="A barby piece of recipe data" help="More useless help" advice="More useless advice" units="DEGC" type="float" category="Simple Constant" val="37.567" high-limit="" low-limit=""  />
 	 */
 	@SuppressWarnings("deprecation")
-	public static JSONObject fromG2(String g2Xml) {
-		// TODO: implement
+	public static JSONObject fromG2(InputStream in) {		
+		try {
+			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+			DefaultHandler handler = new DefaultHandler() {
+				@Override
+				public void startElement(String uri, String localName, String qName, Attributes attributes) {
+					if(localName.equals("recipe")) {
+						BasicPropertySet properties = new BasicPropertySet();
+						int numAttributes = attributes.getLength();
+						String g2ClassName = null;
+						for(int i = 0; i < numAttributes; i++) {
+							String attName = attributes.getLocalName(i);
+							String sValue = attributes.getValue(i);
+							if(attName.equals("class")) {
+								g2ClassName = sValue;
+							}
+						}
+						Class aClass = getConcreteClassForG2Class(g2ClassName);
+						//Data data = (Data)aClass.newInstance();
+					}
+				}
+			};
+			parser.parse(in, handler);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
 		/*
 		Map<String,String> g2Attributes = new HashMap<String,String>();
 		int eqIndex = -1;

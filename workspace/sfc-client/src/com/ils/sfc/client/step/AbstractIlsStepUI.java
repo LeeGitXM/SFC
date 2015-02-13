@@ -3,16 +3,22 @@ package com.ils.sfc.client.step;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
+import javax.xml.stream.XMLOutputFactory;
 
+import jdk.internal.util.xml.XMLStreamWriter;
+
+import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.sfc.client.api.ChartStatusContext;
-import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.ui.AbstractStepUI;
+import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public abstract class AbstractIlsStepUI extends AbstractStepUI {
@@ -54,6 +60,16 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 		IlsEnclosingStepUI.FACTORY,
 	};
 	
+	private static Map<String,ClientStepFactory> factoriesById = new HashMap<String,ClientStepFactory>();
+	static {
+		for(ClientStepFactory factory: clientStepFactories) {
+			factoriesById.put(factory.getId(), factory);
+		}
+	}
+	public static ClientStepFactory getFactory(String id) {
+		return factoriesById.get(id);
+	}
+		
 	protected AbstractIlsStepUI() {
     	label.setText(getText());
     	label.setBorder(new LineBorder(Color.gray, 2));
