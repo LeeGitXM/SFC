@@ -15,5 +15,5 @@ JAR=${LIB}/sfc-migration.jar
 DB=${SFC}/migration/mdb/conversion.db
 mkdir -p $2
 # Use for debugging - ruins output file however.
-# java -cp ${JAR} -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Dlog.level=INFO -Droot.class=APPLICATION com.ils.blt.migration.Migrator ${DB}
+#java -cp ${JAR} -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Dlog.level=INFO -Droot.class=APPLICATION com.ils.blt.migration.Converter ${DB} "$1" "$2" "$3"
 java -cp ${JAR} -Dlog.level=INFO com.ils.sfc.migration.Converter ${DB} "$1" "$2" "$3"

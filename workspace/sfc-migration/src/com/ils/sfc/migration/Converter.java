@@ -5,6 +5,7 @@ package com.ils.sfc.migration;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -16,11 +17,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.ConsoleAppender;
@@ -30,12 +41,15 @@ import org.apache.log4j.PatternLayout;
 import org.sqlite.JDBC;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
 import com.ils.sfc.migration.visitor.CopyWalker;
+import com.ils.sfc.migration.visitor.PathWalker;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 /**
@@ -56,12 +70,14 @@ public class Converter {
 	private final ClassNameMapper classMapper;
 	private final ProcedureMapper procedureMapper;
 	private final PropertyMapper propertyMapper;
+	private final Map<String,String> pathForFile;     // A map of the complete path indexed by file name
 	
  
 	public Converter() {
 		this.classMapper = new ClassNameMapper();
 		this.procedureMapper = new ProcedureMapper();
 		this.propertyMapper = new PropertyMapper();
+		this.pathForFile = new HashMap<>();
 	}
 	
 	/**
@@ -134,24 +150,42 @@ public class Converter {
 			}
 		}
 	}
-
 	/**
-	 * Step 3: Traverse the directory designated as input and replicate its
+	 * Step 3: Traverse the directory designated as input and create a 
+	 *         map of relative path versus file name. We use this later
+	 *         on to resolve paths to encapsulations 
+	 */
+	public void createPathMap(Path indir,String start) {
+		if( !ok ) return;
+		
+		// Create a path walker with the root
+		PathWalker walker = new PathWalker(indir,this.pathForFile,this);
+		try {
+			Path startpath = Paths.get(indir.toString(), start);
+			Files.walkFileTree(startpath, walker);
+		}
+		catch(IOException ioe) {
+			log.infof("%s.createPathMap: Walk failed (%s)",TAG,ioe.getMessage());
+		}
+	}
+	
+	/**
+	 * Step 4: Traverse the directory designated as input and replicate its
 	 *         structure on the output. Convert any .xml files found and
 	 *         place them in the output structure. Each .xml file represents
-	 *         a chart.
+	 *         a chart. 
 	 */
 	public void processInput(Path indir,Path outdir,String start) {
 		if( !ok ) return;
 		
-		// Create the copy walker with the root
+		// Create a copy walker with the root
 		CopyWalker walker = new CopyWalker(indir,outdir,this);
 		try {
 			
 			Path startpath = Paths.get(indir.toString(), start);
 			log.infof("%s.processInput: Walking %s",TAG,startpath.toString());
 			Files.walkFileTree(startpath, walker);
-			log.infof("%s.processInput: walking comlete.",TAG);
+			log.infof("%s.processInput: walking complete.",TAG);
 		}
 		catch(IOException ioe) {
 			log.infof("%s.processInput: Walk failed (%s)",TAG,ioe.getMessage());
@@ -185,7 +219,9 @@ public class Converter {
 			updateChartForG2(chartdoc,g2doc);
 			
 			// Write the chart to the output
-			Files.write(outfile, chartdoc.toString().getBytes(), StandardOpenOption.CREATE_NEW);
+			String xml = docToString(chartdoc);
+			log.infof("%s.processInput: Writing to %s\n%s\n",TAG,outfile.toString(),xml);
+			Files.write(outfile, xml.getBytes(), StandardOpenOption.CREATE_NEW);
 		}
 		catch (ParserConfigurationException pce) {
 			log.errorf("%s.addChart: Error parsing %s (%s)",TAG,infile.toString(),pce.getMessage());
@@ -205,7 +241,47 @@ public class Converter {
 	 * @param g2doc the G2 export
 	 */
 	private void updateChartForG2(Document chart,Document g2doc) {
-
+		NodeList steps = g2doc.getElementsByTagName("block");
+		// A common idiom is a single block in the chart. We need to add begin/end.
+		if(steps.getLength()==1) {
+			Node block = steps.item(0);
+			updateChartForSingletonStep(chart,g2doc,block);
+		}
+	}
+	/**
+	 * The G2 chart has only a single block. Add begin, end steps.
+	 * @param chart the result
+	 * @param g2doc the G2 export
+	 */
+	private void updateChartForSingletonStep(Document chart,Document g2doc,Node block) {
+		Element root = chart.getDocumentElement();   // "sfc"
+		root.appendChild(createBeginStep(chart,UUID.randomUUID(),5,1));
+		root.appendChild(createEndStep(chart,UUID.randomUUID(),5,2));
+	}
+	
+	
+	/**
+	 * Update the contents of an Ignition chart document based on a corresponding G2 version.
+	 * @param chart the result
+	 * @param g2doc the G2 export
+	 */
+	private String docToString(Document doc) {
+		TransformerFactory tf = TransformerFactory.newInstance();
+		String result = "";
+		try {
+			Transformer transformer = tf.newTransformer();
+			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+			StringWriter writer = new StringWriter();
+			transformer.transform(new DOMSource(doc), new StreamResult(writer));
+		    result = writer.getBuffer().toString().replaceAll("\r", "");
+		}
+		catch(TransformerConfigurationException tce) {
+			log.errorf("%s.docToString: Error creating transformer for string conversion (%s)",TAG,tce.getMessage());
+		}
+		catch(TransformerException te) {
+			log.errorf("%s.docToString: Error transforming document (%s)",TAG,te.getMessage());
+		}
+		return result;
 	}
 	
 	/**
@@ -264,7 +340,7 @@ public class Converter {
 	    return camelCase.toString();
 	}
 	
-	private String chartNameFromPath(Path path) {
+	public String chartNameFromPath(Path path) {
 		String name = path.toString();
 		int index = name.lastIndexOf(File.separator);
 		if( index>0) name = name.substring(index+1);
@@ -274,6 +350,24 @@ public class Converter {
 		return name;
 	}
 	
+	// Add a single chart element to the document
+	private Element createBeginStep(Document chart,UUID uuid,int x,int y) {
+		Element step = chart.createElement("step");
+		step.setAttribute("id", uuid.toString());
+		step.setAttribute("location", String.format("%d %d", x,y));
+		step.setAttribute("name", "__begin");
+		step.setAttribute("factory-id", "begin-step");
+		return step;
+	}
+	// Add a single chart element to the document
+	private Element createEndStep(Document chart,UUID uuid,int x,int y) {
+		Element step = chart.createElement("step");
+		step.setAttribute("id", uuid.toString());
+		step.setAttribute("location", String.format("%d %d", x,y));
+		step.setAttribute("name", "__end");
+		step.setAttribute("factory-id", "end-step");
+		return step;
+	}
 	// Add a single chart element to the document
 	private void initializeChart(Document doc) {
 		Element chart = doc.createElement("sfc");
@@ -352,7 +446,9 @@ public class Converter {
 			Path outdir = pathFromString(args[argi++]);
 			log.infof("%s.main: outdir = %s",TAG,outdir.toString());
 			m.prepareOutput(outdir);
-			m.processInput(indir,outdir,args[argi]);
+			String rootFile = args[argi];
+			m.createPathMap(indir,rootFile);
+			m.processInput(indir,outdir,rootFile);
 		}
 		catch(Exception ex) {
 			System.err.println(String.format("%s.main: UncaughtException (%s)",TAG,ex.getMessage()));

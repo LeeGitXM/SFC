@@ -22,8 +22,6 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.ils.sfc.migration.visitor.ProjectWalker;
 import com.inductiveautomation.ignition.common.Base64;
@@ -71,7 +69,7 @@ public class ProjectBuilder {
 		try {
 			log.infof("%s.processInput: Walking %s",TAG,path.toString());
 			Files.walkFileTree(path, walker);
-			log.infof("%s.processInput: walking comlete.",TAG);
+			log.infof("%s.processInput: walking complete.",TAG);
 		}
 		catch(IOException ioe) {
 			log.infof("%s.processInput: Walk failed (%s)",TAG,ioe.getMessage());
@@ -80,7 +78,7 @@ public class ProjectBuilder {
 	/**
 	 * Write the fixed part of the header.
 	 */
-	public void writeHeader(String name) {
+	public void writeHeader() {
 		if( !ok ) return;
 		
 		Date now = new Date();
@@ -96,8 +94,8 @@ public class ProjectBuilder {
 		out.printf("<timestamp>%s</timestamp>\n",df.format(now));
 		out.println("<id>-1</id>");
 		out.println("<name>[global]</name>");
-		out.printf("<title>%s</title>\n",name);
-		out.printf("<description>Automated migration of %s</description>\n",name);
+		out.printf("<title></title>\n");
+		out.printf("<description></description>\n");
 		out.println("<enabled>true</enabled>");
 		out.printf("<lastModified>%d</lastModified>\n",now.getTime());
 		out.println("<lastModifiedBy>auto</lastModifiedBy>");
@@ -128,10 +126,10 @@ public class ProjectBuilder {
 		resid++;
 		// Get the name from the path
 		String name = resourceNameFromPath(filepath);
-		log.infof("%s.addChart: %s (%d)",TAG,name,resid);
+		log.infof("%s.addChart: %s (%d), parent %s",TAG,name,resid,parentuuidString);
 		out.printf("<resource id='%d' name='%s' module='com.inductiveautomation.sfc'",resid,name);
 		out.printf(" modver=''  ver='0' dirty='true' editcount='1' type='sfc-chart-ui-model' ");
-		out.printf(" parent='%s' oemlocked='false' scope='%s' protected='false'>\n",parentuuidString,ApplicationScope.DESIGNER);
+		out.printf(" parent='%s' oemlocked='false' scope='%s' protected='false'>\n",parentuuidString,ApplicationScope.GATEWAY);
 		out.println("<doc></doc>");
 		// The file represents a chart. Zip and Base64 encode it. 
 		try {
@@ -156,16 +154,15 @@ public class ProjectBuilder {
 	 */
 	public void addFolder(String name,String uuidString,String parentuuidString) {
 		resid++;
-		log.infof("%s.addFolder: %s (%d)",TAG,name,resid);
+		log.infof("%s.addFolder: %s (%d) %s, parent %s",TAG,name,resid,uuidString,parentuuidString);
 		out.printf("<resource id='%d' name='%s' module='com.inductiveautomation.sfc'",resid,name);
 		out.printf(" modver=''  ver='0' dirty='true' editcount='1' type='%s' ",ProjectResource.FOLDER_RESOURCE_TYPE);
-		out.printf(" parent='%s' oemlocked='false' scope='%s' protected='false'>\n",parentuuidString,ApplicationScope.DESIGNER);
+		out.printf(" parent='%s' oemlocked='false' scope='%s' protected='false'>\n",parentuuidString,ApplicationScope.GATEWAY);
 		out.println("<doc></doc>");
 		// We construct a project resource so that we can get the serialized value that we need to store.
 		// The bytes stored are the UUID as a Base64-encoded byte array.
 		UUID uuid = UUID.fromString(uuidString);
 		byte[] bytes = asByteArray(uuid);
-		// log.infof("UUID= %s",Base64.encodeBytes(bytes));
 		out.printf("<bytes><![CDATA[%s]]>",Base64.encodeBytes(bytes));
 		out.println("</bytes></resource>");
 	}
@@ -180,18 +177,18 @@ public class ProjectBuilder {
 		}
 	}
 	// @see: http://stackoverflow.com/questions/772802/storing-uuid-as-base64-string
+	// Original gives us the bytes in reverse order
 	private byte[] asByteArray(UUID uuid) {
     	long msb = uuid.getMostSignificantBits();
     	long lsb = uuid.getLeastSignificantBits();
     	byte[] buffer = new byte[16];
 
     	for (int i = 0; i < 8; i++) {
-    		buffer[i] = (byte) (msb >>> 8 * (7 - i));
+    		buffer[15-i] = (byte) (msb >>> 8 * (7 - i));
     	}
     	for (int i = 8; i < 16; i++) {
-    		buffer[i] = (byte) (lsb >>> 8 * (7 - i));
+    		buffer[15-i] = (byte) (lsb >>> 8 * (7 - i));
     	}
-
     	return buffer;
     }
 	
@@ -265,11 +262,7 @@ public class ProjectBuilder {
 			Path indir = pathFromString(args[argi++]);
 			Path outfile = pathFromString(args[argi++]);
 			m.prepareOutput(outfile);
-			String name = outfile.getFileName().toString();
-			// Strip .proj
-			int pos = name.indexOf(".");
-			if( pos>0 ) name = name.substring(pos);
-			m.writeHeader(name);
+			m.writeHeader();
 			m.processInput(indir);
 			m.writeTrailer();
 			m.shutdown();

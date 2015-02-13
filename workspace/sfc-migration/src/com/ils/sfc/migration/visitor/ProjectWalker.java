@@ -26,7 +26,7 @@ public class ProjectWalker implements FileVisitor<Path>  {
 	private final LoggerEx log;
 	private final Path indir;
 	private final ProjectBuilder delegate;   // Delegate for migrating individual files
-	private Path currentDirectory = null;              // Current parent directory
+	private String currentDirectory = null;  // Current parent directory as a string
 	private final Map<String,String> uuidForPath;
 
 	 /**
@@ -65,7 +65,7 @@ public class ProjectWalker implements FileVisitor<Path>  {
 			parentId = uuidForPath.get(parent);
 		}
 		if( parentId!=null) {
-			currentDirectory = dir;
+			currentDirectory = dirString;
 			String uuid = UUID.randomUUID().toString();
 			uuidForPath.put(dirString, uuid);
 			log.infof("%s.previsitDirectory: %s = %s.",TAG,dirString,uuid);
@@ -82,6 +82,7 @@ public class ProjectWalker implements FileVisitor<Path>  {
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 		// Look up the UUID of the parent directory
 		String parentUUID = uuidForPath.get(currentDirectory);
+		log.infof("%s.visitFile: parent for %s = %s.",TAG,currentDirectory,parentUUID);
 		delegate.addChart(file,parentUUID);
         return FileVisitResult.CONTINUE;
 	}
@@ -91,7 +92,7 @@ public class ProjectWalker implements FileVisitor<Path>  {
 
 	@Override
 	public FileVisitResult visitFileFailed(Path file, IOException ioe) throws IOException {
-		System.err.format("Error converting %s: %s", file, ioe.getMessage());
+		log.errorf("%s.visitFileFailed: Error converting %s: %s",TAG, file, ioe.getMessage());
 		return FileVisitResult.CONTINUE;
 	}
 

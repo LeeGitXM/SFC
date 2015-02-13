@@ -13,70 +13,51 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
+import java.util.Map;
 import java.util.Set;
 
 import com.ils.sfc.migration.Converter;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 /**
- * Walk the input directory writing converted files into the second.
+ * Before we can link encapsulations via path, we need to create a
+ * complete path map. Traverse the input tree, convert the names in the same
+ * way as the final converter, then make a lookup of path, versus chaart name.
  */
-public class CopyWalker implements FileVisitor<Path>  {
-	private final static String TAG = "CopyWalker";
-	private final String inRoot;    // Original root directory (munged)
-	private final Path outRoot;
-	private final Converter delegate;   // Delegate for migrating individual files
+public class PathWalker implements FileVisitor<Path>  {
+	private final static String TAG = "PathWalker";
+	private final String inRoot;        // Original root directory (munged)
+	private final Converter delegate;   // Delegate for name conversion
 	private final LoggerEx log;
-
+	private final Map<String,String> pathMap;
+	private String currentPartialPath = "";    // Current partial path
 	 /**
 	  * 
 	  * @param in
 	  * @param out
 	  */
-	public CopyWalker(Path g2Root,Path igRoot, Converter migrator) {
+	public PathWalker(Path g2Root,Map<String,String> map, Converter migrator) {
 		this.delegate = migrator;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.inRoot = delegate.toCamelCase(g2Root.toString());
-		this.outRoot = igRoot;
+		this.pathMap = map;
 	}
 
 	/** 
-	 * Create any necessary output subdirectories, if needed
+	 * With each directory visited, record the current partial path for later
+	 * use as the location of a file. 
 	 */
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-		log.debugf("%s.preVisitDirectory: visiting %s",TAG,dir.toString());
-		String relative = relativize(inRoot,delegate.toCamelCase(dir.toString()));
-		// Before visiting entries in a directory we create the output directory
-		Path newdir = Paths.get(outRoot.toString(),relative);
-		//log.infof("%s.preVisitDirectory: resolved/creating %s",TAG,newdir.toString());
-		Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwxr-xr-x");
-		FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
-		try {
-			if( !Files.exists(newdir)) {
-				Files.createDirectory(newdir,attr);
-			}
-		}
-		catch(IOException ioe) {
-			log.errorf("%s.previsitDirectory: Unable to create: %s",TAG, newdir.toString());
-			return FileVisitResult.SKIP_SUBTREE;
-		}
+		//log.infof("%s.preVisitDirectory: visiting %s",TAG,dir.toString());
+		currentPartialPath = relativize(inRoot,delegate.toCamelCase(dir.toString()));
 		return FileVisitResult.CONTINUE;
 	}
 	
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-		String relative = relativize(inRoot,delegate.toCamelCase(file.toString()));
-		Path newfile = Paths.get(outRoot.toString(),relative);
-		// Make sure that the new file does not exist ... 
-		// if so try append alpha until we get a free name.
-		int version = 0;
-		Path target = newfile;
-		while(Files.exists(target)) {
-			target = Paths.get(String.format("%s%c",newfile.toString(),'a'+version));
-		}
-		log.infof("%s.visitFile: %s -> %s",TAG,file.toString(),target.toString());
-		delegate.convertFile(file, target);
+		String chartName = delegate.chartNameFromPath(file);
+		pathMap.put(chartName, currentPartialPath);
 		return FileVisitResult.CONTINUE;
 	}
 

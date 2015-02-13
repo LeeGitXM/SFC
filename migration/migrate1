@@ -3,7 +3,6 @@
 #
 SFC=~/Development/ils/src/sfc
 START="Test Diagram"
-#START="Test-Unit-Procedure-2"
 INDIR="$SFC/xml/g2"
 OUTDIR=$SFC/xml/ignition
 mkdir -p $OUTDIR
