@@ -160,11 +160,6 @@ public class BrowserPane extends JPanel implements RecipeEditorController.Recipe
 		validate();	
 	}
 	
-	/** Set the properties on the currently selected recipe data object--typically follows editing. */
-	public void setSelectedProperties(BasicPropertySet propertyValues) {
-		selectedNode.getRecipeData().setProperties(propertyValues);
-	}
-
 	/** Add a new object under the selected node, and select the node. */
 	public void add(Data newObject) {
 		((Group)selectedNode.getRecipeData()).getChildren().add(newObject);

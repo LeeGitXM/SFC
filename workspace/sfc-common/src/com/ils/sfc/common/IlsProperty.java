@@ -103,7 +103,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> TYPE = new IlsProperty<String>(IlsSfcNames.TYPE, String.class, "");
     public static final IlsProperty<String> UNITS = new IlsProperty<String>(IlsSfcNames.UNITS, String.class, "");
     public static final IlsProperty<Double> UPDATE_FREQUENCY = new IlsProperty<Double>(IlsSfcNames.UPDATE_FREQUENCY, Double.class, 10.);
-    public static final IlsProperty<Double> VALUE = new IlsProperty<Double>(IlsSfcNames.VALUE, Double.class, 0.);
+    public static final IlsProperty<Object> VALUE = new IlsProperty<Object>(IlsSfcNames.VALUE, Object.class, null);
     public static final IlsProperty<String> STRING_VALUE = new IlsProperty<String>(IlsSfcNames.VALUE, String.class, "");
     public static final IlsProperty<Boolean> VIEW_FILE = new IlsProperty<Boolean>(IlsSfcNames.VIEW_FILE, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<String> WINDOW = new IlsProperty<String>(IlsSfcNames.WINDOW, String.class, "");
