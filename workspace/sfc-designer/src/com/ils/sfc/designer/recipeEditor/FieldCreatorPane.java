@@ -23,6 +23,7 @@ import com.ils.sfc.common.recipe.objects.Structure;
 import com.ils.sfc.designer.ButtonPanel;
 import com.ils.sfc.designer.ComboWrapper;
 import com.ils.sfc.designer.DesignerUtil;
+import com.ils.sfc.designer.UnitChooserPanel;
 
 @SuppressWarnings("serial")
 public class FieldCreatorPane extends JPanel implements RecipeEditorController.RecipeEditorPane {
@@ -30,8 +31,7 @@ public class FieldCreatorPane extends JPanel implements RecipeEditorController.R
 	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false, RecipeEditorController.background);
 	private JTextField nameField = new JTextField();
 	private JComboBox<ComboWrapper> typesCombo = new JComboBox<ComboWrapper>();
-	private JComboBox<ComboWrapper> unitTypesCombo = new JComboBox<ComboWrapper>();
-	private JComboBox<ComboWrapper> unitsCombo = new JComboBox<ComboWrapper>();
+	private UnitChooserPanel unitChooserPanel = new UnitChooserPanel();
 	private Structure recipeData;
 	
 	public FieldCreatorPane(RecipeEditorController controller) {
@@ -64,15 +64,8 @@ public class FieldCreatorPane extends JPanel implements RecipeEditorController.R
 		DesignerUtil.setConstraints(con, WEST, BOTH, 1, 1, 1, 1, new Insets(2, 5, 2, 0), 0, 0);
 		formPanel.add(typesCombo, con);
 
-		DesignerUtil.setConstraints(con, EAST, NONE, 1, 1, 0, 2, new Insets(2, 0, 2, 5), 0, 0);
-		formPanel.add(new JLabel("Unit Type:", SwingConstants.RIGHT), con);
-		DesignerUtil.setConstraints(con, WEST, BOTH, 1, 1, 1, 2, new Insets(2, 5, 2, 0), 0, 0);
-		formPanel.add(unitTypesCombo, con);
-
-		DesignerUtil.setConstraints(con, EAST, NONE, 1, 1, 0, 3, new Insets(2, 0, 2, 5), 0, 0);
-		formPanel.add(new JLabel("Units:", SwingConstants.RIGHT), con);
-		DesignerUtil.setConstraints(con, WEST, BOTH, 1, 1, 1, 3, new Insets(2, 5, 2, 0), 0, 0);
-		formPanel.add(unitsCombo, con);
+		DesignerUtil.setConstraints(con, EAST, NONE, 2, 2, 0, 2, new Insets(2, 0, 2, 5), 0, 0);
+		formPanel.add(unitChooserPanel, con);
 		
 		typesCombo.addItem(new ComboWrapper("String", String.class));
 		typesCombo.addItem(new ComboWrapper("Double", Double.class));

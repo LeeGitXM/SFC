@@ -38,6 +38,7 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.json.JSONException;
 import org.sqlite.JDBC;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -45,6 +46,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
@@ -386,6 +388,19 @@ public class Converter {
 		doc.appendChild(chart);
 	}
 	
+	/** return an xml element for associated data, containing the recipe data. */
+	private String getRecipeDataElement(java.io.InputStream xmlIn) throws JSONException {
+		RecipeDataTranslator rdTranslator = new RecipeDataTranslator(xmlIn);
+		String adElement = rdTranslator.translate();
+		// Some debug stuff for errors--might want to log it...
+		if(adElement == null) {
+			for(String errMsg: rdTranslator.getErrors()) {
+				System.out.println(errMsg);
+			}
+		}
+		return adElement;
+	}
+	
 	/**
 	 * Usage: Converter [-f] <databasepath> <indir> <outdir>
 	 */
@@ -462,4 +477,5 @@ public class Converter {
 		log.infof("%s.main: COMPLETE",TAG);
 	}
 
+	
 }

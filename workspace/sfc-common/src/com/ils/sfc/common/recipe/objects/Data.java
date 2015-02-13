@@ -1,21 +1,12 @@
 package com.ils.sfc.common.recipe.objects;
 
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xml.sax.SAXException;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.DefaultHandler;
 
 import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.IlsSfcNames;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
@@ -55,31 +46,7 @@ public abstract class Data {
 	protected BasicPropertySet properties = new BasicPropertySet();
 	protected String s88Level;
 	
-	private static Map<String, Class<?>> concreteClassesByG2Name = new HashMap<String, Class<?>>();
-	static {
-		concreteClassesByG2Name.put("S88-RECIPE-DATA-GROUP", Group.class);
-		concreteClassesByG2Name.put("S88-RECIPE-QUANTITY-ARRAY-DATA", QuantityArray.class);
-		concreteClassesByG2Name.put("S88-RECIPE-VALUE-ARRAY-DATA", ValueArray.class);
-		concreteClassesByG2Name.put("S88-RECIPE-INPUT-DATA", Input.class);
-		concreteClassesByG2Name.put("S88-RECIPE-OUTPUT-DATA", Output.class);
-		concreteClassesByG2Name.put("S88-RECIPE-OUTPUT-RAMP-DATA", OutputRamp.class);
-		concreteClassesByG2Name.put("S88-RECIPE-MATRIX-DATA", Matrix.class);
-		concreteClassesByG2Name.put("S88-RECIPE-QUANTITY-LIST-DATA", QuantityList.class);
-		concreteClassesByG2Name.put("S88-RECIPE-SQC-DATA", SQC.class);
-		concreteClassesByG2Name.put("S88-RECIPE-VALUE-DATA", Value.class);
-		concreteClassesByG2Name.put("S88-RECIPE-TEXT-LIST-DATA", TextList.class);
-		concreteClassesByG2Name.put("S88-RECIPE-SEQUENCE-DATA", Sequence.class);
-		concreteClassesByG2Name.put("S88-RECIPE-STRUCTURE-DATA", Structure.class);
-	}
 
-	public static Collection<Class<?>> getConcreteClasses() {
-		return concreteClassesByG2Name.values();
-	}
-
-	public static Class<?> getConcreteClassForG2Class(String g2ClassName) {
-		return concreteClassesByG2Name.get(g2ClassName);
-	}
-	
 	public Data() {
 		addProperty(IlsProperty.CLASS);
 		addProperty(IlsProperty.KEY);
@@ -123,54 +90,36 @@ public abstract class Data {
 	@SuppressWarnings("unchecked")
 	protected void addProperty(IlsProperty property) {
 		properties.set(property, property.getDefaultValue());
-	}
-	
-	/** Translate from G2 export to ignition AdditionalData property. Example of G2 XML element:
-	 * <recipe key="bar" label="bar" description="A barby piece of recipe data" help="More useless help" advice="More useless advice" units="DEGC" type="float" category="Simple Constant" val="37.567" high-limit="" low-limit=""  />
-	 */
-	@SuppressWarnings("deprecation")
-	public static JSONObject fromG2(InputStream in) {		
-		try {
-			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-			DefaultHandler handler = new DefaultHandler() {
-				@Override
-				public void startElement(String uri, String localName, String qName, Attributes attributes) {
-					if(localName.equals("recipe")) {
-						BasicPropertySet properties = new BasicPropertySet();
-						int numAttributes = attributes.getLength();
-						String g2ClassName = null;
-						for(int i = 0; i < numAttributes; i++) {
-							String attName = attributes.getLocalName(i);
-							String sValue = attributes.getValue(i);
-							if(attName.equals("class")) {
-								g2ClassName = sValue;
-							}
-						}
-						Class aClass = getConcreteClassForG2Class(g2ClassName);
-						//Data data = (Data)aClass.newInstance();
-					}
-				}
-			};
-			parser.parse(in, handler);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-		/*
-		Map<String,String> g2Attributes = new HashMap<String,String>();
-		int eqIndex = -1;
-		while((eqIndex = g2Xml.indexOf('"', eqIndex)) != -1) {
-			int keyIndex = eqIndex - 1;
-			while(!Character.isSpace(g2Xml.charAt(keyIndex))) keyIndex--;
-			String key = g2Xml.substring(keyIndex + 1, eqIndex);
-			int valueIndex = eqIndex + 2;
-			while(g2Xml.charAt(keyIndex) != '"') ++keyIndex;
-			String value = g2Xml.substring(eqIndex + 2, valueIndex);
-			g2Attributes.put(key, value);
+	}	
+
+	/** Get the value object associated with the given property name, or null if not found. */
+	PropertyValue<?> findPropertyValue(String propertyName) {
+		for(PropertyValue<?> pvalue: properties) {
+			if(pvalue.getProperty().getName().equals(propertyName)) {
+				return pvalue;
+			}
 		}
-		*/
 		return null;
 	}
-		
+	
+	/** Set a property by name. Will throw IllegalArgumentException if the property is not present,
+	 *  unless this is a Structure in which case it will be created. */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public void setProperty(String name, Object newValue) {
+		// TODO: should check that value type is compatible with existing property
+		PropertyValue<?> pvalue = findPropertyValue(name);
+		if(pvalue == null) {
+			if(this instanceof Structure) {
+				IlsProperty newProperty = new IlsProperty(name, newValue.getClass(), null);
+				properties.set(new PropertyValue(newProperty, newValue));
+			}
+			else {
+				throw new IllegalArgumentException("no property named " + name);
+			}
+		}
+		properties.setDirect(pvalue.getProperty(), newValue);
+	}
+	
 	/** Convert a recipe data hierarchy to a JSON Object */
 	public JSONObject toJSON() throws JSONException {
 		JSONObject jsonObj = new JSONObject();
@@ -223,22 +172,4 @@ public abstract class Data {
 		}
 	}
 
-	public static void main(String[] args) {
-		try {
-			Group group = new Group();
-			Input input = new Input();
-			group.getChildren().add(input);
-			System.out.println("===================IN==================");
-			group.print(0);
-			JSONObject outObj = group.toJSON();
-			String jsonString = outObj.toString();
-			JSONObject inObj = new JSONObject(jsonString);
-			Data data = Data.fromJson(inObj);
-			System.out.println("===================OUT==================");
-			data.print(0);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
 }

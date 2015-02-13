@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import com.ils.sfc.common.recipe.objects.Data;
+import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.designer.ButtonPanel;
 import com.ils.sfc.designer.ComboWrapper;
 import com.ils.sfc.designer.DesignerUtil;
@@ -68,7 +69,7 @@ public class ObjectCreatorPane extends JPanel implements RecipeEditorController.
 }
 
 	private void initTypes() {
-		for(Class<?> type: Data.getConcreteClasses()) {
+		for(Class<?> type: RecipeDataTranslator.getConcreteClasses()) {
 			typesCombo.addItem(new ComboWrapper(type.getSimpleName(), type));
 		}
 		typesCombo.setSelectedIndex(0);
