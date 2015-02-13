@@ -80,8 +80,8 @@ public class BrowserPane extends JPanel implements RecipeEditorController.Recipe
 	private void createTree() {		
 		rootNode = new RecipeDataTreeNode(controller.getRecipeData());
 		selectedNode = rootNode;
-		treeModel = new DefaultTreeModel(rootNode);
 		rootNode.removeAllChildren();
+		treeModel = new DefaultTreeModel(rootNode);
 		addLayer(rootNode);
 		tree = new JTree(treeModel);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -135,7 +135,8 @@ public class BrowserPane extends JPanel implements RecipeEditorController.Recipe
 	}
 
 	private void doEdit() {
-		controller.getEditor().getPropertyEditor().setPropertyValues(selectedNode.getRecipeData().getProperties(), false);
+		//controller.getEditor().getPropertyEditor().setPropertyValues(selectedNode.getRecipeData().getProperties(), false);
+		controller.getEditor().setRecipeData(selectedNode.getRecipeData());
 		controller.getEditor().activate();
 	}
 
@@ -159,11 +160,6 @@ public class BrowserPane extends JPanel implements RecipeEditorController.Recipe
 		validate();	
 	}
 	
-	/** Set the properties on the currently selected recipe data object--typically follows editing. */
-	public void setSelectedProperties(BasicPropertySet propertyValues) {
-		selectedNode.getRecipeData().setProperties(propertyValues);
-	}
-
 	/** Add a new object under the selected node, and select the node. */
 	public void add(Data newObject) {
 		((Group)selectedNode.getRecipeData()).getChildren().add(newObject);

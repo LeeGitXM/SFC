@@ -38,6 +38,7 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.json.JSONException;
 import org.sqlite.JDBC;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -273,9 +274,9 @@ public class Converter {
 	 */
 	private void updateChartForSingletonStep(Document chart,Element g2block) {
 		Element root = chart.getDocumentElement();   // "sfc"
-		root.appendChild(createBeginStep(chart,UUID.randomUUID(),5,1));
-		root.appendChild(stepTranslator.translate(chart,g2block,5,2));
-		root.appendChild(createEndStep(chart,UUID.randomUUID(),5,3));
+		root.appendChild(createBeginStep(chart,UUID.randomUUID(),5,2));
+		root.appendChild(stepTranslator.translate(chart,g2block,5,3));
+		root.appendChild(createEndStep(chart,UUID.randomUUID(),5,4));
 	}
 	
 	
@@ -416,6 +417,23 @@ public class Converter {
 		}
 		return blockMap;
 	}
+
+	/** return an xml element for associated data, containing the recipe data. */
+	private String getRecipeDataElement(java.io.InputStream xmlIn) throws JSONException {
+		/*
+		RecipeDataTranslator rdTranslator = new RecipeDataTranslator(xmlIn);
+		String adElement = rdTranslator.translate();
+		// Some debug stuff for errors--might want to log it...
+		if(adElement == null) {
+			for(String errMsg: rdTranslator.getErrors()) {
+				System.out.println(errMsg);
+			}
+		}
+		return adElement;
+		*/
+		return null;
+	}
+	
 	/**
 	 * Usage: Converter [-f] <databasepath> <indir> <outdir>
 	 */
@@ -492,4 +510,5 @@ public class Converter {
 		log.infof("%s.main: COMPLETE",TAG);
 	}
 
+	
 }

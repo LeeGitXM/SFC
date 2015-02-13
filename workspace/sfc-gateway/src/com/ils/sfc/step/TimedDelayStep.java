@@ -15,10 +15,8 @@ public class TimedDelayStep extends IlsAbstractChartStep implements TimedDelaySt
 
 	@Override
 	public void activateStep() {
-		System.out.println("java: b4 delay");
 		super.activateStep();
 		exec(PythonCall.TIMED_DELAY);	
-		System.out.println("java: after delay");
 	}
 
 }
