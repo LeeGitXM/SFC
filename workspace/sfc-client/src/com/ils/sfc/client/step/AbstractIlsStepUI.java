@@ -11,11 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
-import javax.xml.stream.XMLOutputFactory;
 
-import jdk.internal.util.xml.XMLStreamWriter;
-
-import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.sfc.client.api.ChartStatusContext;
 import com.inductiveautomation.sfc.client.ui.AbstractStepUI;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;

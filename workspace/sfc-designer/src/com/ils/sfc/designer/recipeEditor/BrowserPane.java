@@ -135,7 +135,8 @@ public class BrowserPane extends JPanel implements RecipeEditorController.Recipe
 	}
 
 	private void doEdit() {
-		controller.getEditor().getPropertyEditor().setPropertyValues(selectedNode.getRecipeData().getProperties(), false);
+		//controller.getEditor().getPropertyEditor().setPropertyValues(selectedNode.getRecipeData().getProperties(), false);
+		controller.getEditor().setRecipeData(selectedNode.getRecipeData());
 		controller.getEditor().activate();
 	}
 
