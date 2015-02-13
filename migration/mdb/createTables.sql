@@ -1,7 +1,8 @@
 -- Map a G2 block class to an Ignition step class
 CREATE TABLE ClassMap(
     G2Class text PRIMARY KEY ,
-    FactoryId text NOT NULL
+    FactoryId text NOT NULL,
+	Encloses text DEFAULT 'false'
 );
 
 -- Map properties of G2 blocks to properties of

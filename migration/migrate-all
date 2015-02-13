@@ -12,6 +12,6 @@ rm -rf $OUTDIR/*
 cd $INDIR
 for dir in *
 do
-	echo "Processing $fil..."
-    $APP $INDIR/$dir $OUTDIR/$dir
+	echo "Processing $dir ..."
+    $APP "$INDIR" "$OUTDIR" "$dir"
 done

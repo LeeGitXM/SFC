@@ -1,5 +1,5 @@
 /**
- *   (c) 2014  ILS Automation. All rights reserved.
+ *   (c) 2015  ILS Automation. All rights reserved.
  */
 package com.ils.sfc.migration;
 
@@ -19,7 +19,6 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-import org.json.XML;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -28,6 +27,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.inductiveautomation.ignition.common.Base64;
+import com.inductiveautomation.ignition.common.model.ApplicationScope;
+import com.inductiveautomation.ignition.common.project.ProjectResource;
 
 /**
  * Given an Ignition project file, scan for CDATA elements. 
@@ -55,7 +56,7 @@ public class ProjectDebugger {
 			doc.getDocumentElement().normalize();
 		} 
 		catch (ParserConfigurationException pce) {
-			System.out.println("ProjectBuilder.readXML: ParserConfigurationException ("+pce.getLocalizedMessage()+")");
+			System.out.println(TAG+".readXML: ParserConfigurationException ("+pce.getLocalizedMessage()+")");
 			ok = false;
 		} 
 		catch (SAXException saxe) {
@@ -107,11 +108,13 @@ public class ProjectDebugger {
 									}
 									System.out.println("\n" + xml.toString());
 								}
+								// If we get an exception, then try without the Gzip
 								catch(IOException ioe) {
-									System.out.println("ProjectBuilder.processInput: IOException ("+ioe.getLocalizedMessage()+")");
+									ProjectResource pr = new ProjectResource(42L,"com.inductiveautomation.sfc","FolderName",
+											ProjectResource.FOLDER_RESOURCE_TYPE,ApplicationScope.DESIGNER,bytes);
+									System.out.println("\n" + pr.getDataAsUUID().toString());
 								}
 							}
-							
 						}
 			        }
 			    }

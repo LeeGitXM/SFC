@@ -1,3 +1,0 @@
- Comments regarding G2 xml exports ..
-   - charts have no attributes. Get name from file name
-   - replicate file system directory hierarchy in Ignition.

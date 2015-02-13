@@ -8,7 +8,6 @@ then
 	exit 2
 fi
 REPO=~/Development/ils/src
-cd $REPO/sfc
 SFC=`pwd`
 LIB=$REPO/external/lib
 JAR=${LIB}/sfc-migration.jar
