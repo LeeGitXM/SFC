@@ -209,8 +209,6 @@ public class Converter {
 	 * @param outfile file location in which to write the output. 
 	 */
 	public void convertFile(Path infile,Path outfile) {
-		// Get the name from the path
-		String name = chartNameFromPath(outfile);
 		// First create the G2 chart as an XML document.
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = null;
@@ -275,11 +273,10 @@ public class Converter {
 	 */
 	private void updateChartForSingletonStep(Document chart,Element g2block) {
 		Element root = chart.getDocumentElement();   // "sfc"
-		root.appendChild(createBeginStep(chart,UUID.randomUUID(),5,2));
-		root.appendChild(stepTranslator.translate(chart,g2block,5,3));
-		root.appendChild(createEndStep(chart,UUID.randomUUID(),5,4));
+		root.appendChild(createBeginStep(chart,UUID.randomUUID(),3,2));
+		root.appendChild(stepTranslator.translate(chart,g2block,3,3));
+		root.appendChild(createEndStep(chart,UUID.randomUUID(),3,4));
 	}
-	
 	
 	/**
 	 * Update the contents of an Ignition chart document based on a corresponding G2 version.
@@ -413,7 +410,7 @@ public class Converter {
 			Element block = (Element)blocks.item(index);
 			Element datum = (Element)data.item(index);
 			String uuid = block.getAttribute("uuid");
-			if( uuid!=null) blockMap.put(uuid, datum);
+			if( uuid.length()>0) blockMap.put(uuid, datum);
 			index++;
 		}
 		return blockMap;

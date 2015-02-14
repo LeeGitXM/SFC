@@ -11,6 +11,9 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -81,6 +84,18 @@ public class RecipeDataTranslator {
 	public String translate() throws JSONException {	
 		JSONObject jobj = G2ToJSON();
 		return jobj != null ? "<associated-data>" + jobj.toString() + "</associated-data>" : null;
+	}
+	
+	/** 
+	 * Create JSONObject representing RecipeData and add as an "associated-data" 
+	 * element to a chart step. 
+	 */
+	public Element createAssociatedDataElement(Document chart) throws JSONException {	
+		JSONObject jobj = G2ToJSON();
+		Element assocdata = chart.createElement("associated-data");
+		Node textNode = chart.createTextNode(jobj.toString());
+		assocdata.appendChild(textNode);
+		return assocdata;
 	}
 	
 	/** Translate from G2 export to JSONObject */

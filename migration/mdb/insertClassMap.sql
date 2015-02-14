@@ -37,3 +37,4 @@ insert into ClassMap values ('S88-WRITE-FILE-TASK','com.ils.writeFileStep','fals
 insert into ClassMap values ('S88-WRITE-OUTPUTS-TASK','com.ils.writeOutputsStep','false');
 insert into ClassMap values ('S88-YES-NO-TASK','com.ils.yesNoStep','false');
 insert into ClassMap values ('S88-UNIT-PROCEDURE','enclosing-step','true');
+insert into ClassMap values ('S88-OPERATION-PROCEDURE','enclosing-step','true');

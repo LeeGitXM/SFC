@@ -19,16 +19,17 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
  * x-y placements.
  */
 public class StepLayoutManager {
-	private final static String TAG = "StepTranslator";
+	private final static String TAG = "StepLayoutManager";
 	private static int UNSET = -8888;
 	private  final LoggerEx log = LogUtil.getLogger(StepLayoutManager.class.getPackage().getName());
 	private final Map<String,Element> blockMap;             // block by UUID
 	private final Map<String,ConnectionHub> connectionMap;  // Incoming/outgoing connections by UUID
 	private final Map<String,GridPoint> gridMap;            // Grid by step UUID
+	// Record the chart limits so that we can return a canvas size, if asked.
 	private int minx = 0;
 	private int miny = 0;
-	private int minx = 0;
-	private int minx = 0;
+	private int maxx = 0;
+	private int maxy = 0;
 	private double zoom = 1.0;
 	/**
 	 * Constructor: Immediately analyze the supplied chart.
@@ -51,32 +52,31 @@ public class StepLayoutManager {
 		// First-time through create default entries in the grid map
 		while( index < blocklist.getLength()) {
 			Element block = (Element)blocklist.item(index);
-			String uuid = block.getAttribute("uuid");
-			if( uuid!=null ) {
-				blockMap.put(uuid, block);
-				gridMap.put(uuid,new GridPoint(UNSET,UNSET));
-				String connectionString = block.getAttribute("connectedTo");
-				if( connectionString!=null ) {
-					ConnectionHub hub = connectionMap.get(uuid);
-					if( hub==null) {
-						hub = new ConnectionHub();
-						connectionMap.put(uuid,hub);
+			String uuid = StepTranslator.canonicalForm(block.getAttribute("uuid"));
+			blockMap.put(uuid, block);
+			gridMap.put(uuid,new GridPoint(UNSET,UNSET));
+			String connectionString = block.getAttribute("connectedTo");
+			if( connectionString!=null ) {
+				ConnectionHub hub = connectionMap.get(uuid);
+				if( hub==null) {
+					hub = new ConnectionHub();
+					connectionMap.put(uuid,hub);
+				}
+				String[] connections = connectionString.split(",");
+				int jndex = 0;
+				while( jndex < connections.length ) {
+					String cxn = StepTranslator.canonicalForm(connections[jndex]);
+					hub.addConnectionTo(cxn);
+					ConnectionHub destinationHub = connectionMap.get(cxn);
+					if( destinationHub==null) {
+						destinationHub = new ConnectionHub();
+						connectionMap.put(cxn,destinationHub);
 					}
-					String[] connections = connectionString.split(",");
-					int jndex = 0;
-					while( jndex < connections.length ) {
-						String cxn = connections[jndex];
-						hub.addConnectionTo(cxn);
-						ConnectionHub destinationHub = connectionMap.get(cxn);
-						if( destinationHub==null) {
-							destinationHub = new ConnectionHub();
-							connectionMap.put(cxn,destinationHub);
-						}
-						destinationHub.addConnectionFrom(uuid);
-						jndex++;
-					}
+					destinationHub.addConnectionFrom(uuid);
+					jndex++;
 				}
 			}
+
 			index++;
 		}
 		// Find the begin block. There can be only one.
@@ -84,13 +84,11 @@ public class StepLayoutManager {
 		index = 0;
 		while( index < blocklist.getLength()) {
 			Element block = (Element)blocklist.item(index);
-			String uuid = block.getAttribute("uuid");
-			if( uuid!=null ) {
-				ConnectionHub hub = connectionMap.get(uuid);
-				if( hub.getConnectionsFrom().isEmpty()) {
-					beginuuid = uuid;
-					break;
-				}
+			String uuid = StepTranslator.canonicalForm(block.getAttribute("uuid"));
+			ConnectionHub hub = connectionMap.get(uuid);
+			if( hub.getConnectionsFrom().isEmpty()) {
+				beginuuid = uuid;
+				break;
 			}
 			index++;
 		}
@@ -137,27 +135,38 @@ public class StepLayoutManager {
 	}
 	
 	// The original layout may create indices that are out-of-range.
-	// Adjust
+	// Place the diagram in the upper left corner of the space. 
 	private void center() {
 		// First iteration gets the bounds
-		int minx = 0;
-		int minx = 0;
+		minx = 10000;
+		miny = 10000;
+		maxx = -10000;
+		maxy = -10000;
 		for( GridPoint gp:gridMap.values()) {
-			if( gp.x>max ) max = gp.x;
-			if( gp.y>max ) max = gp.y;
-		}
-		// Make adjustments the second time through
-		int max = 10;
-		for( GridPoint gp:gridMap.values()) {
-			if( gp.x>max ) max = gp.x;
-			if( gp.y>max ) max = gp.y;
+			if( gp.x>maxx ) maxx = gp.x;
+			if( gp.y>maxy ) maxy = gp.y;
+			if( gp.x<minx ) minx = gp.x;
+			if( gp.y<miny ) miny = gp.y;
 		}
 		
+		// Make adjustments the second time through
+		int deltax = minx - 1;      // Normalize to left edge at 1
+		int deltay = miny - 1;      // Normalize to top edge  at 1
+		minx = minx - deltax;
+		maxx = maxx - deltax;
+		miny = miny - deltay;
+		maxy = maxy - deltay;
+		for( GridPoint gp:gridMap.values()) {
+			gp.x = gp.x - deltax;
+			gp.y = gp.y - deltay;
+		}
 		
 		// As a bonus, we create the zoom factor.
 		// The standard grid is 10x10. Factor our layout to the same physical size.
 		// Consider both dimensions equally.
-		this.zoom =  10./(double)max;
+		int max = maxx;
+		if( maxy>max) max = maxy;
+		if( max>10) this.zoom =  10./(double)max;
 	}
 	
 	private class ConnectionHub {

@@ -48,7 +48,7 @@ public class ProjectWalker implements FileVisitor<Path>  {
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
 		// The root folder has ROOT as its parent
-		log.infof("%s.previsitDirectory: %s ...",TAG,dir.toString());
+		log.tracef("%s.previsitDirectory: %s ...",TAG,dir.toString());
 		String dirname = "";
 		String dirString = dir.toString();
 		int index = dirString.lastIndexOf(File.separator);
@@ -68,7 +68,7 @@ public class ProjectWalker implements FileVisitor<Path>  {
 			currentDirectory = dirString;
 			String uuid = UUID.randomUUID().toString();
 			uuidForPath.put(dirString, uuid);
-			log.infof("%s.previsitDirectory: %s = %s.",TAG,dirString,uuid);
+			log.tracef("%s.previsitDirectory: %s = %s.",TAG,dirString,uuid);
 			delegate.addFolder(dirname,uuid,parentId);
 		}
 		else {
@@ -77,7 +77,6 @@ public class ProjectWalker implements FileVisitor<Path>  {
 		return FileVisitResult.CONTINUE;
 	}
 	
-
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 		//Ignore the OSX resource marker
@@ -88,9 +87,6 @@ public class ProjectWalker implements FileVisitor<Path>  {
 		delegate.addChart(file,parentUUID);
         return FileVisitResult.CONTINUE;
 	}
-
-
-
 
 	@Override
 	public FileVisitResult visitFileFailed(Path file, IOException ioe) throws IOException {

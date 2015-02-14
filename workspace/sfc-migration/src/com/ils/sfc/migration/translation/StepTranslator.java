@@ -5,13 +5,9 @@ package com.ils.sfc.migration.translation;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -23,7 +19,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.json.JSONException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.migration.Converter;
@@ -62,8 +57,7 @@ public class StepTranslator {
 		Element block = (Element)(g2block.getElementsByTagName("block").item(0));
 		// Get attributes from the block element
 		String name = makeName(block.getAttribute("name"));
-		String uuid = block.getAttribute("uuid");
-		if( uuid==null ) uuid = UUID.randomUUID().toString();
+		String uuid = canonicalForm(block.getAttribute("uuid"));
 		String claz = block.getAttribute("class");
 		String factoryId = "action-step";     // Generic action step as default
 		boolean isEnclosure = false;
@@ -90,7 +84,7 @@ public class StepTranslator {
 		step.setAttribute("factory-id", factoryId);
 		
 		// Now add recipe data - feed the translator the entire "data" element
-		Element recipe = makeRecipeDataElement(g2block);
+		Element recipe = makeRecipeDataElement(chart,step,g2block);
 		if( recipe!=null) step.appendChild(recipe);
 		return step;
 	}
@@ -143,7 +137,7 @@ public class StepTranslator {
 	 * Seems like this should be easier...
 	 * @return an xml element for associated data, containing the recipe data.
 	 */
-	private Element makeRecipeDataElement(Element g2Block) {
+	private Element makeRecipeDataElement(Document chart,Element step,Element g2Block) {
 		// The recipe data translator uses  a SAX parser, so stream the input
 		Element recipe = null;
 
@@ -154,20 +148,14 @@ public class StepTranslator {
 			TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);
 			InputStream xmlIn = new ByteArrayInputStream(outputStream.toByteArray());
 			RecipeDataTranslator rdTranslator = new RecipeDataTranslator(xmlIn);
-			String rdElement = rdTranslator.translate();
-			if(rdElement != null) {
-				InputStream sbis = new ByteArrayInputStream(rdElement.getBytes());
-				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
-			    DocumentBuilder builder = factory.newDocumentBuilder();
-			    Document doc = builder.parse(sbis);
-			    recipe = doc.getDocumentElement();
+			Element associatedData = rdTranslator.createAssociatedDataElement(chart);
+			step.appendChild(associatedData);
+
+			// Some debug stuff for errors--might want to log it...
+			for(String errMsg: rdTranslator.getErrors()) {
+				log.errorf("%s.makeRecipeDataElement: Parse error (%s)",TAG,errMsg);
 			}
-			else {
-				// Some debug stuff for errors--might want to log it...
-				for(String errMsg: rdTranslator.getErrors()) {
-					log.errorf("%s.makeRecipeDataElement: Parse error (%s)",TAG,errMsg);
-				}
-			}
+
 		} 
 		catch (TransformerException | TransformerFactoryConfigurationError tf) {
 			log.errorf("%s.makeRecipeDataElement: Exception transforming G2 block element (%s)",TAG,tf.getMessage());
@@ -175,15 +163,32 @@ public class StepTranslator {
 		catch (JSONException je) {
 			log.errorf("%s.makeRecipeDataElement: Exception creating JSON data (%s)",TAG,je.getMessage());
 		} 
-		catch (SAXException saxe) {
-			log.errorf("%s.makeRecipeDataElement: Exception parsing JSON data (%s)",TAG,saxe.getMessage());
-		} 
-		catch (IOException ioe) {
-			log.errorf("%s.makeRecipeDataElement: Exception writing JSON element (%s)",TAG,ioe.getMessage());
-		} 
-		catch (ParserConfigurationException pce) {
-			log.errorf("%s.makeRecipeDataElement: Exception creating recipe data parser (%s)",TAG,pce.getMessage());
-		}
 		return recipe;
+	}
+	
+	/**
+	 * Format a G2 UUID string into the UUID canonical form. Basically
+	 * this entails inserting dashes.
+	 * 
+	 * @param uuidin the incoming UUID proposal.
+	 * @return
+	 */
+	public static String canonicalForm(String uuidin) {
+		String uuid = uuidin;
+		if( uuid.isEmpty() ) return UUID.randomUUID().toString();
+		int len = uuid.length();
+		if( len==32 ) {
+			uuid = String.format("%s-%s-%s-%s-%s",uuid.substring(0,8),
+										uuid.substring(8,12),uuid.substring(12,16),uuid.substring(16,20),
+										uuid.substring(20,32));
+		}
+		else if( len==36 ) {
+			// Format is good already
+			;
+		}
+		else {
+			throw new IllegalArgumentException(String.format("%s is not a legal or almost loegal UUID", uuidin));
+		}
+		return uuid;
 	}
 }
