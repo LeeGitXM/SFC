@@ -85,7 +85,7 @@ public class RecipeDataTranslator {
 	
 	/** Translate from G2 export to JSONObject */
 	public JSONObject G2ToJSON() throws JSONException  {
-		Group group = new Group();
+		final Group group = new Group();
 		group.setKey("recipeData");
 		try {
 			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();

@@ -3,11 +3,29 @@
  */
 package com.ils.sfc.migration.translation;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.json.JSONException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
+import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.migration.Converter;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -70,6 +88,10 @@ public class StepTranslator {
 		step.setAttribute("name", name);
 		step.setAttribute("id", uuid);
 		step.setAttribute("factory-id", factoryId);
+		
+		// Now add recipe data - feed the translator the entire "data" element
+		Element recipe = makeRecipeDataElement(g2block);
+		if( recipe!=null) step.appendChild(recipe);
 		return step;
 	}
 	
@@ -117,5 +139,51 @@ public class StepTranslator {
 	    log.tracef("toCamelCase: result %s",camelCase.toString());
 	    return camelCase.toString();
 	}
-	
+	/** 
+	 * Seems like this should be easier...
+	 * @return an xml element for associated data, containing the recipe data.
+	 */
+	private Element makeRecipeDataElement(Element g2Block) {
+		// The recipe data translator uses  a SAX parser, so stream the input
+		Element recipe = null;
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		Source xmlSource = new DOMSource(g2Block);
+		Result outputTarget = new StreamResult(outputStream);
+		try {
+			TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);
+			InputStream xmlIn = new ByteArrayInputStream(outputStream.toByteArray());
+			RecipeDataTranslator rdTranslator = new RecipeDataTranslator(xmlIn);
+			String rdElement = rdTranslator.translate();
+			if(rdElement != null) {
+				InputStream sbis = new ByteArrayInputStream(rdElement.getBytes());
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
+			    DocumentBuilder builder = factory.newDocumentBuilder();
+			    Document doc = builder.parse(sbis);
+			    recipe = doc.getDocumentElement();
+			}
+			else {
+				// Some debug stuff for errors--might want to log it...
+				for(String errMsg: rdTranslator.getErrors()) {
+					log.errorf("%s.makeRecipeDataElement: Parse error (%s)",TAG,errMsg);
+				}
+			}
+		} 
+		catch (TransformerException | TransformerFactoryConfigurationError tf) {
+			log.errorf("%s.makeRecipeDataElement: Exception transforming G2 block element (%s)",TAG,tf.getMessage());
+		} 
+		catch (JSONException je) {
+			log.errorf("%s.makeRecipeDataElement: Exception creating JSON data (%s)",TAG,je.getMessage());
+		} 
+		catch (SAXException saxe) {
+			log.errorf("%s.makeRecipeDataElement: Exception parsing JSON data (%s)",TAG,saxe.getMessage());
+		} 
+		catch (IOException ioe) {
+			log.errorf("%s.makeRecipeDataElement: Exception writing JSON element (%s)",TAG,ioe.getMessage());
+		} 
+		catch (ParserConfigurationException pce) {
+			log.errorf("%s.makeRecipeDataElement: Exception creating recipe data parser (%s)",TAG,pce.getMessage());
+		}
+		return recipe;
+	}
 }

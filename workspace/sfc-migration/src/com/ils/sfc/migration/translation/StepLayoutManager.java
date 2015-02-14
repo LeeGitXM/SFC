@@ -25,8 +25,11 @@ public class StepLayoutManager {
 	private final Map<String,Element> blockMap;             // block by UUID
 	private final Map<String,ConnectionHub> connectionMap;  // Incoming/outgoing connections by UUID
 	private final Map<String,GridPoint> gridMap;            // Grid by step UUID
+	private int minx = 0;
+	private int miny = 0;
+	private int minx = 0;
+	private int minx = 0;
 	private double zoom = 1.0;
-	
 	/**
 	 * Constructor: Immediately analyze the supplied chart.
 	 * @param g2chart
@@ -97,7 +100,7 @@ public class StepLayoutManager {
 		}
 		
 		// Now do the layout. Position the root. Walk the tree.
-		int x = 5;
+		int x = 0;   // Center on zero so that we can scale if need be.
 		int y = 2;
 		GridPoint gp = gridMap.get(beginuuid);
 		gp.x = x;
@@ -119,14 +122,30 @@ public class StepLayoutManager {
 	 * @param y the block's new y
 	 */
 	private void positionNextNode(String uuid,int x,int y) {
-		
+		GridPoint gp = gridMap.get(uuid);
+		gp.x = x;
+		gp.y = y;
+		ConnectionHub hub = connectionMap.get(uuid);
+		List<String> nextBlocks = hub.getConnectionsTo();
+		if( nextBlocks.size() < 2) y = y+1;
+		else                       y = y+2;  // Allow for connections
+		int xpos = x - (nextBlocks.size()-1);
+		for( String blockuuid:nextBlocks) {
+			positionNextNode(blockuuid,xpos,y);
+			xpos += 2;
+		}
 	}
 	
-	// The original layput may create indices that are out-of-range.
+	// The original layout may create indices that are out-of-range.
 	// Adjust
 	private void center() {
 		// First iteration gets the bounds
-		
+		int minx = 0;
+		int minx = 0;
+		for( GridPoint gp:gridMap.values()) {
+			if( gp.x>max ) max = gp.x;
+			if( gp.y>max ) max = gp.y;
+		}
 		// Make adjustments the second time through
 		int max = 10;
 		for( GridPoint gp:gridMap.values()) {
