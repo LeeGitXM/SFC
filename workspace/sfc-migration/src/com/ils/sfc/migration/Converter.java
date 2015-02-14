@@ -45,6 +45,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
@@ -417,10 +418,9 @@ public class Converter {
 		}
 		return blockMap;
 	}
-
+	
 	/** return an xml element for associated data, containing the recipe data. */
 	private String getRecipeDataElement(java.io.InputStream xmlIn) throws JSONException {
-		/*
 		RecipeDataTranslator rdTranslator = new RecipeDataTranslator(xmlIn);
 		String adElement = rdTranslator.translate();
 		// Some debug stuff for errors--might want to log it...
@@ -430,8 +430,6 @@ public class Converter {
 			}
 		}
 		return adElement;
-		*/
-		return null;
 	}
 	
 	/**

@@ -43,14 +43,14 @@ public class StepLayoutManager {
 	public double getZoom() { return this.zoom; }
 	
 	// ========================================= This is where the work gets done ================================
-	private void analyze(NodeList blocks) {
+	private void analyze(NodeList blocklist) {
 		int index = 0;
 		// First-time through create default entries in the grid map
-		while( index < blocks.getLength()) {
-			Element block = (Element)blocks.item(index);
+		while( index < blocklist.getLength()) {
+			Element block = (Element)blocklist.item(index);
 			String uuid = block.getAttribute("uuid");
 			if( uuid!=null ) {
-				
+				blockMap.put(uuid, block);
 				gridMap.put(uuid,new GridPoint(UNSET,UNSET));
 				String connectionString = block.getAttribute("connectedTo");
 				if( connectionString!=null ) {
@@ -77,33 +77,48 @@ public class StepLayoutManager {
 			index++;
 		}
 		// Find the begin block. There can be only one.
-		Element beginBlock = null;
+		String beginuuid = null;
 		index = 0;
-		while( index < blocks.getLength()) {
-			Element block = (Element)blocks.item(index);
+		while( index < blocklist.getLength()) {
+			Element block = (Element)blocklist.item(index);
 			String uuid = block.getAttribute("uuid");
 			if( uuid!=null ) {
 				ConnectionHub hub = connectionMap.get(uuid);
 				if( hub.getConnectionsFrom().isEmpty()) {
-					beginBlock = block;
+					beginuuid = uuid;
 					break;
 				}
 			}
 			index++;
 		}
-		if( beginBlock==null ) {
+		if( beginuuid==null ) {
 			log.errorf("%s.analyze: Chart has no begin block", TAG);
 			return;
 		}
 		
 		// Now do the layout. Position the root. Walk the tree.
-		int startx = 5;
-		int starty = 1;
-		GridPoint gp = gridMap.get(key)
-	
+		int x = 5;
+		int y = 2;
+		GridPoint gp = gridMap.get(beginuuid);
+		gp.x = x;
+		gp.y = y;
+		ConnectionHub hub = connectionMap.get(beginuuid);
+		List<String> nextBlocks = hub.getConnectionsTo();
+		if( nextBlocks.size() < 2) y = y+1;
+		else                       y = y+2;  // Allow for connections
+		int xpos = x - (nextBlocks.size()-1);
+		for( String uuid:nextBlocks) {
+			positionNextNode(uuid,xpos,y);
+			xpos += 2;
+		}
 	}
 	
-	private positionNextNodes(Element parent,Block child,GridPosition pos) {
+	/** 
+	 * @param uuid the block being placed
+	 * @param x the block's new x
+	 * @param y the block's new y
+	 */
+	private void positionNextNode(String uuid,int x,int y) {
 		
 	}
 	
