@@ -4,7 +4,7 @@
 #
 if [ $# -lt 3 ]
 then
-    echo "USAGE: migrate <inpath> <outpath> <start>"
+    echo "USAGE: convert <inpath> <outpath> <start>"
 	exit 2
 fi
 REPO=~/Development/ils/src

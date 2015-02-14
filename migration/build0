@@ -2,8 +2,8 @@
 #  Use this version when debugging a single file.
 #
 SFC=~/Development/ils/src/sfc
-DIRIN="TestUnitProcedure1"
-PROJ="testunitprocedure1.proj"
+DIRIN="TestDiagram"
+PROJ="testdiagram.proj"
 INDIR="$SFC/xml/ignition/$DIRIN"
 OUTFIL=$SFC/xml/$PROJ
 $SFC/migration/build-project "$INDIR" "$OUTFIL"

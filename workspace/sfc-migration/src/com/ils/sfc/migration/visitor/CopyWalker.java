@@ -78,14 +78,14 @@ public class CopyWalker implements FileVisitor<Path>  {
 		while(Files.exists(target)) {
 			target = Paths.get(String.format("%s%c",newfile.toString(),'a'+version));
 		}
-		log.infof("%s.visitFile: %s -> %s",TAG,file.toString(),target.toString());
+		log.debugf("%s.visitFile: %s -> %s",TAG,file.toString(),target.toString());
 		delegate.convertFile(file, target);
 		return FileVisitResult.CONTINUE;
 	}
 
 	@Override
 	public FileVisitResult visitFileFailed(Path file, IOException ioe) throws IOException {
-		System.err.format("Error converting %s: %s", file, ioe.getMessage());
+		log.errorf("%s: Error converting %s: (%s)",TAG,file, ioe.getMessage());
 		return FileVisitResult.CONTINUE;
 	}
 

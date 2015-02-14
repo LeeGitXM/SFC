@@ -38,14 +38,12 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-import org.json.JSONException;
 import org.sqlite.JDBC;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
@@ -86,7 +84,14 @@ public class Converter {
 	}
 	
 	public ClassNameMapper getClassMapper() { return classMapper; }
-	public String getPathForFile(String filename)  { return pathForFile.get(filename); }
+	public String getPathForFile(String filename)  { 
+		String filepath =  pathForFile.get(filename);
+		if( filepath==null ) {
+			log.infof("%s.getPathForFile: No path recorded for file %s",TAG,filepath);
+			filepath = "";
+		}
+		return filepath;
+	}
 	
 	/**
 	 * Step 1: Read the database and create maps between various elements.
@@ -95,7 +100,7 @@ public class Converter {
 	 */
 	public void processDatabase(Path path) {
 		String connectPath = "jdbc:sqlite:"+path.toString();
-		log.infof("%s.processDatabase: database path = %s",TAG,path.toString());
+		log.debugf("%s.processDatabase: database path = %s",TAG,path.toString());
 		// Read database to generate conversion maps
 		Connection connection = null;
 		try {
@@ -190,12 +195,11 @@ public class Converter {
 		try {
 			
 			Path startpath = Paths.get(indir.toString(), start);
-			log.infof("%s.processInput: Walking %s",TAG,startpath.toString());
+			log.tracef("%s.processInput: Walking %s",TAG,startpath.toString());
 			Files.walkFileTree(startpath, walker);
-			log.infof("%s.processInput: walking complete.",TAG);
 		}
 		catch(IOException ioe) {
-			log.infof("%s.processInput: Walk failed (%s)",TAG,ioe.getMessage());
+			log.warnf("%s.processInput: Walk failed (%s)",TAG,ioe.getMessage());
 		}
 	}
 	
@@ -365,6 +369,7 @@ public class Converter {
 		// Strip off extension
 		index = name.lastIndexOf(".");
 		if( index>0 ) name = name.substring(0,index);
+		name = toCamelCase(name);
 		return name;
 	}
 	

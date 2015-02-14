@@ -53,7 +53,8 @@ public class PathWalker implements FileVisitor<Path>  {
 		//Ignore the OSX resource marker
 		if(file.toString().endsWith(".DS_Store")) return FileVisitResult.CONTINUE;
 		String chartName = delegate.chartNameFromPath(file);
-		pathMap.put(chartName, currentPartialPath);
+		log.infof("%s.visitFile: path map of %s = %s",TAG,chartName,currentPartialPath);
+		pathMap.put(chartName, String.format("%s/%s",currentPartialPath,chartName));
 		return FileVisitResult.CONTINUE;
 	}
 

@@ -60,10 +60,10 @@ public class StepTranslator {
 		String uuid = canonicalForm(block.getAttribute("uuid"));
 		String claz = block.getAttribute("class");
 		String factoryId = "action-step";     // Generic action step as default
-		boolean isEnclosure = false;
+		boolean isEncapsulation = false;
 		if( claz!=null ) {
 			String fid = delegate.getClassMapper().factoryIdForClass(claz);
-			isEnclosure= delegate.getClassMapper().isClassAnEnclosure(claz);
+			isEncapsulation= delegate.getClassMapper().isClassAnEncapsulation(claz);
 			if( fid!=null) {
 				factoryId = fid;
 			}
@@ -71,9 +71,10 @@ public class StepTranslator {
 				log.errorf("%s.translate: Error no SFC factoryID found for G2 class (%s)",TAG,claz);
 			}
 		}
-		// Enclosures have several additional properties
-		if( isEnclosure ) {
-			String reference = block.getAttribute("label");
+		// Encapsulation have several additional properties
+		if( isEncapsulation ) {
+			String reference = block.getAttribute("block-full-path-label");
+			if( reference.length()==0) reference = block.getAttribute("label");
 			String filename = delegate.toCamelCase(reference);
 			step.setAttribute("chart-path", delegate.getPathForFile(filename));
 			step.setAttribute("execution-mode", "RunUntilStopped");

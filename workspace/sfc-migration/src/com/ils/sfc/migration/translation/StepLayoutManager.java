@@ -25,6 +25,7 @@ public class StepLayoutManager {
 	private final Map<String,Element> blockMap;             // block by UUID
 	private final Map<String,ConnectionHub> connectionMap;  // Incoming/outgoing connections by UUID
 	private final Map<String,GridPoint> gridMap;            // Grid by step UUID
+	private final ArrayList<Integer> rightmostIndex;        // Rightmost index by row number 
 	// Record the chart limits so that we can return a canvas size, if asked.
 	private int minx = 0;
 	private int miny = 0;
@@ -39,6 +40,7 @@ public class StepLayoutManager {
 		this.blockMap = new HashMap<>();
 		this.connectionMap = new HashMap<>();
 		this.gridMap = new HashMap<>();
+		this.rightmostIndex = new ArrayList<>();
 		analyze(g2chart.getElementsByTagName("block"));
 		center();
 	}
@@ -100,37 +102,40 @@ public class StepLayoutManager {
 		// Now do the layout. Position the root. Walk the tree.
 		int x = 0;   // Center on zero so that we can scale if need be.
 		int y = 2;
-		GridPoint gp = gridMap.get(beginuuid);
-		gp.x = x;
-		gp.y = y;
-		ConnectionHub hub = connectionMap.get(beginuuid);
-		List<String> nextBlocks = hub.getConnectionsTo();
-		if( nextBlocks.size() < 2) y = y+1;
-		else                       y = y+2;  // Allow for connections
-		int xpos = x - (nextBlocks.size()-1);
-		for( String uuid:nextBlocks) {
-			positionNextNode(uuid,xpos,y);
-			xpos += 2;
-		}
+		positionNode(beginuuid,x,y);
 	}
 	
 	/** 
+	 * Recursive routine to set the position of the specified node
+	 * and continue on with its children.
+	 * 
 	 * @param uuid the block being placed
 	 * @param x the block's new x
 	 * @param y the block's new y
 	 */
-	private void positionNextNode(String uuid,int x,int y) {
+	private void positionNode(String uuid,int x,int y) {
 		GridPoint gp = gridMap.get(uuid);
+		// If we conflict on the left, move everything right
+		int rightmost = getRightmost(y);
+		if( rightmost > x-2 ) {
+			int dx = rightmost - x + 2;
+			x = x + dx;
+			moveAncestryRight(uuid,dx);
+		}
 		gp.x = x;
 		gp.y = y;
+		setRightmost(x,y);
+		
+		
 		ConnectionHub hub = connectionMap.get(uuid);
 		List<String> nextBlocks = hub.getConnectionsTo();
 		if( nextBlocks.size() < 2) y = y+1;
 		else                       y = y+2;  // Allow for connections
 		int xpos = x - (nextBlocks.size()-1);
-		for( String blockuuid:nextBlocks) {
-			positionNextNode(blockuuid,xpos,y);
-			xpos += 2;
+		for( String childuuid:nextBlocks) {
+			positionNode(childuuid,xpos,y);
+			gp = gridMap.get(childuuid);  
+			xpos = gp.x + 2;                // Position for next block
 		}
 	}
 	
@@ -167,6 +172,47 @@ public class StepLayoutManager {
 		int max = maxx;
 		if( maxy>max) max = maxy;
 		if( max>10) this.zoom =  10./(double)max;
+	}
+	
+	// Traverse the parentage of the specified block and 
+	// move them to the right, recursively. If the parent
+	// has multiple children, adjust the move to try and
+	// keep it centered.
+	//
+	// This depends on the fact that we have not yet placed
+	// the blocks to our right.
+	private void moveAncestryRight(String uuid,int dx) {
+		ConnectionHub hub = connectionMap.get(uuid);
+		if( hub!=null && !hub.getConnectionsFrom().isEmpty()) {
+			for(String parent:hub.getConnectionsFrom() ) {
+				int childcount = hub.getConnectionsTo().size();
+				int position   = hub.getConnectionsTo().indexOf(parent);
+				if( position>=0 && childcount>0) {
+					dx = dx*(childcount-position)/childcount;
+					GridPoint gp = gridMap.get(parent);
+					gp.x = gp.x + dx;
+					moveAncestryRight(parent,dx);
+				}
+				else {
+					log.warnf("%s.moveAncestryRight: Parent (%s) of %s has no children.", TAG,parent,uuid);
+				}
+			}
+		}
+	}
+	private void setRightmost(int x,int y) {
+		while( y>rightmostIndex.size() ) {
+			rightmostIndex.add(null);
+		}
+		rightmostIndex.set(y,new Integer(x));
+	}
+	
+	private int getRightmost(int y) {
+		int index = Integer.MIN_VALUE;
+		if( y< rightmostIndex.size()) {
+			Integer val = rightmostIndex.get(y);
+			if( val!=null ) index = val.intValue();
+		}
+		return index;
 	}
 	
 	private class ConnectionHub {

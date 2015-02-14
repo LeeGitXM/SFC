@@ -73,7 +73,7 @@ public class ClassNameMapper {
 	 * @param className the G2 class name
 	 * @return whether or not this class is an enclosure
 	 */
-	public boolean isClassAnEnclosure(String className) {
+	public boolean isClassAnEncapsulation(String className) {
 		boolean flag = false;  // default
 		String result = enclosureMap.get(className);
 		if( result!=null ) {
