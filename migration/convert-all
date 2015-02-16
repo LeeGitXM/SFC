@@ -3,7 +3,7 @@
 # Save the results in the json storate area for ignition.
 #
 SFC=~/Development/ils/src/sfc
-APP=$SFC/migration/migrate
+APP=$SFC/migration/convert
 INDIR=$SFC/xml/g2
 OUTDIR=$SFC/xml/ignition
 mkdir -p $INDIR

@@ -3,11 +3,24 @@
  */
 package com.ils.sfc.migration.translation;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.UUID;
 
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.json.JSONException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.migration.Converter;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -34,8 +47,6 @@ public class StepTranslator {
 	 */
 	public Element translate(Document chart,Element g2block,int x,int y) {
 		Element step = chart.createElement("step");
-
-		step.setAttribute("location", String.format("%d %d", x,y));
 		
 		if( g2block.getElementsByTagName("block").getLength()==0) {
 			log.errorf("%s.translate: g2block has no \"block\" element",TAG);
@@ -44,14 +55,13 @@ public class StepTranslator {
 		Element block = (Element)(g2block.getElementsByTagName("block").item(0));
 		// Get attributes from the block element
 		String name = makeName(block.getAttribute("name"));
-		String uuid = block.getAttribute("uuid");
-		if( uuid==null ) uuid = UUID.randomUUID().toString();
+		String uuid = canonicalForm(block.getAttribute("uuid"));
 		String claz = block.getAttribute("class");
 		String factoryId = "action-step";     // Generic action step as default
-		boolean isEnclosure = false;
+		boolean isEncapsulation = false;
 		if( claz!=null ) {
 			String fid = delegate.getClassMapper().factoryIdForClass(claz);
-			isEnclosure= delegate.getClassMapper().isClassAnEnclosure(claz);
+			isEncapsulation= delegate.getClassMapper().isClassAnEncapsulation(claz);
 			if( fid!=null) {
 				factoryId = fid;
 			}
@@ -59,9 +69,12 @@ public class StepTranslator {
 				log.errorf("%s.translate: Error no SFC factoryID found for G2 class (%s)",TAG,claz);
 			}
 		}
-		// Enclosures have several additional properties
-		if( isEnclosure ) {
-			String reference = block.getAttribute("label");
+		delegate.updateStepFromG2Block(chart,step,g2block);
+
+		// Encapsulation have several additional properties
+		if( isEncapsulation ) {
+			String reference = block.getAttribute("block-full-path-label");
+			if( reference.length()==0) reference = block.getAttribute("label");
 			String filename = delegate.toCamelCase(reference);
 			step.setAttribute("chart-path", delegate.getPathForFile(filename));
 			step.setAttribute("execution-mode", "RunUntilStopped");
@@ -70,6 +83,11 @@ public class StepTranslator {
 		step.setAttribute("name", name);
 		step.setAttribute("id", uuid);
 		step.setAttribute("factory-id", factoryId);
+		step.setAttribute("location", String.format("%d %d", x,y));
+		
+		// Now add recipe data - feed the translator the entire "data" element
+		Element recipe = makeRecipeDataElement(chart,step,g2block);
+		if( recipe!=null) step.appendChild(recipe);
 		return step;
 	}
 	
@@ -117,5 +135,62 @@ public class StepTranslator {
 	    log.tracef("toCamelCase: result %s",camelCase.toString());
 	    return camelCase.toString();
 	}
+	/** 
+	 * Seems like this should be easier...
+	 * @return an xml element for associated data, containing the recipe data.
+	 */
+	private Element makeRecipeDataElement(Document chart,Element step,Element g2Block) {
+		// The recipe data translator uses  a SAX parser, so stream the input
+		Element recipe = null;
+
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		Source xmlSource = new DOMSource(g2Block);
+		Result outputTarget = new StreamResult(outputStream);
+		try {
+			TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);
+			InputStream xmlIn = new ByteArrayInputStream(outputStream.toByteArray());
+			RecipeDataTranslator rdTranslator = new RecipeDataTranslator(xmlIn);
+			Element associatedData = rdTranslator.createAssociatedDataElement(chart);
+			step.appendChild(associatedData);
+
+			// Some debug stuff for errors--might want to log it...
+			for(String errMsg: rdTranslator.getErrors()) {
+				log.errorf("%s.makeRecipeDataElement: Parse error (%s)",TAG,errMsg);
+			}
+
+		} 
+		catch (TransformerException | TransformerFactoryConfigurationError tf) {
+			log.errorf("%s.makeRecipeDataElement: Exception transforming G2 block element (%s)",TAG,tf.getMessage());
+		} 
+		catch (JSONException je) {
+			log.errorf("%s.makeRecipeDataElement: Exception creating JSON data (%s)",TAG,je.getMessage());
+		} 
+		return recipe;
+	}
 	
+	/**
+	 * Format a G2 UUID string into the UUID canonical form. Basically
+	 * this entails inserting dashes.
+	 * 
+	 * @param uuidin the incoming UUID proposal.
+	 * @return
+	 */
+	public static String canonicalForm(String uuidin) {
+		String uuid = uuidin;
+		if( uuid.isEmpty() ) return UUID.randomUUID().toString();
+		int len = uuid.length();
+		if( len==32 ) {
+			uuid = String.format("%s-%s-%s-%s-%s",uuid.substring(0,8),
+										uuid.substring(8,12),uuid.substring(12,16),uuid.substring(16,20),
+										uuid.substring(20,32));
+		}
+		else if( len==36 ) {
+			// Format is good already
+			;
+		}
+		else {
+			throw new IllegalArgumentException(String.format("%s is not a legal or almost loegal UUID", uuidin));
+		}
+		return uuid;
+	}
 }

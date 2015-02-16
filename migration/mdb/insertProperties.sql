@@ -1,24 +1,15 @@
 -- Map G2 block properties into Ignition block properties
--- Columns are: FactoryId, ignition propertyName, datatype, G2Property
--- NOTE: Are description, label, name, uuid universal attributes?
+-- Columns are: FactoryId, ignition propertyName, G2Property
+-- NOTE: name, factoryId, uuid are universal attributes and are not included here.
 -- S88-UNIT-PROCEDURE
-insert into PropertyMap values ('enclosing-step','??','STRING','description');
-insert into PropertyMap values ('enclosing-step','??','STRING','label');
-insert into PropertyMap values ('enclosing-step','??','STRING','name');
-insert into PropertyMap values ('enclosing-step','??','STRING','uuid');
-insert into PropertyMap values ('enclosing-step','??','DOUBLE','conditional-block-recheck-interval-seconds');
-insert into PropertyMap values ('enclosing-step','??','SCRIPT','post-to-error-queue-procedure');
-insert into PropertyMap values ('enclosing-step','??','SCRIPT','post-to-message-queue-procedure');
-insert into PropertyMap values ('enclosing-step','??','SCRIPT','show-message-queue-procedure');
-insert into PropertyMap values ('enclosing-step','??','STRING','message-queue-name');
-insert into PropertyMap values ('enclosing-step','??','BOOLEAN','show-control-panel');
+insert into PropertyMap values ('enclosing-step','description','description');
 -- S88-TIME-DELAY
-insert into PropertyMap values ('com.ils.TimedDelayStep','??','STRING','description');
-insert into PropertyMap values ('com.ils.TimedDelayStep','??','STRING','label');
-insert into PropertyMap values ('com.ils.TimedDelayStep','??','STRING','name');
-insert into PropertyMap values ('com.ils.TimedDelayStep','??','STRING','uuid');
-insert into PropertyMap values ('com.ils.TimedDelayStep','??','DOUBLE','delay-time');
-insert into PropertyMap values ('com.ils.TimedDelayStep','??','STRING','delay-units');
-insert into PropertyMap values ('com.ils.TimedDelayStep','??','STRING','recipe-location');
-insert into PropertyMap values ('com.ils.TimedDelayStep','??','STRING','strategy');
-insert into PropertyMap values ('com.ils.TimedDelayStep','??','BOOLEAN','post-notification');
+insert into PropertyMap values ('com.ils.TimedDelayStep','auditLevel','');
+insert into PropertyMap values ('com.ils.TimedDelayStep','callback','callback');
+insert into PropertyMap values ('com.ils.TimedDelayStep','delay','delay-time');
+insert into PropertyMap values ('com.ils.TimedDelayStep','delayUnit','delay-units');
+insert into PropertyMap values ('com.ils.TimedDelayStep','description','description');
+insert into PropertyMap values ('com.ils.TimedDelayStep','key','strategy');
+insert into PropertyMap values ('com.ils.TimedDelayStep','postNotification','post-notification');
+insert into PropertyMap values ('com.ils.TimedDelayStep','recipeLocation','recipe-location');
+insert into PropertyMap values ('com.ils.TimedDelayStep','strategy','strategy');

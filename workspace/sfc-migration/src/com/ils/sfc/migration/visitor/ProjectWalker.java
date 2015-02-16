@@ -14,31 +14,26 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.ils.sfc.migration.ProjectBuilder;
-import com.inductiveautomation.ignition.common.util.LogUtil;
-import com.inductiveautomation.ignition.common.util.LoggerEx;
 /**
  * Walk the output directory collecting files for incorporation
  * into the output project.
  */
-public class ProjectWalker implements FileVisitor<Path>  {
+public class ProjectWalker extends AbstractPathWalker implements FileVisitor<Path>  {
 	private final static String TAG = "ProjectWalker";
 	private final static String ROOT = "947a0c86-3b70-45bf-b8f2-829d108ab928";  // SFC root node
-	private final LoggerEx log;
 	private final Path indir;
 	private final ProjectBuilder delegate;   // Delegate for migrating individual files
-	private String currentDirectory = null;  // Current parent directory as a string
 	private final Map<String,String> uuidForPath;
 
 	 /**
 	  * 
-	  * @param in
+	  * @param in the root of the directory containing ignition-style XML.
 	  * @param out
 	  */
 	public ProjectWalker(Path in,ProjectBuilder builder) {
 		this.indir = in;
 		this.delegate = builder;
 		this.uuidForPath = new HashMap<>();
-		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
 
 	/** 
@@ -65,10 +60,9 @@ public class ProjectWalker implements FileVisitor<Path>  {
 			parentId = uuidForPath.get(parent);
 		}
 		if( parentId!=null) {
-			currentDirectory = dirString;
 			String uuid = UUID.randomUUID().toString();
 			uuidForPath.put(dirString, uuid);
-			log.infof("%s.previsitDirectory: %s = %s.",TAG,dirString,uuid);
+			log.infof("%s.previsitDirectory: directory %s = %s.",TAG,dirString,uuid);
 			delegate.addFolder(dirname,uuid,parentId);
 		}
 		else {
@@ -77,35 +71,23 @@ public class ProjectWalker implements FileVisitor<Path>  {
 		return FileVisitResult.CONTINUE;
 	}
 	
-
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 		//Ignore the OSX resource marker
 		if(file.toString().endsWith(".DS_Store")) return FileVisitResult.CONTINUE;
 		// Look up the UUID of the parent directory
-		String parentUUID = uuidForPath.get(currentDirectory);
-		log.infof("%s.visitFile: parent for %s = %s.",TAG,currentDirectory,parentUUID);
+		String directory = directoryForFile(file);
+		String parentUUID = uuidForPath.get(directory);
+		log.infof("%s.visitFile: parent for %s = %s.",TAG,directory,parentUUID);
 		delegate.addChart(file,parentUUID);
         return FileVisitResult.CONTINUE;
 	}
-
-
-
-
-	@Override
-	public FileVisitResult visitFileFailed(Path file, IOException ioe) throws IOException {
-		log.errorf("%s.visitFileFailed: Error converting %s: %s",TAG, file, ioe.getMessage());
-		return FileVisitResult.CONTINUE;
-	}
-
-
-
-	/**
-	 * Nothing is required in the post-visit phase.
-	 */
-	@Override
-	public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-		return FileVisitResult.CONTINUE;
-	}
 	
+	// String off the last path segment
+	private String directoryForFile(Path file) {
+		String dir = file.toString();
+		int pos = dir.lastIndexOf(File.separator);
+		if( pos>0 ) dir = dir.substring(0,pos);
+		return dir;
+	}
 }

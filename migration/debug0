@@ -2,7 +2,7 @@
 #  Use this version when debugging a single file.
 #
 SFC=~/Development/ils/src/sfc
-PROJ="testunitprocedure1.proj"
+PROJ="testdiagram.proj"
 OUTFIL=$SFC/xml/$PROJ
 rm -f "$OUTFILE"
 $SFC/migration/debug-project "$OUTFIL"

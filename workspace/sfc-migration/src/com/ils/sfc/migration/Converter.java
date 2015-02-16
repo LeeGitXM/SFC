@@ -18,6 +18,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -38,10 +39,10 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-import org.json.JSONException;
 import org.sqlite.JDBC;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -85,7 +86,14 @@ public class Converter {
 	}
 	
 	public ClassNameMapper getClassMapper() { return classMapper; }
-	public String getPathForFile(String filename)  { return pathForFile.get(filename); }
+	public String getPathForFile(String filename)  { 
+		String filepath =  pathForFile.get(filename);
+		if( filepath==null ) {
+			log.infof("%s.getPathForFile: No path recorded for file %s",TAG,filepath);
+			filepath = "";
+		}
+		return filepath;
+	}
 	
 	/**
 	 * Step 1: Read the database and create maps between various elements.
@@ -94,7 +102,7 @@ public class Converter {
 	 */
 	public void processDatabase(Path path) {
 		String connectPath = "jdbc:sqlite:"+path.toString();
-		log.infof("%s.processDatabase: database path = %s",TAG,path.toString());
+		log.debugf("%s.processDatabase: database path = %s",TAG,path.toString());
 		// Read database to generate conversion maps
 		Connection connection = null;
 		try {
@@ -189,15 +197,23 @@ public class Converter {
 		try {
 			
 			Path startpath = Paths.get(indir.toString(), start);
-			log.infof("%s.processInput: Walking %s",TAG,startpath.toString());
+			log.tracef("%s.processInput: Walking %s",TAG,startpath.toString());
 			Files.walkFileTree(startpath, walker);
-			log.infof("%s.processInput: walking complete.",TAG);
 		}
 		catch(IOException ioe) {
-			log.infof("%s.processInput: Walk failed (%s)",TAG,ioe.getMessage());
+			log.warnf("%s.processInput: Walk failed (%s)",TAG,ioe.getMessage());
 		}
 	}
-	
+	public String chartNameFromPath(Path path) {
+		String name = path.toString();
+		int index = name.lastIndexOf(File.separator);
+		if( index>0) name = name.substring(index+1);
+		// Strip off extension
+		index = name.lastIndexOf(".");
+		if( index>0 ) name = name.substring(0,index);
+		name = toCamelCase(name);
+		return name;
+	}
 	/**
 	 * This is where the real conversion takes place. This method gets called
 	 * as we walk the tree. Create an XML document out of the G2 input file. 
@@ -208,8 +224,6 @@ public class Converter {
 	 * @param outfile file location in which to write the output. 
 	 */
 	public void convertFile(Path infile,Path outfile) {
-		// Get the name from the path
-		String name = chartNameFromPath(outfile);
 		// First create the G2 chart as an XML document.
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = null;
@@ -226,7 +240,8 @@ public class Converter {
 			
 			// Write the chart to the output
 			String xml = docToString(chartdoc);
-			log.infof("%s.processInput: Writing to %s\n%s\n",TAG,outfile.toString(),xml);
+			log.infof("%s.processInput: Writing to %s",TAG,outfile.toString());
+			log.debug(xml);
 			Files.write(outfile, xml.getBytes(), StandardOpenOption.CREATE_NEW);
 		}
 		catch (ParserConfigurationException pce) {
@@ -274,11 +289,10 @@ public class Converter {
 	 */
 	private void updateChartForSingletonStep(Document chart,Element g2block) {
 		Element root = chart.getDocumentElement();   // "sfc"
-		root.appendChild(createBeginStep(chart,UUID.randomUUID(),5,2));
-		root.appendChild(stepTranslator.translate(chart,g2block,5,3));
-		root.appendChild(createEndStep(chart,UUID.randomUUID(),5,4));
+		root.appendChild(createBeginStep(chart,UUID.randomUUID(),3,2));
+		root.appendChild(stepTranslator.translate(chart,g2block,3,3));
+		root.appendChild(createEndStep(chart,UUID.randomUUID(),3,4));
 	}
-	
 	
 	/**
 	 * Update the contents of an Ignition chart document based on a corresponding G2 version.
@@ -359,15 +373,29 @@ public class Converter {
 	    log.tracef("toCamelCase: result %s",camelCase.toString());
 	    return camelCase.toString();
 	}
-	
-	public String chartNameFromPath(Path path) {
-		String name = path.toString();
-		int index = name.lastIndexOf(File.separator);
-		if( index>0) name = name.substring(index+1);
-		// Strip off extension
-		index = name.lastIndexOf(".");
-		if( index>0 ) name = name.substring(0,index);
-		return name;
+	/**
+	 * Iterate over all properties for the specified class, creating them
+	 * in the step. If available, pull corresponding values from the G2 element.
+	 * 
+	 * @param step
+	 * @param g2block
+	 */
+	public void updateStepFromG2Block(Document chart,Element step,Element g2block) {
+		String factoryId = step.getAttribute("factory-id");
+		List<String> properties = propertyMapper.getPropertyList(factoryId);
+		if( properties!=null ) {
+			for( String property:properties ) {
+				String g2attribute = propertyMapper.g2Property(factoryId,property);
+				String value = g2block.getAttribute(g2attribute);
+				Element propelement = chart.createElement(property);
+				Node textNode = chart.createTextNode(value);
+				propelement.appendChild(textNode);
+			}
+		}
+		else {
+			if( factoryId.startsWith("com.ils") ) log.warnf("updateStepFromG2Block: WARNING: No properties found for class %s",factoryId);
+		}
+		
 	}
 	
 	// Add a single chart element to the document
@@ -412,26 +440,10 @@ public class Converter {
 			Element block = (Element)blocks.item(index);
 			Element datum = (Element)data.item(index);
 			String uuid = block.getAttribute("uuid");
-			if( uuid!=null) blockMap.put(uuid, datum);
+			if( uuid.length()>0) blockMap.put(uuid, datum);
 			index++;
 		}
 		return blockMap;
-	}
-
-	/** return an xml element for associated data, containing the recipe data. */
-	private String getRecipeDataElement(java.io.InputStream xmlIn) throws JSONException {
-		/*
-		RecipeDataTranslator rdTranslator = new RecipeDataTranslator(xmlIn);
-		String adElement = rdTranslator.translate();
-		// Some debug stuff for errors--might want to log it...
-		if(adElement == null) {
-			for(String errMsg: rdTranslator.getErrors()) {
-				System.out.println(errMsg);
-			}
-		}
-		return adElement;
-		*/
-		return null;
 	}
 	
 	/**
