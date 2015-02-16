@@ -1,6 +1,10 @@
 package com.ils.sfc.common;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.inductiveautomation.ignition.common.config.BasicProperty;
@@ -131,6 +135,19 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 
 	public String[] getChoices() {
 		return choices;
+	}
+	
+	public static List<String> getAllPropertyNames() throws Exception {
+		List<String> allPropertyNames = new ArrayList<String>();
+		Field[] fields = IlsProperty.class.getFields();
+		for(Field field: fields) {
+			int modifiers = field.getModifiers();
+			if(field.getType() == IlsProperty.class && Modifier.isStatic(modifiers)) {
+				IlsProperty<?> property = (IlsProperty<?>)field.get(null);
+				allPropertyNames.add(property.getName());
+			}
+		}
+		return allPropertyNames;
 	}
 		
 }

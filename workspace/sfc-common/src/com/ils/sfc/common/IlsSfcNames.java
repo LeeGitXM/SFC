@@ -53,6 +53,7 @@ public class IlsSfcNames {
 	public static final String HELP = "help";
 	public static final String HIGH = "High";
 	public static final String HIGH_LIMIT = "highLimit";
+	public static final String ID = "id";
 	public static final String INFO = "Info";
 	public static final String LOW_LIMIT = "lowLimit";
 	public static final String LOW = "Low";

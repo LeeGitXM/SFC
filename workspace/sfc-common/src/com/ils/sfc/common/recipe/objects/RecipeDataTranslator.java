@@ -52,16 +52,19 @@ public class RecipeDataTranslator {
 		g2ToIgName.put(G2_CLASS_NAME, IlsSfcNames.CLASS);
 		g2ToIgName.put("help", IlsSfcNames.HELP);
 		g2ToIgName.put("high-limit", IlsSfcNames.HIGH_LIMIT);
+		g2ToIgName.put("id", IlsSfcNames.ID);
 		g2ToIgName.put("key", IlsSfcNames.KEY);
 		g2ToIgName.put("label", IlsSfcNames.LABEL);
 		g2ToIgName.put("low-limit", IlsSfcNames.LOW_LIMIT);
+		g2ToIgName.put("parent", IlsSfcNames.PARENT);
 		g2ToIgName.put("type", IlsSfcNames.TYPE);
 		g2ToIgName.put("units", IlsSfcNames.UNITS);
 		g2ToIgName.put("val", IlsSfcNames.VALUE);
 	}
 
-	private java.util.List<String> errors = new ArrayList<String>();
-	private InputStream xmlIn;
+	private Group recipeData = new Group();
+	private final java.util.List<String> errors = new ArrayList<String>();
+	private final InputStream xmlIn;
 	
 	public RecipeDataTranslator(InputStream xmlIn) {
 		this.xmlIn = xmlIn;
@@ -100,8 +103,7 @@ public class RecipeDataTranslator {
 	
 	/** Translate from G2 export to JSONObject */
 	public JSONObject G2ToJSON() throws JSONException  {
-		final Group group = new Group();
-		group.setKey("recipeData");
+		final java.util.List<Data> recipeObjects = new ArrayList<Data>();
 		try {
 			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 			DefaultHandler handler = new DefaultHandler() {
@@ -126,15 +128,23 @@ public class RecipeDataTranslator {
 						// Create the instance and populate the properties
 						try {
 							Data data = (Data)aClass.newInstance();
-							group.getChildren().add(data);
+							recipeObjects.add(data);
 							for(String g2Key: attMap.keySet()) {
 								String igKey = g2ToIgName.get(g2Key);
 								if(igKey == null) {
 									throw new IllegalArgumentException("no translation for attribute " + g2Key);
 								}
 								String strValue = attMap.get(g2Key);
-								Object objValue = IlsSfcCommonUtils.parseObjectValue(strValue);
-								data.setProperty(igKey, objValue);
+								if(igKey.equals(IlsSfcNames.ID)) {
+									data.setId(strValue);
+								}
+								else if(igKey.equals(IlsSfcNames.PARENT)) {
+									data.setParentId(strValue);
+								}
+								else {
+									Object objValue = IlsSfcCommonUtils.parseObjectValue(strValue);
+									data.setProperty(igKey, objValue);
+								}
 							}
 						} catch (Exception e) {
 							errors.add("Unexpected error creating recipe object: " + e.getMessage());
@@ -147,10 +157,36 @@ public class RecipeDataTranslator {
 		} catch (Exception e) {
 			errors.add("Unexpected error in G2 translation" + e.getMessage());
 		} 
-
-		return errors.size() == 0 ? group.toJSON() : null;
+		restoreHierarchy(recipeObjects);
+		return errors.size() == 0 ? recipeData.toJSON() : null;
 	}
 	
+	/** Restore the hierarchy of Groups with children. */
+	private void restoreHierarchy(java.util.List<Data>recipeObjects) {
+		Map<String,Data> objectsById = new HashMap<String,Data>();
+		for(Data data: recipeObjects) {
+			objectsById.put(data.getId(), data);
+		}
+		for(Data data: recipeObjects) {
+			if(data.getParentId() == null) {
+				recipeData.getChildren().add(data);
+			}
+			if(data.getParentId() != null) {
+				Data parent = objectsById.get(data.getParentId());
+				if(parent == null) {
+					errors.add("no parent for id " + data.getParentId());
+					continue;
+				}
+				else if(!(parent instanceof Group)) {
+					errors.add("parent object with id " + data.getParentId() + " is not a Group");			
+				}
+				else {
+					((Group)parent).getChildren().add(data);
+				}
+			}
+		}		
+	}
+
 	public static void main(String[] args) {
 		try {
 			InputStream in = new java.io.FileInputStream("C:/root/repo/svn/EMChemicals/G2Artifacts/Sequential Control/Test-Unit-Procedure-1/TEST-UNIT-PROCEDURE-1.xml");

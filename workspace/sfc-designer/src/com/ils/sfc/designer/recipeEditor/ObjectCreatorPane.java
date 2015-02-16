@@ -87,6 +87,7 @@ public class ObjectCreatorPane extends JPanel implements RecipeEditorController.
 			Class<?> selectedClass = (Class<?>)selectedType.getObject();
 			Data newObject = (Data)selectedClass.newInstance();
 			newObject.setKey(key);
+			keyTextField.setText("");
 			controller.getBrowser().add(newObject);
 			controller.getEditor().setRecipeData(newObject);
 			controller.getEditor().activate();
