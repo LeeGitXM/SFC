@@ -21,12 +21,11 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 /**
  * Walk the input directory writing converted files into the second.
  */
-public class CopyWalker implements FileVisitor<Path>  {
+public class CopyWalker extends AbstractPathWalker implements FileVisitor<Path>  {
 	private final static String TAG = "CopyWalker";
 	private final String inRoot;    // Original root directory (munged)
 	private final Path outRoot;
 	private final Converter delegate;   // Delegate for migrating individual files
-	private final LoggerEx log;
 
 	 /**
 	  * 
@@ -35,7 +34,6 @@ public class CopyWalker implements FileVisitor<Path>  {
 	  */
 	public CopyWalker(Path g2Root,Path igRoot, Converter migrator) {
 		this.delegate = migrator;
-		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.inRoot = delegate.toCamelCase(g2Root.toString());
 		this.outRoot = igRoot;
 	}
@@ -81,39 +79,5 @@ public class CopyWalker implements FileVisitor<Path>  {
 		log.debugf("%s.visitFile: %s -> %s",TAG,file.toString(),target.toString());
 		delegate.convertFile(file, target);
 		return FileVisitResult.CONTINUE;
-	}
-
-	@Override
-	public FileVisitResult visitFileFailed(Path file, IOException ioe) throws IOException {
-		log.errorf("%s: Error converting %s: (%s)",TAG,file, ioe.getMessage());
-		return FileVisitResult.CONTINUE;
-	}
-
-
-
-	/**
-	 * Nothing is required in the post-visit phase.
-	 */
-	@Override
-	public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-		return FileVisitResult.CONTINUE;
-	}
-	
-	/**
-	 * The FileVisitor's relativize didn't perform like I expected. Here we simply
-	 * subtract off the root from the extended path. Both paths have been "camelized".
-	 * 
-	 * @param root
-	 * @param extended
-	 * @return
-	 */
-	private String relativize(String root,String extended) {
-		//log.infof("%s.relativize: %s to %s",TAG,root,extended);
-		String result = extended;
-		if( extended.length()>root.length()+1) {
-			result = extended.substring(root.length()+1);
-		}
-		log.tracef("%s.relativize: yields %s",TAG,result);
-		return result;
 	}
 }

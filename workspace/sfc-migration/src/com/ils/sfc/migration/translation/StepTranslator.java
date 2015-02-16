@@ -47,8 +47,6 @@ public class StepTranslator {
 	 */
 	public Element translate(Document chart,Element g2block,int x,int y) {
 		Element step = chart.createElement("step");
-
-		step.setAttribute("location", String.format("%d %d", x,y));
 		
 		if( g2block.getElementsByTagName("block").getLength()==0) {
 			log.errorf("%s.translate: g2block has no \"block\" element",TAG);
@@ -71,6 +69,8 @@ public class StepTranslator {
 				log.errorf("%s.translate: Error no SFC factoryID found for G2 class (%s)",TAG,claz);
 			}
 		}
+		delegate.updateStepFromG2Block(chart,step,g2block);
+
 		// Encapsulation have several additional properties
 		if( isEncapsulation ) {
 			String reference = block.getAttribute("block-full-path-label");
@@ -83,6 +83,7 @@ public class StepTranslator {
 		step.setAttribute("name", name);
 		step.setAttribute("id", uuid);
 		step.setAttribute("factory-id", factoryId);
+		step.setAttribute("location", String.format("%d %d", x,y));
 		
 		// Now add recipe data - feed the translator the entire "data" element
 		Element recipe = makeRecipeDataElement(chart,step,g2block);

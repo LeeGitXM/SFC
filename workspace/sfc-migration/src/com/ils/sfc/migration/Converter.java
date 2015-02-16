@@ -18,6 +18,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -41,6 +42,7 @@ import org.apache.log4j.PatternLayout;
 import org.sqlite.JDBC;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -202,7 +204,16 @@ public class Converter {
 			log.warnf("%s.processInput: Walk failed (%s)",TAG,ioe.getMessage());
 		}
 	}
-	
+	public String chartNameFromPath(Path path) {
+		String name = path.toString();
+		int index = name.lastIndexOf(File.separator);
+		if( index>0) name = name.substring(index+1);
+		// Strip off extension
+		index = name.lastIndexOf(".");
+		if( index>0 ) name = name.substring(0,index);
+		name = toCamelCase(name);
+		return name;
+	}
 	/**
 	 * This is where the real conversion takes place. This method gets called
 	 * as we walk the tree. Create an XML document out of the G2 input file. 
@@ -229,7 +240,8 @@ public class Converter {
 			
 			// Write the chart to the output
 			String xml = docToString(chartdoc);
-			log.infof("%s.processInput: Writing to %s\n%s\n",TAG,outfile.toString(),xml);
+			log.infof("%s.processInput: Writing to %s",TAG,outfile.toString());
+			log.debug(xml);
 			Files.write(outfile, xml.getBytes(), StandardOpenOption.CREATE_NEW);
 		}
 		catch (ParserConfigurationException pce) {
@@ -361,16 +373,29 @@ public class Converter {
 	    log.tracef("toCamelCase: result %s",camelCase.toString());
 	    return camelCase.toString();
 	}
-	
-	public String chartNameFromPath(Path path) {
-		String name = path.toString();
-		int index = name.lastIndexOf(File.separator);
-		if( index>0) name = name.substring(index+1);
-		// Strip off extension
-		index = name.lastIndexOf(".");
-		if( index>0 ) name = name.substring(0,index);
-		name = toCamelCase(name);
-		return name;
+	/**
+	 * Iterate over all properties for the specified class, creating them
+	 * in the step. If available, pull corresponding values from the G2 element.
+	 * 
+	 * @param step
+	 * @param g2block
+	 */
+	public void updateStepFromG2Block(Document chart,Element step,Element g2block) {
+		String factoryId = step.getAttribute("factory-id");
+		List<String> properties = propertyMapper.getPropertyList(factoryId);
+		if( properties!=null ) {
+			for( String property:properties ) {
+				String g2attribute = propertyMapper.g2Property(factoryId,property);
+				String value = g2block.getAttribute(g2attribute);
+				Element propelement = chart.createElement(property);
+				Node textNode = chart.createTextNode(value);
+				propelement.appendChild(textNode);
+			}
+		}
+		else {
+			if( factoryId.startsWith("com.ils") ) log.warnf("updateStepFromG2Block: WARNING: No properties found for class %s",factoryId);
+		}
+		
 	}
 	
 	// Add a single chart element to the document

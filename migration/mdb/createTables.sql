@@ -9,8 +9,7 @@ CREATE TABLE ClassMap(
 -- Ignition blocks
 CREATE TABLE PropertyMap(
     FactoryId text NOT NULL,
-	Name     text NOT NULL,
-	DataType text NOT NULL,
+	Property  text NOT NULL,
     G2Property text NOT NULL
 );
 

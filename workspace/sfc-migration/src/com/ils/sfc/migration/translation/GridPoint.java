@@ -3,7 +3,6 @@
  */
 package com.ils.sfc.migration.translation;
 
-import java.util.Date;
 
 
 /**

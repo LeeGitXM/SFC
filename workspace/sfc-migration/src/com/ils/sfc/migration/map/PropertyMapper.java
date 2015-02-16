@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,12 +15,14 @@ import java.util.Map;
  */
 public class PropertyMapper {
 	private final String TAG = "PropertyMapper";
-	private final Map<String,String> propertyMap;     // Lookup by G2 property name
+	private final Map<String,String> propertyMap;     // Lookup by factoryId, Ignition property
+	private final Map<String,List<String>> propertiesMap;     // Lookup by factoryId,
 	/** 
 	 * Constructor: 
 	 */
 	public PropertyMapper() {
-		propertyMap = new HashMap<String,String>();
+		propertyMap = new HashMap<>();
+		propertiesMap = new HashMap<>();
 	}
 
 	/**
@@ -38,10 +42,16 @@ public class PropertyMapper {
 			while(rs.next())
 			{
 				String factoryId = rs.getString("FactoryId");
+				String iProperty = rs.getString("Property");
 				String g2Property = rs.getString("G2Property");
-				String iProperty = rs.getString("Name");
-				String key = makePropertyMapKey(factoryId,g2Property);
+				String key = makePropertyMapKey(factoryId,iProperty);
 				propertyMap.put(key,iProperty);
+				List<String> properties = propertiesMap.get(factoryId);
+				if( properties==null) {
+					properties = new ArrayList<>();
+					propertiesMap.put(factoryId,properties);
+				}
+				properties.add(iProperty);
 			}
 			rs.close();
 		}
@@ -57,7 +67,19 @@ public class PropertyMapper {
 		}
 	}
 
+	public String g2Property(String factoryId,String propertyName) {
+		String key = makePropertyMapKey(factoryId,propertyName);
+		return propertyMap.get(key);
+	}
 	
+	/**
+	 * 
+	 * @param factoryId
+	 * @return a list of properties appropriate for a class
+	 */
+	public List<String> getPropertyList(String factoryId) {
+		return propertiesMap.get(factoryId);
+	}
 	
 	/**
 	 * Create the key for lookup in the property map. Simply
