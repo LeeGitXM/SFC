@@ -12,6 +12,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.ils.sfc.migration.DOMUtil;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 /**
@@ -44,7 +45,7 @@ public class StepLayoutManager {
 		analyze(g2chart.getElementsByTagName("block"));
 		center();
 	}
-	
+	public Map<String,Element>   getBlockMap() { return this.blockMap; }
 	public Map<String,GridPoint> getGridMap() { return this.gridMap; }
 	public double getZoom() { return this.zoom; }
 	
@@ -57,28 +58,27 @@ public class StepLayoutManager {
 			String uuid = StepTranslator.canonicalForm(block.getAttribute("uuid"));
 			blockMap.put(uuid, block);
 			gridMap.put(uuid,new GridPoint(UNSET,UNSET));
-			String connectionString = block.getAttribute("connectedTo");
-			if( connectionString!=null ) {
-				ConnectionHub hub = connectionMap.get(uuid);
-				if( hub==null) {
-					hub = new ConnectionHub();
-					connectionMap.put(uuid,hub);
-				}
-				String[] connections = connectionString.split(",");
-				int jndex = 0;
-				while( jndex < connections.length ) {
-					String cxn = StepTranslator.canonicalForm(connections[jndex]);
-					hub.addConnectionTo(cxn);
-					ConnectionHub destinationHub = connectionMap.get(cxn);
-					if( destinationHub==null) {
-						destinationHub = new ConnectionHub();
-						connectionMap.put(cxn,destinationHub);
-					}
-					destinationHub.addConnectionFrom(uuid);
-					jndex++;
-				}
+			log.infof("%s.analyze: block and gridpoints for %s(%s)",TAG,block.getAttribute("name"),uuid);
+			ConnectionHub hub = connectionMap.get(uuid);
+			if( hub==null) {
+				hub = new ConnectionHub();
+				connectionMap.put(uuid,hub);
 			}
-
+			NodeList connections = block.getElementsByTagName("connectedTo");
+			int jndex = 0;
+			while( jndex < connections.getLength() ) {
+				Element connection = (Element)connections.item(jndex);
+				String cxn = StepTranslator.canonicalForm(connection.getAttribute("uuid"));
+				log.infof("%s.analyze: connected to %s",TAG,cxn);
+				hub.addConnectionTo(cxn);
+				ConnectionHub destinationHub = connectionMap.get(cxn);
+				if( destinationHub==null) {
+					destinationHub = new ConnectionHub();
+					connectionMap.put(cxn,destinationHub);
+				}
+				destinationHub.addConnectionFrom(uuid);
+				jndex++;
+			}
 			index++;
 		}
 		// Find the begin block. There can be only one.
@@ -88,7 +88,7 @@ public class StepLayoutManager {
 			Element block = (Element)blocklist.item(index);
 			String uuid = StepTranslator.canonicalForm(block.getAttribute("uuid"));
 			ConnectionHub hub = connectionMap.get(uuid);
-			if( hub.getConnectionsFrom().isEmpty()) {
+			if( hub.getConnectionsTo().isEmpty()) {
 				beginuuid = uuid;
 				break;
 			}
@@ -98,7 +98,7 @@ public class StepLayoutManager {
 			log.errorf("%s.analyze: Chart has no begin block", TAG);
 			return;
 		}
-		
+		log.infof("%s.analyze: begin block is %s",TAG,beginuuid);
 		// Now do the layout. Position the root. Walk the tree.
 		int x = 0;   // Center on zero so that we can scale if need be.
 		int y = 2;
@@ -115,6 +115,7 @@ public class StepLayoutManager {
 	 */
 	private void positionNode(String uuid,int x,int y) {
 		GridPoint gp = gridMap.get(uuid);
+		
 		// If we conflict on the left, move everything right
 		int rightmost = getRightmost(y);
 		if( rightmost > x-2 ) {
@@ -200,7 +201,7 @@ public class StepLayoutManager {
 		}
 	}
 	private void setRightmost(int x,int y) {
-		while( y>rightmostIndex.size() ) {
+		while( y>=rightmostIndex.size() ) {
 			rightmostIndex.add(null);
 		}
 		rightmostIndex.set(y,new Integer(x));

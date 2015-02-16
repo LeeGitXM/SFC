@@ -76,6 +76,7 @@ public class CopyWalker extends AbstractPathWalker implements FileVisitor<Path> 
 		while(Files.exists(target)) {
 			target = Paths.get(String.format("%s%c",newfile.toString(),'a'+version));
 		}
+		target = Paths.get(target.toString(),".xml");
 		log.debugf("%s.visitFile: %s -> %s",TAG,file.toString(),target.toString());
 		delegate.convertFile(file, target);
 		return FileVisitResult.CONTINUE;

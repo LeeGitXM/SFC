@@ -262,7 +262,7 @@ public class Converter {
 	 * @param g2doc the G2 export
 	 */
 	private void updateChartForG2(Document chart,Document g2doc) {
-		NodeList steps = g2doc.getElementsByTagName("data");
+		NodeList steps = g2doc.getElementsByTagName("block");
 		// A common idiom is a single block in the chart. We need to add begin/end.
 		if(steps.getLength()==1) {
 			Element block = (Element)steps.item(0);
@@ -271,7 +271,7 @@ public class Converter {
 		else {
 			StepLayoutManager layout = new StepLayoutManager(g2doc);
 			Element root = chart.getDocumentElement();   // "sfc"
-			Map<String,Element> blockMap = createBlockMap(root);
+			Map<String,Element> blockMap =  layout.getBlockMap();
 			Map<String,GridPoint> gridMap = layout.getGridMap();
 			for(String uuid:gridMap.keySet()) {
 				GridPoint gp = gridMap.get(uuid);
@@ -382,14 +382,17 @@ public class Converter {
 	 */
 	public void updateStepFromG2Block(Document chart,Element step,Element g2block) {
 		String factoryId = step.getAttribute("factory-id");
+		log.infof("%s.updateStepFromG2Block: step class = %s",TAG,factoryId);
 		List<String> properties = propertyMapper.getPropertyList(factoryId);
 		if( properties!=null ) {
 			for( String property:properties ) {
 				String g2attribute = propertyMapper.g2Property(factoryId,property);
 				String value = g2block.getAttribute(g2attribute);
+				log.infof("%s.updateStepFromG2Block: %s(%s) = %s",TAG,property,g2attribute,value);
 				Element propelement = chart.createElement(property);
 				Node textNode = chart.createTextNode(value);
 				propelement.appendChild(textNode);
+				step.appendChild(propelement);
 			}
 		}
 		else {
@@ -427,23 +430,6 @@ public class Converter {
 		chart.setAttribute("version", "7.7.2 (b2014121709)");
 		chart.setAttribute("zoom", "1.0");
 		doc.appendChild(chart);
-	}
-	
-	private Map<String,Element> createBlockMap(Element root) {
-		Map<String,Element> blockMap = new HashMap<>();
-		// Rely that the return is document order and 
-		// data and block are 1:1. The uuid is in the block.
-		NodeList data = root.getElementsByTagName("data");
-		NodeList blocks = root.getElementsByTagName("block");
-		int index = 0;
-		while( index < blocks.getLength() ) {
-			Element block = (Element)blocks.item(index);
-			Element datum = (Element)data.item(index);
-			String uuid = block.getAttribute("uuid");
-			if( uuid.length()>0) blockMap.put(uuid, datum);
-			index++;
-		}
-		return blockMap;
 	}
 	
 	/**

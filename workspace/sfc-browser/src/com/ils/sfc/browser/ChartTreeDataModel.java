@@ -114,8 +114,14 @@ public class ChartTreeDataModel {
 				catch(IOException ioe ) {
 					log.warnf("%s.initialize: IO Exception for %s (%s)", TAG,res.getName(),ioe.getLocalizedMessage());
 				}
+				catch(NumberFormatException nfe ) {
+					log.warnf("%s.initialize: Chart instantiation error for %s (%s)", TAG,res.getName(),nfe.getLocalizedMessage());
+				}
 				catch(XMLParseException xpe ) {
 					log.warnf("%s.initialize: Parse Exception for %s (%s)", TAG,res.getName(),xpe.getLocalizedMessage());
+				}
+				catch(Exception ex) {
+					log.warnf("%s.initialize: Unhandled exception for %s (%s)", TAG,res.getName(),ex.getLocalizedMessage());
 				}
 			}
 			// Handle the folder hierarchy
