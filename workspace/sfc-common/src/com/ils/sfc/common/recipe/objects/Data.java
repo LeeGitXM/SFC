@@ -45,6 +45,9 @@ attributes:sequence (structure (
 public abstract class Data {
 	protected BasicPropertySet properties = new BasicPropertySet();
 	protected String s88Level;
+	// id and parentId come from the G2 export and are used to re-compose a hierarchy:
+	protected String id;
+	protected String parentId;
 	
 
 	public Data() {
@@ -56,6 +59,22 @@ public abstract class Data {
 		addProperty(IlsProperty.ADVICE);
 		
 		properties.set(IlsProperty.CLASS, getClass().getSimpleName());
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
 	}
 
 	public String getS88Level() {
