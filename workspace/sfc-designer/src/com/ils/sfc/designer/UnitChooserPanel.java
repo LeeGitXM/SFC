@@ -30,7 +30,6 @@ import com.inductiveautomation.ignition.common.script.JythonExecException;
 public class UnitChooserPanel extends JPanel {
 	private JComboBox<String> typesCombo = new JComboBox<String>();
 	private JComboBox<String> unitsCombo = new JComboBox<String>();
-	private boolean initialized;
 	
 	public UnitChooserPanel() {
 		initUI();
@@ -42,7 +41,7 @@ public class UnitChooserPanel extends JPanel {
 	}
 
 	private void initUI() {
-		setLayout(new BorderLayout());
+		setLayout(new GridBagLayout());
 		GridBagConstraints con = new GridBagConstraints();
 
 		DesignerUtil.setConstraints(con, EAST, NONE, 1, 1, 0, 0, new Insets(2, 0, 2, 5), 0, 0);

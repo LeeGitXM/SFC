@@ -33,6 +33,7 @@ public class FieldCreatorPane extends JPanel implements RecipeEditorController.R
 	private JComboBox<ComboWrapper> typesCombo = new JComboBox<ComboWrapper>();
 	private UnitChooserPanel unitChooserPanel = new UnitChooserPanel();
 	private Structure recipeData;
+	private boolean initialized;
 	
 	public FieldCreatorPane(RecipeEditorController controller) {
 		super(new BorderLayout());
@@ -45,6 +46,10 @@ public class FieldCreatorPane extends JPanel implements RecipeEditorController.R
 
 	@Override
 	public void activate() {
+		if(!initialized) {
+			unitChooserPanel.initTypes();
+			initialized = true;
+		}
 		controller.slideTo(RecipeEditorController.FIELD_CREATOR);
 	}
 
