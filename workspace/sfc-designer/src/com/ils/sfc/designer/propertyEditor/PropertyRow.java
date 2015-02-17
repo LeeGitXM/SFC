@@ -2,6 +2,7 @@ package com.ils.sfc.designer.propertyEditor;
 
 import java.text.ParseException;
 
+import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
@@ -9,7 +10,6 @@ import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 public class PropertyRow {
 	private PropertyValue<?> propertyValue;
-	private Object[] choices;
 	private String displayLabel;
 	
 	public PropertyRow(PropertyValue<?> propertyValue) {
@@ -36,6 +36,11 @@ public class PropertyRow {
 		return propertyValue.getProperty().getName();
 	}
 	
+	public Object[] getChoices() {
+		return propertyValue.getProperty() instanceof IlsProperty ? 
+			((IlsProperty<?>)propertyValue.getProperty()).getChoices() : null;
+	}
+	
 	public boolean isEditableString() {
 		return getProperty().getType() == String.class && getChoices() == null;
 	}
@@ -47,10 +52,6 @@ public class PropertyRow {
 	public Object getValue() {
 		return propertyValue.getValue() != null ? propertyValue.getValue() : getDefaultValue();
 	}
-	
-	public Object[] getChoices() {
-		return choices;
-	}
 
 	public String getCategory() {
 		return null;
@@ -58,10 +59,6 @@ public class PropertyRow {
 	
 	public boolean isCategory() {
 		return false;
-	}
-
-	public void setChoices(Object[] choices) {
-		this.choices = choices;
 	}
 
 	public Property<?> getProperty() {

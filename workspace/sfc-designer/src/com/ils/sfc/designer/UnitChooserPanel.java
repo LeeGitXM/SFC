@@ -68,6 +68,14 @@ public class UnitChooserPanel extends JPanel {
 		typesCombo.setSelectedIndex(0);
 	}
 
+	public void setUnit(String unitName) throws JythonExecException {
+		String unitType = (String) PythonCall.GET_TYPE_OF_UNIT.exec(unitName);
+		typesCombo.setSelectedItem(unitType);
+		if(unitType != null) {
+			unitsCombo.setSelectedItem(unitName);
+		}
+	}
+	
 	public String getSelectedType() {
 		return (String) typesCombo.getSelectedItem();
 	}

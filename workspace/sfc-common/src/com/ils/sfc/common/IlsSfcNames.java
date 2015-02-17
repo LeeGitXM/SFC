@@ -116,6 +116,7 @@ public class IlsSfcNames {
 	public static final String TOP_LEFT = "topLeft";
 	public static final String TOP_RIGHT = "topRight";
 	public static final String TYPE = "type";
+	public static final String UNIT_SUFFIX = "Unit";
 	public static final String UNITS = "units";
 	public static final String UPDATE = "update";
 	public static final String UPDATE_FREQUENCY = "updateFrequency";

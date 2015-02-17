@@ -24,7 +24,6 @@ import com.inductiveautomation.ignition.common.script.JythonExecException;
 
 @SuppressWarnings("serial")
 public class PropertyTableModel extends AbstractTableModel {
-	private static final String UNIT_SUFFIX = "Unit";
 	private static final String[] columnNames = {"Property", "Value"};
 	static final int NAME_COLUMN = 0;
 	static final int VALUE_COLUMN = 1;
@@ -128,21 +127,7 @@ public class PropertyTableModel extends AbstractTableModel {
 			}
 			if( !IlsProperty.ignoreProperties.contains(name)) {
 				PropertyRow newRow = new PropertyRow(pValue);
-				rows.add(newRow);
-	
-				// add unit choices if present
-				if(name.endsWith(UNIT_SUFFIX)) {
-					String unit = (String) pValue.getValue();
-					Object[] unitChoices = null;
-					try {
-						unitChoices = PythonCall.toArray(
-							PythonCall.OTHER_UNITS.exec(unit));
-						newRow.setChoices(unitChoices);
-					} catch (Exception e) {
-						logger.error("Exception getting units", e);
-					}
-				}
-				
+				rows.add(newRow);				
 			}
 		}
 		

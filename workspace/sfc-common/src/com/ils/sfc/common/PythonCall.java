@@ -57,8 +57,11 @@ public class PythonCall {
 	public static final PythonCall GET_UNIT_TYPES = new PythonCall("ils.common.units.getUnitTypes", 
 			PyList.class,  new String[]{} );
 
+	public static final PythonCall GET_TYPE_OF_UNIT = new PythonCall("ils.common.units.getTypeOfUnit", 
+			String.class,  new String[]{"unitName"} );
+
 	public static final PythonCall GET_UNITS_OF_TYPE = new PythonCall("ils.common.units.getUnitsOfType", 
-			PyList.class,  new String[]{"unitType"} );
+			PyList.class,  new String[]{"unitName"} );
 
 	public static final PythonCall DELETE_DELAY_NOTIFICATION = new PythonCall(STEPS_PKG + "deleteDelayNotifications", 
 			PyList.class, stepArgs );

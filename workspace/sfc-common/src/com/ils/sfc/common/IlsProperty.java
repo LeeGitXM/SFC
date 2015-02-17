@@ -23,6 +23,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 		ignoreProperties.add("id");
 		ignoreProperties.add("type");
 		ignoreProperties.add("factory-id");
+		ignoreProperties.add("associated-data");
 		// ILS recipe data type:
 		ignoreProperties.add("class");
 	}
