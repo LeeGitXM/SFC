@@ -28,21 +28,21 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 	static final int EMPTY_PANE = 8;
 	
 	// The sub-panes:
-	private BrowserPane browser = new BrowserPane(this);
-	private ObjectCreatorPane creator = new ObjectCreatorPane(this);
-	private ObjectEditorPane objectEditor = new ObjectEditorPane(this);
-	private RecipeEditorStringEditorPane textEditor = new RecipeEditorStringEditorPane(this);
-	private RecipeEditorMessagePane messagePane = new RecipeEditorMessagePane(this);
-	private FieldCreatorPane fieldCreator = new FieldCreatorPane(this);
-	private RecipeEditorTagBrowserPane tagBrowser;
-	private UnitChooserPane unitChooser = new UnitChooserPane(this);
+	private RecipeBrowserPane browser = new RecipeBrowserPane(this);
+	private RecipeObjectCreatorPane creator = new RecipeObjectCreatorPane(this);
+	private RecipePropertyEditorPane objectEditor = new RecipePropertyEditorPane(this);
+	private RecipeStringEditorPane textEditor = new RecipeStringEditorPane(this);
+	private RecipeMessagePane messagePane = new RecipeMessagePane(this);
+	private RecipeFieldCreatorPane fieldCreator = new RecipeFieldCreatorPane(this);
+	private RecipeTagBrowserPane tagBrowser;
+	private RecipeUnitChooserPane unitChooser = new RecipeUnitChooserPane(this);
 	
 	// The step whose recipe data we are editing:
 	private ChartUIElement element;
 	private Group recipeData;
 	
 	public RecipeEditorController() {
-		tagBrowser = new RecipeEditorTagBrowserPane(this);
+		tagBrowser = new RecipeTagBrowserPane(this);
 		objectEditor.getPropertyEditor().getTableModel().setErrorHandler(this);
 		// sub-panes added according to the indexes above:
 		slidingPane.add(browser);
@@ -78,35 +78,35 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 		return slidingPane;
 	}
 
-	public BrowserPane getBrowser() {
+	public RecipeBrowserPane getBrowser() {
 		return browser;
 	}
 
-	public ObjectCreatorPane getCreator() {
+	public RecipeObjectCreatorPane getCreator() {
 		return creator;
 	}
 
-	public FieldCreatorPane getFieldCreator() {
+	public RecipeFieldCreatorPane getFieldCreator() {
 		return fieldCreator;
 	}
 
-	public ObjectEditorPane getEditor() {
+	public RecipePropertyEditorPane getEditor() {
 		return objectEditor;
 	}
 
-	public RecipeEditorStringEditorPane getTextEditor() {
+	public RecipeStringEditorPane getTextEditor() {
 		return textEditor;
 	}
 
-	public RecipeEditorMessagePane getMessagePane() {
+	public RecipeMessagePane getMessagePane() {
 		return messagePane;
 	}
 
-	public RecipeEditorTagBrowserPane getTagBrowser() {
+	public RecipeTagBrowserPane getTagBrowser() {
 		return tagBrowser;
 	}
 	
-	public UnitChooserPane getUnitChooser() {
+	public RecipeUnitChooserPane getUnitChooser() {
 		return unitChooser;
 	}
 

@@ -10,8 +10,8 @@ import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.step.*;
-import com.ils.sfc.designer.recipeEditor.RecipeDataEditorFrame;
-import com.ils.sfc.designer.stepEditor.IlsStepEditor;
+import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame;
+import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -33,7 +33,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	//private SFCWorkspace sfcWorkspace;
 	//private JPopupMenu stepPopup;
 	private SFCDesignerHook iaSfcHook;
-	private RecipeDataEditorFrame recipeEditorFrame = new RecipeDataEditorFrame();
+	private RecipeEditorFrame recipeEditorFrame = new RecipeEditorFrame();
 	
 	//private ChartManagerService chartManager;
 	private static String[] editorFactoryIds = {
@@ -100,7 +100,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		}
 		    	
 		// register the step config factories (ie the editors)
-		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory();
+		StepEditorController.Factory editorFactory = new StepEditorController.Factory();
     	StepConfigRegistry configRegistry = (StepConfigRegistry) context.getModule(SFCModule.MODULE_ID);
     	for(String factoryId: editorFactoryIds) {
     		configRegistry.register(factoryId, editorFactory);

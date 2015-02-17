@@ -78,6 +78,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private static Map<String, List<String>> propertyNamesById = new HashMap<String, List<String>>();
 	static {
 		for(StepFactory stepFactory: stepFactories) {
+			if(!(stepFactory instanceof AbstractIlsStepDelegate)) continue;
 			List<String> propertyNames = new ArrayList<String>();
 			AbstractIlsStepDelegate delegate = (AbstractIlsStepDelegate)stepFactory;
 			propertyNamesById.put(delegate.getId(), propertyNames);
