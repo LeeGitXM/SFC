@@ -42,7 +42,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private GatewayContext context = null;
 	private ChartManagerService chartManager;
 	private IlsScopeLocator scopeLocator = new IlsScopeLocator();
-	private static Map<String, List<String>> propertyNamesById = new HashMap<String, List<String>>();
 	
 	private static StepFactory[] stepFactories = {
 		new QueueMessageStepFactory(),
@@ -74,7 +73,22 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		new ReviewFlowsStepFactory(),
 		new IlsEnclosingStepFactory(),
 	};
-	
+
+	// an index of step property names by the factory id:
+	private static Map<String, List<String>> propertyNamesById = new HashMap<String, List<String>>();
+	static {
+		for(StepFactory stepFactory: stepFactories) {
+			List<String> propertyNames = new ArrayList<String>();
+			AbstractIlsStepDelegate delegate = (AbstractIlsStepDelegate)stepFactory;
+			propertyNamesById.put(delegate.getId(), propertyNames);
+			System.out.println(delegate.getId());
+			for(PropertyValue<?> pval: delegate.getPropertySet()) {
+				propertyNames.add(pval.getProperty().getName());
+				System.out.println(pval.getProperty().getName());
+			}
+		}		
+	}
+
 	public IlsSfcGatewayHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
