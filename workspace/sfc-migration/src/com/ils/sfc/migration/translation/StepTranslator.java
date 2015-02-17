@@ -73,7 +73,7 @@ public class StepTranslator {
 			String convertedReference = delegate.toCamelCase(reference);
 			String chartPath = delegate.getPathForChart(convertedReference);
 			step.setAttribute("chart-path", chartPath);
-			log.infof("%s.translate: Encapsulation: %s translates to %s",TAG,reference,chartPath);
+			log.infof("%s.translate: Encapsulation: %s translates to %s",TAG,convertedReference,chartPath);
 			step.setAttribute("execution-mode", "RunUntilStopped");
 		}
 	

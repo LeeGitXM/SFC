@@ -47,7 +47,7 @@ public class PathWalker extends AbstractPathWalker implements FileVisitor<Path> 
 		if( partialPath.endsWith(".xml")) partialPath = partialPath.substring(0, partialPath.length()-4);
 		partialPath = delegate.toCamelCase(partialPath);
 		log.infof("%s.visitFile: path map of %s = %s",TAG,chartName,partialPath);
-		pathMap.put(chartName, String.format("%s/%s",partialPath,chartName));
+		pathMap.put(chartName, partialPath);
 		return FileVisitResult.CONTINUE;
 	}
 }
