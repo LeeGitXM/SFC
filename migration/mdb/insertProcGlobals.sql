@@ -1,1 +1,1 @@
-insert into GlobalMap values ('FsErrorLogMessages','LogFiles');
+insert into ProcGlobalMap values ('FsErrorLogMessages','LogFiles');

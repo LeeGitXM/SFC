@@ -44,12 +44,6 @@ CREATE TABLE ProcClassMap(
     IgnitionClass text NOT NULL
 );
 
--- Map a G2 procedure to a python module
-CREATE TABLE ProcedureMap(
-    G2Procedure text PRIMARY KEY ,
-    IgnitionProcedure text NOT NULL
-);
-
 -- Set properties of Ignition blocks based on a 
 -- G2 class. These properties rely only on the G2 class.
 CREATE TABLE ProcClassProperty(
@@ -69,7 +63,7 @@ CREATE TABLE ProcEnumerationMap(
 );
 -- These are values of globals
 -- by the procedures that need them.
-CREATE TABLE ProcedureGlobalMap(
+CREATE TABLE ProcGlobalMap(
    PyProc      text NOT NULL,
    GlobalName  text NOT NULL
 );

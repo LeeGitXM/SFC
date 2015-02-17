@@ -20,4 +20,7 @@ sqlite3 $DB < ${BIN}/insertClassMap.sql
 sqlite3 $DB < ${BIN}/insertProperties.sql
 sqlite3 $DB < ${BIN}/insertPropertyValues.sql
 sqlite3 $DB < ${BIN}/insertProcedures.sql
+sqlite3 $DB < ${BIN}/insertProcClassMap.sql
+sqlite3 $DB < ${BIN}/insertProcGlobals.sql
+sqlite3 $DB < ${BIN}/insertEnumerations.sql
 sqlite3 $DB < ${BIN}/insertTags.sql
