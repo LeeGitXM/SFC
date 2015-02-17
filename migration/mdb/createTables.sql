@@ -1,3 +1,7 @@
+-- Copyright 2015. ILS Automaition. All rights reserved.
+-- These tables hold conversion mappings between G2
+-- sequential control blocks and Ignition Sequential Function Charts.
+--
 -- Map a G2 block class to an Ignition step class
 CREATE TABLE ClassMap(
     G2Class text PRIMARY KEY ,
@@ -31,4 +35,35 @@ CREATE TABLE TagMap(
 	GSIName  text NOT NULL,
 	TagPath  text NOT NULL,
 	DataType text NOT NULL
+);
+
+-- The tables below pertain to procedure translation
+-- Map a G2 class to an Ignition python class
+CREATE TABLE ProcClassMap(
+    G2Class text PRIMARY KEY ,
+    IgnitionClass text NOT NULL
+);
+
+-- Set properties of Ignition blocks based on a 
+-- G2 class. These properties rely only on the G2 class.
+CREATE TABLE ProcClassProperty(
+    G2Class    text NOT NULL,
+	Name     text NOT NULL,
+	DataType text NOT NULL,
+	Editable integer,
+	BindingType text NOT NULL,
+	Value text
+);
+
+-- These are values of symbolic constants
+CREATE TABLE ProcEnumerationMap(
+   G2Name text      NOT NULL,
+   EnumerationName  text NOT NULL,
+   Value            text NOT NULL
+);
+-- These are values of globals
+-- by the procedures that need them.
+CREATE TABLE ProcGlobalMap(
+   PyProc      text NOT NULL,
+   GlobalName  text NOT NULL
 );

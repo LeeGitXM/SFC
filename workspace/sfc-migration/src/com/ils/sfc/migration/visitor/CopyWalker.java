@@ -64,7 +64,6 @@ public class CopyWalker extends AbstractPathWalker implements FileVisitor<Path> 
 		//Ignore the OSX resource marker
 		if(file.toString().endsWith(".DS_Store")) return FileVisitResult.CONTINUE;
 		String relative = relativize(inRoot,delegate.toCamelCase(file.toString()));
-		//log.infof("%s.visitFile: %s relative=%s",TAG,file.toString(),relative);
 		Path newfile = Paths.get(outRoot.toString(),relative);
 		// Make sure that the new file does not exist ... 
 		// if so try append alpha until we get a free name.
@@ -74,7 +73,7 @@ public class CopyWalker extends AbstractPathWalker implements FileVisitor<Path> 
 			target = Paths.get(String.format("%s%c",newfile.toString(),'a'+version));
 		}
 		target = Paths.get(target.toString()+".xml");
-		log.infof("%s.visitFile: %s -> %s",TAG,file.toString(),target.toString());
+		log.tracef("%s.visitFile: %s -> %s",TAG,file.toString(),target.toString());
 		delegate.convertFile(file, target);
 		return FileVisitResult.CONTINUE;
 	}

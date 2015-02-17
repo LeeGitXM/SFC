@@ -1,0 +1,10 @@
+#!/bin/sh
+#  Use this version when debugging a single file.
+#
+SFC=~/Development/ils/src/sfc
+START="Test-Unit-Procedure-5"
+INDIR="$SFC/xml/g2"
+OUTDIR=$SFC/xml/ignition
+mkdir -p $OUTDIR
+rm -rf $OUTDIR/*
+$SFC/migration/convert "$INDIR" "$OUTDIR" "$START"

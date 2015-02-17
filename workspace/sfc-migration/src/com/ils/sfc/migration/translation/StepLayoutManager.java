@@ -12,7 +12,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.ils.sfc.migration.DOMUtil;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 /**
@@ -88,7 +87,7 @@ public class StepLayoutManager {
 			Element block = (Element)blocklist.item(index);
 			String uuid = StepTranslator.canonicalForm(block.getAttribute("uuid"));
 			ConnectionHub hub = connectionMap.get(uuid);
-			if( hub.getConnectionsTo().isEmpty()) {
+			if( hub.getConnectionsFrom().isEmpty()) {
 				beginuuid = uuid;
 				break;
 			}
@@ -125,12 +124,13 @@ public class StepLayoutManager {
 		}
 		gp.x = x;
 		gp.y = y;
+		log.infof("%s.positionNode: %s at %d,%d", TAG,uuid,x,y);
 		setRightmost(x,y);
 		
 		
 		ConnectionHub hub = connectionMap.get(uuid);
 		List<String> nextBlocks = hub.getConnectionsTo();
-		if( nextBlocks.size() < 2) y = y+1;
+		if( nextBlocks.size() < 2 ) y = y+1;
 		else                       y = y+2;  // Allow for connections
 		int xpos = x - (nextBlocks.size()-1);
 		for( String childuuid:nextBlocks) {

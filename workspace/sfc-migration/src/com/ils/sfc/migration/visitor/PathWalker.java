@@ -46,7 +46,7 @@ public class PathWalker extends AbstractPathWalker implements FileVisitor<Path> 
 		// Remove the file extension, came-case
 		if( partialPath.endsWith(".xml")) partialPath = partialPath.substring(0, partialPath.length()-4);
 		partialPath = delegate.toCamelCase(partialPath);
-		log.infof("%s.visitFile: path map of %s = %s",TAG,chartName,partialPath);
+		log.debugf("%s.visitFile: path map of %s = %s",TAG,chartName,partialPath);
 		pathMap.put(chartName, partialPath);
 		return FileVisitResult.CONTINUE;
 	}

@@ -1,9 +1,8 @@
 #!/bin/sh
-# Copy the JSON files from svn into our project
-# for viewing in Eclipse.
+# Copy XML export files from svn into our project
+# for viewing in Eclipse. Clean out irrelevant directories.
 #
 BIN=`pwd`
-UNIT=Test\ Diagram
 SVN=~/Development/ils/svn/EMChemicals/G2Artifacts/Sequential\ Control
 REPO=~/Development/ils/src/sfc/xml
 mkdir -p $REPO/g2/
