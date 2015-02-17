@@ -42,17 +42,12 @@ public class StepTranslator {
 	 * G2 block. The g2block element has a single "block" child and,
 	 * potentially, multiple "recipe" elements.
 	 * @param chart
-	 * @param g2block
+	 * @param block g2block corresponding to a step within the chart
 	 * @return
 	 */
-	public Element translate(Document chart,Element g2block,int x,int y) {
+	public Element translate(Document chart,Element block,int x,int y) {
 		Element step = chart.createElement("step");
 		
-		if( g2block.getElementsByTagName("block").getLength()==0) {
-			log.errorf("%s.translate: g2block has no \"block\" element",TAG);
-			return step;
-		}
-		Element block = (Element)(g2block.getElementsByTagName("block").item(0));
 		// Get attributes from the block element
 		String name = makeName(block.getAttribute("name"));
 		String uuid = canonicalForm(block.getAttribute("uuid"));
@@ -69,14 +64,16 @@ public class StepTranslator {
 				log.errorf("%s.translate: Error no SFC factoryID found for G2 class (%s)",TAG,claz);
 			}
 		}
-		delegate.updateStepFromG2Block(chart,step,g2block);
 
-		// Encapsulation have several additional properties
+		// Encapsulation have several additional properties. The encapsulation reference
+		// is to a chart name only. Ignition requires a path.
 		if( isEncapsulation ) {
 			String reference = block.getAttribute("block-full-path-label");
 			if( reference.length()==0) reference = block.getAttribute("label");
-			String filename = delegate.toCamelCase(reference);
-			step.setAttribute("chart-path", delegate.getPathForFile(filename));
+			String convertedReference = delegate.toCamelCase(reference);
+			String chartPath = delegate.getPathForChart(convertedReference);
+			step.setAttribute("chart-path", chartPath);
+			log.infof("%s.translate: Encapsulation: %s translates to %s",TAG,convertedReference,chartPath);
 			step.setAttribute("execution-mode", "RunUntilStopped");
 		}
 	
@@ -84,9 +81,10 @@ public class StepTranslator {
 		step.setAttribute("id", uuid);
 		step.setAttribute("factory-id", factoryId);
 		step.setAttribute("location", String.format("%d %d", x,y));
+		delegate.updateStepFromG2Block(chart,step,block);
 		
 		// Now add recipe data - feed the translator the entire "data" element
-		Element recipe = makeRecipeDataElement(chart,step,g2block);
+		Element recipe = makeRecipeDataElement(chart,step,block);
 		if( recipe!=null) step.appendChild(recipe);
 		return step;
 	}
@@ -137,6 +135,7 @@ public class StepTranslator {
 	}
 	/** 
 	 * Seems like this should be easier...
+	 * @param g2Block a G2 export "block" element
 	 * @return an xml element for associated data, containing the recipe data.
 	 */
 	private Element makeRecipeDataElement(Document chart,Element step,Element g2Block) {

@@ -11,6 +11,7 @@ insert into ClassMap values ('S88-REMOVE-BUSY-NOTIFICATION-TASK','com.ils.delete
 insert into ClassMap values ('S88-SHOW-NOTIFICATION-DIALOG-TASK','com.ils.dialogMessageStep','false');
 insert into ClassMap values ('S88-ENABLE-OR-DISABLE-COMMAND-TASK','com.ils.enableDisableStep','false');
 insert into ClassMap values ('S88-ENCAPSULATION-TASK', 'enclosing-step','true');
+insert into ClassMap values ('S88-END', 'end-step','false');
 insert into ClassMap values ('S88-GET-INPUT-TASK','com.ils.inputStep','false');
 insert into ClassMap values ('S88-HOLD-TASK','com.ils.pauseStep','false');
 insert into ClassMap values ('S88-LIBRARY-TASK','enclosing-step','false');

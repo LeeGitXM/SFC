@@ -13,14 +13,14 @@ import java.util.Map;
  * Copy property values from G2 blocks into Ignition. Use the 
  * database as a lookup to map property names between the two systems.
  */
-public class PropertyMapper {
+public class PropertyValueMapper {
 	private final String TAG = "PropertyMapper";
 	private final Map<String,String> propertyMap;     // Lookup by factoryId, Ignition property
 	private final Map<String,List<String>> propertiesMap;     // Lookup by factoryId,
 	/** 
 	 * Constructor: 
 	 */
-	public PropertyMapper() {
+	public PropertyValueMapper() {
 		propertyMap = new HashMap<>();
 		propertiesMap = new HashMap<>();
 	}

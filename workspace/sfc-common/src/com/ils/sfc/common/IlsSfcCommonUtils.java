@@ -100,7 +100,15 @@ public class IlsSfcCommonUtils {
 	public static void fromXML(Element dom, ChartUIElement ui, Property<?>[] properties) {
 		for(Property<?> property: properties) {
 			String stringValue = getPropertyAsString(property, dom);
-			Object value = parseProperty(property, stringValue);
+			Object value = null;
+			try {
+				value = parseProperty(property, stringValue);
+			}
+			catch(NumberFormatException nfe) {
+				logger.warn("Error deserializing step property "+property+" from "+stringValue, nfe);
+				value = stringValue;
+			}
+			
 			ui.setDirect(property, value);
 		}
 	}

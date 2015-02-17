@@ -43,7 +43,7 @@ public class ProjectWalker extends AbstractPathWalker implements FileVisitor<Pat
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
 		// The root folder has ROOT as its parent
-		log.infof("%s.previsitDirectory: %s ...",TAG,dir.toString());
+		log.debugf("%s.previsitDirectory: %s ...",TAG,dir.toString());
 		String dirname = "";
 		String dirString = dir.toString();
 		int index = dirString.lastIndexOf(File.separator);
@@ -78,7 +78,7 @@ public class ProjectWalker extends AbstractPathWalker implements FileVisitor<Pat
 		// Look up the UUID of the parent directory
 		String directory = directoryForFile(file);
 		String parentUUID = uuidForPath.get(directory);
-		log.infof("%s.visitFile: parent for %s = %s.",TAG,directory,parentUUID);
+		log.debugf("%s.visitFile: parent for %s = %s.",TAG,directory,parentUUID);
 		delegate.addChart(file,parentUUID);
         return FileVisitResult.CONTINUE;
 	}
