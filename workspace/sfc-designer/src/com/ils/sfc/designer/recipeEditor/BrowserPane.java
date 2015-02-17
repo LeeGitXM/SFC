@@ -19,12 +19,12 @@ import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Group;
 import com.ils.sfc.designer.ButtonPanel;
-import com.inductiveautomation.ignition.common.config.BasicPropertySet;
+import com.ils.sfc.designer.EditorPane;
 
 /** Provide a tree view of all recipe data. */
 @SuppressWarnings("serial")
-public class BrowserPane extends JPanel implements RecipeEditorController.RecipeEditorPane {
-	private ButtonPanel buttonPanel = new ButtonPanel(false, true, true, true, false, true, RecipeEditorController.background);
+public class BrowserPane extends JPanel implements EditorPane {
+	private ButtonPanel buttonPanel = new ButtonPanel(false, true, true, true, false, true);
 	private JTree tree;
 	private JScrollPane treeScroll;
 	private DefaultTreeModel treeModel;

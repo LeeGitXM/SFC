@@ -15,7 +15,7 @@ import com.inductiveautomation.ignition.common.script.JythonExecException;
 @SuppressWarnings("serial")
 public class PropertyEditorPanel extends JPanel {
 	public static java.awt.Color background = new java.awt.Color(238,238,238);
-	private ButtonPanel buttonPanel = new ButtonPanel(false, false, false, true, false, false, background);
+	private ButtonPanel buttonPanel = new ButtonPanel(false, false, false, true, false, false);
 	private PropertyEditor propertyEditor = new PropertyEditor();
 	
 	public PropertyEditorPanel() {

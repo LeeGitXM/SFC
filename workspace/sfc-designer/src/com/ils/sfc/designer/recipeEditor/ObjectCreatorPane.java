@@ -24,14 +24,15 @@ import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.designer.ButtonPanel;
 import com.ils.sfc.designer.ComboWrapper;
 import com.ils.sfc.designer.DesignerUtil;
+import com.ils.sfc.designer.EditorPane;
 
 /** An editor for creating a Recipe Data object. */
 @SuppressWarnings("serial")
-public class ObjectCreatorPane extends JPanel implements RecipeEditorController.RecipeEditorPane {
+public class ObjectCreatorPane extends JPanel implements EditorPane {
 	private RecipeEditorController controller;
 	private JComboBox<ComboWrapper> typesCombo = new JComboBox<ComboWrapper>();
 	private JTextField keyTextField = new JTextField();
-	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false, RecipeEditorController.background);
+	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
 	
 	public ObjectCreatorPane(RecipeEditorController controller) {
 		this.controller = controller;

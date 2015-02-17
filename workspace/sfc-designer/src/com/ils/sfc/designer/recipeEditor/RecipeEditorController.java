@@ -8,23 +8,15 @@ import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Group;
 import com.ils.sfc.designer.propertyEditor.PropertyTableModel;
 import com.inductiveautomation.ignition.client.util.gui.SlidingPane;
-import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** A controller for all the sliding panes that are involved in editing recipe data. */
 public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
-	public static java.awt.Color background = new java.awt.Color(238,238,238);
-	
-	interface RecipeEditorPane {
-		/** show yourself, after doing any necessary preparation. */
-		public void activate();
-	}
 	
 	private SlidingPane slidingPane = new SlidingPane();
-	
-	// indices for the sub-panes:
+		
 	static final int BROWSER = 0;
 	static final int OBJECT_CREATOR = 1;
 	static final int OBJECT_EDITOR = 2;
@@ -39,10 +31,10 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 	private BrowserPane browser = new BrowserPane(this);
 	private ObjectCreatorPane creator = new ObjectCreatorPane(this);
 	private ObjectEditorPane objectEditor = new ObjectEditorPane(this);
-	private StringEditorPane textEditor = new StringEditorPane(this);
-	private MessagePane messagePane = new MessagePane(this);
+	private RecipeEditorStringEditorPane textEditor = new RecipeEditorStringEditorPane(this);
+	private RecipeEditorMessagePane messagePane = new RecipeEditorMessagePane(this);
 	private FieldCreatorPane fieldCreator = new FieldCreatorPane(this);
-	private TagBrowserPane tagBrowser;
+	private RecipeEditorTagBrowserPane tagBrowser;
 	private UnitChooserPane unitChooser = new UnitChooserPane(this);
 	
 	// The step whose recipe data we are editing:
@@ -50,7 +42,7 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 	private Group recipeData;
 	
 	public RecipeEditorController() {
-		tagBrowser = new TagBrowserPane(this);
+		tagBrowser = new RecipeEditorTagBrowserPane(this);
 		objectEditor.getPropertyEditor().getTableModel().setErrorHandler(this);
 		// sub-panes added according to the indexes above:
 		slidingPane.add(browser);
@@ -82,7 +74,7 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 		slidingPane.setSelectedPane(index);	
 	}	
 	
-	public JPanel getSlidingPane() {
+	public SlidingPane getSlidingPane() {
 		return slidingPane;
 	}
 
@@ -102,15 +94,15 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 		return objectEditor;
 	}
 
-	public StringEditorPane getTextEditor() {
+	public RecipeEditorStringEditorPane getTextEditor() {
 		return textEditor;
 	}
 
-	public MessagePane getMessagePane() {
+	public RecipeEditorMessagePane getMessagePane() {
 		return messagePane;
 	}
 
-	public TagBrowserPane getTagBrowser() {
+	public RecipeEditorTagBrowserPane getTagBrowser() {
 		return tagBrowser;
 	}
 	

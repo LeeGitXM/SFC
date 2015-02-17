@@ -12,6 +12,7 @@ import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.ResourceWorkspaceFrame;
 import com.inductiveautomation.sfc.client.ui.StepComponent;
 import com.jidesoft.docking.DockContext;
+import com.jidesoft.docking.DockableFrame;
 import com.jidesoft.docking.event.DockableFrameAdapter;
 import com.jidesoft.docking.event.DockableFrameEvent;
 import com.jidesoft.docking.event.DockableFrameListener;
@@ -32,10 +33,6 @@ public class RecipeDataEditorFrame extends com.jidesoft.docking.DockableFrame im
        	setSideTitle(TITLE);
       	controller = new RecipeEditorController();
        	setContentPane(controller.getSlidingPane());
-	}
-	
-	public RecipeEditorController getController() {
-		return controller;
 	}
 
 	@Override
@@ -73,6 +70,10 @@ public class RecipeDataEditorFrame extends com.jidesoft.docking.DockableFrame im
 	
 	public void containerSelected(DesignableContainer arg0) {
 		controller.commit();
+	}
+
+	public RecipeEditorController getController() {
+		return controller;
 	}
 
 }

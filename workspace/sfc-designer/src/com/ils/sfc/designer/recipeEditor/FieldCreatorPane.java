@@ -23,12 +23,13 @@ import com.ils.sfc.common.recipe.objects.Structure;
 import com.ils.sfc.designer.ButtonPanel;
 import com.ils.sfc.designer.ComboWrapper;
 import com.ils.sfc.designer.DesignerUtil;
+import com.ils.sfc.designer.EditorPane;
 import com.ils.sfc.designer.UnitChooserPanel;
 
 @SuppressWarnings("serial")
-public class FieldCreatorPane extends JPanel implements RecipeEditorController.RecipeEditorPane {
+public class FieldCreatorPane extends JPanel implements EditorPane {
 	private RecipeEditorController controller;
-	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false, RecipeEditorController.background);
+	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
 	private JTextField nameField = new JTextField();
 	private JComboBox<ComboWrapper> typesCombo = new JComboBox<ComboWrapper>();
 	private UnitChooserPanel unitChooserPanel = new UnitChooserPanel();

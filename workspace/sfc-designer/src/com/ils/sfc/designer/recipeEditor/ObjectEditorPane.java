@@ -11,6 +11,7 @@ import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Structure;
 import com.ils.sfc.designer.ButtonPanel;
+import com.ils.sfc.designer.EditorPane;
 import com.ils.sfc.designer.propertyEditor.PropertyEditor;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
@@ -18,10 +19,10 @@ import com.inductiveautomation.ignition.common.config.PropertyValue;
  *  Also provides add/remove for dynamic properties, and extended
  *  editing for strings and tags.  */
 @SuppressWarnings("serial")
-public class ObjectEditorPane extends JPanel implements RecipeEditorController.RecipeEditorPane {
+public class ObjectEditorPane extends JPanel implements EditorPane {
 	private RecipeEditorController controller;
 	private PropertyEditor editor = new PropertyEditor();
-	private ButtonPanel buttonPanel = new ButtonPanel(true, true, true, true, false,  false, RecipeEditorController.background);
+	private ButtonPanel buttonPanel = new ButtonPanel(true, true, true, true, false,  false);
 
 	private Data recipeData;
 	

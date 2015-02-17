@@ -3,8 +3,16 @@
  */
 package com.ils.sfc.gateway;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.ils.sfc.common.PythonCall;
+import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.step.*;
+import com.inductiveautomation.ignition.common.config.Property;
+import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -34,8 +42,9 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private GatewayContext context = null;
 	private ChartManagerService chartManager;
 	private IlsScopeLocator scopeLocator = new IlsScopeLocator();
-
-	private StepFactory[] stepFactories = {
+	private static Map<String, List<String>> propertyNamesById = new HashMap<String, List<String>>();
+	
+	private static StepFactory[] stepFactories = {
 		new QueueMessageStepFactory(),
 		new SetQueueStepFactory(),
 		new ShowQueueStepFactory(),
@@ -116,5 +125,8 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		chartManager = null;
 	}
 
+	public static Map<String, List<String>> getPropertyNamesById() {
+		return propertyNamesById;
+	}
 
 }

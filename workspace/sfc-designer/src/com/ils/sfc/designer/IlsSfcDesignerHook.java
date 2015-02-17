@@ -11,6 +11,7 @@ import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.step.*;
 import com.ils.sfc.designer.recipeEditor.RecipeDataEditorFrame;
+import com.ils.sfc.designer.stepEditor.IlsStepEditor;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
