@@ -32,9 +32,10 @@ public class ButtonPanel extends JPanel {
 	final JLabel comboLabel = new JLabel();
 	final JComboBox<String> comboBox = new JComboBox<String>();
 	final Dimension buttonDimension = new Dimension(16,16);
+	public static final  java.awt.Color background = new java.awt.Color(238,238,238);	
 
 	public ButtonPanel(boolean showAccept, boolean showAdd, boolean showRemove, 
-		boolean showEdit, boolean showExec, boolean showCombo, Color background) {
+		boolean showEdit, boolean showExec, boolean showCombo) {
 		setBackground(background);
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		setPreferredSize(new Dimension(100,20));
@@ -57,7 +58,7 @@ public class ButtonPanel extends JPanel {
 	}
 	
 	public ButtonPanel() {
-		this(true, true, true, true, true, true, Color.white);
+		this(true, true, true, true, true, true);
 	}
 
 	private void addButton(JButton button) {
