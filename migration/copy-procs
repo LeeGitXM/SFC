@@ -1,0 +1,15 @@
+#!/bin/sh
+# Copy G2 procedure exports from svn into our project
+# for processing with conversion tools
+#
+BIN=`pwd`
+SVN=~/Development/ils/svn/EMChemicals/G2Artifacts/Sequential\ Control
+REPO=~/Development/ils/src/sfc/procs
+mkdir -p $REPO/g2/
+mkdir -p $REPO/python
+cp "${SVN}"/*/callbacks/*.txt $REPO/g2
+# Clean up the non-xml
+#find ${REPO}/g2 -type f ! -name "*.txt" -exec rm {}  \; 
+#rm -r `find ${REPO}/g2 -type d -name Diagrams`  2&>/dev/null
+#rm -r `find ${REPO}/g2 -type d -name diagrams`  2&>/dev/null
+#rm -r `find ${REPO}/g2 -type d -name callbacks`  2&>/dev/null

@@ -14,15 +14,13 @@ import java.util.Map;
  * database as a lookup to map property names between the two systems.
  */
 public class PropertyValueMapper {
-	private final String TAG = "PropertyMapper";
-	private final Map<String,String> propertyMap;     // Lookup by factoryId, Ignition property
-	private final Map<String,List<String>> propertiesMap;     // Lookup by factoryId,
+	private final String TAG = "PropertyValueMapper";
+	private final Map<String,String> propertyValueMap;  // Lookup by Ignition property, G2value
 	/** 
 	 * Constructor: 
 	 */
 	public PropertyValueMapper() {
-		propertyMap = new HashMap<>();
-		propertiesMap = new HashMap<>();
+		propertyValueMap = new HashMap<>();
 	}
 
 	/**
@@ -38,20 +36,15 @@ public class PropertyValueMapper {
 			Statement statement = cxn.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-			rs = statement.executeQuery("select * from PropertyMap");
+			rs = statement.executeQuery("select * from PropertyValueMap");
 			while(rs.next())
 			{
-				String factoryId = rs.getString("FactoryId");
 				String iProperty = rs.getString("Property");
-				String g2Property = rs.getString("G2Property");
-				String key = makePropertyMapKey(factoryId,iProperty);
-				propertyMap.put(key,g2Property);
-				List<String> properties = propertiesMap.get(factoryId);
-				if( properties==null) {
-					properties = new ArrayList<>();
-					propertiesMap.put(factoryId,properties);
-				}
-				properties.add(iProperty);
+				String g2Value = rs.getString("G2Value");
+				String iValue = rs.getString("IgnitionValue");
+				String key = makePropertyMapKey(iProperty,g2Value);
+				propertyValueMap.put(key,iValue);
+
 			}
 			rs.close();
 		}
@@ -67,27 +60,28 @@ public class PropertyValueMapper {
 		}
 	}
 
-	public String g2Property(String factoryId,String propertyName) {
-		String key = makePropertyMapKey(factoryId,propertyName);
-		return propertyMap.get(key);
-	}
-	
 	/**
-	 * 
-	 * @param factoryId
-	 * @return a list of properties appropriate for a class
+	 * Munge a G2 property value into an ignition equivalent. If there is
+	 * no modification found, simply pass through the g2Value.
+	 * @param propertyName
+	 * @param g2Value the originally supplied value from a G2 export.
+	 * @return
 	 */
-	public List<String> getPropertyList(String factoryId) {
-		return propertiesMap.get(factoryId);
+	public String modifyPropertyValueForIgnition(String propertyName,String g2Value) {
+		String result = g2Value;
+		String key = makePropertyMapKey(propertyName,g2Value);
+		String modified = propertyValueMap.get(key);
+		if( modified!=null ) result = modified;
+		return result;
 	}
 	
 	/**
 	 * Create the key for lookup in the property map. Simply
-	 * concatenate the class name and the property. The key
+	 * concatenate the property name and value. The key
 	 * is case-insensitive.
 	 */
-	private String makePropertyMapKey(String cname, String pname) {
-		String key = cname.toUpperCase()+":"+pname.toUpperCase();
+	private String makePropertyMapKey(String pname,String val) {
+		String key = pname.toUpperCase()+":"+val.toUpperCase();
 		return key;
 	}
 

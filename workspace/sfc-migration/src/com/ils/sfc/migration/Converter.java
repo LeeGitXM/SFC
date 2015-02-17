@@ -49,6 +49,7 @@ import org.xml.sax.SAXException;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
+import com.ils.sfc.migration.map.PropertyValueMapper;
 import com.ils.sfc.migration.translation.GridPoint;
 import com.ils.sfc.migration.translation.StepLayoutManager;
 import com.ils.sfc.migration.translation.StepTranslator;
@@ -74,6 +75,7 @@ public class Converter {
 	private final ClassNameMapper classMapper;
 	private final ProcedureMapper procedureMapper;
 	private final PropertyMapper propertyMapper;
+	private final PropertyValueMapper propertyValueMapper;
 	private final Map<String,String> pathForFile;     // A map of the complete path indexed by file name
 	private final StepTranslator stepTranslator;
  
@@ -81,6 +83,7 @@ public class Converter {
 		this.classMapper = new ClassNameMapper();
 		this.procedureMapper = new ProcedureMapper();
 		this.propertyMapper = new PropertyMapper();
+		this.propertyValueMapper = new PropertyValueMapper();
 		this.pathForFile = new HashMap<>();
 		this.stepTranslator = new StepTranslator(this);
 	}
@@ -111,6 +114,7 @@ public class Converter {
 			classMapper.createMap(connection);
 			procedureMapper.createMap(connection);
 			propertyMapper.createMap(connection);
+			propertyValueMapper.createMap(connection);
 		}
 		catch(SQLException e) {
 			// if the error message is "out of memory", 
@@ -390,6 +394,8 @@ public class Converter {
 			for( String property:properties ) {
 				String g2attribute = propertyMapper.g2Property(factoryId,property);
 				String value = g2block.getAttribute(g2attribute);
+				// Alter the value, if so specified
+				value = propertyValueMapper.modifyPropertyValueForIgnition(property, value);
 				//log.debugf("%s.updateStepFromG2Block: %s(%s) = %s",TAG,property,g2attribute,value);
 				Element propelement = chart.createElement(property);
 				Node textNode = chart.createTextNode(value);
@@ -494,11 +500,11 @@ public class Converter {
 		try {
 			m.processDatabase(pathFromString(args[argi++]));
 			Path indir = pathFromString(args[argi++]);
-			log.infof("%s.main: indir = %s",TAG,indir.toString());
+			log.tracef("%s.main: indir = %s",TAG,indir.toString());
 			// The output directory is the root holder for the new tree that will be created.
 			Path outdir = pathFromString(args[argi++]);
 			String rootFile = args[argi];
-			log.infof("%s.main: outdir = %s",TAG,outdir.toString());
+			log.tracef("%s.main: outdir = %s",TAG,outdir.toString());
 			m.prepareOutput(outdir);
 			m.createPathMap(indir,rootFile);
 			m.processInput(indir,outdir,rootFile);
