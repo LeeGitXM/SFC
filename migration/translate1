@@ -2,6 +2,6 @@
 #  Use this version when debugging a single file.
 #
 SFC=~/Development/ils/src/sfc
-FIL=DOUBLE-FACTORIAL.txt
-DIR=${SFC}/migration/samples
+FIL=PH-TEST-CALLBACK-1.txt
+DIR=${SFC}/procs/g2
 ${SFC}/migration/translate $DIR/$FIL
