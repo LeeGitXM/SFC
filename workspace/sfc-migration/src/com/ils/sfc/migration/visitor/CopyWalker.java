@@ -16,14 +16,12 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
 
 import com.ils.sfc.migration.Converter;
-import com.inductiveautomation.ignition.common.util.LogUtil;
-import com.inductiveautomation.ignition.common.util.LoggerEx;
 /**
  * Walk the input directory writing converted files into the second.
  */
 public class CopyWalker extends AbstractPathWalker implements FileVisitor<Path>  {
 	private final static String TAG = "CopyWalker";
-	private final String inRoot;    // Original root directory (munged)
+	private final String inRoot;         // Original G2 root directory (munged)
 	private final Path outRoot;
 	private final Converter delegate;   // Delegate for migrating individual files
 
@@ -47,7 +45,6 @@ public class CopyWalker extends AbstractPathWalker implements FileVisitor<Path> 
 		String relative = relativize(inRoot,delegate.toCamelCase(dir.toString()));
 		// Before visiting entries in a directory we create the output directory
 		Path newdir = Paths.get(outRoot.toString(),relative);
-		//log.infof("%s.preVisitDirectory: resolved/creating %s",TAG,newdir.toString());
 		Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwxr-xr-x");
 		FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
 		try {
@@ -66,8 +63,8 @@ public class CopyWalker extends AbstractPathWalker implements FileVisitor<Path> 
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 		//Ignore the OSX resource marker
 		if(file.toString().endsWith(".DS_Store")) return FileVisitResult.CONTINUE;
-		
 		String relative = relativize(inRoot,delegate.toCamelCase(file.toString()));
+		//log.infof("%s.visitFile: %s relative=%s",TAG,file.toString(),relative);
 		Path newfile = Paths.get(outRoot.toString(),relative);
 		// Make sure that the new file does not exist ... 
 		// if so try append alpha until we get a free name.
@@ -76,8 +73,8 @@ public class CopyWalker extends AbstractPathWalker implements FileVisitor<Path> 
 		while(Files.exists(target)) {
 			target = Paths.get(String.format("%s%c",newfile.toString(),'a'+version));
 		}
-		target = Paths.get(target.toString(),".xml");
-		log.debugf("%s.visitFile: %s -> %s",TAG,file.toString(),target.toString());
+		target = Paths.get(target.toString()+".xml");
+		log.infof("%s.visitFile: %s -> %s",TAG,file.toString(),target.toString());
 		delegate.convertFile(file, target);
 		return FileVisitResult.CONTINUE;
 	}

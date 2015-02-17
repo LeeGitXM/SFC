@@ -41,7 +41,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> CLASS = new IlsProperty<String>(IlsSfcNames.CLASS, String.class, "");
     public static final IlsProperty<String> COMPUTER = new IlsProperty<String>(IlsSfcNames.COMPUTER, String.class, IlsSfcNames.COMPUTER_CHOICES[0], IlsSfcNames.COMPUTER_CHOICES);
     public static final IlsProperty<String> DATABASE = new IlsProperty<String>(IlsSfcNames.DATABASE, String.class, "");
-    public static final IlsProperty<Integer> DELAY = new IlsProperty<Integer>(IlsSfcNames.DELAY, Integer.class, 0);
+    public static final IlsProperty<Integer> DELAY = new IlsProperty<Double>(IlsSfcNames.DELAY,Double.class, 0.);
     public static final IlsProperty<String> DELAY_UNIT = new IlsProperty<String>(IlsSfcNames.DELAY_UNIT, String.class, IlsSfcNames.MINUTE);  
     public static final IlsProperty<String> DESCRIPTION = new IlsProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
     public static final IlsProperty<String> DIALOG = new IlsProperty<String>(IlsSfcNames.DIALOG, String.class, "");

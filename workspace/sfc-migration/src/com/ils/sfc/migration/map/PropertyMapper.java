@@ -45,7 +45,7 @@ public class PropertyMapper {
 				String iProperty = rs.getString("Property");
 				String g2Property = rs.getString("G2Property");
 				String key = makePropertyMapKey(factoryId,iProperty);
-				propertyMap.put(key,iProperty);
+				propertyMap.put(key,g2Property);
 				List<String> properties = propertiesMap.get(factoryId);
 				if( properties==null) {
 					properties = new ArrayList<>();

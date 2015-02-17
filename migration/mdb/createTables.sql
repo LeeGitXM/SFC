@@ -12,6 +12,14 @@ CREATE TABLE PropertyMap(
 	Property  text NOT NULL,
     G2Property text NOT NULL
 );
+-- Map values of properties found in G2 blocks to
+-- Ignition equivalents. These include procedure
+-- names.
+CREATE TABLE PropertyValueMap(
+    Property text NOT NULL,
+	G2Value text NOT NULL,
+	IgnitionValue text NOT NULL
+);
 
 -- Convert G2 procedute names into Python module names.
 CREATE TABLE ProcedureMap(

@@ -64,15 +64,16 @@ public class StepTranslator {
 				log.errorf("%s.translate: Error no SFC factoryID found for G2 class (%s)",TAG,claz);
 			}
 		}
-		delegate.updateStepFromG2Block(chart,step,block);
 
-		// Encapsulation have several additional properties
+		// Encapsulation have several additional properties. The encapsulation reference
+		// is to a chart name only. Ignition requires a path.
 		if( isEncapsulation ) {
 			String reference = block.getAttribute("block-full-path-label");
 			if( reference.length()==0) reference = block.getAttribute("label");
 			String convertedReference = delegate.toCamelCase(reference);
-			step.setAttribute("chart-path", convertedReference);
-			log.infof("%s.translate: Encapsulation: %s translates to %s",TAG,reference,convertedReference);
+			String chartPath = delegate.getPathForChart(convertedReference);
+			step.setAttribute("chart-path", chartPath);
+			log.infof("%s.translate: Encapsulation: %s translates to %s",TAG,reference,chartPath);
 			step.setAttribute("execution-mode", "RunUntilStopped");
 		}
 	
@@ -80,6 +81,7 @@ public class StepTranslator {
 		step.setAttribute("id", uuid);
 		step.setAttribute("factory-id", factoryId);
 		step.setAttribute("location", String.format("%d %d", x,y));
+		delegate.updateStepFromG2Block(chart,step,block);
 		
 		// Now add recipe data - feed the translator the entire "data" element
 		Element recipe = makeRecipeDataElement(chart,step,block);

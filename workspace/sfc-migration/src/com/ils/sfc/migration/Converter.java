@@ -86,15 +86,16 @@ public class Converter {
 	}
 	
 	public ClassNameMapper getClassMapper() { return classMapper; }
-	public String getPathForFile(String filename)  { 
+	
+	// The path of interest for a chart is an SFC folder hierarchy
+	public String getPathForChart(String filename)  { 
 		String filepath =  pathForFile.get(filename);
 		if( filepath==null ) {
-			log.infof("%s.getPathForFile: No path recorded for file %s",TAG,filepath);
+			log.infof("%s.getPathForChart: No path recorded for file %s",TAG,filepath);
 			filepath = "";
 		}
 		return filepath;
 	}
-	
 	/**
 	 * Step 1: Read the database and create maps between various elements.
 	 * 
@@ -143,14 +144,15 @@ public class Converter {
 			}
 			catch(IOException ioe) {
 				ok = false;
-				System.err.println(String.format("%s: Failed to create output directory %s (%s)",TAG,dir.toString(),ioe.getMessage()));
+				log.errorf("%s: Failed to create output directory %s (%s)",TAG,dir.toString(),ioe.getMessage());
 			}
 		}
 		// Check for directory
 		else if (!Files.isDirectory(dir)) {
 			ok = false;
-			System.err.println(String.format("%s: Target output exists, but is not a directory (%s)",TAG,dir.toString()));
+			log.errorf("%s: Target output exists, but is not a directory (%s)",TAG,dir.toString());
 		}
+		// We don't know the exact name of the output yet, so we make sure that the entire directory is clear
 		else {
 			// Look in the directory for any non-hidden files
 			File[] files = dir.toFile().listFiles();
@@ -382,13 +384,13 @@ public class Converter {
 	 */
 	public void updateStepFromG2Block(Document chart,Element step,Element g2block) {
 		String factoryId = step.getAttribute("factory-id");
-		log.infof("%s.updateStepFromG2Block: step class = %s",TAG,factoryId);
+		log.debugf("%s.updateStepFromG2Block: step class = %s",TAG,factoryId);
 		List<String> properties = propertyMapper.getPropertyList(factoryId);
 		if( properties!=null ) {
 			for( String property:properties ) {
 				String g2attribute = propertyMapper.g2Property(factoryId,property);
 				String value = g2block.getAttribute(g2attribute);
-				log.infof("%s.updateStepFromG2Block: %s(%s) = %s",TAG,property,g2attribute,value);
+				//log.debugf("%s.updateStepFromG2Block: %s(%s) = %s",TAG,property,g2attribute,value);
 				Element propelement = chart.createElement(property);
 				Node textNode = chart.createTextNode(value);
 				propelement.appendChild(textNode);
@@ -495,9 +497,9 @@ public class Converter {
 			log.infof("%s.main: indir = %s",TAG,indir.toString());
 			// The output directory is the root holder for the new tree that will be created.
 			Path outdir = pathFromString(args[argi++]);
+			String rootFile = args[argi];
 			log.infof("%s.main: outdir = %s",TAG,outdir.toString());
 			m.prepareOutput(outdir);
-			String rootFile = args[argi];
 			m.createPathMap(indir,rootFile);
 			m.processInput(indir,outdir,rootFile);
 		}
