@@ -16,4 +16,4 @@ DB=${SFC}/migration/mdb/conversion.db
 OUTDIR=${SFC}/procs/python
 mkdir -p ${OUTDIR}
 #cat $1 | java -cp ${JAR} -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Dlog.level=INFO -Droot.class=APPLICATION com.ils.blt.migration.Migrator ${DB}
-cat $1 | java -cp ${JAR} -Dprocedure.package=ils.sfc.test -Dlog.level=TRACE com.ils.python.translation.G2ProcedureTranslator ${OUTDIR} ${DB} 
+cat $1 | java -cp ${JAR} -Dprocedure.package= -Dprocedure.variant=sfc.onstart -Dlog.level=TRACE com.ils.python.translation.G2ProcedureTranslator ${OUTDIR} ${DB} 

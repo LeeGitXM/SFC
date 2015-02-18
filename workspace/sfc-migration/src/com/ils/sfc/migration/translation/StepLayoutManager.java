@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -25,22 +27,28 @@ public class StepLayoutManager {
 	private final Map<String,Element> blockMap;             // block by UUID
 	private final Map<String,ConnectionHub> connectionMap;  // Incoming/outgoing connections by UUID
 	private final Map<String,GridPoint> gridMap;            // Grid by step UUID
+	private final List<Element> anchors;                    // Anchors and jumps created by this manager
 	private final ArrayList<Integer> rightmostIndex;        // Rightmost index by row number 
+	private final Document chart;                           // Ignition chart
 	// Record the chart limits so that we can return a canvas size, if asked.
 	private int minx = 0;
 	private int miny = 0;
 	private int maxx = 0;
 	private int maxy = 0;
+	private int anchorCount = 0;
 	private double zoom = 1.0;
 	/**
 	 * Constructor: Immediately analyze the supplied chart.
 	 * @param g2chart
 	 */
-	public StepLayoutManager(Document g2chart) {
+	public StepLayoutManager(Document ichart, Document g2chart) {
 		this.blockMap = new HashMap<>();
 		this.connectionMap = new HashMap<>();
 		this.gridMap = new HashMap<>();
 		this.rightmostIndex = new ArrayList<>();
+		this.anchors = new ArrayList<>();
+		this.anchorCount = 0;
+		this.chart = ichart;
 		analyze(g2chart.getElementsByTagName("block"));
 		center();
 	}
@@ -101,7 +109,7 @@ public class StepLayoutManager {
 		// Now do the layout. Position the root. Walk the tree.
 		int x = 0;   // Center on zero so that we can scale if need be.
 		int y = 2;
-		positionNode(beginuuid,x,y);
+		positionNode(null,beginuuid,x,y);
 	}
 	
 	/** 
@@ -112,7 +120,22 @@ public class StepLayoutManager {
 	 * @param x the block's new x
 	 * @param y the block's new y
 	 */
-	private void positionNode(String uuid,int x,int y) {
+	private void positionNode(String source,String uuid,int x,int y) {
+
+		ConnectionHub hub = connectionMap.get(uuid);
+		if( blockMap.get(uuid)!=null ) {
+			// NOTE: anchors and jumps are not in the block map.
+			// If there are multiple inputs on a block
+			// then create an anchor and associated jumps
+			for(String input:hub.connectedFrom) {
+				if( !input.equals(source) ) {
+					x = createAnchors(source,uuid,x,y-1);
+					y+=2;
+					break;
+				}
+			}
+		}
+		
 		GridPoint gp = gridMap.get(uuid);
 		
 		// If we conflict on the left, move everything right
@@ -127,18 +150,66 @@ public class StepLayoutManager {
 		log.infof("%s.positionNode: %s at %d,%d", TAG,uuid,x,y);
 		setRightmost(x,y);
 		
-		
-		ConnectionHub hub = connectionMap.get(uuid);
 		List<String> nextBlocks = hub.getConnectionsTo();
 		if( nextBlocks.size() < 2 ) y = y+1;
 		else                       y = y+2;  // Allow for connections
 		int xpos = x - (nextBlocks.size()-1);
 		for( String childuuid:nextBlocks) {
-			positionNode(childuuid,xpos,y);
+			positionNode(uuid,childuuid,xpos,y);
 			gp = gridMap.get(childuuid);  
 			xpos = gp.x + 2;                // Position for next block
 		}
 	}
+	
+	/**
+	 * Create an anchor plus a corresponding jump for every block connecting to it.
+	 * Exclude the source 
+	 * @param uuid target step
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	private int createAnchors(String source,String uuid,int x,int y) {
+		ConnectionHub hub = connectionMap.get(uuid);
+		String anchoruuid = UUID.randomUUID().toString();
+		List<String> from = hub.getConnectionsFrom();
+		// Search all blocks connect connections to this block
+		// replace with a link to the anchor.
+		for(String fromid:from) {
+			if(fromid.equalsIgnoreCase(source)) continue;
+			ConnectionHub tohub = connectionMap.get(fromid);
+			List<String> tos = tohub.getConnectionsTo();
+			String jumpuuid = UUID.randomUUID().toString();
+			tos.remove(uuid);
+			tos.add(jumpuuid);
+			Element jump = createJump(chart,jumpuuid,anchorCount);
+			anchors.add(jump);
+			GridPoint gp = new GridPoint(UNSET,UNSET);
+			gridMap.put(jumpuuid,gp);
+			ConnectionHub jumpHub = new ConnectionHub();
+			jumpHub.getConnectionsFrom().add(uuid);
+			connectionMap.put(jumpuuid,jumpHub);
+		}
+		// Now
+		from.clear();
+		from.add(source);
+		from.add(anchoruuid);
+		Element anchor = createAnchor(chart,anchoruuid,anchorCount);
+		anchors.add(anchor);
+		ConnectionHub anchorHub = new ConnectionHub();
+		anchorHub.getConnectionsTo().add(uuid);
+		connectionMap.put(anchoruuid,anchorHub);
+		// We are given the y of the source block - the most compact location
+		// is immediately to the right of the source block. This spot should 
+		// ALWAYS be available.
+		x+=1;
+		GridPoint gp = new GridPoint(x,y);
+		gridMap.put(anchoruuid,gp);
+		anchorCount++;
+		return x;
+	}
+	
+	public List<Element> getAnchors() { return this.anchors; }
 	
 	// The original layout may create indices that are out-of-range.
 	// Place the diagram in the upper left corner of the space. 
@@ -165,6 +236,13 @@ public class StepLayoutManager {
 		for( GridPoint gp:gridMap.values()) {
 			gp.x = gp.x - deltax;
 			gp.y = gp.y - deltay;
+		}
+		
+		// The anchors and jumps also need translating. Set their location directly on the elements
+		for(Element e:anchors) {
+			String uuid = e.getAttribute("id");
+			GridPoint gp = gridMap.get(uuid);    // These have just been translated
+			e.setAttribute("location", String.format("%d %d",gp.x,gp.y));
 		}
 		
 		// As a bonus, we create the zoom factor.
@@ -214,6 +292,24 @@ public class StepLayoutManager {
 			if( val!=null ) index = val.intValue();
 		}
 		return index;
+	}
+	
+	private Element createAnchor(Document chart,String uuid,int count) {
+		log.infof("%s.createAnchor: %s", TAG,uuid);
+		Element e = chart.createElement("anchor");
+		e.setAttribute("id", uuid);
+		Node node = chart.createTextNode(String.format("%c",'A'+count));
+		e.appendChild(node);
+		return e;
+	}
+	
+	private Element createJump(Document chart,String uuid,int count) {
+		log.infof("%s.createJump: %s", TAG,uuid);
+		Element e = chart.createElement("jump");
+		e.setAttribute("id", uuid);
+		Node node = chart.createTextNode(String.format("%c",'A'+count));
+		e.appendChild(node);
+		return e;
 	}
 	
 	private class ConnectionHub {

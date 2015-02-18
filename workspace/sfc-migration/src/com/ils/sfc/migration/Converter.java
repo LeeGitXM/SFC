@@ -78,6 +78,7 @@ public class Converter {
 	private final PropertyValueMapper propertyValueMapper;
 	private final Map<String,String> pathForFile;     // A map of the complete path indexed by file name
 	private final StepTranslator stepTranslator;
+	private Path pythonRoot = null;
  
 	public Converter() {
 		this.classMapper = new ClassNameMapper();
@@ -99,6 +100,7 @@ public class Converter {
 		}
 		return filepath;
 	}
+	public void setPythonRoot(Path root) { this.pythonRoot = root; }
 	/**
 	 * Step 1: Read the database and create maps between various elements.
 	 * 
@@ -275,15 +277,21 @@ public class Converter {
 			updateChartForSingletonStep(chart,block);
 		}
 		else {
-			StepLayoutManager layout = new StepLayoutManager(g2doc);
+			StepLayoutManager layout = new StepLayoutManager(chart,g2doc);
 			Element root = chart.getDocumentElement();   // "sfc"
 			Map<String,Element> blockMap =  layout.getBlockMap();
 			Map<String,GridPoint> gridMap = layout.getGridMap();
 			for(String uuid:gridMap.keySet()) {
 				GridPoint gp = gridMap.get(uuid);
 				//g2block element has child "block", plus one or more recipes
+				// --- null returns apply to anchors and jumps, ignore
 				Element g2block = blockMap.get(uuid);
-				root.appendChild(stepTranslator.translate(chart,g2block,gp.x,gp.y));
+				if( g2block!=null ) root.appendChild(stepTranslator.translate(chart,g2block,gp.x,gp.y));
+			}
+			// The layout creates anchors and jumps
+			List<Element> anchorElements = layout.getAnchors();   // Includes jumps
+			for(Element e:anchorElements) {
+				root.appendChild(e);
 			}
 			root.setAttribute("zoom", String.valueOf(layout.getZoom()));
 		}
@@ -324,6 +332,40 @@ public class Converter {
 		return result;
 	}
 	
+	/**
+	 * If the G2 block contains a "callback", then read its converted value from the 
+	 * file system and insert as a step property.
+	 * 
+	 * @param step
+	 * @param g2block
+	 */
+	public void insertOnStartFromG2Block(Document chart,Element step,Element g2block) {
+		
+		String g2attribute = g2block.getAttribute("callback");
+		if( g2attribute.length()>0) {
+			String script = propertyValueMapper.modifyPropertyValueForIgnition("callback",g2attribute);
+			log.infof("%s.insertOnStartFromG2Block: callback = %s->%s",TAG,g2attribute,script);
+			if( script!=null  ) {
+				Path scriptPath = Paths.get(pythonRoot.toString(),script);
+				try {
+					byte[] bytes = Files.readAllBytes(scriptPath);
+					if( bytes!=null && bytes.length>0) {
+						Element startelement = chart.createElement("start-script");
+						Node textNode = chart.createTextNode(new String(bytes));
+						startelement.appendChild(textNode);
+						step.appendChild(startelement);
+					}
+					else {
+						log.errorf("%s.insertOnStartFromG2Block: Empty file %s",TAG,scriptPath.toString());
+					}
+					
+				}
+				catch(IOException ioe) {
+					log.errorf("%s.insertOnStartFromG2Block: Error reading script %s (%s)",TAG,scriptPath.toString(),ioe.getMessage());
+				}
+			}
+		}
+	}
 	/**
 	 * Alter the last segment of a complete path. This
 	 * may be a directory name of file name. Re-assemble 
@@ -499,6 +541,7 @@ public class Converter {
 		
 		try {
 			m.processDatabase(pathFromString(args[argi++]));
+			m.setPythonRoot(pathFromString(args[argi++]));
 			Path indir = pathFromString(args[argi++]);
 			log.tracef("%s.main: indir = %s",TAG,indir.toString());
 			// The output directory is the root holder for the new tree that will be created.

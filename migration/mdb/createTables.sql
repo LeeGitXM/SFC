@@ -6,7 +6,7 @@
 CREATE TABLE ClassMap(
     G2Class text PRIMARY KEY ,
     FactoryId text NOT NULL,
-	Encloses text DEFAULT 'false'
+	Type text DEFAULT ''
 );
 
 -- Map properties of G2 blocks to properties of

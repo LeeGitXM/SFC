@@ -19,6 +19,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.json.JSONException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.migration.Converter;
@@ -46,17 +47,19 @@ public class StepTranslator {
 	 * @return
 	 */
 	public Element translate(Document chart,Element block,int x,int y) {
-		Element step = chart.createElement("step");
 		
+		Element step = null;
 		// Get attributes from the block element
 		String name = makeName(block.getAttribute("name"));
 		String uuid = canonicalForm(block.getAttribute("uuid"));
 		String claz = block.getAttribute("class");
 		String factoryId = "action-step";     // Generic action step as default
 		boolean isEncapsulation = false;
+		boolean isTransition = false;
 		if( claz!=null ) {
 			String fid = delegate.getClassMapper().factoryIdForClass(claz);
-			isEncapsulation= delegate.getClassMapper().isClassAnEncapsulation(claz);
+			isEncapsulation= delegate.getClassMapper().isEncapsulation(claz);
+			isTransition= delegate.getClassMapper().isTransition(claz);
 			if( fid!=null) {
 				factoryId = fid;
 			}
@@ -64,28 +67,41 @@ public class StepTranslator {
 				log.errorf("%s.translate: Error no SFC factoryID found for G2 class (%s)",TAG,claz);
 			}
 		}
-
-		// Encapsulation have several additional properties. The encapsulation reference
-		// is to a chart name only. Ignition requires a path.
-		if( isEncapsulation ) {
-			String reference = block.getAttribute("block-full-path-label");
-			if( reference.length()==0) reference = block.getAttribute("label");
-			String convertedReference = delegate.toCamelCase(reference);
-			String chartPath = delegate.getPathForChart(convertedReference);
-			step.setAttribute("chart-path", chartPath);
-			log.infof("%s.translate: Encapsulation: %s translates to %s",TAG,convertedReference,chartPath);
-			step.setAttribute("execution-mode", "RunUntilStopped");
+		if( isTransition ) {
+			step = chart.createElement("transition");
+			String expression = TransitionTranslator.createTransitionExpression(block);
+			Node textNode = chart.createTextNode(expression);
+			step.appendChild(textNode);
 		}
-	
-		step.setAttribute("name", name);
+		else {
+			step = chart.createElement("step");
+			step.setAttribute("name", name);
+			// Encapsulation have several additional properties. The encapsulation reference
+			// is to a chart name only. Ignition requires a path.
+			if( isEncapsulation ) {
+				String reference = block.getAttribute("block-full-path-label");
+				if( reference.length()==0) reference = block.getAttribute("label");
+				String convertedReference = delegate.toCamelCase(reference);
+				String chartPath = delegate.getPathForChart(convertedReference);
+				step.setAttribute("chart-path", chartPath);
+				log.infof("%s.translate: Encapsulation: %s translates to %s",TAG,convertedReference,chartPath);
+				step.setAttribute("execution-mode", "RunUntilStopped");
+			}
+			if( factoryId.equalsIgnoreCase("action-step") ) {
+				delegate.insertOnStartFromG2Block(chart,step,block);
+			}
+			else {
+				delegate.updateStepFromG2Block(chart,step,block);
+			}
+			// Now add recipe data - feed the translator the entire "data" element
+			Element recipe = makeRecipeDataElement(chart,step,block);
+			if( recipe!=null) step.appendChild(recipe);
+		}
+
+		// Common to both steps and transitions
 		step.setAttribute("id", uuid);
 		step.setAttribute("factory-id", factoryId);
 		step.setAttribute("location", String.format("%d %d", x,y));
-		delegate.updateStepFromG2Block(chart,step,block);
-		
-		// Now add recipe data - feed the translator the entire "data" element
-		Element recipe = makeRecipeDataElement(chart,step,block);
-		if( recipe!=null) step.appendChild(recipe);
 		return step;
 	}
 	
@@ -150,7 +166,7 @@ public class StepTranslator {
 			InputStream xmlIn = new ByteArrayInputStream(outputStream.toByteArray());
 			RecipeDataTranslator rdTranslator = new RecipeDataTranslator(xmlIn);
 			Element associatedData = rdTranslator.createAssociatedDataElement(chart);
-			step.appendChild(associatedData);
+			if( associatedData!=null) step.appendChild(associatedData);
 
 			// Some debug stuff for errors--might want to log it...
 			for(String errMsg: rdTranslator.getErrors()) {

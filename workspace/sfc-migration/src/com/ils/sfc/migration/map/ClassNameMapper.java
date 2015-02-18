@@ -8,18 +8,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Convert a G2 classname into a BLT classname
+ * Convert a G2 classname into a SFC classname
  */
 public class ClassNameMapper {
 	private static final String TAG = "ClassNameMapper";
 	private final Map<String,String> classMap;     // Lookup by G2 classname
-	private final Map<String,String> enclosureMap;     // Lookup by G2 classname
+	// Legal types are: enclosure, transition, ""
+	private final Map<String,String> typeMap;      // Lookup by G2 classname
 	/** 
 	 * Constructor: 
 	 */
 	public ClassNameMapper() {
 		classMap = new HashMap<String,String>();
-		enclosureMap = new HashMap<String,String>();
+		typeMap = new HashMap<String,String>();
 	}
 	
 	
@@ -40,8 +41,8 @@ public class ClassNameMapper {
 				String g2 = rs.getString("G2Class");
 				String ignition = rs.getString("FactoryId");
 				classMap.put(g2, ignition);
-				String encloses = rs.getString("Encloses");
-				enclosureMap.put(g2, encloses);
+				String type = rs.getString("Type");
+				typeMap.put(g2, type);
 			}
 			rs.close();
 		}
@@ -73,11 +74,25 @@ public class ClassNameMapper {
 	 * @param className the G2 class name
 	 * @return whether or not this class is an enclosure
 	 */
-	public boolean isClassAnEncapsulation(String className) {
+	public boolean isEncapsulation(String className) {
 		boolean flag = false;  // default
-		String result = enclosureMap.get(className);
+		String result = typeMap.get(className);
 		if( result!=null ) {
-			flag = result.equalsIgnoreCase("true");
+			flag = result.equalsIgnoreCase("enclosure");
+		}
+		return flag;
+	}
+	
+	/**
+	 * 
+	 * @param className the G2 class name
+	 * @return whether or not this class is a transition
+	 */
+	public boolean isTransition(String className) {
+		boolean flag = false;  // default
+		String result = typeMap.get(className);
+		if( result!=null ) {
+			flag = result.equalsIgnoreCase("transition");
 		}
 		return flag;
 	}
