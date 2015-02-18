@@ -131,11 +131,11 @@ public class RecipeDataTranslator {
 							recipeObjects.add(data);
 							for(String g2Key: attMap.keySet()) {
 								String igKey = g2ToIgName.get(g2Key);
-								if(igKey == null) {
-									throw new IllegalArgumentException("no translation for attribute " + g2Key);
-								}
 								String strValue = attMap.get(g2Key);
-								if(igKey.equals(IlsSfcNames.ID)) {
+								if(igKey == null) {
+									errors.add("no translation for attribute " + g2Key);
+								}
+								else if(igKey.equals(IlsSfcNames.ID)) {
 									data.setId(strValue);
 								}
 								else if(igKey.equals(IlsSfcNames.PARENT)) {
@@ -158,7 +158,7 @@ public class RecipeDataTranslator {
 			errors.add("Unexpected error in G2 translation" + e.getMessage());
 		} 
 		restoreHierarchy(recipeObjects);
-		return errors.size() == 0 ? recipeData.toJSON() : null;
+		return recipeData.toJSON();
 	}
 	
 	/** Restore the hierarchy of Groups with children. */
