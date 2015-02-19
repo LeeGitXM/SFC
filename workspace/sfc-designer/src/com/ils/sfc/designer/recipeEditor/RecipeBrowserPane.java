@@ -3,7 +3,6 @@ package com.ils.sfc.designer.recipeEditor;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,6 +19,7 @@ import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Group;
 import com.ils.sfc.designer.ButtonPanel;
 import com.ils.sfc.designer.EditorPane;
+import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 /** Provide a tree view of all recipe data. */
 @SuppressWarnings("serial")
@@ -29,11 +29,12 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	private JScrollPane treeScroll;
 	private DefaultTreeModel treeModel;
 	private RecipeDataTreeNode selectedNode;
-	private final RecipeEditorController controller;
+	private RecipeEditorController controller;
 	private RecipeDataTreeNode rootNode;
+	private boolean showLeafNodes = false;
 
 	/** Helper class to show recipe data objects as tree nodes. */
-	private static class RecipeDataTreeNode extends DefaultMutableTreeNode {
+	private class RecipeDataTreeNode extends DefaultMutableTreeNode {
 				 
 		public RecipeDataTreeNode(Data data) {
 			super(data);
@@ -49,11 +50,20 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 		
 		@Override
 		public boolean isLeaf() {
-			return !getRecipeData().isGroup();
+			return showLeafNodes ? false : !getRecipeData().isGroup();
 		}
 		
 	}
 
+	/** This constructor is for development/testing use */
+	public RecipeBrowserPane(Data data) {
+		rootNode = new RecipeDataTreeNode(data);
+		showLeafNodes = true;
+		setLayout(new BorderLayout());
+		createTree();
+		validate();	
+	}
+	
 	public RecipeBrowserPane(RecipeEditorController controller) {
 		this.controller = controller;
 		setLayout(new BorderLayout());
@@ -78,7 +88,6 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	}
 	
 	private void createTree() {		
-		rootNode = new RecipeDataTreeNode(controller.getRecipeData());
 		selectedNode = rootNode;
 		rootNode.removeAllChildren();
 		treeModel = new DefaultTreeModel(rootNode);
@@ -110,6 +119,14 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	
 	/** Recursively add a layer of nested recipe data to the tree. */
 	private void addLayer(RecipeDataTreeNode node) {
+		if(showLeafNodes) {
+			for(PropertyValue<?> pval: node.getRecipeData().getProperties().getValues()) {
+				String valDesc = pval.getValue() != null ? pval.getValue().toString() + " (" + pval.getValue().getClass().getSimpleName() + ")" : "<null>";
+				String desc = pval.getProperty().getName() + ": " + valDesc;
+				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(desc);
+				node.add(childNode);
+			}			
+		}
 		if(node.getRecipeData().isGroup()) {
 			Group group = (Group)node.getRecipeData();
 			for(Data child: group.getChildren()) {
@@ -156,6 +173,7 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 		if(treeScroll != null) {
 			this.remove(treeScroll);	
 		}
+		rootNode = new RecipeDataTreeNode(controller.getRecipeData());
 		createTree();
 		validate();	
 	}

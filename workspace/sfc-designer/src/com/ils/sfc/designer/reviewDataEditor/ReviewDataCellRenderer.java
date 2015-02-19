@@ -7,7 +7,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableCellRenderer;
 
-class ReviewDataCellRenderer implements TableCellRenderer {		
+public class ReviewDataCellRenderer implements TableCellRenderer {		
 	public Component getTableCellRendererComponent(JTable table, Object value,
 				boolean isSelected, boolean hasFocus, int row, int column) {
 		JTextField textField = new JTextField();

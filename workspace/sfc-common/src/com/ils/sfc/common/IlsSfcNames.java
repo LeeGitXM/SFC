@@ -69,7 +69,7 @@ public class IlsSfcNames {
 	public static final String NAME = "name";
 	public static final String NONE = "none";
 	public static final String OFF = "Off";
-	public static final String PARENT = "parent";
+	public static final String PARENT_GROUP = "parent-group";
 	public static final String POSITION = "position";
 	public static final String POST_TO_QUEUE = "postToQueue";
 	public static final String POST_NOTIFICATION = "postNotification";
@@ -97,6 +97,7 @@ public class IlsSfcNames {
 	public static final String SCREEN_HEADER = "screenHeader";
 	public static final String SECURITY = "security";
 	public static final String SEMI_AUTOMATIC = "semiAutomatic";
+	public static final String SEQUENCE = "sequence";
 	public static final String SERVER = "server";
 	public static final String SHOW_PRINT_DIALOG = "showPrintDialog";
 	public static final String SINGLE = "single";
@@ -121,6 +122,7 @@ public class IlsSfcNames {
 	public static final String UPDATE = "update";
 	public static final String UPDATE_FREQUENCY = "updateFrequency";
 	public static final String UPDATE_OR_CREATE = "updateOrCreate";
+	public static final String UUID = "uuid";
 	public static final String VALUE = "value";
 	public static final String VIEW_FILE = "viewFile";
 	public static final String WARNING = "Warning";

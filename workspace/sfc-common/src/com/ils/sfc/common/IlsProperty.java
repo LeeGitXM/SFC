@@ -63,6 +63,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> GUI_LABEL = new IlsProperty<String>(IlsSfcNames.GUI_LABEL, String.class, "");
     public static final IlsProperty<String> HELP = new IlsProperty<String>(IlsSfcNames.HELP, String.class, "");
     public static final IlsProperty<Double> HIGH_LIMIT = new IlsProperty<Double>(IlsSfcNames.HIGH_LIMIT, Double.class, 0.);
+    public static final IlsProperty<String> JSON_LIST = new IlsProperty<String>(IlsSfcNames.VALUE, String.class, "[]");
     public static final IlsProperty<String> KEY = new IlsProperty<String>(IlsSfcNames.KEY, String.class, "");
     public static final IlsProperty<String> KEY_MODE = new IlsProperty<String>(IlsSfcNames.KEY_MODE, String.class, "", IlsSfcNames.KEY_MODE_CHOICES);
     public static final IlsProperty<String> LABEL = new IlsProperty<String>(IlsSfcNames.LABEL, String.class, "");
@@ -109,7 +110,6 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> UNITS = new IlsProperty<String>(IlsSfcNames.UNITS, String.class, "");
     public static final IlsProperty<Double> UPDATE_FREQUENCY = new IlsProperty<Double>(IlsSfcNames.UPDATE_FREQUENCY, Double.class, 10.);
     public static final IlsProperty<Object> VALUE = new IlsProperty<Object>(IlsSfcNames.VALUE, Object.class, null);
-    public static final IlsProperty<String> STRING_VALUE = new IlsProperty<String>(IlsSfcNames.VALUE, String.class, "");
     public static final IlsProperty<Boolean> VIEW_FILE = new IlsProperty<Boolean>(IlsSfcNames.VIEW_FILE, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<String> WINDOW = new IlsProperty<String>(IlsSfcNames.WINDOW, String.class, "");
     public static final IlsProperty<Boolean> WRITE_CONFIRM = new IlsProperty<Boolean>(IlsSfcNames.WRITE_CONFIRM, Boolean.class, Boolean.TRUE);

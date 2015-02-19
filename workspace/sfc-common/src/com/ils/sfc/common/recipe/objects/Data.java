@@ -1,6 +1,7 @@
 package com.ils.sfc.common.recipe.objects;
 
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -121,24 +122,7 @@ public abstract class Data {
 		return null;
 	}
 	
-	/** Set a property by name. Will throw IllegalArgumentException if the property is not present,
-	 *  unless this is a Structure in which case it will be created. */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void setProperty(String name, Object newValue) {
-		// TODO: should check that value type is compatible with existing property
-		PropertyValue<?> pvalue = findPropertyValue(name);
-		if(pvalue == null) {
-			if(this instanceof Structure) {
-				IlsProperty newProperty = new IlsProperty(name, newValue.getClass(), null);
-				properties.set(new PropertyValue(newProperty, newValue));
-			}
-			else {
-				throw new IllegalArgumentException("no property named " + name);
-			}
-		}
-		properties.setDirect(pvalue.getProperty(), newValue);
-	}
-	
+
 	/** Convert a recipe data hierarchy to a JSON Object */
 	public JSONObject toJSON() throws JSONException {
 		JSONObject jsonObj = new JSONObject();

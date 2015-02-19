@@ -1,7 +1,5 @@
 package com.ils.sfc.designer.propertyEditor;
 
-import java.text.ParseException;
-
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
@@ -41,8 +39,10 @@ public class PropertyRow {
 			((IlsProperty<?>)propertyValue.getProperty()).getChoices() : null;
 	}
 	
-	public boolean isEditableString() {
-		return getProperty().getType() == String.class && getChoices() == null;
+	public boolean isSerializedObject() {
+		boolean isReviewData = getProperty().equals(IlsProperty.REVIEW_DATA) ||
+			getProperty().equals(IlsProperty.REVIEW_DATA_WITH_ADVICE); 
+		return isReviewData;
 	}
 
 	public Object getDefaultValue() {
@@ -76,7 +76,7 @@ public class PropertyRow {
 		setValue(value);
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setValue(Object value) {
 		propertyValue = new PropertyValue(getProperty(), value);		
 	}

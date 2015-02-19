@@ -25,7 +25,7 @@ class PropertyCellEditor extends AbstractCellEditor implements TableCellEditor{
 		}
 		else {
 			int alignment = factory.getHorizontalAlignment(col);
-			return component = factory.getComponentForValue(rowObj.getPropertyValue(), alignment);
+			return component = factory.getComponentForValue(rowObj, alignment);
 		}
 	}
 

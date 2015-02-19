@@ -17,7 +17,7 @@ import com.inductiveautomation.ignition.common.script.JythonExecException;
 
 /** A table cell editor for the property grid */
 @SuppressWarnings("serial")
-class ReviewDataCellEditor extends AbstractCellEditor implements TableCellEditor{
+public class ReviewDataCellEditor extends AbstractCellEditor implements TableCellEditor{
 	private Component component;
 
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected,

@@ -11,6 +11,6 @@ attributes:sequence (structure (ATTRIBUTE-NAME: the symbol VAL,
 public class Matrix extends DataWithUnits {
 	
 	public Matrix() {
-		addProperty(IlsProperty.STRING_VALUE);
+		addProperty(IlsProperty.VALUE);
 	}
 }

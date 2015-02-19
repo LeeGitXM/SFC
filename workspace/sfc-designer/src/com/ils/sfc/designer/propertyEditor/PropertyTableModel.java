@@ -80,15 +80,12 @@ public class PropertyTableModel extends AbstractTableModel {
         else if(col == VALUE_COLUMN) {
         	value = pRow.getValue();
         }
-       else {
-        	value = ""; // the edit row; value not important
-        }
         return value;
     }
     
     public boolean isCellEditable(int row, int col) { 
     	PropertyRow rowObj = getRowObject(row);
-    	return col == VALUE_COLUMN && !rowObj.isCategory();
+    	return col == VALUE_COLUMN && !rowObj.isCategory() && !rowObj.isSerializedObject();
     }
     
     public void setValueAt(Object value, int row, int col) {

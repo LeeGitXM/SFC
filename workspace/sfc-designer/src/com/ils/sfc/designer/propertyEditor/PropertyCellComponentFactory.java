@@ -48,19 +48,25 @@ public class PropertyCellComponentFactory {
 	/** Get a swing component suitable for editing/rendering a value of
 	 *  the given type.
 	 */
-	protected Component getComponentForValue(PropertyValue<?> pvalue, int alignment) {
-	    if(pvalue.getProperty().getType() == Boolean.class) {
+	protected Component getComponentForValue(PropertyRow rowObj, int alignment) {
+	    if(rowObj.getProperty().getType() == Boolean.class) {
 	    	JCheckBox checkBox = createCheckBox();
-	    	boolean value = pvalue.getValue() != null ? ((Boolean)pvalue.getValue()).booleanValue() : false;
+	    	boolean value = rowObj.getValue() != null ? ((Boolean)rowObj.getValue()).booleanValue() : false;
 	    	checkBox.setSelected(value);
 	    	return checkBox;
 	    }
 	    else {
 	    	JTextField textField = createTextField();
 	    	textField.setHorizontalAlignment(alignment);
-	    	String value = pvalue.getValue() != null ? pvalue.getValue().toString() : "";
-	    	textField.setText(value.toString());
-	    	textField.setToolTipText(value.toString());
+	    	String sValue = null;
+	    	if(rowObj.isSerializedObject()) {
+	    		sValue = "<Use Editor>";
+	    	}
+	    	else {
+	    		sValue = rowObj.getValue() != null ? rowObj.getValue().toString() : "";	    		
+	    	}
+	    	textField.setText(sValue);
+	    	textField.setToolTipText(sValue);
 	    	return textField;
 	    }		
 	}

@@ -22,7 +22,7 @@ class PropertyCellRenderer implements TableCellRenderer {
 		PropertyTableModel model = (PropertyTableModel) table.getModel();
 		PropertyRow rowObj = model.getRowObject(row);
 		if(column == PropertyTableModel.VALUE_COLUMN) {
-			return factory.getComponentForValue(rowObj.getPropertyValue(), alignment);
+			return factory.getComponentForValue(rowObj, alignment);
 		}
 		else {
 			JComponent component = (JComponent) defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);

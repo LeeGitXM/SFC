@@ -35,23 +35,6 @@ public class PropertyEditor extends JPanel {
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 	}
 
-	private void doEdit(int row, int col) {
-		PropertyRow stringEditRowObject = tableModel.getRowObject(row);
-		JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(table);
-		if(stringEditRowObject.getProperty().equals(IlsProperty.REVIEW_DATA)) {
-			// kind of a hack here...REVIEW_DATA is a pseudo-property
-			// the complex values are held in the local recipe data of the step
-			ReviewDataEditorDialog dlg = new ReviewDataEditorDialog(frame, tableModel.getStepId(), false);
-			dlg.setVisible(true);						
-		}
-		else if(stringEditRowObject.getProperty().equals(IlsProperty.REVIEW_DATA_WITH_ADVICE)) {
-			// kind of a hack here...REVIEW_DATA_WITH_ADVICE is a pseudo-property
-			// the complex values are held in the local recipe data of the step
-			ReviewDataEditorDialog dlg = new ReviewDataEditorDialog(frame, tableModel.getStepId(), true);
-			dlg.setVisible(true);						
-		}
-	}
-
 	public PropertyRow getSelectedRow() {
 		int selectionIndex = table.getSelectedRow();
 		return selectionIndex >= 0 ? tableModel.getRowObject(selectionIndex) : null;
