@@ -55,23 +55,35 @@ public class RecipeDataTranslator {
 	private static Map<String,String> g2ToIgName = new HashMap<String,String>();
 	static {
 		g2ToIgName.put("advice", IlsSfcNames.ADVICE);
+		g2ToIgName.put("array-key", IlsSfcNames.ARRAY_KEY);
 		g2ToIgName.put("category", IlsSfcNames.CATEGORY);
+		g2ToIgName.put("columns", IlsSfcNames.COLUMNS);
+		g2ToIgName.put("column-key", IlsSfcNames.COLUMN_KEY);
+		g2ToIgName.put("column-keyed", IlsSfcNames.COLUMN_KEYED);
 		g2ToIgName.put("description", IlsSfcNames.DESCRIPTION);
 		g2ToIgName.put("download", IlsSfcNames.DOWNLOAD);
+		g2ToIgName.put("elements", IlsSfcNames.ELEMENTS
+				);
 		g2ToIgName.put(G2_CLASS_NAME, IlsSfcNames.CLASS);
 		g2ToIgName.put("help", IlsSfcNames.HELP);
 		g2ToIgName.put("high-limit", IlsSfcNames.HIGH_LIMIT);
 		g2ToIgName.put("high_limit", IlsSfcNames.HIGH_LIMIT);
 		g2ToIgName.put("key", IlsSfcNames.KEY);
+		g2ToIgName.put("keyed", IlsSfcNames.KEYED);
 		g2ToIgName.put("label", IlsSfcNames.LABEL);
 		g2ToIgName.put("low-limit", IlsSfcNames.LOW_LIMIT);
 		g2ToIgName.put("low_limit", IlsSfcNames.LOW_LIMIT);
 		g2ToIgName.put("max-timing", IlsSfcNames.MAX_TIMING);
+		g2ToIgName.put("ramp-time", IlsSfcNames.RAMP_TIME);
+		g2ToIgName.put("rows", IlsSfcNames.ROWS);
+		g2ToIgName.put("row-key", IlsSfcNames.ROW_KEY);
+		g2ToIgName.put("row-keyed", IlsSfcNames.ROW_KEYED);
 		g2ToIgName.put("tag", IlsSfcNames.TAG_PATH);
 		g2ToIgName.put("target", IlsSfcNames.TARGET_VALUE);
 		g2ToIgName.put("timing", IlsSfcNames.TIMING);
 		g2ToIgName.put("type", IlsSfcNames.TYPE);
 		g2ToIgName.put("units", IlsSfcNames.UNITS);
+		g2ToIgName.put("update-frequency", IlsSfcNames.UPDATE_FREQUENCY);
 		g2ToIgName.put("val", IlsSfcNames.VALUE);
 		g2ToIgName.put("val-type", IlsSfcNames.TYPE);
 		g2ToIgName.put("write-confirm", IlsSfcNames.WRITE_CONFIRM);
@@ -186,6 +198,7 @@ public class RecipeDataTranslator {
 							//System.out.println(data.toJSON());
 						} catch (Exception e) {
 							errors.add("Unexpected error creating " + g2ClassName + " recipe object: " + e.getMessage());
+							e.printStackTrace();
 						}
 					}
 				}
@@ -205,13 +218,6 @@ public class RecipeDataTranslator {
 	public void setProperty(Data data, String name, String strValue) {
 		
 		PropertyValue<?> pvalue = data.findPropertyValue(name);
-		Object objValue = null;
-		if(pvalue != null && pvalue.getProperty().getType() == String.class) {
-			objValue = strValue;
-		}
-		else if(strValue.length() > 0 ) { 
-			objValue = IlsSfcCommonUtils.parseObjectValue(strValue);
-		}
 		
 		if(pvalue == null) {
 			errors.add("no property named " + name + " in " + data.getClass().getSimpleName());
@@ -226,6 +232,13 @@ public class RecipeDataTranslator {
 			addStructureProperties((Structure)data, strValue) ;
 		}
 		else {
+			Object objValue = null;
+			if(pvalue != null && pvalue.getProperty().getType() == String.class) {
+				objValue = strValue;
+			}
+			else if(strValue.length() > 0 ) { 
+				objValue = IlsSfcCommonUtils.parseObjectValue(strValue, pvalue.getProperty().getType());
+			}
 			if(objValue == null ||pvalue.getProperty().getType().isAssignableFrom(objValue.getClass())) {
 				data.getProperties().setDirect(pvalue.getProperty(), objValue);
 			}
@@ -276,7 +289,7 @@ public class RecipeDataTranslator {
 		if(strValue.startsWith("{")) {
 			String[] stringVals = strValue.substring(1, strValue.length() - 1).split(",");
 			for(String sval: stringVals) {
-				Object objVal = IlsSfcCommonUtils.parseObjectValue(sval.trim());
+				Object objVal = IlsSfcCommonUtils.parseObjectValue(sval.trim(), null);
 				values.add(objVal);
 			}
 		}
@@ -309,7 +322,7 @@ public class RecipeDataTranslator {
 			return parseListValue(strValue);
 		}
 		else {	// a primitive value, hopefully
-			return IlsSfcCommonUtils.parseObjectValue(strValue);
+			return IlsSfcCommonUtils.parseObjectValue(strValue, null);
 		}
 	}
 

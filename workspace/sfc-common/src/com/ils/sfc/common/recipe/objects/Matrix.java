@@ -11,6 +11,12 @@ attributes:sequence (structure (ATTRIBUTE-NAME: the symbol VAL,
 public class Matrix extends DataWithUnits {
 	
 	public Matrix() {
+		addProperty(IlsProperty.ROWS);
+		addProperty(IlsProperty.ROW_KEY);
+		addProperty(IlsProperty.ROW_KEYED);
+		addProperty(IlsProperty.COLUMNS);
+		addProperty(IlsProperty.COLUMN_KEY);
+		addProperty(IlsProperty.COLUMN_KEYED);
 		addProperty(IlsProperty.VALUE);
 	}
 }

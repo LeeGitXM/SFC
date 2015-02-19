@@ -127,7 +127,7 @@ public class IlsSfcCommonUtils {
 			return Boolean.valueOf(stringValue);
 		}
 		else if(property.getType() == Object.class) {
-			return parseObjectValue(stringValue);
+			return parseObjectValue(stringValue, null);
 		}
 		else {
 			return stringValue;
@@ -208,10 +208,12 @@ public class IlsSfcCommonUtils {
 	/** For a string that may represent a number, string, or boolean, parse it
 	 *  with a best guess as to type
 	 */
-	public static Object parseObjectValue(String strValue) {
+	public static Object parseObjectValue(String strValue, Class<?> hintClass) {
+		if(hintClass != Double.class) {
+			try { return Integer.parseInt(strValue); }
+			catch(NumberFormatException e) { /* didn't work */ }
+		}
 		try { return Double.parseDouble(strValue); }
-		catch(NumberFormatException e) { /* didn't work */ }
-		try { return Integer.parseInt(strValue); }
 		catch(NumberFormatException e) { /* didn't work */ }
 		if(strValue.equalsIgnoreCase("true") || strValue.equalsIgnoreCase("false")) {
 			return Boolean.parseBoolean(strValue); 		

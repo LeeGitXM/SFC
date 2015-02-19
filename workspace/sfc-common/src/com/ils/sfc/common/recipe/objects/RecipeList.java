@@ -8,6 +8,9 @@ A class that lumps together all the sequence/list types in G2
 public class RecipeList extends DataWithUnits {
 	
 	public RecipeList() {
+		addProperty(IlsProperty.KEYED);
+		addProperty(IlsProperty.ELEMENTS);
+		addProperty(IlsProperty.ARRAY_KEY);
 		addProperty(IlsProperty.VALUE);
 	}
 }
