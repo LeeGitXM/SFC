@@ -121,9 +121,7 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	private void addLayer(RecipeDataTreeNode node) {
 		if(showLeafNodes) {
 			for(PropertyValue<?> pval: node.getRecipeData().getProperties().getValues()) {
-				String valDesc = pval.getValue() != null ? pval.getValue().toString() + " (" + pval.getValue().getClass().getSimpleName() + ")" : "<null>";
-				String desc = pval.getProperty().getName() + ": " + valDesc;
-				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(desc);
+				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(formatValue(pval));
 				node.add(childNode);
 			}			
 		}
@@ -137,6 +135,31 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 		}
 	}
 	
+	private Object formatValue(PropertyValue<?> pval) {
+		Object value = pval.getValue();
+		if(value instanceof double[][]) {
+			StringBuilder buf = new StringBuilder();
+			double[][] arrValue = (double[][]) value;
+			for(int i = 0; i < arrValue.length; i++) {
+				buf.append('[');
+				for(int j = 0; j < arrValue[i].length; j++) {
+					if(j > 0) {
+						buf.append(", ");
+					}
+					buf.append(Double.toString(arrValue[i][j]));
+				}	
+				buf.append(']');
+			}
+			return buf.toString();
+		}
+		else {
+			String valDesc = pval.getValue() != null ?
+				value.toString() + " (" + value.getClass().getSimpleName() + ")" : "<null>";
+			String desc = pval.getProperty().getName() + ": " + valDesc;
+			return desc;
+		}
+	}
+
 	private void doAdd() {				
 		controller.getCreator().activate();
 	}

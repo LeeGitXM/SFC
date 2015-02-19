@@ -51,12 +51,12 @@ attributes:sequence (structure (
 public class Output extends IO {
 
 	public Output() {
-		// TODO: VAL-TYPE
 		addProperty(IlsProperty.WRITE_CONFIRM);
 		addProperty(IlsProperty.WRITE_CONFIRMED);
 		addProperty(IlsProperty.DOWNLOAD);
 		addProperty(IlsProperty.DOWNLOAD_STATUS);
 		addProperty(IlsProperty.TIMING);
+		addProperty(IlsProperty.TYPE);
 		addProperty(IlsProperty.STEP_TIME);
 		addProperty(IlsProperty.STEP_TIMESTAMP);
 		addProperty(IlsProperty.MAX_TIMING);

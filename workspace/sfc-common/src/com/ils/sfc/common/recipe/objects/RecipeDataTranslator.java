@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
@@ -49,12 +50,14 @@ public class RecipeDataTranslator {
 	}
 	public static final String G2_CLASS_NAME = "class-name";
 	public static final String SYMBOL_PREFIX = "the symbol ";
+	public static final String STRUCTURE_PREFIX = "structure (";
 
 	private static Map<String,String> g2ToIgName = new HashMap<String,String>();
 	static {
 		g2ToIgName.put("advice", IlsSfcNames.ADVICE);
 		g2ToIgName.put("category", IlsSfcNames.CATEGORY);
 		g2ToIgName.put("description", IlsSfcNames.DESCRIPTION);
+		g2ToIgName.put("download", IlsSfcNames.DOWNLOAD);
 		g2ToIgName.put(G2_CLASS_NAME, IlsSfcNames.CLASS);
 		g2ToIgName.put("help", IlsSfcNames.HELP);
 		g2ToIgName.put("high-limit", IlsSfcNames.HIGH_LIMIT);
@@ -63,11 +66,27 @@ public class RecipeDataTranslator {
 		g2ToIgName.put("label", IlsSfcNames.LABEL);
 		g2ToIgName.put("low-limit", IlsSfcNames.LOW_LIMIT);
 		g2ToIgName.put("low_limit", IlsSfcNames.LOW_LIMIT);
+		g2ToIgName.put("max-timing", IlsSfcNames.MAX_TIMING);
 		g2ToIgName.put("tag", IlsSfcNames.TAG_PATH);
 		g2ToIgName.put("target", IlsSfcNames.TARGET_VALUE);
+		g2ToIgName.put("timing", IlsSfcNames.TIMING);
 		g2ToIgName.put("type", IlsSfcNames.TYPE);
 		g2ToIgName.put("units", IlsSfcNames.UNITS);
 		g2ToIgName.put("val", IlsSfcNames.VALUE);
+		g2ToIgName.put("val-type", IlsSfcNames.TYPE);
+		g2ToIgName.put("write-confirm", IlsSfcNames.WRITE_CONFIRM);
+
+		// for the weird EM-RECIPE-DATA, just translate directly for the moment:
+		g2ToIgName.put("pres", "pres");
+		g2ToIgName.put("hilim", "hilim");
+		g2ToIgName.put("recc", "recc");
+		g2ToIgName.put("modattr_val", "modattr_val");
+		g2ToIgName.put("lolim", "lolim");
+		g2ToIgName.put("dscr", "dscr");
+		g2ToIgName.put("stag", "stag");
+		g2ToIgName.put("modattr", "modattr");
+		g2ToIgName.put("ctag", "ctag");
+		g2ToIgName.put("chg_lev", "chg_lev");
 	}
 
 	private Group recipeData = new Group();
@@ -164,6 +183,7 @@ public class RecipeDataTranslator {
 									//System.out.println(igKey + ": " + strValue);
 								}
 							}
+							//System.out.println(data.toJSON());
 						} catch (Exception e) {
 							errors.add("Unexpected error creating " + g2ClassName + " recipe object: " + e.getMessage());
 						}
@@ -194,17 +214,16 @@ public class RecipeDataTranslator {
 		}
 		
 		if(pvalue == null) {
-			if(data instanceof Structure) {
-				// structures have dynamic properties, so just add one:
-				IlsProperty newProperty = new IlsProperty(name, objValue.getClass(), null);
-				data.getProperties().set(new PropertyValue(newProperty, objValue));
-			}
-			else {
-				errors.add("no property named " + name + " in " + data.getClass().getSimpleName());
-			}
+			errors.add("no property named " + name + " in " + data.getClass().getSimpleName());
 		}
 		else if(data instanceof RecipeList && pvalue.getProperty().equals(IlsProperty.VALUE)) {
 			data.getProperties().setDirect(pvalue.getProperty(), parseListValue(strValue));
+		}
+		else if(data instanceof Matrix && pvalue.getProperty().equals(IlsProperty.VALUE)) {
+			data.getProperties().setDirect(pvalue.getProperty(), parseMatrixValue(strValue));
+		}
+		else if(data instanceof Structure && pvalue.getProperty().equals(IlsProperty.VALUE)) {
+			addStructureProperties((Structure)data, strValue) ;
 		}
 		else {
 			if(objValue == null ||pvalue.getProperty().getType().isAssignableFrom(objValue.getClass())) {
@@ -218,8 +237,38 @@ public class RecipeDataTranslator {
 		}
 	}
 
+	private void addStructureProperties(Structure struct, String strValue) {
+		String[] keyVals = strValue.substring(STRUCTURE_PREFIX.length(), strValue.length() - 1).split(",");
+		for(String keyVal: keyVals) {
+			int colonIndex = keyVal.indexOf(':');
+			String key = keyVal.substring(0, colonIndex).trim();
+			String valString = keyVal.substring(colonIndex + 1, keyVal.length()).trim();
+			Object objValue = parseObjectValue(valString);
+			// structures have dynamic properties, so just add one:
+			struct.addDynamicProperty(key, objValue);
+		}
+	}
+
 	private boolean isList(String strValue) {
 		return strValue.startsWith("{") || strValue.startsWith("sequence(");
+	}
+	
+	private double[][] parseMatrixValue(String strValue) {
+		List<double[]> rows = new ArrayList<double[]>();
+		int lbIndex = 0;
+		while((lbIndex = strValue.indexOf('{', lbIndex)) != -1 ) {
+			int rbIndex = strValue.indexOf('}', lbIndex);
+			String[] rowVals = strValue.substring(lbIndex + 1, rbIndex).split(",");
+			double[] row = new double[rowVals.length];
+			for(int i = 0; i < rowVals.length; i++) {
+				String sval = rowVals[i].trim();
+				double dval = Double.parseDouble(sval);
+				row[i] = dval;
+			}
+			rows.add(row);
+			lbIndex = rbIndex + 1;
+		}
+		return rows.toArray(new double[rows.size()][]);
 	}
 	
 	private java.util.List<Object> parseListValue(String strValue) {
@@ -250,9 +299,10 @@ public class RecipeDataTranslator {
 
 	private Object parseObjectValue(String strValue) {
 		if(strValue.startsWith(SYMBOL_PREFIX)) {	// G2 Symbol
-			return strValue.substring(strValue.length(), strValue.length());
+			return strValue.substring(SYMBOL_PREFIX.length(), strValue.length());
 		}
 		else if(strValue.startsWith("'")) { // single-quoted string
+			// remove the quotes
 			return strValue.substring(1, strValue.length() - 1);
 		}
 		else if(isList(strValue)) {  // some kind of list

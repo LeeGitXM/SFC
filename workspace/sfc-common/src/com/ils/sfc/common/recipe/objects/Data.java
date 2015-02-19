@@ -162,6 +162,12 @@ public abstract class Data {
 		}	
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void addDynamicProperty(String name, Object value) {
+		IlsProperty<?> newProperty = new IlsProperty(name, value.getClass(), null);
+		getProperties().set(new PropertyValue(newProperty, value));		
+	}
+	
 	protected void printSpace(int count) {
 		for(int i = 0; i < count; i++) {
 			System.out.print("   ");

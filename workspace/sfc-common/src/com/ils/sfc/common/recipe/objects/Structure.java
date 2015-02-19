@@ -1,5 +1,6 @@
 package com.ils.sfc.common.recipe.objects;
 
+import com.ils.sfc.common.IlsProperty;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 
@@ -13,6 +14,9 @@ attributes:sequence (structure (
 public class Structure extends Data {
 
 	public Structure() {
+		// value is a pseudo-property, as coming from G2 it contains
+		// a serialized form of all the dynamic property/values
+		addProperty(IlsProperty.VALUE);
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
