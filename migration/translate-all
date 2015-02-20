@@ -1,10 +1,11 @@
 #!/bin/sh
-# Process all of the json files in the repository "g2" area.
-# Save the results in the json storate area for ignition.
+# Process all of the .txt files in the repository "g2" area.
+# These are the raw G2 exports. Translate, then save the
+# results in the procedure storage area for ignition.
 #
 SFC=~/Development/ils/src/sfc
 APP=${SFC}/migration/translate
-cd ${SFC}/migration/samples
+cd ${SFC}/procs/g2
 DIR=`pwd`
 for fil in *.txt
 do

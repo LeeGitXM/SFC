@@ -85,7 +85,7 @@ public class StepTranslator {
 				String chartPath = delegate.getPathForChart(convertedReference);
 				step.setAttribute("chart-path", chartPath);
 				log.infof("%s.translate: Encapsulation: %s translates to %s",TAG,convertedReference,chartPath);
-				step.setAttribute("execution-mode", "RunUntilStopped");
+				step.setAttribute("execution-mode", "RunUntilCompletion");   // versus RunUntilStopped
 			}
 			if( factoryId.equalsIgnoreCase("action-step") ) {
 				delegate.insertOnStartFromG2Block(chart,step,block);

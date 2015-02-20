@@ -100,6 +100,10 @@ public class IlsSfcCommonUtils {
 	public static void fromXML(Element dom, ChartUIElement ui, Property<?>[] properties) {
 		for(Property<?> property: properties) {
 			String stringValue = getPropertyAsString(property, dom);
+			if( stringValue==null) {
+				logger.warn("IlsSSfcCommonUtils.fromXML: Step property "+property+" missing in supplied DOM for "+ui.getType());
+				continue;  // Ignore
+			}
 			Object value = null;
 			try {
 				value = parseProperty(property, stringValue);

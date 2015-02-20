@@ -1,7 +1,0 @@
-#!/bin/sh
-#  Use this version when debugging a single file.
-#
-SFC=~/Development/ils/src/sfc
-FIL=FS-R2-C3-CONV-VS-PR.txt
-DIR=${SFC}/migration/samples
-${SFC}/migration/translate $DIR/$FIL

@@ -344,6 +344,8 @@ public class Converter {
 		String g2attribute = g2block.getAttribute("callback");
 		if( g2attribute.length()>0) {
 			String script = propertyValueMapper.modifyPropertyValueForIgnition("callback",g2attribute);
+			// As returned the script contains the module - strip it off.
+			script = pathNameForModule(script);
 			log.infof("%s.insertOnStartFromG2Block: callback = %s->%s",TAG,g2attribute,script);
 			if( script!=null  ) {
 				Path scriptPath = Paths.get(pythonRoot.toString(),script);
@@ -379,6 +381,18 @@ public class Converter {
 		return outpath;
 	}
 	
+	/**
+	 * Create a file path from a module name. Strip off the entry point
+	 * and add a ".py"
+	 * @param inpath
+	 * @return
+	 */
+	public String pathNameForModule(String modulePath) {
+		String out = modulePath;
+		int pos = out.lastIndexOf(".");
+		if( pos>0 ) out = out.substring(0, pos);
+		return out+".py";
+	}
 	/**
 	 * Remove dashes and spaces. Convert to camel-case.
 	 * @param input
