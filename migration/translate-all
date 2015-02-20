@@ -5,6 +5,7 @@
 #
 SFC=~/Development/ils/src/sfc
 APP=${SFC}/migration/translate
+mkdir -p ${SFC}/procs/g2
 cd ${SFC}/procs/g2
 DIR=`pwd`
 for fil in *.txt
