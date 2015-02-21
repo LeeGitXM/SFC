@@ -76,6 +76,7 @@ public class StepTranslator {
 		else {
 			step = chart.createElement("step");
 			step.setAttribute("name", name);
+			step.setAttribute("factory-id", factoryId);
 			// Encapsulation have several additional properties. The encapsulation reference
 			// is to a chart name only. Ignition requires a path.
 			if( isEncapsulation ) {
@@ -100,7 +101,6 @@ public class StepTranslator {
 
 		// Common to both steps and transitions
 		step.setAttribute("id", uuid);
-		step.setAttribute("factory-id", factoryId);
 		step.setAttribute("location", String.format("%d %d", x,y));
 		return step;
 	}

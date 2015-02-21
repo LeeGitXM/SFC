@@ -50,6 +50,7 @@ import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
 import com.ils.sfc.migration.map.PropertyValueMapper;
+import com.ils.sfc.migration.translation.ConnectionMaker;
 import com.ils.sfc.migration.translation.GridPoint;
 import com.ils.sfc.migration.translation.StepLayoutManager;
 import com.ils.sfc.migration.translation.StepTranslator;
@@ -293,6 +294,12 @@ public class Converter {
 			for(Element e:anchorElements) {
 				root.appendChild(e);
 			}
+			// The layout does NOT create connections. Create them here.
+			ConnectionMaker cm = new ConnectionMaker(blockMap,layout.getConnectionMap(),gridMap);
+			List<Element> linkElements = cm.getConnections(chart);
+			for(Element e:linkElements) {
+				root.appendChild(e);
+			}
 			root.setAttribute("zoom", String.valueOf(layout.getZoom()));
 		}
 	}
@@ -452,7 +459,7 @@ public class Converter {
 				String value = g2block.getAttribute(g2attribute);
 				// Alter the value, if so specified
 				value = propertyValueMapper.modifyPropertyValueForIgnition(property, value);
-				//log.debugf("%s.updateStepFromG2Block: %s(%s) = %s",TAG,property,g2attribute,value);
+				log.debugf("%s.updateStepFromG2Block: %s(%s) = %s (altered)",TAG,property,g2attribute,value);
 				Element propelement = chart.createElement(property);
 				Node textNode = chart.createTextNode(value);
 				propelement.appendChild(textNode);

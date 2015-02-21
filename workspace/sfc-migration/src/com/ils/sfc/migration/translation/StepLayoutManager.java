@@ -52,8 +52,9 @@ public class StepLayoutManager {
 		analyze(g2chart.getElementsByTagName("block"));
 		center();
 	}
-	public Map<String,Element>   getBlockMap() { return this.blockMap; }
-	public Map<String,GridPoint> getGridMap() { return this.gridMap; }
+	public Map<String,Element>       getBlockMap() { return this.blockMap; }
+	public Map<String,ConnectionHub> getConnectionMap() { return this.connectionMap; }
+	public Map<String,GridPoint>     getGridMap() { return this.gridMap; }
 	public double getZoom() { return this.zoom; }
 	
 	// ========================================= This is where the work gets done ================================
@@ -127,7 +128,7 @@ public class StepLayoutManager {
 			// NOTE: anchors and jumps are not in the block map.
 			// If there are multiple inputs on a block
 			// then create an anchor and associated jumps
-			for(String input:hub.connectedFrom) {
+			for(String input:hub.getConnectionsFrom()) {
 				if( !input.equals(source) ) {
 					x = createAnchors(source,uuid,x,y-1);
 					y+=2;
@@ -215,10 +216,10 @@ public class StepLayoutManager {
 	// Place the diagram in the upper left corner of the space. 
 	private void center() {
 		// First iteration gets the bounds
-		minx = 10000;
-		miny = 10000;
-		maxx = -10000;
-		maxy = -10000;
+		minx = Integer.MAX_VALUE;
+		miny = Integer.MAX_VALUE;
+		maxx = Integer.MIN_VALUE;
+		maxy = Integer.MIN_VALUE;
 		for( GridPoint gp:gridMap.values()) {
 			if( gp.x>maxx ) maxx = gp.x;
 			if( gp.y>maxy ) maxy = gp.y;
@@ -310,19 +311,5 @@ public class StepLayoutManager {
 		Node node = chart.createTextNode(String.format("%c",'A'+count));
 		e.appendChild(node);
 		return e;
-	}
-	
-	private class ConnectionHub {
-		private final List<String> connectedTo;
-		private final List<String> connectedFrom;
-		public ConnectionHub() {
-			this.connectedTo = new ArrayList<>();
-			this.connectedFrom = new ArrayList<>();
-		}
-		
-		public void addConnectionTo(String uuid) { connectedTo.add(uuid); }
-		public void addConnectionFrom(String uuid) { connectedFrom.add(uuid); }
-		public List<String> getConnectionsTo() { return connectedTo; }
-		public List<String> getConnectionsFrom() { return connectedFrom; }
 	}
 }

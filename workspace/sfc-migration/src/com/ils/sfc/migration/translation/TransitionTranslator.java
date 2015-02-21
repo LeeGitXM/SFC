@@ -18,7 +18,6 @@ public class TransitionTranslator {
 	 */
 	public static String createTransitionExpression(Element g2Block) {
 		String expression = "true";
-
 		return expression;
 	}
 }

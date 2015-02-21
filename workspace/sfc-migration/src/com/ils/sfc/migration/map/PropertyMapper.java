@@ -69,7 +69,9 @@ public class PropertyMapper {
 
 	public String g2Property(String factoryId,String propertyName) {
 		String key = makePropertyMapKey(factoryId,propertyName);
-		return propertyMap.get(key);
+		String result = propertyMap.get(key);
+		//System.err.println(TAG+".g2Property for "+factoryId+":"+propertyName+"="+result);
+		return result;
 	}
 	
 	/**
