@@ -9,11 +9,8 @@ REPO_ROOT=~/Development/ils/src
 SVN=~/Development/ils/svn/EMChemicals/Release/src
 # Prepare directories
 mkdir -p $SVN/project
-mkdir -p $SVN/modules
-mkdir -p $SVN/data
-cd $REPO_ROOT/sfc
-cp -a data $SVN
 cd $REPO_ROOT/sfc/project
 cp sfc_demo_proj.proj $SVN/project
+cp BrowserGlobalDemo.proj $SVN/project
 SVN=~/Development/ils/svn/EMChemicals/Ignition
 cp $REPO_ROOT/sfc/workspace/sfc-build/modules/*.modl $SVN
