@@ -98,6 +98,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public void setup(GatewayContext ctxt) {
 		this.context = ctxt;
 		context.getModuleServicesManager().subscribe(ChartManagerService.class, this);
+		IlsGatewayScripts.setContext(context);
 	}
 
 	@Override

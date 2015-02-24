@@ -1,12 +1,10 @@
 package com.ils.sfc.client;
 
-import com.ils.sfc.client.step.*;
-import com.ils.sfc.common.IlsSfcModule;
+import com.ils.sfc.client.step.AbstractIlsStepUI;
+import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
-import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
 import com.inductiveautomation.ignition.client.model.ClientContext;
-import com.inductiveautomation.ignition.client.util.EDTUtil;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
@@ -43,6 +41,7 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
         });
         log.debug("starting up...");
 		registerSteps();
+		IlsClientScripts.setContext(context);
     }
 
     private void registerSteps() {
@@ -59,6 +58,7 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 		super.initializeScriptManager(manager);
 		PythonCall.setScriptMgr(manager);
 		manager.addStaticFields("system.ils.sfc", IlsSfcNames.class);
+		manager.addScriptModule("system.ils.sfc", IlsClientScripts.class);
     }
 
 }

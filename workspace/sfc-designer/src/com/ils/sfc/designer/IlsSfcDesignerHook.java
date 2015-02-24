@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
+import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.step.*;
@@ -83,6 +84,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		super.initializeScriptManager(mgr);
 		PythonCall.setScriptMgr(mgr);
 		mgr.addStaticFields("system.ils.sfc", IlsSfcNames.class);
+		mgr.addScriptModule("system.ils.sfc", IlsClientScripts.class);
 	}
 	
 	@Override
@@ -104,7 +106,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	StepConfigRegistry configRegistry = (StepConfigRegistry) context.getModule(SFCModule.MODULE_ID);
     	for(String factoryId: editorFactoryIds) {
     		configRegistry.register(factoryId, editorFactory);
-    	}    	
+    	} 
+    	IlsClientScripts.setContext(context);
 	}
 	
 	@Override

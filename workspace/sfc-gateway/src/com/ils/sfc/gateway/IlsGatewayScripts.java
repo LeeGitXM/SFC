@@ -13,6 +13,7 @@ import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.step.IlsAbstractChartStep;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
+import com.inductiveautomation.ignition.common.project.ProjectVersion;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -32,9 +33,26 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 // or at least inflate memory if not "claimed"
 public class IlsGatewayScripts {	
 	private static LoggerEx logger = LogUtil.getLogger(IlsGatewayScripts.class.getName());
+	private static GatewayContext context = null;
 	private static Map<String,PyDictionary> repliesById = Collections.synchronizedMap(
 		new HashMap<String,PyDictionary>());
 
+	public static void setContext(GatewayContext ctx) { context = ctx; }
+	/**
+	 * Find the database associated with a specified project. This requires 
+	 * that a Gateway context. NOTE: There is no default defined for the global project.
+	 * 
+	 * @param projectId identifier for the project
+	 * @return name of the default database for the specified project
+	 */
+	public String getDefaultDatabaseName(long projectId)  {
+		String dbName = "";
+		if( projectId!=-1) {
+			dbName = context.getProjectManager().getProps(projectId, ProjectVersion.Published).getDefaultDatasourceName();
+		}
+		return dbName;
+	}
+	
 	public static PyDictionary getResponse(String id) {
 		PyDictionary reply = repliesById.get(id);
 		if(reply != null) {
