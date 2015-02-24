@@ -9,7 +9,7 @@ insert into PropertyMap values ('com.ils.TimedDelayStep','callback','callback');
 insert into PropertyMap values ('com.ils.TimedDelayStep','delay','delay-time');
 insert into PropertyMap values ('com.ils.TimedDelayStep','delayUnit','delay-units');
 insert into PropertyMap values ('com.ils.TimedDelayStep','description','description');
-insert into PropertyMap values ('com.ils.TimedDelayStep','key','strategy');
+insert into PropertyMap values ('com.ils.TimedDelayStep','key','identifier-or-name');
 insert into PropertyMap values ('com.ils.TimedDelayStep','postNotification','post-notification');
 insert into PropertyMap values ('com.ils.TimedDelayStep','recipeLocation','recipe-location');
 insert into PropertyMap values ('com.ils.TimedDelayStep','strategy','strategy');
