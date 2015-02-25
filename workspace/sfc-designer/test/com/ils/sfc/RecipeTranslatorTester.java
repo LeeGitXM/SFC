@@ -10,6 +10,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -43,6 +44,8 @@ public class RecipeTranslatorTester {
 				for(String errMsg: trans.getErrors()) {
 					System.out.println(errMsg);
 				}
+				String json = trans.DOMToData().toJSON().toString();
+				data = Data.fromJson(new JSONObject(json));
 				JFrame frame = new JFrame();
 				frame.setTitle(fXmlFile.getName());
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

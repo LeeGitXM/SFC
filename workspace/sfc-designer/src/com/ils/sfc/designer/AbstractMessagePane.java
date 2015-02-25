@@ -14,13 +14,14 @@ import com.ils.sfc.designer.EditorPane;
 @SuppressWarnings("serial")
 public abstract class AbstractMessagePane extends JPanel implements EditorPane {
 	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
-	protected JTextArea textField = new JTextArea();
+	protected JTextArea testArea = new JTextArea();
 	protected int returnIndex;
 	
 	public AbstractMessagePane() {
 		super(new BorderLayout());
-		textField.setEditable(false);
-		add(textField, BorderLayout.CENTER);
+		testArea.setEditable(false);
+		testArea.setLineWrap(true);
+		add(testArea, BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.NORTH);
 		buttonPanel.getAddButton().setVisible(false);
 		buttonPanel.getEditButton().setVisible(false);
@@ -35,7 +36,7 @@ public abstract class AbstractMessagePane extends JPanel implements EditorPane {
 	}
 	
 	public void setText(String text, int returnIndex) {
-		textField.setText(text);
+		testArea.setText(text);
 		this.returnIndex = returnIndex;
 	}
 	

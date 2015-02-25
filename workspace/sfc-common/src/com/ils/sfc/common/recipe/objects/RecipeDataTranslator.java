@@ -227,6 +227,7 @@ public class RecipeDataTranslator {
 			Data data = (Data)aClass.newInstance();
 			recipeObjects.add(data);
 			for(String g2Key: attMap.keySet()) {
+				if(g2Key.equals(G2_CLASS_NAME)) continue;
 				String igKey = g2ToIgName.get(g2Key);
 				String strValue = attMap.get(g2Key);
 				if(IlsSfcNames.UUID.equals(g2Key)) {

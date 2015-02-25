@@ -186,6 +186,7 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	
 	/** Rebuild the tree in response to a change in recipe data. */
 	public void rebuildTree() {
+		if(controller.getRecipeData() == null) return;
 		if(controller.getRecipeData().getS88Level() != null) {
 			buttonPanel.getComboBox().setSelectedItem(
 				controller.getRecipeData().getS88Level());
