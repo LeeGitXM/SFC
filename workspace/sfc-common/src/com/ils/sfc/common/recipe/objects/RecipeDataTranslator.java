@@ -14,7 +14,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -103,10 +105,11 @@ public class RecipeDataTranslator {
 
 	private Group recipeData = new Group();
 	private final java.util.List<String> errors = new ArrayList<String>();
-	private final InputStream xmlIn;
+	private  InputStream xmlIn;
+	private Element blockElement;
 	
-	public RecipeDataTranslator(InputStream xmlIn) {
-		this.xmlIn = xmlIn;
+	public RecipeDataTranslator(Element blockElement) {
+		this.blockElement = blockElement;
 	}
 	
 	public static Collection<Class<?>> getConcreteClasses() {
@@ -123,7 +126,7 @@ public class RecipeDataTranslator {
 
 	/** Translate from JSONObject to corresponding xml element for the Associated Data property. */
 	public String translate() throws JSONException {	
-		Data data = G2ToData();
+		Data data = DOMToData();
 		JSONObject jobj = data.toJSON();
 		return jobj != null ? "<associated-data>" + jobj.toString() + "</associated-data>" : null;
 	}
@@ -133,7 +136,7 @@ public class RecipeDataTranslator {
 	 * element to a chart step. 
 	 */
 	public Element createAssociatedDataElement(Document chart) throws JSONException {	
-		Data data = G2ToData();
+		Data data = DOMToData();
 		JSONObject jobj = data.toJSON();
 		Element assocdata = chart.createElement("associated-data");
 		Node textNode = chart.createTextNode(jobj.toString());
@@ -141,82 +144,34 @@ public class RecipeDataTranslator {
 		return assocdata;
 	}
 	
-	/** Translate from G2 export to Data objects */
-	public Data G2ToData() throws JSONException  {
+	public Data DOMToData() {
 		final java.util.List<Data> recipeObjects = new ArrayList<Data>();
-		try {
-			SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-			DefaultHandler handler = new DefaultHandler() {
-				@Override
-				public void startElement(String uri, String localName, String qName, Attributes attributes) {
-					if(qName.equals("recipe")) {
-						
-						// read the XML attributes
-						int numAttributes = attributes.getLength();
-						Map<String,String> attMap = new HashMap<String,String>();
-						for(int i = 0; i < numAttributes; i++) {
-							attMap.put(attributes.getQName(i), attributes.getValue(i));
-						}
-						
-						// Find the Recipe Data class we want to instantiate
-						String g2ClassName = attMap.get(G2_CLASS_NAME);
-						String valueType = attMap.get(IlsSfcNames.TYPE);
-						//System.out.println();
-						//System.out.println(g2ClassName);
-						Class<?> aClass = getConcreteClassForG2Class(g2ClassName);
-						if(aClass == null) {
-							errors.add("No concrete class found for G2 class " + g2ClassName);
-						}
-						
-						// a special case: if it is a simple value with a sequence value,
-						// make it a List type:
-						if(aClass == Value.class && IlsSfcNames.SEQUENCE.equals(valueType)) {
-							aClass = RecipeList.class;
-						}
-						
-						// Create the instance and populate the properties
-						try {
-							Data data = (Data)aClass.newInstance();
-							recipeObjects.add(data);
-							for(String g2Key: attMap.keySet()) {
-								String igKey = g2ToIgName.get(g2Key);
-								String strValue = attMap.get(g2Key);
-								if(IlsSfcNames.UUID.equals(g2Key)) {
-									data.setId(strValue);
-								}
-								else if(IlsSfcNames.PARENT_GROUP.equals(g2Key)) {
-									data.setParentId(strValue);
-								}
-								else if(igKey == null) {
-									errors.add("no translation for attribute " + g2Key + " in " + g2ClassName);
-								}
-								else {
-									setProperty(data, igKey, strValue.trim());
-									//System.out.println(igKey + ": " + strValue);
-								}
-							}
-							//System.out.println(data.toJSON());
-						} catch (Exception e) {
-							errors.add("Unexpected error creating " + g2ClassName + " recipe object: " + e.getMessage());
-							e.printStackTrace();
-						}
-					}
+		NodeList recipeNodes = blockElement.getElementsByTagName("recipe");
+		for (int temp = 0; temp < recipeNodes.getLength(); temp++) {			 
+			Node nNode = recipeNodes.item(temp);	 
+			System.out.println("\nCurrent Element :" + nNode.getNodeName());	 
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {	 
+				Element recipeElement = (Element) nNode;
+				NamedNodeMap attributes = recipeElement.getAttributes();
+				Map<String,String> attMap = new HashMap<String,String>();
+				for(int i = 0; i < attributes.getLength(); i++) {
+					Node item = attributes.item(i);
+					String name = item.getNodeName();
+					String value = item.getTextContent();
+					System.out.println( name + ": " + value);
+					attMap.put(name, value);					
 				}
-			};
-			parser.parse(xmlIn, handler);
-			xmlIn.close();
-		} catch (Exception e) {
-			errors.add("Unexpected error in G2 translation" + e.getMessage());
-		} 
+				createObject(recipeObjects, attMap);
+			}
+		}
 		restoreHierarchy(recipeObjects);
 		return recipeData;
 	}
-
+	
 	/** Set a property by name. Will throw IllegalArgumentException if the property is not present,
 	 *  unless this is a Structure in which case it will be created. */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void setProperty(Data data, String name, String strValue) {
-		
+	public void setProperty(Data data, String name, String strValue) {		
 		PropertyValue<?> pvalue = data.findPropertyValue(name);
 		
 		if(pvalue == null) {
@@ -237,7 +192,7 @@ public class RecipeDataTranslator {
 				objValue = strValue;
 			}
 			else if(strValue.length() > 0 ) { 
-				objValue = IlsSfcCommonUtils.parseObjectValue(strValue, pvalue.getProperty().getType());
+				objValue = IlsProperty.parseObjectValue(strValue, pvalue.getProperty().getType());
 			}
 			if(objValue == null ||pvalue.getProperty().getType().isAssignableFrom(objValue.getClass())) {
 				data.getProperties().setDirect(pvalue.getProperty(), objValue);
@@ -247,6 +202,53 @@ public class RecipeDataTranslator {
 					") is wrong type for property " + pvalue.getProperty().getName() + "(" +
 					pvalue.getProperty().getType().getSimpleName());
 			}
+		}
+	}
+
+	private void createObject(
+			final java.util.List<Data> recipeObjects,
+			Map<String, String> attMap) {
+		// Find the Recipe Data class we want to instantiate
+		String g2ClassName = attMap.get(G2_CLASS_NAME);
+		String valueType = attMap.get(IlsSfcNames.TYPE);
+		//System.out.println();
+		//System.out.println(g2ClassName);
+		Class<?> aClass = getConcreteClassForG2Class(g2ClassName);
+		if(aClass == null) {
+			errors.add("No concrete class found for G2 class " + g2ClassName);
+		}
+		
+		// a special case: if it is a simple value with a sequence value,
+		// make it a List type:
+		if(aClass == Value.class && IlsSfcNames.SEQUENCE.equals(valueType)) {
+			aClass = RecipeList.class;
+		}
+		
+		// Create the instance and populate the properties
+		try {
+			Data data = (Data)aClass.newInstance();
+			recipeObjects.add(data);
+			for(String g2Key: attMap.keySet()) {
+				String igKey = g2ToIgName.get(g2Key);
+				String strValue = attMap.get(g2Key);
+				if(IlsSfcNames.UUID.equals(g2Key)) {
+					data.setId(strValue);
+				}
+				else if(IlsSfcNames.PARENT_GROUP.equals(g2Key)) {
+					data.setParentId(strValue);
+				}
+				else if(igKey == null) {
+					errors.add("no translation for attribute " + g2Key + " in " + g2ClassName);
+				}
+				else {
+					setProperty(data, igKey, strValue.trim());
+					//System.out.println(igKey + ": " + strValue);
+				}
+			}
+			//System.out.println(data.toJSON());
+		} catch (Exception e) {
+			errors.add("Unexpected error creating " + g2ClassName + " recipe object: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 
@@ -289,7 +291,7 @@ public class RecipeDataTranslator {
 		if(strValue.startsWith("{")) {
 			String[] stringVals = strValue.substring(1, strValue.length() - 1).split(",");
 			for(String sval: stringVals) {
-				Object objVal = IlsSfcCommonUtils.parseObjectValue(sval.trim(), null);
+				Object objVal = IlsProperty.parseObjectValue(sval.trim(), null);
 				values.add(objVal);
 			}
 		}
@@ -322,7 +324,7 @@ public class RecipeDataTranslator {
 			return parseListValue(strValue);
 		}
 		else {	// a primitive value, hopefully
-			return IlsSfcCommonUtils.parseObjectValue(strValue, null);
+			return IlsProperty.parseObjectValue(strValue, null);
 		}
 	}
 

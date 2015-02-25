@@ -73,7 +73,15 @@ public abstract class Data {
 	public String getParentId() {
 		return parentId;
 	}
+	
+	public Object getValue(Property<?> property) {
+		return properties.get(property);
+	}
 
+	public void setValue(Property<?> property, Object value) {
+		properties.setDirect(property, value);
+	}
+	
 	public void setParentId(String parentId) {
 		this.parentId = parentId;
 	}

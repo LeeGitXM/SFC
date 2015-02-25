@@ -85,7 +85,8 @@ public class PropertyTableModel extends AbstractTableModel {
     
     public boolean isCellEditable(int row, int col) { 
     	PropertyRow rowObj = getRowObject(row);
-    	return col == VALUE_COLUMN && !rowObj.isCategory() && !rowObj.isSerializedObject();
+    	return col == VALUE_COLUMN && !rowObj.isCategory() && 
+    		!IlsProperty.isSerializedObject(rowObj.getProperty());
     }
     
     public void setValueAt(Object value, int row, int col) {
@@ -96,9 +97,9 @@ public class PropertyTableModel extends AbstractTableModel {
 				pRow.setValueFormatted((String)value);
 				propertyValues.set(pRow.getPropertyValue());
 			}
-			catch(NumberFormatException e) {
+			catch(ParseException e) {
 				if(errorHandler != null) {
-					errorHandler.handleError("Bad number format: " + value);
+					errorHandler.handleError(e.getMessage());
 				}
 			}
 		}

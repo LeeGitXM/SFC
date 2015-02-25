@@ -11,6 +11,6 @@ public class RecipeList extends DataWithUnits {
 		addProperty(IlsProperty.KEYED);
 		addProperty(IlsProperty.ELEMENTS);
 		addProperty(IlsProperty.ARRAY_KEY);
-		addProperty(IlsProperty.VALUE);
+		addProperty(IlsProperty.JSON_LIST);
 	}
 }

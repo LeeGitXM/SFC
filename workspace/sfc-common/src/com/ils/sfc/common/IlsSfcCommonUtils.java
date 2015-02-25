@@ -2,6 +2,7 @@ package com.ils.sfc.common;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -106,10 +107,10 @@ public class IlsSfcCommonUtils {
 			}
 			Object value = null;
 			try {
-				value = parseProperty(property, stringValue);
+				value = IlsProperty.parsePropertyValue(property, stringValue);
 			}
-			catch(NumberFormatException nfe) {
-				logger.warn("Error deserializing step property "+property+" from "+stringValue, nfe);
+			catch(ParseException e) {
+				logger.warn("Error deserializing step property "+property+" from "+stringValue, e);
 				value = stringValue;
 			}
 			
@@ -117,26 +118,6 @@ public class IlsSfcCommonUtils {
 		}
 	}
 
-	public static Object parseProperty(Property<?> property, String stringValue) {
-		if(property.getType() == String.class) {
-			return stringValue;
-		}
-		else if(property.getType() == Integer.class) {
-			return Integer.parseInt(stringValue);
-		}
-		else if(property.getType() == Double.class) {
-			return Double.parseDouble(stringValue);
-		}
-		else if(property.getType() == Boolean.class) {
-			return Boolean.valueOf(stringValue);
-		}
-		else if(property.getType() == Object.class) {
-			return parseObjectValue(stringValue, null);
-		}
-		else {
-			return stringValue;
-		}
-	}
 
 	public static Object getDefaultValue(Property<?> prop) {
 		if(prop.getDefaultValue() != null) {
@@ -209,19 +190,4 @@ public class IlsSfcCommonUtils {
 		return str == null || str.length() == 0;
 	}
 	
-	/** For a string that may represent a number, string, or boolean, parse it
-	 *  with a best guess as to type
-	 */
-	public static Object parseObjectValue(String strValue, Class<?> hintClass) {
-		if(hintClass != Double.class) {
-			try { return Integer.parseInt(strValue); }
-			catch(NumberFormatException e) { /* didn't work */ }
-		}
-		try { return Double.parseDouble(strValue); }
-		catch(NumberFormatException e) { /* didn't work */ }
-		if(strValue.equalsIgnoreCase("true") || strValue.equalsIgnoreCase("false")) {
-			return Boolean.parseBoolean(strValue); 		
-		}
-		return strValue;  // nothing else worked, just make it a string
-	}
 }

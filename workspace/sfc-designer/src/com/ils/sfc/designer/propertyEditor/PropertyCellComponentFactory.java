@@ -7,6 +7,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import com.ils.sfc.common.IlsProperty;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 /** A helper class to make Swing components for editing/rendering various
@@ -59,7 +60,7 @@ public class PropertyCellComponentFactory {
 	    	JTextField textField = createTextField();
 	    	textField.setHorizontalAlignment(alignment);
 	    	String sValue = null;
-	    	if(rowObj.isSerializedObject()) {
+	    	if(IlsProperty.isSerializedObject(rowObj.getProperty())) {
 	    		sValue = "<Use Editor>";
 	    	}
 	    	else {

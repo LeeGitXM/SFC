@@ -2,12 +2,17 @@ package com.ils.sfc.common;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.inductiveautomation.ignition.common.config.BasicProperty;
+import com.inductiveautomation.ignition.common.config.Property;
 
 @SuppressWarnings("serial")
 public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializable {
@@ -68,7 +73,9 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> GUI_LABEL = new IlsProperty<String>(IlsSfcNames.GUI_LABEL, String.class, "");
     public static final IlsProperty<String> HELP = new IlsProperty<String>(IlsSfcNames.HELP, String.class, "");
     public static final IlsProperty<Double> HIGH_LIMIT = new IlsProperty<Double>(IlsSfcNames.HIGH_LIMIT, Double.class, 0.);
-    public static final IlsProperty<String> JSON_LIST = new IlsProperty<String>(IlsSfcNames.VALUE, String.class, "[]");
+    public static final IlsProperty<String> JSON_LIST = new IlsProperty<String>(IlsSfcNames.VALUE, String.class, "[0., 0.]");
+    public static final IlsProperty<String> JSON_MATRIX = new IlsProperty<String>(IlsSfcNames.VALUE, String.class, "[0., 0.][0., 0.]");
+    public static final IlsProperty<String> JSON_OBJECT = new IlsProperty<String>(IlsSfcNames.VALUE, String.class, "{}");
     public static final IlsProperty<String> KEY = new IlsProperty<String>(IlsSfcNames.KEY, String.class, "");
     public static final IlsProperty<Boolean> KEYED = new IlsProperty<Boolean>(IlsSfcNames.KEYED, Boolean.class, Boolean.FALSE);
     public static final IlsProperty<String> KEY_MODE = new IlsProperty<String>(IlsSfcNames.KEY_MODE, String.class, "", IlsSfcNames.KEY_MODE_CHOICES);
@@ -160,4 +167,84 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 		return allPropertyNames;
 	}
 		
+	public static Object parsePropertyValue(Property<?> property, String stringValue) throws ParseException {
+		if(property.getType() == Integer.class) {
+			try {
+				return Integer.parseInt(stringValue);
+			}
+			catch(NumberFormatException e) {
+				throw new ParseException("bad integer format: " + stringValue, 0);
+			}
+		}
+		else if(property.getType() == Double.class) {
+			try {
+				return Double.parseDouble(stringValue);
+			}
+			catch(NumberFormatException e) {
+				throw new ParseException("bad float format: " + stringValue, 0);
+			}
+		}
+		else if(property.getType() == Boolean.class) {
+			try {
+				return Boolean.valueOf(stringValue);
+			}
+			catch(NumberFormatException e) {
+				throw new ParseException("bad boolean format: " + stringValue, 0);
+			}
+		}
+		else if(property.equals(JSON_LIST)) {
+			// validate that the string is a valid JSON list
+			try {
+				new JSONArray(stringValue);
+			}
+			catch(JSONException e) {
+				throw new ParseException("bad array format: " + stringValue + "; should be something like " + JSON_LIST.getDefaultValue(), 0);				
+			}
+			return stringValue;
+		}
+		else if(property.equals(JSON_MATRIX)) {
+			// validate that the string is a valid JSON matrix			
+			try {
+				JSONArray rows = new JSONArray(stringValue);
+				for(int i = 0; i < rows.length(); i++) {
+					rows.getJSONArray(i); 
+				}
+			}
+			catch(JSONException e) {
+				throw new ParseException("bad matrix format: " + stringValue + "; should be something like " + JSON_MATRIX.getDefaultValue(), 0);				
+			}
+			return stringValue;
+		}
+		else if(property.getType() == String.class) {
+			return stringValue;
+		}
+		else if(property.getType() == Object.class) {
+			return parseObjectValue(stringValue, null);
+		}
+		else {
+			return stringValue;
+		}
+	}
+
+	/** For a string that may represent a number, string, or boolean, parse it
+	 *  with a best guess as to type
+	 */
+	public static Object parseObjectValue(String strValue, Class<?> hintClass) {
+		if(hintClass != Double.class) {
+			try { return Integer.parseInt(strValue); }
+			catch(NumberFormatException e) { /* didn't work */ }
+		}
+		try { return Double.parseDouble(strValue); }
+		catch(NumberFormatException e) { /* didn't work */ }
+		if(strValue.equalsIgnoreCase("true") || strValue.equalsIgnoreCase("false")) {
+			return Boolean.parseBoolean(strValue); 		
+		}
+		return strValue;  // nothing else worked, just make it a string
+	}
+
+	public static boolean isSerializedObject(Property<?> property) {
+		return 
+			property.equals(IlsProperty.REVIEW_DATA_WITH_ADVICE) ||
+			property.equals(IlsProperty.JSON_OBJECT);
+	}
 }

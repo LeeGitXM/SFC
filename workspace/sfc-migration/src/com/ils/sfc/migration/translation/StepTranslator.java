@@ -157,14 +157,8 @@ public class StepTranslator {
 	private Element makeRecipeDataElement(Document chart,Element step,Element g2Block) {
 		// The recipe data translator uses  a SAX parser, so stream the input
 		Element recipe = null;
-
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		Source xmlSource = new DOMSource(g2Block);
-		Result outputTarget = new StreamResult(outputStream);
 		try {
-			TransformerFactory.newInstance().newTransformer().transform(xmlSource, outputTarget);
-			InputStream xmlIn = new ByteArrayInputStream(outputStream.toByteArray());
-			RecipeDataTranslator rdTranslator = new RecipeDataTranslator(xmlIn);
+			RecipeDataTranslator rdTranslator = new RecipeDataTranslator(step);
 			Element associatedData = rdTranslator.createAssociatedDataElement(chart);
 			if( associatedData!=null) step.appendChild(associatedData);
 
@@ -172,10 +166,6 @@ public class StepTranslator {
 			for(String errMsg: rdTranslator.getErrors()) {
 				log.errorf("%s.makeRecipeDataElement: Parse error (%s)",TAG,errMsg);
 			}
-
-		} 
-		catch (TransformerException | TransformerFactoryConfigurationError tf) {
-			log.errorf("%s.makeRecipeDataElement: Exception transforming G2 block element (%s)",TAG,tf.getMessage());
 		} 
 		catch (JSONException je) {
 			log.errorf("%s.makeRecipeDataElement: Exception creating JSON data (%s)",TAG,je.getMessage());

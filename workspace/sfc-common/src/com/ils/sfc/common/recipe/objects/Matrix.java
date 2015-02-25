@@ -17,6 +17,6 @@ public class Matrix extends DataWithUnits {
 		addProperty(IlsProperty.COLUMNS);
 		addProperty(IlsProperty.COLUMN_KEY);
 		addProperty(IlsProperty.COLUMN_KEYED);
-		addProperty(IlsProperty.VALUE);
+		addProperty(IlsProperty.JSON_MATRIX);
 	}
 }

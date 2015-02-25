@@ -1,5 +1,7 @@
 package com.ils.sfc.designer.propertyEditor;
 
+import java.text.ParseException;
+
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
@@ -39,12 +41,6 @@ public class PropertyRow {
 			((IlsProperty<?>)propertyValue.getProperty()).getChoices() : null;
 	}
 	
-	public boolean isSerializedObject() {
-		boolean isReviewData = getProperty().equals(IlsProperty.REVIEW_DATA) ||
-			getProperty().equals(IlsProperty.REVIEW_DATA_WITH_ADVICE); 
-		return isReviewData;
-	}
-
 	public Object getDefaultValue() {
 		return getProperty() instanceof BasicProperty ? ((BasicProperty<?>)getProperty()).getDefaultValue() : null;
 	}
@@ -70,9 +66,10 @@ public class PropertyRow {
 	}
 
 	/** Regardless of underlying type, set the value from a string representation. 
-	 *  throws NumberFormatException for bad numbers */
-	public void setValueFormatted(String stringValue) {
-		Object value = IlsSfcCommonUtils.parseProperty(getProperty(), stringValue);
+	 *  throws NumberFormatException for bad numbers 
+	 * @throws ParseException */
+	public void setValueFormatted(String stringValue) throws ParseException {
+		Object value = IlsProperty.parsePropertyValue(getProperty(), stringValue);
 		setValue(value);
 	}
 
