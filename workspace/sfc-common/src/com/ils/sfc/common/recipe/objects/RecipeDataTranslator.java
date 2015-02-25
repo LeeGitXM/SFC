@@ -149,7 +149,6 @@ public class RecipeDataTranslator {
 		NodeList recipeNodes = blockElement.getElementsByTagName("recipe");
 		for (int temp = 0; temp < recipeNodes.getLength(); temp++) {			 
 			Node nNode = recipeNodes.item(temp);	 
-			System.out.println("\nCurrent Element :" + nNode.getNodeName());	 
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {	 
 				Element recipeElement = (Element) nNode;
 				NamedNodeMap attributes = recipeElement.getAttributes();
@@ -158,7 +157,6 @@ public class RecipeDataTranslator {
 					Node item = attributes.item(i);
 					String name = item.getNodeName();
 					String value = item.getTextContent();
-					System.out.println( name + ": " + value);
 					attMap.put(name, value);					
 				}
 				createObject(recipeObjects, attMap);
