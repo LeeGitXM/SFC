@@ -158,7 +158,7 @@ public class StepTranslator {
 		// The recipe data translator uses  a SAX parser, so stream the input
 		Element recipe = null;
 		try {
-			RecipeDataTranslator rdTranslator = new RecipeDataTranslator(step);
+			RecipeDataTranslator rdTranslator = new RecipeDataTranslator(g2Block);
 			Element associatedData = rdTranslator.createAssociatedDataElement(chart);
 			if( associatedData!=null) step.appendChild(associatedData);
 
