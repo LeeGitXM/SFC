@@ -103,9 +103,8 @@ public class RecipeDataTranslator {
 		g2ToIgName.put("chg_lev", "chg_lev");
 	}
 
-	private Group recipeData = new Group();
+	//private List<Data> recipeData = new ArrayList<Data>();
 	private final java.util.List<String> errors = new ArrayList<String>();
-	private  InputStream xmlIn;
 	private Element blockElement;
 	
 	public RecipeDataTranslator(Element blockElement) {
@@ -124,28 +123,21 @@ public class RecipeDataTranslator {
 		return errors;
 	}
 
-	/** Translate from JSONObject to corresponding xml element for the Associated Data property. */
-	public String translate() throws JSONException {	
-		Data data = DOMToData();
-		JSONObject jobj = data.toJSON();
-		return jobj != null ? "<associated-data>" + jobj.toString() + "</associated-data>" : null;
-	}
-	
 	/** 
 	 * Create JSONObject representing RecipeData and add as an "associated-data" 
 	 * element to a chart step. 
 	 */
 	public Element createAssociatedDataElement(Document chart) throws JSONException {	
-		Data data = DOMToData();
-		JSONObject jobj = data.toJSON();
+		List<Data> recipeData = DOMToData();
+		JSONObject jobj = Data.toAssociatedData(recipeData);
 		Element assocdata = chart.createElement("associated-data");
 		Node textNode = chart.createTextNode(jobj.toString());
 		assocdata.appendChild(textNode);
 		return assocdata;
 	}
 	
-	public Data DOMToData() {
-		final java.util.List<Data> recipeObjects = new ArrayList<Data>();
+	public List<Data> DOMToData() {
+		final java.util.List<Data> flatRecipeObjects = new ArrayList<Data>();
 		NodeList recipeNodes = blockElement.getElementsByTagName("recipe");
 		for (int temp = 0; temp < recipeNodes.getLength(); temp++) {			 
 			Node nNode = recipeNodes.item(temp);	 
@@ -159,17 +151,16 @@ public class RecipeDataTranslator {
 					String value = item.getTextContent();
 					attMap.put(name, value);					
 				}
-				createObject(recipeObjects, attMap);
+				createObject(flatRecipeObjects, attMap);
 			}
 		}
-		restoreHierarchy(recipeObjects);
-		return recipeData;
+		return restoreHierarchy(flatRecipeObjects);
 	}
 	
 	/** Set a property by name. Will throw IllegalArgumentException if the property is not present,
-	 *  unless this is a Structure in which case it will be created. */
+	 *  unless this is a Structure in which case it will be created.  */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void setProperty(Data data, String name, String strValue) {		
+	public void setProperty(Data data, String name, String strValue) throws JSONException {		
 		PropertyValue<?> pvalue = data.findPropertyValue(name);
 		
 		if(pvalue == null) {
@@ -181,8 +172,8 @@ public class RecipeDataTranslator {
 		else if(data instanceof Matrix && pvalue.getProperty().equals(IlsProperty.VALUE)) {
 			data.getProperties().setDirect(pvalue.getProperty(), parseMatrixValue(strValue));
 		}
-		else if(data instanceof Structure && pvalue.getProperty().equals(IlsProperty.VALUE)) {
-			addStructureProperties((Structure)data, strValue) ;
+		else if(data instanceof Structure && pvalue.getProperty().equals(IlsProperty.JSON_OBJECT)) {
+			createJsonStrucure((Structure)data, strValue) ;
 		}
 		else {
 			Object objValue = null;
@@ -251,16 +242,17 @@ public class RecipeDataTranslator {
 		}
 	}
 
-	private void addStructureProperties(Structure struct, String strValue) {
+	private void createJsonStrucure(Structure struct, String strValue) throws JSONException {
 		String[] keyVals = strValue.substring(STRUCTURE_PREFIX.length(), strValue.length() - 1).split(",");
+		JSONObject jobj = new JSONObject();
 		for(String keyVal: keyVals) {
 			int colonIndex = keyVal.indexOf(':');
 			String key = keyVal.substring(0, colonIndex).trim();
 			String valString = keyVal.substring(colonIndex + 1, keyVal.length()).trim();
 			Object objValue = parseObjectValue(valString);
-			// structures have dynamic properties, so just add one:
-			struct.addDynamicProperty(key, objValue);
+			jobj.put(key, objValue);
 		}
+		struct.setValue(IlsProperty.JSON_OBJECT, jobj.toString());
 	}
 
 	private boolean isList(String strValue) {
@@ -294,7 +286,7 @@ public class RecipeDataTranslator {
 				values.add(objVal);
 			}
 		}
-		else if(strValue.startsWith("sequence(")) {
+		else if(strValue.startsWith("sequence")) {
 			int lparenIndex = strValue.indexOf("(");
 			int rparenIndex = strValue.indexOf(")");
 			String[] stringVals = strValue.substring(lparenIndex+1, rparenIndex).split(",");
@@ -328,14 +320,15 @@ public class RecipeDataTranslator {
 	}
 
 	/** Restore the hierarchy of Groups with children. */
-	private void restoreHierarchy(java.util.List<Data>recipeObjects) {
+	private List<Data> restoreHierarchy(java.util.List<Data> flatRecipeObjects) {
+		List<Data> hierarchicalData = new ArrayList<Data>();
 		Map<String,Data> objectsById = new HashMap<String,Data>();
-		for(Data data: recipeObjects) {
+		for(Data data: flatRecipeObjects) {
 			objectsById.put(data.getId(), data);
 		}
-		for(Data data: recipeObjects) {
+		for(Data data: flatRecipeObjects) {
 			if(data.getParentId() == null) {
-				recipeData.getChildren().add(data);
+				hierarchicalData.add(data);
 			}
 			if(data.getParentId() != null) {
 				Data parent = objectsById.get(data.getParentId());
@@ -351,6 +344,7 @@ public class RecipeDataTranslator {
 				}
 			}
 		}		
+		return hierarchicalData;
 	}
 
 

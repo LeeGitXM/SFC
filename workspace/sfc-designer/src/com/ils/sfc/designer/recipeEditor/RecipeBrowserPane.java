@@ -3,6 +3,7 @@ package com.ils.sfc.designer.recipeEditor;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -30,7 +31,7 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	private DefaultTreeModel treeModel;
 	private RecipeDataTreeNode selectedNode;
 	private RecipeEditorController controller;
-	private RecipeDataTreeNode rootNode;
+	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
 	private boolean showLeafNodes = false;
 
 	/** Helper class to show recipe data objects as tree nodes. */
@@ -56,11 +57,10 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	}
 
 	/** This constructor is for development/testing use */
-	public RecipeBrowserPane(Data data) {
-		rootNode = new RecipeDataTreeNode(data);
+	public RecipeBrowserPane(List<Data> recipeData) {
 		showLeafNodes = true;
 		setLayout(new BorderLayout());
-		createTree();
+		createTree(recipeData);
 		validate();	
 	}
 	
@@ -87,11 +87,13 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 		});		
 	}
 	
-	private void createTree() {		
-		selectedNode = rootNode;
+	private void createTree(List<Data> recipeData) {		
+		selectedNode = null;
 		rootNode.removeAllChildren();
 		treeModel = new DefaultTreeModel(rootNode);
-		addLayer(rootNode);
+		for(Data data: recipeData) {
+			addLayer(rootNode, data);
+		}
 		tree = new JTree(treeModel);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		tree.setRootVisible(false);
@@ -110,27 +112,26 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	/** Enable/Disable buttons based on tree selection. */
 	private void setButtonState() {
 		selectedNode = (RecipeDataTreeNode) tree.getLastSelectedPathComponent();
-		if(selectedNode == null) selectedNode = rootNode;
 		Data selectedData = selectedNode != null ? selectedNode.getRecipeData() : null;
-		buttonPanel.getAddButton().setEnabled(selectedData != null && selectedData.isGroup());
-		buttonPanel.getRemoveButton().setEnabled(selectedData != null && selectedNode != treeModel.getRoot());
+		buttonPanel.getAddButton().setEnabled(selectedData == null || selectedData.isGroup());
+		buttonPanel.getRemoveButton().setEnabled(selectedData != null);
 		buttonPanel.getEditButton().setEnabled(selectedData != null && !selectedData.isGroup());
 	}
 	
 	/** Recursively add a layer of nested recipe data to the tree. */
-	private void addLayer(RecipeDataTreeNode node) {
+	private void addLayer(DefaultMutableTreeNode parentNode, Data data) {
+		RecipeDataTreeNode childNode = new RecipeDataTreeNode(data);
+		parentNode.add(childNode);
 		if(showLeafNodes) {
-			for(PropertyValue<?> pval: node.getRecipeData().getProperties().getValues()) {
-				DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(formatValue(pval));
-				node.add(childNode);
+			for(PropertyValue<?> pval: data.getProperties().getValues()) {
+				DefaultMutableTreeNode leafNode = new DefaultMutableTreeNode(formatValue(pval));
+				childNode.add(leafNode);
 			}			
 		}
-		if(node.getRecipeData().isGroup()) {
-			Group group = (Group)node.getRecipeData();
-			for(Data child: group.getChildren()) {
-				RecipeDataTreeNode childNode = new RecipeDataTreeNode(child);
-				node.add(childNode);
-				addLayer(childNode);
+		if(data.isGroup()) {
+			Group group = (Group)data;
+			for(Data childData: group.getChildren()) {
+				addLayer(childNode, childData);
 			}
 		}
 	}
@@ -181,12 +182,16 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	}
 
 	private void doSetS88Level() {
-		controller.getRecipeData().setS88Level((String)buttonPanel.getComboBox().getSelectedItem());
+		// TODO: un-break the s88 level
+		//controller.getRecipeData().setS88Level((String)buttonPanel.getComboBox().getSelectedItem());
 	}
 	
 	/** Rebuild the tree in response to a change in recipe data. */
 	public void rebuildTree() {
 		if(controller.getRecipeData() == null) return;
+// TODO: un-break the s88 level
+/*		
+		// sync the s88Level combo box w current data
 		if(controller.getRecipeData().getS88Level() != null) {
 			buttonPanel.getComboBox().setSelectedItem(
 				controller.getRecipeData().getS88Level());
@@ -194,19 +199,14 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 		else {
 			buttonPanel.getComboBox().setSelectedItem(IlsSfcNames.NONE);
 		}
+*/		
 		if(treeScroll != null) {
 			this.remove(treeScroll);	
 		}
-		rootNode = new RecipeDataTreeNode(controller.getRecipeData());
-		createTree();
+		createTree(controller.getRecipeData());
 		validate();	
 	}
 	
-	/** Add a new object under the selected node, and select the node. */
-	public void add(Data newObject) {
-		((Group)selectedNode.getRecipeData()).getChildren().add(newObject);
-	}
-
 	@Override
 	public void activate() {
 		rebuildTree();

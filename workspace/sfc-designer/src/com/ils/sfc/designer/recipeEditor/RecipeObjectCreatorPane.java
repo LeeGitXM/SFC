@@ -89,7 +89,7 @@ public class RecipeObjectCreatorPane extends JPanel implements EditorPane {
 			Data newObject = (Data)selectedClass.newInstance();
 			newObject.setKey(key);
 			keyTextField.setText("");
-			controller.getBrowser().add(newObject);
+			controller.getRecipeData().add(newObject);
 			controller.getEditor().setRecipeData(newObject);
 			controller.getEditor().activate();
 		}

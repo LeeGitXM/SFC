@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.xml.parsers.DocumentBuilder;
@@ -40,17 +41,16 @@ public class RecipeTranslatorTester {
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {	 
 				Element blockElement = (Element) nNode;
 				RecipeDataTranslator trans = new RecipeDataTranslator(blockElement);
-				Data data = trans.DOMToData();
+				List<Data> recipeData = trans.DOMToData();
 				for(String errMsg: trans.getErrors()) {
 					System.out.println(errMsg);
 				}
-				String json = trans.DOMToData().toJSON().toString();
-				data = Data.fromJson(new JSONObject(json));
+
 				JFrame frame = new JFrame();
 				frame.setTitle(fXmlFile.getName());
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setSize(800,800);
-				RecipeBrowserPane browser = new RecipeBrowserPane(data);
+				RecipeBrowserPane browser = new RecipeBrowserPane(recipeData);
 				frame.getContentPane().add(browser);
 				frame.setVisible(true);			
 			}

@@ -1,14 +1,19 @@
 package com.ils.sfc.common.recipe.objects;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.IlsSfcNames;
+import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
@@ -131,7 +136,7 @@ public abstract class Data {
 	}
 	
 
-	/** Convert a recipe data hierarchy to a JSON Object */
+	/** Convert this object (and any hierarchy) to a JSON object */
 	public JSONObject toJSON() throws JSONException {
 		JSONObject jsonObj = new JSONObject();
 		for(PropertyValue<?> pvalue: properties) {
@@ -145,26 +150,67 @@ public abstract class Data {
 		return jsonObj;
 	}
 
+	/** Create an associated data object containing only the recipe data 
+	 * @throws JSONException */
+	public static JSONObject toAssociatedData(List<Data> recipeData) throws JSONException {
+		JSONObject associatedDataJson = new JSONObject();
+		setAssociatedData(associatedDataJson, recipeData);
+		return associatedDataJson;
+	}
+	
+	/** Set recipe data in the given associated data object */
+	public static void setAssociatedData(JSONObject associatedDataJson, List<Data> recipeData) throws JSONException {
+		JSONArray jsonDataArray = new JSONArray();
+		for(Data data: recipeData) {
+			jsonDataArray.put(data.toJSON());
+		}
+		associatedDataJson.put(IlsSfcNames.RECIPE_DATA, jsonDataArray);
+	}
+	
 	/** Create a recipe data hierarchy from a JSON Object that was
 	 *  originally created from a recipe hierarchy (i.e. not
 	 *  just some random JSONbject. */
-	public static Data fromJson(JSONObject jsonObj) throws Exception {
-		String simpleClassName = jsonObj.getString(IlsSfcNames.CLASS);
+	public static List<Data> fromAssociatedData(JSONObject associatedDataJson) throws Exception {
+		List<Data> recipeData = new ArrayList<Data>();
+		if(!associatedDataJson.has(IlsSfcNames.RECIPE_DATA)) return recipeData;
+		JSONArray jsonDataArray = associatedDataJson.getJSONArray(IlsSfcNames.RECIPE_DATA);
+		for(int i = 0; i < jsonDataArray.length(); i++) {
+			JSONObject jsonData = jsonDataArray.getJSONObject(i);
+			Data data = fromJson(jsonData);
+			recipeData.add(data);
+		}		
+		return recipeData;
+	}
+
+	public static Data fromJson(JSONObject jsonObject) throws Exception {
+		String simpleClassName = jsonObject.getString(IlsSfcNames.CLASS);
 		String packageName = Data.class.getPackage().getName();
 		String fullClassName = packageName + "." + simpleClassName;
 		Data data = (Data)Class.forName(fullClassName).newInstance();
-		data.setFromJson(jsonObj);
+		data.setFromJson(jsonObject);
 		return data;
 	}
-
+	
 	/** The recursive part of fromJSON() */
 	protected void setFromJson(JSONObject jsonObj) throws Exception {
-		Map<Property<?>,java.lang.Object> rawValueMap = properties.getRawValueMap();
+		BasicProperty dummyProperty = new BasicProperty();
+		Iterator<String> keyIter = jsonObj.keys();
+		while(keyIter.hasNext()) {
+			String key = keyIter.next();
+			dummyProperty.setName(key);
+			Object value = jsonObj.get(key);
+			properties.set(dummyProperty, value);
+		}
+		/*
 		for(Property<?> prop: rawValueMap.keySet()) {
 			if(jsonObj.has(prop.getName())) {
 				rawValueMap.put(prop, jsonObj.get(prop.getName()));
 			}
+			else if(this instanceof Structure) {
+				addDynamicProperty(name, value);
+			}
 		}
+		*/
 		if(jsonObj.has(IlsSfcNames.S88_LEVEL)) {
 			s88Level = (String)jsonObj.get(IlsSfcNames.S88_LEVEL);
 		}	

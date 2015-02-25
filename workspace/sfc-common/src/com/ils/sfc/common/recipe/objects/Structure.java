@@ -16,7 +16,7 @@ public class Structure extends Data {
 	public Structure() {
 		// value is a pseudo-property, as coming from G2 it contains
 		// a serialized form of all the dynamic property/values
-		addProperty(IlsProperty.VALUE);
+		addProperty(IlsProperty.JSON_OBJECT);
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })

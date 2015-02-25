@@ -1,5 +1,8 @@
 package com.ils.sfc.designer.recipeEditor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.JPanel;
 
 import org.json.JSONObject;
@@ -39,7 +42,7 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 	
 	// The step whose recipe data we are editing:
 	private ChartUIElement element;
-	private Group recipeData;
+	private List<Data> recipeData;
 	
 	public RecipeEditorController() {
 		tagBrowser = new RecipeTagBrowserPane(this);
@@ -57,12 +60,12 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 		slideTo(EMPTY_PANE);
 	}	
 	
-	public void setRecipeData(Group recipeData) {
+	public void setRecipeData(List<Data> recipeData) {
 		this.recipeData = recipeData;
 		browser.rebuildTree();
 	}
 
-	public Group getRecipeData() {
+	public List<Data> getRecipeData() {
 		return recipeData;
 	}
 
@@ -129,16 +132,15 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 		if(element.contains(ChartStepProperties.AssociatedData)) {
 			JSONObject associatedData = element.getOrDefault(ChartStepProperties.AssociatedData);
 			try {
-				Group group = (Group)Data.fromJson(associatedData);
-				setRecipeData(group);
+				List<Data> recipeData = Data.fromAssociatedData(associatedData);
+				setRecipeData(recipeData);
 			} catch (Exception e) {
 				showMessage("Error getting associated recipe data: " + e.getMessage(), BROWSER);
 			}
 		}
 		else {
-			Group group = new Group();
-			group.setKey("data");
-			setRecipeData(group);			
+			List<Data> recipeData = new ArrayList<Data>();
+			setRecipeData(recipeData);			
 		}
 	}
 	
@@ -146,8 +148,17 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 		if(recipeData == null) return;
 		
 		try {
-			JSONObject associatedData = recipeData.toJSON();
-			element.set(ChartStepProperties.AssociatedData, associatedData);
+			if(element.contains(ChartStepProperties.AssociatedData)) {
+				// set the recipe data in the existing associated data
+				JSONObject associatedData = element.getOrDefault(ChartStepProperties.AssociatedData);
+				Data.setAssociatedData(associatedData, recipeData);
+				element.set(ChartStepProperties.AssociatedData, associatedData);
+			}
+			else {
+				// create a new associated data object to hold recipe data
+				JSONObject associatedData = Data.toAssociatedData(recipeData);
+				element.set(ChartStepProperties.AssociatedData, associatedData);
+			}
 		} catch (Exception e) {
 			showMessage("Error setting associated recipe data: " + e.getMessage(), BROWSER);
 		}

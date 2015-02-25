@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
@@ -191,6 +192,16 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 			catch(NumberFormatException e) {
 				throw new ParseException("bad boolean format: " + stringValue, 0);
 			}
+		}
+		else if(property.equals(JSON_OBJECT)) {
+			// validate that the string is a valid JSON list
+			try {
+				new JSONObject(stringValue);
+			}
+			catch(JSONException e) {
+				throw new ParseException("bad object format: " + stringValue + "; should be something like " + JSON_LIST.getDefaultValue(), 0);				
+			}
+			return stringValue;
 		}
 		else if(property.equals(JSON_LIST)) {
 			// validate that the string is a valid JSON list
