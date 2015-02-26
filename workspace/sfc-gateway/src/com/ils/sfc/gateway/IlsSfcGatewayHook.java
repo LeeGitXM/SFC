@@ -42,6 +42,8 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private GatewayContext context = null;
 	private ChartManagerService chartManager;
 	private IlsScopeLocator scopeLocator = new IlsScopeLocator();
+	private IlsChartObserver chartObserver = new IlsChartObserver();
+	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
 	
 	private static StepFactory[] stepFactories = {
 		new QueueMessageStepFactory(),
@@ -91,14 +93,37 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public IlsSfcGatewayHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
-		
+
+	
 	// NOTE: During this period, the module status is LOADED, not RUNNING
+
+	public GatewayContext getContext() {
+		return context;
+	}
+
+	public ChartManagerService getChartManager() {
+		return chartManager;
+	}
+
+
+	public IlsScopeLocator getScopeLocator() {
+		return scopeLocator;
+	}
+
+
+	public IlsChartObserver getChartObserver() {
+		return chartObserver;
+	}
+
+	public IlsRequestResponseManager getRequestResponseManager() {
+		return requestResponseManager;
+	}
 
 	@Override
 	public void setup(GatewayContext ctxt) {
 		this.context = ctxt;
 		context.getModuleServicesManager().subscribe(ChartManagerService.class, this);
-		IlsGatewayScripts.setContext(context);
+		IlsGatewayScripts.setHook(this);
 	}
 
 	@Override
@@ -117,6 +142,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	
 	@Override
 	public void shutdown() {
+		System.out.println("shutdown");
 	}
 
 	@Override
@@ -124,6 +150,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		if (serviceClass == ChartManagerService.class) {
             chartManager = context.getModuleServicesManager().getService(ChartManagerService.class);
     		chartManager.registerScopeLocator(scopeLocator);
+    		chartManager.addChartObserver(chartObserver);
             for(StepFactory stepFactory: stepFactories) {
     			chartManager.register(stepFactory);
     		}
@@ -132,10 +159,12 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 	@Override
 	public void serviceShutdown(Class<?> arg0) {
+		System.out.println("serviceShutdown");
 		chartManager.unregisterScopeLocator(scopeLocator);
 		for(StepFactory stepFactory: stepFactories) {
 			chartManager.unregister(stepFactory);
 		}
+		chartManager.removeChartObserver(chartObserver);
 		chartManager = null;
 	}
 
