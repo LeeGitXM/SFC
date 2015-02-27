@@ -160,7 +160,7 @@ public class IlsSfcNames {
 	// other
 	public static final String MESSAGE_ID = "messageId";
 	public static final String BY_NAME = "stepsByName";
-	public static final String ENCLOSING_STEP_SCOPE_KEY = "enclosingStepScope";
+	public static final String ENCLOSING_STEP_SCOPE_KEY = "enclosingStep";
 	public static final String S88_LEVEL_KEY = "s88Level";
 
 	// choices:
