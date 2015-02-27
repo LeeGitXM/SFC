@@ -132,15 +132,16 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 		if(element.contains(ChartStepProperties.AssociatedData)) {
 			JSONObject associatedData = element.getOrDefault(ChartStepProperties.AssociatedData);
 			try {
+				System.out.println(associatedData.toString());
 				List<Data> recipeData = Data.fromAssociatedData(associatedData);
 				setRecipeData(recipeData);
 			} catch (Exception e) {
 				showMessage("Error getting associated recipe data: " + e.getMessage(), BROWSER);
+				setRecipeData(new ArrayList<Data>());			
 			}
 		}
 		else {
-			List<Data> recipeData = new ArrayList<Data>();
-			setRecipeData(recipeData);			
+			setRecipeData(new ArrayList<Data>());			
 		}
 	}
 	

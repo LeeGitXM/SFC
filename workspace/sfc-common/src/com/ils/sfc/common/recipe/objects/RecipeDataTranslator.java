@@ -161,35 +161,35 @@ public class RecipeDataTranslator {
 	 *  unless this is a Structure in which case it will be created.  */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setProperty(Data data, String name, String strValue) throws JSONException {		
-		PropertyValue<?> pvalue = data.findPropertyValue(name);
+		IlsProperty<?> property = data.getProperty(name);
 		
-		if(pvalue == null) {
+		if(property == null) {
 			errors.add("no property named " + name + " in " + data.getClass().getSimpleName());
 		}
-		else if(data instanceof RecipeList && pvalue.getProperty().equals(IlsProperty.VALUE)) {
-			data.getProperties().setDirect(pvalue.getProperty(), parseListValue(strValue));
+		else if(data instanceof RecipeList && property.equals(IlsProperty.VALUE)) {
+			data.setValue(property, parseListValue(strValue));
 		}
-		else if(data instanceof Matrix && pvalue.getProperty().equals(IlsProperty.VALUE)) {
-			data.getProperties().setDirect(pvalue.getProperty(), parseMatrixValue(strValue));
+		else if(data instanceof Matrix && property.equals(IlsProperty.VALUE)) {
+			data.getProperties().setDirect(property, parseMatrixValue(strValue));
 		}
-		else if(data instanceof Structure && pvalue.getProperty().equals(IlsProperty.JSON_OBJECT)) {
+		else if(data instanceof Structure && property.equals(IlsProperty.JSON_OBJECT)) {
 			createJsonStrucure((Structure)data, strValue) ;
 		}
 		else {
 			Object objValue = null;
-			if(pvalue != null && pvalue.getProperty().getType() == String.class) {
+			if(property != null && property.getType() == String.class) {
 				objValue = strValue;
 			}
 			else if(strValue.length() > 0 ) { 
-				objValue = IlsProperty.parseObjectValue(strValue, pvalue.getProperty().getType());
+				objValue = IlsProperty.parseObjectValue(strValue, property.getType());
 			}
-			if(objValue == null ||pvalue.getProperty().getType().isAssignableFrom(objValue.getClass())) {
-				data.getProperties().setDirect(pvalue.getProperty(), objValue);
+			if(objValue == null ||property.getType().isAssignableFrom(objValue.getClass())) {
+				data.getProperties().setDirect(property, objValue);
 			}
 			else {
 				errors.add(objValue + "(" + objValue.getClass().getSimpleName() + 
-					") is wrong type for property " + pvalue.getProperty().getName() + "(" +
-					pvalue.getProperty().getType().getSimpleName());
+					") is wrong type for property " + property.getName() + "(" +
+					property.getType().getSimpleName());
 			}
 		}
 	}

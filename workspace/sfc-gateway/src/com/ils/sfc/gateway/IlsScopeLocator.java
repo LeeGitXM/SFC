@@ -20,26 +20,31 @@ public class IlsScopeLocator implements ScopeLocator {
 
 	public PyChartScope resolveScope(PyChartScope chartScope, 
 			PyChartScope stepScope, String scopeIdentifier) {
+		PyChartScope resolvedScope = null;
 		if(scopeIdentifier.equals(IlsSfcNames.LOCAL)) {
-			return stepScope;
+			resolvedScope = stepScope;
 		}
 		else if(scopeIdentifier.equals(IlsSfcNames.PREVIOUS)) {
-			return stepScope.getSubScope(ScopeContext.PREVIOUS);
+			resolvedScope = stepScope.getSubScope(ScopeContext.PREVIOUS);
 		}
 		else if(scopeIdentifier.equals(IlsSfcNames.SUPERIOR)) {
-			return (PyChartScope) chartScope.get(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY);
+			resolvedScope = (PyChartScope) chartScope.get(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY);
 		}
 		else {  // search for a named scope
 			while(chartScope != null) {
 				if(scopeIdentifier.equals(getEnclosingStepScope(chartScope))) {
-					return chartScope.getSubScope(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY);
+					resolvedScope = chartScope.getSubScope(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY);
+					break;
 				}
 				else {  // look up the hierarchy
 					chartScope = chartScope.getSubScope("parent");
 				}
 			}
-			return null;  // couldn't find it
 		}
+		if(resolvedScope != null) {
+			resolvedScope = resolvedScope.getSubScope(IlsSfcNames.RECIPE_DATA);
+		}
+		return resolvedScope;
 	}
 
 	/** Return the scope of the enclosing step. Return "global" if the chart scope

@@ -21,6 +21,7 @@ import org.xml.sax.SAXException;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.designer.recipeEditor.RecipeBrowserPane;
+import com.inductiveautomation.ignition.common.config.BasicProperty;
 
 
 public class RecipeTranslatorTester {
@@ -59,7 +60,12 @@ public class RecipeTranslatorTester {
 	
 	public static void main(String[] args) {
 		try {
-			testDOM();
+			//testDOM();
+
+			BasicProperty<String> prop1 = new BasicProperty<String>("key", String.class);
+			BasicProperty<String> prop2 = new BasicProperty<String>();
+			prop2.setName("key");
+			System.out.println(prop1.equals(prop2));
 		}
 		catch(Exception e) {
 			e.printStackTrace();

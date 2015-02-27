@@ -1,6 +1,7 @@
 package com.ils.sfc.common.recipe.objects;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,8 @@ import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 /**
 superiorClass: sequence (the symbol S88-OBJECT)
@@ -49,7 +52,9 @@ attributes:sequence (structure (
        4b. From a list of PropertyRow objects from the PropertyEditor, produce a map that can be added to the map "model" for RecipeDataBrowser
  */
 public abstract class Data {
+	private static LoggerEx logger = LogUtil.getLogger(Data.class.getName());
 	protected BasicPropertySet properties = new BasicPropertySet();
+	private Map<String, IlsProperty<?>> propertiesByName = new HashMap<String, IlsProperty<?>>();
 	protected String s88Level;
 	// id and parentId come from the G2 export and are used to re-compose a hierarchy:
 	protected String id;
@@ -83,8 +88,13 @@ public abstract class Data {
 		return properties.get(property);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setValue(Property<?> property, Object value) {
-		properties.setDirect(property, value);
+		if(value == null) {
+			throw new IllegalArgumentException("null values are not allowed");
+		}
+		IlsProperty myProperty = getProperty(property.getName());
+		properties.set(myProperty, value);
 	}
 	
 	public void setParentId(String parentId) {
@@ -120,19 +130,15 @@ public abstract class Data {
 	}
 
 	/** Add a property with the default value. */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected void addProperty(IlsProperty property) {
+		propertiesByName.put(property.getName(), property);
 		properties.set(property, property.getDefaultValue());
 	}	
 
-	/** Get the value object associated with the given property name, or null if not found. */
-	PropertyValue<?> findPropertyValue(String propertyName) {
-		for(PropertyValue<?> pvalue: properties) {
-			if(pvalue.getProperty().getName().equals(propertyName)) {
-				return pvalue;
-			}
-		}
-		return null;
+	/** Get the property with the given name, or null if none. */
+	IlsProperty<?> getProperty(String propertyName) {
+		return propertiesByName.get(propertyName);
 	}
 	
 
@@ -140,8 +146,12 @@ public abstract class Data {
 	public JSONObject toJSON() throws JSONException {
 		JSONObject jsonObj = new JSONObject();
 		for(PropertyValue<?> pvalue: properties) {
+			String propName = pvalue.getProperty().getName();
 			if(pvalue.getValue() != null) {
-				jsonObj.put(pvalue.getProperty().getName(), pvalue.getValue());
+				jsonObj.put(propName, pvalue.getValue());
+			}
+			else {
+				logger.error("property " + propName + " is null; cannot add to JSON");
 			}
 		}
 		if(s88Level != null) {
@@ -160,11 +170,11 @@ public abstract class Data {
 	
 	/** Set recipe data in the given associated data object */
 	public static void setAssociatedData(JSONObject associatedDataJson, List<Data> recipeData) throws JSONException {
-		JSONArray jsonDataArray = new JSONArray();
+		JSONObject jsonObject = new JSONObject();
 		for(Data data: recipeData) {
-			jsonDataArray.put(data.toJSON());
+			jsonObject.put(data.getKey(), data.toJSON());
 		}
-		associatedDataJson.put(IlsSfcNames.RECIPE_DATA, jsonDataArray);
+		associatedDataJson.put(IlsSfcNames.RECIPE_DATA, jsonObject);
 	}
 	
 	/** Create a recipe data hierarchy from a JSON Object that was
@@ -173,9 +183,11 @@ public abstract class Data {
 	public static List<Data> fromAssociatedData(JSONObject associatedDataJson) throws Exception {
 		List<Data> recipeData = new ArrayList<Data>();
 		if(!associatedDataJson.has(IlsSfcNames.RECIPE_DATA)) return recipeData;
-		JSONArray jsonDataArray = associatedDataJson.getJSONArray(IlsSfcNames.RECIPE_DATA);
-		for(int i = 0; i < jsonDataArray.length(); i++) {
-			JSONObject jsonData = jsonDataArray.getJSONObject(i);
+		JSONObject jsonObject = associatedDataJson.getJSONObject(IlsSfcNames.RECIPE_DATA);
+		Iterator<String> keyIter = jsonObject.keys();
+		while(keyIter.hasNext()) {
+			String key = keyIter.next();
+			JSONObject jsonData = jsonObject.getJSONObject(key);
 			Data data = fromJson(jsonData);
 			recipeData.add(data);
 		}		
@@ -199,7 +211,7 @@ public abstract class Data {
 			String key = keyIter.next();
 			dummyProperty.setName(key);
 			Object value = jsonObj.get(key);
-			properties.set(dummyProperty, value);
+			setValue(dummyProperty, value);
 		}
 		/*
 		for(Property<?> prop: rawValueMap.keySet()) {
@@ -218,8 +230,8 @@ public abstract class Data {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addDynamicProperty(String name, Object value) {
-		IlsProperty<?> newProperty = new IlsProperty(name, value.getClass(), null);
-		getProperties().set(new PropertyValue(newProperty, value));		
+		IlsProperty<?> newProperty = new IlsProperty(name, value.getClass(), value);
+		addProperty(newProperty);	
 	}
 	
 	protected void printSpace(int count) {

@@ -18,6 +18,7 @@ import javax.swing.tree.TreeSelectionModel;
 import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Group;
+import com.ils.sfc.common.recipe.objects.Value;
 import com.ils.sfc.designer.ButtonPanel;
 import com.ils.sfc.designer.EditorPane;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
@@ -31,7 +32,7 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	private DefaultTreeModel treeModel;
 	private RecipeDataTreeNode selectedNode;
 	private RecipeEditorController controller;
-	private DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode();
+	private RecipeDataTreeNode rootNode = new RecipeDataTreeNode(null);
 	private boolean showLeafNodes = false;
 
 	/** Helper class to show recipe data objects as tree nodes. */
@@ -66,6 +67,7 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	
 	public RecipeBrowserPane(RecipeEditorController controller) {
 		this.controller = controller;
+		rootNode.setUserObject(new Group());  // set some dummy data to prevent NPEs
 		setLayout(new BorderLayout());
 		setBorder(new BevelBorder(BevelBorder.LOWERED));
 		add(buttonPanel, BorderLayout.NORTH);
@@ -167,7 +169,10 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	
 	private void doRemove() {
 		RecipeDataTreeNode parent = (RecipeDataTreeNode)selectedNode.getParent();
-		if(parent.getRecipeData() != null) {
+		if(parent == rootNode) {
+			controller.getRecipeData().remove(selectedNode.getRecipeData());
+		}
+		else if(parent.getRecipeData() != null) {
 			Group group = (Group) parent.getRecipeData();
 			group.getChildren().remove(selectedNode.getRecipeData());
 		}
