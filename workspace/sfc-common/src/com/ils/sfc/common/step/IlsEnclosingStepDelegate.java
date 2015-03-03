@@ -8,7 +8,7 @@ EnclosingStepProperties {
 
 	@Override
 	public String getId() {
-		return "com.ils.enclosingStep";
+		return "enclosing-step"; // "com.ils.enclosingStep";
 	}
 
 }

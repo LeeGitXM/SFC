@@ -7,9 +7,9 @@ then
     echo "USAGE: translate <file>"
 	exit 2
 fi
-REPO=~/Development/ils/src
-cd $REPO/sfc
-SFC=`pwd`
+REPO=${GIT_REPO}
+SFC=$REPO/sfc
+cd $SFC
 LIB=$REPO/external/lib
 JAR=${LIB}/g2-translation.jar
 DB=${SFC}/migration/mdb/conversion.db

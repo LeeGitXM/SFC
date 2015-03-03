@@ -3,8 +3,8 @@
 # for processing with conversion tools
 #
 BIN=`pwd`
-SVN=~/Development/ils/svn/EMChemicals/G2Artifacts/Sequential\ Control
-REPO=~/Development/ils/src/sfc/procs
+SVN=${SVN_REPO}/EMChemicals/G2Artifacts/Sequential\ Control
+REPO=${GIT_REPO}/sfc/procs
 mkdir -p $REPO/g2/
 mkdir -p $REPO/python
 cp "${SVN}"/*/callbacks/*.txt $REPO/g2

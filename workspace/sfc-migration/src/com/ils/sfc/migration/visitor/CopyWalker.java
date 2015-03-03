@@ -49,7 +49,13 @@ public class CopyWalker extends AbstractPathWalker implements FileVisitor<Path> 
 		FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
 		try {
 			if( !Files.exists(newdir)) {
-				Files.createDirectory(newdir,attr);
+				boolean isWindows = System.getProperty("os.name").startsWith("Windows");
+				if(isWindows) {
+					Files.createDirectory(newdir);
+				}
+				else {
+					Files.createDirectory(newdir,attr);
+				}
 			}
 		}
 		catch(IOException ioe) {

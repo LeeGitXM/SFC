@@ -6,8 +6,9 @@ import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.api.ScopeLocator;
 
 public class IlsScopeLocator implements ScopeLocator {
+	
 	/** Given an identifier like local, superior, previous, global, operation
-	 *  return the corresponding STEP scope. The enclosing step scope is store
+	 *  return the corresponding STEP scope. The enclosing step scope is stored
 	 *  in the chart scope of the level BELOW it
 	 */
 	@Override
@@ -18,6 +19,8 @@ public class IlsScopeLocator implements ScopeLocator {
 		return resolveScope(chartScope, stepScope, identifier);
 	}
 
+	/** @see #locate(ScopeContext, String) 
+	 * An alternate entry point that's more convenient for ILS code. */
 	public PyChartScope resolveScope(PyChartScope chartScope, 
 			PyChartScope stepScope, String scopeIdentifier) {
 		PyChartScope resolvedScope = null;
@@ -28,8 +31,7 @@ public class IlsScopeLocator implements ScopeLocator {
 			resolvedScope = stepScope.getSubScope(ScopeContext.PREVIOUS);
 		}
 		else if(scopeIdentifier.equals(IlsSfcNames.SUPERIOR)) {
-			resolvedScope = (PyChartScope) chartScope.get(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY);
-		}
+}
 		else {  // search for a named scope
 			while(chartScope != null) {
 				if(scopeIdentifier.equals(getEnclosingStepScope(chartScope))) {

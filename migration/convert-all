@@ -2,7 +2,7 @@
 # Process all of the json files in the repository "g2" area.
 # Save the results in the json storate area for ignition.
 #
-SFC=~/Development/ils/src/sfc
+SFC=$GIT_REPO/sfc
 APP=$SFC/migration/convert
 INDIR=$SFC/xml/g2
 OUTDIR=$SFC/xml/ignition

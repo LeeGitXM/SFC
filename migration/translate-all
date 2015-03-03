@@ -3,7 +3,7 @@
 # These are the raw G2 exports. Translate, then save the
 # results in the procedure storage area for ignition.
 #
-SFC=~/Development/ils/src/sfc
+SFC=${GIT_REPO}/sfc
 APP=${SFC}/migration/translate
 mkdir -p ${SFC}/procs/g2
 cd ${SFC}/procs/g2

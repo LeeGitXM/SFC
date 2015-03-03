@@ -7,7 +7,7 @@ then
     echo "USAGE: debug-project <inpath>"
 	exit 2
 fi
-REPO=~/Development/ils/src
+REPO=${GIT_REPO}
 SFC=`pwd`
 LIB=$REPO/external/lib
 JAR=${LIB}/sfc-migration.jar

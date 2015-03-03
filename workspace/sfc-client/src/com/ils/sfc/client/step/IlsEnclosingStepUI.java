@@ -5,6 +5,8 @@ import javax.swing.Icon;
 import com.ils.sfc.common.step.IlsEnclosingStepDelegate;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.StepUI;
+import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
+import com.inductiveautomation.sfc.elements.steps.enclosing.ExecutionMode;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public class IlsEnclosingStepUI extends AbstractIlsStepUI {
@@ -49,7 +51,7 @@ public class IlsEnclosingStepUI extends AbstractIlsStepUI {
 
         @Override
         public void initializeStep(ChartUIElement element) {
-        	
+        	element.set(EnclosingStepProperties.EXECUTION_MODE, ExecutionMode.RunUntilCompletion);
         }		
 	
 		@Override

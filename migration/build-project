@@ -9,7 +9,7 @@ then
     echo "USAGE: build-project <indir> <outfile>"
 	exit 2
 fi
-REPO=~/Development/ils/src
+REPO=${GIT_REPO}
 cd $REPO/sfc
 SFC=`pwd`
 LIB=$REPO/external/lib

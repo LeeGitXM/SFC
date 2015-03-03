@@ -3,8 +3,8 @@
 # for viewing in Eclipse. Clean out irrelevant directories.
 #
 BIN=`pwd`
-SVN=~/Development/ils/svn/EMChemicals/G2Artifacts/Sequential\ Control
-REPO=~/Development/ils/src/sfc/xml
+SVN=${SVN_REPO}/EMChemicals/G2Artifacts/Sequential\ Control
+REPO=${GIT_REPO}/sfc/xml
 mkdir -p $REPO/g2/
 mkdir -p $REPO/ignition
 cp -a "${SVN}"/* $REPO/g2

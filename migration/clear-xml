@@ -4,6 +4,6 @@
 # previous copy.
 #
 BIN=`pwd`
-REPO=~/Development/ils/src/sfc/xml
+REPO=${GIT_REPO}/sfc/xml
 rm -rf ${REPO}/g2
 rm -rf ${REPO}/ignition
