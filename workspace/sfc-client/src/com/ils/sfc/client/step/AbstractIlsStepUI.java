@@ -54,6 +54,9 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 		ReviewDataWithAdviceStepUI.FACTORY,		
 		ReviewFlowsStepUI.FACTORY,		
 		IlsEnclosingStepUI.FACTORY,
+		ProcedureStepUI.FACTORY,
+		OperationStepUI.FACTORY,
+		PhaseStepUI.FACTORY,
 	};
 	
 	private static Map<String,ClientStepFactory> factoriesById = new HashMap<String,ClientStepFactory>();

@@ -65,7 +65,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         ReviewDataStepProperties.FACTORY_ID,   
         ReviewDataWithAdviceStepProperties.FACTORY_ID,   
         ReviewFlowsStepProperties.FACTORY_ID,   
-        // enclosing step uses IA editor
+        ProcedureStepProperties.FACTORY_ID,   
+        OperationStepProperties.FACTORY_ID,   
+        PhaseStepProperties.FACTORY_ID,   
 	};
 	
 	public IlsSfcDesignerHook() {

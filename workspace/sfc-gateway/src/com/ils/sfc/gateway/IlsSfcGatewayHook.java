@@ -73,7 +73,10 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		new ReviewDataStepFactory(),
 		new ReviewDataWithAdviceStepFactory(),
 		new ReviewFlowsStepFactory(),
-		new IlsEnclosingStepFactory(),
+		//new IlsEnclosingStepFactory(),
+		new ProcedureStepFactory(),
+		new OperationStepFactory(),
+		new PhaseStepFactory(),
 	};
 
 	// an index of step property names by the factory id:

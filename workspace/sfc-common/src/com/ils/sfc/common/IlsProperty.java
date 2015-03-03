@@ -33,6 +33,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 		ignoreProperties.add("associated-data");
 		// ILS recipe data type:
 		ignoreProperties.add("class");
+		ignoreProperties.add("execution-mode");  // hide this for ILS encapsulations like Procedure
 	}
 
     public static final IlsProperty<Boolean> ACK_REQUIRED = new IlsProperty<Boolean>(IlsSfcNames.ACK_REQUIRED, Boolean.class, Boolean.FALSE);
