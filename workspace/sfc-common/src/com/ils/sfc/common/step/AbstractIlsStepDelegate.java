@@ -1,5 +1,6 @@
 package com.ils.sfc.common.step;
 
+import java.text.ParseException;
 import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
@@ -18,7 +19,10 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.StepDelegate;
 import com.inductiveautomation.sfc.api.XMLParseException;
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
+import com.inductiveautomation.sfc.elements.steps.ExpressionParamCollection;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
+import com.inductiveautomation.sfc.elements.steps.enclosing.ExecutionMode;
+import com.inductiveautomation.sfc.elements.steps.enclosing.ReturnParamCollection;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
@@ -65,8 +69,43 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 
 	@Override
 	public void fromXML(Element dom, ChartUIElement ui)
-			throws XMLParseException {
-		IlsSfcCommonUtils.fromXML(dom, ui, properties);
+		throws XMLParseException {
+		for(Property<?> property: properties) {
+			String stringValue = IlsSfcCommonUtils.getPropertyAsString(property, dom);
+			Object value = null;
+			if(stringValue!=null) {
+				try {
+					value = IlsProperty.parsePropertyValue(property, stringValue);
+				}
+				catch(ParseException e) {
+					log.warn("Error deserializing step property "+property+" from "+stringValue, e);
+					value = stringValue;
+				}
+			}
+			else {
+				if(property.equals(EnclosingStepProperties.EXECUTION_MODE)) {
+					value = ExecutionMode.RunUntilCompletion;
+				}
+				else if(property.equals(EnclosingStepProperties.PASSED_PARAMS)) {
+					value = new ExpressionParamCollection();
+				}
+				else if(property.equals(EnclosingStepProperties.RETURN_PARAMS)) {
+					value = new ReturnParamCollection();				
+				}
+				else if(property.getDefaultValue() != null) {
+					value = property.getDefaultValue();
+				}
+				if(value != null) {
+					log.warn("Step property "+property+" missing in supplied DOM for " + ui.getType() + "; will use default");
+				}
+			}
+			if(value != null) {
+				ui.setDirect(property, value);
+			}
+			else {
+				log.warn("Unable to get value for Step property " + property + "; will be missing");				
+			}
+		}
 	}
 
 	@Override
@@ -82,14 +121,6 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	public PropertySet getPropertySet() {
 		// add the ILS properties
 		PropertySet props = IlsSfcCommonUtils.createPropertySet(properties);
-		/*
-		try {
-			props.set(ChartStepProperties.AssociatedData, Group.getStepData());
-			System.out.println("added initial step data to custom step");
-		} catch (JSONException e) {
-			log.error("error creating recipe data", e);
-		}
-		*/
 		return props;
 	}
 

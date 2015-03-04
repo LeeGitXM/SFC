@@ -1,15 +1,12 @@
 package com.ils.sfc.common.recipe.objects;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
@@ -17,13 +14,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.Attributes;
-import org.xml.sax.helpers.DefaultHandler;
 
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.IlsSfcNames;
-import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
@@ -158,9 +151,10 @@ public class RecipeDataTranslator {
 	}
 	
 	/** Set a property by name. Will throw IllegalArgumentException if the property is not present,
-	 *  unless this is a Structure in which case it will be created.  */
+	 *  unless this is a Structure in which case it will be created.  
+	 * @throws org.apache.wicket.ajax.json.JSONException */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void setProperty(Data data, String name, String strValue) throws JSONException {		
+	public void setProperty(Data data, String name, String strValue) throws JSONException, org.apache.wicket.ajax.json.JSONException {		
 		IlsProperty<?> property = data.getProperty(name);
 		
 		if(property == null) {
@@ -170,7 +164,7 @@ public class RecipeDataTranslator {
 			data.setValue(property, parseListValue(strValue));
 		}
 		else if(data instanceof Matrix && property.equals(IlsProperty.VALUE)) {
-			data.getProperties().setDirect(property, parseMatrixValue(strValue));
+			data.setValue(property, parseMatrixValue(strValue));
 		}
 		else if(data instanceof Structure && property.equals(IlsProperty.JSON_OBJECT)) {
 			createJsonStrucure((Structure)data, strValue) ;
@@ -259,22 +253,23 @@ public class RecipeDataTranslator {
 		return strValue.startsWith("{") || strValue.startsWith("sequence(");
 	}
 	
-	private double[][] parseMatrixValue(String strValue) {
-		List<double[]> rows = new ArrayList<double[]>();
+	private String parseMatrixValue(String strValue) throws org.apache.wicket.ajax.json.JSONException, JSONException {
+		JSONArray outerArray = new JSONArray();
 		int lbIndex = 0;
+		int count = 0;
 		while((lbIndex = strValue.indexOf('{', lbIndex)) != -1 ) {
 			int rbIndex = strValue.indexOf('}', lbIndex);
 			String[] rowVals = strValue.substring(lbIndex + 1, rbIndex).split(",");
-			double[] row = new double[rowVals.length];
+			JSONArray innerArray = new JSONArray();
 			for(int i = 0; i < rowVals.length; i++) {
 				String sval = rowVals[i].trim();
 				double dval = Double.parseDouble(sval);
-				row[i] = dval;
+				innerArray.put(i, dval);
 			}
-			rows.add(row);
+			outerArray.put(count++, innerArray);
 			lbIndex = rbIndex + 1;
 		}
-		return rows.toArray(new double[rows.size()][]);
+		return outerArray.toString();
 	}
 	
 	private java.util.List<Object> parseListValue(String strValue) {

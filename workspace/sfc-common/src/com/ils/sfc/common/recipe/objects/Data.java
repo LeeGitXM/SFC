@@ -155,13 +155,9 @@ public abstract class Data {
 			Object valueOrDefault = pvalue.getValue() != null ? 
 				pvalue.getValue() : pvalue.getProperty().getDefaultValue();
 			if(valueOrDefault != null) {
-				if(valueOrDefault instanceof List) {
+				if(pvalue.getProperty() == IlsProperty.JSON_LIST || pvalue.getProperty() == IlsProperty.JSON_MATRIX) {
 					// we need to turn the list into a JSONArray first
-					JSONArray jsonArray = new JSONArray();
-					List<?> lvalue = (List<?>)valueOrDefault;
-					for(int i = 0; i < lvalue.size(); i++) {
-						jsonArray.put(i, lvalue.get(i));
-					}
+					JSONArray jsonArray = new JSONArray((String)valueOrDefault);
 					valueOrDefault = jsonArray;
 				}
 				jsonObj.put(propName, valueOrDefault);

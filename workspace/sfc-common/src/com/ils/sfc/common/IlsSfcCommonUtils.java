@@ -50,7 +50,7 @@ public class IlsSfcCommonUtils {
 	}
 	
 	/** Get the property's string value from the DOM, or return null if not found. */
-	private static String getPropertyAsString(Property<?> property, Element dom) {
+	public static String getPropertyAsString(Property<?> property, Element dom) {
 		NodeList list = dom.getElementsByTagName(property.getName());
 		if(list.getLength() == 0) {
 			return null;
@@ -97,27 +97,6 @@ public class IlsSfcCommonUtils {
 			logger.error("Error serializing step properties", e);
 		}
 	}
-
-	public static void fromXML(Element dom, ChartUIElement ui, Property<?>[] properties) {
-		for(Property<?> property: properties) {
-			String stringValue = getPropertyAsString(property, dom);
-			if( stringValue==null) {
-				logger.warn("IlsSSfcCommonUtils.fromXML: Step property "+property+" missing in supplied DOM for "+ui.getType());
-				continue;  // Ignore
-			}
-			Object value = null;
-			try {
-				value = IlsProperty.parsePropertyValue(property, stringValue);
-			}
-			catch(ParseException e) {
-				logger.warn("Error deserializing step property "+property+" from "+stringValue, e);
-				value = stringValue;
-			}
-			
-			ui.setDirect(property, value);
-		}
-	}
-
 
 	public static Object getDefaultValue(Property<?> prop) {
 		if(prop.getDefaultValue() != null) {
