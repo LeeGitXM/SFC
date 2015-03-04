@@ -146,7 +146,7 @@ public class IlsSfcNames {
 	public static final String PREVIOUS = "previous";
 	public static final String SUPERIOR = "superior";
 	//public static final String NAMED = "named";
-	public static final String GLOBAL = "global";
+	public static final String GLOBAL = "global";  // same as Procedure, Unit Procedure
 	public static final String OPERATION = "operation";	
 	public static final String PHASE = "phase";
 

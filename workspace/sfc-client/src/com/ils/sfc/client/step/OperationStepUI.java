@@ -3,6 +3,7 @@ package com.ils.sfc.client.step;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.step.OperationStepDelegate;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.StepUI;
@@ -54,7 +55,7 @@ public class OperationStepUI extends AbstractIlsStepUI {
         @Override
         public void initializeStep(ChartUIElement element) {
             element.merge(getPropertySet());
-            element.set(EnclosingStepProperties.EXECUTION_MODE, ExecutionMode.RunUntilCompletion);
+            initializeFoundationStepUI(element, IlsSfcNames.OPERATION);
        }		
 	
 		@Override

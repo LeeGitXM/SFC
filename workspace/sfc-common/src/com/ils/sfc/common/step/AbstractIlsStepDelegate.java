@@ -27,12 +27,12 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 		com.ils.sfc.common.IlsProperty.DESCRIPTION, 
 		com.ils.sfc.common.IlsProperty.AUDIT_LEVEL
 	};
-	private IlsProperty<?>[] properties;
+	private Property<?>[] properties;
 	
-	protected AbstractIlsStepDelegate(IlsProperty<?>[] uncommonProperties) {
+	protected AbstractIlsStepDelegate(Property<?>[] uncommonProperties) {
 		// initialize sort order
 		int numProperties = uncommonProperties.length + commonProperties.length;
-		properties = new IlsProperty<?>[numProperties];
+		properties = new Property<?>[numProperties];
 		int p = 0;
 		for(; p < commonProperties.length; p++) {
 			properties[p] = commonProperties[p];
@@ -42,7 +42,10 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 		}
 		// Set the sort order--common properties first, then as given
 		for(int i = 0; i < properties.length; i++) {
-			properties[i].setSortOrder(i);
+			Property<?> property = properties[i];
+			if(property instanceof IlsProperty) {
+				((IlsProperty<?>)property).setSortOrder(i);
+			}
 		}
 	}
 	

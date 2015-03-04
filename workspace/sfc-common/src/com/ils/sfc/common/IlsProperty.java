@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
+import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 
 @SuppressWarnings("serial")
 public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializable {
@@ -34,6 +35,8 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 		// ILS recipe data type:
 		ignoreProperties.add("class");
 		ignoreProperties.add("execution-mode");  // hide this for ILS encapsulations like Procedure
+		ignoreProperties.add("passed-parameters");  // hide this for ILS encapsulations like Procedure
+		ignoreProperties.add("return-parameters");  // hide this for ILS encapsulations like Procedure
 	}
 
     public static final IlsProperty<Boolean> ACK_REQUIRED = new IlsProperty<Boolean>(IlsSfcNames.ACK_REQUIRED, Boolean.class, Boolean.FALSE);
@@ -134,6 +137,14 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<Boolean> WRITE_CONFIRM = new IlsProperty<Boolean>(IlsSfcNames.WRITE_CONFIRM, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<Boolean> WRITE_CONFIRMED = new IlsProperty<Boolean>(IlsSfcNames.WRITE_CONFIRMED, Boolean.class, Boolean.TRUE);
 
+    public static final Property<?>[] FOUNDATION_STEP_PROPERTIES = {
+    	EnclosingStepProperties.CHART_PATH,
+    	EnclosingStepProperties.EXECUTION_MODE,
+    	EnclosingStepProperties.PASSED_PARAMS,
+    	EnclosingStepProperties.RETURN_PARAMS,
+
+    };
+    
     public IlsProperty() {}
     
 	public IlsProperty(String name, Class<T> clazz, T defaultValue) {

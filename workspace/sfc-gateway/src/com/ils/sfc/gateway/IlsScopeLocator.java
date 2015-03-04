@@ -31,7 +31,8 @@ public class IlsScopeLocator implements ScopeLocator {
 			resolvedScope = stepScope.getSubScope(ScopeContext.PREVIOUS);
 		}
 		else if(scopeIdentifier.equals(IlsSfcNames.SUPERIOR)) {
-}
+			resolvedScope = (PyChartScope) chartScope.get(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY);
+		}
 		else {  // search for a named scope
 			while(chartScope != null) {
 				if(scopeIdentifier.equals(getEnclosingStepScope(chartScope))) {

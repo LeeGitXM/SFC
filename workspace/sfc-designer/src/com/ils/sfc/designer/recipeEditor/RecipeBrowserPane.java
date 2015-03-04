@@ -26,7 +26,7 @@ import com.inductiveautomation.ignition.common.config.PropertyValue;
 /** Provide a tree view of all recipe data. */
 @SuppressWarnings("serial")
 public class RecipeBrowserPane extends JPanel implements EditorPane {
-	private ButtonPanel buttonPanel = new ButtonPanel(false, true, true, true, false, true);
+	private ButtonPanel buttonPanel = new ButtonPanel(false, true, true, true, false, false);
 	private JTree tree;
 	private JScrollPane treeScroll;
 	private DefaultTreeModel treeModel;
@@ -79,13 +79,6 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 		});
 		buttonPanel.getEditButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { doEdit();}
-		});		
-		buttonPanel.getComboLabel().setText("S88Level:");
-		for(String level: IlsSfcNames.S88_LEVEL_CHOICES) {
-			buttonPanel.getComboBox().addItem(level);
-		}
-		buttonPanel.getComboBox().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { doSetS88Level();}
 		});		
 	}
 	
@@ -186,25 +179,9 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 		controller.getEditor().activate();
 	}
 
-	private void doSetS88Level() {
-		// TODO: un-break the s88 level
-		//controller.getRecipeData().setS88Level((String)buttonPanel.getComboBox().getSelectedItem());
-	}
-	
 	/** Rebuild the tree in response to a change in recipe data. */
 	public void rebuildTree() {
 		if(controller.getRecipeData() == null) return;
-// TODO: un-break the s88 level
-/*		
-		// sync the s88Level combo box w current data
-		if(controller.getRecipeData().getS88Level() != null) {
-			buttonPanel.getComboBox().setSelectedItem(
-				controller.getRecipeData().getS88Level());
-		}
-		else {
-			buttonPanel.getComboBox().setSelectedItem(IlsSfcNames.NONE);
-		}
-*/		
 		if(treeScroll != null) {
 			this.remove(treeScroll);	
 		}

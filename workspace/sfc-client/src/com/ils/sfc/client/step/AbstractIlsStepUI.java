@@ -12,12 +12,24 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.ils.sfc.common.IlsSfcNames;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.client.api.ChartStatusContext;
 import com.inductiveautomation.sfc.client.ui.AbstractStepUI;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
+import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
+import com.inductiveautomation.sfc.elements.steps.ExpressionParamCollection;
+import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
+import com.inductiveautomation.sfc.elements.steps.enclosing.ExecutionMode;
+import com.inductiveautomation.sfc.elements.steps.enclosing.ReturnParamCollection;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public abstract class AbstractIlsStepUI extends AbstractStepUI {
+	private static LoggerEx logger = LogUtil.getLogger(AbstractIlsStepUI.class.getName());		
 	protected static Icon messageIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/message.png"));
 	protected static Icon questionIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/question.png"));
 	protected static Icon clockIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/clock.png"));
@@ -53,7 +65,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 		ReviewDataStepUI.FACTORY,		
 		ReviewDataWithAdviceStepUI.FACTORY,		
 		ReviewFlowsStepUI.FACTORY,		
-		IlsEnclosingStepUI.FACTORY,
+		//IlsEnclosingStepUI.FACTORY,
 		ProcedureStepUI.FACTORY,
 		OperationStepUI.FACTORY,
 		PhaseStepUI.FACTORY,
@@ -115,4 +127,23 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	g2d.setTransform(oldTransform);
     }
 
+    /** Initialize the Encapsulation step properties for our step types (e.g. ProcedureStep)
+     *  that are really Encapsulation steps
+     */
+	protected static void initializeFoundationStepUI(ChartUIElement element, String s88Level) {
+		element.set(EnclosingStepProperties.EXECUTION_MODE, ExecutionMode.RunUntilCompletion);
+		element.set(EnclosingStepProperties.PASSED_PARAMS, new ExpressionParamCollection());
+		element.set(EnclosingStepProperties.RETURN_PARAMS, new ReturnParamCollection());
+        JSONObject associatedData = element.get(ChartStepProperties.AssociatedData);
+        if(associatedData == null) {
+        	associatedData = new JSONObject();
+        }
+        try {
+			associatedData.put(IlsSfcNames.S88_LEVEL_KEY, s88Level);
+			element.set(ChartStepProperties.AssociatedData, associatedData);
+		} catch (JSONException e) {
+			logger.error("Error setting s88 level", e);
+		}
+
+	}	 
 }

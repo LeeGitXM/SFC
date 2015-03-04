@@ -3,11 +3,15 @@ package com.ils.sfc.client.step;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.step.ProcedureStepDelegate;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.StepUI;
+import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
+import com.inductiveautomation.sfc.elements.steps.ExpressionParamCollection;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.elements.steps.enclosing.ExecutionMode;
+import com.inductiveautomation.sfc.elements.steps.enclosing.ReturnParamCollection;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public class ProcedureStepUI extends AbstractIlsStepUI {
@@ -54,8 +58,8 @@ public class ProcedureStepUI extends AbstractIlsStepUI {
         @Override
         public void initializeStep(ChartUIElement element) {
              element.merge(getPropertySet());
-             element.set(EnclosingStepProperties.EXECUTION_MODE, ExecutionMode.RunUntilCompletion);
-        }		
+              initializeFoundationStepUI(element, IlsSfcNames.GLOBAL);
+        }
 	
 		@Override
 		public String getCategory() {
