@@ -37,6 +37,7 @@ insert into ClassMap values ('S88-DATABASE-SIMPLE-QUERY-TASK','com.ils.simpleQue
 insert into ClassMap values ('S88-WRITE-FILE-TASK','com.ils.writeFileStep','');
 insert into ClassMap values ('S88-WRITE-OUTPUTS-TASK','com.ils.writeOutputsStep','');
 insert into ClassMap values ('S88-YES-NO-TASK','com.ils.yesNoStep','');
-insert into ClassMap values ('S88-UNIT-PROCEDURE','enclosing-step','enclosure');
-insert into ClassMap values ('S88-OPERATION','enclosing-step','enclosure');
+insert into ClassMap values ('S88-UNIT-PROCEDURE','com.ils.procedureStep','enclosure');
+insert into ClassMap values ('S88-OPERATION','com.ils.operationStep','enclosure');
+insert into ClassMap values ('S88-PHASE','com.ils.phaseStep','enclosure');
 insert into ClassMap values ('S88-CONDITIONAL-TRANSITION','transition','transition');
