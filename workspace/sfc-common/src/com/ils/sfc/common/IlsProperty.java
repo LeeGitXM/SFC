@@ -136,15 +136,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> WINDOW = new IlsProperty<String>(IlsSfcNames.WINDOW, String.class, "");
     public static final IlsProperty<Boolean> WRITE_CONFIRM = new IlsProperty<Boolean>(IlsSfcNames.WRITE_CONFIRM, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<Boolean> WRITE_CONFIRMED = new IlsProperty<Boolean>(IlsSfcNames.WRITE_CONFIRMED, Boolean.class, Boolean.TRUE);
-
-    public static final Property<?>[] FOUNDATION_STEP_PROPERTIES = {
-    	EnclosingStepProperties.CHART_PATH,
-    	EnclosingStepProperties.EXECUTION_MODE,
-    	EnclosingStepProperties.PASSED_PARAMS,
-    	EnclosingStepProperties.RETURN_PARAMS,
-
-    };
-    
+   
     public IlsProperty() {}
     
 	public IlsProperty(String name, Class<T> clazz, T defaultValue) {

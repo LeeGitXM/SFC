@@ -94,7 +94,12 @@ public abstract class Data {
 			throw new IllegalArgumentException("null values are not allowed");
 		}
 		IlsProperty myProperty = getProperty(property.getName());
-		properties.set(myProperty, value);
+		if(myProperty != null) {
+			properties.set(myProperty, value);
+		}
+		else {
+			logger.error("Property " + property.getName() + " not found in " + this.getClass().getSimpleName());
+		}
 	}
 	
 	public void setParentId(String parentId) {
@@ -148,7 +153,17 @@ public abstract class Data {
 		for(PropertyValue<?> pvalue: properties) {
 			String propName = pvalue.getProperty().getName();
 			if(pvalue.getValue() != null) {
-				jsonObj.put(propName, pvalue.getValue());
+				Object value = pvalue.getValue();
+				if(value instanceof List) {
+					// we need to turn the list into a JSONArray first
+					JSONArray jsonArray = new JSONArray();
+					List<?> lvalue = (List<?>)value;
+					for(int i = 0; i < lvalue.size(); i++) {
+						jsonArray.put(i, lvalue.get(i));
+					}
+					value = jsonArray;
+				}
+				jsonObj.put(propName, value);
 			}
 			else {
 				logger.error("property " + propName + " is null; cannot add to JSON");
@@ -211,18 +226,12 @@ public abstract class Data {
 			String key = keyIter.next();
 			dummyProperty.setName(key);
 			Object value = jsonObj.get(key);
-			setValue(dummyProperty, value);
-		}
-		/*
-		for(Property<?> prop: rawValueMap.keySet()) {
-			if(jsonObj.has(prop.getName())) {
-				rawValueMap.put(prop, jsonObj.get(prop.getName()));
+			if(!(value instanceof JSONObject)) {
+				setValue(dummyProperty, value);
 			}
-			else if(this instanceof Structure) {
-				addDynamicProperty(name, value);
-			}
+			// else if the value is an object, the Group extension of this method will
+			// handle it
 		}
-		*/
 		if(jsonObj.has(IlsSfcNames.S88_LEVEL)) {
 			s88Level = (String)jsonObj.get(IlsSfcNames.S88_LEVEL);
 		}	

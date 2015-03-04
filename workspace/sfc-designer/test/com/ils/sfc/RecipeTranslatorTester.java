@@ -25,11 +25,11 @@ import com.inductiveautomation.ignition.common.config.BasicProperty;
 
 
 public class RecipeTranslatorTester {
-	static String file1 = "C:/root/repo/svn/EMChemicals/G2Artifacts/Sequential Control/Test-Unit-Procedure-1/TEST-UNIT-PROCEDURE-1.xml";
-	static String file2 = "C:/root/repo/svn/EMChemicals/G2Artifacts/Sequential Control/Test-Unit-Procedure-2/TEST-UNIT-PROCEDURE-2.xml";
-	static String file3 = "C:/root/repo/svn/EMChemicals/G2Artifacts/Sequential Control/Test-Unit-Procedure-3/TEST-UNIT-PROCEDURE-3.xml";
-	static String file4 = "C:/root/repo/svn/EMChemicals/G2Artifacts/Sequential Control/Test-Unit-Procedure-4/TEST-UNIT-PROCEDURE-4.xml";
-	static String file5 = "C:/root/repo/svn/EMChemicals/G2Artifacts/Sequential Control/Test-Unit-Procedure-5/TEST-UNIT-PROCEDURE-5.xml";
+	static String file1 = "C:/root/repo/svn/EMChemicals/G2Artifacts/Sequential Control/UnitTests/Test-Unit-Procedure-1/TEST-UNIT-PROCEDURE-1.xml";
+	static String file2 = "C:/root/repo/svn/EMChemicals/G2Artifacts/Sequential Control/UnitTests/Test-Unit-Procedure-2/TEST-UNIT-PROCEDURE-2.xml";
+	static String file3 = "C:/root/repo/svn/EMChemicals/G2Artifacts/Sequential Control/UnitTests/Test-Unit-Procedure-3/TEST-UNIT-PROCEDURE-3.xml";
+	static String file4 = "C:/root/repo/svn/EMChemicals/G2Artifacts/Sequential Control/UnitTests/Test-Unit-Procedure-4/TEST-UNIT-PROCEDURE-4.xml";
+	static String file5 = "C:/root/repo/svn/EMChemicals/G2Artifacts/Sequential Control/UnitTests/Test-Unit-Procedure-5/TEST-UNIT-PROCEDURE-5.xml";
 	
 	public static void testDOM() throws Exception {
 		File fXmlFile = new File(file4);
@@ -43,6 +43,8 @@ public class RecipeTranslatorTester {
 				Element blockElement = (Element) nNode;
 				RecipeDataTranslator trans = new RecipeDataTranslator(blockElement);
 				List<Data> recipeData = trans.DOMToData();
+				JSONObject jobj = Data.toAssociatedData(recipeData);
+				System.out.println(jobj);
 				for(String errMsg: trans.getErrors()) {
 					System.out.println(errMsg);
 				}
@@ -60,12 +62,7 @@ public class RecipeTranslatorTester {
 	
 	public static void main(String[] args) {
 		try {
-			//testDOM();
-
-			BasicProperty<String> prop1 = new BasicProperty<String>("key", String.class);
-			BasicProperty<String> prop2 = new BasicProperty<String>();
-			prop2.setName("key");
-			System.out.println(prop1.equals(prop2));
+			testDOM();
 		}
 		catch(Exception e) {
 			e.printStackTrace();

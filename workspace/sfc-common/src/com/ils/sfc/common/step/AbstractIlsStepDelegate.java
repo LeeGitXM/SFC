@@ -18,6 +18,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.StepDelegate;
 import com.inductiveautomation.sfc.api.XMLParseException;
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
+import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
@@ -29,6 +30,13 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	};
 	private Property<?>[] properties;
 	
+    public static final Property<?>[] FOUNDATION_STEP_PROPERTIES = {
+    	EnclosingStepProperties.CHART_PATH,
+    	EnclosingStepProperties.EXECUTION_MODE,
+    	EnclosingStepProperties.PASSED_PARAMS,
+    	EnclosingStepProperties.RETURN_PARAMS,
+    };
+ 
 	protected AbstractIlsStepDelegate(Property<?>[] uncommonProperties) {
 		// initialize sort order
 		int numProperties = uncommonProperties.length + commonProperties.length;
