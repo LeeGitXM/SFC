@@ -14,7 +14,6 @@ import org.json.JSONObject;
 
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
-import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 
 @SuppressWarnings("serial")
 public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializable {

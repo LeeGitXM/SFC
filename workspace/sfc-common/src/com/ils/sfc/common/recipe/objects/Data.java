@@ -152,18 +152,19 @@ public abstract class Data {
 		JSONObject jsonObj = new JSONObject();
 		for(PropertyValue<?> pvalue: properties) {
 			String propName = pvalue.getProperty().getName();
-			if(pvalue.getValue() != null) {
-				Object value = pvalue.getValue();
-				if(value instanceof List) {
+			Object valueOrDefault = pvalue.getValue() != null ? 
+				pvalue.getValue() : pvalue.getProperty().getDefaultValue();
+			if(valueOrDefault != null) {
+				if(valueOrDefault instanceof List) {
 					// we need to turn the list into a JSONArray first
 					JSONArray jsonArray = new JSONArray();
-					List<?> lvalue = (List<?>)value;
+					List<?> lvalue = (List<?>)valueOrDefault;
 					for(int i = 0; i < lvalue.size(); i++) {
 						jsonArray.put(i, lvalue.get(i));
 					}
-					value = jsonArray;
+					valueOrDefault = jsonArray;
 				}
-				jsonObj.put(propName, value);
+				jsonObj.put(propName, valueOrDefault);
 			}
 			else {
 				logger.error("property " + propName + " is null; cannot add to JSON");
