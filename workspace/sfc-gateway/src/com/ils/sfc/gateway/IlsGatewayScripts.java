@@ -34,7 +34,7 @@ public class IlsGatewayScripts {
 	 * @param projectId identifier for the project
 	 * @return name of the default database for the specified project
 	 */
-	public String getDefaultDatabaseName(long projectId)  {
+	public static String getDefaultDatabaseName(long projectId)  {
 		String dbName = "";
 		if( projectId!=-1) {
 			dbName = ilsSfcGatewayHook.getContext().getProjectManager().getProps(projectId, ProjectVersion.Published).getDefaultDatasourceName();

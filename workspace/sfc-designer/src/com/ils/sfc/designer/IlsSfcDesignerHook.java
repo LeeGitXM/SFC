@@ -1,16 +1,50 @@
 /**
- *   (c) 2014  ILS Automation. All rights reserved.
+ *   (c) 2014-2015  ILS Automation. All rights reserved.
  */
 package com.ils.sfc.designer;
 
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.SwingUtilities;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
-import com.ils.sfc.common.step.*;
+import com.ils.sfc.common.step.AbortStepProperties;
+import com.ils.sfc.common.step.ClearQueueStepProperties;
+import com.ils.sfc.common.step.CloseWindowStepProperties;
+import com.ils.sfc.common.step.CollectDataStepProperties;
+import com.ils.sfc.common.step.ControlPanelMessageStepProperties;
+import com.ils.sfc.common.step.DeleteDelayNotificationStepProperties;
+import com.ils.sfc.common.step.DialogMessageStepProperties;
+import com.ils.sfc.common.step.EnableDisableStepProperties;
+import com.ils.sfc.common.step.InputStepProperties;
+import com.ils.sfc.common.step.LimitedInputStepProperties;
+import com.ils.sfc.common.step.OperationStepProperties;
+import com.ils.sfc.common.step.PauseStepProperties;
+import com.ils.sfc.common.step.PhaseStepProperties;
+import com.ils.sfc.common.step.PostDelayNotificationStepProperties;
+import com.ils.sfc.common.step.PrintFileStepProperties;
+import com.ils.sfc.common.step.PrintWindowStepProperties;
+import com.ils.sfc.common.step.ProcedureStepProperties;
+import com.ils.sfc.common.step.QueueMessageStepProperties;
+import com.ils.sfc.common.step.RawQueryStepProperties;
+import com.ils.sfc.common.step.ReviewDataStepProperties;
+import com.ils.sfc.common.step.ReviewDataWithAdviceStepProperties;
+import com.ils.sfc.common.step.ReviewFlowsStepProperties;
+import com.ils.sfc.common.step.SaveDataStepProperties;
+import com.ils.sfc.common.step.SelectInputStepProperties;
+import com.ils.sfc.common.step.SetQueueStepProperties;
+import com.ils.sfc.common.step.ShowQueueStepProperties;
+import com.ils.sfc.common.step.ShowWindowStepProperties;
+import com.ils.sfc.common.step.SimpleQueryStepProperties;
+import com.ils.sfc.common.step.TimedDelayStepProperties;
+import com.ils.sfc.common.step.YesNoStepProperties;
 import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame;
 import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
@@ -20,6 +54,9 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.AbstractDesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.DesignerModuleHook;
+import com.inductiveautomation.ignition.designer.model.menu.JMenuMerge;
+import com.inductiveautomation.ignition.designer.model.menu.MenuBarMerge;
+import com.inductiveautomation.ignition.designer.model.menu.WellKnownMenuConstants;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
@@ -88,7 +125,25 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		mgr.addStaticFields("system.ils.sfc", IlsSfcNames.class);
 		mgr.addScriptModule("system.ils.sfc", IlsClientScripts.class);
 	}
-	
+	// Insert a menu to allow control of database and tag provider.
+    @Override
+    public MenuBarMerge getModuleMenu() {
+        MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  // as suggested in javadocs
+        merge.addSeparator();
+
+        Action testControlAction = new AbstractAction("Chart Connection Configuration") {
+            private static final long serialVersionUID = 5374667367733312464L;
+            public void actionPerformed(ActionEvent ae) {
+                SwingUtilities.invokeLater(new DialogRunner());
+            }
+        };
+
+        JMenuMerge controlMenu = new JMenuMerge(WellKnownMenuConstants.VIEW_MENU_NAME);
+        controlMenu.add(testControlAction);
+        merge.add(WellKnownMenuConstants.VIEW_MENU_LOCATION, controlMenu);
+        return merge;
+    }
+    
 	@Override
 	public void startup(DesignerContext ctx, LicenseState activationState) throws Exception {
 		this.context = ctx;
@@ -116,4 +171,16 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	public void shutdown() {	
 	}
 
+	 /**
+     * Display a popup dialog for configuration of dialog execution parameters.
+     * Run in a separate thread, as a modal dialog in-line here will freeze the UI.
+     */
+    private class DialogRunner implements Runnable {
+
+        public void run() {
+            SetupDialog setup = new SetupDialog(context);
+            setup.pack();
+            setup.setVisible(true);
+        }
+    }
 }

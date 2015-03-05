@@ -1,8 +1,9 @@
 /**
- *   (c) 2014  ILS Automation. All rights reserved. 
+ *   (c) 2014-2015  ILS Automation. All rights reserved. 
  */
 package com.ils.sfc.gateway;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,24 +11,49 @@ import java.util.Map;
 
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
-import com.ils.sfc.step.*;
-import com.inductiveautomation.ignition.common.config.Property;
+import com.ils.sfc.gateway.persistence.ToolkitRecord;
+import com.ils.sfc.step.AbortStepFactory;
+import com.ils.sfc.step.ClearQueueStepFactory;
+import com.ils.sfc.step.CloseWindowStepFactory;
+import com.ils.sfc.step.CollectDataStepFactory;
+import com.ils.sfc.step.ControlPanelMessageStepFactory;
+import com.ils.sfc.step.DeleteDelayNotificationStepFactory;
+import com.ils.sfc.step.DialogMessageStepFactory;
+import com.ils.sfc.step.EnableDisableStepFactory;
+import com.ils.sfc.step.InputStepFactory;
+import com.ils.sfc.step.LimitedInputStepFactory;
+import com.ils.sfc.step.OperationStepFactory;
+import com.ils.sfc.step.PauseStepFactory;
+import com.ils.sfc.step.PhaseStepFactory;
+import com.ils.sfc.step.PostDelayNotificationStepFactory;
+import com.ils.sfc.step.PrintFileStepFactory;
+import com.ils.sfc.step.PrintWindowStepFactory;
+import com.ils.sfc.step.ProcedureStepFactory;
+import com.ils.sfc.step.QueueMessageStepFactory;
+import com.ils.sfc.step.RawQueryStepFactory;
+import com.ils.sfc.step.ReviewDataStepFactory;
+import com.ils.sfc.step.ReviewDataWithAdviceStepFactory;
+import com.ils.sfc.step.ReviewFlowsStepFactory;
+import com.ils.sfc.step.SaveDataStepFactory;
+import com.ils.sfc.step.SelectInputStepFactory;
+import com.ils.sfc.step.SetQueueStepFactory;
+import com.ils.sfc.step.ShowQueueStepFactory;
+import com.ils.sfc.step.ShowWindowStepFactory;
+import com.ils.sfc.step.SimpleQueryStepFactory;
+import com.ils.sfc.step.TimedDelayStepFactory;
+import com.ils.sfc.step.YesNoStepFactory;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
+import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
 import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 import com.inductiveautomation.ignition.gateway.services.ModuleServiceConsumer;
-//import com.inductiveautomation.sfc.ChartManager;
-import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.api.ChartManagerService;
-import com.inductiveautomation.sfc.api.PyChartScope;
-import com.inductiveautomation.sfc.api.ScopeContext;
-import com.inductiveautomation.sfc.api.ScopeLocator;
-import com.inductiveautomation.sfc.api.SfcGatewayHook;
 import com.inductiveautomation.sfc.api.elements.StepFactory;
+//import com.inductiveautomation.sfc.ChartManager;
 
 //import com.ils.sfc.step.IlsSfcIO;
 
@@ -39,7 +65,8 @@ import com.inductiveautomation.sfc.api.elements.StepFactory;
 public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements ModuleServiceConsumer {
 	public static String TAG = "SFCGatewayHook";
 	private final LoggerEx log;
-	private GatewayContext context = null;
+	private transient GatewayContext context = null;
+	private transient GatewayRpcDispatcher dispatcher = null;
 	private ChartManagerService chartManager;
 	private IlsScopeLocator scopeLocator = new IlsScopeLocator();
 	private IlsChartObserver chartObserver = new IlsChartObserver();
@@ -121,12 +148,25 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public IlsRequestResponseManager getRequestResponseManager() {
 		return requestResponseManager;
 	}
+	@Override
+	public Object getRPCHandler(ClientReqSession session, Long projectId) {
+		return dispatcher;
+	}
 
 	@Override
 	public void setup(GatewayContext ctxt) {
 		this.context = ctxt;
 		context.getModuleServicesManager().subscribe(ChartManagerService.class, this);
 		IlsGatewayScripts.setHook(this);
+		GatewayRequestHandler.getInstance().setContext(context);
+		dispatcher = new GatewayRpcDispatcher(context);
+		// Register the ToolkitRecord to make sure that the table exists
+		try {
+			context.getSchemaUpdater().updatePersistentRecords(ToolkitRecord.META);
+		}
+		catch(SQLException sqle) {
+			log.error("IlsSfcGatewayHook.setup: Error registering ToolkitRecord",sqle);
+		}
 	}
 
 	@Override

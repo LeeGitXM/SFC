@@ -136,6 +136,13 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<Boolean> WRITE_CONFIRM = new IlsProperty<Boolean>(IlsSfcNames.WRITE_CONFIRM, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<Boolean> WRITE_CONFIRMED = new IlsProperty<Boolean>(IlsSfcNames.WRITE_CONFIRMED, Boolean.class, Boolean.TRUE);
    
+ // These are the names of toolkit properties that are to be stored in HSQLdb
+ 	public static final String TOOLKIT_PROPERTY_DATABASE            = "Database";           // Production database
+ 	public static final String TOOLKIT_PROPERTY_ISOLATION_DATABASE  = "SecondaryDatabase";  // Database when in isolation
+ 	public static final String TOOLKIT_PROPERTY_PROVIDER            = "Provider";           // Production tag provider
+ 	public static final String TOOLKIT_PROPERTY_ISOLATION_PROVIDER  = "SecondaryProvider";  // Tag provider when in isolation
+ 	public static final String TOOLKIT_PROPERTY_ISOLATION_TIME      = "SecondaryTimeFactor";// Time speedup when in isolation
+ 	
     public IlsProperty() {}
     
 	public IlsProperty(String name, Class<T> clazz, T defaultValue) {
