@@ -3,10 +3,10 @@ package com.ils.sfc.common.step;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-public class AbortStepDelegate extends AbstractIlsStepDelegate implements
-AbortStepProperties {
+public class CancelStepDelegate extends AbstractIlsStepDelegate implements
+CancelStepProperties {
 
-	protected AbortStepDelegate() {
+	protected CancelStepDelegate() {
 		super(properties);
 	}
 

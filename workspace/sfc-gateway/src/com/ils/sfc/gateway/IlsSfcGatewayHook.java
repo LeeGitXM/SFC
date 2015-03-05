@@ -78,7 +78,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		new ShowQueueStepFactory(),
 		new ClearQueueStepFactory(),
 		new YesNoStepFactory(),
-		new AbortStepFactory(),
+		new CancelStepFactory(),
 		new PauseStepFactory(),
 		new ControlPanelMessageStepFactory(),
 		new TimedDelayStepFactory(),

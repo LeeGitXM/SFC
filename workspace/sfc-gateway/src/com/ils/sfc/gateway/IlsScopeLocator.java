@@ -118,6 +118,13 @@ public class IlsScopeLocator implements ScopeLocator {
 	   }
 	   return scope;
 	}
+	
+	public static PyChartScope getTopScope(PyChartScope scope) {
+		while(scope.getSubScope(ScopeContext.PARENT) != null) {
+			scope = scope.getSubScope(ScopeContext.PARENT);
+		}
+		return scope;
+	}
 
 	public Object s88Get(PyChartScope chartScope, PyChartScope stepScope, 
 		String path, String scopeIdentifier) {

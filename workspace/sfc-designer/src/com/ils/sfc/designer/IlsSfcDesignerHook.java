@@ -80,7 +80,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	ShowQueueStepProperties.FACTORY_ID,
     	ClearQueueStepProperties.FACTORY_ID,
     	YesNoStepProperties.FACTORY_ID,
-    	AbortStepProperties.FACTORY_ID,
+    	CancelStepProperties.FACTORY_ID,
     	PauseStepProperties.FACTORY_ID,
     	ControlPanelMessageStepProperties.FACTORY_ID,
     	TimedDelayStepProperties.FACTORY_ID,

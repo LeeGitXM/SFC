@@ -3,6 +3,7 @@ package com.ils.sfc.step;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.step.annotation.ILSStep;
@@ -24,7 +25,6 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 @ILSStep
 public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefinition> implements StepElement {
 	private static final Logger logger = LoggerFactory.getLogger(IlsAbstractChartStep.class);
-	private static final BasicProperty<String> nameProperty = new BasicProperty<String>(IlsSfcNames.NAME, String.class);
 	private String auditLevel = IlsSfcNames.OFF;
 	protected ScopeContext scopeContext;
 	private long startTime;
@@ -143,7 +143,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 */
 	/** Get the name of a step from its definition */
 	private String getName(StepDefinition definition) {
-		return (String)definition.getProperties().getOrDefault(nameProperty);
+		return (String)definition.getProperties().getOrDefault(IlsProperty.NAME);
 	}
 	
 	/** Set each step's closest _step_ predecessor (i.e. not a transition etc) 
