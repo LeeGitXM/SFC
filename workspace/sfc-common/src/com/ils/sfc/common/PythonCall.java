@@ -117,6 +117,9 @@ public class PythonCall {
 	public static final PythonCall SEND_CHART_STATUS = new PythonCall("ils.sfc.gateway.util." + "sendChartStatus", 
 			PyList.class,  new String[]{"projectName", "payload"} );
 
+	public static final PythonCall SEND_CURRENT_OPERATION = new PythonCall("ils.sfc.gateway.util." + "sendCurrentOperation", 
+			PyList.class,  new String[]{"projectName", "payload"} );
+
 	public static final PythonCall INVOKE_STEP = new PythonCall("ils.sfc.gateway.steps." + "invokeStep", 
 		PyList.class,  new String[]{"chartProperties", "stepProperties", "methodName"} );
 
