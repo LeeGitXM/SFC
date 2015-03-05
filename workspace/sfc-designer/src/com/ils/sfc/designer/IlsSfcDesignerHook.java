@@ -15,7 +15,7 @@ import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
-import com.ils.sfc.common.step.AbortStepProperties;
+import com.ils.sfc.common.step.CancelStepProperties;
 import com.ils.sfc.common.step.ClearQueueStepProperties;
 import com.ils.sfc.common.step.CloseWindowStepProperties;
 import com.ils.sfc.common.step.CollectDataStepProperties;

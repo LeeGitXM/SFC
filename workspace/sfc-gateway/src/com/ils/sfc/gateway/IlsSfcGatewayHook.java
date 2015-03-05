@@ -12,7 +12,7 @@ import java.util.Map;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.gateway.persistence.ToolkitRecord;
-import com.ils.sfc.step.AbortStepFactory;
+import com.ils.sfc.step.CancelStepFactory;
 import com.ils.sfc.step.ClearQueueStepFactory;
 import com.ils.sfc.step.CloseWindowStepFactory;
 import com.ils.sfc.step.CollectDataStepFactory;
