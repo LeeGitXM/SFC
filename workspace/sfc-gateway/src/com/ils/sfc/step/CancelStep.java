@@ -1,14 +1,14 @@
 package com.ils.sfc.step;
 
 import com.ils.sfc.common.PythonCall;
-import com.ils.sfc.common.step.AbortStepProperties;
+import com.ils.sfc.common.step.CancelStepProperties;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 
-public class AbortStep extends IlsAbstractChartStep implements AbortStepProperties {
+public class CancelStep extends IlsAbstractChartStep implements CancelStepProperties {
 
-	public AbortStep(ChartContext context, ScopeContext scopeContext, StepDefinition definition) {
+	public CancelStep(ChartContext context, ScopeContext scopeContext, StepDefinition definition) {
 		super(context, scopeContext, definition);
 		this.scopeContext = scopeContext;
 	}

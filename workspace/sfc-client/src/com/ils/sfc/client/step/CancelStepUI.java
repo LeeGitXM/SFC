@@ -3,13 +3,13 @@ package com.ils.sfc.client.step;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import com.ils.sfc.common.step.AbortStepDelegate;
+import com.ils.sfc.common.step.CancelStepDelegate;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-public class AbortStepUI extends AbstractIlsStepUI {
-	protected static Icon cancelIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/abort.png"));
+public class CancelStepUI extends AbstractIlsStepUI {
+	protected static Icon cancelIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/cancel.png"));
   
     public static final ClientStepFactory FACTORY = new AbortStepFactory();
 
@@ -19,8 +19,8 @@ public class AbortStepUI extends AbstractIlsStepUI {
 	@Override
 	protected String getText() { return "<html><b><font color=red>Cancel!</html>"; }
 
-    public static final class AbortStepFactory extends AbortStepDelegate implements ClientStepFactory {
-    	private AbortStepUI UI = new AbortStepUI();
+    public static final class AbortStepFactory extends CancelStepDelegate implements ClientStepFactory {
+    	private CancelStepUI UI = new CancelStepUI();
 
         @Override
         public StepUI createStepUI(ChartUIElement element) {

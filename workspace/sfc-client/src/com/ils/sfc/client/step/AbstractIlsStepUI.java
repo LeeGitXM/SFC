@@ -43,7 +43,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 		ShowQueueStepUI.FACTORY,
 		ClearQueueStepUI.FACTORY,
 		YesNoStepUI.FACTORY,
-		AbortStepUI.FACTORY,
+		CancelStepUI.FACTORY,
 		PauseStepUI.FACTORY,
 		ControlPanelMessageStepUI.FACTORY,
 		TimedDelayStepUI.FACTORY,
