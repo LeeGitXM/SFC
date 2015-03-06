@@ -33,7 +33,18 @@ public class IlsSfcRequestHandler {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
 
-	
+	/**
+	 * Find the database associated with the sequential function charts.
+	 * 
+	 * @param isIsolated true if this the chart is in an isolation (test) state.
+	 * @return name of the database for production or isolation mode, as appropriate.
+	 */
+	public String getDatabaseName(boolean isIsolated) {
+		String dbName = "";
+		if( isIsolated ) dbName = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_ISOLATION_DATABASE);
+		else dbName = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_DATABASE);
+		return dbName;
+	}
 	
 	@SuppressWarnings("unchecked")
 	public List<String> getDatasourceNames() {
@@ -47,7 +58,18 @@ public class IlsSfcRequestHandler {
 		}
 		return names;
 	}
-	
+	/**
+	 * Find the tag provider associated with the sequential function charts.
+	 * 
+	 * @param isIsolated true if this the chart is in an isolation (test) state.
+	 * @return name of the tag provider for production or isolation mode, as appropriate.
+	 */
+	public String getProviderName(boolean isIsolated)  {
+		String providerName = "";
+		if( isIsolated ) providerName = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_ISOLATION_PROVIDER);
+		else providerName = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_PROVIDER);
+		return providerName;
+	}
 	/**
 	 * Acquire a value from the HSQL database table associated with the toolkit. A
 	 * empty string is returned if the string is not found, null if an exception is thrown.
@@ -68,24 +90,31 @@ public class IlsSfcRequestHandler {
 		return result;
 	}
 	/**
-	 * Set a clock rate factor. This must NOT be exercised in a production environment.
-	 * This is a hook for testing only.
+	 * Set a clock rate factor for isolation mode only. We set in the BLT module
+	 * as well. If that module is not present, then we simply ignore the exception.
 	 * @param factor the amount to speed up or slow down the clock.
 	 */
-	public void setTimeFactor(Double factor) {
+	public void setTimeFactor(double factor) {
 		log.infof("%s.setTimeFactor ... %s",TAG,String.valueOf(factor));
 		try {
 			GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
-					IlsSfcModule.MODULE_ID, "setTimeFactor",factor);
+					IlsSfcModule.MODULE_ID, "setTimeFactor",new Double(factor));
 		}
 		catch(Exception ge) {
 			log.infof("%s.setTimeFactor: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());
 		}
+		try {
+			GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
+					IlsSfcModule.BLT_MODULE_ID, "setTimeFactor",new Double(factor));
+		}
+		catch(Exception ignore) {}
 	}
 	
 	/**
 	 * Save a value into the HSQL database table associated with the toolkit. The 
-	 * table contains name-value pairs, so any name is allowable.
+	 * table contains name-value pairs, so any name is allowable. We also execute
+	 * this method on behalf of the BLT-module in case there are any side-effects
+	 * of saving particular parameters.
 	 * @param propertyName name of the property for which a value is to be set
 	 * @param the new value of the property.
 	 */
@@ -98,5 +127,10 @@ public class IlsSfcRequestHandler {
 		catch(Exception ge) {
 			log.infof("%s.setToolkitProperty: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());
 		}
+		try {
+			GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
+					IlsSfcModule.BLT_MODULE_ID, "setToolkitProperty",propertyName,value);
+		}
+		catch(Exception ignore) {}
 	}
 }

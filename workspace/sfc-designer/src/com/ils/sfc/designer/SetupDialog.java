@@ -1,6 +1,5 @@
 /**
  *   (c) 2015  ILS Automation. All rights reserved.
- *   http://docs.oracle.com/javase/tutorial/displayCode.html?code=http://docs.oracle.com/javase/tutorial/uiswing/examples/components/SharedModelDemoProject/src/components/SharedModelDemo.java
  */
 package com.ils.sfc.designer;
 
@@ -27,18 +26,16 @@ import net.miginfocom.swing.MigLayout;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcRequestHandler;
 import com.inductiveautomation.ignition.common.sqltags.model.TagProviderMeta;
-import com.inductiveautomation.ignition.common.util.LogUtil;
-import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 
 /**
- * This is a read-only viewer for test results. We query the controller
- * periodically to update. 
+ * Allow the user to define database connections and tag providers. This
+ * applies to all projects globally. 
  */
 
 public class SetupDialog extends JDialog {
 	protected static final Dimension COMBO_SIZE  = new Dimension(200,24);
-	private static final long serialVersionUID = 2002388376824434427L;
+	private static final long serialVersionUID = 2112388376824434427L;
 	private final int DIALOG_HEIGHT = 220;
 	private final int DIALOG_WIDTH = 560;
 	private final DesignerContext context;
@@ -55,7 +52,7 @@ public class SetupDialog extends JDialog {
 	public SetupDialog(DesignerContext ctx) {
 		super(ctx.getFrame());
 		this.context = ctx;
-		this.setTitle("Diagram Configuration");
+		this.setTitle("SFC Interface Configuration");
 		this.rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
 		this.requestHandler = new IlsSfcRequestHandler();
 		setModal(true);
@@ -268,6 +265,6 @@ public class SetupDialog extends JDialog {
 		requestHandler.setToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_ISOLATION_TIME,secondaryTimeFactorField.getText());
 		// This causes an immediate active update.
 		double speedup = Double.parseDouble(secondaryTimeFactorField.getText());  // We've already validated the field ...
-		requestHandler.setTimeFactor(new Double(speedup));
+		requestHandler.setTimeFactor(speedup);
 	}
 }

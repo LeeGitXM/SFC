@@ -3,12 +3,18 @@
  */
 package com.ils.sfc.designer;
 
+import java.awt.Component;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
@@ -66,6 +72,7 @@ import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
 import com.jidesoft.docking.DockableFrame;
 
 public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook {
+	private static final String INTERFACE_MENU_TITLE  = "External Interface Configuration";
 	private DesignerContext context = null;
 	private final LoggerEx log;
 	//private SFCWorkspace sfcWorkspace;
@@ -126,12 +133,16 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		mgr.addScriptModule("system.ils.sfc", IlsClientScripts.class);
 	}
 	// Insert a menu to allow control of database and tag provider.
+	// If the menu already exists, do nothing
     @Override
     public MenuBarMerge getModuleMenu() {
-        MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  // as suggested in javadocs
+    	
+    	if( menuExists(context.getFrame(),INTERFACE_MENU_TITLE) ) return super.getModuleMenu();
+    	
+        MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  
         merge.addSeparator();
 
-        Action testControlAction = new AbstractAction("Chart Connection Configuration") {
+        Action interfaceAction = new AbstractAction(INTERFACE_MENU_TITLE) {
             private static final long serialVersionUID = 5374667367733312464L;
             public void actionPerformed(ActionEvent ae) {
                 SwingUtilities.invokeLater(new DialogRunner());
@@ -139,7 +150,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         };
 
         JMenuMerge controlMenu = new JMenuMerge(WellKnownMenuConstants.VIEW_MENU_NAME);
-        controlMenu.add(testControlAction);
+        controlMenu.add(interfaceAction);
         merge.add(WellKnownMenuConstants.VIEW_MENU_LOCATION, controlMenu);
         return merge;
     }
@@ -171,7 +182,38 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	public void shutdown() {	
 	}
 
-	 /**
+	// Search the menu tree to see if the same menu has been added by another module
+	private boolean menuExists(Frame frame,String title) {
+		for(Component c:context.getFrame().getComponents() ) {
+			if( c instanceof JRootPane ) {
+				JRootPane root = (JRootPane)c;
+				JMenuBar bar = root.getJMenuBar();
+				if( bar!=null ) {
+					int count = bar.getMenuCount();
+					int index = 0;
+					while( index<count) {
+						JMenu menu = bar.getMenu(index);
+						if( menu.getName().equalsIgnoreCase(WellKnownMenuConstants.VIEW_MENU_NAME)) {
+							int nitems = menu.getItemCount();
+							int jndex = 0;
+							while(jndex<nitems ) {
+								JMenuItem item = menu.getItem(jndex);
+								if( item!=null ) {
+									String name = item.getText();
+									if( title.equalsIgnoreCase(name)) return true;
+								}
+								jndex++;
+							}
+							break;
+						}
+						index++;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	/**
      * Display a popup dialog for configuration of dialog execution parameters.
      * Run in a separate thread, as a modal dialog in-line here will freeze the UI.
      */

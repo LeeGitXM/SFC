@@ -7,6 +7,7 @@ package com.ils.sfc.gateway;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.gateway.persistence.ToolkitRecord;
 import com.inductiveautomation.ignition.common.datasource.DatasourceStatus;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -48,6 +49,20 @@ public class GatewayRequestHandler {
 	}
 
 	public void setContext(GatewayContext ctx) { this.context = ctx; }
+	
+	/**
+	 * Find the database associated with the sequential function charts.
+	 * 
+	 * @param isIsolation true if this the chart is in an isolation (test) state.
+	 * @return name of the database for production or isolation mode, as appropriate.
+	 */
+	public String getDatabaseName(boolean isIsolated) {
+		String dbName = "";
+		if( isIsolated ) dbName = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_ISOLATION_DATABASE);
+		else dbName = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_DATABASE);
+		return dbName;
+	}
+	
 	/**
 	 * A list of data sources is not available in client scope.
 	 * @return
@@ -61,6 +76,19 @@ public class GatewayRequestHandler {
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * Find the tag provider associated with the sequential function charts.
+	 * 
+	 * @param isIsolation true if this the chart is in an isolation (test) state.
+	 * @return name of the tag provider for production or isolation mode, as appropriate.
+	 */
+	public String getProviderName(boolean isIsolated)  {
+		String providerName = "";
+		if( isIsolated ) providerName = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_ISOLATION_PROVIDER);
+		else providerName = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_PROVIDER);
+		return providerName;
 	}
 	/**
 	 * On a failure to find the property, an empty string is returned.
@@ -76,7 +104,15 @@ public class GatewayRequestHandler {
 		}
 		return value;
 	}
-
+	/**
+	 * Set a clock rate factor. This will change timing for isolation mode only.
+	 * This method is provided as a hook for test frameworks.
+	 * @param factor the amount to speed up or slow down the clock.
+	 */
+	public void setTimeFactor(double factor) {
+		String value = String.valueOf(factor);
+		setToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_ISOLATION_TIME,value);
+	}
 	/**
 	 * We have two types of properties of interest here. The first set is found in ScriptConstants
 	 * and represents scripts used for external Python interfaces to Application/Family.

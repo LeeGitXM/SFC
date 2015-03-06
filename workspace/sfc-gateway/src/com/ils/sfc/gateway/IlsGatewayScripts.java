@@ -10,7 +10,6 @@ import org.python.core.PyList;
 import com.ils.sfc.step.IlsAbstractChartStep;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
-import com.inductiveautomation.ignition.common.project.ProjectVersion;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -26,20 +25,28 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 public class IlsGatewayScripts {	
 	private static LoggerEx logger = LogUtil.getLogger(IlsGatewayScripts.class.getName());
 	private static IlsSfcGatewayHook ilsSfcGatewayHook;
+	private static GatewayRequestHandler requestHandler = GatewayRequestHandler.getInstance();
 
 	/**
-	 * Find the database associated with a specified project. This requires 
-	 * that a Gateway context. NOTE: There is no default defined for the global project.
+	 * Find the database associated with the sequential function charts.
 	 * 
-	 * @param projectId identifier for the project
-	 * @return name of the default database for the specified project
+	 * @param isIsolation true if this the chart is in an isolation (test) state.
+	 * @return name of the database for production or isolation mode, as appropriate.
 	 */
-	public static String getDefaultDatabaseName(long projectId)  {
-		String dbName = "";
-		if( projectId!=-1) {
-			dbName = ilsSfcGatewayHook.getContext().getProjectManager().getProps(projectId, ProjectVersion.Published).getDefaultDatasourceName();
-		}
+	public String getDatabaseName(boolean isIsolation)  {
+		String dbName = requestHandler.getDatabaseName(isIsolation);
 		return dbName;
+	}
+	
+	/**
+	 * Find the tag provider associated with the sequential function charts.
+	 * 
+	 * @param isIsolation true if this the chart is in an isolation (test) state.
+	 * @return name of the tag provider for production or isolation mode, as appropriate.
+	 */
+	public String getProviderName(boolean isIsolation)  {
+		String providerName = requestHandler.getProviderName(isIsolation);
+		return providerName;
 	}
 	
 	public static PyDictionary getResponse(String id) {
@@ -134,6 +141,14 @@ public class IlsGatewayScripts {
 		
 	public static void setHook(IlsSfcGatewayHook hook) {
 		ilsSfcGatewayHook = hook;		
+	}
+	/**
+	 * Set a clock rate factor. This will change timing for isolation mode only.
+	 * This method is provided as a hook for test frameworks.
+	 * @param factor the amount to speed up or slow down the clock.
+	 */
+	public static void setTimeFactor(double factor) {
+		requestHandler.setTimeFactor(factor);
 	}
 		
 	public static void registerSfcProject(String projectName) {

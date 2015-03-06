@@ -7,18 +7,40 @@ import com.inductiveautomation.ignition.client.model.ClientContext;
  */
 public class IlsClientScripts {	
 	private static ClientContext context = null;
+	private static IlsSfcRequestHandler requestHandler = new IlsSfcRequestHandler();
 
 	public static void setContext(ClientContext ctx) { context = ctx; }
 	
 	/**
-	 * Find the database associated with a specified project. This requires 
-	 * that a Gateway context. NOTE: There is no default defined for the global project.
+	 * Find the database associated with the sequential function charts.
 	 * 
-	 * @return name of the default database for the current project
+	 * @param isIsolation true if this the chart is in an isolation (test) state.
+	 * @return name of the database for production or isolation mode, as appropriate.
 	 */
-	public String getDefaultDatabaseName()  {
-		String dbName = context.getDefaultDatasourceName();
+	public String getDatabaseName(boolean isIsolation)  {
+		String dbName = requestHandler.getDatabaseName(isIsolation);
 		return dbName;
 	}
+	
+	/**
+	 * Find the tag provider associated with the sequential function charts.
+	 * 
+	 * @param isIsolation true if this the chart is in an isolation (test) state.
+	 * @return name of the tag provider for production or isolation mode, as appropriate.
+	 */
+	public String getProviderName(boolean isIsolation)  {
+		String providerName = requestHandler.getProviderName(isIsolation);
+		return providerName;
+	}
+	
+	/**
+	 * Set a clock rate factor. This will change timing for isolation mode only.
+	 * This method is provided as a hook for test frameworks.
+	 * @param factor the amount to speed up or slow down the clock.
+	 */
+	public static void setTimeFactor(double factor) {
+		requestHandler.setTimeFactor(factor);
+	}
+	
 	
 }

@@ -38,7 +38,14 @@ public class GatewayRpcDispatcher   {
 	public String getToolkitProperty(String propertyName) {
 		return requestHandler.getToolkitProperty(propertyName);
 	}
-	
+	/**
+	 * Set a clock rate factor. This will change timing for isolation mode only.
+	 * This method is provided as a hook for test frameworks.
+	 * @param factor the amount to speed up or slow down the clock.
+	 */
+	public void setTimeFactor(Double factor) {
+		requestHandler.setTimeFactor(factor.doubleValue());
+	}
 	public void setToolkitProperty(String propertyName,String value) {
 		//log.infof("%s.setToolkitProperty: %s: %s", TAG, propertyName, value);
 		requestHandler.setToolkitProperty(propertyName,value);
