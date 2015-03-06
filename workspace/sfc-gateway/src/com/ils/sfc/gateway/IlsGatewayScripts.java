@@ -129,12 +129,12 @@ public class IlsGatewayScripts {
 		return null;  // all is well...		
 	}
 
-	public static Object s88Get(PyChartScope chartScope, PyChartScope stepScope,
+	public static Object s88BasicGet(PyChartScope chartScope, PyChartScope stepScope,
 		String path, String scopeIdentifier) {
 		return ilsSfcGatewayHook.getScopeLocator().s88Get(chartScope, stepScope, path, scopeIdentifier);
 	}
 	
-	public static void s88Set(PyChartScope chartScope, PyChartScope stepScope, 
+	public static void s88BasicSet(PyChartScope chartScope, PyChartScope stepScope, 
 		String path, String scopeIdentifier, Object value) {
 		ilsSfcGatewayHook.getScopeLocator().s88Set(chartScope, stepScope, path, scopeIdentifier, value);
 	}
