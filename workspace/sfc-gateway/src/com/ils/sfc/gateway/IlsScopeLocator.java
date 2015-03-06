@@ -23,20 +23,20 @@ public class IlsScopeLocator implements ScopeLocator {
 	 * An alternate entry point that's more convenient for ILS code. */
 	public PyChartScope resolveScope(PyChartScope chartScope, 
 			PyChartScope stepScope, String scopeIdentifier) {
-		PyChartScope resolvedScope = null;
+		PyChartScope resolvedStepScope = null;
 		if(scopeIdentifier.equals(IlsSfcNames.LOCAL)) {
-			resolvedScope = stepScope;
+			resolvedStepScope = stepScope;
 		}
 		else if(scopeIdentifier.equals(IlsSfcNames.PREVIOUS)) {
-			resolvedScope = stepScope.getSubScope(ScopeContext.PREVIOUS);
+			resolvedStepScope = stepScope.getSubScope(ScopeContext.PREVIOUS);
 		}
 		else if(scopeIdentifier.equals(IlsSfcNames.SUPERIOR)) {
-			resolvedScope = (PyChartScope) chartScope.get(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY);
+			resolvedStepScope = (PyChartScope) chartScope.get(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY);
 		}
 		else {  // search for a named scope
 			while(chartScope != null) {
 				if(scopeIdentifier.equals(getEnclosingStepScope(chartScope))) {
-					resolvedScope = chartScope.getSubScope(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY);
+					resolvedStepScope = chartScope.getSubScope(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY);
 					break;
 				}
 				else {  // look up the hierarchy
@@ -44,14 +44,16 @@ public class IlsScopeLocator implements ScopeLocator {
 				}
 			}
 		}
-		if(resolvedScope != null) {
-			resolvedScope = resolvedScope.getSubScope(IlsSfcNames.RECIPE_DATA);
+		if(resolvedStepScope != null) {
+			return resolvedStepScope.getSubScope(IlsSfcNames.RECIPE_DATA);
 		}
-		return resolvedScope;
+		else {
+			throw new IllegalArgumentException("could not resolve scope " + scopeIdentifier);
+		}
 	}
 
 	/** Return the scope of the enclosing step. Return "global" if the chart scope
-	 *  has no parent. Returns null if no level is available.
+	 *  has no parent. Returns null if no particular level is available.
 	 */
 	String getEnclosingStepScope(PyChartScope chartScope) {
 		if(chartScope.get(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY) != null) {  // don't use containsKey !
