@@ -37,8 +37,6 @@ import com.inductiveautomation.ignition.designer.model.DesignerContext;
  */
 
 public class SetupDialog extends JDialog {
-	private static String TAG = "SetupDialog";
-	private final LoggerEx log;
 	protected static final Dimension COMBO_SIZE  = new Dimension(200,24);
 	private static final long serialVersionUID = 2002388376824434427L;
 	private final int DIALOG_HEIGHT = 220;
@@ -62,7 +60,6 @@ public class SetupDialog extends JDialog {
 		this.requestHandler = new IlsSfcRequestHandler();
 		setModal(true);
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.setPreferredSize(new Dimension(DIALOG_WIDTH,DIALOG_HEIGHT));
         initialize();  
 	}
@@ -138,7 +135,8 @@ public class SetupDialog extends JDialog {
 		box.setToolTipText(rb.getString(bundle));
 		String currentValue = requestHandler.getToolkitProperty(key);
 		if( (currentValue==null || currentValue.length()==0) && !isIsolation) currentValue = context.getDefaultDatasourceName();
-		box.setSelectedItem(currentValue);
+		if( currentValue!=null ) box.setSelectedItem(currentValue);
+		else box.setSelectedIndex(0);  // The blank
 		// If the current value wasn't in the list, then add it.
 		if( box.getSelectedIndex()<0 ) {
 			box.addItem(currentValue);

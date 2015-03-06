@@ -4,20 +4,12 @@
  */
 package com.ils.sfc.common;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
-import com.inductiveautomation.sfc.SFCModule;
 
 
 
@@ -48,7 +40,7 @@ public class IlsSfcRequestHandler {
 		List<String> names = new ArrayList<>();
 		try {
 			names = (List<String>)GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
-					SFCModule.MODULE_ID, "getDatasourceNames");
+					IlsSfcModule.MODULE_ID, "getDatasourceNames");
 		}
 		catch(Exception ge) {
 			log.infof("%s.getDatasourceNames: GatewayException (%s)",TAG,ge.getMessage());
@@ -67,7 +59,7 @@ public class IlsSfcRequestHandler {
 		//log.infof("%s.getToolkitProperty ... %s",TAG,propertyName);
 		try {
 			result = (String)GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
-					SFCModule.MODULE_ID, "getToolkitProperty",propertyName);
+					IlsSfcModule.MODULE_ID, "getToolkitProperty",propertyName);
 			log.tracef("%s.getToolkitProperty ... %s = %s",TAG,propertyName,result.toString());
 		}
 		catch(Exception ge) {
@@ -84,7 +76,7 @@ public class IlsSfcRequestHandler {
 		log.infof("%s.setTimeFactor ... %s",TAG,String.valueOf(factor));
 		try {
 			GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
-					SFCModule.MODULE_ID, "setTimeFactor",factor);
+					IlsSfcModule.MODULE_ID, "setTimeFactor",factor);
 		}
 		catch(Exception ge) {
 			log.infof("%s.setTimeFactor: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());
@@ -101,7 +93,7 @@ public class IlsSfcRequestHandler {
 		log.tracef("%s.setToolkitProperty ... %s=%s",TAG,propertyName,value);
 		try {
 			GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
-					SFCModule.MODULE_ID, "setToolkitProperty",propertyName,value);
+					IlsSfcModule.MODULE_ID, "setToolkitProperty",propertyName,value);
 		}
 		catch(Exception ge) {
 			log.infof("%s.setToolkitProperty: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());

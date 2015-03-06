@@ -1,7 +1,6 @@
 package com.ils.sfc.designer;
 
 
-import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.Box;
