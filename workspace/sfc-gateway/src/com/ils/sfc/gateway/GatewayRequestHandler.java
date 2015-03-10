@@ -91,6 +91,25 @@ public class GatewayRequestHandler {
 		return providerName;
 	}
 	/**
+	 * Get the clock rate factor. For non-isolation mode the value is fixed at 1.0.
+	 * This method is provided as a hook for test frameworks.
+	 * @param isIsolated. True if the system is currently in ISOLATION mode.
+	 * @return the amount to speed up or slow down the clock.
+	 */
+	public double getTimeFactor(boolean isIsolated) {
+		double factor = 1.0;
+		if( isIsolated ) {
+			String value = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_ISOLATION_TIME);
+			try {
+				factor = Double.parseDouble(value);
+			}
+			catch( NumberFormatException nfe) {
+				log.warnf("%s.getTimeFactor: stored value (%s), not a double. Using 1.0",TAG,value);
+			}
+		}
+		return factor;
+	}
+	/**
 	 * On a failure to find the property, an empty string is returned.
 	 */
 	public String getToolkitProperty(String propertyName) {

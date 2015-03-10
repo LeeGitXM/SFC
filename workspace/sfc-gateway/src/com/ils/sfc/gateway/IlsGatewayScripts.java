@@ -33,7 +33,7 @@ public class IlsGatewayScripts {
 	 * @param isIsolation true if this the chart is in an isolation (test) state.
 	 * @return name of the database for production or isolation mode, as appropriate.
 	 */
-	public String getDatabaseName(boolean isIsolation)  {
+	public static String getDatabaseName(boolean isIsolation)  {
 		String dbName = requestHandler.getDatabaseName(isIsolation);
 		return dbName;
 	}
@@ -44,7 +44,7 @@ public class IlsGatewayScripts {
 	 * @param isIsolation true if this the chart is in an isolation (test) state.
 	 * @return name of the tag provider for production or isolation mode, as appropriate.
 	 */
-	public String getProviderName(boolean isIsolation)  {
+	public static String getProviderName(boolean isIsolation)  {
 		String providerName = requestHandler.getProviderName(isIsolation);
 		return providerName;
 	}
@@ -141,6 +141,15 @@ public class IlsGatewayScripts {
 		
 	public static void setHook(IlsSfcGatewayHook hook) {
 		ilsSfcGatewayHook = hook;		
+	}
+	/**
+	 * Get the clock rate factor. For non-isolation mode the value is fixed at 1.0. 
+	 * @param isIsolated. True if the system is currently in ISOLATION mode.
+	 * @return the amount to speed up or slow down the clock. Values larger than
+	 *         1.0 imply that the system is to run faster.
+	 */
+	public static double setTimeFactor(boolean isIsolation) {
+		return requestHandler.getTimeFactor(isIsolation);
 	}
 	/**
 	 * Set a clock rate factor. This will change timing for isolation mode only.
