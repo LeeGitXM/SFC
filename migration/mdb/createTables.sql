@@ -55,6 +55,14 @@ CREATE TABLE ProcClassProperty(
 	Value text
 );
 
+-- Map properties of G2 blocks to properties of
+-- Ignition blocks for use within procedures.
+CREATE TABLE ProcPropertyMap(
+    G2Class text NOT NULL,
+    G2Property text NOT NULL,
+	Property  text NOT NULL,
+	Mode integer NOT NULL
+);
 -- These are values of symbolic constants
 CREATE TABLE ProcEnumerationMap(
    G2Name text      NOT NULL,

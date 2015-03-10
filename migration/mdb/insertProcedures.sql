@@ -19,3 +19,5 @@ insert into ProcedureMap values ('s88-post-message-to-queue','com.ils.sfc.python
 insert into ProcedureMap values ('s88-set','com.ils.sfc.python.ScopeData.set');
 insert into ProcedureMap values ('s88-set-data','ils.sfc.gateway.api.s88SetData');
 insert into ProcedureMap values ('s88-sum-array','com.ils.sfc.python.Array.sum');
+-- Synthesized
+insert into ProcedureMap values ('onStart','onStart');

@@ -1,7 +1,7 @@
 #!/bin/sh
 #  Use this version when debugging a single file.
 #
-SFC=~/Development/ils/src/sfc
+SFC=${GIT_REPO}/sfc
 PROJ="testunitprocedure2.proj"
 OUTFIL=$SFC/xml/$PROJ
 rm -f "$OUTFILE"

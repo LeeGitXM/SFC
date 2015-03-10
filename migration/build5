@@ -1,7 +1,7 @@
 #!/bin/sh
 #  Use this version when debugging a single file.
 #
-SFC=~/Development/ils/src/sfc
+SFC=${GIT_REPO}/sfc
 DIRIN="TestUnitProcedure5"
 PROJ="testunitprocedure5.proj"
 INDIR="$SFC/xml/ignition/$DIRIN"

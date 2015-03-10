@@ -127,7 +127,7 @@ public class SetupDialog extends JDialog {
 		box.removeAllItems();
 		box.addItem("");
 		for(String name:names) {
-			box.addItem(name);
+			if( name.length()>0 ) box.addItem(name);
 		}
 		box.setToolTipText(rb.getString(bundle));
 		String currentValue = requestHandler.getToolkitProperty(key);
