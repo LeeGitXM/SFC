@@ -7,7 +7,7 @@ SVN=${SVN_REPO}/EMChemicals/G2Artifacts/Sequential\ Control
 REPO=${GIT_REPO}/sfc/procs
 mkdir -p $REPO/g2/
 mkdir -p $REPO/python
-cp "${SVN}"/*/callbacks/*.txt $REPO/g2
+cp "${SVN}"/UnitTests/*/callbacks/*.txt $REPO/g2
 # Clean up the non-xml
 #find ${REPO}/g2 -type f ! -name "*.txt" -exec rm {}  \; 
 #rm -r `find ${REPO}/g2 -type d -name Diagrams`  2&>/dev/null
