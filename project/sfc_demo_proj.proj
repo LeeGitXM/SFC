@@ -7,15 +7,15 @@
   <build>2015021711</build>
   <beta>1</beta>
 </version>
-<timestamp>2015-03-05 14:29:59</timestamp>
+<timestamp>2015-03-06 14:50:38</timestamp>
 <id>4</id>
 <name>SFC_Demo</name>
 <title></title>
 <description></description>
 <enabled>true</enabled>
-<lastModified>1425590834802</lastModified>
+<lastModified>1425678192774</lastModified>
 <lastModifiedBy>admin</lastModifiedBy>
-<editCount>45</editCount>
+<editCount>79</editCount>
 <uuid>2b0637d3-9b9d-0b91-cc12-11e1335074fc</uuid>
 <resources>
 	<resource id='263' name='Input' module='fpmi' modver='' type='window' ver='0' dirty='false' editcount='0' parent='9c680335-f178-405c-af49-a97fcf02ba3e' oemlocked='false' scope='4' protected='false'>

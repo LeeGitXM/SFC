@@ -17,7 +17,7 @@ public class IlsClientScripts {
 	 * @param isIsolation true if this the chart is in an isolation (test) state.
 	 * @return name of the database for production or isolation mode, as appropriate.
 	 */
-	public String getDatabaseName(boolean isIsolation)  {
+	public static String getDatabaseName(boolean isIsolation)  {
 		String dbName = requestHandler.getDatabaseName(isIsolation);
 		return dbName;
 	}
@@ -28,9 +28,13 @@ public class IlsClientScripts {
 	 * @param isIsolation true if this the chart is in an isolation (test) state.
 	 * @return name of the tag provider for production or isolation mode, as appropriate.
 	 */
-	public String getProviderName(boolean isIsolation)  {
+	public static String getProviderName(boolean isIsolation)  {
 		String providerName = requestHandler.getProviderName(isIsolation);
 		return providerName;
+	}
+	
+	public static Double getTimeFactor(boolean isIsolation) {
+		return null;
 	}
 	
 	/**

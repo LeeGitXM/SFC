@@ -45,7 +45,7 @@ public class IlsChartObserver implements ChartObserver {
 			}
 		}
 		else {
-			logger.error("Error sending chart status msg: no sfc project names");
+			//logger.error("Error sending chart status msg: no sfc project names");
 		}
 		//System.out.println("chart " + chartId.toString() + " " + newChartState.toString());
 	}
