@@ -1,0 +1,7 @@
+#!/bin/sh
+#  Use this version when debugging a single file.
+#
+SFC=${GIT_REPO}/sfc
+FIL=EM-MISC-COLD-STICK-TASKS.txt
+DIR=${SFC}/procs/g2
+${SFC}/migration/translate $DIR/$FIL
