@@ -51,16 +51,19 @@ public class IlsSfcCommonUtils {
 	
 	/** Get the property's string value from the DOM, or return null if not found. */
 	public static String getPropertyAsString(Property<?> property, Element dom) {
-		NodeList list = dom.getElementsByTagName(property.getName());
+		String propertyName = property.getName();
+		NodeList list = dom.getElementsByTagName(propertyName);
 		if(list.getLength() == 0) {
-			return null;
+			// not an element--maybe it is an attribute; if not this will
+			// return an empty string
+			return dom.getAttribute(propertyName);
 		}
 		else if(list.getLength() == 1) {
 			Node node = list.item(0);
 			return node.getTextContent();
 		}
 		else {
-			logger.error("property " + property.getName() + " has > 1 element");
+			logger.error("property " + propertyName + " has > 1 element");
 			return null;
 		}
 	}
