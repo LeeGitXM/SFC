@@ -5,5 +5,5 @@ SFC=${GIT_REPO}/sfc
 DIRIN="TestDiagram"
 PROJ="testdiagram.proj"
 INDIR="$SFC/xml/ignition/$DIRIN"
-OUTFIL=$SFC/xml/$PROJ
+OUTFIL=$SFC/xml/ignition/$PROJ
 $SFC/migration/build-project "$INDIR" "$OUTFIL"

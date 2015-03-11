@@ -1,8 +1,9 @@
 -- Map G2 block properties into Ignition block properties
 -- Columns are: FactoryId, ignition propertyName, G2Property
 -- NOTE: name, factoryId, uuid are universal attributes and are not included here.
--- S88-UNIT-PROCEDURE
 insert into PropertyMap values ('enclosing-step','description','description');
+-- S88-UNIT-PROCEDURE
+insert into PropertyMap values ('com.ils.procedureStep','description','description');
 -- S88-TIME-DELAY
 insert into PropertyMap values ('com.ils.TimedDelayStep','auditLevel','');
 insert into PropertyMap values ('com.ils.TimedDelayStep','callback','callback');

@@ -4,7 +4,7 @@
 SFC=${GIT_REPO}/sfc
 DIRIN="TestUnitProcedure6"
 PROJ="testunitprocedure6.proj"
-INDIR="$SFC/xml/ignition/$DIRIN"
-OUTFIL=$SFC/xml/$PROJ
+INDIR="$SFC/xml/ignition/UnitTests/$DIRIN"
+OUTFIL=$SFC/xml/ignition/UnitTests/$PROJ
 rm -f "$OUTFILE"
 $SFC/migration/build-project "$INDIR" "$OUTFIL"
