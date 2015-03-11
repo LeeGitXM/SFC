@@ -56,7 +56,8 @@ public class IlsSfcCommonUtils {
 		if(list.getLength() == 0) {
 			// not an element--maybe it is an attribute; if not this will
 			// return an empty string
-			return dom.getAttribute(propertyName);
+			String value = dom.getAttribute(propertyName);
+			return value.length() > 0 ? value : null;
 		}
 		else if(list.getLength() == 1) {
 			Node node = list.item(0);

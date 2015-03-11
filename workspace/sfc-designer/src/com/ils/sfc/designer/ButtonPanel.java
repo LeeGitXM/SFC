@@ -8,7 +8,7 @@ import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -22,23 +22,22 @@ public class ButtonPanel extends JPanel {
 	private static Icon addIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/add.png"));
 	private static Icon removeIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/delete.png"));
 	private static Icon editIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/pencil.png"));
-	private static Icon execIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/pencil.png"));
+	private static Icon execIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/exclam.png"));
 	final JButton addButton = new JButton(addIcon);
 	final JButton editButton = new JButton(editIcon);
 	final JButton removeButton = new JButton(removeIcon);
 	final JButton acceptButton = new JButton(checkIcon);
 	final JButton execButton = new JButton(execIcon);
 	final JLabel comboLabel = new JLabel();
-	final JComboBox<String> comboBox = new JComboBox<String>();
+	final JCheckBox checkBox = new JCheckBox();
 	final Dimension buttonDimension = new Dimension(16,16);
 	public static final  java.awt.Color background = new java.awt.Color(238,238,238);	
 
 	public ButtonPanel(boolean showAccept, boolean showAdd, boolean showRemove, 
-		boolean showEdit, boolean showExec, boolean showCombo) {
+		boolean showEdit, boolean showExec, boolean showCheckBox) {
 		setBackground(background);
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		setPreferredSize(new Dimension(100,20));
-		comboBox.setEditable(false);
 		addButton.setToolTipText("Add");
 		editButton.setToolTipText("Edit");
 		removeButton.setToolTipText("Remove");
@@ -49,10 +48,9 @@ public class ButtonPanel extends JPanel {
 		if(showRemove) addButton(removeButton);
 		if(showEdit) addButton(editButton);
 		if(showExec) addButton(execButton);
-		if(showCombo) {
+		if(showCheckBox) {
 			add(Box.createRigidArea(new Dimension(50,10)));
-			add(comboLabel);
-			add(comboBox);
+			add(checkBox);
 		}
 	}
 	
@@ -92,8 +90,8 @@ public class ButtonPanel extends JPanel {
 		return comboLabel;
 	}
 
-	public JComboBox<String> getComboBox() {
-		return comboBox;
+	public JCheckBox getCheckBox() {
+		return checkBox;
 	}
 
 }
