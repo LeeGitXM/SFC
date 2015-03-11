@@ -6,4 +6,5 @@ DIRIN="TestUnitProcedure1"
 PROJ="testunitprocedure1.proj"
 INDIR="$SFC/xml/ignition/UnitTests/$DIRIN"
 OUTFIL=$SFC/xml/ignition/UnitTests/$PROJ
+rm -f $OUTFIL
 $SFC/migration/build-project "$INDIR" "$OUTFIL"

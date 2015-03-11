@@ -3,8 +3,8 @@
 #
 SFC=${GIT_REPO}/sfc
 START="Test-Unit-Procedure-6"
-INDIR="$SFC/xml/g2"
-OUTDIR=$SFC/xml/ignition
+INDIR="$SFC/xml/g2/UnitTests"
+OUTDIR=$SFC/xml/ignition/UnitTests
 mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
 $SFC/migration/convert "$INDIR" "$OUTDIR" "$START"
