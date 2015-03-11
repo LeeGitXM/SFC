@@ -33,8 +33,8 @@ public class IlsClientScripts {
 		return providerName;
 	}
 	
-	public static Double getTimeFactor(boolean isIsolation) {
-		return null;
+	public static double getTimeFactor(boolean isIsolation) {
+		return requestHandler.getTimeFactor(isIsolation);
 	}
 	
 	/**

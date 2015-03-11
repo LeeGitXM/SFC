@@ -89,6 +89,27 @@ public class IlsSfcRequestHandler {
 		}
 		return result;
 	}
+
+	/**
+	 * Get the clock rate factor. For non-isolation mode the value is fixed at 1.0.
+	 * This method is provided as a hook for test frameworks.
+	 * @param isIsolated. True if the system is currently in ISOLATION mode.
+	 * @return the amount to speed up or slow down the clock.
+	 */
+	public double getTimeFactor(boolean isIsolated) {
+		double factor = 1.0;
+		if( isIsolated ) {
+			String value = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_ISOLATION_TIME);
+			try {
+				factor = Double.parseDouble(value);
+			}
+			catch( NumberFormatException nfe) {
+				log.warnf("%s.getTimeFactor: stored value (%s), not a double. Using 1.0",TAG,value);
+			}
+		}
+		return factor;
+	}
+
 	/**
 	 * Set a clock rate factor for isolation mode only. We set in the BLT module
 	 * as well. If that module is not present, then we simply ignore the exception.

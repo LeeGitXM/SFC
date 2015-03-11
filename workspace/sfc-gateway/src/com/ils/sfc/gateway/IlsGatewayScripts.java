@@ -148,7 +148,7 @@ public class IlsGatewayScripts {
 	 * @return the amount to speed up or slow down the clock. Values larger than
 	 *         1.0 imply that the system is to run faster.
 	 */
-	public static double setTimeFactor(boolean isIsolation) {
+	public static double getTimeFactor(boolean isIsolation) {
 		return requestHandler.getTimeFactor(isIsolation);
 	}
 	/**
