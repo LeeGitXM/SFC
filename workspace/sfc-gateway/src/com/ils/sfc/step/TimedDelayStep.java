@@ -19,4 +19,11 @@ public class TimedDelayStep extends IlsAbstractChartStep implements TimedDelaySt
 		exec(PythonCall.TIMED_DELAY);	
 	}
 
+	@Override
+	public void pauseStep() {
+	}
+
+	@Override
+	public void resumeStep() {
+	}
 }

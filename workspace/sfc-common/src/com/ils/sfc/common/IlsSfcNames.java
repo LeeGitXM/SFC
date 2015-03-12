@@ -151,11 +151,12 @@ public class IlsSfcNames {
 	public static final String PHASE = "phase";
 
 	
-	// frequently used units
-	// These must correspond to the actual unit names in the DB:
-	public static final String SECOND= "SEC";
-	public static final String MINUTE = "MIN";
-	public static final String TIME_UNIT_TYPE = "TIME";
+	// symbols for a TimeDelayStep unit choice
+	// these have nothing to do with unit conversion, they
+	// are unique to the TimeDelayStep
+	public static final String DELAY_UNIT_SECOND = "SEC";
+	public static final String DELAY_UNIT_MINUTE = "MIN";
+	public static final String DELAY_UNIT_HOUR = "HR";
 
 	// other
 	public static final String MESSAGE_ID = "messageId";
@@ -167,6 +168,7 @@ public class IlsSfcNames {
 	public static final String[] RECIPE_STATIC_STRATEGY_CHOICES = {STATIC, RECIPE};
 	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, PREVIOUS, SUPERIOR,
 		GLOBAL, OPERATION, PHASE};
+	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
 	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK};
 	public static final String[] RESULTS_MODE_CHOICES = {UPDATE, UPDATE_OR_CREATE};
 	public static final String[] FETCH_MODE_CHOICES = {SINGLE, MULTIPLE};
