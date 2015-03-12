@@ -149,7 +149,7 @@ public class RecipeDataTranslator {
 		}
 		return restoreHierarchy(flatRecipeObjects);
 	}
-	
+		
 	/** Set a property by name. Will throw IllegalArgumentException if the property is not present,
 	 *  unless this is a Structure in which case it will be created.  
 	 * @throws org.apache.wicket.ajax.json.JSONException */
@@ -157,10 +157,7 @@ public class RecipeDataTranslator {
 	public void setProperty(Data data, String name, String strValue) throws JSONException, org.apache.wicket.ajax.json.JSONException {		
 		IlsProperty<?> property = data.getProperty(name);
 		
-		if(property == null) {
-			errors.add("no property named " + name + " in " + data.getClass().getSimpleName());
-		}
-		else if(data instanceof RecipeList && property.equals(IlsProperty.VALUE)) {
+		if(data instanceof RecipeList && property.equals(IlsProperty.VALUE)) {
 			data.setValue(property, parseListValue(strValue));
 		}
 		else if(data instanceof Matrix && property.equals(IlsProperty.VALUE)) {
@@ -203,8 +200,10 @@ public class RecipeDataTranslator {
 		
 		// a special case: if it is a simple value with a sequence value,
 		// make it a List type:
+		boolean listFromValue = false;
 		if(aClass == Value.class && IlsSfcNames.SEQUENCE.equals(valueType)) {
 			aClass = RecipeList.class;
+			listFromValue = true;
 		}
 		
 		// Create the instance and populate the properties
@@ -225,7 +224,15 @@ public class RecipeDataTranslator {
 					errors.add("no translation for attribute " + g2Key + " in " + g2ClassName);
 				}
 				else {
-					setProperty(data, igKey, strValue.trim());
+					if(data.hasProperty(igKey)) {
+						setProperty(data, igKey, strValue.trim());
+					}
+					else if(!listFromValue){
+						// expected property not found
+						// if the list is from a Value, we suppress this as
+						// the list will not have several Value properties
+						errors.add("no property named " + igKey + " in " + data.getClass().getSimpleName());
+					}
 					//System.out.println(igKey + ": " + strValue);
 				}
 			}

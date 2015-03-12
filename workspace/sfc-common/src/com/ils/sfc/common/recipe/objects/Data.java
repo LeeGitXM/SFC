@@ -88,6 +88,10 @@ public abstract class Data {
 		return properties.get(property);
 	}
 
+	public boolean hasProperty(String propName) {
+		return getProperty(propName) != null;
+	}
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setValue(Property<?> property, Object value) {
 		if(value == null) {
