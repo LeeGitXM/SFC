@@ -1,0 +1,15 @@
+
+#!/bin/sh
+#  Analyze the project of a specialized test case
+#  unit tests (1-7)
+#
+if [ $# -lt 1 ]
+then
+    echo "USAGE: gentest <testno>"
+	exit 2
+fi
+TESTNO=$1
+SFC=${GIT_REPO}/sfc
+PROJ="testunitprocedure${TESTNO}.proj"
+OUTFIL=$SFC/xml/ignition/UnitTests/$PROJ
+$SFC/migration/debug-project "$OUTFIL"

@@ -50,7 +50,7 @@ import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
 import com.ils.sfc.migration.map.PropertyValueMapper;
-import com.ils.sfc.migration.translation.ConnectionMaker;
+import com.ils.sfc.migration.translation.ConnectionRouter;
 import com.ils.sfc.migration.translation.GridPoint;
 import com.ils.sfc.migration.translation.StepLayoutManager;
 import com.ils.sfc.migration.translation.StepTranslator;
@@ -160,6 +160,7 @@ public class Converter {
 			log.errorf("%s: Target output exists, but is not a directory (%s)",TAG,dir.toString());
 		}
 		// We don't know the exact name of the output yet, so we make sure that the entire directory is clear
+		/*
 		else {
 			// Look in the directory for any non-hidden files
 			File[] files = dir.toFile().listFiles();
@@ -172,6 +173,7 @@ public class Converter {
 				index++;
 			}
 		}
+		*/
 	}
 	/**
 	 * Step 3: Traverse the directory designated as input and create a 
@@ -295,8 +297,8 @@ public class Converter {
 				root.appendChild(e);
 			}
 			// The layout does NOT create connections. Create them here.
-			ConnectionMaker cm = new ConnectionMaker(blockMap,layout.getConnectionMap(),gridMap);
-			List<Element> linkElements = cm.getConnections(chart);
+			ConnectionRouter router = new ConnectionRouter(layout.getConnectionMap(),gridMap);
+			List<Element> linkElements = router.createLinks(chart);
 			for(Element e:linkElements) {
 				root.appendChild(e);
 			}
@@ -310,9 +312,9 @@ public class Converter {
 	 */
 	private void updateChartForSingletonStep(Document chart,Element g2block) {
 		Element root = chart.getDocumentElement();   // "sfc"
-		root.appendChild(createBeginStep(chart,UUID.randomUUID(),3,2));
-		root.appendChild(stepTranslator.translate(chart,g2block,3,3));
-		root.appendChild(createEndStep(chart,UUID.randomUUID(),3,4));
+		root.appendChild(createBeginStep(chart,UUID.randomUUID(),1,1));
+		root.appendChild(stepTranslator.translate(chart,g2block,1,2));
+		root.appendChild(createEndStep(chart,UUID.randomUUID(),1,3));
 	}
 	
 	/**

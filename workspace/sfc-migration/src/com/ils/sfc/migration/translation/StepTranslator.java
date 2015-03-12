@@ -3,18 +3,7 @@
  */
 package com.ils.sfc.migration.translation;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.UUID;
-
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import org.json.JSONException;
 import org.w3c.dom.Document;
@@ -164,7 +153,7 @@ public class StepTranslator {
 
 			// Some debug stuff for errors--might want to log it...
 			for(String errMsg: rdTranslator.getErrors()) {
-				log.errorf("%s.makeRecipeDataElement: Parse error (%s)",TAG,errMsg);
+				log.errorf("%s.makeRecipeDataElement: Parse error in (%s)",TAG,errMsg);
 			}
 		} 
 		catch (JSONException je) {

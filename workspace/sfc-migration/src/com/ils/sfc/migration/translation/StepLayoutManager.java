@@ -23,7 +23,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 public class StepLayoutManager {
 	private final static String TAG = "StepLayoutManager";
 	private static int UNSET = -8888;
-	private  final LoggerEx log = LogUtil.getLogger(StepLayoutManager.class.getPackage().getName());
+	private final LoggerEx log = LogUtil.getLogger(StepLayoutManager.class.getPackage().getName());
 	private final Map<String,Element> blockMap;             // block by UUID
 	private final Map<String,ConnectionHub> connectionMap;  // Incoming/outgoing connections by UUID
 	private final Map<String,GridPoint> gridMap;            // Grid by step UUID
@@ -131,7 +131,7 @@ public class StepLayoutManager {
 			for(String input:hub.getConnectionsFrom()) {
 				if( !input.equals(source) ) {
 					x = createAnchors(source,uuid,x,y-1);
-					y+=2;
+					y+=1;  
 					break;
 				}
 			}
@@ -153,7 +153,7 @@ public class StepLayoutManager {
 		
 		List<String> nextBlocks = hub.getConnectionsTo();
 		if( nextBlocks.size() < 2 ) y = y+1;
-		else                       y = y+2;  // Allow for connections
+		else                        y = y+2;  // Allow for connections
 		int xpos = x - (nextBlocks.size()-1);
 		for( String childuuid:nextBlocks) {
 			positionNode(uuid,childuuid,xpos,y);

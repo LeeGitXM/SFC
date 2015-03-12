@@ -1,9 +1,0 @@
-#!/bin/sh
-#  Use this version when debugging a single file.
-#
-SFC=${GIT_REPO}/sfc
-DIRIN="TestDiagram"
-PROJ="testdiagram.proj"
-INDIR="$SFC/xml/ignition/$DIRIN"
-OUTFIL=$SFC/xml/ignition/$PROJ
-$SFC/migration/build-project "$INDIR" "$OUTFIL"

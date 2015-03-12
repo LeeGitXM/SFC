@@ -1,8 +1,0 @@
-#!/bin/sh
-#  Use this version when debugging a single file.
-#
-SFC=${GIT_REPO}/sfc
-PROJ="testdiagram.proj"
-OUTFIL=$SFC/xml/$PROJ
-rm -f "$OUTFILE"
-$SFC/migration/debug-project "$OUTFIL"

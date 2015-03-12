@@ -15,10 +15,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
-import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Group;
-import com.ils.sfc.common.recipe.objects.Value;
 import com.ils.sfc.designer.ButtonPanel;
 import com.ils.sfc.designer.EditorPane;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
