@@ -44,6 +44,8 @@ public class ConnectionRouter {
 	
 	/** 
 	 * Traverse the layout grid, adding connections where needed.
+	 * The hub contains information about parallel blocks. These
+	 * require special handling.
 	 */
 	private void createConnections() {
 		for(String blockuuid:connectionMap.keySet()) {
@@ -51,18 +53,17 @@ public class ConnectionRouter {
 			ConnectionHub hub = connectionMap.get(blockuuid);
 			for(String destuuid:hub.getConnectionsTo()) {
 				GridPoint destination = gridMap.get(destuuid);
-				route(source,destination);
+				route(source,destination,hub,connectionMap.get(destuuid));
 			}
 		}
 	}
 	
 	/** 
 	 * Convert the connections to elements of the chart.
-	 * @return a list of connections
+	 * Append to the proper parent element.
 	 */
-	public List<Element> createLinks(Document chart) {
-		List<Element> links = linkArray.createLinkElements(chart);
-		return links;
+	public void createLinks(Document chart) {
+		linkArray.createLinkElementsInDocument(chart);
 	}
 	 
 	// 
@@ -86,7 +87,7 @@ public class ConnectionRouter {
 	 * Create links as needed between the source and destination. For 
 	 * horizontal routing create links one step below the source.
 	 */
-	private void route(GridPoint source,GridPoint destination) {
+	private void route(GridPoint source,GridPoint destination,ConnectionHub sourceHub,ConnectionHub destinationHub) {
 		if( !isAdjacent(source,destination)) {
 			Link link = null;
 			if( source.x==destination.x) {
@@ -95,7 +96,7 @@ public class ConnectionRouter {
 				int y = source.y;
 				y++;
 				while(y<destination.y) {
-					link = linkArray.get(x, y);
+					link = linkArray.get(sourceHub.getParent(),x, y);
 					link.setUp(true);
 					link.setDown(true);
 					y++;
@@ -107,25 +108,25 @@ public class ConnectionRouter {
 				int y = source.y;
 				y++;
 				// Create link directly below.
-				link = linkArray.get(x, y);
+				link = linkArray.get(sourceHub.getParent(),x, y);
 				link.setUp(true);
 				link.setLeft(true);
 				x--;
 				// Draw horizontally left
 				while(x > destination.x) {
-					link = linkArray.get(x,y);
+					link = linkArray.get(sourceHub.getParent(),x,y);
 					link.setLeft(true);
 					link.setRight(true);
 					x--;
 				}
 				// Draw corner down
-				link = linkArray.get(x,y);
+				link = linkArray.get(sourceHub.getParent(),x,y);
 				link.setRight(true);
 				link.setDown(true);
 				// Continue down to destination
 				y++;
 				while(y<destination.y) {
-					link = linkArray.get(x,y);
+					link = linkArray.get(sourceHub.getParent(),x,y);
 					link.setUp(true);
 					link.setDown(true);
 					y++;
@@ -137,25 +138,25 @@ public class ConnectionRouter {
 				int y = source.y;
 				y++;
 				// Create link directly below.
-				link = linkArray.get(x,y);
+				link = linkArray.get(sourceHub.getParent(),x,y);
 				link.setUp(true);
 				link.setRight(true);
 				x++;
 				// Draw horizontally right
 				while(x < destination.x) {
-					link = linkArray.get(x,y);
+					link = linkArray.get(sourceHub.getParent(),x,y);
 					link.setLeft(true);
 					link.setRight(true);
 					x++;
 				}
 				// Draw corner down
-				link = linkArray.get(x,y);
+				link = linkArray.get(sourceHub.getParent(),x,y);
 				link.setLeft(true);
 				link.setDown(true);
 				// Continue down to destination
 				y++;
 				while(y<destination.y) {
-					link = linkArray.get(x, y);
+					link = linkArray.get(sourceHub.getParent(),x, y);
 					link.setUp(true);
 					link.setDown(true);
 					y++;
@@ -202,30 +203,31 @@ public class ConnectionRouter {
 		}
 		
 		/*
-		 * The getter guarantees that the link exists. 
+		 * The getter guarantees that the link exists.
+		 * The reason for the parent is that the link definition
+		 * needs it. Different links get added to different parent elements. 
 		 */
-		public Link get(int x,int y) {
+		public Link get(Element parent,int x,int y) {
 			Link link = array[x][y];
 			if( link==null ) {
-				link = new Link(x,y);
+				link = new Link(parent,x,y);
 				array[x][y] = link;
 			}
 			return link;
 		}
 		/*
 		 * Convert all non-null links to XML elements
-		 * and add to the supplied document
+		 * and add to the parent element
 		 */
-		List<Element> createLinkElements(Document chart) {
-			List<Element> links = new ArrayList<>();
+		public void createLinkElementsInDocument(Document chart) {
 			for(int y=0;y<=maxy;y++) {
 				for( int x=0; x<=maxx; x++) {
 					Link link = array[x][y];
 					if( link==null ) continue;
-					links.add(link.toElement(chart));
+					Element e = link.toElement(chart);
+					link.getParent().appendChild(e);
 				}
 			}
-			return links;
 		}
 	}
 	
@@ -236,8 +238,10 @@ public class ConnectionRouter {
 		private boolean left = false;
 		private final int x;
 		private final int y;
+		private final Element parent;
 
-		public Link(int xpos,int ypos) {
+		public Link(Element p,int xpos,int ypos) {
+			this.parent = p;
 			this.x = xpos;
 			this.y = ypos;
 		}
@@ -246,6 +250,7 @@ public class ConnectionRouter {
 		public void setDown(boolean down) {this.down = down;}
 		public void setRight(boolean right) {this.right = right;}
 		public void setLeft(boolean left) {this.left = left;}
+		public Element getParent() { return this.parent; }
 		
 		public Element toElement(Document doc) {
 			Element link = doc.createElement("link");

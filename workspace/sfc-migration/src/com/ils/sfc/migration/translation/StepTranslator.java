@@ -8,7 +8,6 @@ import java.util.UUID;
 import org.json.JSONException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.migration.Converter;
@@ -62,6 +61,12 @@ public class StepTranslator {
 			step = chart.createElement("transition");
 			TransitionTranslator transTrans = new TransitionTranslator(block);
 			transTrans.updateTransition(chart,step);
+		}
+		// Note: In the G2 export we find parallel blocks for both the start and end.
+		//       In Ignition, the parallel element encapsulates its children
+		//       During migration, the parallel element is created by the layout manager
+		else if( isParallel ) {
+			return null;
 		}
 		else {
 			step = chart.createElement("step");

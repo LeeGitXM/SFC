@@ -69,7 +69,7 @@ public class StepLayoutManager {
 			log.infof("%s.analyze: block and gridpoints for %s(%s)",TAG,block.getAttribute("name"),uuid);
 			ConnectionHub hub = connectionMap.get(uuid);
 			if( hub==null) {
-				hub = new ConnectionHub();
+				hub = new ConnectionHub(chart.getDocumentElement());
 				connectionMap.put(uuid,hub);
 			}
 			NodeList connections = block.getElementsByTagName("connectedTo");
@@ -81,7 +81,7 @@ public class StepLayoutManager {
 				hub.addConnectionTo(cxn);
 				ConnectionHub destinationHub = connectionMap.get(cxn);
 				if( destinationHub==null) {
-					destinationHub = new ConnectionHub();
+					destinationHub = new ConnectionHub(chart.getDocumentElement());
 					connectionMap.put(cxn,destinationHub);
 				}
 				destinationHub.addConnectionFrom(uuid);
@@ -187,7 +187,7 @@ public class StepLayoutManager {
 			anchors.add(jump);
 			GridPoint gp = new GridPoint(UNSET,UNSET);
 			gridMap.put(jumpuuid,gp);
-			ConnectionHub jumpHub = new ConnectionHub();
+			ConnectionHub jumpHub = new ConnectionHub(chart.getDocumentElement());
 			jumpHub.getConnectionsFrom().add(uuid);
 			connectionMap.put(jumpuuid,jumpHub);
 		}
@@ -197,7 +197,7 @@ public class StepLayoutManager {
 		from.add(anchoruuid);
 		Element anchor = createAnchor(chart,anchoruuid,anchorCount);
 		anchors.add(anchor);
-		ConnectionHub anchorHub = new ConnectionHub();
+		ConnectionHub anchorHub = new ConnectionHub(chart.getDocumentElement());
 		anchorHub.getConnectionsTo().add(uuid);
 		connectionMap.put(anchoruuid,anchorHub);
 		// We are given the y of the source block - the most compact location

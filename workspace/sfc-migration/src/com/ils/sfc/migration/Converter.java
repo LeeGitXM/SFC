@@ -50,6 +50,7 @@ import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
 import com.ils.sfc.migration.map.PropertyValueMapper;
+import com.ils.sfc.migration.translation.ConnectionHub;
 import com.ils.sfc.migration.translation.ConnectionRouter;
 import com.ils.sfc.migration.translation.GridPoint;
 import com.ils.sfc.migration.translation.StepLayoutManager;
@@ -289,7 +290,12 @@ public class Converter {
 				//g2block element has child "block", plus one or more recipes
 				// --- null returns apply to anchors and jumps, ignore
 				Element g2block = blockMap.get(uuid);
-				if( g2block!=null ) root.appendChild(stepTranslator.translate(chart,g2block,gp.x,gp.y));
+				ConnectionHub hub = layout.getConnectionMap().get(uuid);
+				if( g2block!=null && hub!=null ) {
+					Element child = stepTranslator.translate(chart,g2block,gp.x,gp.y);
+					// Parallel blocks are created by the layout manager and will be null here.
+					if( child!=null ) hub.getParent().appendChild(child);
+				}
 			}
 			// The layout creates anchors and jumps
 			List<Element> anchorElements = layout.getAnchors();   // Includes jumps
@@ -298,11 +304,8 @@ public class Converter {
 			}
 			// The layout does NOT create connections. Create them here.
 			ConnectionRouter router = new ConnectionRouter(layout.getConnectionMap(),gridMap);
-			List<Element> linkElements = router.createLinks(chart);
-			for(Element e:linkElements) {
-				root.appendChild(e);
-			}
-			root.setAttribute("zoom", String.valueOf(layout.getZoom()));
+			router.createLinks(chart);
+			chart.getDocumentElement().setAttribute("zoom", String.valueOf(layout.getZoom()));
 		}
 	}
 	/**
