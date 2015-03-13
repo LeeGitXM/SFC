@@ -47,7 +47,8 @@ public class RecipeDataTranslator {
 	public static final String SYMBOL_PREFIX = "the symbol ";
 	public static final String STRUCTURE_PREFIX = "structure (";
 
-	private static Map<String,String> g2ToIgName = new HashMap<String,String>();
+	// Use map for migration
+	public static Map<String,String> g2ToIgName = new HashMap<String,String>();
 	static {
 		g2ToIgName.put("advice", IlsSfcNames.ADVICE);
 		g2ToIgName.put("array-key", IlsSfcNames.ARRAY_KEY);

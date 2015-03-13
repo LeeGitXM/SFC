@@ -45,10 +45,12 @@ public class StepTranslator {
 		String factoryId = "action-step";     // Generic action step as default
 		boolean isEncapsulation = false;
 		boolean isTransition = false;
+		boolean isParallel = false;
 		if( claz!=null ) {
 			String fid = delegate.getClassMapper().factoryIdForClass(claz);
 			isEncapsulation= delegate.getClassMapper().isEncapsulation(claz);
 			isTransition= delegate.getClassMapper().isTransition(claz);
+			isParallel= delegate.getClassMapper().isParallel(claz);
 			if( fid!=null) {
 				factoryId = fid;
 			}
@@ -58,9 +60,8 @@ public class StepTranslator {
 		}
 		if( isTransition ) {
 			step = chart.createElement("transition");
-			String expression = TransitionTranslator.createTransitionExpression(block);
-			Node textNode = chart.createTextNode(expression);
-			step.appendChild(textNode);
+			TransitionTranslator transTrans = new TransitionTranslator(block);
+			transTrans.updateTransition(chart,step);
 		}
 		else {
 			step = chart.createElement("step");

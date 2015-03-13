@@ -6,7 +6,8 @@ package com.ils.sfc.migration.translation;
 import java.util.ArrayList;
 import java.util.List;
 /**
- * Used to keep track of step connectivity.
+ * Used to keep track of step connectivity. 
+ * Note: any given step can be enclosed by at most one parallel structure.
  */
 public class ConnectionHub {
 	private final List<String> connectedTo;

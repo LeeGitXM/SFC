@@ -42,3 +42,4 @@ insert into ClassMap values ('S88-UNIT-PROCEDURE','com.ils.procedureStep','enclo
 insert into ClassMap values ('S88-OPERATION','com.ils.operationStep','enclosure');
 insert into ClassMap values ('S88-PHASE','com.ils.phaseStep','enclosure');
 insert into ClassMap values ('S88-CONDITIONAL-TRANSITION','transition','transition');
+insert into ClassMap values ('S88-PARALLEL-TRANSITION','parallel','parallel');

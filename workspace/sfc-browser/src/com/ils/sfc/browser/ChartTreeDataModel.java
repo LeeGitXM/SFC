@@ -43,6 +43,7 @@ public class ChartTreeDataModel {
 	
 	private final Map<Integer,Integer> lineage;       // Find parent given child
 	private final Map<String,Integer>  rowLookup;     // Find node row by path
+	private final Map<Integer,List<String>> stepMap;       // For checking step for parent
 	private final Map<String,FolderHolder> folderHierarchy;
 	private final List<EnclosingStep> enclosingSteps;
 	
@@ -56,6 +57,7 @@ public class ChartTreeDataModel {
 		lineage = new HashMap<>();
 		folderHierarchy = new HashMap<>();
 		rowLookup = new HashMap<>();
+		stepMap = new HashMap<>();
 		nodes = new Table();
 		nodes.addColumn(BrowserConstants.CXNS, int.class);        // Count of linked connections 
 		nodes.addColumn(BrowserConstants.STATUS, int.class);      // Health of this node
@@ -105,7 +107,7 @@ public class ChartTreeDataModel {
 						lineage.put(new Integer(row), new Integer(ROOT_ROW));
 						nodes.setString(row, BrowserConstants.PARENT, res.getParentUuid().toString());
 						// Check steps in chart for being enclosures
-						handleEnclosingSteps(row,null,definition.getBeginElement().getNextElements());
+						handleEnclosingSteps(new Integer(row),null,definition.getBeginElement().getNextElements());
 					}
 					else {
 						log.warnf("%s.initialize: Chart %s has compilation errors", TAG,res.getName());
@@ -215,9 +217,20 @@ public class ChartTreeDataModel {
 		nodes.setLong(row,BrowserConstants.RESOURCE,-1);
 	}
 	
-	// Check and see if the referenced element is an enclosing step
-	// @param parentRow the row in the nodes table corresponding to the enclosing block
-	private void handleEnclosingSteps(int parentRow,String stepName,List<ElementDefinition> steps) {
+	// Check and see if the referenced element is an enclosing step. If we've already seen
+	// the step then ignore -- we're in a loop.
+	// @param parentRow the row in the nodes table corresponding to the enclosing block. Guaranteed 
+	//                  to be non-null
+	private void handleEnclosingSteps(Integer parentRow,String stepName,List<ElementDefinition> steps) {
+		List<String> stepNames = stepMap.get(parentRow);
+		if( stepNames==null) {
+			stepNames = new ArrayList<>();
+			stepMap.put(parentRow, stepNames);
+		}
+		else {
+			if( stepName.contains(stepName)) return;
+			else stepNames.add(stepName);
+		}
 		for( ElementDefinition step:steps) {
 			if( step instanceof StepDefinition ) {
 				StepDefinition stepDef = (StepDefinition)step;
@@ -228,7 +241,7 @@ public class ChartTreeDataModel {
 					// Create the step-that-is-an-enclosure node
 					// Link it to the base and create an EnclosingStep reference.
 					int newRow = addNodeTableRow(name,BrowserConstants.NO_RESOURCE);
-					addEdgeTableRow(parentRow,newRow);
+					addEdgeTableRow(parentRow.intValue(),newRow);
 					lineage.put(new Integer(newRow), new Integer(parentRow));
 					EnclosingStep es = new EnclosingStep(parentRow,newRow,name,path);
 					enclosingSteps.add(es);
@@ -241,6 +254,7 @@ public class ChartTreeDataModel {
 					handleEnclosingSteps(parentRow,stepName,ed.getNextElements());
 				}
 			}
+			// Careful here -- it is perfectly legal for the chart itself to loop
 			handleEnclosingSteps(parentRow,stepName,step.getNextElements());
 		}
 	}

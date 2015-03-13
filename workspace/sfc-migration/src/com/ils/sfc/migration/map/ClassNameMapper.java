@@ -88,6 +88,19 @@ public class ClassNameMapper {
 	 * @param className the G2 class name
 	 * @return whether or not this class is a transition
 	 */
+	public boolean isParallel(String className) {
+		boolean flag = false;  // default
+		String result = typeMap.get(className);
+		if( result!=null ) {
+			flag = result.equalsIgnoreCase("parallel");
+		}
+		return flag;
+	}
+	/**
+	 * 
+	 * @param className the G2 class name
+	 * @return whether or not this class is a transition
+	 */
 	public boolean isTransition(String className) {
 		boolean flag = false;  // default
 		String result = typeMap.get(className);
@@ -96,5 +109,4 @@ public class ClassNameMapper {
 		}
 		return flag;
 	}
-	
 }
