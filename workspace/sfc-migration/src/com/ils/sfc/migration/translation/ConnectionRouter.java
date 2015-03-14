@@ -3,9 +3,6 @@
  */
 package com.ils.sfc.migration.translation;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,6 +16,10 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
  * logical connections for steps, insert "physical" connections
  * where needed. A "connection" occupies one spot on the grid.
  * It has elements <up>,<down>,<left>,<right>
+ * 
+ * The version of the grid map that we have here is absolute. For links
+ * that are inside parallel zones, we need to change the locations to
+ * be relative to the zone start point.
  */
 public class ConnectionRouter {
 	private final static String TAG = "ConnectionCreator";
@@ -34,9 +35,9 @@ public class ConnectionRouter {
 	 * @param connections
 	 * @param gridPoints
 	 */
-	public ConnectionRouter(Map<String,ConnectionHub> connections,Map<String,GridPoint> gridPoints) {
-		this.connectionMap = connections;
-		this.gridMap = gridPoints;
+	public ConnectionRouter(StepLayoutManager layout) {
+		this.connectionMap = layout.getConnectionMap();
+		this.gridMap = layout.getGridMap();
 		this.gridSize = computeGridDimension(gridMap);
 		this.linkArray = new LinkArray(gridSize);
 		createConnections();
@@ -88,10 +89,47 @@ public class ConnectionRouter {
 	 * horizontal routing create links one step below the source.
 	 */
 	private void route(GridPoint source,GridPoint destination,ConnectionHub sourceHub,ConnectionHub destinationHub) {
-		if( !isAdjacent(source,destination)) {
+		if( !isAdjacent(source,destination,sourceHub.isParallelBlock()||destinationHub.isParallelBlock())) {
 			Link link = null;
-			if( source.x==destination.x) {
+			if( sourceHub!=null && sourceHub.isParallelBlock() && destinationHub.isParallelBlock()) {
+				// For a straight shot between two parallel bars, take the far-right lane
+				ParallelArea pa = sourceHub.getParallelArea();
+				int x = source.x + pa.x2 - pa.x1 -1 ;
+				int y = source.y;
+				y++;
+				while(y<destination.y) {
+					link = linkArray.get(sourceHub.getParent(),x, y);
+					link.setUp(true);
+					link.setDown(true);
+					y++;
+				}
+			}
+			else if( source.x==destination.x) {
 				// Route is directly below
+				int x = source.x;
+				int y = source.y;
+				y++;
+				while(y<destination.y) {
+					link = linkArray.get(sourceHub.getParent(),x, y);
+					link.setUp(true);
+					link.setDown(true);
+					y++;
+				}
+			}
+			else if( sourceHub!=null && sourceHub.isParallelBlock() ) {
+				// Route directly down from source
+				int x = destination.x;
+				int y = source.y;
+				y++;
+				while(y<destination.y) {
+					link = linkArray.get(sourceHub.getParent(),x, y);
+					link.setUp(true);
+					link.setDown(true);
+					y++;
+				}
+			}
+			else if( destinationHub.isParallelBlock() ) {
+				// Route directly down to destination
 				int x = source.x;
 				int y = source.y;
 				y++;
@@ -169,7 +207,7 @@ public class ConnectionRouter {
 	 * @param a the source
 	 * @param b the destination
 	 */
-	boolean isAdjacent(GridPoint a,GridPoint b) {
+	private boolean isAdjacent(GridPoint a,GridPoint b, boolean isParallel) {
 		boolean adjacent = false;
 		if( a.x==b.x && a.y==b.y ) {
 			log.warnf("%s.isAdjacent: attempt to link two steps at same address (%d,%d)",TAG,a.x,a.y);
@@ -180,6 +218,10 @@ public class ConnectionRouter {
 			adjacent = true;  // To ignore
 		}
 		else if( a.y==b.y && (b.x==a.x+1 || b.x==a.x-1) ) {
+			adjacent = true;
+		}
+		// For parallel transitions, ignore x (they will stretch to fit)
+		else if( b.y==a.y+1 && isParallel ) {
 			adjacent = true;
 		}
 		else if( a.x==b.x && b.y==a.y+1 ) {

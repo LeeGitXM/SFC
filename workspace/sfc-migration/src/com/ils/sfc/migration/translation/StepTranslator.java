@@ -19,7 +19,6 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 public class StepTranslator {
 	private final static String TAG = "StepTranslator";
 	private  final LoggerEx log = LogUtil.getLogger(StepTranslator.class.getPackage().getName());
-	
 	private final Converter delegate;
 
 	public StepTranslator(Converter converter) {

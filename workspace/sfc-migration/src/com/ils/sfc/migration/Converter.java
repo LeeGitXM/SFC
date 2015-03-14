@@ -281,8 +281,7 @@ public class Converter {
 			updateChartForSingletonStep(chart,block);
 		}
 		else {
-			StepLayoutManager layout = new StepLayoutManager(chart,g2doc);
-			Element root = chart.getDocumentElement();   // "sfc"
+			StepLayoutManager layout = new StepLayoutManager(this,chart,g2doc);
 			Map<String,Element> blockMap =  layout.getBlockMap();
 			Map<String,GridPoint> gridMap = layout.getGridMap();
 			for(String uuid:gridMap.keySet()) {
@@ -297,14 +296,17 @@ public class Converter {
 					if( child!=null ) hub.getParent().appendChild(child);
 				}
 			}
-			// The layout creates anchors and jumps
-			List<Element> anchorElements = layout.getAnchors();   // Includes jumps
-			for(Element e:anchorElements) {
-				root.appendChild(e);
-			}
+
 			// The layout does NOT create connections. Create them here.
-			ConnectionRouter router = new ConnectionRouter(layout.getConnectionMap(),gridMap);
+			// When created they are added as elements to the chart.
+			ConnectionRouter router = new ConnectionRouter(layout);
 			router.createLinks(chart);
+			
+			// The layout creates anchors and jumps - and adds them to the chart.
+			// Go back to the layout and size any parallel zones to cover children.
+			// While we're at it, change the child locations relative to the zone.
+			layout.sizeParallelAreas();
+			
 			chart.getDocumentElement().setAttribute("zoom", String.valueOf(layout.getZoom()));
 		}
 	}

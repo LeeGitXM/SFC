@@ -89,7 +89,7 @@ public class TransitionTranslator {
 			}
 			ans = String.format("{ %s.%s%s } %s %s", 
 					 recipeLocation.toLowerCase(),
-					 baseLoc,
+					 baseLoc.toLowerCase(),
 					 element,
 					 convertOperator(operator),
 					 constant
