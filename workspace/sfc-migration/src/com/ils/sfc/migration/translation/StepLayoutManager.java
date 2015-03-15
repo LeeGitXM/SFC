@@ -243,7 +243,7 @@ public class StepLayoutManager {
 					pa.x2+=2;
 				}
 				x = (pa.x1+pa.x2)/2;   // Position in middle
-				y = pa.y2 + 2;
+				y = pa.y2;
 				gp.x = pa.x2;
 				gp.y = pa.y2;
 				if( hub.getVisitCount()<hub.getConnectionsFrom().size() ) return;
@@ -268,13 +268,17 @@ public class StepLayoutManager {
 			if( sourceHub.isInParallelZone() ) {
 				pa = sourceHub.getParallelArea();
 				if( pa.x2 < x ) pa.x2 = x;
-				if( pa.y2 < y ) pa.y2 = y;
+				if( pa.y2 < y+1 ) pa.y2 = y+1;
 			}
 		}
 		else {
 			gp.x = x;
 			gp.y = y;
 		}
+		
+		List<String> nextBlocks = hub.getConnectionsTo();
+		y = y+1;
+		if( nextBlocks.size() >= 2 && !hub.isParallelBlock() ) y = y+1; // Allow for connections
 		
 		// In positioning the blocks, disregard the parallel zone.
 		// Later on we will size it to cover all its children.
@@ -288,10 +292,7 @@ public class StepLayoutManager {
 
 		log.tracef("%s.positionNode: %s at %d,%d", TAG,uuid,x,y);
 		setRightmost(x,y);
-		
-		List<String> nextBlocks = hub.getConnectionsTo();
-		y = y+1;
-		if( nextBlocks.size() >= 2 && !hub.isParallelBlock() ) y = y+1; // Allow for connections  
+		  
 		int xpos = x - (nextBlocks.size()-1);
 		for( String childuuid:nextBlocks) {
 			positionNode(uuid,childuuid,xpos,y);
@@ -350,7 +351,9 @@ public class StepLayoutManager {
 	}
 	
 	// The original layout may create indices that are out-of-range.
-	// Place the diagram in the upper left corner of the space. 
+	// Place the diagram in the upper left corner of the space.
+	// NOTE: We make no attempt to modify parallelArea objects.
+	//       These are set in a sizeParallelAreas()
 	private void center() {
 		// First iteration gets the bounds
 		minx = Integer.MAX_VALUE;
@@ -407,6 +410,11 @@ public class StepLayoutManager {
 				if( position>=0 && childcount>0) {
 					dx = dx*(childcount-position)/childcount;
 					GridPoint gp = gridMap.get(parent);
+					ParallelArea pa = parallelMap.get(parent);
+					if( pa!=null ) {
+						pa.x1 = pa.x1+dx;
+						pa.x2 = pa.x2+dx;
+					}
 					gp.x = gp.x + dx;
 					moveAncestryRight(parent,dx);
 				}

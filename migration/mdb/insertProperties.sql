@@ -2,6 +2,8 @@
 -- Columns are: FactoryId, ignition propertyName, G2Property
 -- NOTE: name, factoryId, uuid are universal attributes and are not included here.
 insert into PropertyMap values ('enclosing-step','description','description');
+-- S88-PAHASE
+insert into PropertyMap values ('com.ils.phaseStep','description','description');
 -- S88-OPERATION
 insert into PropertyMap values ('com.ils.operationStep','description','description');
 -- S88-UNIT-PROCEDURE
