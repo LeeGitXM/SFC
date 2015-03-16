@@ -8,8 +8,10 @@ import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.step.annotation.ILSStep;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
+import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.sfc.api.ChartContext;
+import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.api.elements.AbstractChartElement;
 import com.inductiveautomation.sfc.api.elements.StepElement;
@@ -95,6 +97,14 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		} catch (Exception e) {
 			logger.error("Error calling " + pcall.getMethodName(), e);
 		}
+	}
+
+	private Object toPyChartScope(PropertySet properties) {
+		PyChartScope chartScope = new PyChartScope();
+		for(PropertyValue<?> pvalue: properties) {
+			chartScope.put(pvalue.getProperty().getName(), pvalue.getValue());
+		}
+		return chartScope;
 	}
 
 	/** Lazily initialize chart properties with things we need, like local scopes
