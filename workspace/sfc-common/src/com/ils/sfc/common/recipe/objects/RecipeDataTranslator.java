@@ -17,6 +17,9 @@ import org.w3c.dom.NodeList;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcNames;
+import com.ils.sfc.common.step.OperationStepDelegate;
+import com.ils.sfc.common.step.PhaseStepDelegate;
+import com.ils.sfc.common.step.ProcedureStepDelegate;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
@@ -121,15 +124,34 @@ public class RecipeDataTranslator {
 	 * Create JSONObject representing RecipeData and add as an "associated-data" 
 	 * element to a chart step. 
 	 */
-	public Element createAssociatedDataElement(Document chart) throws JSONException {	
+	public Element createAssociatedDataElement(Document chartDocument, String factoryId) throws JSONException {	
 		List<Data> recipeData = DOMToData();
-		JSONObject jobj = Data.toAssociatedData(recipeData);
-		Element assocdata = chart.createElement("associated-data");
-		Node textNode = chart.createTextNode(jobj.toString());
+		JSONObject assocDataJsonObj = Data.toAssociatedData(recipeData);
+		String s88Level = getS88Level(factoryId);
+		if(s88Level != null) {
+			assocDataJsonObj.put(IlsSfcNames.S88_LEVEL_KEY, s88Level);
+		}
+		Element assocdata = chartDocument.createElement("associated-data");
+		Node textNode = chartDocument.createTextNode(assocDataJsonObj.toString());
 		assocdata.appendChild(textNode);
 		return assocdata;
 	}
 	
+	private String getS88Level(String factoryId) {
+		if(PhaseStepDelegate.FACTORY_ID.equals(factoryId)) {
+			return IlsSfcNames.PHASE;
+		}
+		else if(OperationStepDelegate.FACTORY_ID.equals(factoryId)) {
+			return IlsSfcNames.OPERATION;
+		}
+		else if(ProcedureStepDelegate.FACTORY_ID.equals(factoryId)) {
+			return IlsSfcNames.GLOBAL;
+		}
+		else {
+			return null;
+		}
+	}
+
 	public List<Data> DOMToData() {
 		final java.util.List<Data> flatRecipeObjects = new ArrayList<Data>();
 		NodeList recipeNodes = blockElement.getElementsByTagName("recipe");

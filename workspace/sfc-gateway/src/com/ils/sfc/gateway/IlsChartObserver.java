@@ -51,7 +51,7 @@ public class IlsChartObserver implements ChartObserver {
 	}
 
 	@Override
-	public void onElementStateChange(UUID elementId, ElementStateEnum oldElementState,
+	public void onElementStateChange(UUID elementId, UUID chartId, ElementStateEnum oldElementState,
 			ElementStateEnum newElementState) {
 		elementStatesById.put(elementId.toString(), newElementState.toString());		
 		//System.out.println("element " + elementId.toString() + " " + newElementState.toString());

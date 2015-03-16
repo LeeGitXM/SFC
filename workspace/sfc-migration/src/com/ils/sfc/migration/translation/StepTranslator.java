@@ -153,7 +153,8 @@ public class StepTranslator {
 		Element recipe = null;
 		try {
 			RecipeDataTranslator rdTranslator = new RecipeDataTranslator(g2Block);
-			Element associatedData = rdTranslator.createAssociatedDataElement(chart);
+			String stepFactoryId = step.getAttribute("factory-id");
+			Element associatedData = rdTranslator.createAssociatedDataElement(chart, stepFactoryId);
 			if( associatedData!=null) step.appendChild(associatedData);
 
 			// Some debug stuff for errors--might want to log it...
