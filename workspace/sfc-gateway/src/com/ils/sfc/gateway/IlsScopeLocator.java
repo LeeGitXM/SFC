@@ -1,5 +1,6 @@
 package com.ils.sfc.gateway;
 
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.IlsSfcNames;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeContext;
@@ -130,6 +131,7 @@ public class IlsScopeLocator implements ScopeLocator {
 
 	public Object s88Get(PyChartScope chartScope, PyChartScope stepScope, 
 		String path, String scopeIdentifier) {
+		if(IlsSfcCommonUtils.isEmpty(path)) return null;
 		PyChartScope resolvedScope = resolveScope(chartScope, stepScope, scopeIdentifier);
 		Object value = pathGet(resolvedScope, path);
 		return value;
