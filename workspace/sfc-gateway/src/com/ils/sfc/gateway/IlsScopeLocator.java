@@ -16,7 +16,7 @@ public class IlsScopeLocator implements ScopeLocator {
 		// check this step first, then walk up the hierarchy:
 		PyChartScope stepScope = scopeContext.getStepScope();
 		PyChartScope chartScope = scopeContext.getChartScope();
-		return resolveScope(chartScope, stepScope, identifier);
+		return resolveScope(chartScope, stepScope, identifier.trim());
 	}
 
 	/** @see #locate(ScopeContext, String) 
