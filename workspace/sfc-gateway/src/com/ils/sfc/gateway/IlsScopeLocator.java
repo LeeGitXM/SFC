@@ -46,7 +46,7 @@ public class IlsScopeLocator implements ScopeLocator {
 			}
 		}
 		if(resolvedStepScope != null) {
-			return resolvedStepScope.getSubScope(IlsSfcNames.RECIPE_DATA);
+			return resolvedStepScope; // resolvedStepScope.getSubScope(IlsSfcNames.RECIPE_DATA);
 		}
 		else {
 			throw new IllegalArgumentException("could not resolve scope " + scopeIdentifier);

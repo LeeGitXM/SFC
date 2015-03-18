@@ -7,6 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -87,8 +88,9 @@ public class TransitionTranslator {
 					log.warnf("%s.handleConstantValue: Unrecognized recipe item (%s)",TAG,element);
 				}
 			}
-			ans = String.format("{ %s.%s%s } %s %s", 
+			ans = String.format("{ %s.%s.%s%s } %s %s", 
 					 recipeLocation.toLowerCase(),
+					 IlsSfcNames.RECIPE_DATA,
 					 baseLoc.toLowerCase(),
 					 element,
 					 convertOperator(operator),
