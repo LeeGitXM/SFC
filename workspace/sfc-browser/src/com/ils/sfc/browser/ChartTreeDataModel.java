@@ -123,7 +123,7 @@ public class ChartTreeDataModel {
 					log.warnf("%s.initialize: Parse Exception for %s (%s)", TAG,res.getName(),xpe.getLocalizedMessage());
 				}
 				catch(Exception ex) {
-					log.warnf("%s.initialize: Unhandled exception for %s (%s)", TAG,res.getName(),ex.getLocalizedMessage());
+					log.warn(TAG+".initialize: Unhandled exception for "+ res.getName(),ex);
 				}
 			}
 			// Handle the folder hierarchy
@@ -228,7 +228,7 @@ public class ChartTreeDataModel {
 			stepMap.put(parentRow, stepNames);
 		}
 		else {
-			if( stepName.contains(stepName)) return;
+			if( stepNames.contains(stepName)) return;
 			else stepNames.add(stepName);
 		}
 		for( ElementDefinition step:steps) {
