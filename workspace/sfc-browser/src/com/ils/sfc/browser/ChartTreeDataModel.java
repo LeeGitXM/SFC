@@ -234,7 +234,9 @@ public class ChartTreeDataModel {
 		for( ElementDefinition step:steps) {
 			if( step instanceof StepDefinition ) {
 				StepDefinition stepDef = (StepDefinition)step;
-				if( stepDef.getFactoryId().equals(EnclosingStepProperties.FACTORY_ID)) {
+				// Custom enclosures don't inherit from Enclosing step, but they all must have a path.
+				if( stepDef.getFactoryId().equals(EnclosingStepProperties.FACTORY_ID) ||
+					stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH)!=null ) {
 					String name = stepDef.getProperties().get(EnclosingStepProperties.Name);
 					String path = stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH);
 					log.debugf("%s.handleEnclosingStep: enclosing step %d.%s = %s", TAG,parentRow,name,path);
