@@ -31,7 +31,6 @@ public class IlsSfcNames {
 	public static final String COLUMN_KEYED = "columnKeyed";
 	public static final String COMPUTER = "computer";
 	public static final String DATA = "data";
-	public static final String DATABASE = "database";
 	public static final String DESCRIPTION = "description";
 	public static final String DELAY = "delay";
 	public static final String DELAY_UNIT = "delayUnit";

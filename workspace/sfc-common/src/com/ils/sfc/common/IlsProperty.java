@@ -55,7 +55,6 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> COLUMN_KEY = new IlsProperty<String>(IlsSfcNames.COLUMN_KEY, String.class, IlsSfcNames.NONE);
     public static final IlsProperty<Boolean> COLUMN_KEYED = new IlsProperty<Boolean>(IlsSfcNames.COLUMN_KEYED, Boolean.class, Boolean.FALSE);
     public static final IlsProperty<String> COMPUTER = new IlsProperty<String>(IlsSfcNames.COMPUTER, String.class, IlsSfcNames.COMPUTER_CHOICES[0], IlsSfcNames.COMPUTER_CHOICES);
-    public static final IlsProperty<String> DATABASE = new IlsProperty<String>(IlsSfcNames.DATABASE, String.class, "");
     public static final IlsProperty<Double> DELAY = new IlsProperty<Double>(IlsSfcNames.DELAY, Double.class, 0.);
     public static final IlsProperty<String> DELAY_UNIT = new IlsProperty<String>(IlsSfcNames.DELAY_UNIT, String.class, IlsSfcNames.TIME_DELAY_UNIT_CHOICES[0], IlsSfcNames.TIME_DELAY_UNIT_CHOICES);  
     public static final IlsProperty<String> DESCRIPTION = new IlsProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");

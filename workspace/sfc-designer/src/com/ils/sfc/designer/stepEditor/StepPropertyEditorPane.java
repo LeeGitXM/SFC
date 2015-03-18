@@ -57,8 +57,7 @@ public class StepPropertyEditorPane extends JPanel implements EditorPane {
 	public void activate() {
 		// HACK!! we recognize "testable" elements by looking for SQL related properties
 		buttonPanel.getExecButton().setVisible(
-			editor.getPropertyValues().contains(IlsProperty.SQL) && 
-			editor.getPropertyValues().contains(IlsProperty.DATABASE));
+			editor.getPropertyValues().contains(IlsProperty.SQL));
 
 		controller.slideTo(StepEditorController.PROPERTY_EDITOR);
 	}
