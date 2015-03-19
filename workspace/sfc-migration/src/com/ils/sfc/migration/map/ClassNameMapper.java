@@ -11,7 +11,6 @@ import java.util.Map;
  * Convert a G2 classname into a SFC classname
  */
 public class ClassNameMapper {
-	private static final String TAG = "ClassNameMapper";
 	private final Map<String,String> classMap;     // Lookup by G2 classname
 	// Legal types are: enclosure, transition, ""
 	private final Map<String,String> typeMap;      // Lookup by G2 classname

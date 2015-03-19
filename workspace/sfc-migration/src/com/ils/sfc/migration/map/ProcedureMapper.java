@@ -53,9 +53,7 @@ public class ProcedureMapper {
 				try { rs.close(); } catch(SQLException ignore) {}
 			}
 		}
-	}
-	
-	
+	}	
 }
 	
 

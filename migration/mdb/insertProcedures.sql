@@ -1,4 +1,4 @@
--- Map G2 procedure names into a python module.
+
 insert into ProcedureMap select G2Value,IgnitionValue FROM PropertyValueMap WHERE Property='callback';
 -- These are names of procedures found as properties during the migration 
 insert into ProcedureMap values ('IRTLQ-VIEW','ils.??');

@@ -9,6 +9,13 @@ CREATE TABLE ClassMap(
 	Type text DEFAULT ''
 );
 
+-- Map string arguments to procedures from
+-- G2 to Ignition
+CREATE TABLE ArgumentMap(
+    G2Argument text NOT NULL,
+    IgnitionArgument text NOT NULL
+);
+-- Map values of properties found in G2 blocks to
 -- Map properties of G2 blocks to properties of
 -- Ignition blocks
 CREATE TABLE PropertyMap(
