@@ -4,9 +4,9 @@
 # results in the procedure storage area for ignition.
 #
 SFC=${GIT_REPO}/sfc
-APP=${SFC}/migration/translate
-mkdir -p ${SFC}/procs/g2
-cd ${SFC}/procs/g2
+APP=${SFC}/migration/translate-onstart
+mkdir -p ${SFC}/procs/g2/onstart
+cd ${SFC}/procs/g2/onstart
 DIR=`pwd`
 for fil in *.txt
 do
