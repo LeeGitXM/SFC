@@ -11,6 +11,7 @@ SVN=~/Development/ils/svn/EMChemicals/Release/src
 mkdir -p $SVN/project
 cd $REPO_ROOT/sfc/project
 cp sfc_demo_proj.proj $SVN/project
+cp sfc_demo_global.proj $SVN/project
 cp BrowserGlobalDemo.proj $SVN/project
 SVN=~/Development/ils/svn/EMChemicals/Ignition
 cp $REPO_ROOT/sfc/workspace/sfc-build/modules/*.modl $SVN
