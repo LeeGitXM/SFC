@@ -44,7 +44,6 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 		JTabbedPane mainPanel = createTabPane(contentPanel,legendPanel);
 		init(mainPanel);
 		updateContentPanel();
-		context.addProjectChangeListener(this);
 	}
 
 	/**

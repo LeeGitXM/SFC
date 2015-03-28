@@ -4,14 +4,18 @@
 package com.ils.sfc.browser;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
+import com.inductiveautomation.ignition.common.modules.ModuleInfo;
+import com.inductiveautomation.ignition.common.modules.ModuleInfo.ModuleDependency;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.AbstractDesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.DesignerModuleHook;
+import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.designer.SFCDesignerHook;
 import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
@@ -43,16 +47,47 @@ public class IlsSfcBrowserHook extends AbstractDesignerModuleHook implements Des
 	
 	// We would like to add the browser to the Standard SFC frames here, but the 
 	// IA SFC Hook doesn't have its frames created yet, plus it's not clear that you
-	// can augment another module's frames.
+	// can augment another module's frames -- so we make our own frame.
 	@Override
 	public void startup(DesignerContext ctx, LicenseState activationState) throws Exception {
 		this.context = ctx;
         log.infof("%s.startup...",TAG);
+        new Thread(new ModuleWatcher(context)).start();             // Watch for modules to start
 	}
 
 	@Override
 	public void shutdown() {
 		iaSfcHook.getFrames().remove(browser);
 	}
-
+	/**
+	 * We are dependent on the Ignition SFC module, but don't know about other modules that
+	 * also may be dependent on "com.inductiveautomation.sfc". In order for any custom chart
+	 * classes to be registered, we need to wait on those modules also
+	 */
+	private class ModuleWatcher implements Runnable {
+		private final DesignerContext ctx;
+		public ModuleWatcher(DesignerContext dc) {
+			this.ctx = dc;
+		}
+		public void run() {
+			boolean ready = false;
+			while( !ready ) {
+				List<ModuleInfo> moduleInfos = ctx.getModules();
+				for( ModuleInfo minfo:moduleInfos ) {
+					Collection<ModuleDependency> dependencies = minfo.getDependencies().values();
+					for(ModuleDependency dep:dependencies) {
+						if( dep.getModuleId().equals(SFCModule.MODULE_ID) ) {
+							log.infof("%s.MainMenuWatcher ...%s depends on %s",TAG,minfo.getName(),SFCModule.MODULE_ID);
+						}
+					}
+					// Don't really know how to wait until module is ready. We just assume it
+					// works by letting whatever calls startup() finish.
+					try { Thread.sleep( 2000 ); }
+					catch (InterruptedException ignore) {}
+				}
+				ready = true;
+			}
+			ctx.addProjectChangeListener(browser);
+		}
+	}
 }
