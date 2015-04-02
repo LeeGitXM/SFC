@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.jfree.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -186,11 +187,9 @@ public abstract class Data {
 	
 	/** Set recipe data in the given associated data object */
 	public static void setAssociatedData(JSONObject associatedDataJson, List<Data> recipeData) throws JSONException {
-		JSONObject jsonObject = new JSONObject();
 		for(Data data: recipeData) {
-			jsonObject.put(data.getKey(), data.toJSON());
+			associatedDataJson.put(data.getKey(), data.toJSON());
 		}
-		associatedDataJson.put(IlsSfcNames.RECIPE_DATA, jsonObject);
 	}
 	
 	/** Create a recipe data hierarchy from a JSON Object that was
@@ -198,14 +197,19 @@ public abstract class Data {
 	 *  just some random JSONbject. */
 	public static List<Data> fromAssociatedData(JSONObject associatedDataJson) throws Exception {
 		List<Data> recipeData = new ArrayList<Data>();
-		if(!associatedDataJson.has(IlsSfcNames.RECIPE_DATA)) return recipeData;
-		JSONObject jsonObject = associatedDataJson.getJSONObject(IlsSfcNames.RECIPE_DATA);
-		Iterator<String> keyIter = jsonObject.keys();
+		Iterator<String> keyIter = associatedDataJson.keys();
 		while(keyIter.hasNext()) {
 			String key = keyIter.next();
-			JSONObject jsonData = jsonObject.getJSONObject(key);
-			Data data = fromJson(jsonData);
-			recipeData.add(data);
+			try {
+				JSONObject jsonData = associatedDataJson.getJSONObject(key);
+				Data data = fromJson(jsonData);
+				recipeData.add(data);
+			}
+			catch(Exception e) {
+				// ?? what to do...we are blindly assuming that everything in the associated
+				// data object is recipe data, which isn't necessarily true...
+				Log.warn("non-recipe data in associated data for key " + key);
+			}
 		}		
 		return recipeData;
 	}
