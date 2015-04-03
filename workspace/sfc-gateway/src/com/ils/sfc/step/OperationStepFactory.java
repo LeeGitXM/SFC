@@ -13,6 +13,6 @@ public class OperationStepFactory extends OperationStepDelegate implements StepF
     @Override
     public StepElement create(ChartContext chartContext,  ScopeContext scopeContext,
     	StepDefinition definition) {
-        return new EnclosingStep(chartContext, definition, scopeContext);
+        return new OperationStep(chartContext, definition, scopeContext);
     }
 }

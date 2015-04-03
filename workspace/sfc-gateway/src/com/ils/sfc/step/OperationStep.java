@@ -25,19 +25,28 @@ public class OperationStep extends EnclosingStep {
 	@Override
 	public void activateStep() {
 		super.activateStep();
-		
-		// message the client to update the current operation
 		String stepName = getDefinition().getProperties().get(IlsProperty.NAME);
-		PyChartScope topScope = IlsScopeLocator.getTopScope(getChartContext().getChartScope());
-		String chartRunId = (String)topScope.get("instanceId");
-		String projectName = (String)topScope.get("project");
-		PyDictionary payload = new PyDictionary();
-		payload.put("instanceId", chartRunId);
-		payload.put("status", stepName);
-		try {
-			PythonCall.SEND_CURRENT_OPERATION.exec(projectName, payload);
-		} catch (JythonExecException e) {
-			logger.error("error sending chart status", e);
-		}
+		updateOperation(stepName);		
+	}
+
+	@Override
+	public void deactivateStep() {
+		super.deactivateStep();
+		updateOperation("");		
+	}
+	
+	private void updateOperation(String operationName) {
+		// message the client to update the current operation
+			PyChartScope topScope = IlsScopeLocator.getTopScope(getChartContext().getChartScope());
+			String chartRunId = (String)topScope.get("instanceId");
+			String projectName = (String)topScope.get("project");
+			PyDictionary payload = new PyDictionary();
+			payload.put("instanceId", chartRunId);
+			payload.put("status", operationName);
+			try {
+				PythonCall.SEND_CURRENT_OPERATION.exec(projectName, payload);
+			} catch (JythonExecException e) {
+				logger.error("error sending chart status", e);
+			}
 	}
 }
