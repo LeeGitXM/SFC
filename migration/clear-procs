@@ -4,6 +4,9 @@
 # previous copy.
 #
 BIN=`pwd`
-REPO=${GIT_REPO}/procs
-rm -rf ${REPO}/g2
-rm -rf ${REPO}/python
+PROCS=${GIT_REPO}/sfc/migration/procs
+rm -rf ${PROCS}/g2
+rm -rf ${PROCS}/python
+#
+# Cleanup obsolete areas
+rm -rf ${GIT_REPO}/sfc/procs

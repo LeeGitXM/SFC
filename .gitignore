@@ -8,3 +8,6 @@ bin/
 out/
 modules/
 temp_modl/
+migration/projects/
+migration/procs/
+migration/xml/

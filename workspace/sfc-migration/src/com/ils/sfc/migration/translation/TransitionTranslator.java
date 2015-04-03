@@ -62,6 +62,18 @@ public class TransitionTranslator {
 					transition.setAttribute("timeout-flag",name);
 					transition.setAttribute("timeout-delay",String.valueOf(timemillisecs));
 				}
+				else if( tu.equalsIgnoreCase("MIN")) {
+					timemillisecs = (long)timeout*60*1000;
+					transition.setAttribute("timeout-enabled","true");
+					transition.setAttribute("timeout-flag",name);
+					transition.setAttribute("timeout-delay",String.valueOf(timemillisecs));
+				}
+				else if( tu.equalsIgnoreCase("SEC")) {
+					timemillisecs = (long)timeout*1000;
+					transition.setAttribute("timeout-enabled","true");
+					transition.setAttribute("timeout-flag",name);
+					transition.setAttribute("timeout-delay",String.valueOf(timemillisecs));
+				}
 				else {
 					log.warnf("%s.updateTransition: Unrecognized time unit (%s)",TAG,tu);
 				}
@@ -108,7 +120,8 @@ public class TransitionTranslator {
 	private String convertOperator(String op) {
 		String operator = "=";
 		if( op!=null ) {
-			if( op.equalsIgnoreCase("LESS-THAN")) operator = "<";
+			if( op.equalsIgnoreCase("EQUAL")) operator = "=";
+			else if( op.equalsIgnoreCase("LESS-THAN")) operator = "<";
 			else if( op.equalsIgnoreCase("GREATER-THAN")) operator = ">";
 			else if( op.equalsIgnoreCase("LESS-THAN-OR_EQUAL")) operator = "<=";
 			else if( op.equalsIgnoreCase("GREATER-THAN-OR-EQUAL")) operator = ">=";

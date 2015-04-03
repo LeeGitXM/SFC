@@ -4,12 +4,12 @@
 #
 BIN=`pwd`
 SVN=${SVN_REPO}/EMChemicals/G2Artifacts/Sequential\ Control
-REPO=${GIT_REPO}/sfc/xml
-mkdir -p $REPO/g2/
-mkdir -p $REPO/ignition
-cp -a "${SVN}"/* $REPO/g2
+XML=${GIT_REPO}/sfc/migration/xml
+mkdir -p $XML/g2/
+mkdir -p $XML/ignition
+cp -a "${SVN}"/* $XML/g2
 # Clean up the non-xml
-find ${REPO}/g2 -type f ! -name "*.xml" -exec rm {}  \; 
-rm -r `find ${REPO}/g2 -type d -name Diagrams`  2&>/dev/null
-rm -r `find ${REPO}/g2 -type d -name diagrams`  2&>/dev/null
-rm -r `find ${REPO}/g2 -type d -name callbacks`  2&>/dev/null
+find ${XML}/g2 -type f ! -name "*.xml" -exec rm {}  \; 
+rm -r `find ${XML}/g2 -type d -name Diagrams`  2&>/dev/null
+rm -r `find ${XML}/g2 -type d -name diagrams`  2&>/dev/null
+rm -r `find ${XML}/g2 -type d -name callbacks`  2&>/dev/null

@@ -4,6 +4,9 @@
 # previous copy.
 #
 BIN=`pwd`
-REPO=${GIT_REPO}/sfc/xml
-rm -rf ${REPO}/g2
-rm -rf ${REPO}/ignition
+XML=${GIT_REPO}/sfc/migration/xml
+rm -rf ${XML}/g2
+rm -rf ${XML}/ignition
+#
+#  Cleanup obsolete work area also
+rm -rf ${GIT_REPO}/sfc/xml

@@ -5,16 +5,15 @@
 #
 BIN=`pwd`
 SVN="${SVN_REPO}/EMChemicals/G2Artifacts/Sequential Control"
-REPO=${GIT_REPO}/sfc/procs
-mkdir -p $REPO/g2/onstart
-mkdir -p $REPO/g2/normal
-mkdir -p $REPO/python/onstart
-mkdir -p $REPO/python/normal
+PROCS=${GIT_REPO}/sfc/migration/procs
+mkdir -p $PROCS/g2/onstart
+mkdir -p $PROCS/g2/normal
+mkdir -p $PROCS/python/onstart
+mkdir -p $PROCS/python/normal
 #cp -a "${SVN}"/UnitTests/*/callbacks/*.txt $REPO/g2/onstart
 #cp -a "${SVN}"/Vistalon/*/callbacks/*.txt $REPO/g2/normal
 for fil in "${SVN}"/UnitTests/*/callbacks/*.txt
 do
-	echo $fil
 	name=`basename "$fil"`
-	cat "$fil"| sed -e 's/if DEBUG-MODE then post/trace/' > ${REPO}/g2/onstart/$name
+	cat "$fil"| sed -e 's/if DEBUG-MODE then post/trace/' > ${PROCS}/g2/onstart/$name
 done

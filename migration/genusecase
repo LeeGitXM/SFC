@@ -11,15 +11,17 @@ fi
 TESTNO=$1
 SFC=${GIT_REPO}/sfc
 START="Test-Unit-Procedure-${TESTNO}"
-INDIR="$SFC/xml/g2/UnitTests"
-OUTDIR=$SFC/xml/ignition/UnitTests
+INDIR="$SFC/migration/xml/g2/UnitTests"
+OUTDIR=$SFC/migration/xml/ignition/UnitTests
 DIRIN="TestUnitProcedure${TESTNO}"
 mkdir -p $OUTDIR
 rm -rf $OUTDIR/$DIRIN
 $SFC/migration/convert "$INDIR" "$OUTDIR" "$START"
 
 PROJ="testunitprocedure${TESTNO}.proj"
-INDIR="$SFC/xml/ignition/UnitTests/$DIRIN"
-OUTFIL=$SFC/xml/ignition/UnitTests/$PROJ
+INDIR="$SFC/migration/xml/ignition/UnitTests/$DIRIN"
+OUTDIR=$SFC/migration/projects/UnitTests
+mkdir -p $OUTDIR
+OUTFIL=${OUTDIR}/$PROJ
 rm -f $OUTFIL
 $SFC/migration/build-project "$INDIR" "$OUTFIL"
