@@ -1,11 +1,13 @@
 -- Fields aare:  G2 class name, Ignition factory-id, type (enclosure/transition/ )
 insert into ClassMap values ('S88-BEGIN','begin-step','');
 insert into ClassMap values ('S88-TIME-DELAY','com.ils.TimedDelayStep','');
+insert into ClassMap values ('S88-ABORT-BLOCK', 'com.ils.abortStep','');
 insert into ClassMap values ('S88-ABORT-TASK', 'com.ils.abortStep','');
 insert into ClassMap values ('S88-CALLBACK','action-step','');
 insert into ClassMap values ('S88-CLEAR-QUEUE-TASK','com.ils.clearQueueStep','');
 insert into ClassMap values ('S88-COLLECT-DATA-TASK','com.ils.collectDataStep','');
 insert into ClassMap values ('S88-CONFIRM-CONTROLLER-MODES','com.ils.confirmControllerModesStep','');
+insert into ClassMap values ('S88-DATABASE-SIMPLE-QUERY-TASK','com.ils.simpleQueryStep','');
 insert into ClassMap values ('S88-MESSAGE-CONSOLE-TASK','com.ils.controlPanelMessageStep','');
 insert into ClassMap values ('S88-REMOVE-BUSY-NOTIFICATION-TASK','com.ils.deleteDelayNotification','');
 insert into ClassMap values ('S88-SHOW-NOTIFICATION-DIALOG-TASK','com.ils.dialogMessageStep','');
@@ -32,8 +34,9 @@ insert into ClassMap values ('S88-SAVE-RECIPE-DATA-TO-CSV','com.ils.saveDataStep
 insert into ClassMap values ('S88-SELECT-INPUT-TASK','com.ils.selectInputStep','');
 insert into ClassMap values ('S88-SET-QUEUE-TASK','com.ils.setQueueStep','');
 insert into ClassMap values ('S88-SHOW-QUEUE-TASK','com.ils.showQueueStep','');
+insert into ClassMap values ('S88-STOP-BLOCK','com.ils.abortStep','');
 insert into ClassMap values ('S88-STOP-TASK','com.ils.abortStep','');
-insert into ClassMap values ('S88-DATABASE-SIMPLE-QUERY-TASK','com.ils.simpleQueryStep','');
+insert into ClassMap values ('S88-TIMEOUT-BLOCK','com.ils.timedDelayStep','');
 insert into ClassMap values ('S88-WRITE-FILE-TASK','com.ils.writeFileStep','');
 insert into ClassMap values ('S88-WRITE-OUTPUTS-TASK','com.ils.writeOutputsStep','');
 insert into ClassMap values ('S88-YES-NO-TASK','com.ils.yesNoStep','');
