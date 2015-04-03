@@ -92,7 +92,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 				else if(property.getDefaultValue() != null) {
 					value = property.getDefaultValue();
 				}
-				if(value != null) {
+				if(value == null) {
 					log.warn("Step property "+property+" missing in supplied DOM for " + ui.getType() + "; will use default");
 				}
 			}
