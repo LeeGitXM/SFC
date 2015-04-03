@@ -56,7 +56,6 @@ public abstract class Data {
 	private static LoggerEx logger = LogUtil.getLogger(Data.class.getName());
 	protected BasicPropertySet properties = new BasicPropertySet();
 	private Map<String, IlsProperty<?>> propertiesByName = new HashMap<String, IlsProperty<?>>();
-	protected String s88Level;
 	// id and parentId come from the G2 export and are used to re-compose a hierarchy:
 	protected String id;
 	protected String parentId;
@@ -111,14 +110,6 @@ public abstract class Data {
 		this.parentId = parentId;
 	}
 
-	public String getS88Level() {
-		return s88Level;
-	}
-
-	public void setS88Level(String s88Level) {
-		this.s88Level = s88Level;
-	}
-
 	public String getKey() {
 		return (String) properties.get(IlsProperty.KEY);
 	}
@@ -170,9 +161,6 @@ public abstract class Data {
 			else {
 				logger.error("property " + propName + " is null; cannot add to JSON");
 			}
-		}
-		if(s88Level != null) {
-			jsonObj.put(IlsSfcNames.S88_LEVEL, s88Level);
 		}
 		return jsonObj;
 	}
@@ -237,9 +225,6 @@ public abstract class Data {
 			// else if the value is an object, the Group extension of this method will
 			// handle it
 		}
-		if(jsonObj.has(IlsSfcNames.S88_LEVEL)) {
-			s88Level = (String)jsonObj.get(IlsSfcNames.S88_LEVEL);
-		}	
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
