@@ -21,25 +21,8 @@ cp -a mdb $TMP
 cd mdb
 ./mkdatabase
 cd ..
-./copy-procs
-./copy-xml
-./translate-onstart
-./convert-usecases
-cd usecases
-./gentest 1
-./gentest 2
-./gentest 3
-./gentest 4
-./gentest 5
-./gentest 6
-./gentest 7
-./gentest 8
-./gentest 9
-./gentest 10
-./gentest 11
-./gentest 12
-cd $REPO_ROOT/sfc/xml/ignition/Unittests
-mkdir -p $TMP/Unittests
+./process-usecases
+cd projects
 cp -a *.proj $TMP/Unittests
 
 # Now zip and copy to subversion
