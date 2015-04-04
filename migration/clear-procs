@@ -3,7 +3,6 @@
 # We do this to make sure there are no residual files from a 
 # previous copy.
 #
-BIN=`pwd`
 PROCS=${GIT_REPO}/sfc/migration/procs
 rm -rf ${PROCS}/g2
 rm -rf ${PROCS}/python

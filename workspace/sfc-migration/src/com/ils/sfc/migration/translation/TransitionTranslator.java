@@ -100,7 +100,7 @@ public class TransitionTranslator {
 					log.warnf("%s.handleConstantValue: Unrecognized recipe item (%s)",TAG,element);
 				}
 			}
-			ans = String.format("{ %s.%s%s } %s %s", 
+			ans = String.format("{%s.%s%s} %s %s", 
 					 recipeLocation.toLowerCase(),
 					 baseLoc.toLowerCase(),
 					 element,
