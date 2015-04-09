@@ -3,6 +3,7 @@ package com.ils.sfc.step;
 import org.python.core.PyDictionary;
 
 import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.gateway.IlsScopeLocator;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
@@ -14,27 +15,23 @@ import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStep;
 
-public class OperationStep extends FoundationStep {
-	private static LoggerEx logger = LogUtil.getLogger(OperationStep.class.getName());
+public class PhaseStep extends FoundationStep {
+	private static LoggerEx logger = LogUtil.getLogger(PhaseStep.class.getName());
 
-	public OperationStep(ChartContext context, StepDefinition definition,
+	public PhaseStep(ChartContext context, StepDefinition definition,
 			ScopeContext scopeContext) {
 		super(context, definition, scopeContext);
 	}
 
 	@Override
 	public void activateStep() {
-		String stepName = getDefinition().getProperties().get(IlsProperty.NAME);
-		updateOperation(stepName);		
+		String queue = getDefinition().getProperties().get(IlsProperty.QUEUE);
+		if(!IlsSfcCommonUtils.isEmpty(queue)){
+			
+		}
 		super.activateStep();
 	}
 
-	@Override
-	public void deactivateStep() {
-		super.deactivateStep();
-		updateOperation("");		
-	}
-	
 	private void updateOperation(String operationName) {
 		// message the client to update the current operation
 			PyChartScope topScope = IlsScopeLocator.getTopScope(getChartContext().getChartScope());

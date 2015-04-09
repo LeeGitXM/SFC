@@ -36,6 +36,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
     	EnclosingStepProperties.EXECUTION_MODE,
     	EnclosingStepProperties.PASSED_PARAMS,
     	EnclosingStepProperties.RETURN_PARAMS,
+    	IlsProperty.QUEUE
     };
  
 	protected AbstractIlsStepDelegate(Property<?>[] uncommonProperties) {
