@@ -19,6 +19,7 @@ import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
+import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** Misc. utilities that don't fit into any ILS class or superclass. */
@@ -171,6 +172,14 @@ public class IlsSfcCommonUtils {
 	/** A null-tolerant check for empty strings. */
 	public static boolean isEmpty(String str) {
 		return str == null || str.length() == 0;
+	}
+	
+	/** Get the highest level scope (by looking at parent scopes) */
+	public static PyChartScope getTopScope(PyChartScope scope) {
+		while(scope.get("parent") != null) {
+			scope = (PyChartScope)scope.get("parent");
+		}
+		return scope;
 	}
 	
 }

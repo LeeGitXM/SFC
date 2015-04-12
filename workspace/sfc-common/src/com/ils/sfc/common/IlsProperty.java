@@ -88,6 +88,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<Double> MAX_TIMING = new IlsProperty<Double>(IlsSfcNames.MAX_TIMING, Double.class, 0.);
     public static final IlsProperty<Double> MAXIMUM_VALUE = new IlsProperty<Double>(IlsSfcNames.MAXIMUM_VALUE, Double.class, 0.);
     public static final IlsProperty<String> MESSAGE = new IlsProperty<String>(IlsSfcNames.MESSAGE, String.class, "");
+    public static final IlsProperty<String> MESSAGE_QUEUE = new IlsProperty<String>(IlsSfcNames.MESSAGE_QUEUE, String.class, "");
     public static final IlsProperty<String> METHOD = new IlsProperty<String>(IlsSfcNames.METHOD, String.class, "");
     public static final IlsProperty<Double> MINIMUM_VALUE = new IlsProperty<Double>(IlsSfcNames.MINIMUM_VALUE, Double.class, 0.);
 	public static final BasicProperty<String> NAME = new BasicProperty<String>(IlsSfcNames.NAME, String.class);

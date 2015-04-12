@@ -71,6 +71,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private IlsScopeLocator scopeLocator = new IlsScopeLocator();
 	private IlsChartObserver chartObserver = new IlsChartObserver();
 	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
+	private TestMgr testMgr = new TestMgr();
 	
 	private static StepFactory[] stepFactories = {
 		new QueueMessageStepFactory(),
@@ -123,9 +124,13 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public IlsSfcGatewayHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
-
 	
 	// NOTE: During this period, the module status is LOADED, not RUNNING
+
+	public TestMgr getTestMgr() {
+		return testMgr;
+	}
+
 
 	public GatewayContext getContext() {
 		return context;

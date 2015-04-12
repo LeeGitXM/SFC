@@ -67,6 +67,7 @@ public class IlsSfcNames {
 	public static final String LABEL = "label";
 	public static final String MAX_TIMING = "maxTiming";
 	public static final String MESSAGE = "message";
+	public static final String MESSAGE_QUEUE = "msgQueue";
 	public static final String METHOD = "method";
 	public static final String MINIMUM_VALUE = "minimumValue";
 	public static final String MAXIMUM_VALUE = "maximumValue";

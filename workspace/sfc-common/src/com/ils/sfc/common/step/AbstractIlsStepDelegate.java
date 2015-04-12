@@ -35,8 +35,16 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
     	EnclosingStepProperties.CHART_PATH,
     	EnclosingStepProperties.EXECUTION_MODE,
     	EnclosingStepProperties.PASSED_PARAMS,
-    	EnclosingStepProperties.RETURN_PARAMS,
-    	IlsProperty.QUEUE
+    	EnclosingStepProperties.RETURN_PARAMS
+    };
+
+    public static final Property<?>[] FOUNDATION_STEP_PROPERTIES_WITH_MSG_QUEUE; 
+    static {
+    	FOUNDATION_STEP_PROPERTIES_WITH_MSG_QUEUE = new Property<?>[FOUNDATION_STEP_PROPERTIES.length + 1];
+    	for(int i = 0; i < FOUNDATION_STEP_PROPERTIES.length; i++) {
+    		FOUNDATION_STEP_PROPERTIES_WITH_MSG_QUEUE[i] = FOUNDATION_STEP_PROPERTIES[i];
+    	}
+    	FOUNDATION_STEP_PROPERTIES_WITH_MSG_QUEUE[FOUNDATION_STEP_PROPERTIES_WITH_MSG_QUEUE.length - 1] = IlsProperty.MESSAGE_QUEUE;
     };
  
 	protected AbstractIlsStepDelegate(Property<?>[] uncommonProperties) {

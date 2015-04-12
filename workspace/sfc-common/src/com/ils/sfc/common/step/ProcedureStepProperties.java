@@ -10,5 +10,5 @@ import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 public interface ProcedureStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.procedureStep";
 	
-    public static final Property<?>[] properties = AbstractIlsStepDelegate.FOUNDATION_STEP_PROPERTIES;
+    public static final Property<?>[] properties = AbstractIlsStepDelegate.FOUNDATION_STEP_PROPERTIES_WITH_MSG_QUEUE;
 }

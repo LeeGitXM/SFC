@@ -6,7 +6,9 @@ import java.util.UUID;
 
 import org.python.core.PyDictionary;
 import org.python.core.PyList;
+import org.python.core.PyObject;
 
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.step.IlsAbstractChartStep;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
@@ -142,6 +144,7 @@ public class IlsGatewayScripts {
 	public static void setHook(IlsSfcGatewayHook hook) {
 		ilsSfcGatewayHook = hook;		
 	}
+	
 	/**
 	 * Get the clock rate factor. For non-isolation mode the value is fixed at 1.0. 
 	 * @param isIsolated. True if the system is currently in ISOLATION mode.
@@ -151,6 +154,7 @@ public class IlsGatewayScripts {
 	public static double getTimeFactor(boolean isIsolation) {
 		return requestHandler.getTimeFactor(isIsolation);
 	}
+	
 	/**
 	 * Set a clock rate factor. This will change timing for isolation mode only.
 	 * This method is provided as a hook for test frameworks.
@@ -164,4 +168,45 @@ public class IlsGatewayScripts {
 		ilsSfcGatewayHook.getChartObserver().registerSfcProject(projectName);
 	}
 
+	public static void initializeTests(String reportFilePath) {
+		ilsSfcGatewayHook.getTestMgr().initialize();
+		ilsSfcGatewayHook.getTestMgr().setReportFilePath(reportFilePath);
+	}
+
+	public static void startTest(String testName) {
+		ilsSfcGatewayHook.getTestMgr().startTest(testName);
+	}
+
+	private static String getTestName(PyChartScope chartScope) {
+		PyChartScope topScope = IlsSfcCommonUtils.getTopScope(chartScope);
+		return (String)topScope.get("chartPath");
+	}
+
+	private static String getFullStepName(PyChartScope chartScope, PyChartScope stepScope) {
+		String stepName = (String)stepScope.get("name");
+		String chartName = (String)chartScope.get("chartPath");
+		return chartName + ":" + stepName;
+	}
+	
+	public static void assertEqual(PyChartScope chartScope, PyChartScope stepScope, PyObject expected, PyObject actual) {		
+		String stepName = getFullStepName(chartScope, stepScope);
+		ilsSfcGatewayHook.getTestMgr().assertEqual(getTestName(chartScope), expected, actual, stepName);
+	}
+
+	public static void assertTrue(PyChartScope chartScope, PyChartScope stepScope, boolean condition, String msg) {
+		String stepName = getFullStepName(chartScope, stepScope);
+		ilsSfcGatewayHook.getTestMgr().assertTrue(getTestName(chartScope), condition, stepName, msg);
+	}
+	
+	public static void failTest(PyChartScope chartScope, String message) {
+		ilsSfcGatewayHook.getTestMgr().fail(getTestName(chartScope), message);
+	}
+	
+	public static void passTest(PyChartScope chartScope) {
+		ilsSfcGatewayHook.getTestMgr().pass(getTestName(chartScope));
+	}
+	
+	public static void reportTests() {
+		ilsSfcGatewayHook.getTestMgr().report();
+	}
 }
