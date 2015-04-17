@@ -121,13 +121,13 @@ public class TestMgr {
 		newTest.start();
 	}
 
-	public void assertTrue(String testName, boolean condition, String stepName, String msg) {		
+	public void assertTrue(String testName, String stepName, boolean condition, String msg) {		
 		if(!getTest(testName).assertTrue(condition, stepName, msg)) {
 			decremementRunningTestCount();			
 		}
 	}
 
-	public void assertEqual(String testName, PyObject expected, PyObject actual, String stepName) {
+	public void assertEqual(String testName, String stepName, PyObject expected, PyObject actual) {
 		if(!getTest(testName).assertEqual(expected, actual, stepName)) {
 			decremementRunningTestCount();						
 		}

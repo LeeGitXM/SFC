@@ -32,6 +32,7 @@ public class IlsSfcNames {
 	public static final String COMPUTER = "computer";
 	public static final String DATA = "data";
 	public static final String DESCRIPTION = "description";
+	public static final String DEFAULT_MESSAGE_QUEUE = "SFC-Message-Queue";
 	public static final String DELAY = "delay";
 	public static final String DELAY_UNIT = "delayUnit";
 	public static final String DIALOG = "dialog";

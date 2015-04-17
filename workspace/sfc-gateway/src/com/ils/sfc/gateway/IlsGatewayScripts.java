@@ -177,33 +177,31 @@ public class IlsGatewayScripts {
 		ilsSfcGatewayHook.getTestMgr().startTest(testName);
 	}
 
-	private static String getTestName(PyChartScope chartScope) {
+	public static String getTestName(PyChartScope chartScope) {
 		PyChartScope topScope = IlsSfcCommonUtils.getTopScope(chartScope);
 		return (String)topScope.get("chartPath");
 	}
 
-	private static String getFullStepName(PyChartScope chartScope, PyChartScope stepScope) {
+	public static String getFullStepName(PyChartScope chartScope, PyChartScope stepScope) {
 		String stepName = (String)stepScope.get("name");
 		String chartName = (String)chartScope.get("chartPath");
 		return chartName + ":" + stepName;
 	}
 	
-	public static void assertEqual(PyChartScope chartScope, PyChartScope stepScope, PyObject expected, PyObject actual) {		
-		String stepName = getFullStepName(chartScope, stepScope);
-		ilsSfcGatewayHook.getTestMgr().assertEqual(getTestName(chartScope), expected, actual, stepName);
+	public static void assertEqual(String testName, String stepName, PyObject expected, PyObject actual) {		
+		ilsSfcGatewayHook.getTestMgr().assertEqual(testName, stepName, expected, actual );
 	}
 
-	public static void assertTrue(PyChartScope chartScope, PyChartScope stepScope, boolean condition, String msg) {
-		String stepName = getFullStepName(chartScope, stepScope);
-		ilsSfcGatewayHook.getTestMgr().assertTrue(getTestName(chartScope), condition, stepName, msg);
+	public static void assertTrue(String testName, String stepName, boolean condition, String msg) {
+		ilsSfcGatewayHook.getTestMgr().assertTrue(testName, stepName, condition,  msg);
 	}
 	
-	public static void failTest(PyChartScope chartScope, String message) {
-		ilsSfcGatewayHook.getTestMgr().fail(getTestName(chartScope), message);
+	public static void failTest(String testName, String message) {
+		ilsSfcGatewayHook.getTestMgr().fail(testName, message);
 	}
 	
-	public static void passTest(PyChartScope chartScope) {
-		ilsSfcGatewayHook.getTestMgr().pass(getTestName(chartScope));
+	public static void passTest(String testName) {
+		ilsSfcGatewayHook.getTestMgr().pass(testName);
 	}
 	
 	public static void reportTests() {
