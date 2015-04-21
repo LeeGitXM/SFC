@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ils.sfc.common.PythonCall;
+import com.ils.sfc.common.chartStructure.IlsSfcChartStructureCompiler;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.gateway.persistence.ToolkitRecord;
 import com.ils.sfc.step.CancelStepFactory;
@@ -44,6 +45,8 @@ import com.ils.sfc.step.TimedDelayStepFactory;
 import com.ils.sfc.step.YesNoStepFactory;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
+import com.inductiveautomation.ignition.common.model.ApplicationScope;
+import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -51,7 +54,10 @@ import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
 import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 import com.inductiveautomation.ignition.gateway.services.ModuleServiceConsumer;
+import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.api.ChartManagerService;
+import com.inductiveautomation.sfc.api.SfcGatewayHook;
+import com.inductiveautomation.sfc.api.elements.GatewayStepRegistry;
 import com.inductiveautomation.sfc.api.elements.StepFactory;
 //import com.inductiveautomation.sfc.ChartManager;
 
@@ -68,10 +74,11 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private transient GatewayContext context = null;
 	private transient GatewayRpcDispatcher dispatcher = null;
 	private ChartManagerService chartManager;
-	private IlsScopeLocator scopeLocator = new IlsScopeLocator();
+	private IlsScopeLocator scopeLocator = new IlsScopeLocator(this);
 	private IlsChartObserver chartObserver = new IlsChartObserver();
 	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
 	private TestMgr testMgr = new TestMgr();
+	private RecipeDataChangeMgr recipeDataChangeMgr;
 	
 	private static StepFactory[] stepFactories = {
 		new QueueMessageStepFactory(),
@@ -131,7 +138,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		return testMgr;
 	}
 
-
 	public GatewayContext getContext() {
 		return context;
 	}
@@ -140,6 +146,9 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		return chartManager;
 	}
 
+	public RecipeDataChangeMgr getRecipeDataChangeMgr() {
+		return recipeDataChangeMgr;
+	}
 
 	public IlsScopeLocator getScopeLocator() {
 		return scopeLocator;
@@ -183,9 +192,10 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	
 	@Override
 	public void startup(LicenseState licenseState) {
-		ScriptManager.asynchInit("C:/Program Files/Inductive Automation/Ignition/user-lib/pylib");				
-		//SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
-	    log.infof("%s: Startup complete.",TAG);
+		//ScriptManager.asynchInit("C:/Program Files/Inductive Automation/Ignition/user-lib/pylib");				
+		recipeDataChangeMgr = new RecipeDataChangeMgr(context);
+		chartManager.addChartObserver(recipeDataChangeMgr);
+		log.infof("%s: Startup complete.",TAG);
 	}
 	
 	@Override
@@ -213,6 +223,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 			chartManager.unregister(stepFactory);
 		}
 		chartManager.removeChartObserver(chartObserver);
+		chartManager.removeChartObserver(recipeDataChangeMgr);
 		chartManager = null;
 	}
 

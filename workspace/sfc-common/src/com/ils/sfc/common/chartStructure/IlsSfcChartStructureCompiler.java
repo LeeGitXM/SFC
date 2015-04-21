@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
+import org.json.JSONObject;
+
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
@@ -21,6 +23,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartCompiler;
+import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
 /** This class takes IA SFC Charts and creates objects to represent its structure in a form 
@@ -41,8 +44,8 @@ public class IlsSfcChartStructureCompiler {
 	static final UUID ROOT_FOLDER_ID = ChartUIModel.ROOT_FOLDER;	
 
 	private static LoggerEx logger = LogUtil.getLogger(IlsSfcChartStructureCompiler.class.getName());
-	private final Project globalProject;
-	private final StepRegistry stepRegistry;
+	private Project globalProject;
+	private StepRegistry stepRegistry;
 	private List<String> messages = new ArrayList<String>();  // messages about compilation errors or warnings
 	
 	// intermediate structures:
@@ -56,14 +59,12 @@ public class IlsSfcChartStructureCompiler {
 	// A helper class that holds some info about the resource hierarchy context of a chart model
 	private static class UIModelInfo {
 		ChartUIModel uiModel;
-		String name;
-		UUID parentUuid;
+		ProjectResource resource;
 		String path;
-		public UIModelInfo(ChartUIModel uiModel, String name, UUID parentUuid) {
+		public UIModelInfo(ChartUIModel uiModel, ProjectResource resource) {
 			super();
 			this.uiModel = uiModel;
-			this.name = name;
-			this.parentUuid = parentUuid;
+			this.resource = resource;
 		}				
 	}
 	
@@ -84,6 +85,17 @@ public class IlsSfcChartStructureCompiler {
 		this.stepRegistry = stepRegistry;
 	}
 				
+	public IlsSfcChartStructureCompiler() {
+	}
+
+	public void setGlobalProject(Project globalProject) {
+		this.globalProject = globalProject;
+	}
+
+	public void setStepRegistry(StepRegistry stepRegistry) {
+		this.stepRegistry = stepRegistry;
+	}
+
 	/** Compile Ignition charts and create an ILS model of the structure. We try to do an error-tolerant
 	 *  compile so some useful information is available even if there are errors. A null return indicates
 	 *  the errors were severe enough we couldn't get any useful info.
@@ -102,19 +114,19 @@ public class IlsSfcChartStructureCompiler {
 	// create the full path names for the charts by traversing the folder hierarchy
 	private boolean createChartPathNames() {
 		for(UIModelInfo uiModelInfo: uiModelInfos) {			
-			if(!uiModelInfo.parentUuid.equals(ROOT_FOLDER_ID)) {
+			if(!uiModelInfo.resource.getParentUuid().equals(ROOT_FOLDER_ID)) {
 				StringBuilder buf = new StringBuilder();
-				if(getParentPath(uiModelInfo.parentUuid, buf)) {
+				if(getParentPath(uiModelInfo.resource.getParentUuid(), buf)) {
 					buf.append("/");
-					buf.append(uiModelInfo.name);
+					buf.append(uiModelInfo.resource.getName());
 					uiModelInfo.path = buf.toString();
 				}
 				else {
-					logger.warn("couldn't get hierarchy for " + uiModelInfo.name);
+					logger.warn("couldn't get hierarchy for " + uiModelInfo.resource.getName());
 				}
 			}
 			else {
-				uiModelInfo.path = uiModelInfo.name;
+				uiModelInfo.path = uiModelInfo.resource.getName();
 			}
 		}
 		return true;
@@ -147,7 +159,7 @@ public class IlsSfcChartStructureCompiler {
 					//IlsSfcCommonUtils.printResource(data);					
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 					ChartUIModel uiModel = ChartUIModel.fromXML(xmlInput, stepRegistry );
-					uiModelInfos.add(new UIModelInfo(uiModel, res.getName(), res.getParentUuid()));
+					uiModelInfos.add(new UIModelInfo(uiModel, res));
 				}
 				catch(Exception e) {
 					messages.add("Compilation failed--a chart resource could not be deserialized");
@@ -246,6 +258,19 @@ public class IlsSfcChartStructureCompiler {
 					}
 				}
 			}					
+		}
+	}
+
+	/** Store changed recipe data back in the chart definition. */
+	public void updateRecipeData(String string, Map<String, JSONObject> updatedDataByStepId) {
+		loadModels();	
+		for(UIModelInfo info: uiModelInfos) {
+			for(ChartUIElement element: info.uiModel.getChartElements()) {
+				String id = element.getId().toString();
+				if(updatedDataByStepId.get(id) != null) {
+					System.out.println("HIT " + id);
+				}
+			}
 		}
 	}
 }
