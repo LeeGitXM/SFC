@@ -202,6 +202,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 			}
 		}
 		else if(property.getType() == Double.class) {
+			if( IlsSfcCommonUtils.isEmpty(stringValue) ) return property.getDefaultValue();
 			try {
 				return Double.parseDouble(stringValue);
 			}

@@ -56,6 +56,7 @@ import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.api.ChartManagerService;
 import com.inductiveautomation.sfc.api.SfcGatewayHook;
 import com.inductiveautomation.sfc.api.elements.StepFactory;
+
 //import com.inductiveautomation.sfc.ChartManager;
 
 //import com.ils.sfc.step.IlsSfcIO;
@@ -71,11 +72,12 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private transient GatewayContext context = null;
 	private transient GatewayRpcDispatcher dispatcher = null;
 	private ChartManagerService chartManager;
-	private IlsScopeLocator scopeLocator = new IlsScopeLocator();
+	private IlsScopeLocator scopeLocator = new IlsScopeLocator(this);
 	private IlsChartObserver chartObserver = new IlsChartObserver();
 	private final IlsStepMonitor stepMonitor = new IlsStepMonitor();
 	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
 	private TestMgr testMgr = new TestMgr();
+	private RecipeDataChangeMgr recipeDataChangeMgr;
 	
 	private static StepFactory[] stepFactories = {
 		new QueueMessageStepFactory(),
@@ -134,9 +136,11 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public TestMgr getTestMgr() {
 		return testMgr;
 	}
+
 	public IlsStepMonitor getStepMonitor() {
 		return stepMonitor;
 	}
+
 
 	public GatewayContext getContext() {
 		return context;
@@ -146,6 +150,9 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		return chartManager;
 	}
 
+	public RecipeDataChangeMgr getRecipeDataChangeMgr() {
+		return recipeDataChangeMgr;
+	}
 
 	public IlsScopeLocator getScopeLocator() {
 		return scopeLocator;
@@ -188,11 +195,12 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	};
 	
 	@Override
-	public void startup(LicenseState licenseState) {
-		ScriptManager.asynchInit("C:/Program Files/Inductive Automation/Ignition/user-lib/pylib");				
+	public void startup(LicenseState licenseState) {			
 		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
-		stepMonitor.initialize(context,chartManager,iaSfcHook);
-	    log.infof("%s: Startup complete.",TAG);
+		stepMonitor.initialize(context,chartManager,iaSfcHook);				
+		recipeDataChangeMgr = new RecipeDataChangeMgr(context);
+		chartManager.addChartObserver(recipeDataChangeMgr);
+		log.infof("%s: Startup complete.",TAG);
 	}
 	
 	@Override
@@ -220,6 +228,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 			chartManager.unregister(stepFactory);
 		}
 		chartManager.removeChartObserver(chartObserver);
+		chartManager.removeChartObserver(recipeDataChangeMgr);
 		chartManager = null;
 		stepMonitor.shutdown();
 	}

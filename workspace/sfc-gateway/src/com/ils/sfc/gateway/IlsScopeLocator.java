@@ -7,6 +7,11 @@ import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.api.ScopeLocator;
 
 public class IlsScopeLocator implements ScopeLocator {
+	private final IlsSfcGatewayHook hook;
+	
+	public IlsScopeLocator(IlsSfcGatewayHook hook) {
+		this.hook = hook;
+	}
 	
 	/** Given an identifier like local, superior, previous, global, operation
 	 *  return the corresponding STEP scope. The enclosing step scope is stored
@@ -141,5 +146,7 @@ public class IlsScopeLocator implements ScopeLocator {
 		String path, String scopeIdentifier, Object value) {
 		PyChartScope resolvedScope = resolveScope(chartScope, stepScope, scopeIdentifier);
 		pathSet(resolvedScope, path, value);
+		String chartRunId = (String)getTopScope(chartScope).get("instanceId");
+		hook.getRecipeDataChangeMgr().addChangedScope(resolvedScope, chartRunId);
 	}
 }

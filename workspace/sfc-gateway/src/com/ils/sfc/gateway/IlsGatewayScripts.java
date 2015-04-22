@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.python.core.PyDictionary;
 import org.python.core.PyList;
 import org.python.core.PyObject;
 
 import com.ils.sfc.common.IlsSfcCommonUtils;
+import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.step.IlsAbstractChartStep;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
@@ -226,6 +229,11 @@ public class IlsGatewayScripts {
 		String stepName = (String)stepScope.get("name");
 		String chartName = (String)chartScope.get("chartPath");
 		return chartName + ":" + stepName;
+	}
+	
+	public static String getJSONForScope(PyChartScope scope) throws JSONException {
+		JSONObject jsonObject = Data.fromStepScope(scope);
+		return jsonObject.toString();
 	}
 	
 	public static void assertEqual(String testName, String stepName, PyObject expected, PyObject actual) {		

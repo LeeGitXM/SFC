@@ -21,6 +21,7 @@ import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
+import com.inductiveautomation.sfc.api.PyChartScope;
 
 /**
 superiorClass: sequence (the symbol S88-OBJECT)
@@ -142,6 +143,27 @@ public abstract class Data {
 		return propertiesByName.get(propertyName);
 	}
 	
+	public static JSONObject fromStepScope(PyChartScope stepScope) throws JSONException {
+		return fromStepScopeRecursive(stepScope, 0);
+	}
+	
+	private static JSONObject fromStepScopeRecursive(PyChartScope stepScope, int level) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+		for(Object key: stepScope.keys()) {
+			if(!(key instanceof String)) continue;
+			// ignore the id and name step properties, and assume everything else
+			// is recipe data
+			if(level == 0 && ("id".equals(key) || "name".equals(key))) continue;
+			Object value = stepScope.get(key);
+			if(value instanceof PyChartScope) {
+				jsonObject.put((String)key, fromStepScope((PyChartScope)value));
+			}
+			else {
+				jsonObject.put((String)key, value);				
+			}
+		}
+		return jsonObject;	
+	}
 
 	/** Convert this object (and any hierarchy) to a JSON object */
 	public JSONObject toJSON() throws JSONException {

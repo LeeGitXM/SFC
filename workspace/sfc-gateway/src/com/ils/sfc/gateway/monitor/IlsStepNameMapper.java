@@ -40,6 +40,7 @@ public class IlsStepNameMapper {
 	private final static LoggerEx log = LogUtil.getLogger(IlsStepNameMapper.class.getPackage().getName());
 	private final Map<String,FolderHolder> folderHierarchy;
 	private final Map<String, String> stepIdByName;
+	private final Map<String, Long> resourceIdByStep;
 	
 	/**
 	 * On construction, create a map of Step names by UUID.
@@ -48,6 +49,7 @@ public class IlsStepNameMapper {
 	public IlsStepNameMapper(GatewayContext ctx,SfcGatewayHook iaSfcHook) {
 		stepIdByName = new HashMap<>();
 		folderHierarchy = new HashMap<>();
+		resourceIdByStep = new HashMap<>();
 		configureRootNode();    // Adds root to the folder hierarchy
 		this.context = ctx;
 		this.hook = iaSfcHook;
@@ -87,12 +89,12 @@ public class IlsStepNameMapper {
 						if( fh!=null ) {
 							String path = fh.getPath()+"/"+res.getName();
 							if( path.startsWith("/")) path = path.substring(1);
-							mapElement(path,definition.getBeginElement());
+							mapElement(path,res.getResourceId(),definition.getBeginElement());
 						}
 						else {
 							// We expect each chart to have a parent folder. 
 							log.warnf("%s.initialize: Could not find parent for chart %s", TAG,res.getName());
-							mapElement(res.getName(),definition.getBeginElement());
+							mapElement(res.getName(),res.getResourceId(),definition.getBeginElement());
 						}
 					}
 					else {
@@ -122,17 +124,18 @@ public class IlsStepNameMapper {
 		folderHierarchy.put(ChartUIModel.ROOT_FOLDER.toString(), root);
 	}
 	// Add the current element to the map, then recursively its children.
-	private void mapElement(String chartName,ElementDefinition element) {
+	private void mapElement(String chartName,long resId,ElementDefinition element) {
 		if( element instanceof StepDefinition ) {
 			StepDefinition stepDef = (StepDefinition)element;
 			String stepId = stepDef.getElementId().toString();
 			if( stepIdByName.get(stepId)!=null ) return; // We've looped
 			String name = stepDef.getProperties().get(ChartStepProperties.Name);
 			stepIdByName.put(makeKey(chartName,name), stepId);
+			resourceIdByStep.put(stepId, new Long(resId));
 			log.infof("%s.mapElement: %s:%s is %s",TAG,chartName,name,stepId);
 
 			for( ElementDefinition def:stepDef.getNextElements() ) {
-				mapElement(chartName,def);
+				mapElement(chartName,resId,def);
 			}
 		}
 	}
@@ -177,6 +180,16 @@ public class IlsStepNameMapper {
 	}
 	
 	public String idForName(String chartName,String name) { return stepIdByName.get(makeKey(chartName,name)); }
+	/**
+	 * @param stepId
+	 * @return the resourceId associated with the parent chart of the specified step.
+	 *         If the lookup fails, return -1.
+	 */
+	public long resourceIdForStep(String stepId) { 
+		Long id = resourceIdByStep.get(stepId);
+		if( id!=null) return id.longValue();
+		else return -1L; 
+	}
 	
 	private String makeKey(String chartName,String stepName) {
 		StringBuilder sb = new StringBuilder();
