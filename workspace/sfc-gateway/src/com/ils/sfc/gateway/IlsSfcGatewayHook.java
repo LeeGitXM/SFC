@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
+import com.ils.sfc.gateway.monitor.IlsStepMonitor;
 import com.ils.sfc.gateway.persistence.ToolkitRecord;
 import com.ils.sfc.step.CancelStepFactory;
 import com.ils.sfc.step.ClearQueueStepFactory;
@@ -51,7 +52,9 @@ import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
 import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 import com.inductiveautomation.ignition.gateway.services.ModuleServiceConsumer;
+import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.api.ChartManagerService;
+import com.inductiveautomation.sfc.api.SfcGatewayHook;
 import com.inductiveautomation.sfc.api.elements.StepFactory;
 //import com.inductiveautomation.sfc.ChartManager;
 
@@ -70,6 +73,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private ChartManagerService chartManager;
 	private IlsScopeLocator scopeLocator = new IlsScopeLocator();
 	private IlsChartObserver chartObserver = new IlsChartObserver();
+	private final IlsStepMonitor stepMonitor = new IlsStepMonitor();
 	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
 	private TestMgr testMgr = new TestMgr();
 	
@@ -130,7 +134,9 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public TestMgr getTestMgr() {
 		return testMgr;
 	}
-
+	public IlsStepMonitor getStepMonitor() {
+		return stepMonitor;
+	}
 
 	public GatewayContext getContext() {
 		return context;
@@ -184,7 +190,8 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	@Override
 	public void startup(LicenseState licenseState) {
 		ScriptManager.asynchInit("C:/Program Files/Inductive Automation/Ignition/user-lib/pylib");				
-		//SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
+		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
+		stepMonitor.initialize(context,chartManager,iaSfcHook);
 	    log.infof("%s: Startup complete.",TAG);
 	}
 	
@@ -214,6 +221,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		}
 		chartManager.removeChartObserver(chartObserver);
 		chartManager = null;
+		stepMonitor.shutdown();
 	}
 
 	public static Map<String, List<String>> getPropertyNamesById() {

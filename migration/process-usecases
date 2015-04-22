@@ -6,7 +6,7 @@
 #   -- create project files from the converted XML and translated procedures
 #
 SFC=$GIT_REPO/sfc
-OUTDIR=$SFC/migration/projects/UnitTests
+OUTDIR=$SFC/migration/projects/UseCases
 mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
 

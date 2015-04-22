@@ -1,6 +1,6 @@
 -- Fields aare:  G2 class name, Ignition factory-id, type (enclosure/transition/ )
 insert into ClassMap values ('S88-BEGIN','begin-step','');
-insert into ClassMap values ('S88-TIME-DELAY','com.ils.TimedDelayStep','');
+insert into ClassMap values ('S88-TIME-DELAY','com.ils.timedDelayStep','');
 insert into ClassMap values ('S88-ABORT-BLOCK', 'com.ils.abortStep','');
 insert into ClassMap values ('S88-ABORT-TASK', 'com.ils.abortStep','');
 insert into ClassMap values ('S88-CALLBACK','action-step','');

@@ -23,7 +23,8 @@ import com.inductiveautomation.sfc.api.ScopeLocator;
 import com.inductiveautomation.sfc.api.elements.ChartElement;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 
-/** java utilities exposed to Python. */
+/** Java utilities exposed to Python. The python module path is: "system.ils.sfc"
+ */
 public class IlsGatewayScripts {	
 	private static LoggerEx logger = LogUtil.getLogger(IlsGatewayScripts.class.getName());
 	private static IlsSfcGatewayHook ilsSfcGatewayHook;
@@ -162,6 +163,45 @@ public class IlsGatewayScripts {
 	 */
 	public static void setTimeFactor(double factor) {
 		requestHandler.setTimeFactor(factor);
+	}
+	
+	/**
+	 * Clear results from the step monitor. Since results are indexed
+	 * by the run-id of the chart, the dictionary entries related to
+	 * completed charts are not cleaned up without resorting to this
+	 * call.
+	 */
+	public static void clearStepMonitor() {
+		ilsSfcGatewayHook.getStepMonitor().clear();
+	}
+	/**
+	 * @return the most recent state of the named block of a running chart.
+	 */
+	public static String stepState(String chartId,String stepName) {
+		return ilsSfcGatewayHook.getStepMonitor().stepState(chartId,stepName);
+	}
+	/**
+	 * On a stop, the step monitor removes itself as a chart observer,
+	 * but retains the current state dictionary. Note that this is a 
+	 * global operation affecting the monitoring of all running charts.
+	 */
+	public static void stopStepMonitor() {
+		ilsSfcGatewayHook.getStepMonitor().stop();
+	}
+	/**
+	 * If the step monitor is not currently observing step status,
+	 * it will add itself as a ChartObserver. 
+	 */
+	public static void startStepMonitor() {
+		ilsSfcGatewayHook.getStepMonitor().start();
+	}
+	/**
+	 * Tell the step monitor to collect observations for a 
+	 * particular chart and its steps. This call sets the
+	 * mapping between chart name and chart execution id. 
+	 */
+	public static void watchChart(String id,String name) {
+		ilsSfcGatewayHook.getStepMonitor().watch(id,name);
 	}
 		
 	public static void registerSfcProject(String projectName) {

@@ -1,4 +1,4 @@
-#!/bin/sh
+#/bin/sh
 #
 # Save the source tree for sfc and common into a zip repository.
 # Do not intentionally include build products. Make clean before 
@@ -22,11 +22,10 @@ cd mdb
 ./mkdatabase
 cd ..
 ./process-usecases
-cd projects
-cp -a *.proj $TMP/Unittests
+cp -a projects $TMP
 
 # Now zip and copy to subversion
 cd $REPO_ROOT
-zip -r sfc-usecases.zip $VERS
-cp sfc-usecases.zip $SVN
+zip -r sfc-migration.zip $VERS
+cp sfc-migration.zip $SVN
 rm -rf $TMP
