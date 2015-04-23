@@ -2,17 +2,15 @@ package com.ils.sfc.gateway;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Writer;
 import java.net.InetAddress;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
@@ -20,11 +18,8 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -33,96 +28,172 @@ import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
-import com.ils.sfc.common.chartStructure.IlsSfcChartStructureCompiler;
 import com.ils.sfc.common.recipe.objects.Data;
-import com.inductiveautomation.ignition.client.gateway_interface.ResourceLockManager;
-import com.inductiveautomation.ignition.client.gateway_interface.ResourceLockManagerFactory;
 import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
-import com.inductiveautomation.ignition.common.user.AuthenticatedUser;
-import com.inductiveautomation.ignition.common.user.BasicAuthChallenge;
+import com.inductiveautomation.ignition.common.project.ProjectVersion;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
+import com.inductiveautomation.ignition.gateway.project.ProjectListener;
 import com.inductiveautomation.ignition.gateway.project.ProjectManager;
-import com.inductiveautomation.ignition.gateway.user.UserSourceProfile;
 import com.inductiveautomation.sfc.ChartObserver;
 import com.inductiveautomation.sfc.ChartStateEnum;
 import com.inductiveautomation.sfc.ElementStateEnum;
-import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.api.PyChartScope;
-import com.inductiveautomation.sfc.api.SfcGatewayHook;
-import com.inductiveautomation.sfc.api.XMLParseException;
-import com.inductiveautomation.sfc.api.elements.GatewayStepRegistry;
-import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
 /**
- * Keep track of changes in recipe data, and save them for later inspection
- * --maybe listen for completion of charts and save any changes for that chart...
+ * A manager that keeps track of changes to recipe data as a chart runs.
+ * Changes are saved back to the chart definition. Un-modified recipe
+ * data is also available through this class.
  */
-public class RecipeDataChangeMgr implements ChartObserver {
+public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 	public static final String CHART_RESOURCE_TYPE="sfc-chart-ui-model";
-	private static LoggerEx logger = LogUtil.getLogger(ChartObserver.class.getName());
-	private Map<String, Map<String,PyChartScope>> changedStepScopesByRunId = new HashMap<String,  Map<String,PyChartScope>>();
+	private static LoggerEx logger = LogUtil.getLogger(RecipeDataChangeMgr.class.getName());
+	private Map<String,Set<String>> changedStepScopeIdsByRunId = new HashMap<String,Set<String>>(); 
+	private Map<String,String> recipeDataByStepId = new HashMap<String,String>();
 	private Project globalProject;
 	private ProjectManager projectManager;
-	private GatewayContext context;
-	//private IlsSfcChartStructureCompiler chartCompiler;
-		
+	private Map<String,Long> resourceIdsByStepId = new HashMap<String,Long>();
+	private Date lastGlobalProjectChangeDate;
+	private boolean updating = false;
+	
 	public RecipeDataChangeMgr(GatewayContext context) {
-		//GatewayStepRegistry stepRegistry = ((SfcGatewayHook)context.getModule(SFCModule.MODULE_ID)).getStepRegistry();
-		this.context = context;
 		projectManager = context.getProjectManager();
 		globalProject = projectManager.getGlobalProject(ApplicationScope.GATEWAY);
-	}
-
-	public synchronized void addChangedScope(PyChartScope stepScope, String chartRunId) {
-		Map<String,PyChartScope> changedStepScopes = changedStepScopesByRunId.get(chartRunId);
-		if(changedStepScopes == null) {
-			changedStepScopes = new HashMap<String, PyChartScope>();
-			changedStepScopesByRunId.put(chartRunId, changedStepScopes);
-		}				
-		changedStepScopes.put((String)stepScope.get("id"), stepScope);
-	}
-	
-	/** Write all changed step scopes for the given run back into the associated data
-	 *  properties of the chart definitions. */
-	public synchronized void flushChanges(String chartRunId) throws Exception {
-		Map<String,PyChartScope> changedStepScopes = changedStepScopesByRunId.get(chartRunId);
-		if(changedStepScopes != null) {
-			Map<String, String> updatedDataByStepId = buildChangeMap(changedStepScopes);
-			List<ProjectResource> chartResources = getChartResourcesForChangedScopes(changedStepScopes);
-			for(ProjectResource chartResource: chartResources) {
-				byte[] resourceData = chartResource.getData();
-				GZIPInputStream in = new GZIPInputStream(
-					new ByteArrayInputStream(resourceData));
-				ByteArrayOutputStream outBytes = new ByteArrayOutputStream();
-				GZIPOutputStream out = new GZIPOutputStream(outBytes, true);			
-				int numReplacements = replaceAssociatedData(in, updatedDataByStepId, out);
-				out.flush();
-				// TODO: remove check on numReplacements when we're not using all charts
-				if(numReplacements > 0) {
-					byte[] newBytes = outBytes.toByteArray();
-					chartResource.setData(newBytes);
-					Project diff = globalProject.getDiff();
-					diff.putResource(chartResource);
-					UserSourceProfile defaultProfile = context.getUserSourceManager().getProfile("default");
-					BasicAuthChallenge authChallenge = new BasicAuthChallenge("admin", "password");
-					AuthenticatedUser authUser = defaultProfile.authenticate(authChallenge);
-					String host = InetAddress.getLocalHost().getHostName();
-					projectManager.saveProject(diff, authUser, host, "recipe data change", true);
-				}
-			}
-			changedStepScopesByRunId.remove(chartRunId);
+		projectManager.addProjectListener(this);
+		try {
+			initializeAllRecipeData();
+		} catch (Exception e) {
+			logger.error("Error initializing recipe data", e);
 		}
 	}
 
-	/** Get all the resources that have a changed step scope. */
-	private List<ProjectResource> getChartResourcesForChangedScopes(Map<String,PyChartScope> asdf) {
-		// TODO: be more efficient here--now we're just getting all chart resources
+	/** Get the ids of all steps whose recipe data has unsaved changes for the given run. 
+	 *  If no changes exist yet, a set is created to hold them. */
+	private Set<String> getChangedStepScopeIdsForRun(String runId) {
+		Set<String> changedStepScopeIds = changedStepScopeIdsByRunId.get(runId);
+		if(changedStepScopeIds == null) {
+			changedStepScopeIds = new HashSet<String>();
+			changedStepScopeIdsByRunId.put(runId, changedStepScopeIds);
+		}
+		return changedStepScopeIds;
+	}
+	
+	/** Answer if any changes have been registered for the given run. */
+	private boolean changesExistForRun(String runId) {
+		return changedStepScopeIdsByRunId.get(runId) != null;
+	}
+	
+	/** Record the changed recipe data for a particular step. The run id is the for the
+	 *  TOP level chart, though the step may be in a different, enclosed chart. */
+	public synchronized void addChangedScope(PyChartScope stepScope, String chartRunId)  {
+		String stepId = (String)stepScope.get("id");
+		Set<String> changedStepScopeIds = getChangedStepScopeIdsForRun(chartRunId);
+		changedStepScopeIds.add(stepId);				
+		try {
+			recipeDataByStepId.put(stepId, getAssociatedDataTextForStepScope(stepScope));
+		} catch (JSONException e) {
+			logger.error("Error saving step scope change as JSON", e);
+		}
+	}
+	
+	/** Get the recipe data for a particular step. This data will reflect any recent
+	 *  changes to it. */
+	public synchronized String getRecipeData(String stepId) {
+		return recipeDataByStepId.get(stepId);
+	}
+	
+	/** Pull the static recipe data out of all the chart definitions and store it here. */
+	private void initializeAllRecipeData() {
+		logger.info("Initializing recipe data in RecipeDataChangeMgr");
+		for(ProjectResource chartResource: getChartResources()) {
+			initializeRecipeData(chartResource);
+		}
+	}
+	
+	/** Pull the static recipe data out of one chart definition and store it here. */
+	private void initializeRecipeData(ProjectResource chartResource)  {
+		try {
+			Document doc = getDocumentForChartResource(chartResource);
+			Map<String, Node> associatedDataNodesByStepId = getAssociatedDataNodesByStepId(doc);
+			for(Entry<String,Node> entry: associatedDataNodesByStepId.entrySet()) {
+				String stepId = entry.getKey();
+				Node associatedDataNode = entry.getValue();
+				recipeDataByStepId.put(stepId, associatedDataNode.getTextContent());
+				resourceIdsByStepId.put(stepId, Long.valueOf(chartResource.getResourceId()));
+			}
+		}
+		catch(Exception e) {
+			logger.error("Error initializing recipe data for resource " + chartResource.getName(), e );
+		}
+	}
+	
+	/** Translate a chart definition in resource form to an xml DOM document. */
+	private Document getDocumentForChartResource(ProjectResource resource) throws Exception {
+		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		byte[] resourceData = resource.getData();
+		GZIPInputStream in = new GZIPInputStream(new ByteArrayInputStream(resourceData));
+		Document doc = docBuilder.parse(in);
+		in.close();
+		return doc;
+	}
+	
+	/** Write all changed recipe data for the given run back into the associated data
+	 *  properties of the chart definitions. */
+	public synchronized void flushChanges(String chartRunId) throws Exception {
+		if(!changesExistForRun(chartRunId)) return;
+		logger.debug("Saving changes for run" + chartRunId);
+		Map<Long, Set<String>> changedStepScopeIdsByResourceId  = getChangedStepScopeIdsByResourceId(chartRunId);
+		for(ProjectResource chartResource: getChartResources()) {
+			// see if there are changes for this resource
+			Set<String> changedStepScopeIdsForResource = changedStepScopeIdsByResourceId.get(
+				Long.valueOf(chartResource.getResourceId()));
+			if(changedStepScopeIdsForResource == null) continue;
+			// replace the changed associated-data elements in the chart definition xml
+			if(logger.isDebugEnabled()) {
+				logger.debug("updating recipe data for resource " + chartResource.getName());
+			}
+			Document doc = getDocumentForChartResource(chartResource);
+			ByteArrayOutputStream outBytes = new ByteArrayOutputStream();
+			GZIPOutputStream out = new GZIPOutputStream(outBytes, true);			
+			replaceAssociatedData(doc, changedStepScopeIdsForResource, out);
+			out.flush();
+			byte[] newBytes = outBytes.toByteArray();
+			out.close();
+			// put the new chart definition xml back in the resource
+			chartResource.setData(newBytes);
+			Project diff = globalProject.getDiff();
+			diff.putResource(chartResource);
+			String host = InetAddress.getLocalHost().getHostName();
+			projectManager.saveProject(diff, null, host, "recipe data change", true);
+		}
+		changedStepScopeIdsByRunId.remove(chartRunId);
+	}
+
+	/** Partition the changed step ids according to what resource the step is in. */
+	private Map<Long, Set<String>> getChangedStepScopeIdsByResourceId(String chartRunId) {
+		Map<Long, Set<String>> changedStepScopeIdsByResourceId = new HashMap<Long, Set<String>>();
+		for(String changedStepId: getChangedStepScopeIdsForRun(chartRunId)) {
+			Long resourceId = resourceIdsByStepId.get(changedStepId);
+			if(resourceId == null) {
+				logger.error("Couldn't find resource id for step id " + changedStepId);
+				continue;
+			}
+			Set<String> stepIds = changedStepScopeIdsByResourceId.get(resourceId);
+			if(stepIds == null) {
+				stepIds = new HashSet<String>();
+				changedStepScopeIdsByResourceId.put(resourceId, stepIds);
+			}
+			stepIds.add(changedStepId);
+		}
+		return changedStepScopeIdsByResourceId;
+	}
+
+	/** Get all the chart resources. */
+	private List<ProjectResource> getChartResources() {
 		List<ProjectResource> chartResources = new ArrayList<ProjectResource>();
 		for(ProjectResource res: globalProject.getResources()) {
 			if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
@@ -131,65 +202,104 @@ public class RecipeDataChangeMgr implements ChartObserver {
 		}
 		return chartResources;
 	}
-
-	/** Build a map of changed associated data by step id */
-	private Map<String, String> buildChangeMap(
-			Map<String, PyChartScope> changedStepScopes) throws JSONException {
-		Map<String, String> updatedDataByStepId = new HashMap<String, String>();
-		for(java.util.Map.Entry<String,PyChartScope> entry: changedStepScopes.entrySet()) {
-			String stepId = entry.getKey();
-			PyChartScope scope = entry.getValue();
-			JSONObject jsonObject = Data.fromStepScope(scope);
-			updatedDataByStepId.put(stepId, jsonObject.toString());
-		}
-		return updatedDataByStepId;
+	
+	/** Transform the run-time step scope into the static JSON representation for recipe data */
+	private String getAssociatedDataTextForStepScope(PyChartScope stepScope) throws JSONException {
+		JSONObject jsonObject = Data.fromStepScope(stepScope);
+		return jsonObject.toString();
 	}
 
-	/** Given in/out streams representing chart xml, replace associated data content for
-	 *  the steps given in the map. Returns count of replaced elements.
-	 */
-	public int replaceAssociatedData(InputStream in, 
-			Map<String,String> replacementByStepId, OutputStream out) throws Exception {
-			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		Document doc = docBuilder.parse(in);
+	/** Pull out the nodes in a DOM chart definition that correspond to associated-data
+	 *  step properties, i.e., recipe data. */
+	private Map<String, Node> getAssociatedDataNodesByStepId(Document doc) {
+		Map<String, Node> associatedDataNodesByStepId = new HashMap<String, Node>();
 		NodeList stepNodes = doc.getDocumentElement().getChildNodes();
-		int numReplacements = 0;
 		for(int i = 0; i < stepNodes.getLength(); i++) {
 			Node stepNode = stepNodes.item(i);
 			if(!stepNode.getNodeName().equals("step")) continue;
 			String stepId = stepNode.getAttributes().getNamedItem("id").getTextContent();
-			String replacement = replacementByStepId.get(stepId);
-			if(replacement != null) {
-				++numReplacements;
 				NodeList childNodes = stepNode.getChildNodes();
 				for(int j = 0; j < childNodes.getLength(); j++) {
 					Node childNode = childNodes.item(j);
 					if(childNode.getNodeName().equals("associated-data")) {
-						childNode.setTextContent(replacement);
+						associatedDataNodesByStepId.put(stepId, childNode);
 					}
 				}
+		}
+		return associatedDataNodesByStepId;
+	}
+	
+	/** Given a chart definition DOM, replace associated data content for
+	 *  the steps given in the map. The changed definition is output as XML.
+	 *  Returns count of replaced elements.
+	 */
+	public void replaceAssociatedData(Document doc, 
+			Set<String> changedStepIds, OutputStream out) throws Exception {
+		Map<String, Node> associatedDataNodesByStepId = getAssociatedDataNodesByStepId(doc);
+		// Make the changes in the DOM:
+		for(String changedStepId: changedStepIds) {
+			String replacementText = recipeDataByStepId.get(changedStepId);
+			Node associatedDataNode = associatedDataNodesByStepId.get(changedStepId);
+			if(logger.isDebugEnabled()) {
+				logger.debug("updating recipe data for step " + changedStepId + " to " + replacementText);
+			}
+			if(associatedDataNode != null) {  
+				associatedDataNode.setTextContent(replacementText);
+			}	
+			else {
+				logger.error("Couldn't find associated data node for step " + changedStepId);
 			}
 		}
+		// Transform the DOM into XML:
 		Transformer transformer = TransformerFactory.newInstance().newTransformer();
-		//transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 		transformer.transform(new DOMSource(doc), new StreamResult(out));
-		return numReplacements;
 	}
 
+	/** A chart listener that we use to know when a top-level chart run ends so we
+	 *  can save any changed recipe data it might have. */
 	@Override
 	public void onChartStateChange(UUID chartId, ChartStateEnum oldChartState,
 			ChartStateEnum newChartState) {
 		if(newChartState.isTerminal()) {
 			try {
+				updating = true;
 				flushChanges(chartId.toString());
 			} catch (Exception e) {
 				logger.error("error saving recipe data changes", e);
 			}
+			finally {
+				updating = false;
+			}
 		}
 	}
 
+	/** We don't use the element state change notification. */
 	@Override
 	public void onElementStateChange(UUID arg0, UUID arg1,ElementStateEnum arg2, ElementStateEnum arg3) {
+	}
+
+	@Override
+	public void projectAdded(Project arg0, Project arg1) {}
+
+	@Override
+	public void projectDeleted(long arg0) {}
+
+	@Override
+	public void projectUpdated(Project project, ProjectVersion version) {
+		/** If charts may have changed, rebuild the recipe data
+		 *  (unless we are the ones who did the changing).
+		 *  this isn't too selective right now--if any change is
+		 *  made to the global project we will rebuild all recipe data */
+		if(project.getId() == -1 && !updating) {
+			Date changeDate = project.getLastModified();
+			if(lastGlobalProjectChangeDate == null || 
+			   lastGlobalProjectChangeDate.before(changeDate)) {
+				logger.debug("Rebuilding recipe data in response to global project change");
+				initializeAllRecipeData();
+			}
+			lastGlobalProjectChangeDate = changeDate;
+		}
+			
 	}
 
 }
