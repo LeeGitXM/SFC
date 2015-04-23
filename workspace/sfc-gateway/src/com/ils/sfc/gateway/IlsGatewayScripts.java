@@ -177,6 +177,7 @@ public class IlsGatewayScripts {
 	public static void clearStepMonitor() {
 		ilsSfcGatewayHook.getStepMonitor().clear();
 	}
+
 	/**
 	 * @return the most recent state of the named block of a running chart.
 	 */

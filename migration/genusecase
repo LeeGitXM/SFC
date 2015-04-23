@@ -20,7 +20,7 @@ $SFC/migration/convert "$INDIR" "$OUTDIR" "$START"
 
 PROJ="testunitprocedure${TESTNO}.proj"
 INDIR="$SFC/migration/xml/ignition/UnitTests/$DIRIN"
-OUTDIR=$SFC/migration/projects/UnitTests
+OUTDIR=$SFC/migration/projects/UseCases
 mkdir -p $OUTDIR
 OUTFIL=${OUTDIR}/$PROJ
 rm -f $OUTFIL

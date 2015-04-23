@@ -1,0 +1,11 @@
+#
+# Test of SFC use case. This must be run in a client.
+#
+Test: Use Case 1
+Step: Before Timeout
+#Show: chart $uc1
+10:00 chartid = startChart($PROJECT,$USER,$ISOLATION,$uc1)
+10:00:10 assert: getState($chartid,"TestUnit1") = "ACTIVE" "Operation is active"
+
+Step: After Timeout
+10:00:25 assert: getState($chartid,"TestUnit1") = "INACTIVE" "Operation is complete"

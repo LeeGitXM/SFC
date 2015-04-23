@@ -3,7 +3,7 @@
 insert into PropertyValueMap values ('recipeLocation','LOCAL','local');
 insert into PropertyValueMap values ('recipeLocation','PREVIOUS','previous');
 insert into PropertyValueMap values ('recipeLocation','SUPERIOR','superior');
-insert into PropertyValueMap values ('strategy','LOCAL','local');
+insert into PropertyValueMap values ('strategy','LOCAL','static');   -- there is no local strategy
 insert into PropertyValueMap values ('strategy','STATIC','static');
 
 -- Names of callbacks get read from here and inserted into ProcedureMap also
