@@ -53,40 +53,26 @@ public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 	public static final String CHART_RESOURCE_TYPE="sfc-chart-ui-model";
 	private static LoggerEx logger = LogUtil.getLogger(RecipeDataChangeMgr.class.getName());
 	private Map<String,Set<String>> changedStepScopeIdsByRunId = new HashMap<String,Set<String>>(); 
-	private Map<String,String> recipeDataByStepId = new HashMap<String,String>();
+	private Map<String,String> staticRecipeDataByStepId = new HashMap<String,String>();
+	private Map<String,String> changedRecipeDataByStepId = new HashMap<String,String>();
 	private Project globalProject;
 	private ProjectManager projectManager;
 	private Map<String,Long> resourceIdsByStepId = new HashMap<String,Long>();
 	private Date lastGlobalProjectChangeDate;
 	private boolean updating = false;
+	private static long changeLatencyMillis = 5000;
 	
 	public RecipeDataChangeMgr(GatewayContext context) {
 		projectManager = context.getProjectManager();
 		globalProject = projectManager.getGlobalProject(ApplicationScope.GATEWAY);
 		projectManager.addProjectListener(this);
 		try {
-			initializeAllRecipeData();
+			initializeAllStaticRecipeData();
 		} catch (Exception e) {
 			logger.error("Error initializing recipe data", e);
 		}
 	}
 
-	/** Get the ids of all steps whose recipe data has unsaved changes for the given run. 
-	 *  If no changes exist yet, a set is created to hold them. */
-	private Set<String> getChangedStepScopeIdsForRun(String runId) {
-		Set<String> changedStepScopeIds = changedStepScopeIdsByRunId.get(runId);
-		if(changedStepScopeIds == null) {
-			changedStepScopeIds = new HashSet<String>();
-			changedStepScopeIdsByRunId.put(runId, changedStepScopeIds);
-		}
-		return changedStepScopeIds;
-	}
-	
-	/** Answer if any changes have been registered for the given run. */
-	private boolean changesExistForRun(String runId) {
-		return changedStepScopeIdsByRunId.get(runId) != null;
-	}
-	
 	/** Record the changed recipe data for a particular step. The run id is the for the
 	 *  TOP level chart, though the step may be in a different, enclosed chart. */
 	public synchronized void addChangedScope(PyChartScope stepScope, String chartRunId)  {
@@ -94,7 +80,7 @@ public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 		Set<String> changedStepScopeIds = getChangedStepScopeIdsForRun(chartRunId);
 		changedStepScopeIds.add(stepId);				
 		try {
-			recipeDataByStepId.put(stepId, getAssociatedDataTextForStepScope(stepScope));
+			changedRecipeDataByStepId.put(stepId, getAssociatedDataTextForStepScope(stepScope));
 		} catch (JSONException e) {
 			logger.error("Error saving step scope change as JSON", e);
 		}
@@ -103,47 +89,22 @@ public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 	/** Get the recipe data for a particular step. This data will reflect any recent
 	 *  changes to it. */
 	public synchronized String getRecipeData(String stepId) {
-		return recipeDataByStepId.get(stepId);
+		String changedData =  changedRecipeDataByStepId.get(stepId);
+		return changedData != null ? changedData : staticRecipeDataByStepId.get(stepId);
 	}
 	
 	/** Pull the static recipe data out of all the chart definitions and store it here. */
-	private void initializeAllRecipeData() {
+	private synchronized void initializeAllStaticRecipeData() {
 		logger.info("Initializing recipe data in RecipeDataChangeMgr");
+		staticRecipeDataByStepId.clear();
 		for(ProjectResource chartResource: getChartResources()) {
-			initializeRecipeData(chartResource);
+			initializeStaticRecipeData(chartResource);
 		}
-	}
-	
-	/** Pull the static recipe data out of one chart definition and store it here. */
-	private void initializeRecipeData(ProjectResource chartResource)  {
-		try {
-			Document doc = getDocumentForChartResource(chartResource);
-			Map<String, Node> associatedDataNodesByStepId = getAssociatedDataNodesByStepId(doc);
-			for(Entry<String,Node> entry: associatedDataNodesByStepId.entrySet()) {
-				String stepId = entry.getKey();
-				Node associatedDataNode = entry.getValue();
-				recipeDataByStepId.put(stepId, associatedDataNode.getTextContent());
-				resourceIdsByStepId.put(stepId, Long.valueOf(chartResource.getResourceId()));
-			}
-		}
-		catch(Exception e) {
-			logger.error("Error initializing recipe data for resource " + chartResource.getName(), e );
-		}
-	}
-	
-	/** Translate a chart definition in resource form to an xml DOM document. */
-	private Document getDocumentForChartResource(ProjectResource resource) throws Exception {
-		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		byte[] resourceData = resource.getData();
-		GZIPInputStream in = new GZIPInputStream(new ByteArrayInputStream(resourceData));
-		Document doc = docBuilder.parse(in);
-		in.close();
-		return doc;
 	}
 	
 	/** Write all changed recipe data for the given run back into the associated data
 	 *  properties of the chart definitions. */
-	public synchronized void flushChanges(String chartRunId) throws Exception {
+	private synchronized void flushChanges(String chartRunId) throws Exception {
 		if(!changesExistForRun(chartRunId)) return;
 		logger.debug("Saving changes for run" + chartRunId);
 		Map<Long, Set<String>> changedStepScopeIdsByResourceId  = getChangedStepScopeIdsByResourceId(chartRunId);
@@ -172,7 +133,50 @@ public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 		}
 		changedStepScopeIdsByRunId.remove(chartRunId);
 	}
+	
+	/** Pull the static recipe data out of one chart definition and store it here. */
+	private void initializeStaticRecipeData(ProjectResource chartResource)  {
+		try {
+			Document doc = getDocumentForChartResource(chartResource);
+			Map<String, Node> associatedDataNodesByStepId = getAssociatedDataNodesByStepId(doc);
+			for(Entry<String,Node> entry: associatedDataNodesByStepId.entrySet()) {
+				String stepId = entry.getKey();
+				Node associatedDataNode = entry.getValue();
+				staticRecipeDataByStepId.put(stepId, associatedDataNode.getTextContent());
+				resourceIdsByStepId.put(stepId, Long.valueOf(chartResource.getResourceId()));
+			}
+		}
+		catch(Exception e) {
+			logger.error("Error initializing recipe data for resource " + chartResource.getName(), e );
+		}
+	}
+	
+	/** Translate a chart definition in resource form to an xml DOM document. */
+	private Document getDocumentForChartResource(ProjectResource resource) throws Exception {
+		DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		byte[] resourceData = resource.getData();
+		GZIPInputStream in = new GZIPInputStream(new ByteArrayInputStream(resourceData));
+		Document doc = docBuilder.parse(in);
+		in.close();
+		return doc;
+	}	
 
+	/** Get the ids of all steps whose recipe data has unsaved changes for the given run. 
+	 *  If no changes exist yet, a set is created to hold them. */
+	private Set<String> getChangedStepScopeIdsForRun(String runId) {
+		Set<String> changedStepScopeIds = changedStepScopeIdsByRunId.get(runId);
+		if(changedStepScopeIds == null) {
+			changedStepScopeIds = new HashSet<String>();
+			changedStepScopeIdsByRunId.put(runId, changedStepScopeIds);
+		}
+		return changedStepScopeIds;
+	}
+	
+	/** Answer if any changes have been registered for the given run. */
+	private boolean changesExistForRun(String runId) {
+		return changedStepScopeIdsByRunId.get(runId) != null;
+	}
+	
 	/** Partition the changed step ids according to what resource the step is in. */
 	private Map<Long, Set<String>> getChangedStepScopeIdsByResourceId(String chartRunId) {
 		Map<Long, Set<String>> changedStepScopeIdsByResourceId = new HashMap<Long, Set<String>>();
@@ -238,7 +242,8 @@ public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 		Map<String, Node> associatedDataNodesByStepId = getAssociatedDataNodesByStepId(doc);
 		// Make the changes in the DOM:
 		for(String changedStepId: changedStepIds) {
-			String replacementText = recipeDataByStepId.get(changedStepId);
+			String replacementText = changedRecipeDataByStepId.get(changedStepId);
+			changedRecipeDataByStepId.remove(changedStepId);
 			Node associatedDataNode = associatedDataNodesByStepId.get(changedStepId);
 			if(logger.isDebugEnabled()) {
 				logger.debug("updating recipe data for step " + changedStepId + " to " + replacementText);
@@ -293,9 +298,10 @@ public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 		if(project.getId() == -1 && !updating) {
 			Date changeDate = project.getLastModified();
 			if(lastGlobalProjectChangeDate == null || 
-			   lastGlobalProjectChangeDate.before(changeDate)) {
+			   lastGlobalProjectChangeDate.getTime() + changeLatencyMillis <
+			   changeDate.getTime()) {
 				logger.debug("Rebuilding recipe data in response to global project change");
-				initializeAllRecipeData();
+				initializeAllStaticRecipeData();
 			}
 			lastGlobalProjectChangeDate = changeDate;
 		}
