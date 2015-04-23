@@ -233,7 +233,7 @@ public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 	 *  the steps given in the map. The changed definition is output as XML.
 	 *  Returns count of replaced elements.
 	 */
-	public void replaceAssociatedData(Document doc, 
+	private void replaceAssociatedData(Document doc, 
 			Set<String> changedStepIds, OutputStream out) throws Exception {
 		Map<String, Node> associatedDataNodesByStepId = getAssociatedDataNodesByStepId(doc);
 		// Make the changes in the DOM:
