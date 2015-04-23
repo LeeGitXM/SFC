@@ -302,8 +302,8 @@ public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 			   changeDate.getTime()) {
 				logger.debug("Rebuilding recipe data in response to global project change");
 				initializeAllStaticRecipeData();
+				lastGlobalProjectChangeDate = changeDate;
 			}
-			lastGlobalProjectChangeDate = changeDate;
 		}
 			
 	}
