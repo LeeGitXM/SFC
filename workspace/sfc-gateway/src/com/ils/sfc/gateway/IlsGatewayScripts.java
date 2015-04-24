@@ -144,6 +144,16 @@ public class IlsGatewayScripts {
 		String path, String scopeIdentifier, Object value) {
 		ilsSfcGatewayHook.getScopeLocator().s88Set(chartScope, stepScope, path, scopeIdentifier, value);
 	}
+
+	public static String getRecipeDataText(PyChartScope chartScope, PyChartScope stepScope,
+		String scopeIdentifier) {
+		try {
+			return ilsSfcGatewayHook.getScopeLocator().getRecipeDataText(chartScope, stepScope, scopeIdentifier);
+		} catch (JSONException e) {
+			logger.error("Error getting recipe data text", e);
+			return "";
+		}	
+	}
 		
 	public static void setHook(IlsSfcGatewayHook hook) {
 		ilsSfcGatewayHook = hook;		

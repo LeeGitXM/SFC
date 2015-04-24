@@ -48,6 +48,9 @@ import com.inductiveautomation.sfc.api.PyChartScope;
  * A manager that keeps track of changes to recipe data as a chart runs.
  * Changes are saved back to the chart definition. Un-modified recipe
  * data is also available through this class.
+ * 
+ * Implementation concerns:
+ *    is there any possibility of uncommitted changes building up over time (memory leak)?
  */
 public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 	public static final String CHART_RESOURCE_TYPE="sfc-chart-ui-model";
@@ -295,12 +298,14 @@ public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 		 *  (unless we are the ones who did the changing).
 		 *  this isn't too selective right now--if any change is
 		 *  made to the global project we will rebuild all recipe data */
+		// ?? I'm not sure if all this stuff with the change date really affects
+		// anything. If we could get the RESOURCE change dates that might be helpful...
 		if(project.getId() == -1 && !updating) {
 			Date changeDate = project.getLastModified();
 			if(lastGlobalProjectChangeDate == null || 
 			   lastGlobalProjectChangeDate.getTime() + changeLatencyMillis <
 			   changeDate.getTime()) {
-				logger.debug("Rebuilding recipe data in response to global project change");
+				logger.debug("Rebuilding static recipe data in response to global project change");
 				initializeAllStaticRecipeData();
 				lastGlobalProjectChangeDate = changeDate;
 			}

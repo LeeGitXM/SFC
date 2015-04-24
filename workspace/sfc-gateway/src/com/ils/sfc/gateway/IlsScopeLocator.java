@@ -1,7 +1,11 @@
 package com.ils.sfc.gateway;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.IlsSfcNames;
+import com.ils.sfc.common.recipe.objects.Data;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.api.ScopeLocator;
@@ -133,6 +137,16 @@ public class IlsScopeLocator implements ScopeLocator {
 		}
 		return scope;
 	}
+
+	/** Get a text representation of all the recipe data for a particular scope. 
+	 * @throws JSONException */
+	public String getRecipeDataText(PyChartScope chartScope, PyChartScope stepScope, 
+		String scopeIdentifier) throws JSONException {
+			PyChartScope resolvedScope = resolveScope(chartScope, stepScope, scopeIdentifier);
+			JSONObject jsonObject;
+			jsonObject = Data.fromStepScope(resolvedScope);
+			return jsonObject.toString();
+		}
 
 	public Object s88Get(PyChartScope chartScope, PyChartScope stepScope, 
 		String path, String scopeIdentifier) {
