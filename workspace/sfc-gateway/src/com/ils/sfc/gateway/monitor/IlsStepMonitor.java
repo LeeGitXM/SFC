@@ -56,7 +56,7 @@ public class IlsStepMonitor implements ChartObserver {
 	 *             It does not start with a "/".
 	 */
 	public void watch(String id,String name) {
-		log.infof("%s.watch: %s is %s",TAG,name,id);
+		log.debugf("%s.watch: %s is %s",TAG,name,id);
 		chartNameForId.put(id, name);
 	}
 	
@@ -75,7 +75,7 @@ public class IlsStepMonitor implements ChartObserver {
 	public void onElementStateChange(UUID chartId, UUID elementId, ElementStateEnum oldState,ElementStateEnum newState) {		
 		String key = makeKey(chartId.toString(),elementId.toString());
 		elementStateForKey.put(key, newState.name());
-		log.infof("%s.onElementStateChange: %s is %s",TAG,key,newState.name());
+		log.tracef("%s.onElementStateChange: %s is %s",TAG,key,newState.name());
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class IlsStepMonitor implements ChartObserver {
 				}
 			}
 		}
-		log.infof("%s.stepState: %s:%s is %s",TAG,chartId.toString(),stepName,stepState);
+		log.debugf("%s.stepState: %s:%s is %s",TAG,chartId.toString(),stepName,stepState);
 		return stepState;
 	}
 	
