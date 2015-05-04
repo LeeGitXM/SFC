@@ -1,11 +1,12 @@
 #
 # Test of SFC use case. This must be run in a client.
+# Total delay in the chart is 60 mins, 5 secs.
 #
 Test: Use Case 1
 Step: Before Timeout
 #Show: chart $uc1
-10:00 chartid = startChart($PROJECT,$USER,$ISOLATION,$uc1)
-10:00:10 assert: getState($chartid,"TestUnit1") = "ACTIVE" "Operation is active"
+00:00 chartid = startChart($PROJECT,$USER,$ISOLATION,$uc1)
+00:10:00 assert: getState($chartid,"TestUnit1") = "ACTIVE" "Operation is active"
 
 Step: After Timeout
-10:00:25 assert: getState($chartid,"TestUnit1") = "INACTIVE" "Operation is complete"
+01:01 assert: getState($chartid,"TestUnit1") = "INACTIVE" "Operation is complete"
