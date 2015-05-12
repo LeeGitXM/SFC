@@ -13,16 +13,15 @@ public interface ReviewDataStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.reviewDataStep";
 	
     public static final IlsProperty<?>[] properties = {  
-    	SCREEN_HEADER,
+    	WINDOW_TITLE,
     	BUTTON_LABEL,
-    	DIALOG_TEMPLATE,
-    	POSTING_METHOD,
-    	AUTO_MODE,
+    	REVIEW_DATA_POSTING_METHOD,
     	DISPLAY_MODE,
     	BUTTON_KEY,
     	BUTTON_KEY_LOCATION,
     	POSITION,
     	SCALE,
+    	REVIEW_DATA_WINDOW,
     	REVIEW_DATA
     };
 }

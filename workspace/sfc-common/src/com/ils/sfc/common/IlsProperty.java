@@ -59,7 +59,6 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> DELAY_UNIT = new IlsProperty<String>(IlsSfcNames.DELAY_UNIT, String.class, IlsSfcNames.TIME_DELAY_UNIT_CHOICES[0], IlsSfcNames.TIME_DELAY_UNIT_CHOICES);  
     public static final IlsProperty<String> DESCRIPTION = new IlsProperty<String>(IlsSfcNames.DESCRIPTION, String.class, "");
     public static final IlsProperty<String> DIALOG = new IlsProperty<String>(IlsSfcNames.DIALOG, String.class, "");
-    public static final IlsProperty<String> DIALOG_TEMPLATE = new IlsProperty<String>(IlsSfcNames.DIALOG_TEMPLATE, String.class, "ReviewData");
     public static final IlsProperty<String> DIRECTORY = new IlsProperty<String>(IlsSfcNames.DIRECTORY, String.class, "");
     public static final IlsProperty<String> DISPLAY_MODE = new IlsProperty<String>(IlsSfcNames.DISPLAY_MODE, String.class, IlsSfcNames.DISPLAY_MODE_CHOICES[0], IlsSfcNames.DISPLAY_MODE_CHOICES);
     public static final IlsProperty<Boolean> DOWNLOAD = new IlsProperty<Boolean>(IlsSfcNames.DOWNLOAD, Boolean.class, Boolean.TRUE);
@@ -71,7 +70,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<Double> ERROR_CODE = new IlsProperty<Double>(IlsSfcNames.ERROR_CODE, Double.class, 0.);
     public static final IlsProperty<String> ERROR_TEXT = new IlsProperty<String>(IlsSfcNames.ERROR_TEXT, String.class, "");
     public static final IlsProperty<String> EXTENSION = new IlsProperty<String>(IlsSfcNames.EXTENSION, String.class, ".txt");
-    public static final IlsProperty<String> FETCH_MODE = new IlsProperty<String>(IlsSfcNames.FETCH_MODE, String.class, "", IlsSfcNames.FETCH_MODE_CHOICES);
+    public static final IlsProperty<String> FETCH_MODE = new IlsProperty<String>(IlsSfcNames.FETCH_MODE, String.class, IlsSfcNames.FETCH_MODE_CHOICES[0], IlsSfcNames.FETCH_MODE_CHOICES);
     public static final IlsProperty<String> FILENAME = new IlsProperty<String>(IlsSfcNames.FILENAME, String.class, "");
     public static final IlsProperty<String> GUI_UNITS = new IlsProperty<String>(IlsSfcNames.FILENAME, String.class, "");
     public static final IlsProperty<String> GUI_LABEL = new IlsProperty<String>(IlsSfcNames.GUI_LABEL, String.class, "");
@@ -95,7 +94,6 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> POSITION = new IlsProperty<String>(IlsSfcNames.POSITION, String.class, IlsSfcNames.POSITION_CHOICES[0], IlsSfcNames.POSITION_CHOICES);
     public static final IlsProperty<Boolean> POST_NOTIFICATION = new IlsProperty<Boolean>(IlsSfcNames.POST_NOTIFICATION, Boolean.class, Boolean.FALSE);
     public static final IlsProperty<Boolean> POST_TO_QUEUE = new IlsProperty<Boolean>(IlsSfcNames.POST_TO_QUEUE, Boolean.class, Boolean.FALSE);
-    public static final IlsProperty<String> POSTING_METHOD = new IlsProperty<String>(IlsSfcNames.POSTING_METHOD, String.class, "");
     public static final IlsProperty<String> PROMPT = new IlsProperty<String>(IlsSfcNames.PROMPT, String.class, "");
     public static final IlsProperty<Boolean> PRINT_FILE = new IlsProperty<Boolean>(IlsSfcNames.PRINT_FILE, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<String> PRIORITY = new IlsProperty<String>(IlsSfcNames.PRIORITY, String.class, IlsSfcNames.PRIORITY_CHOICES[0], IlsSfcNames.PRIORITY_CHOICES);
@@ -105,15 +103,17 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> QUEUE = new IlsProperty<String>(IlsSfcNames.QUEUE, String.class, "");
     public static final IlsProperty<Double> RAMP_TIME = new IlsProperty<Double>(IlsSfcNames.RAMP_TIME, Double.class, 5.);
     public static final IlsProperty<String> RECIPE_LOCATION = new IlsProperty<String>(IlsSfcNames.RECIPE_LOCATION, String.class, IlsSfcNames.RECIPE_LOCATION_CHOICES[0], IlsSfcNames.RECIPE_LOCATION_CHOICES);
-    public static final IlsProperty<String> RESULTS_MODE = new IlsProperty<String>(IlsSfcNames.RESULTS_MODE, String.class, "", IlsSfcNames.RESULTS_MODE_CHOICES);
-    public static final IlsProperty<String> REVIEW_FLOWS = new IlsProperty<String>(IlsSfcNames.REVIEW_FLOWS, String.class, "");
+    public static final IlsProperty<String> RESULTS_MODE = new IlsProperty<String>(IlsSfcNames.RESULTS_MODE, String.class, IlsSfcNames.RESULTS_MODE_CHOICES[0], IlsSfcNames.RESULTS_MODE_CHOICES);
     public static final IlsProperty<String> REVIEW_DATA = new IlsProperty<String>(IlsSfcNames.REVIEW_DATA, String.class, "", true);
+    public static final IlsProperty<String> REVIEW_DATA_POSTING_METHOD = new IlsProperty<String>(IlsSfcNames.POSTING_METHOD, String.class, "ils.sfc.client.windows.reviewData.defaultPostingMethod");
+    public static final IlsProperty<String> REVIEW_FLOWS_WINDOW = new IlsProperty<String>(IlsSfcNames.WINDOW, String.class,  "SFC/ReviewFlows", false);
+    public static final IlsProperty<String> REVIEW_FLOWS_POSTING_METHOD = new IlsProperty<String>(IlsSfcNames.POSTING_METHOD, String.class, "");
+    public static final IlsProperty<String> REVIEW_DATA_WINDOW = new IlsProperty<String>(IlsSfcNames.WINDOW, String.class,  "SFC/ReviewData", false);
     public static final IlsProperty<String> REVIEW_DATA_WITH_ADVICE = new IlsProperty<String>(IlsSfcNames.REVIEW_DATA_WITH_ADVICE, String.class, "", true);
     public static final IlsProperty<Integer> ROWS = new IlsProperty<Integer>(IlsSfcNames.ROWS, Integer.class, 0);
     public static final IlsProperty<String> ROW_KEY = new IlsProperty<String>(IlsSfcNames.ROW_KEY, String.class, IlsSfcNames.NONE);
     public static final IlsProperty<Boolean> ROW_KEYED = new IlsProperty<Boolean>(IlsSfcNames.ROW_KEYED, Boolean.class, Boolean.FALSE);
     public static final IlsProperty<String> S88_LEVEL = new IlsProperty<String>(IlsSfcNames.S88_LEVEL, String.class, IlsSfcNames.S88_LEVEL_CHOICES[0], IlsSfcNames.S88_LEVEL_CHOICES);
-    public static final IlsProperty<String> SCREEN_HEADER = new IlsProperty<String>(IlsSfcNames.SCREEN_HEADER, String.class, "");
     public static final IlsProperty<String> SECURITY = new IlsProperty<String>(IlsSfcNames.SECURITY, String.class, IlsSfcNames.SECURITY_CHOICES[0], IlsSfcNames.SECURITY_CHOICES);
     public static final IlsProperty<Boolean> SHOW_PRINT_DIALOG = new IlsProperty<Boolean>(IlsSfcNames.SHOW_PRINT_DIALOG, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<String> SQL = new IlsProperty<String>(IlsSfcNames.SQL, String.class, "");
@@ -134,6 +134,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<Object> VALUE = new IlsProperty<Object>(IlsSfcNames.VALUE, Object.class, Integer.valueOf(0));
     public static final IlsProperty<Boolean> VIEW_FILE = new IlsProperty<Boolean>(IlsSfcNames.VIEW_FILE, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<String> WINDOW = new IlsProperty<String>(IlsSfcNames.WINDOW, String.class, "");
+    public static final IlsProperty<String> WINDOW_TITLE = new IlsProperty<String>(IlsSfcNames.WINDOW_TITLE, String.class, "");
     public static final IlsProperty<Boolean> WRITE_CONFIRM = new IlsProperty<Boolean>(IlsSfcNames.WRITE_CONFIRM, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<Boolean> WRITE_CONFIRMED = new IlsProperty<Boolean>(IlsSfcNames.WRITE_CONFIRMED, Boolean.class, Boolean.TRUE);
    

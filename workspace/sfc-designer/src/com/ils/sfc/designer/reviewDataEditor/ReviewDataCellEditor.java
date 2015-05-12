@@ -39,11 +39,9 @@ public class ReviewDataCellEditor extends AbstractCellEditor implements TableCel
 				try {
 					Row rowObj = tableModel.getRowObject(row);
 					if(!IlsSfcCommonUtils.isEmpty(rowObj.unitType)) {
-						System.out.println("unit type " + rowObj.unitType);
 						choices = PythonCall.toArray(PythonCall.GET_UNITS_OF_TYPE.exec(rowObj.unitType));
 					}
 					else {
-						System.out.println("no unit type");
 						// no unit type has been chosen
 						choices = new String[0];						
 					}

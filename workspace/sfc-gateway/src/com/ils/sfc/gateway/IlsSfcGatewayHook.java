@@ -45,6 +45,7 @@ import com.ils.sfc.step.TimedDelayStepFactory;
 import com.ils.sfc.step.YesNoStepFactory;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -191,9 +192,26 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public void initializeScriptManager(ScriptManager manager) {
 		PythonCall.setScriptMgr(manager);
 		manager.addScriptModule("system.ils.sfc", IlsGatewayScripts.class);	
+		initializeUnits();
 		//manager.addStaticFields("system.ils.sfc", IlsSfcNames.class);
 	};
 	
+	private void initializeUnits() {
+		// Because there are apparently a lot of different script managers in the gateway,
+		// we have to ensure that the one we use for calling into Python has the units
+		// initialized. There is potentially a conflict between the units in the production
+		// database and the isolation database, but since we only have one PythonCall singleton
+		// we aren't set up to handle that anyway. We choose to use the units from the 
+		// production database.
+		String databaseName =  GatewayRequestHandler.getInstance().getDatabaseName(false);
+		Object[] args = {databaseName};
+		try {
+			PythonCall.INITIALIZE_UNITS.exec(args);
+		} catch (JythonExecException e) {
+			log.error("Error initializing units in PythonCall script manager", e);
+		}
+	}
+
 	@Override
 	public void startup(LicenseState licenseState) {			
 		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);

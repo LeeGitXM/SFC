@@ -109,7 +109,7 @@ public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 	 *  properties of the chart definitions. */
 	private synchronized void flushChanges(String chartRunId) throws Exception {
 		if(!changesExistForRun(chartRunId)) return;
-		logger.debug("Saving changes for run" + chartRunId);
+		logger.debug("Saving recipe data changes for run" + chartRunId);
 		Map<Long, Set<String>> changedStepScopeIdsByResourceId  = getChangedStepScopeIdsByResourceId(chartRunId);
 		for(ProjectResource chartResource: getChartResources()) {
 			// see if there are changes for this resource

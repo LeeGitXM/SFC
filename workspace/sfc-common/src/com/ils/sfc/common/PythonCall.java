@@ -10,16 +10,20 @@ import org.python.core.PyStringMap;
 
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 /** An object that can call a particular method in Python. 
  *  Also holds static objects for particular calls. */
 public class PythonCall {
+	private static final LoggerEx logger = LogUtil.getLogger(PythonCall.class.getName());
 	private static final String RESULT_NAME = "pyCallResult";
 	private final String methodName; // package + method name
 	private final String[] argNames; // args to the method, if any
 	private final Class<?> returnType;	// is null if no return value
 	private PyCode compiledCode;	// cached compiled code
-	
+	private static PyStringMap localMap;
+
 	private static ScriptManager scriptMgr;
 	private static final String[] stepArgs = new String[]{"scopeContext", "stepProperties"};
 	private static final String STEPS_PKG = "ils.sfc.gateway.steps.";
@@ -51,6 +55,9 @@ public class PythonCall {
 	public static final PythonCall TIMED_DELAY = new PythonCall(STEPS_PKG + "timedDelay", 
 			null, stepArgs);
 
+	public static final PythonCall INITIALIZE_UNITS = new PythonCall("ils.common.units.lazyInitialize", 
+			null,  new String[]{"database"} );
+	
 	public static final PythonCall OTHER_UNITS = new PythonCall("ils.common.units.unitsOfSameType", 
 			PyList.class,  new String[]{"unit"} );
 
@@ -62,6 +69,9 @@ public class PythonCall {
 
 	public static final PythonCall GET_UNITS_OF_TYPE = new PythonCall("ils.common.units.getUnitsOfType", 
 			PyList.class,  new String[]{"unitName"} );
+
+	public static final PythonCall CONVERT_UNITS = new PythonCall("ils.common.units.convert", 
+			Double.class,  new String[]{"fromUnit", "toUnit", "value"} );
 
 	public static final PythonCall DELETE_DELAY_NOTIFICATION = new PythonCall(STEPS_PKG + "deleteDelayNotifications", 
 			PyList.class, stepArgs );
@@ -141,7 +151,6 @@ public class PythonCall {
 		if(compiledCode == null) {
 			compileCode();
 		}
-		PyStringMap localMap = scriptMgr.createLocalsMap();
 		PyStringMap globalsMap = scriptMgr.getGlobals();
 		for(int i = 0; i < argNames.length; i++) {
 			localMap.__setitem__(argNames[i], Py.java2py(argValues[i]));
@@ -164,12 +173,11 @@ public class PythonCall {
 					HANDLE_UNEXPECTED_ERROR.exec(argValues[0], msg);
 				}
 				else {
-					// TODO: log instead of print
-					System.out.println("Error invoking script : " + msg);					
+					logger.error("Error invoking script : " + msg, ex);					
 				}
 			}
 			else {
-				System.out.println("Couldn't invoke handleUnexpectedError script : " + ex.toString());
+				logger.error("Couldn't invoke handleUnexpectedError script : " + ex.toString(), ex);
 			}
 			return null;
 		}
@@ -201,6 +209,7 @@ public class PythonCall {
 
 	public static void setScriptMgr(ScriptManager scriptManager) {
 		scriptMgr = scriptManager;
+		localMap = scriptMgr.createLocalsMap();
 	}
 	
 	public static String[] toArray(Object o) {

@@ -98,7 +98,8 @@ public class IlsSfcNames {
 	public static final String RESULTS_MODE = "resultsMode"; 
 	public static final String REVIEW_DATA = "reviewData"; 
 	public static final String REVIEW_DATA_WITH_ADVICE = "reviewDataWithAdvice"; 
-	public static final String REVIEW_FLOWS = "reviewFlows"; 
+	public static final String REVIEW_DATA_WINDOW = "reviewDataWindow";
+	public static final String REVIEW_FLOWS_WINDOW = "reviewFlowsWindow";
 	public static final String ROW_KEY = "rowKey"; 
 	public static final String ROW_KEYED = "rowKeyed"; 
 	public static final String ROWS = "rows"; 
@@ -137,6 +138,7 @@ public class IlsSfcNames {
 	public static final String VIEW_FILE = "viewFile";
 	public static final String WARNING = "Warning";
 	public static final String WINDOW = "window";
+	public static final String WINDOW_TITLE = "windowTitle";
 	public static final String WRITE_CONFIRM = "writeConfirm";
 	public static final String WRITE_CONFIRMED = "writeConfirmed";
 

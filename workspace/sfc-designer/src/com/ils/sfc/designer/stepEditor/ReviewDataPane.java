@@ -30,6 +30,7 @@ public class ReviewDataPane extends JPanel implements EditorPane {
 	private JTable table;
 	private PropertyValue<String> pvalue;
 	private ReviewDataConfig config;
+	private JPanel tablePanel;
 	
 	public ReviewDataPane(StepEditorController controller) {
 		super(new BorderLayout());
@@ -72,6 +73,10 @@ public class ReviewDataPane extends JPanel implements EditorPane {
 	}
 
 	void setConfig(PropertyValue<String> pvalue) {
+		// Changing to a different config 
+		if(config != null) {
+			doAccept();
+		}
 		this.pvalue = pvalue;
 		String json = (String) pvalue.getValue();
 		if(json != null && json.length() > 0) {
@@ -95,8 +100,8 @@ public class ReviewDataPane extends JPanel implements EditorPane {
 		table.setRowMargin(3);	
 		table.setShowGrid(true);
 		tableModel.setConfig(config);
-		
-		JPanel tablePanel = new JPanel(new BorderLayout());	
+		if(tablePanel != null) remove(tablePanel);
+		tablePanel = new JPanel(new BorderLayout());	
 		tablePanel.setBorder(new EmptyBorder(10,10,10,10));
 		add(tablePanel, BorderLayout.CENTER);
 		JScrollPane scroll = new JScrollPane(table);

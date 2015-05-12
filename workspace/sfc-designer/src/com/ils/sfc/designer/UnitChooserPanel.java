@@ -5,7 +5,6 @@ import static java.awt.GridBagConstraints.EAST;
 import static java.awt.GridBagConstraints.NONE;
 import static java.awt.GridBagConstraints.WEST;
 
-import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -17,10 +16,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.jfree.util.UnitType;
-
 import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 /** A generic unit chooser. initUI() must be called prior to use; the reason this
  *  is not in the constructor is that the system may not be ready to load units
@@ -28,6 +27,7 @@ import com.inductiveautomation.ignition.common.script.JythonExecException;
  */
 @SuppressWarnings("serial")
 public class UnitChooserPanel extends JPanel {
+	private static LoggerEx logger = LogUtil.getLogger(UnitChooserPanel.class.getName());
 	private JComboBox<String> typesCombo = new JComboBox<String>();
 	private JComboBox<String> unitsCombo = new JComboBox<String>();
 	
@@ -63,7 +63,7 @@ public class UnitChooserPanel extends JPanel {
 				typesCombo.addItem(unitType);
 			}
 		} catch (JythonExecException e) {
-			
+			logger.error("Error initializing unit types", e);
 		}
 		typesCombo.setSelectedIndex(0);
 	}
@@ -87,13 +87,20 @@ public class UnitChooserPanel extends JPanel {
 	private void getUnitsForType() {
 		String selectedType = (String) typesCombo.getSelectedItem();
 		try {
-			String[] units = PythonCall.toArray(PythonCall.GET_UNITS_OF_TYPE.exec(selectedType));
+			Object[] args = {selectedType};
+			String[] units = PythonCall.toArray(PythonCall.GET_UNITS_OF_TYPE.exec(args));
 			unitsCombo.removeAllItems();
 			for(String unit: units) {
 				unitsCombo.addItem(unit);
 			}
-			unitsCombo.setSelectedIndex(0);
+			if(units.length > 0) {
+				unitsCombo.setSelectedIndex(0);
+			}
+			else {
+				logger.error("No units for type: " + selectedType);
+			}
 		} catch (JythonExecException e) {
+			logger.error("Error getting units for type " + selectedType, e);
 		}
 	}
 	

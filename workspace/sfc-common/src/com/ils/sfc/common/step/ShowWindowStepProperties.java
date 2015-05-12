@@ -15,7 +15,7 @@ public interface ShowWindowStepProperties extends ChartStepProperties {
     public static final IlsProperty<?>[] properties = { 
     	WINDOW,
     	SECURITY,
-    	LABEL,
+    	WINDOW_TITLE,
     	POSITION,
     	SCALE
     	};

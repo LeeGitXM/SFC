@@ -9,8 +9,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 public class ReviewDataConfig {
-	List<Row> rows = new ArrayList<Row>();
+	private List<Row> rows = new ArrayList<Row>();
 	public static class Row {
 		public String configKey;
 		public String valueKey;
@@ -19,6 +20,10 @@ public class ReviewDataConfig {
 		public String advice;
 		public String unitType;
 		public String units;
+		
+		public boolean isBlank() {
+			return IlsSfcCommonUtils.isEmpty(valueKey); 
+		}
 	}
 
 	public List<Row> getRows() {
@@ -34,5 +39,5 @@ public class ReviewDataConfig {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.readValue(json, ReviewDataConfig.class);
 	}
-	
+
 }

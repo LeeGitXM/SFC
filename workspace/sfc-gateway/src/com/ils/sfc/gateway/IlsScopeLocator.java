@@ -156,11 +156,16 @@ public class IlsScopeLocator implements ScopeLocator {
 		return value;
 	}
 	
+	/** Set the given step scope as changed. */
+	public void s88ScopeChanged(PyChartScope chartScope, PyChartScope stepScope) {
+		String chartRunId = (String)getTopScope(chartScope).get("instanceId");
+		hook.getRecipeDataChangeMgr().addChangedScope(stepScope, chartRunId);		
+	}
+	
 	public void s88Set(PyChartScope chartScope, PyChartScope stepScope, 
 		String path, String scopeIdentifier, Object value) {
 		PyChartScope resolvedScope = resolveScope(chartScope, stepScope, scopeIdentifier);
 		pathSet(resolvedScope, path, value);
-		String chartRunId = (String)getTopScope(chartScope).get("instanceId");
-		hook.getRecipeDataChangeMgr().addChangedScope(resolvedScope, chartRunId);
+		s88ScopeChanged(chartScope, resolvedScope);
 	}
 }

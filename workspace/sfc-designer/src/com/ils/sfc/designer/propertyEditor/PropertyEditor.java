@@ -64,6 +64,7 @@ public class PropertyEditor extends JPanel {
 	
 	public void setPropertyValues(BasicPropertySet propertyValues, boolean sortInternal) {
 		tableModel.setPropertyValues(propertyValues, sortInternal);
+		table.clearSelection();
 	}
 	
 	@SuppressWarnings("rawtypes")

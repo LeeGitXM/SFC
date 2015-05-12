@@ -7,15 +7,20 @@ import java.util.UUID;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.python.core.PyDictionary;
-import org.python.core.PyList;
 import org.python.core.PyObject;
 
 import com.ils.sfc.common.IlsSfcCommonUtils;
+import com.ils.sfc.common.PythonCall;
+import com.ils.sfc.common.ReviewDataConfig;
+import com.ils.sfc.common.ReviewDataConfig.Row;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.step.IlsAbstractChartStep;
+import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
+import com.inductiveautomation.ignition.common.util.DatasetBuilder;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
@@ -63,34 +68,61 @@ public class IlsGatewayScripts {
 		ilsSfcGatewayHook.getRequestResponseManager().setResponse(id, payload);
 	}
 	
-	public static PyList getReviewDataConfig(String stepId, boolean addAdvice) {
-		return null;
-		/*
-		PyList result = new PyList();
-	    RecipeData recipeData = RecipeDataManager.getData();
-	    ReviewDataConfig dataConfig = recipeData.getReviewDataConfig(stepId);
-       	System.out.println("addAdvice: " + addAdvice);
-	    for(ReviewDataConfig.Row row: dataConfig.getRows()) {
-	    	PyList rowConfig = new PyList();
-	        result.add(rowConfig);
-	        rowConfig.add(row.prompt);
- 	        if(addAdvice) {
-	        	rowConfig.add(row.advice);
-	        }
-	        RecipeScope scopeEnum = RecipeScope.valueOf(row.recipeScope);
-	        Object value = null;
-			try {
-				value = recipeData.get(scopeEnum, stepId, row.valueKey);
-			} catch (RecipeDataException e) {
-				logger.error("error getting recipe value", e);
+	public static Dataset getReviewData(PyChartScope chartScope, PyChartScope stepScope,
+		String reviewDataConfigJson, boolean addAdvice) {
+		try {
+			ReviewDataConfig config = ReviewDataConfig.fromJSON(reviewDataConfigJson);
+			DatasetBuilder builder = new DatasetBuilder();
+			if(addAdvice) {
+				builder.colNames("Prompt", "Advice", "Value", "Units");
+				builder.colTypes(String.class, String.class, Double.class, String.class);
 			}
-	        rowConfig.add(value);
-	        rowConfig.add(row.units);
-	    }
-	        return result;
-	        */
+			else {
+				builder.colNames("Prompt", "Value", "Units");
+				builder.colTypes(String.class, Double.class, String.class);
+			}
+			Object[] buffer = addAdvice ? new Object[4] : new Object[3];
+		    for(ReviewDataConfig.Row row: config.getRows()) {
+		    	if(!row.isBlank()) {
+			    	int i = 0;
+			    	buffer[i++] = row.prompt;
+			    	if(addAdvice) buffer[i++] = row.advice;
+					Object value = getValueInDisplayUnits(chartScope, stepScope, row);
+			    	buffer[i++] = value;
+			    	buffer[i++] = row.units;
+		    	}
+		    	builder.addRow(buffer);
+		    }
+			return builder.build();
+		}
+		catch(Exception e) {
+			logger.error("Error building review data", e);
+			return null;
+		}	
 	}
 	
+	/** Convert the recipe data value to the display units given in the Review Data config. */
+	private static double getValueInDisplayUnits(PyChartScope chartScope, PyChartScope stepScope, Row row) {
+		Object oVal = s88BasicGet(chartScope, stepScope, row.valueKey, row.recipeScope);
+		double doubleVal = 0.;
+		if(oVal instanceof Number) {
+			doubleVal = ((Number)oVal).doubleValue();
+		}
+		// else error!
+		String unitsKey = row.valueKey.replace(".value", ".units");
+		String fromUnits = (String)s88BasicGet(chartScope, stepScope, unitsKey, row.recipeScope);
+		String toUnits = row.units;
+		Object[] params = {fromUnits, toUnits, Double.valueOf(doubleVal)};
+		Double displayValue;
+		try {
+			displayValue = (Double)PythonCall.CONVERT_UNITS.exec(params);
+		} catch (JythonExecException e) {
+			e.printStackTrace();
+			return doubleVal;
+		}
+		return displayValue;
+	}
+
 	/** For testing, create an instance of the given step and run the action method on it, 
 	 *  returning null if OK else an error message. */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -135,11 +167,31 @@ public class IlsGatewayScripts {
 		return null;  // all is well...		
 	}
 
+	/** Check if a particular piece of recipe data exists. */
+	public static Object s88DataExists(PyChartScope chartScope, PyChartScope stepScope,
+		String path, String scopeIdentifier) {
+		try {
+			ilsSfcGatewayHook.getScopeLocator().s88Get(chartScope, stepScope, path, scopeIdentifier);
+			return true;
+		}
+		catch(IllegalArgumentException e) {
+			return false;
+		}
+	}
+
 	public static Object s88BasicGet(PyChartScope chartScope, PyChartScope stepScope,
 		String path, String scopeIdentifier) {
 		return ilsSfcGatewayHook.getScopeLocator().s88Get(chartScope, stepScope, path, scopeIdentifier);
 	}
 	
+	public static PyChartScope s88GetScope(PyChartScope chartScope, PyChartScope stepScope, String scopeIdentifier) {
+		return ilsSfcGatewayHook.getScopeLocator().resolveScope(chartScope, stepScope, scopeIdentifier);
+	}
+
+	public static void s88ScopeChanged(PyChartScope chartScope, PyChartScope stepScope) {
+		ilsSfcGatewayHook.getScopeLocator().s88ScopeChanged(chartScope, stepScope);
+	}
+
 	public static void s88BasicSet(PyChartScope chartScope, PyChartScope stepScope, 
 		String path, String scopeIdentifier, Object value) {
 		ilsSfcGatewayHook.getScopeLocator().s88Set(chartScope, stepScope, path, scopeIdentifier, value);

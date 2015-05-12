@@ -81,6 +81,7 @@ public class StepEditorController extends AbstractStepEditor implements Property
 	public void setElement(ChartUIElement element) {
 		super.setElement(element);
 		propertyEditor.getPropertyEditor().setPropertyValues(element, true);
+		slideTo(PROPERTY_EDITOR);
 	}
 
 	@Override
