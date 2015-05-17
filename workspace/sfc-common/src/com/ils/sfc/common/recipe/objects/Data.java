@@ -170,19 +170,13 @@ public abstract class Data {
 		JSONObject jsonObj = new JSONObject();
 		for(PropertyValue<?> pvalue: properties) {
 			String propName = pvalue.getProperty().getName();
-			Object valueOrDefault = pvalue.getValue() != null ? 
-				pvalue.getValue() : pvalue.getProperty().getDefaultValue();
-			if(valueOrDefault != null) {
-				if(pvalue.getProperty() == IlsProperty.JSON_LIST || pvalue.getProperty() == IlsProperty.JSON_MATRIX) {
-					// we need to turn the list into a JSONArray first
-					JSONArray jsonArray = new JSONArray((String)valueOrDefault);
-					valueOrDefault = jsonArray;
-				}
-				jsonObj.put(propName, valueOrDefault);
+			Object value = pvalue.getValue();
+			if(pvalue.getProperty() == IlsProperty.JSON_LIST || pvalue.getProperty() == IlsProperty.JSON_MATRIX) {
+				// we need to turn the list into a JSONArray first
+				JSONArray jsonArray = value != null ? new JSONArray((String)value) : new JSONArray();
+				value = jsonArray;
 			}
-			else {
-				logger.error("property " + propName + " is null; cannot add to JSON");
-			}
+			jsonObj.put(propName, value != null ? value : JSONObject.NULL);
 		}
 		return jsonObj;
 	}
@@ -235,13 +229,15 @@ public abstract class Data {
 	
 	/** The recursive part of fromJSON() */
 	protected void setFromJson(JSONObject jsonObj) throws Exception {
+		@SuppressWarnings("rawtypes")
 		BasicProperty dummyProperty = new BasicProperty();
+		@SuppressWarnings("unchecked")
 		Iterator<String> keyIter = jsonObj.keys();
 		while(keyIter.hasNext()) {
 			String key = keyIter.next();
 			dummyProperty.setName(key);
 			Object value = jsonObj.get(key);
-			if(!(value instanceof JSONObject)) {
+			if(!(value instanceof JSONObject) && !value.equals(JSONObject.NULL)) {
 				setValue(dummyProperty, value);
 			}
 			// else if the value is an object, the Group extension of this method will

@@ -1,6 +1,8 @@
 package com.ils.sfc.designer.propertyEditor;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JCheckBox;
@@ -21,6 +23,11 @@ class PropertyCellEditor extends AbstractCellEditor implements TableCellEditor{
 		if(rowObj.getChoices() != null) {
 			JComboBox<Object> combo = new JComboBox<Object>(rowObj.getChoices());
 			combo.setBackground(java.awt.Color.white);
+			combo.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					fireEditingStopped();
+				}				
+			});
 			return component = combo;
 		}
 		else {

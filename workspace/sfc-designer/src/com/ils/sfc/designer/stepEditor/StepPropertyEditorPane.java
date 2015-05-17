@@ -66,14 +66,19 @@ public class StepPropertyEditorPane extends JPanel implements EditorPane {
 	private void doEdit() {
 		PropertyValue<?> selectedPropertyValue = getPropertyEditor().getSelectedPropertyValue();
 		if(selectedPropertyValue == null) return;
+		System.out.println("editing " + selectedPropertyValue.getProperty().getName());
+
 		if(selectedPropertyValue.getProperty().equals(IlsProperty.TAG_PATH)) {
 			editor.stopCellEditing();
 			controller.getTagBrowser().activate();
 		}
-		else if(selectedPropertyValue.getProperty().equals(IlsProperty.REVIEW_DATA) ||
-				selectedPropertyValue.getProperty().equals(IlsProperty.REVIEW_DATA_WITH_ADVICE )) {
+		else if(selectedPropertyValue.getProperty().equals(IlsProperty.PRIMARY_REVIEW_DATA) ||
+				selectedPropertyValue.getProperty().equals(IlsProperty.PRIMARY_REVIEW_DATA_WITH_ADVICE) ||
+				selectedPropertyValue.getProperty().equals(IlsProperty.SECONDARY_REVIEW_DATA) ||
+				selectedPropertyValue.getProperty().equals(IlsProperty.SECONDARY_REVIEW_DATA_WITH_ADVICE )) {
 			// kind of a hack here...REVIEW_DATA is a pseudo-property
 			// the complex values are held in the local recipe data of the step
+			System.out.println("initial congfig " + selectedPropertyValue.getProperty().getName());
 			controller.getReviewDataPane().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getReviewDataPane().activate();				
 		}

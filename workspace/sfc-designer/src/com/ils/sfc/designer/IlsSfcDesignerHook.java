@@ -54,6 +54,7 @@ import com.ils.sfc.common.step.YesNoStepProperties;
 import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame;
 import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -131,7 +132,15 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		PythonCall.setScriptMgr(mgr);
 		mgr.addStaticFields("system.ils.sfc", IlsSfcNames.class);
 		mgr.addScriptModule("system.ils.sfc", IlsClientScripts.class);
-	}
+		// Initialize units. Since this is a lazy initialization, 
+    	Object[] args = {null};
+    	try {
+			PythonCall.INITIALIZE_UNITS.exec(args);
+		} catch (JythonExecException e) {
+			log.error("Error initializing units in Designer");
+		}
+    }
+	
 	// Insert a menu to allow control of database and tag provider.
 	// If the menu already exists, do nothing
     @Override
@@ -176,7 +185,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     		configRegistry.register(factoryId, editorFactory);
     	} 
     	IlsClientScripts.setContext(context);
-	}
+ 	}
 	
 	@Override
 	public void shutdown() {	

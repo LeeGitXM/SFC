@@ -94,6 +94,12 @@ public class PropertyTableModel extends AbstractTableModel {
 
 		if(col == VALUE_COLUMN) {
 			try {
+				// It is a bit strange that the value is set twice
+				// The reason for this is that the "real" value is
+				// in the propertyValues collections, but the 
+				// viewed value is in the pRow. These are two 
+				// different values, basically because PropertyValues
+				// are immutable
 				pRow.setValueFormatted((String)value);
 				propertyValues.set(pRow.getPropertyValue());
 			}

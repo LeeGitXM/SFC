@@ -81,6 +81,8 @@ public class IlsSfcNames {
 	public static final String POST_TO_QUEUE = "postToQueue";
 	public static final String POST_NOTIFICATION = "postNotification";
 	public static final String POSTING_METHOD = "postingMethod";
+	public static final String PRIMARY_REVIEW_DATA = "primaryReviewData"; 
+	public static final String PRIMARY_REVIEW_DATA_WITH_ADVICE = "primaryReviewDataWithAdvice"; 
 	public static final String PRINT_FILE = "printFile";
 	public static final String PRIORITY = "priority";
 	public static final String PRIVATE = "private";
@@ -96,7 +98,6 @@ public class IlsSfcNames {
 	public static final String REGISTER_AND_DISPLAY = "registerAndDisplay";
 	public static final String REGISTER_ONLY = "registerOnly";
 	public static final String RESULTS_MODE = "resultsMode"; 
-	public static final String REVIEW_DATA = "reviewData"; 
 	public static final String REVIEW_DATA_WITH_ADVICE = "reviewDataWithAdvice"; 
 	public static final String REVIEW_DATA_WINDOW = "reviewDataWindow";
 	public static final String REVIEW_FLOWS_WINDOW = "reviewFlowsWindow";
@@ -106,6 +107,8 @@ public class IlsSfcNames {
 	public static final String S88_LEVEL = "s88Level";
 	public static final String SCALE = "scale";
 	public static final String SCREEN_HEADER = "screenHeader";
+	public static final String SECONDARY_REVIEW_DATA = "secondaryReviewData"; 
+	public static final String SECONDARY_REVIEW_DATA_WITH_ADVICE = "secondaryReviewDataWithAdvice"; 
 	public static final String SECURITY = "security";
 	public static final String SEMI_AUTOMATIC = "semiAutomatic";
 	public static final String SEQUENCE = "sequence";
@@ -169,7 +172,7 @@ public class IlsSfcNames {
 	// choices:
 	public static final String[] RECIPE_STATIC_STRATEGY_CHOICES = {STATIC, RECIPE};
 	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, PREVIOUS, SUPERIOR,
-		GLOBAL, OPERATION, PHASE};
+		GLOBAL, OPERATION, PHASE, TAG};
 	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
 	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK};
 	public static final String[] RESULTS_MODE_CHOICES = {UPDATE, UPDATE_OR_CREATE};
@@ -181,6 +184,5 @@ public class IlsSfcNames {
 	public static final String[] SECURITY_CHOICES = {PUBLIC, PRIVATE};
 	public static final String[] PRIORITY_CHOICES = {INFO, WARNING, ERROR};
 	public static final String[] AUDIT_LEVEL_CHOICES = {OFF, LOW, HIGH};
-	public static final String[] DISPLAY_MODE_CHOICES = {REGISTER_AND_DISPLAY, REGISTER_ONLY};
 	public static final String[] S88_LEVEL_CHOICES = {NONE, GLOBAL, OPERATION, PHASE};
 }

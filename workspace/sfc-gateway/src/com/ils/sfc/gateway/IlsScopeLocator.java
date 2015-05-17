@@ -1,16 +1,24 @@
 package com.ils.sfc.gateway;
 
+import java.io.IOException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.recipe.objects.Data;
+import com.inductiveautomation.ignition.common.sqltags.model.Tag;
+import com.inductiveautomation.ignition.common.sqltags.model.TagPath;
+import com.inductiveautomation.ignition.common.sqltags.parser.TagPathParser;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.api.ScopeLocator;
 
 public class IlsScopeLocator implements ScopeLocator {
+	private static LoggerEx logger = LogUtil.getLogger(IlsScopeLocator.class.getName());
 	private final IlsSfcGatewayHook hook;
 	
 	public IlsScopeLocator(IlsSfcGatewayHook hook) {
@@ -151,8 +159,27 @@ public class IlsScopeLocator implements ScopeLocator {
 	public Object s88Get(PyChartScope chartScope, PyChartScope stepScope, 
 		String path, String scopeIdentifier) {
 		if(IlsSfcCommonUtils.isEmpty(path)) return null;
-		PyChartScope resolvedScope = resolveScope(chartScope, stepScope, scopeIdentifier);
-		Object value = pathGet(resolvedScope, path);
+		Object value = null;
+		if(IlsSfcNames.TAG.equals(scopeIdentifier)) {
+			TagPath tagPath;
+			try {
+				tagPath = TagPathParser.parse(path);
+			} catch (IOException e) {
+				logger.error("Couldn't parse tag path for s88Get", e);
+				return null;
+			};
+			Tag tag = hook.getContext().getTagManager().getTag(tagPath);
+			if(tag != null) {
+			value = tag.getValue().getValue();
+			}
+			else {
+				logger.error("no tag for path " + tagPath);
+			}
+		}
+		else {
+			PyChartScope resolvedScope = resolveScope(chartScope, stepScope, scopeIdentifier);
+			value = pathGet(resolvedScope, path);
+		}
 		return value;
 	}
 	

@@ -16,12 +16,12 @@ public interface ReviewDataStepProperties extends ChartStepProperties {
     	WINDOW_TITLE,
     	BUTTON_LABEL,
     	REVIEW_DATA_POSTING_METHOD,
-    	DISPLAY_MODE,
     	BUTTON_KEY,
     	BUTTON_KEY_LOCATION,
     	POSITION,
     	SCALE,
     	REVIEW_DATA_WINDOW,
-    	REVIEW_DATA
+    	PRIMARY_REVIEW_DATA,
+    	SECONDARY_REVIEW_DATA
     };
 }

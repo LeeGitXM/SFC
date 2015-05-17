@@ -19,17 +19,13 @@ public class PropertyRow {
 
 	/** Create a user-friendly label for this property */
 	private String createDisplayLabel() {
-		// break up the camel-case, replacing caps by spaces
-		StringBuilder buf = new StringBuilder();
-		String camelCaseName = getName();
-		for(int i = 0; i < camelCaseName.length(); i++) {
-			char c = camelCaseName.charAt(i);
-			if(Character.isUpperCase(c)) {
-				buf.append(' ');
-			}
-			buf.append(Character.toLowerCase(c));
+		if(propertyValue.getProperty() instanceof IlsProperty) {
+			IlsProperty<?> ilsProperty = (IlsProperty<?>)propertyValue.getProperty();
+			return ilsProperty.getLabel();
 		}
-		return buf.toString();
+		else {
+			return IlsProperty.labelize(propertyValue.getProperty().getName());
+		}
 	}
 
 	public String getName() {

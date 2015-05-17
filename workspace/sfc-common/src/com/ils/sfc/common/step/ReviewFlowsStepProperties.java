@@ -18,11 +18,10 @@ public interface ReviewFlowsStepProperties extends ChartStepProperties {
     	REVIEW_FLOWS_WINDOW,
     	REVIEW_FLOWS_POSTING_METHOD,
     	AUTO_MODE,
-    	DISPLAY_MODE,
     	BUTTON_KEY,
     	BUTTON_KEY_LOCATION,
     	POSITION,
     	SCALE,
-    	REVIEW_DATA
+    	// # REVIEW_DATA ?? do we have secondary here as well ?
     };
 }

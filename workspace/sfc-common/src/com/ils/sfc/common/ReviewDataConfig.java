@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -21,6 +22,7 @@ public class ReviewDataConfig {
 		public String unitType;
 		public String units;
 		
+		@JsonIgnore
 		public boolean isBlank() {
 			return IlsSfcCommonUtils.isEmpty(valueKey); 
 		}
@@ -40,4 +42,15 @@ public class ReviewDataConfig {
 		return mapper.readValue(json, ReviewDataConfig.class);
 	}
 
+	public static void main(String[] args) {
+		try {
+			ReviewDataConfig config = new ReviewDataConfig();
+			//config.rows.add(new Row());
+			String json = config.toJSON();
+			System.out.print(json);
+		}
+		catch(Exception e ) {
+			e.printStackTrace();
+		}
+	}
 }

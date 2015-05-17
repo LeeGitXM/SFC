@@ -30,6 +30,7 @@ import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeLocator;
 import com.inductiveautomation.sfc.api.elements.ChartElement;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
+import static com.ils.sfc.common.IlsSfcCommonUtils.isEmpty;
 
 /** Java utilities exposed to Python. The python module path is: "system.ils.sfc"
  */
@@ -85,11 +86,30 @@ public class IlsGatewayScripts {
 		    for(ReviewDataConfig.Row row: config.getRows()) {
 		    	if(!row.isBlank()) {
 			    	int i = 0;
-			    	buffer[i++] = row.prompt;
-			    	if(addAdvice) buffer[i++] = row.advice;
+			    	// Get any config data that has been created programmatically
+			    	Row scriptedConfig = new Row();
+			    	if(!isEmpty(row.configKey)) {
+			    		getScriptedConfig(chartScope, stepScope, row.configKey, row.recipeScope, scriptedConfig);
+			    	}
+			    	String prompt = !isEmpty(scriptedConfig.prompt) ? scriptedConfig.prompt : row.prompt;
+			    	buffer[i++] = prompt;
+			    	if(addAdvice) {
+				    	String advice = !isEmpty(scriptedConfig.advice) ? scriptedConfig.advice : row.advice;
+			    		if(isEmpty(advice)) {
+			    			String adviceKey = row.valueKey.replace("value", "advice");
+			    			try {
+			    				advice = (String) s88BasicGet(chartScope, stepScope, adviceKey, row.recipeScope);
+			    			}
+			    			catch(Exception e) {
+			    				logger.error("Error getting advice from recipe data", e);
+			    			}
+			    		}
+			    		buffer[i++] = advice;
+			    	}
 					Object value = getValueInDisplayUnits(chartScope, stepScope, row);
 			    	buffer[i++] = value;
-			    	buffer[i++] = row.units;
+			    	String units = !isEmpty(scriptedConfig.units) ? scriptedConfig.units : row.units;
+			    	buffer[i++] = units;
 		    	}
 		    	builder.addRow(buffer);
 		    }
@@ -101,6 +121,22 @@ public class IlsGatewayScripts {
 		}	
 	}
 	
+	/** Get Review Data config info from recipe data. Tolerates nonexistent keys. */
+	private static void getScriptedConfig(PyChartScope chartScope, PyChartScope stepScope, String configKey, String configScope, Row scriptedConfig) {
+		String adviceKey = configKey + ".advice";
+		if(s88DataExists(chartScope, stepScope, adviceKey, configScope)) {
+			scriptedConfig.advice = (String)s88BasicGet(chartScope, stepScope, adviceKey, configScope);
+		}
+		String unitsKey = configKey + ".units";
+		if(s88DataExists(chartScope, stepScope, unitsKey, configScope)) {
+			scriptedConfig.units = (String)s88BasicGet(chartScope, stepScope, unitsKey, configScope);		
+		}
+		String promptKey = configKey + "label";
+		if(s88DataExists(chartScope, stepScope, promptKey, configScope)) {
+			scriptedConfig.prompt = (String)s88BasicGet(chartScope, stepScope, promptKey, configScope);	
+		}
+	}
+
 	/** Convert the recipe data value to the display units given in the Review Data config. */
 	private static double getValueInDisplayUnits(PyChartScope chartScope, PyChartScope stepScope, Row row) {
 		Object oVal = s88BasicGet(chartScope, stepScope, row.valueKey, row.recipeScope);
@@ -112,6 +148,9 @@ public class IlsGatewayScripts {
 		String unitsKey = row.valueKey.replace(".value", ".units");
 		String fromUnits = (String)s88BasicGet(chartScope, stepScope, unitsKey, row.recipeScope);
 		String toUnits = row.units;
+		if(IlsSfcCommonUtils.isEmpty(fromUnits) || IlsSfcCommonUtils.isEmpty(toUnits)) {
+			throw new IllegalArgumentException("null units in display conversion " + fromUnits + "->" + toUnits);
+		}
 		Object[] params = {fromUnits, toUnits, Double.valueOf(doubleVal)};
 		Double displayValue;
 		try {
@@ -168,7 +207,7 @@ public class IlsGatewayScripts {
 	}
 
 	/** Check if a particular piece of recipe data exists. */
-	public static Object s88DataExists(PyChartScope chartScope, PyChartScope stepScope,
+	public static boolean s88DataExists(PyChartScope chartScope, PyChartScope stepScope,
 		String path, String scopeIdentifier) {
 		try {
 			ilsSfcGatewayHook.getScopeLocator().s88Get(chartScope, stepScope, path, scopeIdentifier);

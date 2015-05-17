@@ -2,9 +2,14 @@ package com.ils.sfc.designer.stepEditor;
 
 import java.awt.BorderLayout;
 
+import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.designer.propertyEditor.PropertyTableModel;
+import com.ils.sfc.designer.stepEditor.reviewData.ReviewDataPanel;
 import com.inductiveautomation.ignition.client.util.gui.SlidingPane;
 import com.inductiveautomation.ignition.common.config.Property;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.designer.api.AbstractStepEditor;
 import com.inductiveautomation.sfc.designer.api.ElementEditor;
 import com.inductiveautomation.sfc.designer.api.StepConfigFactory;
@@ -14,6 +19,7 @@ import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 /** An editor for all ILS step types */
 public class StepEditorController extends AbstractStepEditor implements PropertyTableModel.ErrorHandler {
 	private static final long serialVersionUID = 1L;
+
 	private SlidingPane slidingPane = new SlidingPane();
 	
 	static final int PROPERTY_EDITOR = 0;
@@ -21,7 +27,7 @@ public class StepEditorController extends AbstractStepEditor implements Property
 	static final int TAG_BROWSER = 2;
 	static final int UNIT_CHOOSER = 3;
 	static final int MESSAGE = 4;
-	static final int REVIEW_DATA = 5;
+	public static final int REVIEW_DATA = 5;
 
 	// The sub-panes:
 	private StepPropertyEditorPane propertyEditor = new StepPropertyEditorPane(this);
@@ -29,7 +35,7 @@ public class StepEditorController extends AbstractStepEditor implements Property
 	private StepTagBrowserPane tagBrowser = new StepTagBrowserPane(this);
 	private StepUnitChooserPane unitChooser = new StepUnitChooserPane(this);
 	private StepMessagePane messagePane = new StepMessagePane(this);
-	private ReviewDataPane reviewDataPane = new ReviewDataPane(this);
+	private ReviewDataPanel reviewDataPane = new ReviewDataPanel(this);
 			
 	public StepEditorController(ChartUIModel chartModel, ChartUIElement element) {
 		super(new BorderLayout(), chartModel);
@@ -39,7 +45,7 @@ public class StepEditorController extends AbstractStepEditor implements Property
 		slidingPane.add(tagBrowser);
 		slidingPane.add(unitChooser);
 		slidingPane.add(messagePane);
-		slidingPane.add(reviewDataPane);
+		slidingPane.add(reviewDataPane);	
 	}
 
 	
@@ -68,7 +74,7 @@ public class StepEditorController extends AbstractStepEditor implements Property
 	}
 
 
-	public ReviewDataPane getReviewDataPane() {
+	public ReviewDataPanel getReviewDataPane() {
 		return reviewDataPane;
 	}
 
