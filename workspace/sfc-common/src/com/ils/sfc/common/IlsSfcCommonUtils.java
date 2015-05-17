@@ -169,9 +169,9 @@ public class IlsSfcCommonUtils {
 		}
 	}
 	
-	/** A null-tolerant check for empty strings. */
+	/** A null-tolerant check for strings with no real content. */
 	public static boolean isEmpty(String str) {
-		return str == null || str.length() == 0;
+		return str == null || str.trim().length() == 0;
 	}
 	
 	/** Get the highest level scope (by looking at parent scopes) */

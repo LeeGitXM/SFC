@@ -96,7 +96,7 @@ public class IlsGatewayScripts {
 			    	if(addAdvice) {
 				    	String advice = !isEmpty(scriptedConfig.advice) ? scriptedConfig.advice : row.advice;
 			    		if(isEmpty(advice)) {
-			    			String adviceKey = row.valueKey.replace("value", "advice");
+			    			String adviceKey = changeValueKey(row.valueKey, "advice");
 			    			try {
 			    				advice = (String) s88BasicGet(chartScope, stepScope, adviceKey, row.recipeScope);
 			    			}
@@ -121,6 +121,18 @@ public class IlsGatewayScripts {
 		}	
 	}
 	
+	/** Change a recipe data key to get a "sibling" value, e.g. "advice" instead of "value" */
+	private static String changeValueKey(String path, String newKey) {
+		int lastDotIndex = path.lastIndexOf(".");
+		if(lastDotIndex >= 0) {
+			return path.substring(0, lastDotIndex + 1) + newKey;
+		}
+		else {
+			logger.error("Could not replace key in recipe data path: " + path);
+			return path;
+		}
+	}
+	
 	/** Get Review Data config info from recipe data. Tolerates nonexistent keys. */
 	private static void getScriptedConfig(PyChartScope chartScope, PyChartScope stepScope, String configKey, String configScope, Row scriptedConfig) {
 		String adviceKey = configKey + ".advice";
@@ -131,7 +143,7 @@ public class IlsGatewayScripts {
 		if(s88DataExists(chartScope, stepScope, unitsKey, configScope)) {
 			scriptedConfig.units = (String)s88BasicGet(chartScope, stepScope, unitsKey, configScope);		
 		}
-		String promptKey = configKey + "label";
+		String promptKey = configKey + ".label";
 		if(s88DataExists(chartScope, stepScope, promptKey, configScope)) {
 			scriptedConfig.prompt = (String)s88BasicGet(chartScope, stepScope, promptKey, configScope);	
 		}
@@ -145,7 +157,7 @@ public class IlsGatewayScripts {
 			doubleVal = ((Number)oVal).doubleValue();
 		}
 		// else error!
-		String unitsKey = row.valueKey.replace(".value", ".units");
+		String unitsKey = changeValueKey(row.valueKey,  "units");
 		String fromUnits = (String)s88BasicGet(chartScope, stepScope, unitsKey, row.recipeScope);
 		String toUnits = row.units;
 		if(IlsSfcCommonUtils.isEmpty(fromUnits) || IlsSfcCommonUtils.isEmpty(toUnits)) {
