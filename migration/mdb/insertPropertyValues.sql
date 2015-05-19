@@ -150,3 +150,11 @@ insert into PropertyValueMap values ('callback','s88-store-r2-recipe-data-fs','s
 insert into PropertyValueMap values ('callback','s88-store-r2-recipe-slopes-fs','s88StoreR2RecipeSlopes.onStart');
 insert into PropertyValueMap values ('callback','s88-store-recipe-data-fs','s88StoreRecipeDataFs.onStart');
 insert into PropertyValueMap values ('callback','s88-store-recipe-slopes-fs','s88StoreRecipeSlopesFs.onStart');
+insert into PropertyValueMap values ('callback','s88-test-generic-callback','s88TestGenericCallback.onStart');
+insert into PropertyValueMap values ('callback','s88-test-post-user-respone','s88TestPostUserResponse.onStart');
+insert into PropertyValueMap values ('callback','s88-test-post-user-response','s88TestPostUserResponse.onStart');
+insert into PropertyValueMap values ('callback','s88-test-set-parameter-false','s88TestSetParameterFalse.onStart');
+insert into PropertyValueMap values ('callback','test-8-initialization','test8Initialization.onStart');
+insert into PropertyValueMap values ('callback','test-8-path-1','test8Path1.onStart');
+insert into PropertyValueMap values ('callback','test-8-path-2','test8Path2.onStart');
+insert into PropertyValueMap values ('callback','test-8-timeout-callback','test8TimeoutCallback.onStart');

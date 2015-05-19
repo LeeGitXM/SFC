@@ -1,0 +1,20 @@
+#!/bin/sh
+# Translate a single method used in the use cases
+#  - we start from the top and work down teting one-at-a-time
+#
+MIGRATION=${GIT_REPO}/sfc/migration
+#FIL=PH-TEST-CALLBACK-1.txt
+#FIL=S88-CALLBACK-TEMPLATE.txt
+#FIL=S88-TEST-GENERIC-CALLBACK.txt
+#FIL=S88-TEST-POST-USER-RESPONE.txt
+FIL=S88-TEST-SET-PARAMETER-FALSE.txt
+#FIL=TEST-5-CALLBACK-1.txt
+#FIL=TEST-5-CALLBACK-2.txt
+#FIL=TEST-5-SHARED-CALLBACK.txt
+#FIL=TEST-6-CALLBACK.txt
+#FIL=TEST-8-INITIALIZATION.txt
+#FIL=TEST-8-PATH-1.txt
+#FIL=TEST-8-PATH-2.txt
+#FIL=TEST-8-TIMEOUT-CALLBACK.txt
+DIR=${MIGRATION}/procs/g2/onstart
+${MIGRATION}/translate-onstart $DIR/$FIL
