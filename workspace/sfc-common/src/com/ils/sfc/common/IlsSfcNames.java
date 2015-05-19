@@ -83,6 +83,7 @@ public class IlsSfcNames {
 	public static final String POSTING_METHOD = "postingMethod";
 	public static final String PRIMARY_REVIEW_DATA = "primaryReviewData"; 
 	public static final String PRIMARY_REVIEW_DATA_WITH_ADVICE = "primaryReviewDataWithAdvice"; 
+	public static final String PRIMARY_TAB_LABEL = "primaryTabLabel"; 
 	public static final String PRINT_FILE = "printFile";
 	public static final String PRIORITY = "priority";
 	public static final String PRIVATE = "private";
@@ -109,6 +110,7 @@ public class IlsSfcNames {
 	public static final String SCREEN_HEADER = "screenHeader";
 	public static final String SECONDARY_REVIEW_DATA = "secondaryReviewData"; 
 	public static final String SECONDARY_REVIEW_DATA_WITH_ADVICE = "secondaryReviewDataWithAdvice"; 
+	public static final String SECONDARY_TAB_LABEL = "secondaryTabLabel"; 
 	public static final String SECURITY = "security";
 	public static final String SEMI_AUTOMATIC = "semiAutomatic";
 	public static final String SEQUENCE = "sequence";

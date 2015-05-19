@@ -14,7 +14,6 @@ public interface ReviewDataWithAdviceStepProperties extends ChartStepProperties 
 	
     public static final IlsProperty<?>[] properties = {  
     	WINDOW_TITLE,
-    	BUTTON_LABEL,
     	REVIEW_DATA_POSTING_METHOD,
     	BUTTON_KEY,
     	BUTTON_KEY_LOCATION,
@@ -22,6 +21,8 @@ public interface ReviewDataWithAdviceStepProperties extends ChartStepProperties 
     	SCALE,
     	REVIEW_DATA_WINDOW,
     	PRIMARY_REVIEW_DATA_WITH_ADVICE,
-    	SECONDARY_REVIEW_DATA_WITH_ADVICE
+    	PRIMARY_TAB_LABEL,
+    	SECONDARY_REVIEW_DATA_WITH_ADVICE,
+    	SECONDARY_TAB_LABEL
     };
 }

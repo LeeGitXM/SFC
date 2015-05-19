@@ -43,7 +43,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<Boolean> ACK_REQUIRED = new IlsProperty<Boolean>(IlsSfcNames.ACK_REQUIRED, Boolean.class, Boolean.FALSE);
     public static final IlsProperty<String> ADVICE = new IlsProperty<String>(IlsSfcNames.ADVICE, String.class, "");
     public static final IlsProperty<String> ARRAY_KEY = new IlsProperty<String>(IlsSfcNames.ARRAY_KEY, String.class, IlsSfcNames.NONE);
-    public static final IlsProperty<String> AUDIT_LEVEL = new IlsProperty<String>(IlsSfcNames.AUDIT_LEVEL, String.class, IlsSfcNames.AUDIT_LEVEL_CHOICES[0], IlsSfcNames.AUDIT_LEVEL_CHOICES);
+    //public static final IlsProperty<String> AUDIT_LEVEL = new IlsProperty<String>(IlsSfcNames.AUDIT_LEVEL, String.class, IlsSfcNames.AUDIT_LEVEL_CHOICES[0], IlsSfcNames.AUDIT_LEVEL_CHOICES);
     public static final IlsProperty<String> AUTO_MODE = new IlsProperty<String>(IlsSfcNames.AUTO_MODE, String.class, IlsSfcNames.AUTO_MODE_CHOICES[0], IlsSfcNames.AUTO_MODE_CHOICES);
     public static final IlsProperty<String> BUTTON_KEY = new IlsProperty<String>(IlsSfcNames.BUTTON_KEY, String.class, "");
     public static final IlsProperty<String> BUTTON_KEY_LOCATION = new IlsProperty<String>(IlsSfcNames.BUTTON_KEY_LOCATION, String.class, IlsSfcNames.RECIPE_LOCATION_CHOICES[0], IlsSfcNames.RECIPE_LOCATION_CHOICES);
@@ -97,6 +97,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<Boolean> POST_TO_QUEUE = new IlsProperty<Boolean>(IlsSfcNames.POST_TO_QUEUE, Boolean.class, Boolean.FALSE);
     public static final IlsProperty<String> PRIMARY_REVIEW_DATA = new IlsProperty<String>(IlsSfcNames.PRIMARY_REVIEW_DATA, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "primary data");
     public static final IlsProperty<String> PRIMARY_REVIEW_DATA_WITH_ADVICE = new IlsProperty<String>(IlsSfcNames.PRIMARY_REVIEW_DATA_WITH_ADVICE, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "primary data");
+    public static final IlsProperty<String> PRIMARY_TAB_LABEL = new IlsProperty<String>(IlsSfcNames.PRIMARY_TAB_LABEL, String.class, "Primary");
     public static final IlsProperty<String> PROMPT = new IlsProperty<String>(IlsSfcNames.PROMPT, String.class, "");
     public static final IlsProperty<Boolean> PRINT_FILE = new IlsProperty<Boolean>(IlsSfcNames.PRINT_FILE, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<String> PRIORITY = new IlsProperty<String>(IlsSfcNames.PRIORITY, String.class, IlsSfcNames.PRIORITY_CHOICES[0], IlsSfcNames.PRIORITY_CHOICES);
@@ -118,6 +119,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> SECURITY = new IlsProperty<String>(IlsSfcNames.SECURITY, String.class, IlsSfcNames.SECURITY_CHOICES[0], IlsSfcNames.SECURITY_CHOICES);
     public static final IlsProperty<String> SECONDARY_REVIEW_DATA = new IlsProperty<String>(IlsSfcNames.SECONDARY_REVIEW_DATA, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "secondary data");
     public static final IlsProperty<String> SECONDARY_REVIEW_DATA_WITH_ADVICE = new IlsProperty<String>(IlsSfcNames.SECONDARY_REVIEW_DATA_WITH_ADVICE, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "secondary data");
+    public static final IlsProperty<String> SECONDARY_TAB_LABEL = new IlsProperty<String>(IlsSfcNames.SECONDARY_TAB_LABEL, String.class, "Secondary");
     public static final IlsProperty<Boolean> SHOW_PRINT_DIALOG = new IlsProperty<Boolean>(IlsSfcNames.SHOW_PRINT_DIALOG, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<String> SQL = new IlsProperty<String>(IlsSfcNames.SQL, String.class, "");
     public static final IlsProperty<Double> STEP_TIME = new IlsProperty<Double>(IlsSfcNames.STEP_TIME, Double.class, 0.);
