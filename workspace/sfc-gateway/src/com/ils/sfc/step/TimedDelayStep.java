@@ -34,9 +34,17 @@ public class TimedDelayStep extends IlsAbstractChartStep implements TimedDelaySt
 
 	@Override
 	public void pauseStep() {
+		super.pauseStep();
 	}
 
 	@Override
 	public void resumeStep() {
+		super.resumeStep();
 	}
+	
+	@Override
+	public void cancelStep() {
+		super.cancelStep();
+	}
+
 }

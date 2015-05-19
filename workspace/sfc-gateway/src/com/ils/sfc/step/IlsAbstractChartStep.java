@@ -30,6 +30,9 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	private String auditLevel = IlsSfcNames.OFF;
 	protected ScopeContext scopeContext;
 	private long startTime;
+	private enum Status {
+		Activate, Pause, Resume, Cancel
+	};
 	
 	protected IlsAbstractChartStep(ChartContext context,  ScopeContext scopeContext, StepDefinition definition) {
 		super(context, definition);
@@ -60,6 +63,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
             
 	@Override
 	public void activateStep() {
+		setStatus(Status.Activate);
 		setAuditLevel();
 		startTime = System.currentTimeMillis();
 		if(auditOn()) {
@@ -77,6 +81,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 
 	@Override
 	public void pauseStep() {
+		setStatus(Status.Pause);
 		if(auditOn()) {
 			logger.debug(toString() + " paused");
 		}
@@ -84,11 +89,25 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 
 	@Override
 	public void resumeStep() {
+		setStatus(Status.Resume);
 		if(auditOn()) {
 			logger.debug(toString() + " resumed");
 		}
 	}
 
+	@Override
+	public void cancelStep() {
+		setStatus(Status.Cancel);
+		if(auditOn()) {
+			logger.debug(toString() + " cancelled");
+		}
+	}
+
+	/** Set the status in the step scope so the Python code can see it */
+	private void setStatus(Status status) {
+		scopeContext.getStepScope().put("_status", status.toString());
+	}
+	
 	protected void exec(PythonCall pcall) {
 		try {
 			logger.trace(pcall.getMethodName());
