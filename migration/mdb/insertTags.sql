@@ -224,5 +224,6 @@ insert into TagMap values ('SPLIT_RATE_CHANGE_OUTPUT','[]Connections/SplitRateCh
 insert into TagMap values ('STAB_SQC_TO_CRX-GDA','[]Connections/StabSqcToCrx','STRING');
 insert into TagMap values ('UNIFORM_CNTR_TPR_TIPS_PATH-GDA','[]Connections/UniformCntrTprTips','STRING');
 -- From use cases
-insert into TagMap values ('s88-test-logicl-parameter','[]Parameters/s88TestLogicalParameter','BOOLEAN');
-
+insert into TagMap values ('s88-test-logical-parameter','[]Parameters/s88TestLogicalParameter','BOOLEAN');
+insert into TagMap values ('test-8-path-1','[]Parameters/test8Path1','BOOLEAN');
+insert into TagMap values ('test-8-path-2','[]Parameters/test8Path2','BOOLEAN');

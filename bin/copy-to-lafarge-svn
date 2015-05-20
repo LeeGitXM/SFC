@@ -5,14 +5,13 @@
 # VERS, DATE files updated
 #
 #set -x
-REPO_ROOT=~/Development/ils/src
 SVN=~/Development/ils/svn/Lafarge/Release/src
 # Prepare directories
 mkdir -p $SVN/project
 mkdir -p $SVN/data
 cd $REPO_ROOT/sfc
 cp -a data $SVN
-cd $REPO_ROOT/sfc/project
+cd ${GIT_REPO}/sfc/project
 cp sfc_demo_proj.proj $SVN/project
 SVN=~/Development/ils/svn/Lafarge/Ignition
-cp $REPO_ROOT/sfc/workspace/sfc-build/modules/ILS-SFC-module-*.modl $SVN
+cp ${GIT_REPO}/sfc/workspace/sfc-build/modules/ILS-SFC-module-*.modl $SVN

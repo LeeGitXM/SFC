@@ -5,24 +5,23 @@
 # running this script.
 #
 #set -x
-REPO_ROOT=~/Development/ils/src
 SVN=~/Development/ils/svn/EMChemicals
 VERS=sfc-`cat $SVN/Release/VERS`
-TMP=$REPO_ROOT/$VERS
+TMP=${GIT_REPO}/$VERS
 # Cleanup
 rm -rf $TMP
-cd $REPO_ROOT
+cd ${GIT_REPO}
 rm -rf sfc/workspace/*/doc/*
 rm -rf sfc/workspace/*/bin/*
 rm -rf sfc/workspace/*/temp_modl
 mkdir $TMP
 
 mkdir $TMP/sfc
-cd $REPO_ROOT/sfc; cp -a workspace $TMP/sfc
+cd ${GIT_REPO}/sfc; cp -a workspace $TMP/sfc
 
 
 # Now zip and copy to subversion
-cd $REPO_ROOT/$VERS
+cd ${GIT_REPO}/$VERS
 zip -r $VERS.zip *
 cp $VERS.zip $SVN/Release/src
 rm -rf $TMP
