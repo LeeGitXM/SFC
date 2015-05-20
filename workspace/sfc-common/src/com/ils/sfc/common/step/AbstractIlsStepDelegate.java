@@ -27,7 +27,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	private static LoggerEx log = LogUtil.getLogger(AbstractIlsStepDelegate.class.getName());
 	private static final IlsProperty<?>[] commonProperties = {
 		com.ils.sfc.common.IlsProperty.DESCRIPTION, 
-		com.ils.sfc.common.IlsProperty.AUDIT_LEVEL
+		//com.ils.sfc.common.IlsProperty.AUDIT_LEVEL
 	};
 	private Property<?>[] properties;
 	
