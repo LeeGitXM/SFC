@@ -113,12 +113,17 @@ public class IlsScopeLocator implements ScopeLocator {
 	void pathSet(PyChartScope scope, String path, Object value) {
 		String[] keys = splitPath(path);
 		String lastKey = keys[keys.length-1];
-		try {
-			getLastScope(scope, keys, path).put(lastKey, value);
-		}
-		catch(Exception e) {
+		
+		PyChartScope lastScope = getLastScope(scope, keys, path);
+		if(!lastScope.hasKey(lastKey)) {
 			throw new IllegalArgumentException("no data at path " + path);
 		}
+		// don't allow a primitive value to be set over an object value
+		// e.g. if someone forgot to add ".value"
+		if(lastScope.get(lastKey) instanceof PyChartScope) {
+			throw new IllegalArgumentException("incomplete path " + path + "--did you forget to add \".value\"?");			
+		}
+		lastScope.put(lastKey, value);
 	}
 	
 	
