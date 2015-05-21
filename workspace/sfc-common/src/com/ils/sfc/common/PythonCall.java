@@ -40,6 +40,9 @@ public class PythonCall {
 	public static final PythonCall SHOW_QUEUE = new PythonCall(STEPS_PKG + "showQueue", 
 		null, stepArgs);
 
+	public static final PythonCall GET_QUEUE_NAMES = new PythonCall("ils.queue.commons.getQueueNames", 
+			PyList.class, new String[]{"db"});
+
 	public static final PythonCall YES_NO = new PythonCall(STEPS_PKG + "yesNo", 
 			null, stepArgs);
 

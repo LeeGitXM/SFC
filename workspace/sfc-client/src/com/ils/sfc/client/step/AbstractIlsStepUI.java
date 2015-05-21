@@ -15,6 +15,7 @@ import javax.swing.border.LineBorder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcNames;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -92,11 +93,16 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	label.setOpaque(true);
 	}
 	
-	/** Subclasses override to get text to display. */
+	/** Subclasses override to get icon to display. */
 	protected Icon getIcon() { return null; }
 	
-	/** Subclasses override to get icon to display. */
+	/** Subclasses override to get text to display. */
 	protected String getText() { return null; }
+	
+	protected boolean isFoundationStep() {
+		return this instanceof ProcedureStepUI || this instanceof OperationStepUI ||
+			this instanceof PhaseStepUI;
+	}
 	
     @Override
     public void drawStep(ChartUIElement propertyValues, ChartStatusContext chartStatusContext, 
@@ -109,7 +115,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	// Give the label a slight inset
     	int inset = 4;
     	label.setSize((int)cellWidth - 2 * inset, (int)cellHeight - 2 * inset);
-    	
+    	    	
     	// draw connections to other steps
     	this.drawUpLink(g2d);
     	this.drawDownLink(g2d);
@@ -121,10 +127,22 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	double tx = oldTransform.getTranslateX() + inset;
     	double ty = oldTransform.getTranslateY() + inset;
     	transform.translate(tx, ty);
-    	
+
+    	// For foundation steps, add the step name
+    	String oldLabelText = null;
+    	if(isFoundationStep()) {
+    		oldLabelText = label.getText();
+    		String stepName = propertyValues.get(IlsProperty.NAME);
+    		label.setText(oldLabelText.replace("</html>", "<br>" + stepName + "</html>"));
+    	}
+
     	g2d.setTransform(transform);
     	label.paint(g2d);
     	g2d.setTransform(oldTransform);
+    	
+    	if(isFoundationStep()) {
+    		label.setText(oldLabelText);
+    	}    	
     }
 
     /** Initialize the Encapsulation step properties for our step types (e.g. ProcedureStep)

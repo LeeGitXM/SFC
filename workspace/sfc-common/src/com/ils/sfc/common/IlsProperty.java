@@ -14,9 +14,13 @@ import org.json.JSONObject;
 
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 @SuppressWarnings("serial")
 public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializable {
+	private static LoggerEx logger = LogUtil.getLogger(IlsProperty.class.getName());
 	private int sortOrder;
 	private boolean isSerializedObject;
 	private String[] choices;
@@ -88,7 +92,18 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<Double> MAX_TIMING = new IlsProperty<Double>(IlsSfcNames.MAX_TIMING, Double.class, 0.);
     public static final IlsProperty<Double> MAXIMUM_VALUE = new IlsProperty<Double>(IlsSfcNames.MAXIMUM_VALUE, Double.class, 0.);
     public static final IlsProperty<String> MESSAGE = new IlsProperty<String>(IlsSfcNames.MESSAGE, String.class, "");
-    public static final IlsProperty<String> MESSAGE_QUEUE = new IlsProperty<String>(IlsSfcNames.MESSAGE_QUEUE, String.class, IlsSfcNames.DEFAULT_MESSAGE_QUEUE);
+    public static final IlsProperty<String> MESSAGE_QUEUE = new IlsProperty<String>(IlsSfcNames.MESSAGE_QUEUE, String.class, IlsSfcNames.DEFAULT_MESSAGE_QUEUE) {
+    	@Override
+    	public String[] getChoices() {
+    		try {
+    			Object[] args = {null};
+				return PythonCall.toArray(PythonCall.GET_QUEUE_NAMES.exec(args));
+			} catch (JythonExecException e) {
+				logger.error("Error getting message queue names", e);
+				return null;
+			}
+    	}
+    };
     public static final IlsProperty<String> METHOD = new IlsProperty<String>(IlsSfcNames.METHOD, String.class, "");
     public static final IlsProperty<Double> MINIMUM_VALUE = new IlsProperty<Double>(IlsSfcNames.MINIMUM_VALUE, Double.class, 0.);
 	public static final BasicProperty<String> NAME = new BasicProperty<String>(IlsSfcNames.NAME, String.class);
