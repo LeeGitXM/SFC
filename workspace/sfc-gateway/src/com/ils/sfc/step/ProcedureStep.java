@@ -1,7 +1,5 @@
 package com.ils.sfc.step;
 
-import com.inductiveautomation.ignition.common.util.LogUtil;
-import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.definitions.StepDefinition;

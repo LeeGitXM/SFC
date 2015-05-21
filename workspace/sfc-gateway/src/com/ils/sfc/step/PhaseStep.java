@@ -23,27 +23,4 @@ public class PhaseStep extends FoundationStep {
 		super(context, definition, scopeContext);
 	}
 
-	@Override
-	public void activateStep() {
-		String queue = getDefinition().getProperties().get(IlsProperty.QUEUE);
-		if(!IlsSfcCommonUtils.isEmpty(queue)){
-			
-		}
-		super.activateStep();
-	}
-
-	private void updateOperation(String operationName) {
-		// message the client to update the current operation
-			PyChartScope topScope = IlsScopeLocator.getTopScope(getChartContext().getChartScope());
-			String chartRunId = (String)topScope.get("instanceId");
-			String projectName = (String)topScope.get("project");
-			PyDictionary payload = new PyDictionary();
-			payload.put("instanceId", chartRunId);
-			payload.put("status", operationName);
-			try {
-				PythonCall.SEND_CURRENT_OPERATION.exec(projectName, payload);
-			} catch (JythonExecException e) {
-				logger.error("error sending chart status", e);
-			}
-	}
 }

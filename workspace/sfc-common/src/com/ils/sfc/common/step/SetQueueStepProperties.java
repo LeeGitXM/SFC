@@ -14,5 +14,5 @@ public interface SetQueueStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.setQueueStep";
 	
     public static final IlsProperty<?>[] properties = { 
-    	QUEUE };
+    	MESSAGE_QUEUE };
 }
