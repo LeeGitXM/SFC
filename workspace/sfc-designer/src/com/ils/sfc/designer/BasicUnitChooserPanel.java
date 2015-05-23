@@ -16,30 +16,28 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
+import com.ils.sfc.designer.DesignerUtil;
+import com.ils.sfc.designer.panels.UnitChooserPanel;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
-/** A generic unit chooser. initUI() must be called prior to use; the reason this
- *  is not in the constructor is that the system may not be ready to load units
- *  at initialization time.
- */
+/** A re-usable sub-pane for choosing units. */
 @SuppressWarnings("serial")
-public class UnitChooserPanel extends JPanel {
-	private static LoggerEx logger = LogUtil.getLogger(UnitChooserPanel.class.getName());
+public class BasicUnitChooserPanel extends JPanel {
+	private LoggerEx logger = LogUtil.getLogger(UnitChooserPanel.class.getName());
 	private JComboBox<String> typesCombo = new JComboBox<String>();
 	private JComboBox<String> unitsCombo = new JComboBox<String>();
 	
-	public UnitChooserPanel() {
+	public BasicUnitChooserPanel() {
 		initUI();
 		typesCombo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				getUnitsForType();
-			}
+			public void actionPerformed(ActionEvent e) { doTypeChanged(); }		
 		});
 	}
-
+	
 	private void initUI() {
 		setLayout(new GridBagLayout());
 		GridBagConstraints con = new GridBagConstraints();
@@ -68,23 +66,11 @@ public class UnitChooserPanel extends JPanel {
 		typesCombo.setSelectedIndex(0);
 	}
 
-	public void setUnit(String unitName) throws JythonExecException {
-		String unitType = (String) PythonCall.GET_TYPE_OF_UNIT.exec(unitName);
-		typesCombo.setSelectedItem(unitType);
-		if(unitType != null) {
-			unitsCombo.setSelectedItem(unitName);
-		}
-	}
-	
 	public String getSelectedType() {
 		return (String) typesCombo.getSelectedItem();
 	}
 
-	public String getSelectedUnits() {
-		return (String) unitsCombo.getSelectedItem();
-	}
-
-	private void getUnitsForType() {
+	private void doTypeChanged() {
 		String selectedType = (String) typesCombo.getSelectedItem();
 		try {
 			Object[] args = {selectedType};
@@ -103,6 +89,23 @@ public class UnitChooserPanel extends JPanel {
 			logger.error("Error getting units for type " + selectedType, e);
 		}
 	}
-	
 
+	public String getSelectedUnits() {
+		return (String) unitsCombo.getSelectedItem();
+	}
+
+	public void setUnits(String unitName) {
+		if(IlsSfcCommonUtils.isEmpty(unitName)) return;
+		String unitType = null;
+		try {
+			unitType = (String) PythonCall.GET_TYPE_OF_UNIT.exec(unitName);
+		} catch (JythonExecException e) {
+			logger.error("error getting type of unit" + unitName, e);
+		}
+		typesCombo.setSelectedItem(unitType);
+		if(unitType != null) {
+			unitsCombo.setSelectedItem(unitName);
+		}
+	}
+	
 }

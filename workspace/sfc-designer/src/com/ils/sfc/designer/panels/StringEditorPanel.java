@@ -1,39 +1,43 @@
-package com.ils.sfc.designer;
+package com.ils.sfc.designer.panels;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import com.ils.sfc.designer.ButtonPanel;
-import com.ils.sfc.designer.EditorPane;
+import com.ils.sfc.designer.propertyEditor.ValueHolder;
 
 /** Basically just a big text area for editing long strings. */
 @SuppressWarnings("serial")
-public abstract class AbstractStringEditorPane extends JPanel implements EditorPane {
+public class StringEditorPanel extends ValueHoldingEditorPanel {
 	protected JTextArea textField = new JTextArea();
 	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
 	
-	public AbstractStringEditorPane() {
-		super(new BorderLayout());
+	public StringEditorPanel(PanelController controller, int index) {
+		super(controller, index);
 		add(textField, BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.NORTH);
 		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {doOK();}		
+			public void actionPerformed(ActionEvent e) {accept();}		
 		});
 	}
 
 	/** Do anything that needs to be done before re-showing this. */
-	public void activate() {
+	@Override
+	public void activate(ValueHolder valueHolder) {
 		textField.requestFocus();
+		super.activate(valueHolder);
 	}
 
-	public void setText(String text) {
-		textField.setText(text);
+	@Override
+	public void setValue(Object text) {
+		textField.setText((String)text);
 	}
-	
-	public abstract void doOK();
+
+	@Override
+	Object getValue() {
+		return textField.getText();
+	}
 	
 }

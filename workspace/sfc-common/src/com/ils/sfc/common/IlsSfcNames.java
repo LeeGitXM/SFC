@@ -5,12 +5,14 @@ package com.ils.sfc.common;
 public class IlsSfcNames {
 
 	// step properties:
+	public static final String ABORT = "abort";
 	public static final String ACK_REQUIRED = "ackRequired";
 	public static final String ADVICE = "advice";
 	public static final String ARRAY_KEY = "arrayKey";
 	public static final String AUDIT_LEVEL = "auditLevel";
 	public static final String AUTO_MODE = "autoMode";
 	public static final String AUTOMATIC = "automatic";
+	public static final String AVERAGE = "average";
 	public static final String BOTTOM_CENTER = "bottomCenter";
 	public static final String BOTTOM_LEFT = "bottomLeft";
 	public static final String BOTTOM_RIGHT = "bottomRight";
@@ -30,9 +32,12 @@ public class IlsSfcNames {
 	public static final String COLUMNS = "columns";
 	public static final String COLUMN_KEYED = "columnKeyed";
 	public static final String COMPUTER = "computer";
+	public static final String CONFIG = "config";
+	public static final String CURRENT = "current";
 	public static final String DATA = "data";
 	public static final String DESCRIPTION = "description";
 	public static final String DEFAULT_MESSAGE_QUEUE = "SFC-Message-Queue";
+	public static final String DEFAULT_VALUE = "defaultValue";
 	public static final String DELAY = "delay";
 	public static final String DELAY_UNIT = "delayUnit";
 	public static final String DIALOG = "dialog";
@@ -70,7 +75,9 @@ public class IlsSfcNames {
 	public static final String MESSAGE = "message";
 	public static final String MESSAGE_QUEUE = "msgQueue";
 	public static final String METHOD = "method";
+	public static final String MINIMUM = "minimum";
 	public static final String MINIMUM_VALUE = "minimumValue";
+	public static final String MAXIMUM = "maximum";
 	public static final String MAXIMUM_VALUE = "maximumValue";
 	public static final String MULTIPLE = "multiple";
 	public static final String NAME = "name";
@@ -118,6 +125,7 @@ public class IlsSfcNames {
 	public static final String SHOW_PRINT_DIALOG = "showPrintDialog";
 	public static final String SINGLE = "single";
 	public static final String SQL = "sql";
+	public static final String STANDARD_DEVIATION = "stdDeviation";
 	public static final String STATIC = "static";
 	public static final String STEP_TIME = "stepTime";
 	public static final String STEP_TIMESTAMP = "stepTimestamp";
@@ -187,4 +195,6 @@ public class IlsSfcNames {
 	public static final String[] PRIORITY_CHOICES = {INFO, WARNING, ERROR};
 	public static final String[] AUDIT_LEVEL_CHOICES = {OFF, LOW, HIGH};
 	public static final String[] S88_LEVEL_CHOICES = {NONE, GLOBAL, OPERATION, PHASE};
+	public static final String[] COLLECT_DATA_VALUE_TYPE_CHOICES = {CURRENT, AVERAGE, MINIMUM, MAXIMUM, STANDARD_DEVIATION};
+	public static final String[] ERROR_HANDLING_CHOICES = {ABORT, TIMEOUT, DEFAULT_VALUE};
 }

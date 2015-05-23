@@ -24,14 +24,14 @@ public class RecipeEditorFrame extends com.jidesoft.docking.DockableFrame implem
 	private static String TITLE = "Recipe Data";
 	private RecipeEditorController controller;
 	
-	public RecipeEditorFrame() {
+	public RecipeEditorFrame(DesignerContext ctx) {
 		super(KEY);
        	setInitSide(DockContext.DOCK_SIDE_WEST);
        	setInitIndex(10);
        	setTitle(TITLE);
        	setTabTitle(TITLE);
        	setSideTitle(TITLE);
-      	controller = new RecipeEditorController();
+      	controller = new RecipeEditorController(ctx);
        	setContentPane(controller.getSlidingPane());
 	}
 
@@ -51,7 +51,7 @@ public class RecipeEditorFrame extends com.jidesoft.docking.DockableFrame implem
 		if(selectedComponent instanceof StepComponent) {
 			StepComponent stepComponent = (StepComponent) selectedComponent;
 			controller.setElement(stepComponent.getElement());
-			controller.getBrowser().activate();
+			controller.getBrowser().activate(-1);
 		}
 		else {
 			// either no step was selected, or it was a multiple selection

@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.border.BevelBorder;
@@ -17,21 +16,21 @@ import javax.swing.tree.TreeSelectionModel;
 
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Group;
-import com.ils.sfc.designer.ButtonPanel;
-import com.ils.sfc.designer.EditorPane;
+import com.ils.sfc.designer.panels.ButtonPanel;
+import com.ils.sfc.designer.panels.EditorPanel;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 /** Provide a tree view of all recipe data. */
 @SuppressWarnings("serial")
-public class RecipeBrowserPane extends JPanel implements EditorPane {
+public class RecipeBrowserPane extends EditorPanel {
 	private ButtonPanel buttonPanel = new ButtonPanel(false, true, true, true, false, false);
 	private JTree tree;
 	private JScrollPane treeScroll;
 	private DefaultTreeModel treeModel;
 	private RecipeDataTreeNode selectedNode;
-	private RecipeEditorController controller;
 	private RecipeDataTreeNode rootNode = new RecipeDataTreeNode(null);
 	private boolean showLeafNodes = false;
+	private RecipeEditorController controller;
 
 	/** Helper class to show recipe data objects as tree nodes. */
 	private class RecipeDataTreeNode extends DefaultMutableTreeNode {
@@ -54,16 +53,9 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 		}
 		
 	}
-
-	/** This constructor is for development/testing use */
-	public RecipeBrowserPane(List<Data> recipeData) {
-		showLeafNodes = true;
-		setLayout(new BorderLayout());
-		createTree(recipeData);
-		validate();	
-	}
 	
-	public RecipeBrowserPane(RecipeEditorController controller) {
+	public RecipeBrowserPane(RecipeEditorController controller, int index) {
+		super(controller, index);
 		this.controller = controller;
 		rootNode.setUserObject(new Group());  // set some dummy data to prevent NPEs
 		setLayout(new BorderLayout());
@@ -155,7 +147,7 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	}
 
 	private void doAdd() {				
-		controller.getCreator().activate();
+		controller.getCreator().activate(myIndex);
 	}
 	
 	private void doRemove() {
@@ -174,7 +166,7 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	private void doEdit() {
 		//controller.getEditor().getPropertyEditor().setPropertyValues(selectedNode.getRecipeData().getProperties(), false);
 		controller.getEditor().setRecipeData(selectedNode.getRecipeData());
-		controller.getEditor().activate();
+		controller.getEditor().activate(myIndex);
 	}
 
 	/** Rebuild the tree in response to a change in recipe data. */
@@ -188,9 +180,9 @@ public class RecipeBrowserPane extends JPanel implements EditorPane {
 	}
 	
 	@Override
-	public void activate() {
+	public void activate(int returnIndex) {
 		rebuildTree();
-		controller.slideTo(RecipeEditorController.BROWSER);
+		super.activate(returnIndex);
 	}
 
 }

@@ -26,6 +26,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 	private String[] choices;
 	private String label;
 	private static final String EMPTY_REVIEW_DATA_CONFIG = "{\"rows\":[]}";
+	private static final String EMPTY_COLLECT_DATA_CONFIG = "{\"errorHandling\": \"" + IlsSfcNames.DEFAULT_VALUE + "\", \"rows\":[]}";
 	
 	// properties to omit from the editor
 	public static final Set<String> ignoreProperties = new HashSet<String>();
@@ -57,6 +58,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> CHOICES_RECIPE_LOCATION = new IlsProperty<String>(IlsSfcNames.CHOICES_RECIPE_LOCATION, String.class, IlsSfcNames.RECIPE_LOCATION_CHOICES[0], IlsSfcNames.RECIPE_LOCATION_CHOICES);
     public static final IlsProperty<String> CHOICES_KEY = new IlsProperty<String>(IlsSfcNames.CHOICES_KEY, String.class, "");
     public static final IlsProperty<String> CLASS = new IlsProperty<String>(IlsSfcNames.CLASS, String.class, "");
+    public static final IlsProperty<String> COLLECT_DATA_CONFIG = new IlsProperty<String>(IlsSfcNames.CONFIG, String.class, EMPTY_COLLECT_DATA_CONFIG, true);
     public static final IlsProperty<Integer> COLUMNS = new IlsProperty<Integer>(IlsSfcNames.COLUMNS, Integer.class, 0);
     public static final IlsProperty<String> COLUMN_KEY = new IlsProperty<String>(IlsSfcNames.COLUMN_KEY, String.class, IlsSfcNames.NONE);
     public static final IlsProperty<Boolean> COLUMN_KEYED = new IlsProperty<Boolean>(IlsSfcNames.COLUMN_KEYED, Boolean.class, Boolean.FALSE);

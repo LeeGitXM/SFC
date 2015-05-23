@@ -21,20 +21,21 @@ import javax.swing.SwingConstants;
 
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
-import com.ils.sfc.designer.ButtonPanel;
+import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.ComboWrapper;
 import com.ils.sfc.designer.DesignerUtil;
-import com.ils.sfc.designer.EditorPane;
+import com.ils.sfc.designer.panels.EditorPanel;
 
 /** An editor for creating a Recipe Data object. */
 @SuppressWarnings("serial")
-public class RecipeObjectCreatorPane extends JPanel implements EditorPane {
-	private RecipeEditorController controller;
+public class RecipeObjectCreatorPane extends EditorPanel {
 	private JComboBox<ComboWrapper> typesCombo = new JComboBox<ComboWrapper>();
 	private JTextField keyTextField = new JTextField();
 	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
+	private RecipeEditorController controller;
 	
-	public RecipeObjectCreatorPane(RecipeEditorController controller) {
+	public RecipeObjectCreatorPane(RecipeEditorController controller, int index) {
+		super(controller, index);
 		this.controller = controller;
 		initTypes();
 		initUI();
@@ -44,9 +45,9 @@ public class RecipeObjectCreatorPane extends JPanel implements EditorPane {
 	}
 
 	@Override
-	public void activate() {
+	public void activate(int returnIndex) {
 		keyTextField.requestFocus();
-		controller.slideTo(RecipeEditorController.OBJECT_CREATOR);
+		super.activate(returnIndex);
 	}
 
 	private void initUI() {
@@ -66,8 +67,7 @@ public class RecipeObjectCreatorPane extends JPanel implements EditorPane {
 		DesignerUtil.setConstraints(con, WEST, BOTH, 1, 1, 1, 1, new Insets(2, 5, 2, 0), 0, 0);
 		mainPanel.add(keyTextField, con);
 		keyTextField.setPreferredSize(new Dimension(100,25));
-
-}
+	}
 
 	private void initTypes() {
 		for(Class<?> type: RecipeDataTranslator.getConcreteClasses()) {
@@ -80,8 +80,8 @@ public class RecipeObjectCreatorPane extends JPanel implements EditorPane {
 		ComboWrapper selectedType = (ComboWrapper)typesCombo.getSelectedItem();
 		String key = keyTextField.getText().trim();
 		if(key.length() == 0) {
-			controller.getMessagePane().setText("You must specify a key", RecipeEditorController.OBJECT_CREATOR);
-			controller.getMessagePane().activate();
+			controller.getMessagePane().setText("You must specify a key");
+			controller.getMessagePane().activate(myIndex);
 			return;
 		}
 		try {
@@ -91,12 +91,12 @@ public class RecipeObjectCreatorPane extends JPanel implements EditorPane {
 			keyTextField.setText("");
 			controller.getRecipeData().add(newObject);
 			controller.getEditor().setRecipeData(newObject);
-			controller.getEditor().activate();
+			controller.getEditor().activate(myIndex);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			controller.getMessagePane().setText("Unexpected error creating object: " + e.getMessage(), RecipeEditorController.OBJECT_CREATOR);
-			controller.getMessagePane().activate();
+			controller.getMessagePane().setText("Unexpected error creating object: " + e.getMessage());
+			controller.getMessagePane().activate(myIndex);
 			return;
 		}
 	}

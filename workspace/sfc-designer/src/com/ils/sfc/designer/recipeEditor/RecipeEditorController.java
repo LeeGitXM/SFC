@@ -8,18 +8,19 @@ import javax.swing.JPanel;
 import org.json.JSONObject;
 
 import com.ils.sfc.common.recipe.objects.Data;
-import com.ils.sfc.common.recipe.objects.Group;
+import com.ils.sfc.designer.panels.MessagePanel;
+import com.ils.sfc.designer.panels.PanelController;
+import com.ils.sfc.designer.panels.StringEditorPanel;
+import com.ils.sfc.designer.panels.TagBrowserPanel;
+import com.ils.sfc.designer.panels.UnitChooserPanel;
 import com.ils.sfc.designer.propertyEditor.PropertyTableModel;
-import com.inductiveautomation.ignition.client.util.gui.SlidingPane;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** A controller for all the sliding panes that are involved in editing recipe data. */
-public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
-	
-	private SlidingPane slidingPane = new SlidingPane();
-		
+public class RecipeEditorController extends PanelController implements PropertyTableModel.ErrorHandler {
+			
 	static final int BROWSER = 0;
 	static final int OBJECT_CREATOR = 1;
 	static final int OBJECT_EDITOR = 2;
@@ -31,21 +32,21 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 	static final int EMPTY_PANE = 8;
 	
 	// The sub-panes:
-	private RecipeBrowserPane browser = new RecipeBrowserPane(this);
-	private RecipeObjectCreatorPane creator = new RecipeObjectCreatorPane(this);
-	private RecipePropertyEditorPane objectEditor = new RecipePropertyEditorPane(this);
-	private RecipeStringEditorPane textEditor = new RecipeStringEditorPane(this);
-	private RecipeMessagePane messagePane = new RecipeMessagePane(this);
-	private RecipeFieldCreatorPane fieldCreator = new RecipeFieldCreatorPane(this);
-	private RecipeTagBrowserPane tagBrowser;
-	private RecipeUnitChooserPane unitChooser = new RecipeUnitChooserPane(this);
+	private RecipeBrowserPane browser = new RecipeBrowserPane(this, BROWSER);
+	private RecipeObjectCreatorPane creator = new RecipeObjectCreatorPane(this, OBJECT_CREATOR);
+	private RecipePropertyEditorPane objectEditor = new RecipePropertyEditorPane(this, OBJECT_EDITOR);
+	private StringEditorPanel textEditor = new StringEditorPanel(this, TEXT_EDITOR);
+	private MessagePanel messagePanel = new MessagePanel(this, MESSAGE);
+	private RecipeFieldCreatorPane fieldCreator = new RecipeFieldCreatorPane(this, FIELD_CREATOR);
+	private TagBrowserPanel tagBrowser = new TagBrowserPanel(this, TAG_BROWSER);
+	private UnitChooserPanel unitChooser = new UnitChooserPanel(this, UNIT_CHOOSER);
 	
 	// The step whose recipe data we are editing:
 	private ChartUIElement element;
 	private List<Data> recipeData;
 	
-	public RecipeEditorController() {
-		tagBrowser = new RecipeTagBrowserPane(this);
+	public RecipeEditorController(DesignerContext ctx) { 
+		super(ctx);
 		objectEditor.getPropertyEditor().getTableModel().setErrorHandler(this);
 		// sub-panes added according to the indexes above:
 		slidingPane.add(browser);
@@ -53,7 +54,7 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 		slidingPane.add(objectEditor);
 		slidingPane.add(fieldCreator);
 		slidingPane.add(textEditor);
-		slidingPane.add(messagePane);
+		slidingPane.add(messagePanel);
 		slidingPane.add(tagBrowser);
 		slidingPane.add(unitChooser);
 		slidingPane.add(new JPanel());  // a blank pane
@@ -67,18 +68,6 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 
 	public List<Data> getRecipeData() {
 		return recipeData;
-	}
-
-	public void setContext(DesignerContext context) {
-		tagBrowser.setContext(context);
-	}
-	
-	public void slideTo(int index) {
-		slidingPane.setSelectedPane(index);	
-	}	
-	
-	public SlidingPane getSlidingPane() {
-		return slidingPane;
 	}
 
 	public RecipeBrowserPane getBrowser() {
@@ -97,34 +86,25 @@ public class RecipeEditorController implements PropertyTableModel.ErrorHandler {
 		return objectEditor;
 	}
 
-	public RecipeStringEditorPane getTextEditor() {
+	public StringEditorPanel getTextEditor() {
 		return textEditor;
 	}
 
-	public RecipeMessagePane getMessagePane() {
-		return messagePane;
+	public MessagePanel getMessagePane() {
+		return messagePanel;
 	}
 
-	public RecipeTagBrowserPane getTagBrowser() {
+	public TagBrowserPanel getTagBrowser() {
 		return tagBrowser;
 	}
 	
-	public RecipeUnitChooserPane getUnitChooser() {
+	public UnitChooserPanel getUnitChooser() {
 		return unitChooser;
 	}
 
 	public void showMessage(String message, int returnPanelIndex) {
-		messagePane.setText(message, returnPanelIndex);
-		messagePane.activate();
-	}
-
-	public static void main(String[] args) {
-		RecipeEditorController controller = new RecipeEditorController();		
-		javax.swing.JFrame frame = new javax.swing.JFrame();
-		frame.setContentPane(controller.getSlidingPane());
-		frame.setSize(300,200);
-		frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
+		messagePanel.setText(message);
+		messagePanel.activate(returnPanelIndex);
 	}
 
 	public void setElement(ChartUIElement element) {

@@ -10,24 +10,25 @@ import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Structure;
-import com.ils.sfc.designer.ButtonPanel;
-import com.ils.sfc.designer.EditorPane;
+import com.ils.sfc.designer.panels.ButtonPanel;
+import com.ils.sfc.designer.panels.EditorPanel;
 import com.ils.sfc.designer.propertyEditor.PropertyEditor;
+import com.ils.sfc.designer.propertyEditor.ValueHolder;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 /** A thin wrapper for a PropertyEditor that adds an accept action.
  *  Also provides add/remove for dynamic properties, and extended
  *  editing for strings and tags.  */
 @SuppressWarnings("serial")
-public class RecipePropertyEditorPane extends JPanel implements EditorPane {
+public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder {
 	private RecipeEditorController controller;
 	private PropertyEditor editor = new PropertyEditor();
 	private ButtonPanel buttonPanel = new ButtonPanel(true, true, true, true, false,  false);
 
 	private Data recipeData;
 	
-	public RecipePropertyEditorPane(RecipeEditorController controller) {
-		super(new BorderLayout());
+	public RecipePropertyEditorPane(RecipeEditorController controller, int index) {
+		super(controller, index);
 		this.controller = controller;
 		add(editor, BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.NORTH);
@@ -44,15 +45,10 @@ public class RecipePropertyEditorPane extends JPanel implements EditorPane {
 			public void actionPerformed(ActionEvent e) {doEdit();}			
 		});
 	}
-
-	@Override
-	public void activate() {
-		controller.slideTo(RecipeEditorController.OBJECT_EDITOR);
-	}
 	
 	private void doAdd() {
 		controller.getFieldCreator().setRecipeData((Structure)recipeData);
-		controller.getFieldCreator().activate();
+		controller.getFieldCreator().activate(myIndex);
 	}
 
 	private void doEdit() {
@@ -60,18 +56,18 @@ public class RecipePropertyEditorPane extends JPanel implements EditorPane {
 		if(selectedPropertyValue == null) return;
 		if(selectedPropertyValue.getProperty().equals(IlsProperty.TAG_PATH)) {
 			editor.stopCellEditing();
-			controller.getTagBrowser().activate();
+			controller.getTagBrowser().activate(this);
 		}
 		else if(selectedPropertyValue.getProperty().equals(IlsProperty.UNITS)) {
 			editor.stopCellEditing();
-			controller.getUnitChooser().activate();
+			controller.getUnitChooser().activate(myIndex);
 			// as activate may initialize units; we set unit AFTER activation:
-			controller.getUnitChooser().setUnit((String)editor.getSelectedValue());
+			controller.getUnitChooser().setValue(editor.getSelectedValue());
 		}
 		else if(selectedPropertyValue.getProperty().getType() == String.class) {
 			editor.stopCellEditing();
-			controller.getTextEditor().setText((String)selectedPropertyValue.getValue());
-			controller.getTextEditor().activate();
+			controller.getTextEditor().setValue(selectedPropertyValue.getValue());
+			controller.getTextEditor().activate(myIndex);
 		}
 		// else do nothing
 	}
@@ -90,7 +86,7 @@ public class RecipePropertyEditorPane extends JPanel implements EditorPane {
 			controller.showMessage("A key is required", RecipeEditorController.OBJECT_EDITOR);
 		}
 		else {
-			controller.getBrowser().activate();			
+			controller.getBrowser().activate(myIndex);			
 		}
 	}
 
@@ -104,6 +100,16 @@ public class RecipePropertyEditorPane extends JPanel implements EditorPane {
 		buttonPanel.getAddButton().setEnabled(isStructure);
 		buttonPanel.getRemoveButton().setEnabled(isStructure);
 		getPropertyEditor().setPropertyValues(recipeData.getProperties(), false);
+	}
+
+	@Override
+	public void setValue(Object value) {
+		getPropertyEditor().setSelectedValue(value);
+	}
+
+	@Override
+	public int getIndex() {
+		return myIndex;
 	}
 
 }

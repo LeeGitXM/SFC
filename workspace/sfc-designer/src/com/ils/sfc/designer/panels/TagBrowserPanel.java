@@ -1,50 +1,52 @@
-package com.ils.sfc.designer;
+package com.ils.sfc.designer.panels;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JPanel;
-
-import com.ils.sfc.designer.ButtonPanel;
-import com.ils.sfc.designer.EditorPane;
 import com.ils.sfc.designer.TagBrowser;
-import com.inductiveautomation.ignition.designer.model.DesignerContext;
+import com.ils.sfc.designer.propertyEditor.ValueHolder;
 
 /** A wrapper for an Ignition tag browser so the user can browse tags instead
  *  of manually typing in the tag path. 
  */
 @SuppressWarnings("serial")
-public abstract class AbstractTagBrowserPane extends JPanel implements EditorPane  {
+public class TagBrowserPanel extends ValueHoldingEditorPanel  {
 	private final ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false,  false);
 	protected TagBrowser tagBrowser;
-	private DesignerContext context;
 	private boolean initialized;
 	
-	public AbstractTagBrowserPane() {
-		super(new BorderLayout());
+	public TagBrowserPanel(PanelController controller, int index) {
+		super(controller, index);
+		this.myIndex = index;
 		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {doAccept();}			
+			public void actionPerformed(ActionEvent e) {accept();}			
 		});
 	}
 
-	public void setContext(DesignerContext context) {
-		this.context = context;
-	}
-
 	@Override
-	public void activate() {	
+	public void activate(ValueHolder valueHolder) {	
 		// the tag browser's internal icons are not added until very late,
 		// so to avoid errors we need to delay creating it until the last minute
 		if(!initialized) {
 			add(buttonPanel, BorderLayout.NORTH);
-			tagBrowser = new TagBrowser(context);
+			tagBrowser = new TagBrowser(panelController.getContext());
 			add(tagBrowser, BorderLayout.CENTER);
 			validate();
 			initialized = true;
 		}
+		super.activate(valueHolder);
 	}
 
-	abstract public void doAccept();
+	@Override
+	public Object getValue() {
+		return tagBrowser.getTagPath();
+	}
+
+	@Override
+	void setValue(Object value) {
+		// in theory we could set the tag browser to select the current value,
+		// but at the moment we do nothing...
+	}
 }
 

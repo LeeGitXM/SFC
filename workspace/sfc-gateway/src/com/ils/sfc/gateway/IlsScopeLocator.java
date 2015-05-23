@@ -1,6 +1,8 @@
 package com.ils.sfc.gateway;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +15,10 @@ import com.inductiveautomation.ignition.common.sqltags.model.TagPath;
 import com.inductiveautomation.ignition.common.sqltags.parser.TagPathParser;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
+import com.inductiveautomation.ignition.gateway.sqltags.SQLTagsManager;
+import com.inductiveautomation.ignition.gateway.sqltags.model.BasicWriteRequest;
+import com.inductiveautomation.ignition.gateway.sqltags.model.WriteRequest;
+import com.inductiveautomation.opcua.types.structs.WriteValue;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.api.ScopeLocator;
@@ -196,8 +202,23 @@ public class IlsScopeLocator implements ScopeLocator {
 	
 	public void s88Set(PyChartScope chartScope, PyChartScope stepScope, 
 		String path, String scopeIdentifier, Object value) {
-		PyChartScope resolvedScope = resolveScope(chartScope, stepScope, scopeIdentifier);
-		pathSet(resolvedScope, path, value);
-		s88ScopeChanged(chartScope, resolvedScope);
+		if(IlsSfcNames.TAG.equals(scopeIdentifier)) {
+			TagPath tagPath = null;
+			try {
+				tagPath = TagPathParser.parse(path);
+			} catch (IOException e) {
+				logger.error("Couldn't parse tag path for s88Get", e);
+			};
+			SQLTagsManager tagManager = hook.getContext().getTagManager();
+			BasicWriteRequest<TagPath> writeRequest = new BasicWriteRequest<TagPath>(tagPath, value);
+			List<WriteRequest<TagPath>> writeRequests = new ArrayList<WriteRequest<TagPath>>();
+			writeRequests.add(writeRequest);
+			tagManager.write(writeRequests, null, true);
+		}
+		else {
+			PyChartScope resolvedScope = resolveScope(chartScope, stepScope, scopeIdentifier);
+			pathSet(resolvedScope, path, value);
+			s88ScopeChanged(chartScope, resolvedScope);
+		}
 	}
 }

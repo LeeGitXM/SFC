@@ -15,16 +15,15 @@ import javax.swing.border.LineBorder;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.ReviewDataConfig;
-import com.ils.sfc.designer.ButtonPanel;
-import com.ils.sfc.designer.EditorPane;
+import com.ils.sfc.designer.panels.ButtonPanel;
+import com.ils.sfc.designer.panels.EditorPanel;
 import com.ils.sfc.designer.stepEditor.StepEditorController;
-import com.inductiveautomation.ignition.client.script.ClientDBUtilities;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 @SuppressWarnings("serial")
-public class ReviewDataPanel extends JPanel implements EditorPane {
+public class ReviewDataPanel extends EditorPanel {
 	private static LoggerEx logger = LogUtil.getLogger(ReviewDataPanel.class.getName());
 	private final StepEditorController controller;
 	private ButtonPanel buttonPanel = new ButtonPanel(true, true, true, false, false, false);
@@ -34,12 +33,12 @@ public class ReviewDataPanel extends JPanel implements EditorPane {
 	private ReviewDataConfig config;
 	private JPanel tablePanel;
 	
-	public ReviewDataPanel(StepEditorController controller) {
-		super(new BorderLayout());
+	public ReviewDataPanel(StepEditorController controller, int index) {
+		super(controller, index);
 		this.controller = controller;
 		add(buttonPanel, BorderLayout.NORTH);
 		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {doAccept();}
+			public void actionPerformed(ActionEvent e) {accept();}
 		});
 		buttonPanel.getAddButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {doAdd();}
@@ -50,20 +49,15 @@ public class ReviewDataPanel extends JPanel implements EditorPane {
 	}
 
 	@Override
-	public void activate() {
-		controller.slideTo(StepEditorController.REVIEW_DATA);
-	}
-
-	private void doAccept() {
+	public void accept() {
 		try {
 			String json = config.toJSON();
-			System.out.println("setting " + pvalue.getProperty().getName() + " config " + json);
 			controller.getPropertyEditor().getPropertyEditor().setSelectedValue(json);
-			controller.getPropertyEditor().activate();
 		} 
 		catch(Exception e ) {
 			logger.error("Error serializing review data config");
 		}
+		super.accept();
 	}
 
 	private void doAdd() {
@@ -77,9 +71,6 @@ public class ReviewDataPanel extends JPanel implements EditorPane {
 
 	public void setConfig(PropertyValue<String> pvalue) {
 		// Changing to a different config 
-		if(config != null) {
-			doAccept();
-		}
 		this.pvalue = pvalue;
 		String json = (String) pvalue.getValue();
 		if(json != null && json.length() > 0) {

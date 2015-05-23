@@ -12,5 +12,5 @@ import static com.ils.sfc.common.IlsProperty.*;
 public interface CollectDataStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.collectDataStep";
 	
-    public static final IlsProperty<?>[] properties = { TAG_PATH, RECIPE_LOCATION, KEY };
+    public static final IlsProperty<?>[] properties = { COLLECT_DATA_CONFIG };
 }

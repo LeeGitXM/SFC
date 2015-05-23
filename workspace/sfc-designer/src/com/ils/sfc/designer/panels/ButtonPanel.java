@@ -1,4 +1,4 @@
-package com.ils.sfc.designer;
+package com.ils.sfc.designer.panels;
 
 
 import java.awt.Dimension;

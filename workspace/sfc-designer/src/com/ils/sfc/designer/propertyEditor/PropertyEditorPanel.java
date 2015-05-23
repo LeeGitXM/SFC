@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 
-import com.ils.sfc.designer.ButtonPanel;
+import com.ils.sfc.designer.panels.ButtonPanel;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 
 @SuppressWarnings("serial")

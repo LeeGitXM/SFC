@@ -20,24 +20,25 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import com.ils.sfc.common.recipe.objects.Structure;
-import com.ils.sfc.designer.ButtonPanel;
+import com.ils.sfc.designer.panels.ButtonPanel;
+import com.ils.sfc.designer.BasicUnitChooserPanel;
 import com.ils.sfc.designer.ComboWrapper;
 import com.ils.sfc.designer.DesignerUtil;
-import com.ils.sfc.designer.EditorPane;
-import com.ils.sfc.designer.UnitChooserPanel;
+import com.ils.sfc.designer.panels.EditorPanel;
+import com.ils.sfc.designer.panels.UnitChooserPanel;
 
 @SuppressWarnings("serial")
-public class RecipeFieldCreatorPane extends JPanel implements EditorPane {
+public class RecipeFieldCreatorPane extends EditorPanel {
 	private RecipeEditorController controller;
 	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
 	private JTextField nameField = new JTextField();
 	private JComboBox<ComboWrapper> typesCombo = new JComboBox<ComboWrapper>();
-	private UnitChooserPanel unitChooserPanel = new UnitChooserPanel();
+	private BasicUnitChooserPanel unitChooserPanel = new BasicUnitChooserPanel();
 	private Structure recipeData;
 	private boolean initialized;
 	
-	public RecipeFieldCreatorPane(RecipeEditorController controller) {
-		super(new BorderLayout());
+	public RecipeFieldCreatorPane(RecipeEditorController controller, int index) {
+		super(controller, index);
 		this.controller = controller;
 		initUI();
 		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
@@ -46,12 +47,12 @@ public class RecipeFieldCreatorPane extends JPanel implements EditorPane {
 	}
 
 	@Override
-	public void activate() {
+	public void activate(int returnIndex) {
 		if(!initialized) {
 			unitChooserPanel.initTypes();
 			initialized = true;
 		}
-		controller.slideTo(RecipeEditorController.FIELD_CREATOR);
+		super.activate(returnIndex);
 	}
 
 	private void initUI() {
@@ -87,8 +88,8 @@ public class RecipeFieldCreatorPane extends JPanel implements EditorPane {
 	private void doCreate() {
 		String name = nameField.getText().trim();
 		if(name.length() == 0) {
-			controller.getMessagePane().setText("You must specify a name", RecipeEditorController.FIELD_CREATOR);
-			controller.getMessagePane().activate();
+			controller.getMessagePane().setText("You must specify a name");
+			controller.getMessagePane().activate(myIndex);
 			return;
 		}
 		try {
@@ -96,11 +97,11 @@ public class RecipeFieldCreatorPane extends JPanel implements EditorPane {
 			Class<?> selectedClass = (Class<?>)selectedType.getObject();
 			recipeData.addDynamicProperty(name, selectedClass, null);
 			controller.getEditor().getPropertyEditor().setPropertyValues(recipeData.getProperties(), false);
-			controller.getEditor().activate();
+			controller.getEditor().activate(myIndex);
 		}
 		catch(Exception e) {
-			controller.getMessagePane().setText("Unexpected error creating object: " + e.getMessage(), RecipeEditorController.FIELD_CREATOR);
-			controller.getMessagePane().activate();
+			controller.getMessagePane().setText("Unexpected error creating object: " + e.getMessage());
+			controller.getMessagePane().activate(myIndex);
 			return;
 		}
 	}

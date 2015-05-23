@@ -52,6 +52,7 @@ import com.ils.sfc.common.step.SimpleQueryStepProperties;
 import com.ils.sfc.common.step.TimedDelayStepProperties;
 import com.ils.sfc.common.step.YesNoStepProperties;
 import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame;
+import com.ils.sfc.designer.stepEditor.IlsStepEditor;
 import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
@@ -79,7 +80,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	//private SFCWorkspace sfcWorkspace;
 	//private JPopupMenu stepPopup;
 	private SFCDesignerHook iaSfcHook;
-	private RecipeEditorFrame recipeEditorFrame = new RecipeEditorFrame();
+	private RecipeEditorFrame recipeEditorFrame;
 	
 	//private ChartManagerService chartManager;
 	private static String[] editorFactoryIds = {
@@ -169,8 +170,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		this.context = ctx;
         log.debug("IlsSfcDesignerHook.startup...");
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
+		recipeEditorFrame = new RecipeEditorFrame(ctx);
       	iaSfcHook.getWorkspace().getInnerWorkspace().addDesignableWorkspaceListener(recipeEditorFrame);
-		recipeEditorFrame.getController().setContext(context);
 		
 		// Register steps
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
@@ -179,7 +180,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		}
 		    	
 		// register the step config factories (ie the editors)
-		StepEditorController.Factory editorFactory = new StepEditorController.Factory();
+		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory(context);
     	StepConfigRegistry configRegistry = (StepConfigRegistry) context.getModule(SFCModule.MODULE_ID);
     	for(String factoryId: editorFactoryIds) {
     		configRegistry.register(factoryId, editorFactory);
