@@ -15,5 +15,5 @@ mkdir -p $PROCS/python/normal
 for fil in "${SVN}"/UnitTests/*/callbacks/*.txt
 do
 	name=`basename "$fil"`
-	cat "$fil"| sed -e 's/if DEBUG-MODE then post/trace/' > ${PROCS}/g2/onstart/$name
+	cat "$fil" > ${PROCS}/g2/onstart/$name
 done
