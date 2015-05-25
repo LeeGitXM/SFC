@@ -62,12 +62,15 @@ public class IlsStepNameMapper {
 		GatewayStepRegistry registry = hook.getStepRegistry();
 		// First figure out the folder hierarchy
 		for(ProjectResource res:resources) {
+			if( res==null) continue;
 			if( res.getResourceType().equals(FOLDER_RESOURCE_TYPE)) {
 				UUID self = res.getDataAsUUID();
+				UUID parent = res.getParentUuid();
+				if( self==null) continue;
 				FolderHolder holder = new FolderHolder(res.getDataAsUUID(),res.getParentUuid(),res.getName());
 				folderHierarchy.put(self.toString(),holder);
 				log.tracef("%s.initialize: folder resource %s (%s) (%s, parent %s)", TAG,res.getName(),res.getResourceType(),
-						self.toString(),res.getParentUuid().toString());
+						self.toString(),(parent==null?"NO PARENT":parent.toString()));
 				resolvePath(holder);  // High likelihood of success if we're traversing down the tree
 			}
 		}
