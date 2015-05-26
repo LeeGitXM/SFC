@@ -165,19 +165,25 @@ public class IlsStepNameMapper {
 	private boolean resolvePath(FolderHolder holder) {
 		boolean success = false;
 		UUID parent = holder.getParent();
-		FolderHolder parentHolder = folderHierarchy.get(parent.toString());
-		if( parentHolder!=null ) {
-			String path = parentHolder.getPath();
-			if( path!=null) {
-				if( path.length()==0) path = holder.getName();
-				else path = String.format("%s/%s", path,holder.getName());
-				holder.setPath(path);
-				success = true;
+		if( parent!=null ) {
+			FolderHolder parentHolder = folderHierarchy.get(parent.toString());
+			if( parentHolder!=null ) {
+				String path = parentHolder.getPath();
+				if( path!=null) {
+					if( path.length()==0) path = holder.getName();
+					else path = String.format("%s/%s", path,holder.getName());
+					holder.setPath(path);
+					success = true;
+				}
+			}
+			else {
+				// We expect all to be resolved immediately, but are not assured of this.
+				log.infof("%s.resolvePath. Unresolved parent %s for folder %s", TAG,holder.getParent().toString(),holder.getId().toString());
 			}
 		}
 		else {
 			// We expect all to be resolved immediately, but are not assured of this.
-			log.infof("%s.resolvePath. Unresolved parent %s for folder %s", TAG,holder.getParent().toString(),holder.getId().toString());
+			log.infof("%s.resolvePath. No parent for folder %s", TAG,holder.getName());
 		}
 		return success;
 	}
