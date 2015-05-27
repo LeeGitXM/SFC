@@ -40,6 +40,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	
 	public static ClientStepFactory[] clientStepFactories = {
 		QueueMessageStepUI.FACTORY,
+		SaveQueueStepUI.FACTORY,
 		SetQueueStepUI.FACTORY,
 		ShowQueueStepUI.FACTORY,
 		ClearQueueStepUI.FACTORY,

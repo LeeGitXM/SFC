@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.gateway.monitor.IlsStepMonitor;
@@ -36,6 +37,7 @@ import com.ils.sfc.step.ReviewDataStepFactory;
 import com.ils.sfc.step.ReviewDataWithAdviceStepFactory;
 import com.ils.sfc.step.ReviewFlowsStepFactory;
 import com.ils.sfc.step.SaveDataStepFactory;
+import com.ils.sfc.step.SaveQueueStepFactory;
 import com.ils.sfc.step.SelectInputStepFactory;
 import com.ils.sfc.step.SetQueueStepFactory;
 import com.ils.sfc.step.ShowQueueStepFactory;
@@ -82,6 +84,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	
 	private static StepFactory[] stepFactories = {
 		new QueueMessageStepFactory(),
+		new SaveQueueStepFactory(),
 		new SetQueueStepFactory(),
 		new ShowQueueStepFactory(),
 		new ClearQueueStepFactory(),
@@ -192,6 +195,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public void initializeScriptManager(ScriptManager manager) {
 		PythonCall.setScriptMgr(manager);
 		manager.addScriptModule("system.ils.sfc", IlsGatewayScripts.class);	
+		manager.addScriptModule("system.ils.sfc.constants", IlsSfcNames.class);	
 		initializeUnits();
 		//manager.addStaticFields("system.ils.sfc", IlsSfcNames.class);
 	};
