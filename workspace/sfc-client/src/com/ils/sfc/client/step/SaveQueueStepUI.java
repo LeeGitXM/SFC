@@ -14,7 +14,7 @@ public class SaveQueueStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new SaveQueueStepFactory();
 
    	@Override
-	protected Icon getIcon() { return null; }
+	protected Icon getIcon() { return messageIcon; }
 	
 	@Override
 	protected String getText() { return "<html><center><b>Save<br>Queue</html>"; }
@@ -39,7 +39,7 @@ public class SaveQueueStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Save Msg Queue to File";
+            return "Save Queue to File";
         }
 
         @Override

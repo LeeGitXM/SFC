@@ -44,6 +44,7 @@ import com.ils.sfc.common.step.ReviewDataStepProperties;
 import com.ils.sfc.common.step.ReviewDataWithAdviceStepProperties;
 import com.ils.sfc.common.step.ReviewFlowsStepProperties;
 import com.ils.sfc.common.step.SaveDataStepProperties;
+import com.ils.sfc.common.step.SaveQueueStepProperties;
 import com.ils.sfc.common.step.SelectInputStepProperties;
 import com.ils.sfc.common.step.SetQueueStepProperties;
 import com.ils.sfc.common.step.ShowQueueStepProperties;
@@ -88,6 +89,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	SetQueueStepProperties.FACTORY_ID,
     	ShowQueueStepProperties.FACTORY_ID,
     	ClearQueueStepProperties.FACTORY_ID,
+       	SaveQueueStepProperties.FACTORY_ID,
     	YesNoStepProperties.FACTORY_ID,
     	CancelStepProperties.FACTORY_ID,
     	PauseStepProperties.FACTORY_ID,
