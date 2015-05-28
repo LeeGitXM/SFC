@@ -95,9 +95,6 @@ public abstract class Data {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setValue(Property<?> property, Object value) {
-		if(value == null) {
-			throw new IllegalArgumentException("null values are not allowed");
-		}
 		IlsProperty myProperty = getProperty(property.getName());
 		if(myProperty != null) {
 			properties.set(myProperty, value);
@@ -159,7 +156,9 @@ public abstract class Data {
 				jsonObject.put((String)key, fromStepScope((PyChartScope)value));
 			}
 			else {
-				jsonObject.put((String)key, value);				
+				// null values show up in step scope as JSONObject.NULL, which is 
+				// what we want to put in the JSON object, so no special logic:
+				jsonObject.put((String)key, value);	
 			}
 		}
 		return jsonObject;	
@@ -212,7 +211,7 @@ public abstract class Data {
 			catch(Exception e) {
 				// ?? what to do...we are blindly assuming that everything in the associated
 				// data object is recipe data, which isn't necessarily true...
-				Log.warn("non-recipe data in associated data for key " + key);
+				logger.warn("non-recipe data in associated data for key " + key);
 			}
 		}		
 		return recipeData;
@@ -237,8 +236,8 @@ public abstract class Data {
 			String key = keyIter.next();
 			dummyProperty.setName(key);
 			Object value = jsonObj.get(key);
-			if(!(value instanceof JSONObject) && !value.equals(JSONObject.NULL)) {
-				setValue(dummyProperty, value);
+			if(!(value instanceof JSONObject)) {
+				setValue(dummyProperty, value.equals(JSONObject.NULL) ? null : value);
 			}
 			// else if the value is an object, the Group extension of this method will
 			// handle it

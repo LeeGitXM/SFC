@@ -127,31 +127,12 @@ public class RecipeDataTranslator {
 	public Element createAssociatedDataElement(Document chartDocument, String factoryId) throws JSONException {	
 		List<Data> recipeData = DOMToData();
 		JSONObject assocDataJsonObj = Data.toAssociatedData(recipeData);
-		String s88Level = getS88Level(factoryId);
-		if(s88Level != null) {
-			assocDataJsonObj.put(IlsSfcNames.S88_LEVEL_KEY, s88Level);
-		}
 		Element assocdata = chartDocument.createElement("associated-data");
 		Node textNode = chartDocument.createTextNode(assocDataJsonObj.toString());
 		assocdata.appendChild(textNode);
 		return assocdata;
 	}
 	
-	private String getS88Level(String factoryId) {
-		if(PhaseStepDelegate.FACTORY_ID.equals(factoryId)) {
-			return IlsSfcNames.PHASE;
-		}
-		else if(OperationStepDelegate.FACTORY_ID.equals(factoryId)) {
-			return IlsSfcNames.OPERATION;
-		}
-		else if(ProcedureStepDelegate.FACTORY_ID.equals(factoryId)) {
-			return IlsSfcNames.GLOBAL;
-		}
-		else {
-			return null;
-		}
-	}
-
 	public List<Data> DOMToData() {
 		final java.util.List<Data> flatRecipeObjects = new ArrayList<Data>();
 		NodeList recipeNodes = blockElement.getElementsByTagName("recipe");
