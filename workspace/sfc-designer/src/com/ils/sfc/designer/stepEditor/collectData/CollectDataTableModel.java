@@ -2,8 +2,8 @@ package com.ils.sfc.designer.stepEditor.collectData;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.ils.sfc.common.CollectDataConfig;
-import com.ils.sfc.common.ReviewDataConfig;
+import com.ils.sfc.common.rowconfig.CollectDataConfig;
+import com.ils.sfc.common.rowconfig.ReviewDataConfig;
 
 @SuppressWarnings("serial")
 public class CollectDataTableModel extends AbstractTableModel {

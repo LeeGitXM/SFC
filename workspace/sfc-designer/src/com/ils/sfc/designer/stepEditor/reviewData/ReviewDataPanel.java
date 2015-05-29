@@ -14,7 +14,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.ReviewDataConfig;
+import com.ils.sfc.common.rowconfig.ReviewDataConfig;
 import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.panels.EditorPanel;
 import com.ils.sfc.designer.stepEditor.StepEditorController;

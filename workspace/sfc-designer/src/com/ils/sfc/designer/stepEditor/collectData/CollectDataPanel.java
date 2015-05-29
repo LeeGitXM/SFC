@@ -18,8 +18,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.ils.sfc.common.CollectDataConfig;
 import com.ils.sfc.common.IlsSfcNames;
+import com.ils.sfc.common.rowconfig.CollectDataConfig;
 import com.ils.sfc.designer.ColumnSelectionAdapter;
 import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.panels.EditorPanel;

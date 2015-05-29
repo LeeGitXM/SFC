@@ -14,7 +14,7 @@ import javax.swing.table.TableCellEditor;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
-import com.ils.sfc.common.ReviewDataConfig.Row;
+import com.ils.sfc.common.rowconfig.ReviewDataConfig.Row;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 
 /** A table cell editor for the property grid */

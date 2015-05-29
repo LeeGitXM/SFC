@@ -18,13 +18,16 @@ import com.ils.sfc.step.CancelStepFactory;
 import com.ils.sfc.step.ClearQueueStepFactory;
 import com.ils.sfc.step.CloseWindowStepFactory;
 import com.ils.sfc.step.CollectDataStepFactory;
+import com.ils.sfc.step.ConfirmControllersStepFactory;
 import com.ils.sfc.step.ControlPanelMessageStepFactory;
 import com.ils.sfc.step.DeleteDelayNotificationStepFactory;
 import com.ils.sfc.step.DialogMessageStepFactory;
 import com.ils.sfc.step.EnableDisableStepFactory;
 import com.ils.sfc.step.InputStepFactory;
 import com.ils.sfc.step.LimitedInputStepFactory;
+import com.ils.sfc.step.MonitorDownloadStepFactory;
 import com.ils.sfc.step.OperationStepFactory;
+import com.ils.sfc.step.PVMonitorStepFactory;
 import com.ils.sfc.step.PauseStepFactory;
 import com.ils.sfc.step.PhaseStepFactory;
 import com.ils.sfc.step.PostDelayNotificationStepFactory;
@@ -44,6 +47,7 @@ import com.ils.sfc.step.ShowQueueStepFactory;
 import com.ils.sfc.step.ShowWindowStepFactory;
 import com.ils.sfc.step.SimpleQueryStepFactory;
 import com.ils.sfc.step.TimedDelayStepFactory;
+import com.ils.sfc.step.WriteOutputStepFactory;
 import com.ils.sfc.step.YesNoStepFactory;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
@@ -115,6 +119,10 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		new ProcedureStepFactory(),
 		new OperationStepFactory(),
 		new PhaseStepFactory(),
+		new ConfirmControllersStepFactory(),
+		new WriteOutputStepFactory(),
+		new PVMonitorStepFactory(),
+		new MonitorDownloadStepFactory(),
 	};
 
 	// an index of step property names by the factory id:

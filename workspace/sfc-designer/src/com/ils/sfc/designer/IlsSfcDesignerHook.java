@@ -25,13 +25,16 @@ import com.ils.sfc.common.step.CancelStepProperties;
 import com.ils.sfc.common.step.ClearQueueStepProperties;
 import com.ils.sfc.common.step.CloseWindowStepProperties;
 import com.ils.sfc.common.step.CollectDataStepProperties;
+import com.ils.sfc.common.step.ConfirmControllersStepProperties;
 import com.ils.sfc.common.step.ControlPanelMessageStepProperties;
 import com.ils.sfc.common.step.DeleteDelayNotificationStepProperties;
 import com.ils.sfc.common.step.DialogMessageStepProperties;
 import com.ils.sfc.common.step.EnableDisableStepProperties;
 import com.ils.sfc.common.step.InputStepProperties;
 import com.ils.sfc.common.step.LimitedInputStepProperties;
+import com.ils.sfc.common.step.MonitorDownloadStepProperties;
 import com.ils.sfc.common.step.OperationStepProperties;
+import com.ils.sfc.common.step.PVMonitorStepProperties;
 import com.ils.sfc.common.step.PauseStepProperties;
 import com.ils.sfc.common.step.PhaseStepProperties;
 import com.ils.sfc.common.step.PostDelayNotificationStepProperties;
@@ -51,6 +54,7 @@ import com.ils.sfc.common.step.ShowQueueStepProperties;
 import com.ils.sfc.common.step.ShowWindowStepProperties;
 import com.ils.sfc.common.step.SimpleQueryStepProperties;
 import com.ils.sfc.common.step.TimedDelayStepProperties;
+import com.ils.sfc.common.step.WriteOutputStepProperties;
 import com.ils.sfc.common.step.YesNoStepProperties;
 import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame;
 import com.ils.sfc.designer.stepEditor.IlsStepEditor;
@@ -116,6 +120,10 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         ProcedureStepProperties.FACTORY_ID,   
         OperationStepProperties.FACTORY_ID,   
         PhaseStepProperties.FACTORY_ID,   
+        ConfirmControllersStepProperties.FACTORY_ID,   
+        WriteOutputStepProperties.FACTORY_ID,   
+        PVMonitorStepProperties.FACTORY_ID,   
+        MonitorDownloadStepProperties.FACTORY_ID,   
 	};
 	
 	public IlsSfcDesignerHook() {

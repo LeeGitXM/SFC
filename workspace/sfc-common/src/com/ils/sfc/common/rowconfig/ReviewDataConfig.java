@@ -1,4 +1,4 @@
-package com.ils.sfc.common;
+package com.ils.sfc.common.rowconfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ils.sfc.common.IlsSfcCommonUtils;
 
 
 public class ReviewDataConfig {

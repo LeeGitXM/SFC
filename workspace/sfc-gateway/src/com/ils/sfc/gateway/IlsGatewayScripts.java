@@ -11,9 +11,9 @@ import org.python.core.PyObject;
 
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
-import com.ils.sfc.common.ReviewDataConfig;
-import com.ils.sfc.common.ReviewDataConfig.Row;
 import com.ils.sfc.common.recipe.objects.Data;
+import com.ils.sfc.common.rowconfig.ReviewDataConfig;
+import com.ils.sfc.common.rowconfig.ReviewDataConfig.Row;
 import com.ils.sfc.step.IlsAbstractChartStep;
 import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
@@ -30,6 +30,7 @@ import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeLocator;
 import com.inductiveautomation.sfc.api.elements.ChartElement;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
+
 import static com.ils.sfc.common.IlsSfcCommonUtils.isEmpty;
 
 /** Java utilities exposed to Python. The python module path is: "system.ils.sfc"

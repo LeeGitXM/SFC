@@ -136,6 +136,10 @@ public class IlsSfcNames {
 	public static final String TIMING = "timing";
 	public static final String TIMEOUT = "timeout";
 	public static final String TIMEOUT_UNIT = "timeoutUnit";
+	public static final String TIMER_CLEAR = "timerClear";
+	public static final String TIMER_KEY = "timerKey";
+	public static final String TIMER_LOCATION = "timerLocation";
+	public static final String TIMER_SET = "timerSet";
 	public static final String TIMESTAMP = "timestamp";
 	public static final String TOP_CENTER = "topCenter";
 	public static final String TOP_LEFT = "topLeft";
@@ -148,6 +152,7 @@ public class IlsSfcNames {
 	public static final String UPDATE_OR_CREATE = "updateOrCreate";
 	public static final String UUID = "uuid";
 	public static final String VALUE = "value";
+	public static final String VERBOSE = "value";
 	public static final String VIEW_FILE = "viewFile";
 	public static final String WARNING = "Warning";
 	public static final String WINDOW = "window";

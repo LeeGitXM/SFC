@@ -27,7 +27,13 @@ public class PythonCall {
 	private static ScriptManager scriptMgr;
 	private static final String[] stepArgs = new String[]{"scopeContext", "stepProperties"};
 	private static final String STEPS_PKG = "ils.sfc.gateway.steps.";
-	
+
+	public static final PythonCall MONITOR_PV = new PythonCall(STEPS_PKG + "monitorPV", 
+			null, stepArgs);
+
+	public static final PythonCall MONITOR_DOWNLOAD = new PythonCall(STEPS_PKG + "monitorDownload", 
+			null, stepArgs);
+
 	public static final PythonCall QUEUE_INSERT = new PythonCall(STEPS_PKG + "queueInsert", 
 		null, stepArgs);
 
@@ -125,6 +131,12 @@ public class PythonCall {
 			PyList.class, stepArgs );
 
 	public static final PythonCall REVIEW_DATA = new PythonCall(STEPS_PKG + "reviewData", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall CONFIRM_CONTROLLERS = new PythonCall(STEPS_PKG + "confirmControllers", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall WRITE_OUTPUT = new PythonCall(STEPS_PKG + "writeOutput", 
 			PyList.class, stepArgs );
 
 	public static final PythonCall HANDLE_UNEXPECTED_ERROR = new PythonCall("ils.sfc.gateway.util." + "handleUnexpectedGatewayError", 
