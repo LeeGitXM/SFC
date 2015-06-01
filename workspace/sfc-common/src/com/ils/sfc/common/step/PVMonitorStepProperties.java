@@ -13,6 +13,13 @@ public interface PVMonitorStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.pvMonitorStep";
 	
     public static final IlsProperty<?>[] properties = {
+    	TIMER_LOCATION,
+    	TIMER_KEY,
+    	TIMER_SET,
+    	TIME_LIMIT_STRATEGY,
+        RECIPE_LOCATION,
+        KEY,
+        VALUE,
     	PV_MONITOR_CONFIG
     };
 }

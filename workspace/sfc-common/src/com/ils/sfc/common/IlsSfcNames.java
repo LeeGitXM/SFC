@@ -189,6 +189,7 @@ public class IlsSfcNames {
 	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, PREVIOUS, SUPERIOR,
 		GLOBAL, OPERATION, PHASE, TAG};
 	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
+	public static final String[] TIME_LIMIT_STRATEGY_CHOICES = {STATIC, RECIPE};
 	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK};
 	public static final String[] RESULTS_MODE_CHOICES = {UPDATE, UPDATE_OR_CREATE};
 	public static final String[] FETCH_MODE_CHOICES = {SINGLE, MULTIPLE};
