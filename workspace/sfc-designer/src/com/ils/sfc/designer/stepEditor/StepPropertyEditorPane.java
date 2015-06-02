@@ -74,13 +74,33 @@ public class StepPropertyEditorPane extends EditorPanel {
 				selectedPropertyValue.getProperty().equals(IlsProperty.SECONDARY_REVIEW_DATA) ||
 				selectedPropertyValue.getProperty().equals(IlsProperty.SECONDARY_REVIEW_DATA_WITH_ADVICE )) {
 			// REVIEW_DATA properties hold a complex configuration in a stringified JSON object
-			controller.getReviewDataPane().setConfig((PropertyValue<String>) selectedPropertyValue);
-			controller.getReviewDataPane().activate(myIndex);				
+			controller.getReviewDataPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getReviewDataPanel().activate(myIndex);				
 		}
 		else if(selectedPropertyValue.getProperty().equals(IlsProperty.COLLECT_DATA_CONFIG)) {
 			// COLLECT_DATA properties hold a complex configuration in a stringified JSON object
-			controller.getCollectDataPane().setConfig((PropertyValue<String>) selectedPropertyValue);
-			controller.getCollectDataPane().activate(myIndex);							
+			controller.getCollectDataPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getCollectDataPanel().activate(myIndex);							
+		}
+		else if(selectedPropertyValue.getProperty().equals(IlsProperty.CONFIRM_CONTROLLERS_CONFIG)) {
+			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
+			controller.getConfirmControllersPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getConfirmControllersPanel().activate(myIndex);							
+		}
+		else if(selectedPropertyValue.getProperty().equals(IlsProperty.MONITOR_DOWNLOADS_CONFIG)) {
+			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
+			controller.getMonitorDownloadsPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getMonitorDownloadsPanel().activate(myIndex);							
+		}
+		else if(selectedPropertyValue.getProperty().equals(IlsProperty.PV_MONITOR_CONFIG)) {
+			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
+			controller.getPvMonitorPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getPvMonitorPanel().activate(myIndex);							
+		}
+		else if(selectedPropertyValue.getProperty().equals(IlsProperty.WRITE_OUTPUT_CONFIG)) {
+			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
+			controller.getWriteOutputPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getWriteOutputPanel().activate(myIndex);							
 		}
 		else if(selectedPropertyValue.getProperty().getName().endsWith(IlsSfcNames.UNIT_SUFFIX)) {
 			editor.stopCellEditing();

@@ -7,7 +7,11 @@ import com.ils.sfc.designer.panels.TagBrowserPanel;
 import com.ils.sfc.designer.panels.UnitChooserPanel;
 import com.ils.sfc.designer.propertyEditor.PropertyTableModel;
 import com.ils.sfc.designer.stepEditor.collectData.CollectDataPanel;
+import com.ils.sfc.designer.stepEditor.confirmControllers.ConfirmControllersPanel;
+import com.ils.sfc.designer.stepEditor.monitorDownloads.MonitorDownloadsPanel;
+import com.ils.sfc.designer.stepEditor.pvMonitor.PVMonitorPanel;
 import com.ils.sfc.designer.stepEditor.reviewData.ReviewDataPanel;
+import com.ils.sfc.designer.stepEditor.writeOutput.WriteOutputPanel;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
@@ -21,6 +25,10 @@ public class StepEditorController extends PanelController implements PropertyTab
 	static final int MESSAGE = 4;
 	public static final int REVIEW_DATA = 5;
 	public static final int COLLECT_DATA = 6;
+	public static final int CONFIRM_CONTROLLERS = 7;
+	public static final int MONITOR_DOWNLOADS = 8;
+	public static final int PV_MONITOR = 9;
+	public static final int WRITE_OUTPUT = 10;
 
 	// The sub-panes:
 	private StepPropertyEditorPane propertyEditor = new StepPropertyEditorPane(this, PROPERTY_EDITOR);
@@ -30,6 +38,10 @@ public class StepEditorController extends PanelController implements PropertyTab
 	private MessagePanel messagePanel = new MessagePanel(this, MESSAGE);
 	private ReviewDataPanel reviewDataPanel = new ReviewDataPanel(this, REVIEW_DATA);
 	private CollectDataPanel collectDataPanel = new CollectDataPanel(this, COLLECT_DATA);
+	private ConfirmControllersPanel confirmControllersPanel = new ConfirmControllersPanel(this, CONFIRM_CONTROLLERS);
+	private MonitorDownloadsPanel monitorDownloadsPanel = new MonitorDownloadsPanel(this, MONITOR_DOWNLOADS);
+	private PVMonitorPanel pvMonitorPanel = new PVMonitorPanel(this, PV_MONITOR);
+	private WriteOutputPanel writeOutputPanel = new WriteOutputPanel(this, WRITE_OUTPUT);
 	
 	public StepEditorController(DesignerContext context) {
 		super(context);
@@ -40,6 +52,10 @@ public class StepEditorController extends PanelController implements PropertyTab
 		slidingPane.add(messagePanel);
 		slidingPane.add(reviewDataPanel);	
 		slidingPane.add(collectDataPanel);	
+		slidingPane.add(confirmControllersPanel);	
+		slidingPane.add(monitorDownloadsPanel);	
+		slidingPane.add(pvMonitorPanel);	
+		slidingPane.add(writeOutputPanel);	
 	}
 
 	
@@ -47,35 +63,45 @@ public class StepEditorController extends PanelController implements PropertyTab
 		return propertyEditor;
 	}
 
-
 	public StringEditorPanel getStringEditor() {
 		return stringEditor;
 	}
-
 
 	public TagBrowserPanel getTagBrowser() {
 		return tagBrowser;
 	}
 
-
 	public UnitChooserPanel getUnitChooser() {
 		return unitChooser;
 	}
 
-
-	public MessagePanel getMessagePane() {
+	public MessagePanel getMessagePanel() {
 		return messagePanel;
 	}
 
-
-	public ReviewDataPanel getReviewDataPane() {
+	public ReviewDataPanel getReviewDataPanel() {
 		return reviewDataPanel;
 	}
 
-	public CollectDataPanel getCollectDataPane() {
+	public CollectDataPanel getCollectDataPanel() {
 		return collectDataPanel;
 	}
 
+	public ConfirmControllersPanel getConfirmControllersPanel() {
+		return confirmControllersPanel;
+	}
+
+	public MonitorDownloadsPanel getMonitorDownloadsPanel() {
+		return monitorDownloadsPanel;
+	}
+
+	public PVMonitorPanel getPvMonitorPanel() {
+		return pvMonitorPanel;
+	}
+
+	public WriteOutputPanel getWriteOutputPanel() {
+		return writeOutputPanel;
+	}
 
 	public void showMessage(String message, int returnPanelIndex) {
 		messagePanel.setText(message);

@@ -128,33 +128,11 @@ public class CollectDataPanel extends EditorPanel implements ValueHolder {
 			config = new CollectDataConfig();
 		}
 		errorHandlingCombo.setSelectedItem(config.errorHandling);
+		
 		tableModel = new CollectDataTableModel();
-		table = new JTable(tableModel);
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setCellSelectionEnabled(true);
-		table.getColumnModel().addColumnModelListener(new ColumnSelectionAdapter() {
-			 public void columnSelectionChanged(ListSelectionEvent e) {
-				int selectedColumn = table.getSelectedColumn();
-				buttonPanel.getEditButton().setEnabled(
-					selectedColumn == CollectDataTableModel.TAG_COLUMN);
-			 }
-		});
-		table.setDefaultEditor(Object.class, new CollectDataCellEditor());
-		table.setDefaultRenderer(Object.class, new CollectDataCellRenderer());
-		table.setRowHeight(20);
-		table.setRowMargin(3);	
-		table.setShowGrid(true);
 		tableModel.setConfig(config);
-		if(tablePanel != null) remove(tablePanel);
-		tablePanel = new JPanel(new BorderLayout());	
-		tablePanel.setBorder(new EmptyBorder(10,10,10,10));
-		add(tablePanel, BorderLayout.CENTER);
-		JScrollPane scroll = new JScrollPane(table);
-		scroll.setBorder(
-			new CompoundBorder(
-				new EmptyBorder(10,10,0,10), 
-				new LineBorder(Color.black)));
-		tablePanel.add(scroll, BorderLayout.CENTER);
+		tablePanel = createTablePanel(tableModel, tablePanel,
+			new CollectDataCellEditor(), new CollectDataCellRenderer());		
 	}
 
 	@Override
@@ -162,6 +140,11 @@ public class CollectDataPanel extends EditorPanel implements ValueHolder {
 		int row = table.getSelectedRow();
 		int col = table.getSelectedColumn();
 		tableModel.setValueAt(value, row, col);
+	}
+	
+	@Override
+	protected void columnSelected(int col ) {
+		buttonPanel.getEditButton().setEnabled(col == CollectDataTableModel.TAG_COLUMN);
 	}
 	
 }

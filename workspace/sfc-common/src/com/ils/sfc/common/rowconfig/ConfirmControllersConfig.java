@@ -9,20 +9,21 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class WriteOutputConfig extends RowConfig {
+public class ConfirmControllersConfig extends RowConfig {
 	private List<Row> rows = new ArrayList<Row>();
 	
 	public static class Row {
 		public String key;
-		public boolean confirmWrite;
+		public boolean checkSPFor0;
+		public boolean checkPathToValve;
 	}
-
+	
 	public List<Row> getRows() {
 		return rows;
 	}
-	
-	public static WriteOutputConfig fromJSON(String json) throws JsonParseException, JsonMappingException, IOException {
+
+	public static ConfirmControllersConfig fromJSON(String json) throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readValue(json, WriteOutputConfig.class);
+		return mapper.readValue(json, ConfirmControllersConfig.class);
 	}
 }

@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 
 
-public class ReviewDataConfig {
+public class ReviewDataConfig  extends RowConfig {
 	private List<Row> rows = new ArrayList<Row>();
 	public static class Row {
 		public String configKey;
@@ -33,25 +33,9 @@ public class ReviewDataConfig {
 		return rows;
 	}
 
-	public String toJSON() throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.writeValueAsString(this);
-	}
-	
 	public static ReviewDataConfig fromJSON(String json) throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.readValue(json, ReviewDataConfig.class);
 	}
 
-	public static void main(String[] args) {
-		try {
-			ReviewDataConfig config = new ReviewDataConfig();
-			//config.rows.add(new Row());
-			String json = config.toJSON();
-			System.out.print(json);
-		}
-		catch(Exception e ) {
-			e.printStackTrace();
-		}
-	}
 }

@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ils.sfc.common.IlsSfcNames;
 
-public class CollectDataConfig {
+public class CollectDataConfig extends RowConfig {
 	public String errorHandling = IlsSfcNames.ABORT;
 	private List<Row> rows = new ArrayList<Row>();
 	public static class Row {
@@ -25,11 +25,6 @@ public class CollectDataConfig {
 
 	public List<Row> getRows() {
 		return rows;
-	}
-
-	public String toJSON() throws JsonProcessingException {
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.writeValueAsString(this);
 	}
 	
 	public static CollectDataConfig fromJSON(String json) throws JsonParseException, JsonMappingException, IOException {

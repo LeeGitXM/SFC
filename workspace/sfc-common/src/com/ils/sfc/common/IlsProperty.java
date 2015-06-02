@@ -26,7 +26,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 	private String[] choices;
 	private String label;
 	private static final String EMPTY_MONITOR_DOWNLOAD_CONFIG = "{\"rows\":[]}";
-	private static final String EMPTY_CONFIRM_CONTROLLER_CONFIG = "{\"rows\":[]}";
+	private static final String EMPTY_CONFIRM_CONTROLLERS_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_PV_MONITOR_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_WRITE_OUTPUT_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_REVIEW_DATA_CONFIG = "{\"rows\":[]}";
@@ -62,8 +62,8 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> CHOICES_RECIPE_LOCATION = new IlsProperty<String>(IlsSfcNames.CHOICES_RECIPE_LOCATION, String.class, IlsSfcNames.RECIPE_LOCATION_CHOICES[0], IlsSfcNames.RECIPE_LOCATION_CHOICES);
     public static final IlsProperty<String> CHOICES_KEY = new IlsProperty<String>(IlsSfcNames.CHOICES_KEY, String.class, "");
     public static final IlsProperty<String> CLASS = new IlsProperty<String>(IlsSfcNames.CLASS, String.class, "");
-    public static final IlsProperty<String> COLLECT_DATA_CONFIG = new IlsProperty<String>(IlsSfcNames.CONFIG, String.class, EMPTY_COLLECT_DATA_CONFIG, true);
-    public static final IlsProperty<String> CONFIRM_CONTROLLERS_CONFIG = new IlsProperty<String>(IlsSfcNames.CONFIG, String.class, EMPTY_CONFIRM_CONTROLLER_CONFIG, true);
+    public static final IlsProperty<String> COLLECT_DATA_CONFIG = new IlsProperty<String>(IlsSfcNames.COLLECT_DATA_CONFIG, String.class, EMPTY_COLLECT_DATA_CONFIG, true);
+    public static final IlsProperty<String> CONFIRM_CONTROLLERS_CONFIG = new IlsProperty<String>(IlsSfcNames.CONFIRM_CONTROLLERS_CONFIG, String.class, EMPTY_CONFIRM_CONTROLLERS_CONFIG, true);
     public static final IlsProperty<Integer> COLUMNS = new IlsProperty<Integer>(IlsSfcNames.COLUMNS, Integer.class, 0);
     public static final IlsProperty<String> COLUMN_KEY = new IlsProperty<String>(IlsSfcNames.COLUMN_KEY, String.class, IlsSfcNames.NONE);
     public static final IlsProperty<Boolean> COLUMN_KEYED = new IlsProperty<Boolean>(IlsSfcNames.COLUMN_KEYED, Boolean.class, Boolean.FALSE);
@@ -113,9 +113,9 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     };
     public static final IlsProperty<String> METHOD = new IlsProperty<String>(IlsSfcNames.METHOD, String.class, "");
     public static final IlsProperty<Double> MINIMUM_VALUE = new IlsProperty<Double>(IlsSfcNames.MINIMUM_VALUE, Double.class, 0.);
-    public static final IlsProperty<String> MONITOR_DOWNLOAD_CONFIG = new IlsProperty<String>(IlsSfcNames.CONFIG, String.class, EMPTY_MONITOR_DOWNLOAD_CONFIG, true);
-    public static final IlsProperty<String> MONITOR_DOWNLOAD_POSTING_METHOD = new IlsProperty<String>(IlsSfcNames.POSTING_METHOD, String.class, "ils.sfc.client.windows.monitorDownload.defaultPostingMethod");
-    public static final IlsProperty<String> MONITOR_DOWNLOAD_WINDOW = new IlsProperty<String>(IlsSfcNames.WINDOW, String.class,  "SFC/MonitorDownload", false);
+    public static final IlsProperty<String> MONITOR_DOWNLOADS_CONFIG = new IlsProperty<String>(IlsSfcNames.MONITOR_DOWNLOADS_CONFIG, String.class, EMPTY_MONITOR_DOWNLOAD_CONFIG, true);
+    public static final IlsProperty<String> MONITOR_DOWNLOADS_POSTING_METHOD = new IlsProperty<String>(IlsSfcNames.POSTING_METHOD, String.class, "ils.sfc.client.windows.monitorDownload.defaultPostingMethod");
+    public static final IlsProperty<String> MONITOR_DOWNLOADS_WINDOW = new IlsProperty<String>(IlsSfcNames.WINDOW, String.class,  "SFC/MonitorDownload", false);
 	public static final BasicProperty<String> NAME = new BasicProperty<String>(IlsSfcNames.NAME, String.class);
     public static final IlsProperty<String> POSITION = new IlsProperty<String>(IlsSfcNames.POSITION, String.class, IlsSfcNames.POSITION_CHOICES[0], IlsSfcNames.POSITION_CHOICES);
     public static final IlsProperty<Boolean> POST_NOTIFICATION = new IlsProperty<Boolean>(IlsSfcNames.POST_NOTIFICATION, Boolean.class, Boolean.FALSE);
@@ -129,7 +129,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> PV_MONITOR_STATUS = new IlsProperty<String>(IlsSfcNames.PV_MONITOR_STATUS, String.class, "");
     public static final IlsProperty<String> PV_MONITOR_ACTIVE = new IlsProperty<String>(IlsSfcNames.PV_MONITOR_ACTIVE, String.class, "");
     public static final IlsProperty<Double> PV_VALUE = new IlsProperty<Double>(IlsSfcNames.PV_VALUE, Double.class, 0.);
-    public static final IlsProperty<String> PV_MONITOR_CONFIG = new IlsProperty<String>(IlsSfcNames.CONFIG, String.class, EMPTY_PV_MONITOR_CONFIG, true);
+    public static final IlsProperty<String> PV_MONITOR_CONFIG = new IlsProperty<String>(IlsSfcNames.PV_MONITOR_CONFIG, String.class, EMPTY_PV_MONITOR_CONFIG, true);
     public static final IlsProperty<String> QUEUE = new IlsProperty<String>(IlsSfcNames.QUEUE, String.class, "");
     public static final IlsProperty<Double> RAMP_TIME = new IlsProperty<Double>(IlsSfcNames.RAMP_TIME, Double.class, 5.);
     public static final IlsProperty<String> RECIPE_LOCATION = new IlsProperty<String>(IlsSfcNames.RECIPE_LOCATION, String.class, IlsSfcNames.RECIPE_LOCATION_CHOICES[0], IlsSfcNames.RECIPE_LOCATION_CHOICES);
@@ -174,7 +174,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> WINDOW_TITLE = new IlsProperty<String>(IlsSfcNames.WINDOW_TITLE, String.class, "");
     public static final IlsProperty<Boolean> WRITE_CONFIRM = new IlsProperty<Boolean>(IlsSfcNames.WRITE_CONFIRM, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<Boolean> WRITE_CONFIRMED = new IlsProperty<Boolean>(IlsSfcNames.WRITE_CONFIRMED, Boolean.class, Boolean.TRUE);
-    public static final IlsProperty<String> WRITE_OUTPUT_CONFIG = new IlsProperty<String>(IlsSfcNames.CONFIG, String.class, EMPTY_WRITE_OUTPUT_CONFIG, true);
+    public static final IlsProperty<String> WRITE_OUTPUT_CONFIG = new IlsProperty<String>(IlsSfcNames.WRITE_OUTPUT_CONFIG, String.class, EMPTY_WRITE_OUTPUT_CONFIG, true);
    
  // These are the names of toolkit properties that are to be stored in HSQLdb
  	public static final String TOOLKIT_PROPERTY_DATABASE            = "Database";           // Production database

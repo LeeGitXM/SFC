@@ -15,6 +15,7 @@ import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.rowconfig.ReviewDataConfig.Row;
+import com.ils.sfc.designer.stepEditor.EditorUtil;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 
 /** A table cell editor for the property grid */
@@ -26,7 +27,7 @@ public class ReviewDataCellEditor extends AbstractCellEditor implements TableCel
 		int row, int col) {
 		ReviewDataTableModel tableModel = (ReviewDataTableModel)table.getModel();
 		if(tableModel.isComboColumn(col)) {
-			Object[] choices = null;
+			String[] choices = null;
 			if(tableModel.isDestinationColumn(col)) { // recipe scope
 				choices = IlsSfcNames.RECIPE_LOCATION_CHOICES;
 			}
@@ -51,8 +52,7 @@ public class ReviewDataCellEditor extends AbstractCellEditor implements TableCel
 					e.printStackTrace();
 				}
 			}
-			JComboBox<Object> combo = new JComboBox<Object>(choices);
-			combo.setBackground(java.awt.Color.white);
+			JComboBox<Object> combo = EditorUtil.createChoiceCombo(choices);
 			combo.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					fireEditingStopped();
@@ -61,25 +61,14 @@ public class ReviewDataCellEditor extends AbstractCellEditor implements TableCel
 			return component = combo;
 		}
 		else {
-			JTextField textField = new JTextField();
-			textField.setText((String)value);
-	    	textField.setBorder(null);	
-	    	textField.setBackground(Color.white);
+			JTextField textField = EditorUtil.createTextField((String)value);
 	    	return component = textField;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public Object getCellEditorValue() {
-		if(component instanceof JTextField) {
-			return ((JTextField)component).getText();
-		}
-	    else if(component instanceof JComboBox) {
-	    	return ((JComboBox<Object>)component).getSelectedItem();
-	    }
-	    else {	    	
-	    	return "?";
-	    }
+		return EditorUtil.getCellEditorValue(component);
 	}
 	  
 }

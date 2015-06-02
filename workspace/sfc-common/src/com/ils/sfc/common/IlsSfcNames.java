@@ -32,7 +32,8 @@ public class IlsSfcNames {
 	public static final String COLUMNS = "columns";
 	public static final String COLUMN_KEYED = "columnKeyed";
 	public static final String COMPUTER = "computer";
-	public static final String CONFIG = "config";
+	public static final String COLLECT_DATA_CONFIG = "collectDataConfig";
+	public static final String CONFIRM_CONTROLLERS_CONFIG = "confirmControllersConfig";
 	public static final String CURRENT = "current";
 	public static final String DATA = "data";
 	public static final String DESCRIPTION = "description";
@@ -79,6 +80,7 @@ public class IlsSfcNames {
 	public static final String MINIMUM_VALUE = "minimumValue";
 	public static final String MAXIMUM = "maximum";
 	public static final String MAXIMUM_VALUE = "maximumValue";
+	public static final String MONITOR_DOWNLOADS_CONFIG = "monitorDownloadsConfig";
 	public static final String MULTIPLE = "multiple";
 	public static final String NAME = "name";
 	public static final String NONE = "none";
@@ -98,6 +100,7 @@ public class IlsSfcNames {
 	public static final String PUBLIC = "public";
 	public static final String PV_VALUE = "pvValue";
 	public static final String PV_MONITOR_ACTIVE = "pvMonitorActive";
+	public static final String PV_MONITOR_CONFIG = "pvMonitorConfig";
 	public static final String PV_MONITOR_STATUS = "pvMonitorStatus";
 	public static final String QUEUE = "queue";
 	public static final String RAMP_TIME = "rampTime";
@@ -159,6 +162,7 @@ public class IlsSfcNames {
 	public static final String WINDOW_TITLE = "windowTitle";
 	public static final String WRITE_CONFIRM = "writeConfirm";
 	public static final String WRITE_CONFIRMED = "writeConfirmed";
+	public static final String WRITE_OUTPUT_CONFIG = "writeOutputConfig";
 
 
 	// scopes for recipe data:
