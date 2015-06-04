@@ -4,8 +4,9 @@ package com.ils.sfc.common;
 /** A single place to define names that need to be shared between Java and Jython. */
 public class IlsSfcNames {
 
-	// step properties:
+	// step properties
 	public static final String ABORT = "abort";
+	public static final String ABS = "Abs";
 	public static final String ACK_REQUIRED = "ackRequired";
 	public static final String ADVICE = "advice";
 	public static final String ARRAY_KEY = "arrayKey";
@@ -63,8 +64,10 @@ public class IlsSfcNames {
 	public static final String GUI_UNITS = "guiUnits";
 	public static final String HELP = "help";
 	public static final String HIGH = "High";
+	public static final String HIGH_LOW = "High/Low";
 	public static final String HIGH_LIMIT = "highLimit";
 	public static final String ID = "id";
+	public static final String IMMEDIATE = "Immediate";
 	public static final String INFO = "Info";
 	public static final String LOW_LIMIT = "lowLimit";
 	public static final String LOW = "Low";
@@ -80,12 +83,14 @@ public class IlsSfcNames {
 	public static final String MINIMUM_VALUE = "minimumValue";
 	public static final String MAXIMUM = "maximum";
 	public static final String MAXIMUM_VALUE = "maximumValue";
+	public static final String MONITOR = "monitor";
 	public static final String MONITOR_DOWNLOADS_CONFIG = "monitorDownloadsConfig";
 	public static final String MULTIPLE = "multiple";
 	public static final String NAME = "name";
 	public static final String NONE = "none";
 	public static final String OFF = "Off";
 	public static final String PARENT_GROUP = "parent-group";
+	public static final String PCT = "Pct";
 	public static final String POSITION = "position";
 	public static final String POST_TO_QUEUE = "postToQueue";
 	public static final String POST_NOTIFICATION = "postNotification";
@@ -125,6 +130,7 @@ public class IlsSfcNames {
 	public static final String SEMI_AUTOMATIC = "semiAutomatic";
 	public static final String SEQUENCE = "sequence";
 	public static final String SERVER = "server";
+	public static final String SETPOINT = "setpoint";
 	public static final String SHOW_PRINT_DIALOG = "showPrintDialog";
 	public static final String SINGLE = "single";
 	public static final String SQL = "sql";
@@ -157,7 +163,9 @@ public class IlsSfcNames {
 	public static final String VALUE = "value";
 	public static final String VERBOSE = "value";
 	public static final String VIEW_FILE = "viewFile";
+	public static final String WAIT = "Wait";
 	public static final String WARNING = "Warning";
+	public static final String WATCH = "watch";
 	public static final String WINDOW = "window";
 	public static final String WINDOW_TITLE = "windowTitle";
 	public static final String WRITE_CONFIRM = "writeConfirm";
@@ -207,4 +215,9 @@ public class IlsSfcNames {
 	public static final String[] S88_LEVEL_CHOICES = {NONE, GLOBAL, OPERATION, PHASE};
 	public static final String[] COLLECT_DATA_VALUE_TYPE_CHOICES = {CURRENT, AVERAGE, MINIMUM, MAXIMUM, STANDARD_DEVIATION};
 	public static final String[] ERROR_HANDLING_CHOICES = {ABORT, TIMEOUT, DEFAULT_VALUE};
+	public static final String[] PV_TARGET_TYPE_CHOICES = {SETPOINT, VALUE, TAG, RECIPE};
+	public static final String[] PV_STRATEGY_CHOICES = {MONITOR, WATCH};
+	public static final String[] PV_LIMITS_CHOICES = {HIGH_LOW, HIGH, LOW};
+	public static final String[] PV_DOWNLOAD_CHOICES = {IMMEDIATE, WAIT};
+	public static final String[] PV_TYPE_CHOICES = {ABS, PCT};
 }

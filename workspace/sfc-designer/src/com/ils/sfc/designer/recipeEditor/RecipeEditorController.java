@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import org.json.JSONObject;
 
 import com.ils.sfc.common.recipe.objects.Data;
+import com.ils.sfc.designer.EditorErrorHandler;
 import com.ils.sfc.designer.panels.MessagePanel;
 import com.ils.sfc.designer.panels.PanelController;
 import com.ils.sfc.designer.panels.StringEditorPanel;
@@ -19,7 +20,7 @@ import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** A controller for all the sliding panes that are involved in editing recipe data. */
-public class RecipeEditorController extends PanelController implements PropertyTableModel.ErrorHandler {
+public class RecipeEditorController extends PanelController implements EditorErrorHandler {
 			
 	static final int BROWSER = 0;
 	static final int OBJECT_CREATOR = 1;

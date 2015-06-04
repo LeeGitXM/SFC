@@ -3,8 +3,10 @@ package com.ils.sfc.common.recipe.objects;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,7 +51,7 @@ public class RecipeDataTranslator {
 	public static final String G2_CLASS_NAME = "class-name";
 	public static final String SYMBOL_PREFIX = "the symbol ";
 	public static final String STRUCTURE_PREFIX = "structure (";
-
+	
 	// Use map for migration
 	public static Map<String,String> g2ToIgName = new HashMap<String,String>();
 	static {
@@ -109,7 +111,7 @@ public class RecipeDataTranslator {
 	}
 	
 	public static Collection<Class<?>> getConcreteClasses() {
-		return concreteClassesByG2Name.values();
+		return  new HashSet<Class<?>>(concreteClassesByG2Name.values());
 	}
 
 	public static Class<?> getConcreteClassForG2Class(String g2ClassName) {
@@ -157,7 +159,6 @@ public class RecipeDataTranslator {
 	/** Set a property by name. Will throw IllegalArgumentException if the property is not present,
 	 *  unless this is a Structure in which case it will be created.  
 	 * @throws org.apache.wicket.ajax.json.JSONException */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setProperty(Data data, String name, String strValue) throws JSONException, org.apache.wicket.ajax.json.JSONException {		
 		IlsProperty<?> property = data.getProperty(name);
 		

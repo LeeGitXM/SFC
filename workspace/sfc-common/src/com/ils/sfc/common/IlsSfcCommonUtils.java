@@ -2,7 +2,6 @@ package com.ils.sfc.common;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;

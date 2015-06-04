@@ -13,6 +13,7 @@ import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.inductiveautomation.ignition.client.sqltags.tree.TagPropNode;
 import com.inductiveautomation.ignition.client.sqltags.tree.TagRenderer;
 import com.inductiveautomation.ignition.client.sqltags.tree.TagTreeNode;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
@@ -54,6 +55,11 @@ public class TagBrowser extends JPanel {
 			if(selectedPaths[0].getLastPathComponent() instanceof TagTreeNode ) {
 				TagTreeNode node = (TagTreeNode)(selectedPaths[0].getLastPathComponent());
 				selectedPath = node.getTagPath().toString();			
+				return selectedPath;
+			}
+			else if(selectedPaths[0].getLastPathComponent() instanceof TagPropNode ) {
+				TagPropNode node = (TagPropNode)(selectedPaths[0].getLastPathComponent());
+				selectedPath = node.getTagPath().toString() + "." + node.getName();			
 				return selectedPath;
 			}
 			else {

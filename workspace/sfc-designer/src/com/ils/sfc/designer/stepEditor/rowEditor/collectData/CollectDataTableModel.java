@@ -1,39 +1,25 @@
-package com.ils.sfc.designer.stepEditor.collectData;
-
-import javax.swing.table.AbstractTableModel;
+package com.ils.sfc.designer.stepEditor.rowEditor.collectData;
 
 import com.ils.sfc.common.rowconfig.CollectDataConfig;
+import com.ils.sfc.designer.stepEditor.rowEditor.RowTableModel;
 
 @SuppressWarnings("serial")
-public class CollectDataTableModel extends AbstractTableModel {
+public class CollectDataTableModel extends RowTableModel {
 
 	public static final int LOCATION_COLUMN = 1;
 	public static final int TAG_COLUMN = 2;
 	public static final int VALUE_TYPE_COLUMN = 3;
 	public static final int PAST_WINDOW_COLUMN = 4;
-	private static final String[] columnNames = {"Recipe Key", "Location", "Tag Path", "Value Type",  "Past Window", "Default Value"};
-	private CollectDataConfig config;
+	private static final String[] columnNames = {"Recipe Key", "Location", "Tag Path", "Value Type",  "Past Window (min)", "Default Value"};
 	
-	public String getColumnName(int col) {
-        return  getColumnNames()[col];
-    }
-    
 	public String[] getColumnNames() {
 		return columnNames;
 	}
 	
     public CollectDataConfig.Row getRowObject(int i) {
-    	return config.getRows().get(i);
-    }
-    
-	public int getRowCount() { return config.getRows().size(); }
-    
-    public int getColumnCount() { return  getColumnNames().length; }
-    
-    public boolean isCellEditable(int row, int col) { 
-    	return true;
-    }
- 
+    	return ((CollectDataConfig)rowConfig).getRows().get(i);
+    }   
+
     public Object getValueAt(int row, int col) {
     	CollectDataConfig.Row rowObj = getRowObject(row);
     	switch(col) {
@@ -60,20 +46,5 @@ public class CollectDataTableModel extends AbstractTableModel {
     	}
     	fireTableCellUpdated(row, col);
     }
-
-	public void addRow() {
-		config.getRows().add(new CollectDataConfig.Row());
-		fireTableStructureChanged();
-	}
-
-	public void removeSelectedRow(int row) {
-		if(row == -1) return;
-		config.getRows().remove(row);
-		fireTableStructureChanged();
-	}
-
-	public void setConfig(CollectDataConfig config) {
-		this.config = config;		
-	}
 
 }

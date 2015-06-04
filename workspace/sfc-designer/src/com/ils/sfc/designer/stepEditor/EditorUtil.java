@@ -22,27 +22,35 @@ public class EditorUtil {
 	}
 	
 	// Some utility functions for UI creation:
-	public static JCheckBox createCheckBox(Boolean value) {
+	public static JCheckBox createCheckBox(Object value) {
+		Boolean boolValue = value != null ? (Boolean)value : false;
 		JCheckBox checkBox = new JCheckBox();
     	checkBox.setBackground(Color.white);
     	checkBox.setBorder(null);
     	if(value != null) {
-    		checkBox.setSelected((Boolean)value.booleanValue());
+    		checkBox.setSelected(boolValue);
     	}
     	checkBox.setHorizontalAlignment(SwingConstants.CENTER);
     	return checkBox;
 	}
 	
-	public static JTextField createTextField(String value) {
+	public static JTextField createTextField(Object value) {
+		String valueString = value != null ? value.toString() : "";
 		JTextField textField = new JTextField();
-		textField.setText(value);
+		textField.setText(valueString);
     	textField.setBorder(null);	
     	textField.setBackground(Color.white);
     	return textField;
 	}
 	
-	public static JComboBox<Object> createChoiceCombo(String[] choices) {
+	public static JComboBox<Object> createChoiceCombo(String[] choices, String value) {
 		JComboBox<Object> combo = new JComboBox<Object>(choices);
+		if(value != null) {
+			combo.setSelectedItem(value);
+		}
+		else {
+			combo.setSelectedIndex(0);
+		}
 		combo.setBackground(java.awt.Color.white);
 		return combo;
 	}
@@ -63,4 +71,8 @@ public class EditorUtil {
 	    }
 	}
 
+	/** null-tolerant to-string. */
+	public static String toString(Object o) {
+		return o != null ? o.toString() : "";
+	}
 }

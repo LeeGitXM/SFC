@@ -1,15 +1,14 @@
-package com.ils.sfc.designer.stepEditor.reviewData;
+package com.ils.sfc.designer.stepEditor.rowEditor.reviewData;
 
-import javax.swing.table.AbstractTableModel;
-
+import com.ils.sfc.common.rowconfig.CollectDataConfig;
 import com.ils.sfc.common.rowconfig.ReviewDataConfig;
+import com.ils.sfc.designer.stepEditor.rowEditor.RowTableModel;
 
 @SuppressWarnings("serial")
-public class ReviewDataTableModel extends AbstractTableModel {
+public class ReviewDataTableModel extends RowTableModel {
 	public static final int VALUE_COLUMN = 1;
 	private static final String[] columnNames = {"Config Key", "Value Key", "Destination", "Prompt", "Unit Type", "Units"};
 	private static final String[] columnNamesWithAdvice = {"Config Key", "Value Key", "Destination", "Prompt", "Advice", "Unit Type", "Units"};
-	private ReviewDataConfig config;
 	private boolean showAdvice;
 	
 	public ReviewDataTableModel(boolean showAdvice) {
@@ -32,26 +31,14 @@ public class ReviewDataTableModel extends AbstractTableModel {
 		return col == (showAdvice ? 6 : 5);
 	}
 
-	public String getColumnName(int col) {
-        return  getColumnNames()[col];
-    }
-    
 	public String[] getColumnNames() {
 		return showAdvice ? columnNamesWithAdvice : columnNames;
 	}
 	
     public ReviewDataConfig.Row getRowObject(int i) {
-    	return config.getRows().get(i);
-    }
+    	return ((ReviewDataConfig)rowConfig).getRows().get(i);
+    }   
     
-	public int getRowCount() { return config.getRows().size(); }
-    
-    public int getColumnCount() { return  getColumnNames().length; }
-    
-    public boolean isCellEditable(int row, int col) { 
-    	return true;
-    }
- 
     public Object getValueAt(int row, int col) {
     	ReviewDataConfig.Row rowObj = getRowObject(row);
     	switch(col) {
@@ -99,19 +86,4 @@ public class ReviewDataTableModel extends AbstractTableModel {
     	}
     }
 
-	public void addRow() {
-		config.getRows().add(new ReviewDataConfig.Row());
-		fireTableStructureChanged();
-	}
-
-	public void removeSelectedRow(int row) {
-		if(row == -1) return;
-		config.getRows().remove(row);
-		fireTableStructureChanged();
-	}
-
-	public void setConfig(ReviewDataConfig config) {
-		this.config = config;		
-	}
-    
 }
