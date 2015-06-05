@@ -7,7 +7,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
+import com.ils.sfc.common.IlsProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
+import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 /** A property editor grid/table */
@@ -57,8 +59,8 @@ public class PropertyEditor extends JPanel {
 		return tableModel.hasChanged();
 	}
 	
-	public void setPropertyValues(BasicPropertySet propertyValues, boolean sortInternal) {
-		tableModel.setPropertyValues(propertyValues, sortInternal);
+	public void setPropertyValues(BasicPropertySet propertyValues, Property<?>[] orderedPropertiesOrNull) {
+		tableModel.setPropertyValues(propertyValues, orderedPropertiesOrNull);
 		table.clearSelection();
 	}
 	

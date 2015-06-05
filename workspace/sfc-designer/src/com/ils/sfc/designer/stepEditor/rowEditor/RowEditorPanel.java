@@ -132,4 +132,10 @@ public abstract class RowEditorPanel extends EditorPanel implements ValueHolder 
 		tableModel.setValueAt(value, row, col);
 	}
 	
+	@Override
+	public void commitEdit() {
+		if(table.getCellEditor() != null) {
+			table.getCellEditor().stopCellEditing();
+		}
+	}
 }

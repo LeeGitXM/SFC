@@ -29,7 +29,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 		com.ils.sfc.common.IlsProperty.DESCRIPTION, 
 		//com.ils.sfc.common.IlsProperty.AUDIT_LEVEL
 	};
-	private Property<?>[] properties;
+	private Property<?>[] orderedProperties;
 	
     public static final Property<?>[] FOUNDATION_STEP_PROPERTIES = {
     	EnclosingStepProperties.CHART_PATH,
@@ -38,7 +38,11 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
     	EnclosingStepProperties.RETURN_PARAMS
     };
 
-    public static final Property<?>[] FOUNDATION_STEP_PROPERTIES_WITH_MSG_QUEUE; 
+    public Property<?>[] getOrderedProperties() {
+		return orderedProperties;
+	}
+
+	public static final Property<?>[] FOUNDATION_STEP_PROPERTIES_WITH_MSG_QUEUE; 
     static {
     	FOUNDATION_STEP_PROPERTIES_WITH_MSG_QUEUE = new Property<?>[FOUNDATION_STEP_PROPERTIES.length + 1];
     	for(int i = 0; i < FOUNDATION_STEP_PROPERTIES.length; i++) {
@@ -47,23 +51,17 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
     	FOUNDATION_STEP_PROPERTIES_WITH_MSG_QUEUE[FOUNDATION_STEP_PROPERTIES_WITH_MSG_QUEUE.length - 1] = IlsProperty.MESSAGE_QUEUE;
     };
  
-	protected AbstractIlsStepDelegate(Property<?>[] uncommonProperties) {
-		// initialize sort order
-		int numProperties = uncommonProperties.length + commonProperties.length;
-		properties = new Property<?>[numProperties];
+	protected AbstractIlsStepDelegate(Property<?>[] ilsProperties) {
+		// combine the ILS properties with whichever common or
+		// Ignition properties we wish to expose:
+		int numProperties = ilsProperties.length + commonProperties.length;
+		orderedProperties = new Property<?>[numProperties];
 		int p = 0;
 		for(; p < commonProperties.length; p++) {
-			properties[p] = commonProperties[p];
+			orderedProperties[p] = commonProperties[p];
 		}
-		for(int i=0; i < uncommonProperties.length; i++, p++) {
-			properties[p] = uncommonProperties[i];
-		}
-		// Set the sort order--common properties first, then as given
-		for(int i = 0; i < properties.length; i++) {
-			Property<?> property = properties[i];
-			if(property instanceof IlsProperty) {
-				((IlsProperty<?>)property).setSortOrder(i);
-			}
+		for(int i=0; i < ilsProperties.length; i++, p++) {
+			orderedProperties[p] = ilsProperties[i];
 		}
 	}
 	
@@ -76,7 +74,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	@Override
 	public void fromXML(Element dom, ChartUIElement ui)
 		throws XMLParseException {
-		for(Property<?> property: properties) {
+		for(Property<?> property: orderedProperties) {
 			String stringValue = IlsSfcCommonUtils.getPropertyAsString(property, dom);
 			Object value = null;
 			if(stringValue!=null) {
@@ -126,7 +124,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	
 	public PropertySet getPropertySet() {
 		// add the ILS properties
-		PropertySet props = IlsSfcCommonUtils.createPropertySet(properties);
+		PropertySet props = IlsSfcCommonUtils.createPropertySet(orderedProperties);
 		return props;
 	}
 

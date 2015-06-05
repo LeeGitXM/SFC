@@ -22,6 +22,7 @@ public interface MonitorDownloadStepProperties extends ChartStepProperties {
     	TIMER_KEY,
     	TIMER_CLEAR,
     	TIMER_SET,
+    	RECIPE_LOCATION,
     	MONITOR_DOWNLOADS_CONFIG
     };
 }

@@ -20,6 +20,6 @@ public class PropertyEditorPanel extends JPanel {
 	}
 	
 	public void setPropertyValues(BasicPropertySet propertyValues, boolean sortInternal) {
-		propertyEditor.setPropertyValues(propertyValues, sortInternal);
+		propertyEditor.setPropertyValues(propertyValues, null);
 	}
 }

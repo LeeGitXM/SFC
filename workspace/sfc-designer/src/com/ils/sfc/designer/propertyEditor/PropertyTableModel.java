@@ -15,6 +15,7 @@ import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.designer.EditorErrorHandler;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
+import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 @SuppressWarnings("serial")
@@ -109,13 +110,10 @@ public class PropertyTableModel extends AbstractTableModel {
     	return propertyValues;
     }
     
-	public void setPropertyValues(BasicPropertySet propertyValues, boolean sortInternal) {
+	public void setPropertyValues(BasicPropertySet propertyValues, Property<?>[] orderedPropertiesOrNull) {
 		this.propertyValues = propertyValues;		
 		rows.clear();
-		//Map<String,PropertyValue<?>> propsByName = new HashMap<String,PropertyValue<?>>();
-		//for(PropertyValue<?> pValue: propertyValues) {
-			//propsByName.put(pValue.getProperty().getName(), pValue);
-		//}
+		
 		for(PropertyValue<?> pValue: propertyValues.getValues()) {
 			String name = pValue.getProperty().getName();
 			if(name.equals("id")) {
@@ -127,7 +125,14 @@ public class PropertyTableModel extends AbstractTableModel {
 			}
 		}
 		
-		if(sortInternal) {
+		if(orderedPropertiesOrNull != null) {
+			// order the properties in the order they are declared in the array--
+			// e.g. in the Step Properties definition
+			for(int i = 0; i < orderedPropertiesOrNull.length; i++) {
+				if(orderedPropertiesOrNull[i] instanceof IlsProperty) {
+					((IlsProperty<?>)orderedPropertiesOrNull[i]).setSortOrder(i);
+				}
+			}
 			sortRowsInternal();
 		}
 		else{

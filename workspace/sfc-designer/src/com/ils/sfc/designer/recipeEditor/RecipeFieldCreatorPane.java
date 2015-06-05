@@ -96,7 +96,7 @@ public class RecipeFieldCreatorPane extends EditorPanel {
 			ComboWrapper selectedType = (ComboWrapper)typesCombo.getSelectedItem();
 			Class<?> selectedClass = (Class<?>)selectedType.getObject();
 			recipeData.addDynamicProperty(name, selectedClass, null);
-			controller.getEditor().getPropertyEditor().setPropertyValues(recipeData.getProperties(), false);
+			controller.getEditor().getPropertyEditor().setPropertyValues(recipeData.getProperties(), null);
 			controller.getEditor().activate(myIndex);
 		}
 		catch(Exception e) {

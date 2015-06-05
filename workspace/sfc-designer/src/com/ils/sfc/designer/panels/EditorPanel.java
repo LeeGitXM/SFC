@@ -45,4 +45,8 @@ public abstract class EditorPanel extends JPanel {
 	/** Subclasses can override to handle column selection. */
 	protected void columnSelected(int column) {}
 		
+	/** Subclasses with tables should override this
+	 *  and do table.getCellEditor().stopCellEditing();. */
+	public void commitEdit() {		
+	}
 }

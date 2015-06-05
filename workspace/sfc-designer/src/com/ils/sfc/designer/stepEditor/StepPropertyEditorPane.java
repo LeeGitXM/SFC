@@ -120,4 +120,9 @@ public class StepPropertyEditorPane extends EditorPanel {
 		return editor;
 	}
 
+	@Override
+	public void commitEdit() {
+		editor.stopCellEditing();
+	}
+
 }

@@ -1,6 +1,12 @@
 package com.ils.sfc.designer.stepEditor;
 
+import java.awt.Component;
+
+import com.ils.sfc.client.step.AbstractIlsStepUI;
+import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.designer.EditorErrorHandler;
+import com.ils.sfc.designer.panels.EditorPanel;
 import com.ils.sfc.designer.panels.MessagePanel;
 import com.ils.sfc.designer.panels.PanelController;
 import com.ils.sfc.designer.panels.StringEditorPanel;
@@ -118,8 +124,18 @@ public class StepEditorController extends PanelController implements EditorError
 	}
 
 	public void setElement(ChartUIElement element) {
-		getPropertyEditor().getPropertyEditor().setPropertyValues(element, true);
+		String factoryId = (String)element.get(IlsProperty.FACTORY_ID);
+		AbstractIlsStepDelegate stepDelegate = (AbstractIlsStepDelegate)AbstractIlsStepUI.getFactory(factoryId);
+		getPropertyEditor().getPropertyEditor().setPropertyValues(element, stepDelegate.getOrderedProperties());
 		slideTo(PROPERTY_EDITOR);
+	}
+
+	public EditorPanel getSelectedPanel() {
+		 return (EditorPanel)slidingPane.getComponent(slidingPane.getSelectedPane());
+	}
+
+	public void commitEdit() {
+		getSelectedPanel().commitEdit();		
 	}
 
 }

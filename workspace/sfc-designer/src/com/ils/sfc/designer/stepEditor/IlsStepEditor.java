@@ -50,7 +50,7 @@ public class IlsStepEditor  extends AbstractStepEditor {
 
 	@Override
 	public void commitEdit() {
-		// TODO: what to do here??
+		stepEditorController.commitEdit();
 	}
 	
 	public <T> void set(Property<T> property, T value) {

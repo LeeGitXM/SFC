@@ -77,7 +77,7 @@ public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder
 		if(selectedPropertyValue == null) return;
 		Structure structureData = (Structure) recipeData;
 		structureData.removeDynamicProperty(selectedPropertyValue.getProperty());
-		getPropertyEditor().setPropertyValues(recipeData.getProperties(), false);
+		getPropertyEditor().setPropertyValues(recipeData.getProperties(), null);
 	}
 	
 	private void doOK() {
@@ -99,7 +99,7 @@ public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder
 		boolean isStructure = recipeData instanceof Structure;
 		buttonPanel.getAddButton().setEnabled(isStructure);
 		buttonPanel.getRemoveButton().setEnabled(isStructure);
-		getPropertyEditor().setPropertyValues(recipeData.getProperties(), false);
+		getPropertyEditor().setPropertyValues(recipeData.getProperties(), null);
 	}
 
 	@Override

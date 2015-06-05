@@ -13,6 +13,9 @@ public class MonitorDownloadConfig extends RowConfig {
 	private List<Row> rows = new ArrayList<Row>();
 	
 	public static class Row {
+		public String key;
+		public String labelAttribute;
+		public String units;
 	}
 
 	public List<Row> getRows() {
