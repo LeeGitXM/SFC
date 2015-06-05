@@ -32,7 +32,6 @@
 	<target name="clean" description="Remove previous test build products" >
 		<delete file="${basedir}/sfc-build/modules/${sfc.browser.name}-module-unsigned.modl" />
 		<delete dir="${basedir}/sfc-build/release" />
-		<delete dir="${basedir}/sfc-build/temp_modl" />
 	</target>	
 	
 	<!-- Compile the Browser -->
