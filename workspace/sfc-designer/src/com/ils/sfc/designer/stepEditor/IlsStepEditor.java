@@ -1,7 +1,6 @@
 package com.ils.sfc.designer.stepEditor;
 
 import java.awt.BorderLayout;
-import java.awt.LayoutManager;
 
 import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.inductiveautomation.ignition.common.config.Property;

@@ -1,23 +1,22 @@
 package com.ils.sfc.designer.stepEditor;
 
+import com.ils.sfc.designer.EditorErrorHandler;
 import com.ils.sfc.designer.panels.MessagePanel;
 import com.ils.sfc.designer.panels.PanelController;
 import com.ils.sfc.designer.panels.StringEditorPanel;
 import com.ils.sfc.designer.panels.TagBrowserPanel;
 import com.ils.sfc.designer.panels.UnitChooserPanel;
-import com.ils.sfc.designer.propertyEditor.PropertyTableModel;
-import com.ils.sfc.designer.stepEditor.collectData.CollectDataPanel;
-import com.ils.sfc.designer.stepEditor.confirmControllers.ConfirmControllersPanel;
-import com.ils.sfc.designer.stepEditor.monitorDownloads.MonitorDownloadsPanel;
-import com.ils.sfc.designer.stepEditor.pvMonitor.PVMonitorPanel;
-import com.ils.sfc.designer.stepEditor.reviewData.ReviewDataPanel;
-import com.ils.sfc.designer.stepEditor.writeOutput.WriteOutputPanel;
+import com.ils.sfc.designer.stepEditor.rowEditor.collectData.CollectDataPanel;
+import com.ils.sfc.designer.stepEditor.rowEditor.confirmControllers.ConfirmControllersPanel;
+import com.ils.sfc.designer.stepEditor.rowEditor.monitorDownloads.MonitorDownloadsPanel;
+import com.ils.sfc.designer.stepEditor.rowEditor.pvMonitor.PVMonitorPanel;
+import com.ils.sfc.designer.stepEditor.rowEditor.reviewData.ReviewDataPanel;
+import com.ils.sfc.designer.stepEditor.rowEditor.writeOutput.WriteOutputPanel;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** An editor for all ILS step types */
-public class StepEditorController extends PanelController implements PropertyTableModel.ErrorHandler {
-	private static final long serialVersionUID = 1L;
+public class StepEditorController extends PanelController implements EditorErrorHandler {
 	static final int PROPERTY_EDITOR = 0;
 	static final int TEXT_EDITOR = 1;
 	static final int TAG_BROWSER = 2;

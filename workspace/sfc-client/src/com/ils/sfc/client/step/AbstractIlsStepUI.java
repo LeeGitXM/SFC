@@ -83,6 +83,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 			factoriesById.put(factory.getId(), factory);
 		}
 	}
+	
 	public static ClientStepFactory getFactory(String id) {
 		return factoriesById.get(id);
 	}

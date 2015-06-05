@@ -1,4 +1,4 @@
-package com.ils.sfc.designer.stepEditor.collectData;
+package com.ils.sfc.designer.stepEditor.rowEditor.collectData;
 
 import java.awt.Component;
 
@@ -11,7 +11,6 @@ import javax.swing.table.TableCellEditor;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.designer.stepEditor.EditorUtil;
-import com.ils.sfc.designer.stepEditor.EditorUtil;
 
 /** A table cell editor for the property grid */
 @SuppressWarnings("serial")
@@ -21,11 +20,11 @@ public class CollectDataCellEditor extends AbstractCellEditor implements TableCe
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected,
 		int row, int col) {
 		if(col == CollectDataTableModel.LOCATION_COLUMN) {
-			JComboBox<?> comboBox = EditorUtil.createChoiceCombo(IlsProperty.RECIPE_LOCATION.getChoices());
+			JComboBox<?> comboBox = EditorUtil.createChoiceCombo(IlsProperty.RECIPE_LOCATION.getChoices(), (String)value);
 			return component = comboBox;
 		}
 		else if(col == CollectDataTableModel.VALUE_TYPE_COLUMN) {
-			JComboBox<?> comboBox = EditorUtil.createChoiceCombo(IlsSfcNames.COLLECT_DATA_VALUE_TYPE_CHOICES);
+			JComboBox<?> comboBox = EditorUtil.createChoiceCombo(IlsSfcNames.COLLECT_DATA_VALUE_TYPE_CHOICES, (String)value);
 			return component = comboBox;
 		}
 		else {

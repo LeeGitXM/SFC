@@ -1,4 +1,4 @@
-package com.ils.sfc.designer.stepEditor.confirmControllers;
+package com.ils.sfc.designer.stepEditor.rowEditor.confirmControllers;
 
 import java.awt.Component;
 

@@ -1,26 +1,21 @@
 package com.ils.sfc.designer.propertyEditor;
 
-import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.PythonCall;
+import com.ils.sfc.designer.EditorErrorHandler;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
-import com.inductiveautomation.ignition.common.script.JythonExecException;
 
 @SuppressWarnings("serial")
 public class PropertyTableModel extends AbstractTableModel {
@@ -32,11 +27,8 @@ public class PropertyTableModel extends AbstractTableModel {
 	private BasicPropertySet propertyValues;
 	private String stepId;
 	private static final Logger logger = LoggerFactory.getLogger(PropertyTableModel.class);
-	private ErrorHandler errorHandler;
+	private EditorErrorHandler errorHandler;
 	
-	public interface ErrorHandler {
-		public void handleError(String msg);
-	}
 	
 	public String getColumnName(int col) {
         return columnNames[col];
@@ -50,7 +42,7 @@ public class PropertyTableModel extends AbstractTableModel {
     	return hasChanged;
     }
     
-	public void setErrorHandler(ErrorHandler errorHandler) {
+	public void setErrorHandler(EditorErrorHandler errorHandler) {
 		this.errorHandler = errorHandler;
 	}
 
@@ -120,11 +112,11 @@ public class PropertyTableModel extends AbstractTableModel {
 	public void setPropertyValues(BasicPropertySet propertyValues, boolean sortInternal) {
 		this.propertyValues = propertyValues;		
 		rows.clear();
-		Map<String,PropertyValue<?>> propsByName = new HashMap<String,PropertyValue<?>>();
-		for(PropertyValue<?> pValue: propertyValues) {
-			propsByName.put(pValue.getProperty().getName(), pValue);
-		}
-		for(PropertyValue<?> pValue: propertyValues) {
+		//Map<String,PropertyValue<?>> propsByName = new HashMap<String,PropertyValue<?>>();
+		//for(PropertyValue<?> pValue: propertyValues) {
+			//propsByName.put(pValue.getProperty().getName(), pValue);
+		//}
+		for(PropertyValue<?> pValue: propertyValues.getValues()) {
 			String name = pValue.getProperty().getName();
 			if(name.equals("id")) {
 				stepId = pValue.getValue().toString();

@@ -1,6 +1,5 @@
-package com.ils.sfc.designer.stepEditor.reviewData;
+package com.ils.sfc.designer.stepEditor.rowEditor.reviewData;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,7 +51,7 @@ public class ReviewDataCellEditor extends AbstractCellEditor implements TableCel
 					e.printStackTrace();
 				}
 			}
-			JComboBox<Object> combo = EditorUtil.createChoiceCombo(choices);
+			JComboBox<Object> combo = EditorUtil.createChoiceCombo(choices, (String)value);
 			combo.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					fireEditingStopped();
@@ -66,7 +65,6 @@ public class ReviewDataCellEditor extends AbstractCellEditor implements TableCel
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public Object getCellEditorValue() {
 		return EditorUtil.getCellEditorValue(component);
 	}

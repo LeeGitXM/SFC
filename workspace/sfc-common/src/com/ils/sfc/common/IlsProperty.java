@@ -238,30 +238,17 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 	}
 		
 	public static Object parsePropertyValue(Property<?> property, String stringValue) throws ParseException {
+		if( IlsSfcCommonUtils.isEmpty(stringValue)) {
+			return property.getDefaultValue();
+		}
 		if(property.getType() == Integer.class) {
-			try {
-				return Integer.parseInt(stringValue);
-			}
-			catch(NumberFormatException e) {
-				throw new ParseException("bad integer format: " + stringValue, 0);
-			}
+			return parseInt(stringValue);
 		}
 		else if(property.getType() == Double.class) {
-			if( IlsSfcCommonUtils.isEmpty(stringValue) ) return property.getDefaultValue();
-			try {
-				return Double.parseDouble(stringValue);
-			}
-			catch(NumberFormatException e) {
-				throw new ParseException("bad float format: " + stringValue, 0);
-			}
+			return parseDouble(stringValue);
 		}
 		else if(property.getType() == Boolean.class) {
-			try {
-				return Boolean.valueOf(stringValue);
-			}
-			catch(NumberFormatException e) {
-				throw new ParseException("bad boolean format: " + stringValue, 0);
-			}
+			return parseBoolean(stringValue);
 		}
 		else if(property == JSON_OBJECT) {
 			// validate that the string is a valid JSON list
@@ -304,6 +291,33 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 		}
 		else {
 			return stringValue;
+		}
+	}
+
+	public static Boolean parseBoolean(String stringValue) throws ParseException {
+		try {
+			return Boolean.valueOf(stringValue);
+		}
+		catch(NumberFormatException e) {
+			throw new ParseException("bad boolean format: " + stringValue, 0);
+		}
+	}
+
+	public static Double parseDouble(String stringValue) throws ParseException {
+		try {
+			return Double.parseDouble(stringValue);
+		}
+		catch(NumberFormatException e) {
+			throw new ParseException("bad float format: " + stringValue, 0);
+		}
+	}
+
+	public static Integer parseInt(String stringValue) throws ParseException {
+		try {
+			return Integer.parseInt(stringValue);
+		}
+		catch(NumberFormatException e) {
+			throw new ParseException("bad integer format: " + stringValue, 0);
 		}
 	}
 
