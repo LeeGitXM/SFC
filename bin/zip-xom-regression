@@ -24,7 +24,7 @@ cd ..
 cp -a projects $TMP
 
 # Now zip and copy to subversion
-cd ${GIT_REPO}
-zip -r sfc-migration.zip $VERS
-cp sfc-migration.zip $SVN
+cd ${GIT_REPO}/$VERS
+zip -r sfc-regression.zip *
+cp sfc-regression.zip $SVN
 rm -rf $TMP
