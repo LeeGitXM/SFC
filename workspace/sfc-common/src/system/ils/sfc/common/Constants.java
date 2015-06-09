@@ -1,8 +1,8 @@
-package com.ils.sfc.common;
+package system.ils.sfc.common;
 
 
 /** A single place to define names that need to be shared between Java and Jython. */
-public class IlsSfcNames {
+public class Constants {
 
 	// step properties
 	public static final String ABORT = "abort";

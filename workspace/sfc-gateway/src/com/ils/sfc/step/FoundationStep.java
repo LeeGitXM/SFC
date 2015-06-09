@@ -1,8 +1,9 @@
 package com.ils.sfc.step;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
-import com.ils.sfc.common.IlsSfcNames;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeContext;
@@ -23,7 +24,7 @@ public class FoundationStep extends EnclosingStep {
 		String msgQueue = getDefinition().getProperties().get(IlsProperty.MESSAGE_QUEUE);
 		if(!IlsSfcCommonUtils.isEmpty(msgQueue)) {
 			PyChartScope topScope = IlsSfcCommonUtils.getTopScope(scopeContext.getChartScope());
-			topScope.put(IlsSfcNames.MESSAGE_QUEUE, msgQueue);
+			topScope.put(Constants.MESSAGE_QUEUE, msgQueue);
 		}
 		super.activateStep();
 	}

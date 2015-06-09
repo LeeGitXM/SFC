@@ -2,8 +2,9 @@ package com.ils.sfc.designer.stepEditor.rowEditor.pvMonitor;
 
 import java.text.ParseException;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.rowconfig.PVMonitorConfig;
 import com.ils.sfc.designer.EditorErrorHandler;
 import com.ils.sfc.designer.stepEditor.EditorUtil;
@@ -127,19 +128,19 @@ public class PVMonitorTableModel extends RowTableModel {
 
 	public static String[] getChoices(int col) {
 		if(col == TARGET_TYPE_COLUMN) {
-			return IlsSfcNames.PV_TARGET_TYPE_CHOICES;					
+			return Constants.PV_TARGET_TYPE_CHOICES;					
 		}
 		else if(col == STRATEGY_COLUMN) {
-			return IlsSfcNames.PV_STRATEGY_CHOICES;								
+			return Constants.PV_STRATEGY_CHOICES;								
 		}
 		else if(col == LIMITS_COLUMN) {
-			return IlsSfcNames.PV_LIMITS_CHOICES;
+			return Constants.PV_LIMITS_CHOICES;
 		}
 		else if(col == DOWNLOAD_COLUMN) {
-			return IlsSfcNames.PV_DOWNLOAD_CHOICES;			
+			return Constants.PV_DOWNLOAD_CHOICES;			
 		}
 		else if(col == TYPE_COLUMN) {
-			return IlsSfcNames.PV_TYPE_CHOICES;						
+			return Constants.PV_TYPE_CHOICES;						
 		}
 		else { // shouldn't happen, but keep compiler happy
 			return new String[0];

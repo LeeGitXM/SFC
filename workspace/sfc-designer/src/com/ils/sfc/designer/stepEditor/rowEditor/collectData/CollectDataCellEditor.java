@@ -8,8 +8,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.designer.stepEditor.EditorUtil;
 
 /** A table cell editor for the property grid */
@@ -24,7 +25,7 @@ public class CollectDataCellEditor extends AbstractCellEditor implements TableCe
 			return component = comboBox;
 		}
 		else if(col == CollectDataTableModel.VALUE_TYPE_COLUMN) {
-			JComboBox<?> comboBox = EditorUtil.createChoiceCombo(IlsSfcNames.COLLECT_DATA_VALUE_TYPE_CHOICES, (String)value);
+			JComboBox<?> comboBox = EditorUtil.createChoiceCombo(Constants.COLLECT_DATA_VALUE_TYPE_CHOICES, (String)value);
 			return component = comboBox;
 		}
 		else {

@@ -1,8 +1,9 @@
 package com.ils.sfc.client;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
-import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.client.model.ClientContext;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
@@ -57,7 +58,7 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
     public void initializeScriptManager(ScriptManager manager) {
 		super.initializeScriptManager(manager);
 		PythonCall.setScriptMgr(manager);
-		manager.addStaticFields("system.ils.sfc", IlsSfcNames.class);
+		manager.addStaticFields("system.ils.sfc", Constants.class);
 		manager.addScriptModule("system.ils.sfc", IlsClientScripts.class);
     }
 

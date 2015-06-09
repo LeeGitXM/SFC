@@ -4,9 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.panels.EditorPanel;
@@ -102,7 +103,7 @@ public class StepPropertyEditorPane extends EditorPanel {
 			controller.getWriteOutputPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getWriteOutputPanel().activate(myIndex);							
 		}
-		else if(selectedPropertyValue.getProperty().getName().endsWith(IlsSfcNames.UNIT_SUFFIX)) {
+		else if(selectedPropertyValue.getProperty().getName().endsWith(Constants.UNIT_SUFFIX)) {
 			editor.stopCellEditing();
 			controller.getUnitChooser().activate(myIndex);
 			// as activate may initialize units; we set unit AFTER activation:

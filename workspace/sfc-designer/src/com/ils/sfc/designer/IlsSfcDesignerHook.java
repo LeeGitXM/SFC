@@ -17,9 +17,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
-import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.step.CancelStepProperties;
 import com.ils.sfc.common.step.ClearQueueStepProperties;
@@ -141,7 +142,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	public void initializeScriptManager(ScriptManager mgr) {
 		super.initializeScriptManager(mgr);
 		PythonCall.setScriptMgr(mgr);
-		mgr.addStaticFields("system.ils.sfc", IlsSfcNames.class);
+		mgr.addStaticFields("system.ils.sfc", Constants.class);
 		mgr.addScriptModule("system.ils.sfc", IlsClientScripts.class);
 		// Initialize units. Since this is a lazy initialization, 
     	Object[] args = {null};

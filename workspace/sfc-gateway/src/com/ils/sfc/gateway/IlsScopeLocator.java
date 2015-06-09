@@ -7,8 +7,9 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsSfcCommonUtils;
-import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.inductiveautomation.ignition.common.sqltags.model.Tag;
 import com.inductiveautomation.ignition.common.sqltags.model.TagPath;
@@ -48,19 +49,19 @@ public class IlsScopeLocator implements ScopeLocator {
 	public PyChartScope resolveScope(PyChartScope chartScope, 
 			PyChartScope stepScope, String scopeIdentifier) {
 		PyChartScope resolvedStepScope = null;
-		if(scopeIdentifier.equals(IlsSfcNames.LOCAL)) {
+		if(scopeIdentifier.equals(Constants.LOCAL)) {
 			resolvedStepScope = stepScope;
 		}
-		else if(scopeIdentifier.equals(IlsSfcNames.PREVIOUS)) {
+		else if(scopeIdentifier.equals(Constants.PREVIOUS)) {
 			resolvedStepScope = stepScope.getSubScope(ScopeContext.PREVIOUS);
 		}
-		else if(scopeIdentifier.equals(IlsSfcNames.SUPERIOR)) {
-			resolvedStepScope = (PyChartScope) chartScope.get(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY);
+		else if(scopeIdentifier.equals(Constants.SUPERIOR)) {
+			resolvedStepScope = (PyChartScope) chartScope.get(Constants.ENCLOSING_STEP_SCOPE_KEY);
 		}
 		else {  // search for a named scope
 			while(chartScope != null) {
 				if(scopeIdentifier.equals(getEnclosingStepScope(chartScope))) {
-					resolvedStepScope = chartScope.getSubScope(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY);
+					resolvedStepScope = chartScope.getSubScope(Constants.ENCLOSING_STEP_SCOPE_KEY);
 					break;
 				}
 				else {  // look up the hierarchy
@@ -80,17 +81,17 @@ public class IlsScopeLocator implements ScopeLocator {
 	 *  has no parent. Returns null if no particular level is available.
 	 */
 	String getEnclosingStepScope(PyChartScope chartScope) {
-		if(chartScope.get(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY) != null) {  // don't use containsKey !
+		if(chartScope.get(Constants.ENCLOSING_STEP_SCOPE_KEY) != null) {  // don't use containsKey !
 			PyChartScope parentChartScope = chartScope.getSubScope(ScopeContext.PARENT);
 			boolean parentIsRoot = parentChartScope.getSubScope(ScopeContext.PARENT) == null;
-			PyChartScope enclosingStepScope = chartScope.getSubScope(IlsSfcNames.ENCLOSING_STEP_SCOPE_KEY);				
-			String scopeIdentifier = (String) enclosingStepScope.get(IlsSfcNames.S88_LEVEL_KEY);
-			if(scopeIdentifier != null && !scopeIdentifier.toString().equals(IlsSfcNames.NONE)) {
+			PyChartScope enclosingStepScope = chartScope.getSubScope(Constants.ENCLOSING_STEP_SCOPE_KEY);				
+			String scopeIdentifier = (String) enclosingStepScope.get(Constants.S88_LEVEL_KEY);
+			if(scopeIdentifier != null && !scopeIdentifier.toString().equals(Constants.NONE)) {
 				return scopeIdentifier;
 			}
 			else if(parentIsRoot) {
 				// global steps don't need to be tagged
-				return IlsSfcNames.GLOBAL;
+				return Constants.GLOBAL;
 			}
 			else {
 				return null;
@@ -171,7 +172,7 @@ public class IlsScopeLocator implements ScopeLocator {
 		String path, String scopeIdentifier) {
 		if(IlsSfcCommonUtils.isEmpty(path)) return null;
 		Object value = null;
-		if(IlsSfcNames.TAG.equals(scopeIdentifier)) {
+		if(Constants.TAG.equals(scopeIdentifier)) {
 			TagPath tagPath;
 			try {
 				tagPath = TagPathParser.parse(path);
@@ -202,7 +203,7 @@ public class IlsScopeLocator implements ScopeLocator {
 	
 	public void s88Set(PyChartScope chartScope, PyChartScope stepScope, 
 		String path, String scopeIdentifier, Object value) {
-		if(IlsSfcNames.TAG.equals(scopeIdentifier)) {
+		if(Constants.TAG.equals(scopeIdentifier)) {
 			TagPath tagPath = null;
 			try {
 				tagPath = TagPathParser.parse(path);

@@ -7,7 +7,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import com.ils.sfc.common.IlsSfcNames;
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;

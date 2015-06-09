@@ -17,8 +17,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.step.OperationStepDelegate;
 import com.ils.sfc.common.step.PhaseStepDelegate;
 import com.ils.sfc.common.step.ProcedureStepDelegate;
@@ -55,39 +56,39 @@ public class RecipeDataTranslator {
 	// Use map for migration
 	public static Map<String,String> g2ToIgName = new HashMap<String,String>();
 	static {
-		g2ToIgName.put("advice", IlsSfcNames.ADVICE);
-		g2ToIgName.put("array-key", IlsSfcNames.ARRAY_KEY);
-		g2ToIgName.put("category", IlsSfcNames.CATEGORY);
-		g2ToIgName.put("columns", IlsSfcNames.COLUMNS);
-		g2ToIgName.put("column-key", IlsSfcNames.COLUMN_KEY);
-		g2ToIgName.put("column-keyed", IlsSfcNames.COLUMN_KEYED);
-		g2ToIgName.put("description", IlsSfcNames.DESCRIPTION);
-		g2ToIgName.put("download", IlsSfcNames.DOWNLOAD);
-		g2ToIgName.put("elements", IlsSfcNames.ELEMENTS
+		g2ToIgName.put("advice", Constants.ADVICE);
+		g2ToIgName.put("array-key", Constants.ARRAY_KEY);
+		g2ToIgName.put("category", Constants.CATEGORY);
+		g2ToIgName.put("columns", Constants.COLUMNS);
+		g2ToIgName.put("column-key", Constants.COLUMN_KEY);
+		g2ToIgName.put("column-keyed", Constants.COLUMN_KEYED);
+		g2ToIgName.put("description", Constants.DESCRIPTION);
+		g2ToIgName.put("download", Constants.DOWNLOAD);
+		g2ToIgName.put("elements", Constants.ELEMENTS
 				);
-		g2ToIgName.put(G2_CLASS_NAME, IlsSfcNames.CLASS);
-		g2ToIgName.put("help", IlsSfcNames.HELP);
-		g2ToIgName.put("high-limit", IlsSfcNames.HIGH_LIMIT);
-		g2ToIgName.put("high_limit", IlsSfcNames.HIGH_LIMIT);
-		g2ToIgName.put("key", IlsSfcNames.KEY);
-		g2ToIgName.put("keyed", IlsSfcNames.KEYED);
-		g2ToIgName.put("label", IlsSfcNames.LABEL);
-		g2ToIgName.put("low-limit", IlsSfcNames.LOW_LIMIT);
-		g2ToIgName.put("low_limit", IlsSfcNames.LOW_LIMIT);
-		g2ToIgName.put("max-timing", IlsSfcNames.MAX_TIMING);
-		g2ToIgName.put("ramp-time", IlsSfcNames.RAMP_TIME);
-		g2ToIgName.put("rows", IlsSfcNames.ROWS);
-		g2ToIgName.put("row-key", IlsSfcNames.ROW_KEY);
-		g2ToIgName.put("row-keyed", IlsSfcNames.ROW_KEYED);
-		g2ToIgName.put("tag", IlsSfcNames.TAG_PATH);
-		g2ToIgName.put("target", IlsSfcNames.TARGET_VALUE);
-		g2ToIgName.put("timing", IlsSfcNames.TIMING);
-		g2ToIgName.put("type", IlsSfcNames.TYPE);
-		g2ToIgName.put("units", IlsSfcNames.UNITS);
-		g2ToIgName.put("update-frequency", IlsSfcNames.UPDATE_FREQUENCY);
-		g2ToIgName.put("val", IlsSfcNames.VALUE);
-		g2ToIgName.put("val-type", IlsSfcNames.TYPE);
-		g2ToIgName.put("write-confirm", IlsSfcNames.WRITE_CONFIRM);
+		g2ToIgName.put(G2_CLASS_NAME, Constants.CLASS);
+		g2ToIgName.put("help", Constants.HELP);
+		g2ToIgName.put("high-limit", Constants.HIGH_LIMIT);
+		g2ToIgName.put("high_limit", Constants.HIGH_LIMIT);
+		g2ToIgName.put("key", Constants.KEY);
+		g2ToIgName.put("keyed", Constants.KEYED);
+		g2ToIgName.put("label", Constants.LABEL);
+		g2ToIgName.put("low-limit", Constants.LOW_LIMIT);
+		g2ToIgName.put("low_limit", Constants.LOW_LIMIT);
+		g2ToIgName.put("max-timing", Constants.MAX_TIMING);
+		g2ToIgName.put("ramp-time", Constants.RAMP_TIME);
+		g2ToIgName.put("rows", Constants.ROWS);
+		g2ToIgName.put("row-key", Constants.ROW_KEY);
+		g2ToIgName.put("row-keyed", Constants.ROW_KEYED);
+		g2ToIgName.put("tag", Constants.TAG_PATH);
+		g2ToIgName.put("target", Constants.TARGET_VALUE);
+		g2ToIgName.put("timing", Constants.TIMING);
+		g2ToIgName.put("type", Constants.TYPE);
+		g2ToIgName.put("units", Constants.UNITS);
+		g2ToIgName.put("update-frequency", Constants.UPDATE_FREQUENCY);
+		g2ToIgName.put("val", Constants.VALUE);
+		g2ToIgName.put("val-type", Constants.TYPE);
+		g2ToIgName.put("write-confirm", Constants.WRITE_CONFIRM);
 
 		// for the weird EM-RECIPE-DATA, just translate directly for the moment:
 		g2ToIgName.put("pres", "pres");
@@ -195,7 +196,7 @@ public class RecipeDataTranslator {
 			Map<String, String> attMap) {
 		// Find the Recipe Data class we want to instantiate
 		String g2ClassName = attMap.get(G2_CLASS_NAME);
-		String valueType = attMap.get(IlsSfcNames.TYPE);
+		String valueType = attMap.get(Constants.TYPE);
 		//System.out.println();
 		//System.out.println(g2ClassName);
 		Class<?> aClass = getConcreteClassForG2Class(g2ClassName);
@@ -206,7 +207,7 @@ public class RecipeDataTranslator {
 		// a special case: if it is a simple value with a sequence value,
 		// make it a List type:
 		boolean listFromValue = false;
-		if(aClass == Value.class && IlsSfcNames.SEQUENCE.equals(valueType)) {
+		if(aClass == Value.class && Constants.SEQUENCE.equals(valueType)) {
 			aClass = RecipeList.class;
 			listFromValue = true;
 		}
@@ -219,10 +220,10 @@ public class RecipeDataTranslator {
 				if(g2Key.equals(G2_CLASS_NAME)) continue;
 				String igKey = g2ToIgName.get(g2Key);
 				String strValue = attMap.get(g2Key);
-				if(IlsSfcNames.UUID.equals(g2Key)) {
+				if(Constants.UUID.equals(g2Key)) {
 					data.setId(strValue);
 				}
-				else if(IlsSfcNames.PARENT_GROUP.equals(g2Key)) {
+				else if(Constants.PARENT_GROUP.equals(g2Key)) {
 					data.setParentId(strValue);
 				}
 				else if(igKey == null) {

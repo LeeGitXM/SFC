@@ -15,8 +15,9 @@ import javax.swing.border.LineBorder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.IlsSfcNames;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.client.api.ChartStatusContext;
@@ -163,7 +164,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
         	associatedData = new JSONObject();
         }
         try {
-			associatedData.put(IlsSfcNames.S88_LEVEL_KEY, s88Level);
+			associatedData.put(Constants.S88_LEVEL_KEY, s88Level);
 			element.set(ChartStepProperties.AssociatedData, associatedData);
 		} catch (JSONException e) {
 			logger.error("Error setting s88 level", e);

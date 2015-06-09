@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import system.ils.sfc.common.Constants;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ils.sfc.common.IlsSfcNames;
 
 public class CollectDataConfig extends RowConfig {
-	public String errorHandling = IlsSfcNames.ABORT;
+	public String errorHandling = Constants.ABORT;
 	private List<Row> rows = new ArrayList<Row>();
 	public static class Row {
 		public String recipeKey;

@@ -10,8 +10,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.IlsSfcNames;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
@@ -215,7 +216,7 @@ public abstract class Data {
 	}
 
 	public static Data fromJson(JSONObject jsonObject) throws Exception {
-		String simpleClassName = jsonObject.getString(IlsSfcNames.CLASS);
+		String simpleClassName = jsonObject.getString(Constants.CLASS);
 		String packageName = Data.class.getPackage().getName();
 		String fullClassName = packageName + "." + simpleClassName;
 		Data data = (Data)Class.forName(fullClassName).newInstance();

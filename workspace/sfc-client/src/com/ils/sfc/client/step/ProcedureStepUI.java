@@ -3,7 +3,8 @@ package com.ils.sfc.client.step;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import com.ils.sfc.common.IlsSfcNames;
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.step.ProcedureStepDelegate;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.StepUI;
@@ -58,7 +59,7 @@ public class ProcedureStepUI extends AbstractIlsStepUI {
         @Override
         public void initializeStep(ChartUIElement element) {
              element.merge(getPropertySet());
-              initializeFoundationStepUI(element, IlsSfcNames.GLOBAL);
+              initializeFoundationStepUI(element, Constants.GLOBAL);
         }
 	
 		@Override

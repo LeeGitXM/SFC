@@ -10,7 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-import com.ils.sfc.common.IlsSfcNames;
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.rowconfig.CollectDataConfig;
 import com.ils.sfc.common.rowconfig.RowConfig;
 import com.ils.sfc.designer.propertyEditor.ValueHolder;
@@ -28,7 +29,7 @@ public class CollectDataPanel extends RowEditorPanel  {
 		super(controller, index, true);
 		JPanel errorHandlingPanel = new JPanel(new FlowLayout());
 		upperPanel.add(errorHandlingPanel, BorderLayout.CENTER);
-		errorHandlingCombo = new JComboBox<Object>(IlsSfcNames.ERROR_HANDLING_CHOICES);
+		errorHandlingCombo = new JComboBox<Object>(Constants.ERROR_HANDLING_CHOICES);
 		errorHandlingCombo.setBackground(java.awt.Color.white);
 		errorHandlingCombo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

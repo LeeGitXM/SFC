@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ils.sfc.common.IlsSfcNames;
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.gateway.monitor.IlsStepMonitor;
@@ -203,7 +204,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public void initializeScriptManager(ScriptManager manager) {
 		PythonCall.setScriptMgr(manager);
 		manager.addScriptModule("system.ils.sfc", IlsGatewayScripts.class);	
-		manager.addScriptModule("system.ils.sfc.constants", IlsSfcNames.class);	
+		manager.addStaticFields("system.ils.sfc.common.Constants", Constants.class);	
 		initializeUnits();
 		//manager.addStaticFields("system.ils.sfc", IlsSfcNames.class);
 	};

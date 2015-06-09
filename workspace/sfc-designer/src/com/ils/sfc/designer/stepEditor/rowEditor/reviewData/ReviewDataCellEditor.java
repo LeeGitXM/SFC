@@ -10,8 +10,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsSfcCommonUtils;
-import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.rowconfig.ReviewDataConfig.Row;
 import com.ils.sfc.designer.stepEditor.EditorUtil;
@@ -28,7 +29,7 @@ public class ReviewDataCellEditor extends AbstractCellEditor implements TableCel
 		if(tableModel.isComboColumn(col)) {
 			String[] choices = null;
 			if(tableModel.isDestinationColumn(col)) { // recipe scope
-				choices = IlsSfcNames.RECIPE_LOCATION_CHOICES;
+				choices = Constants.RECIPE_LOCATION_CHOICES;
 			}
 			else if(tableModel.isUnitTypesColumn(col)) { // unit types
 				try {

@@ -3,8 +3,9 @@ package com.ils.sfc.step;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.IlsSfcNames;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.step.annotation.ILSStep;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
@@ -27,7 +28,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 @ILSStep
 public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefinition> implements StepElement {
 	private static final Logger logger = LoggerFactory.getLogger(IlsAbstractChartStep.class);
-	private String auditLevel = IlsSfcNames.OFF;
+	private String auditLevel = Constants.OFF;
 	protected ScopeContext scopeContext;
 	private long startTime;
 	private enum Status {
@@ -42,7 +43,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	private void setAuditLevel() {
 		for(PropertyValue<?> propertyValue: getDefinition().getProperties()) {
 			String propName = propertyValue.getProperty().getName();
-			if(IlsSfcNames.AUDIT_LEVEL.equals(propName)) {
+			if(Constants.AUDIT_LEVEL.equals(propName)) {
 				auditLevel = (String) propertyValue.getValue();
 			}
 		}
@@ -58,7 +59,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	}
 	
 	private boolean auditOn() {
-		return !auditLevel.equals(IlsSfcNames.OFF);
+		return !auditLevel.equals(Constants.OFF);
 	}
             
 	@Override
