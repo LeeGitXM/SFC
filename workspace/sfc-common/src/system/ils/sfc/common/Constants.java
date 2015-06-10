@@ -34,7 +34,9 @@ public class Constants {
 	public static final String COLUMN_KEYED = "columnKeyed";
 	public static final String COMPUTER = "computer";
 	public static final String COLLECT_DATA_CONFIG = "collectDataConfig";
+	public static final String CONFIG = "config";
 	public static final String CONFIRM_CONTROLLERS_CONFIG = "confirmControllersConfig";
+	public static final String CONFIRM_WRITE = "confirmWrite";
 	public static final String CURRENT = "current";
 	public static final String DATA = "data";
 	public static final String DESCRIPTION = "description";
@@ -161,7 +163,7 @@ public class Constants {
 	public static final String UPDATE_OR_CREATE = "updateOrCreate";
 	public static final String UUID = "uuid";
 	public static final String VALUE = "value";
-	public static final String VERBOSE = "value";
+	public static final String VERBOSE = "verbose";
 	public static final String VIEW_FILE = "viewFile";
 	public static final String WAIT = "Wait";
 	public static final String WARNING = "Warning";
