@@ -2,6 +2,7 @@
 .recommenders/
 .metadata
 .version
+*.class
 *.db
 *.modl
 bin/

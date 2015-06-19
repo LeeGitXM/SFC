@@ -1,0 +1,13 @@
+#!/bin/sh
+#  Use this version when debugging a single file.
+#
+SFC=${GIT_REPO}/sfc
+APP=$SFC/migration/convert
+PYLIB=$SFC/migration/procs/ignition/vistalon/onstart
+INDIR=$SFC/migration/xml/g2/vistalon/DRIER-REGEN-PROCEDURE
+OUTDIR=$SFC/migration/xml/ignition/vistalon
+mkdir -p $INDIR
+mkdir -p $OUTDIR
+FIL=DRIER\ REGEN.xml
+DIR=${SFC}/migration/procs/g2/vistalon
+$APP "${INDIR}" "${OUTDIR}" $PYLIB "$FIL"

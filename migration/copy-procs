@@ -5,15 +5,23 @@
 #
 BIN=`pwd`
 SVN="${SVN_REPO}/EMChemicals/G2Artifacts/Sequential Control"
+EXPORTS="${SVN_REPO}/EMChemicals/Migration/Vistalon/Exports/SequentialControl"
 PROCS=${GIT_REPO}/sfc/migration/procs
-mkdir -p $PROCS/g2/onstart
-mkdir -p $PROCS/g2/normal
-mkdir -p $PROCS/python/onstart
-mkdir -p $PROCS/python/normal
+mkdir -p $PROCS/g2/usecase/onstart
+mkdir -p $PROCS/g2/vistalon/onstart
+mkdir -p $PROCS/g2/usecase/normal
+mkdir -p $PROCS/python/usecase/onstart
+mkdir -p $PROCS/python/vistalon/onstart
+mkdir -p $PROCS/python/usecase/normal
 #cp -a "${SVN}"/UnitTests/*/callbacks/*.txt $REPO/g2/onstart
 #cp -a "${SVN}"/Vistalon/*/callbacks/*.txt $REPO/g2/normal
 for fil in "${SVN}"/UnitTests/*/callbacks/*.txt
 do
 	name=`basename "$fil"`
-	cat "$fil" > ${PROCS}/g2/onstart/$name
+	cat "$fil" > ${PROCS}/g2/usecase/onstart/$name
+done
+for fil in ${EXPORTS}/*/callbacks/*.txt ${EXPORTS}/*/callbacks/*/*.txt
+do
+	name=`basename "$fil"`
+	cat "$fil" > ${PROCS}/g2/vistalon/onstart/$name
 done

@@ -2,9 +2,9 @@
 #  SFC conversion script
 # -- options for log.level:  INFO,DEBUG,TRACE
 #
-if [ $# -lt 3 ]
+if [ $# -lt 4 ]
 then
-    echo "USAGE: convert <inpath> <outpath> <start>"
+    echo "USAGE: convert <inpath> <outpath> <pypath> <start>"
 	exit 2
 fi
 REPO=${GIT_REPO}
@@ -13,8 +13,6 @@ cd $SFC
 LIB=$REPO/external/lib
 JAR=${LIB}/sfc-migration.jar
 DB=${SFC}/migration/mdb/conversion.db
-PROCS=${SFC}/migration/procs/python/onstart
-mkdir -p $2
+mkdir -p "$2"
 # Use for debugging - ruins output file however.
-#java -cp ${JAR} -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Dlog.level=INFO -Droot.class=APPLICATION com.ils.blt.migration.Converter ${DB} "$1" "$2" "$3"
-java -cp ${JAR} -Dlog.level=INFO com.ils.sfc.migration.Converter ${DB} ${PROCS} "$1" "$2" "$3"
+java -cp ${JAR} -Dlog.level=INFO com.ils.sfc.migration.Converter ${DB} "$3" "$1" "$2" "$4"

@@ -42,8 +42,8 @@ public class PathWalker extends AbstractPathWalker implements FileVisitor<Path> 
 		//Ignore the OSX resource marker
 		if(file.toString().endsWith(".DS_Store")) return FileVisitResult.CONTINUE;
 		String chartName = delegate.chartNameFromPath(file);
-		String partialPath = relativize(root,file.toString());
-		// Remove the file extension, came-case
+		String partialPath = relativize(root,delegate.toCamelCase(file.toString()));
+		// Remove the file extension, camel-case
 		if( partialPath.endsWith(".xml")) partialPath = partialPath.substring(0, partialPath.length()-4);
 		partialPath = delegate.toCamelCase(partialPath);
 		log.debugf("%s.visitFile: path map of %s = %s",TAG,chartName,partialPath);

@@ -21,7 +21,7 @@ import com.ils.sfc.migration.Converter;
  */
 public class CopyWalker extends AbstractPathWalker implements FileVisitor<Path>  {
 	private final static String TAG = "CopyWalker";
-	private final String inRoot;         // Original G2 root directory (munged)
+	private final String inRoot;         // Original G2 root directory (camelized)
 	private final Path outRoot;
 	private final Converter delegate;   // Delegate for migrating individual files
 

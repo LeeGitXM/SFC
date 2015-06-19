@@ -3,13 +3,29 @@
 # for viewing in Eclipse. Clean out irrelevant directories.
 #
 BIN=`pwd`
-SVN=${SVN_REPO}/EMChemicals/G2Artifacts/Sequential\ Control
+SVNUC=${SVN_REPO}/EMChemicals/G2Artifacts/Sequential\ Control/UnitTests
+SVNVIST=${SVN_REPO}/EMChemicals/Migration/Vistalon/Exports/SequentialControl
 XML=${GIT_REPO}/sfc/migration/xml
-mkdir -p $XML/g2/
+mkdir -p $XML/g2/usecase
+mkdir -p $XML/g2/vistalon
 mkdir -p $XML/ignition
-cp -a "${SVN}"/* $XML/g2
+cp -a "${SVNUC}"/* $XML/g2/usecase
+cd ${SVNVIST}
+for dir in *
+do
+   if [ -d $dir ]
+   then
+      cd $dir
+      cd SFCs
+      echo `pwd`
+      mkdir -p $XML/g2/vistalon/$dir
+      cp -a * $XML/g2/vistalon/$dir
+      cd ${SVNVIST}
+   fi
+done
 # Clean up the non-xml
 find ${XML}/g2 -type f ! -name "*.xml" -exec rm {}  \; 
 rm -r `find ${XML}/g2 -type d -name Diagrams`  2&>/dev/null
 rm -r `find ${XML}/g2 -type d -name diagrams`  2&>/dev/null
 rm -r `find ${XML}/g2 -type d -name callbacks`  2&>/dev/null
+rm `find ${XML}/g2 -type f -name "*.csv"`  2&>/dev/null

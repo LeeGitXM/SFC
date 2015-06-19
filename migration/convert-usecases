@@ -4,14 +4,15 @@
 #
 SFC=$GIT_REPO/sfc
 APP=$SFC/migration/convert
-INDIR=$SFC/migration/xml/g2/UnitTests
-OUTDIR=$SFC/migration/xml/ignition/UnitTests
+INDIR=$SFC/migration/xml/g2/usecase
+PYDIR=$SFC/migration/procs/ignition/usecase/onstart
+OUTDIR=$SFC/migration/xml/ignition/usecase
 mkdir -p $INDIR
 mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
 cd $INDIR
-for dir in *
+for file in *
 do
-	echo "Processing $dir ..."
-    $APP "$INDIR" "$OUTDIR" $dir
+	echo "Processing $file ..."
+    $APP "$INDIR" "$OUTDIR" $PYDIR $file
 done
