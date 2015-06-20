@@ -5,4 +5,4 @@
 #
 PROCS=${GIT_REPO}/sfc/migration/procs
 rm -rf ${PROCS}/g2
-rm -rf ${PROCS}/python
+rm -rf ${PROCS}/ignition

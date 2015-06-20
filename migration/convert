@@ -15,4 +15,4 @@ JAR=${LIB}/sfc-migration.jar
 DB=${SFC}/migration/mdb/conversion.db
 mkdir -p "$2"
 # Use for debugging - ruins output file however.
-java -cp ${JAR} -Dlog.level=INFO com.ils.sfc.migration.Converter ${DB} "$3" "$1" "$2" "$4"
+java -cp ${JAR} -Dlog.level=DEBUG com.ils.sfc.migration.Converter ${DB} "$3" "$1" "$2" "$4"

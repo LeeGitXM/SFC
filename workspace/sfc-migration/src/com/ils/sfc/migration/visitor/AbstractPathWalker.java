@@ -60,7 +60,7 @@ public abstract class AbstractPathWalker implements FileVisitor<Path>  {
 	 * @return
 	 */
 	protected String relativize(String root,String extended) {
-		log.infof("%s.relativize: %s to %s",TAG,root,extended);
+		//log.infof("%s.relativize: %s to %s",TAG,root,extended);
 		String result = extended;
 		if( extended.length()>root.length()+1) {
 			result = extended.substring(root.length()+1);

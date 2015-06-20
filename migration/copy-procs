@@ -10,9 +10,9 @@ PROCS=${GIT_REPO}/sfc/migration/procs
 mkdir -p $PROCS/g2/usecase/onstart
 mkdir -p $PROCS/g2/vistalon/onstart
 mkdir -p $PROCS/g2/usecase/normal
-mkdir -p $PROCS/python/usecase/onstart
-mkdir -p $PROCS/python/vistalon/onstart
-mkdir -p $PROCS/python/usecase/normal
+mkdir -p $PROCS/ignition/usecase/onstart
+mkdir -p $PROCS/ignition/vistalon/onstart
+mkdir -p $PROCS/ignition/usecase/normal
 #cp -a "${SVN}"/UnitTests/*/callbacks/*.txt $REPO/g2/onstart
 #cp -a "${SVN}"/Vistalon/*/callbacks/*.txt $REPO/g2/normal
 for fil in "${SVN}"/UnitTests/*/callbacks/*.txt
