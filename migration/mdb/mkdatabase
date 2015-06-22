@@ -7,18 +7,20 @@
 #!/bin/sh
 #set -x
 DB=conversion.db
-REPO_ROOT=${GIT_REPO}
-BIN=$REPO_ROOT/sfc/migration/mdb
-TARGETDIR=$REPO_ROOT/sfc/migration/mdb
+BIN=${GIT_REPO}/sfc/migration/mdb
+TARGETDIR=${GIT_REPO}/sfc/migration/mdb
 mkdir -p ${TARGETDIR}
 
 
 cd ${TARGETDIR}
 rm -f $DB
 sqlite3 $DB < ${BIN}/createTables.sql
-sqlite3 $DB < ${BIN}/insertClassMap.sql
+sqlite3 $DB < ${BIN}/insertAnchorMap.sql
 sqlite3 $DB < ${BIN}/insertArguments.sql
+sqlite3 $DB < ${BIN}/insertClassMap.sql
+sqlite3 $DB < ${BIN}/insertClassProperties.sql
 sqlite3 $DB < ${BIN}/insertProperties.sql
+sqlite3 $DB < ${BIN}/insertPythonProperties.sql
 sqlite3 $DB < ${BIN}/insertPropertyValues.sql
 sqlite3 $DB < ${BIN}/insertProcedures.sql
 sqlite3 $DB < ${BIN}/insertProcClassMap.sql

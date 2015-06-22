@@ -1,5 +1,5 @@
 -- Copyright 2015. ILS Automaition. All rights reserved.
--- These tables hold conversion mappings between G2
+-- These tables hold conversion mappings between G2 and Ignition
 -- sequential control blocks and Ignition Sequential Function Charts.
 --
 -- Map a G2 block class to an Ignition step class
