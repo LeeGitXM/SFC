@@ -2,42 +2,42 @@
 -- These tables hold conversion mappings between G2 and Ignition
 -- sequential control blocks and Ignition Sequential Function Charts.
 --
--- Map a G2 block class to an Ignition step class
+
+-- Map a G2 class to an Ignition python class
 CREATE TABLE ClassMap(
     G2Class text PRIMARY KEY ,
-    FactoryId text NOT NULL,
-	Type text DEFAULT ''
+    IgnitionClass text NOT NULL
+);
+-- These are values of symbolic constants
+CREATE TABLE EnumerationMap(
+   G2Name text      NOT NULL,
+   EnumerationName  text NOT NULL,
+   Value            text NOT NULL
+);
+-- Define project preferences
+CREATE TABLE PreferenceMap(
+  Name text NOT NULL,
+  Value text NOT NULL
 );
 
--- Map string arguments to procedures from
--- G2 to Ignition
-CREATE TABLE ArgumentMap(
-    G2Argument text NOT NULL,
-    IgnitionArgument text NOT NULL
-);
--- Map values of properties found in G2 blocks to
 -- Map properties of G2 blocks to properties of
--- Ignition blocks
+-- Ignition blocks.
 CREATE TABLE PropertyMap(
-    FactoryId text NOT NULL,
+    G2Class text NOT NULL,
+    G2Property text NOT NULL,
 	Property  text NOT NULL,
-    G2Property text NOT NULL
+	Mode integer DEFAULT 2
 );
--- Map values of properties found in G2 blocks to
--- Ignition equivalents. These include procedure
--- names.
+-- Property value equivalents.
+-- The special property "callback"
+-- also results in entries into the 
+-- PropertyMap table.
 CREATE TABLE PropertyValueMap(
     Property text NOT NULL,
 	G2Value text NOT NULL,
 	IgnitionValue text NOT NULL
 );
 
--- Convert G2 procedute names into Python module names.
-CREATE TABLE ProcedureMap(
-    G2Procedure text NOT NULL,
-    IgnitionProcedure text NOT NULL,
-	ReturnType text
-);
 -- Map G2 GSI names to Ignition tags
 CREATE TABLE TagMap(
 	GSIName  text NOT NULL,
@@ -45,41 +45,52 @@ CREATE TABLE TagMap(
 	DataType text NOT NULL
 );
 
--- The tables below pertain to procedure translation
--- Map a G2 class to an Ignition python class
-CREATE TABLE ProcClassMap(
-    G2Class text PRIMARY KEY ,
-    IgnitionClass text NOT NULL
+
+-- Convert G2 procedute names into Python module names.
+CREATE TABLE ProcedureMap(
+    G2Procedure text NOT NULL,
+    IgnitionProcedure text NOT NULL,
+	ReturnType text
 );
 
--- Set properties of Ignition blocks based on a 
--- G2 class. These properties rely only on the G2 class.
-CREATE TABLE ProcClassProperty(
-    G2Class    text NOT NULL,
-	Name     text NOT NULL,
-	DataType text NOT NULL,
-	Editable integer,
-	BindingType text NOT NULL,
+
+
+
+-- ========================== BLT Tables ===================
+CREATE TABLE BltAnchorMap(
+	G2Class text NOT NULL,
+	G2Port  text NOT NULL,
+	Port    text NOT NULL,
+	Annotation text NULL
+);
+
+-- This table is used to define UI attributes for
+-- blocks that are defined in Python.
+CREATE TABLE BltPythonPrototypes(
+    BlockClass text,
+	Key text,
 	Value text
 );
 
--- Map properties of G2 blocks to properties of
--- Ignition blocks for use within procedures.
-CREATE TABLE ProcPropertyMap(
-    G2Class text NOT NULL,
-    G2Property text NOT NULL,
+-- ======================= G2-Python Tables ================
+-- Change the name of string arguments to procedures when
+-- converting from G2 to Python
+CREATE TABLE G2PyArgumentMap(
+    G2Argument text NOT NULL,
+    IgnitionArgument text NOT NULL
+);
+
+-- ========================== SFC Tables ===================
+-- Map a G2 s88 class to an Ignition step class
+CREATE TABLE SfcClassMap(
+    G2Class text PRIMARY KEY ,
+    FactoryId text NOT NULL,
+	Type text DEFAULT ''
+);
+-- Map values of properties found in G2 S88 blocks to
+-- Ignition blocks
+CREATE TABLE SfcPropertyMap(
+    FactoryId text NOT NULL,
 	Property  text NOT NULL,
-	Mode integer NOT NULL
-);
--- These are values of symbolic constants
-CREATE TABLE ProcEnumerationMap(
-   G2Name text      NOT NULL,
-   EnumerationName  text NOT NULL,
-   Value            text NOT NULL
-);
--- These are values of globals
--- by the procedures that need them.
-CREATE TABLE ProcGlobalMap(
-   PyProc      text NOT NULL,
-   GlobalName  text NOT NULL
+    G2Property text NOT NULL
 );

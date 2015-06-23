@@ -1,10 +1,12 @@
 -- These are named constants from G2. Names lower-case.
-insert into ProcEnumerationMap values ('em-critical','EMCConstants','critical');
-insert into ProcEnumerationMap values ('s88-abort-command','S88Command','abort');
-insert into ProcEnumerationMap values ('s88-aborted-state','S88State','aborted');
-insert into ProcEnumerationMap values ('s88-complete-state','S88State','complete');
-insert into ProcEnumerationMap values ('s88-error-state','S88State','error');
-insert into ProcEnumerationMap values ('s88-global','S88Scope','global');
-insert into ProcEnumerationMap values ('s88-running-state','S88State','running');
-insert into ProcEnumerationMap values ('s88-stopped-state','S88State','stopped');
-insert into ProcEnumerationMap values ('s88-superior-operation','S88Scope','superior');
+insert into EnumerationMap values ('em-critical','EMCConstants','critical');
+insert into EnumerationMap values ('em-warning','EMCConstants','warning');
+insert into EnumerationMap values ('em-information','EMCConstants','information');
+insert into EnumerationMap values ('s88-abort-command','S88Command','abort');
+insert into EnumerationMap values ('s88-aborted-state','S88State','aborted');
+insert into EnumerationMap values ('s88-superior-operation','S88Scope','superior');
+insert into EnumerationMap values ('s88-complete-state','S88State','complete');
+insert into EnumerationMap values ('s88-error-state','S88State','error');
+insert into EnumerationMap values ('s88-global','S88Scope','global');
+insert into EnumerationMap values ('s88-running-state','S88State','running');
+insert into EnumerationMap values ('s88-stopped-state','S88State','stopped');

@@ -1,4 +1,4 @@
--- Convert values found in G2 blocks to proper Ignition equivalents.
+-- Convert values found in G2 blocks or charts into proper Ignition equivalents.
 -- Fields are: Ignition property, G2value, desired value
 insert into PropertyValueMap values ('recipeLocation','LOCAL','local');
 insert into PropertyValueMap values ('recipeLocation','PREVIOUS','previous');
@@ -158,3 +158,9 @@ insert into PropertyValueMap values ('callback','test-8-initialization','test8In
 insert into PropertyValueMap values ('callback','test-8-path-1','test8Path1.onStart');
 insert into PropertyValueMap values ('callback','test-8-path-2','test8Path2.onStart');
 insert into PropertyValueMap values ('callback','test-8-timeout-callback','test8TimeoutCallback.onStart');
+
+
+-- Convert values found in G2 blocks to proper Ignition equivalents.
+-- Fields are: Ignition property, G2value, desired value
+insert into PropertyValueMap values ('trigger','.TRUE','TRUE');
+insert into PropertyValueMap values ('trigger','.FALSE','FALSE');

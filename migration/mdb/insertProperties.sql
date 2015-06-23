@@ -1,20 +1,145 @@
 -- Map G2 block properties into Ignition block properties
--- Columns are: FactoryId, ignition propertyName, G2Property
--- NOTE: name, factoryId, uuid are universal attributes and are not included here.
-insert into PropertyMap values ('enclosing-step','description','description');
--- S88-PAHASE
-insert into PropertyMap values ('com.ils.phaseStep','description','description');
--- S88-OPERATION
-insert into PropertyMap values ('com.ils.operationStep','description','description');
--- S88-UNIT-PROCEDURE
-insert into PropertyMap values ('com.ils.procedureStep','description','description');
--- S88-TIME-DELAY
-insert into PropertyMap values ('com.ils.timedDelayStep','auditLevel','');
-insert into PropertyMap values ('com.ils.timedDelayStep','callback','callback');
-insert into PropertyMap values ('com.ils.timedDelayStep','delay','delay-time');
-insert into PropertyMap values ('com.ils.timedDelayStep','delayUnit','delay-units');
-insert into PropertyMap values ('com.ils.timedDelayStep','description','description');
-insert into PropertyMap values ('com.ils.timedDelayStep','key','identifier-or-name');
-insert into PropertyMap values ('com.ils.timedDelayStep','postNotification','post-notification');
-insert into PropertyMap values ('com.ils.timedDelayStep','recipeLocation','recipe-location');
-insert into PropertyMap values ('com.ils.timedDelayStep','strategy','strategy');
+-- Columns are: G2Class, G2Property, ignition propertyName, datatype, editable, binding type
+-- NOTE: properties that are not used in Ignition map to empty strings.
+insert into PropertyMap values ('EM-GDA-ABSOLUTE-COMPARE','bandwidth','deadband');
+insert into PropertyMap values ('EM-GDA-ABSOLUTE-COMPARE','label','');
+insert into PropertyMap values ('EM-GDA-BAD-DATA-HANDLER','label','');
+insert into PropertyMap values ('EM-GDA-BAD-DATA-HANDLER','propagateExpirationData','');
+insert into PropertyMap values ('EM-GDA-CLOCK-TIMER','label','');
+insert into PropertyMap values ('EM-GDA-COMPARE','bandwidth','');
+insert into PropertyMap values ('EM-GDA-COMPARE','label','');
+insert into PropertyMap values ('EM-GDA-DEADBAND-COMPARE','bandwidth','');
+insert into PropertyMap values ('EM-GDA-DEADBAND-COMPARE','label','');
+insert into PropertyMap values ('EM-GDA-ELAPSED-TIME-VARIABLE','elapsedTimeMinutes','InhibitInterval');
+insert into PropertyMap values ('EM-GDA-ELAPSED-TIME-VARIABLE','label','');
+insert into PropertyMap values ('EM-GDA-EXPIRATION-FILTER','label','');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','explanation','');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','label','label');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','logDiagnosisToDatabase','');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','manualMove','');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','manualMoveValue','');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','manualTextRequired','');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','postTextRecommendation','');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','priority','');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','recommendationCalculationMethod','');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','recommendationMultiplier','');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','recommendationRefreshRateInMinutes','');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','targets','');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','textRecommendation','');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','textRecommendationCallback','');
+insert into PropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','trapInsignificantRecommendationConditions','');
+insert into PropertyMap values ('EM-GDA-HIGH-LIMIT','label','');
+insert into PropertyMap values ('EM-GDA-HIGH-LIMIT','statusOnInitialization','');
+insert into PropertyMap values ('EM-GDA-HIGH-LIMIT','target','limit');
+insert into PropertyMap values ('EM-GDA-HIGH-LIMIT-WITH-DEADBAND','bandwidth','deadband');
+insert into PropertyMap values ('EM-GDA-HIGH-LIMIT-WITH-DEADBAND','label','');
+insert into PropertyMap values ('EM-GDA-HIGH-LIMIT-WITH-DEADBAND','statusOnInitialization','');
+insert into PropertyMap values ('EM-GDA-HIGH-LIMIT-WITH-DEADBAND','target','limit');
+insert into PropertyMap values ('EM-GDA-LATCH','label','');
+insert into PropertyMap values ('EM-GDA-LOGIC-FILTER','bandwidth','');
+insert into PropertyMap values ('EM-GDA-LOGIC-FILTER','label','');
+insert into PropertyMap values ('EM-GDA-LOGIC-FILTER','filterTimInMinutes','TimeWindow');
+insert into PropertyMap values ('EM-GDA-LOGIC-FILTER','fractionTrueRequired','MinimumTrueFraction');
+insert into PropertyMap values ('EM-GDA-LOGIC-FILTER','hysteresis','Hysteresis');
+insert into PropertyMap values ('EM-GDA-LOGIC-FILTER','recalculationIntervalInSeconds','scanInterval');
+insert into PropertyMap values ('EM-GDA-LOGICAL-VARIABLE','label','');
+insert into PropertyMap values ('EM-GDA-LOW-LIMIT','label','');
+insert into PropertyMap values ('EM-GDA-LOW-LIMIT','statusOnInitialization','');
+insert into PropertyMap values ('EM-GDA-LOW-LIMIT','target','limit');
+insert into PropertyMap values ('EM-GDA-LOW-LIMIT-WITH-DEADBAND','bandwidth','deadband');
+insert into PropertyMap values ('EM-GDA-LOW-LIMIT-WITH-DEADBAND','label','');
+insert into PropertyMap values ('EM-GDA-LOW-LIMIT-WITH-DEADBAND','statusOnInitialization','');
+insert into PropertyMap values ('EM-GDA-LOW-LIMIT-WITH-DEADBAND','target','limit');
+insert into PropertyMap values ('EM-GDA-SIMPLE-TREND-OBSERVATION','label','');
+insert into PropertyMap values ('EM-GDA-SIMPLE-TREND-OBSERVATION','numberoftrendpointsrequired','');
+insert into PropertyMap values ('EM-GDA-SIMPLE-TREND-OBSERVATION','relativetotarget','');
+insert into PropertyMap values ('EM-GDA-SIMPLE-TREND-OBSERVATION','standarddeviationmultiplicativefactor','');
+insert into PropertyMap values ('EM-GDA-SIMPLE-TREND-OBSERVATION','trendtestlabel','');
+insert into PropertyMap values ('EM-GDA-SIMPLE-TREND-OBSERVATION','slopecalculationoption','');
+insert into PropertyMap values ('EM-GDA-SIMPLE-TREND-OBSERVATION','trendcountthreshold','');
+insert into PropertyMap values ('EM-GDA-SIMPLE-TREND-OBSERVATION','trenddirection','');
+insert into PropertyMap values ('EM-GDA-SQC-DIAGNOSIS','label','Label');
+insert into PropertyMap values ('EM-GDA-SQC-LIMIT-OBSERVATION','dataSource','');
+insert into PropertyMap values ('EM-GDA-SQC-LIMIT-OBSERVATION','label','');
+insert into PropertyMap values ('EM-GDA-SQC-LIMIT-OBSERVATION','limitType','LimitType');
+insert into PropertyMap values ('EM-GDA-SQC-LIMIT-OBSERVATION','numberOfFilterPoints','SampleSize');
+insert into PropertyMap values ('EM-GDA-SQC-LIMIT-OBSERVATION','numberOfOutOfRangePointsRequired','MinimumOutOfRange');
+insert into PropertyMap values ('EM-GDA-SQC-LIMIT-OBSERVATION','numberOfStandardDeviationsToTest','NumberOfStandardDeviations');
+insert into PropertyMap values ('EM-GDA-SQC-LIMIT-OBSERVATION','optionalDesiredConfidence','');
+insert into PropertyMap values ('EM-GDA-SQC-LIMIT-OBSERVATION','sqcTestLabel','TestLabel');
+insert into PropertyMap values ('EM-GDA-SubDIAGNOSIS','label','Label');
+insert into PropertyMap values ('EM-GDA-SYMBOLIC-VARIABLE','LABEL','');
+insert into PropertyMap values ('EM-GDA-TEST-POINT','label','');
+insert into PropertyMap values ('GDL-AND-GATE','logic','');
+insert into PropertyMap values ('GDL-AND-GATE','maximumUnknownInputs','');
+insert into PropertyMap values ('GDL-AND-GATE','outputUncertainty','');
+insert into PropertyMap values ('GDL-AND-GATE','useExpiredInputs','');
+insert into PropertyMap values ('GDL-ARITHMETIC-FUNCTION','arithmeticFunction','Function');
+insert into PropertyMap values ('GDL-CONCLUSION','statusOnInitialization','');
+insert into PropertyMap values ('GDL-EQUALITY-OBSERVATION','equivalenceBand','Deadband');
+insert into PropertyMap values ('GDL-EQUALITY-OBSERVATION','hysteresisWhen','');
+insert into PropertyMap values ('GDL-EQUALITY-OBSERVATION','referenceValue','Nominal');
+insert into PropertyMap values ('GDL-EQUALITY-OBSERVATION','outputUncertainty','');
+insert into PropertyMap values ('GDL-GENERIC-ACTION','userDefinedProcedure','Script');
+insert into PropertyMap values ('GDL-HIGH-VALUE-OBSERVATION','hysteresisWhen','');
+insert into PropertyMap values ('GDL-HIGH-VALUE-OBSERVATION','outputUncertainty','');
+insert into PropertyMap values ('GDL-HIGH-VALUE-OBSERVATION','statusOnInitialization','');
+insert into PropertyMap values ('GDL-HIGH-VALUE-OBSERVATION','threshold','Limit');
+insert into PropertyMap values ('GDL-HIGH-VALUE-OBSERVATION','thresholdUncertainty','Deadband');
+insert into PropertyMap values ('GDL-IN-RANGE-OBSERVATION','lowerThreshold','LowerLimit');
+insert into PropertyMap values ('GDL-IN-RANGE-OBSERVATION','lowerThresholdUncertainty','LowerDeadband');
+insert into PropertyMap values ('GDL-IN-RANGE-OBSERVATION','upperThreshold','UpperLimit');
+insert into PropertyMap values ('GDL-IN-RANGE-OBSERVATION','upperThresholdUncertainty','UpperDeadband');
+insert into PropertyMap values ('GDL-IN-RANGE-OBSERVATION','hysteresisWhen','');
+insert into PropertyMap values ('GDL-IN-RANGE-OBSERVATION','statusOnInitialization','');
+insert into PropertyMap values ('GDL-INFERENCE-DELAY','countBy','');
+insert into PropertyMap values ('GDL-INFERENCE-DELAY','delay','sampleDelay');
+insert into PropertyMap values ('GDL-INFERENCE-DELAY','displayUnits','');
+insert into PropertyMap values ('GDL-INFERENCE-EVENT','holdFor','HoldInterval');
+insert into PropertyMap values ('GDL-INFERENCE-EVENT','hysteresisWhen','');
+insert into PropertyMap values ('GDL-INFERENCE-EVENT','outputUncertainty','');
+insert into PropertyMap values ('GDL-INFERENCE-EVENT','triggerOn','Trigger');
+insert into PropertyMap values ('GDL-LOW-VALUE-OBSERVATION','hysteresisWhen','');
+insert into PropertyMap values ('GDL-LOW-VALUE-OBSERVATION','outputUncertainty','');
+insert into PropertyMap values ('GDL-LOW-VALUE-OBSERVATION','statusOnInitialization','');
+insert into PropertyMap values ('GDL-LOW-VALUE-OBSERVATION','threshold','Limit');
+insert into PropertyMap values ('GDL-LOW-VALUE-OBSERVATION','thresholdUncertainty','Deadband');
+insert into PropertyMap values ('GDL-MOVING-AVERAGE','sampleSize','SampleSize');
+-- GDL-MOVING-AVERAGE is mapped into one of several Ignition blocks. depending on the sampleType);
+insert into PropertyMap values ('GDL-MOVING-AVERAGE','sampleType','');
+insert into PropertyMap values ('GDL-MOVING-AVERAGE','updateType','');
+insert into PropertyMap values ('GDL-MOVING-AVERAGE','updateSize','');
+insert into PropertyMap values ('GDL-MOVING-AVERAGE','eraseHistoryWhenReset','clearOnReset');
+insert into PropertyMap values ('GDL-MOVING-AVERAGE','requireFullHistory','');
+insert into PropertyMap values ('GDL-MOVING-AVERAGE','valueOnInitialization','');
+insert into PropertyMap values ('GDL-NUMERIC-ENTRY-POINT','nameOfSensor','TagPath');
+insert into PropertyMap values ('GDL-NOT-GATE','logic','');
+insert into PropertyMap values ('GDL-NOT-GATE','outputUncertainty','');
+insert into PropertyMap values ('GDL-PERSISTENCE-GATE','countBy','');
+insert into PropertyMap values ('GDL-PERSISTENCE-GATE','delay','TimeWindow');
+insert into PropertyMap values ('GDL-PERSISTENCE-GATE','displayUnits','');
+insert into PropertyMap values ('GDL-PERSISTENCE-GATE','triggerOn','Trigger');
+insert into PropertyMap values ('GDL-OR-GATE','logic','');
+insert into PropertyMap values ('GDL-OR-GATE','maximumUnknownInputs','');
+insert into PropertyMap values ('GDL-OR-GATE','outputUncertainty','');
+insert into PropertyMap values ('GDL-OR-GATE','useExpiredInputs','');
+insert into PropertyMap values ('GDL-SYMBOLIC-ENTRY-POINT','nameOfSensor','TagPath');
+insert into PropertyMap values ('GDL-TIMER','countBy','');
+insert into PropertyMap values ('GDL-TIMER','displayUnits','');
+insert into PropertyMap values ('GDL-TIMER','stopwhen','');
+insert into PropertyMap values ('GDL-TIMER','triggeron','');
+insert into PropertyMap values ('INTEGER-PARAMETER','label','');
+insert into PropertyMap values ('LOGICAL-PARAMETER','label','');
+insert into PropertyMap values ('LOGICAL-VARIABLE','label','');
+insert into PropertyMap values ('SYMBOLIC-PARAMETER','label','');
+-- Map G2 block properties into Ignition block properties within procedures
+-- Columns are: G2 class, G2 propertyName, property, mode
+--     where mode = 1 => wholesale replacement
+--                  2 => rename property
+--                  3 => constant
+-- chart - ignore debug-mode
+insert into PropertyMap values ('chart','debug-mode','log.isTraceEnabled()',1);
+-- step
+insert into PropertyMap values ('s88-recipe-entity','debug-mode','log.isTraceEnabled()',1);
+insert into PropertyMap values ('s88-recipe-entity','class','step',3);
+insert into PropertyMap values ('s88-recipe-entity','label','name',2);
