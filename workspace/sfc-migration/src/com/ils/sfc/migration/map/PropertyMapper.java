@@ -38,7 +38,7 @@ public class PropertyMapper {
 			Statement statement = cxn.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-			rs = statement.executeQuery("select * from PropertyMap");
+			rs = statement.executeQuery("select * from SfcPropertyMap");
 			while(rs.next())
 			{
 				String factoryId = rs.getString("FactoryId");

@@ -34,7 +34,7 @@ public class ClassNameMapper {
 			Statement statement = cxn.createStatement();
 			statement.setQueryTimeout(30);  // set timeout to 30 sec.
 			
-			rs = statement.executeQuery("select * from ClassMap");
+			rs = statement.executeQuery("select * from SfcClassMap");
 			while(rs.next())
 			{
 				String g2 = rs.getString("G2Class");

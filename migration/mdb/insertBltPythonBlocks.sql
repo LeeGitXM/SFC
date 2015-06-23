@@ -32,8 +32,8 @@ insert into BltPythonPrototypes values ('xom.block.subdiagnosis.SubDiagnosis','v
 insert into BltPythonPrototypes values ('xom.block.subdiagnosis.SubDiagnosis','viewWidth','100');
 
 -- Columns are:  className, propertyName, propertyType, editable
-insert into BltPythonBlockProperties values ('xom.block.action.Action','Script','STRING',1);
-insert into BltPythonBlockProperties values ('xom.block.arithmetic.Arithmetic','Function','STRING',1);
-insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Label','STRING',1);
-insert into BltPythonBlockProperties values ('xom.block.sqcdiagnosis.SQCDiagnosis','Label','STRING',1);
-insert into BltPythonBlockProperties values ('xom.block.subdiagnosis.SubDiagnosis','Label','STRING',1);
+insert into PropertyMap values ('xom.block.action.Action','Script','STRING',1);
+insert into PropertyMap values ('xom.block.arithmetic.Arithmetic','Function','STRING',1);
+insert into PropertyMap values ('xom.block.finaldiagnosis.FinalDiagnosis','Label','STRING',1);
+insert into PropertyMap values ('xom.block.sqcdiagnosis.SQCDiagnosis','Label','STRING',1);
+insert into PropertyMap values ('xom.block.subdiagnosis.SubDiagnosis','Label','STRING',1);
