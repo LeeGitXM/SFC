@@ -201,6 +201,9 @@ public abstract class Data {
 		Iterator<String> keyIter = associatedDataJson.keys();
 		while(keyIter.hasNext()) {
 			String key = keyIter.next();
+			if(key.equals(Constants.S88_LEVEL) || key.equals("runningTime")) {
+				continue;
+			}
 			try {
 				JSONObject jsonData = associatedDataJson.getJSONObject(key);
 				Data data = fromJson(jsonData);

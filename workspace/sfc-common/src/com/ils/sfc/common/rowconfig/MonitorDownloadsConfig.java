@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class MonitorDownloadConfig extends RowConfig {
+public class MonitorDownloadsConfig extends RowConfig {
 	private List<Row> rows = new ArrayList<Row>();
 	
 	public static class Row {
@@ -22,9 +22,9 @@ public class MonitorDownloadConfig extends RowConfig {
 		return rows;
 	}
 
-	public static MonitorDownloadConfig fromJSON(String json) throws JsonParseException, JsonMappingException, IOException {
+	public static MonitorDownloadsConfig fromJSON(String json) throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readValue(json, MonitorDownloadConfig.class);
+		return mapper.readValue(json, MonitorDownloadsConfig.class);
 	}
 
 	@Override

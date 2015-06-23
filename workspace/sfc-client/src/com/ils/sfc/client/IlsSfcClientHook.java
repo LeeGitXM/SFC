@@ -37,7 +37,7 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 			}
 
 			public void projectUpdated(Project arg0) {
-				System.out.println("projectUpdated");				
+				// System.out.println("projectUpdated");				
 			}        	
         });
         log.debug("starting up...");

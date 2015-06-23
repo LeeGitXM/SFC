@@ -16,7 +16,6 @@ import system.ils.sfc.common.Constants;
 
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
-import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
@@ -102,24 +101,15 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<Double> MAX_TIMING = new IlsProperty<Double>(Constants.MAX_TIMING, Double.class, 0.);
     public static final IlsProperty<Double> MAXIMUM_VALUE = new IlsProperty<Double>(Constants.MAXIMUM_VALUE, Double.class, 0.);
     public static final IlsProperty<String> MESSAGE = new IlsProperty<String>(Constants.MESSAGE, String.class, "");
-    public static final IlsProperty<String> MESSAGE_QUEUE = new IlsProperty<String>(Constants.MESSAGE_QUEUE, String.class, Constants.DEFAULT_MESSAGE_QUEUE) {
-    	@Override
-    	public String[] getChoices() {
-    		try {
-    			Object[] args = {null};
-				return PythonCall.toArray(PythonCall.GET_QUEUE_NAMES.exec(args));
-			} catch (JythonExecException e) {
-				logger.error("Error getting message queue names", e);
-				return null;
-			}
-    	}
-    };
+    public static final IlsProperty<String> MESSAGE_QUEUE = new IlsProperty<String>(Constants.MESSAGE_QUEUE, String.class, Constants.DEFAULT_MESSAGE_QUEUE);
     public static final IlsProperty<String> METHOD = new IlsProperty<String>(Constants.METHOD, String.class, "");
     public static final IlsProperty<Double> MINIMUM_VALUE = new IlsProperty<Double>(Constants.MINIMUM_VALUE, Double.class, 0.);
     public static final IlsProperty<String> MONITOR_DOWNLOADS_CONFIG = new IlsProperty<String>(Constants.MONITOR_DOWNLOADS_CONFIG, String.class, EMPTY_MONITOR_DOWNLOAD_CONFIG, true, Constants.CONFIG);
     public static final IlsProperty<String> MONITOR_DOWNLOADS_POSTING_METHOD = new IlsProperty<String>(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.monitorDownload.defaultPostingMethod");
     public static final IlsProperty<String> MONITOR_DOWNLOADS_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class,  "SFC/MonitorDownload", false);
 	public static final BasicProperty<String> NAME = new BasicProperty<String>(Constants.NAME, String.class);
+    public static final IlsProperty<Object> NULLABLE_VALUE = new IlsProperty<Object>(Constants.VALUE, Object.class, null);
+    public static final IlsProperty<Object> OUTPUT_VALUE_TYPE = new IlsProperty<Object>(Constants.VALUE_TYPE, Object.class, Constants.OUTPUT_VALUE_TYPE_CHOICES[0], Constants.OUTPUT_VALUE_TYPE_CHOICES);
     public static final IlsProperty<String> POSITION = new IlsProperty<String>(Constants.POSITION, String.class, Constants.POSITION_CHOICES[0], Constants.POSITION_CHOICES);
     public static final IlsProperty<Boolean> POST_NOTIFICATION = new IlsProperty<Boolean>(Constants.POST_NOTIFICATION, Boolean.class, Boolean.FALSE);
     public static final IlsProperty<Boolean> POST_TO_QUEUE = new IlsProperty<Boolean>(Constants.POST_TO_QUEUE, Boolean.class, Boolean.FALSE);
@@ -170,7 +160,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> TYPE = new IlsProperty<String>(Constants.TYPE, String.class, "");
     public static final IlsProperty<String> UNITS = new IlsProperty<String>(Constants.UNITS, String.class, "");
     public static final IlsProperty<Double> UPDATE_FREQUENCY = new IlsProperty<Double>(Constants.UPDATE_FREQUENCY, Double.class, 10.);
-    public static final IlsProperty<Object> VALUE = new IlsProperty<Object>(Constants.VALUE, Object.class, null);
+    public static final IlsProperty<Object> NON_NULL_VALUE = new IlsProperty<Object>(Constants.VALUE, Object.class, "");
     public static final IlsProperty<Boolean> VERBOSE = new IlsProperty<Boolean>(Constants.VERBOSE, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<Boolean> VIEW_FILE = new IlsProperty<Boolean>(Constants.VIEW_FILE, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<String> WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class, "");
@@ -194,7 +184,6 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 		//	throw new IllegalArgumentException("Null not allowed as a default value for JSON");
 		//}
 	}
-
 
 	public IlsProperty(String name, Class<T> clazz, T defaultValue, boolean isSerializedObject, String label) {
 		this(name, clazz, defaultValue);

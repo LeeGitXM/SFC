@@ -111,7 +111,12 @@ public class IlsScopeLocator implements ScopeLocator {
 	Object pathGet(PyChartScope scope, String path) {
 		String[] keys = splitPath(path);
 		String lastKey = keys[keys.length-1];
-		return getLastScope(scope, keys, path).get(lastKey);
+		Object value = getLastScope(scope, keys, path).get(lastKey);
+		// work around the extremely annoying inability of JSONObject to handle null values:
+		if(value == JSONObject.NULL) {
+			value = null;
+		}
+		return value;
 	}
 	
 	/** Set an object in a nested dictionary given a dot-separated
@@ -123,12 +128,16 @@ public class IlsScopeLocator implements ScopeLocator {
 		
 		PyChartScope lastScope = getLastScope(scope, keys, path);
 		if(!lastScope.hasKey(lastKey)) {
-			throw new IllegalArgumentException("no data at path " + path);
+			throw new IllegalArgumentException("recipe data not found: " + path);
 		}
 		// don't allow a primitive value to be set over an object value
 		// e.g. if someone forgot to add ".value"
 		if(lastScope.get(lastKey) instanceof PyChartScope) {
-			throw new IllegalArgumentException("incomplete path " + path + "--did you forget to add \".value\"?");			
+			throw new IllegalArgumentException("recipe data not found: " + path + "--did you forget to add \".value\"?");			
+		}
+		// work around the extremely annoying inability of JSONObject to handle null values:
+		if(value == null) {
+			value = JSONObject.NULL;
 		}
 		lastScope.put(lastKey, value);
 	}
@@ -141,12 +150,12 @@ public class IlsScopeLocator implements ScopeLocator {
 	   for(int i = 0; i < keys.length - 1; i++) {
 		   scope = scope.getSubScope(keys[i]);
 		   if(scope == null || !(scope instanceof PyChartScope)) {
-				throw new IllegalArgumentException("illegal path " + path);			   
+				throw new IllegalArgumentException("recipe data not found: " + path);			   
 		   }
 	   }		
 	   String lastKey = keys[keys.length-1];
 	   if(!scope.containsKey(lastKey)) {
-			throw new IllegalArgumentException("illegal path " + path);			   		   
+			throw new IllegalArgumentException("recipe data not found: " + path);			   		   
 	   }
 	   return scope;
 	}

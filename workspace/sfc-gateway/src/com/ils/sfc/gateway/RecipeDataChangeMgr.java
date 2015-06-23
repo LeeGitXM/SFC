@@ -61,8 +61,7 @@ public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 	private Project globalProject;
 	private ProjectManager projectManager;
 	private Map<String,Long> resourceIdsByStepId = new HashMap<String,Long>();
-	private Date lastGlobalProjectChangeDate;
-	private boolean updating = false;
+	private boolean flushing = false;
 	private static long changeLatencyMillis = 5000;
 	
 	public RecipeDataChangeMgr(GatewayContext context) {
@@ -270,13 +269,13 @@ public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 			ChartStateEnum newChartState) {
 		if(newChartState.isTerminal()) {
 			try {
-				updating = true;
+				flushing = true;
 				flushChanges(chartId.toString());
 			} catch (Exception e) {
 				logger.error("error saving recipe data changes", e);
 			}
 			finally {
-				updating = false;
+				flushing = false;
 			}
 		}
 	}
@@ -298,19 +297,16 @@ public class RecipeDataChangeMgr implements ChartObserver, ProjectListener {
 		 *  (unless we are the ones who did the changing).
 		 *  this isn't too selective right now--if any change is
 		 *  made to the global project we will rebuild all recipe data */
-		// ?? I'm not sure if all this stuff with the change date really affects
-		// anything. If we could get the RESOURCE change dates that might be helpful...
-		if(project.getId() == -1 && !updating) {
-			Date changeDate = project.getLastModified();
-			if(lastGlobalProjectChangeDate == null || 
-			   lastGlobalProjectChangeDate.getTime() + changeLatencyMillis <
-			   changeDate.getTime()) {
-				logger.debug("Rebuilding static recipe data in response to global project change");
-				initializeAllStaticRecipeData();
-				lastGlobalProjectChangeDate = changeDate;
-			}
-		}
-			
+		
+		// To avoid deadlocks, if we are currently writing back to the project ignore this notification.
+		// When the flush finishes and commits the project changes, this will provoke another update
+		// notification so we will eventually do the reload
+		if(flushing) return;
+		
+		if(project.getId() == -1) {
+			logger.debug("Rebuilding static recipe data in response to global project change");
+			initializeAllStaticRecipeData();
+		}			
 	}
 
 }

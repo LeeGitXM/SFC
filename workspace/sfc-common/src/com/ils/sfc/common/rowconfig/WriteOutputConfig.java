@@ -9,13 +9,30 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class WriteOutputConfig extends RowConfig {
+public class WriteOutputConfig extends RowConfig implements java.io.Serializable {
 	private List<Row> rows = new ArrayList<Row>();
 	
-	public static class Row {
+	public static class Row  implements java.io.Serializable {
 		public String key;
 		public boolean confirmWrite;
-	}
+
+		// transient values used in monitoring (maybe this should be a separate object)
+		@JsonIgnore
+		public String tagPath;
+		@JsonIgnore
+		public double value;
+		@JsonIgnore
+		public String ioAttribute;
+		@JsonIgnore
+		public double timingMinutes;
+		@JsonIgnore
+		public boolean written;
+		@JsonIgnore
+		public Object outputRD;
+		@JsonIgnore
+		public Object io;
+
+}
 
 	public List<Row> getRows() {
 		return rows;
