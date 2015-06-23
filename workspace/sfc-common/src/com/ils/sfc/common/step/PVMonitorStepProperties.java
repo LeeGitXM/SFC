@@ -19,7 +19,7 @@ public interface PVMonitorStepProperties extends ChartStepProperties {
     	TIME_LIMIT_STRATEGY,
         RECIPE_LOCATION,
         KEY,
-        VALUE,
+        NON_NULL_VALUE,
     	PV_MONITOR_CONFIG
     };
 }

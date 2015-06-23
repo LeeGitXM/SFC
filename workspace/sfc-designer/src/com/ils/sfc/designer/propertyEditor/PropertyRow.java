@@ -4,11 +4,16 @@ import java.text.ParseException;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
+import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 public class PropertyRow {
+	private static final LoggerEx logger = LogUtil.getLogger(PropertyValue.class.getName());
 	private PropertyValue<?> propertyValue;
 	private String displayLabel;
 	
@@ -33,8 +38,21 @@ public class PropertyRow {
 	}
 	
 	public Object[] getChoices() {
-		return propertyValue.getProperty() instanceof IlsProperty ? 
-			((IlsProperty<?>)propertyValue.getProperty()).getChoices() : null;
+		if(propertyValue.getProperty().equals(IlsProperty.MESSAGE_QUEUE)) {
+			try {
+    			Object[] args = {null};
+				return PythonCall.toArray(PythonCall.GET_QUEUE_NAMES.exec(args));
+			} catch (JythonExecException e) {
+				logger.error("Error getting message queue names", e);
+				return null;
+			}
+		}
+		else if(propertyValue.getProperty() instanceof IlsProperty) {
+			return ((IlsProperty<?>)propertyValue.getProperty()).getChoices();
+		}
+		else {
+			return null;
+		}
 	}
 	
 	public Object getDefaultValue() {

@@ -12,10 +12,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class PVMonitorConfig extends RowConfig {
 	private List<Row> rows = new ArrayList<Row>();
 	public static class Row {
-		public boolean enabled;
+		public boolean enabled = true;
 		public String pvKey;
 		public String targetType;
-		public String targetNameIdValue;
+		public Object targetNameIdOrValue;
 		public String strategy;
 		public String limits;
 		public String download;
@@ -23,8 +23,30 @@ public class PVMonitorConfig extends RowConfig {
 		public double consistency;
 		public double deadTime;
 		public double tolerance;
-		public String type;
+		public String toleranceType;
 		public String status;
+
+		// transient values used in monitoring (maybe this should be a separate object)
+		@JsonIgnore
+		public double presentValue;  
+		@JsonIgnore
+		public double targetValue;  
+		@JsonIgnore
+		public double lowLimit;  
+		@JsonIgnore
+		public double highLimit;  
+		@JsonIgnore
+		public double inToleranceTime;  //  time at which the value last entered tolerance
+		@JsonIgnore
+		public double outToleranceTime;  //  time at which the value last exited tolerance
+		@JsonIgnore
+		public boolean inTolerance;	// was the last pv in tolerance?
+		@JsonIgnore
+		public double downloadTime;  //  time at which the setpoint was downloaded
+		@JsonIgnore
+		public boolean isDownloaded;
+		@JsonIgnore
+		public boolean success;
 	}
 
 	public List<Row> getRows() {

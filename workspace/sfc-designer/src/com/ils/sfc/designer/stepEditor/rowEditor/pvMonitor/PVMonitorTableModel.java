@@ -85,7 +85,7 @@ public class PVMonitorTableModel extends RowTableModel {
     		case 0: return rowObj.enabled;
     		case 1: return rowObj.pvKey;
     		case 2: return rowObj.targetType;
-    		case 3: return rowObj.targetNameIdValue;
+    		case 3: return rowObj.targetNameIdOrValue;
     		case 4: return rowObj.strategy;
     		case 5: return rowObj.limits;
     		case 6: return rowObj.download;
@@ -93,7 +93,7 @@ public class PVMonitorTableModel extends RowTableModel {
     		case 8: return rowObj.consistency;
     		case 9: return rowObj.deadTime;
     		case 10: return rowObj.tolerance;
-       		case 11: return rowObj.type;
+       		case 11: return rowObj.toleranceType;
        		case 12: return rowObj.status;
     		default: return null;
     	}
@@ -107,7 +107,7 @@ public class PVMonitorTableModel extends RowTableModel {
 			case 0: rowObj.enabled = (Boolean)value; break;
 			case 1: rowObj.pvKey = sValue; break;
 			case 2: rowObj.targetType = sValue; break;
-			case 3: rowObj.targetNameIdValue = sValue; break;
+			case 3: rowObj.targetNameIdOrValue = IlsProperty.parseObjectValue(sValue, String.class); break;
 			case 4: rowObj.strategy = sValue; break;
 			case 5: rowObj.limits = sValue; break;
 			case 6: rowObj.download = sValue; break;
@@ -115,7 +115,7 @@ public class PVMonitorTableModel extends RowTableModel {
 			case 8: rowObj.consistency = IlsProperty.parseDouble(sValue); break;
 			case 9: rowObj.deadTime = IlsProperty.parseDouble(sValue); break;
 			case 10: rowObj.tolerance = IlsProperty.parseDouble(sValue); break;
-	   		case 11: rowObj.type = sValue; break;
+	   		case 11: rowObj.toleranceType = sValue; break;
 	    	}
 	    	fireTableCellUpdated(row, col);
     	}

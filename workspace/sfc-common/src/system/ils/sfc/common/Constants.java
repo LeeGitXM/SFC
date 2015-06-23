@@ -36,7 +36,6 @@ public class Constants {
 	public static final String COLLECT_DATA_CONFIG = "collectDataConfig";
 	public static final String CONFIG = "config";
 	public static final String CONFIRM_CONTROLLERS_CONFIG = "confirmControllersConfig";
-	public static final String CONFIRM_WRITE = "confirmWrite";
 	public static final String CURRENT = "current";
 	public static final String DATA = "data";
 	public static final String DESCRIPTION = "description";
@@ -59,6 +58,7 @@ public class Constants {
 	public static final String ERROR_CODE = "errorCode";
 	public static final String ERROR_TEXT = "errorText";
 	public static final String EXTENSION = "extension";
+	public static final String FAILURE = "Failure";
 	public static final String FETCH_MODE = "fetchMode";
 	public static final String FILENAME = "filename";
 	public static final String FILEPATH = "filepath";
@@ -85,12 +85,16 @@ public class Constants {
 	public static final String MINIMUM_VALUE = "minimumValue";
 	public static final String MAXIMUM = "maximum";
 	public static final String MAXIMUM_VALUE = "maximumValue";
+	public static final String MODE = "mode";
 	public static final String MONITOR = "monitor";
+	public static final String MONITORING = "Monitoring";
 	public static final String MONITOR_DOWNLOADS_CONFIG = "monitorDownloadsConfig";
 	public static final String MULTIPLE = "multiple";
 	public static final String NAME = "name";
 	public static final String NONE = "none";
+	public static final String NUMBER_OF_TIMEOUTS = "numberOfTimeouts";
 	public static final String OFF = "Off";
+	public static final String OK = "OK";
 	public static final String PARENT_GROUP = "parent-group";
 	public static final String PCT = "Pct";
 	public static final String POSITION = "position";
@@ -138,8 +142,10 @@ public class Constants {
 	public static final String SQL = "sql";
 	public static final String STANDARD_DEVIATION = "stdDeviation";
 	public static final String STATIC = "static";
+	public static final String STATUS = "status";
 	public static final String STEP_TIME = "stepTime";
 	public static final String STEP_TIMESTAMP = "stepTimestamp";
+	public static final String SUCCESS = "Success";
 	public static final String STRATEGY = "strategy";
 	public static final String TAG = "tag";
 	public static final String TAG_PATH = "tagPath";
@@ -163,6 +169,7 @@ public class Constants {
 	public static final String UPDATE_OR_CREATE = "updateOrCreate";
 	public static final String UUID = "uuid";
 	public static final String VALUE = "value";
+	public static final String VALUE_TYPE = "valueType";
 	public static final String VERBOSE = "verbose";
 	public static final String VIEW_FILE = "viewFile";
 	public static final String WAIT = "Wait";
@@ -222,4 +229,5 @@ public class Constants {
 	public static final String[] PV_LIMITS_CHOICES = {HIGH_LOW, HIGH, LOW};
 	public static final String[] PV_DOWNLOAD_CHOICES = {IMMEDIATE, WAIT};
 	public static final String[] PV_TYPE_CHOICES = {ABS, PCT};
+	public static final String[] OUTPUT_VALUE_TYPE_CHOICES = {SETPOINT, VALUE};
 }

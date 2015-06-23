@@ -163,10 +163,10 @@ public class RecipeDataTranslator {
 	public void setProperty(Data data, String name, String strValue) throws JSONException, org.apache.wicket.ajax.json.JSONException {		
 		IlsProperty<?> property = data.getProperty(name);
 		
-		if(data instanceof RecipeList && property.equals(IlsProperty.VALUE)) {
+		if(data instanceof RecipeList && property.equals(IlsProperty.NULLABLE_VALUE)) {
 			data.setValue(property, parseListValue(strValue));
 		}
-		else if(data instanceof Matrix && property.equals(IlsProperty.VALUE)) {
+		else if(data instanceof Matrix && property.equals(IlsProperty.NULLABLE_VALUE)) {
 			data.setValue(property, parseMatrixValue(strValue));
 		}
 		else if(data instanceof Structure && property.equals(IlsProperty.JSON_OBJECT)) {

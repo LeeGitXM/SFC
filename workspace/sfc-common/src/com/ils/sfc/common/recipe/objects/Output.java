@@ -51,14 +51,15 @@ attributes:sequence (structure (
 public class Output extends IO {
 
 	public Output() {
+		addProperty(IlsProperty.OUTPUT_VALUE_TYPE);
 		addProperty(IlsProperty.WRITE_CONFIRM);
-		addProperty(IlsProperty.WRITE_CONFIRMED);
+		addProperty(IlsProperty.WRITE_CONFIRMED);	// dynamic
 		addProperty(IlsProperty.DOWNLOAD);
-		addProperty(IlsProperty.DOWNLOAD_STATUS);
+		addProperty(IlsProperty.DOWNLOAD_STATUS);   // dynamic
 		addProperty(IlsProperty.TIMING);
 		addProperty(IlsProperty.TYPE);
 		addProperty(IlsProperty.STEP_TIME);
-		addProperty(IlsProperty.STEP_TIMESTAMP);
+		addProperty(IlsProperty.STEP_TIMESTAMP);    // dynamic
 		addProperty(IlsProperty.MAX_TIMING);
 	}
 	

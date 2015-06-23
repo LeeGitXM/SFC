@@ -12,6 +12,7 @@ import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
+import com.inductiveautomation.sfc.api.ScopeContext;
 
 /** An object that can call a particular method in Python. 
  *  Also holds static objects for particular calls. */
@@ -139,7 +140,7 @@ public class PythonCall {
 	public static final PythonCall WRITE_OUTPUT = new PythonCall(STEPS_PKG + "writeOutput", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall HANDLE_UNEXPECTED_ERROR = new PythonCall("ils.sfc.gateway.util." + "handleUnexpectedGatewayError", 
+	public static final PythonCall HANDLE_STEP_ERROR = new PythonCall("ils.sfc.gateway.util." + "handleUnexpectedGatewayError", 
 			PyList.class,  new String[]{"chartProps", "msg"} );
 
 	public static final PythonCall SEND_CHART_STATUS = new PythonCall("ils.sfc.gateway.util." + "sendChartStatus", 
@@ -166,7 +167,9 @@ public class PythonCall {
 	
 	/** Execute this method and return the result. */
 	public Object exec(Object...argValues) throws JythonExecException {
+		//System.out.println("python exec: " + methodName);
 		if(compiledCode == null) {
+			//System.out.println("   first call; compiling method");
 			compileCode();
 		}
 		PyStringMap globalsMap = scriptMgr.getGlobals();
@@ -185,13 +188,18 @@ public class PythonCall {
 			}
 		}
 		catch(JythonExecException ex) {
-			if(this != HANDLE_UNEXPECTED_ERROR) {  // avoid recursion
-				String msg = ex.toString();
-				if(argValues.length > 0 && "chartScope".equals(argValues[0])) {
-					HANDLE_UNEXPECTED_ERROR.exec(argValues[0], msg);
+			if(this != HANDLE_STEP_ERROR) {  // avoid recursion
+				Throwable lowestCause = getLowestCause(ex);
+				String msg1 = lowestCause.getMessage();
+				String msg2 = ex.toString();
+				String msg = msg1 + "\n\n" + msg2;
+				boolean isStepCode = argNames.length > 0 && "scopeContext".equals(argNames[0]);
+				if(isStepCode) {
+					ScopeContext scopeContext = (ScopeContext)argValues[0];
+					HANDLE_STEP_ERROR.exec(scopeContext.getChartScope(), msg);
 				}
 				else {
-					logger.error("Error invoking script : " + msg, ex);					
+					logger.error("Error invoking script : " + msg1, ex);					
 				}
 			}
 			else {
@@ -200,6 +208,15 @@ public class PythonCall {
 			return null;
 		}
 
+	}
+
+	private Throwable getLowestCause(Throwable ex) {
+		if( ex.getCause() == null || ex.getCause().equals(ex)) {
+			return ex;
+		}
+		else {
+			return getLowestCause(ex.getCause());
+		}		
 	}
 
 	/** Compile and cache code to call this method. */

@@ -1,5 +1,6 @@
 package com.ils.sfc.gateway;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -9,11 +10,16 @@ import org.json.JSONObject;
 import org.python.core.PyDictionary;
 import org.python.core.PyObject;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.recipe.objects.Data;
+import com.ils.sfc.common.rowconfig.MonitorDownloadsConfig;
+import com.ils.sfc.common.rowconfig.PVMonitorConfig;
 import com.ils.sfc.common.rowconfig.ReviewDataConfig;
 import com.ils.sfc.common.rowconfig.ReviewDataConfig.Row;
+import com.ils.sfc.common.rowconfig.WriteOutputConfig;
 import com.ils.sfc.step.IlsAbstractChartStep;
 import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
@@ -24,6 +30,7 @@ import com.inductiveautomation.ignition.common.util.DatasetBuilder;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
+import com.inductiveautomation.opcua.types.structs.MonitoringParameters;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ExecutionQueue;
 import com.inductiveautomation.sfc.api.PyChartScope;
@@ -349,6 +356,18 @@ public class IlsGatewayScripts {
 	public static String getJSONForScope(PyChartScope scope) throws JSONException {
 		JSONObject jsonObject = Data.fromStepScope(scope);
 		return jsonObject.toString();
+	}
+
+	public static MonitorDownloadsConfig getMonitorDownloadsConfig(String json) throws JsonParseException, JsonMappingException, IOException {
+		return MonitorDownloadsConfig.fromJSON(json);
+	}
+
+	public static PVMonitorConfig getPVMonitorConfig(String json) throws JsonParseException, JsonMappingException, IOException {
+		return PVMonitorConfig.fromJSON(json);
+	}
+	
+	public static WriteOutputConfig getWriteOutputConfig(String json) throws JsonParseException, JsonMappingException, IOException {
+		return WriteOutputConfig.fromJSON(json);
 	}
 	
 	public static void assertEqual(String testName, String stepName, PyObject expected, PyObject actual) {		
