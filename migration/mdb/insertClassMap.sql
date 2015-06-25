@@ -54,6 +54,10 @@ insert into ClassMap values ('SYMBOLIC-PARAMETER','com.ils.block.Parameter');
 --       later on we analyze and determine which are "sources"
 insert into ClassMap values ('GDL-INFERENCE-PATH-CONNECTION-POST','com.ils.block.SinkConnection');
 insert into ClassMap values ('GDL-DATA-PATH-CONNECTION-POST','com.ils.block.SinkConnection');
+-- For calculation procedures
+insert into ClassMap values('em-application','com.ils.blt.gateway.engine.ProcessApplication');
+insert into ClassMap values('em-diagnosis-family','com.ils.blt.gateway.engine.ProcessFamily');
+insert into ClassMap values('em-gda-final-diagnosis','com.ils.block.finaldiagnosis');
 -- These are generic classes used for SFC translation
 insert into ClassMap values ('quantity-array','list');
 insert into ClassMap values ('chart','chart');
