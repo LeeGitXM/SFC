@@ -1,5 +1,5 @@
 #!/bin/sh
-# Process the .txt files in the repository "g2" area.
+# Process the .txt files in the vistalon "g2" area.
 # If the argument is "all", then all the files are processed.
 # If the argument is "next" then the current file is processed
 # and deleted. Then the next file is processed.
@@ -20,8 +20,13 @@ OUTDIR=${SFC}/migration/procs/ignition/vistalon/onstart
 DIR=`pwd`
 for fil in *.txt
 do
-	echo "Processing $fil..."
-    $APP $DIR/$fil $OUTDIR
+    if [ -f $DIR/$fil ]
+    then
+	   echo "Processing $fil..."
+       $APP $DIR/$fil $OUTDIR
+    else
+       continue
+    fi
 	if [ $OPT == "all" ]
 	then
 		continue

@@ -1,8 +1,17 @@
 #!/bin/sh
-# Process all of the .txt files in the repository "g2" area.
-# These are the raw G2 exports. Translate, then save the
+# Process the .txt files in the usecase "g2" area.
+# If the argument is "all", then all the files are processed.
+# If the argument is "next" then the current file is processed
+# and deleted. Then the next file is processed.
+#
+# We start with raw G2 exports. Translate, then save the
 # results in the procedure storage area for ignition.
 #
+OPT="one"
+if [ $# -gt 0 ]
+then
+    OPT=$1
+fi
 SFC=${GIT_REPO}/sfc
 APP=${SFC}/migration/translate-onstart
 mkdir -p ${SFC}/migration/procs/g2/usecase/onstart
@@ -11,6 +20,21 @@ OUTDIR=${SFC}/migration/procs/ignition/usecase/onstart
 DIR=`pwd`
 for fil in *.txt
 do
-	echo "Processing $fil..."
-    $APP $DIR/$fil $OUTDIR
+    if [ -f $DIR/$fil ]
+    then
+	   echo "Processing $fil..."
+       $APP $DIR/$fil $OUTDIR
+    else
+       continue
+    fi
+	if [ $OPT == "all" ]
+	then
+		continue
+	elif [ $OPT == "one" ]
+	then
+		exit
+	else
+		rm $DIR/$fil
+		OPT="one"
+	fi
 done
