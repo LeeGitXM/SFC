@@ -389,4 +389,13 @@ public class IlsGatewayScripts {
 	public static void reportTests() {
 		ilsSfcGatewayHook.getTestMgr().report();
 	}
+	
+	public static void dropboxPut(String chartRunId, String objectId, Object object) {
+		ilsSfcGatewayHook.getDropBox().put(chartRunId, objectId, object);
+	}
+	
+	public static Object dropboxGet(String chartRunId, String objectId) {
+		return ilsSfcGatewayHook.getDropBox().get(chartRunId, objectId);
+	}
+ 
 }

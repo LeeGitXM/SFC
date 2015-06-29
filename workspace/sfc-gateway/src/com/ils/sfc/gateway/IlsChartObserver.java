@@ -16,11 +16,12 @@ import com.inductiveautomation.sfc.ChartObserver;
 import com.inductiveautomation.sfc.ChartStateEnum;
 import com.inductiveautomation.sfc.ElementStateEnum;
 
+/** An observer that listens to SFC chart status changes and messages the client
+ *  so that the ControlPanel status display (e.g.) can stay up to date. */
 public class IlsChartObserver implements ChartObserver {
 	private static LoggerEx logger = LogUtil.getLogger(IlsChartObserver.class.getName());
 	private Set<String> sfcProjectNames = new HashSet<String>();
 	private Map<String, String> chartStatesByRunId = new HashMap<String, String>();
-	private Map<String, String> elementStatesById = new HashMap<String, String>();
 	
 	public void registerSfcProject(String projectName) {
 		sfcProjectNames.add(projectName);
@@ -32,6 +33,8 @@ public class IlsChartObserver implements ChartObserver {
 		String runIdAsString = chartId.toString();
 		String status =  newChartState.toString();
 		chartStatesByRunId.put(runIdAsString, status);
+		
+		// message the clients about the chart status:
 		if(sfcProjectNames.size() > 0) {
 			for(String projectName: sfcProjectNames) {
 				PyDictionary payload = new PyDictionary();
@@ -43,6 +46,11 @@ public class IlsChartObserver implements ChartObserver {
 					logger.error("error sending chart status", e);
 				}
 			}
+			
+			// prevent a memory leak by clearing the map after the chart finishes
+			if(newChartState.isTerminal()) {
+				chartStatesByRunId.remove(runIdAsString);
+			}
 		}
 		else {
 			//logger.error("Error sending chart status msg: no sfc project names");
@@ -53,8 +61,6 @@ public class IlsChartObserver implements ChartObserver {
 	@Override
 	public void onElementStateChange(UUID elementId, UUID chartId, ElementStateEnum oldElementState,
 			ElementStateEnum newElementState) {
-		elementStatesById.put(elementId.toString(), newElementState.toString());		
-		//System.out.println("element " + elementId.toString() + " " + newElementState.toString());
 	}
 
 }

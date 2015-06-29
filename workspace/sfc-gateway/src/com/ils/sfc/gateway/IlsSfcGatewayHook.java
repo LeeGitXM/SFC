@@ -86,6 +86,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
 	private TestMgr testMgr = new TestMgr();
 	private RecipeDataChangeMgr recipeDataChangeMgr;
+	private IlsDropBox dropBox = new IlsDropBox();
 	
 	private static StepFactory[] stepFactories = {
 		new QueueMessageStepFactory(),
@@ -148,6 +149,10 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 	public TestMgr getTestMgr() {
 		return testMgr;
+	}
+
+	public IlsDropBox getDropBox() {
+		return dropBox;
 	}
 
 	public IlsStepMonitor getStepMonitor() {
@@ -231,6 +236,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		stepMonitor.initialize(context,chartManager,iaSfcHook);				
 		recipeDataChangeMgr = new RecipeDataChangeMgr(context);
 		chartManager.addChartObserver(recipeDataChangeMgr);
+		chartManager.addChartObserver(dropBox);
 		log.infof("%s: Startup complete.",TAG);
 	}
 	

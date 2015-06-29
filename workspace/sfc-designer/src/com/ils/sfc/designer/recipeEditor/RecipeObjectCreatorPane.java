@@ -86,7 +86,7 @@ public class RecipeObjectCreatorPane extends EditorPanel {
 		}
 		try {
 			Class<?> selectedClass = (Class<?>)selectedType.getObject();
-			Data newObject = (Data)selectedClass.newInstance();
+			Data newObject = Data.createNewInstance(selectedClass);
 			newObject.setKey(key);
 			keyTextField.setText("");
 			controller.getRecipeData().add(newObject);

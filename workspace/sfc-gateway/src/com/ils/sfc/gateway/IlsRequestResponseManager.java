@@ -11,7 +11,7 @@ public class IlsRequestResponseManager {
 	private Map<String,PyDictionary> repliesById = Collections.synchronizedMap(
 			new HashMap<String,PyDictionary>());
 
-	public PyDictionary getResponse(String id) {
+	public synchronized PyDictionary getResponse(String id) {
 		PyDictionary reply = repliesById.get(id);
 		if(reply != null) {
 			repliesById.remove(id);
@@ -19,7 +19,7 @@ public class IlsRequestResponseManager {
 		return reply;
 	}
 	
-	public void setResponse(String id, PyDictionary payload) {
+	public synchronized void setResponse(String id, PyDictionary payload) {
 		repliesById.put(id, payload);
 	}
 }
