@@ -38,6 +38,7 @@ public class Constants {
 	public static final String CONFIRM_CONTROLLERS_CONFIG = "confirmControllersConfig";
 	public static final String CURRENT = "current";
 	public static final String DATA = "data";
+	public static final String DATA_ID = "dataId";
 	public static final String DESCRIPTION = "description";
 	public static final String DEFAULT_MESSAGE_QUEUE = "SFC-Message-Queue";
 	public static final String DEFAULT_VALUE = "defaultValue";
@@ -71,6 +72,7 @@ public class Constants {
 	public static final String ID = "id";
 	public static final String IMMEDIATE = "Immediate";
 	public static final String INFO = "Info";
+	public static final String INSTANCE_ID = "instanceId";
 	public static final String LOW_LIMIT = "lowLimit";
 	public static final String LOW = "Low";
 	public static final String KEY = "key";
@@ -97,6 +99,7 @@ public class Constants {
 	public static final String OK = "OK";
 	public static final String PARENT_GROUP = "parent-group";
 	public static final String PCT = "Pct";
+	public static final String PENDING = "Pending";
 	public static final String POSITION = "position";
 	public static final String POST_TO_QUEUE = "postToQueue";
 	public static final String POST_NOTIFICATION = "postNotification";
@@ -150,6 +153,7 @@ public class Constants {
 	public static final String TAG = "tag";
 	public static final String TAG_PATH = "tagPath";
 	public static final String TARGET_VALUE = "targetValue";
+	public static final String TIME = "time";
 	public static final String TIMING = "timing";
 	public static final String TIMEOUT = "timeout";
 	public static final String TIMEOUT_UNIT = "timeoutUnit";
@@ -230,4 +234,15 @@ public class Constants {
 	public static final String[] PV_DOWNLOAD_CHOICES = {IMMEDIATE, WAIT};
 	public static final String[] PV_TYPE_CHOICES = {ABS, PCT};
 	public static final String[] OUTPUT_VALUE_TYPE_CHOICES = {SETPOINT, VALUE};
+	
+	public static final String SFC_DOWNLOAD_KEY_WINDOW = "SFC/DownloadKey";
+	public static final String SFC_INPUT_WINDOW = "SFC/Input";
+	public static final String SFC_MONITOR_DOWNLOADS_WINDOW = "SFC/MonitorDownloads";
+	public static final String SFC_REVIEW_DATA_WINDOW = "SFC/ReviewData";
+	public static final String SFC_REVIEW_FLOWS_WINDOW = "SFC/ReviewFlows";
+	public static final String SFC_SAVE_DATA_WINDOW = "SFC/SaveData";
+	public static final String SFC_SELECT_INPUT_WINDOW = "SFC/SelectInput";
+	public static final String SFC_CONTROL_PANEL_WINDOW = "SFC/ControlPanel";
+	public static final String SFC_NOTIFICATION_WINDOW = "SFC/Notification";
+	public static final String MESSAGE_QUEUE_WINDOW = "Queue/Message Queue";
 }

@@ -214,17 +214,17 @@ public class RecipeDataTranslator {
 		
 		// Create the instance and populate the properties
 		try {
-			Data data = (Data)aClass.newInstance();
+			Data data = Data.createNewInstance(aClass);
 			recipeObjects.add(data);
 			for(String g2Key: attMap.keySet()) {
 				if(g2Key.equals(G2_CLASS_NAME)) continue;
 				String igKey = g2ToIgName.get(g2Key);
 				String strValue = attMap.get(g2Key);
 				if(Constants.UUID.equals(g2Key)) {
-					data.setId(strValue);
+					data.setG2Id(strValue);
 				}
 				else if(Constants.PARENT_GROUP.equals(g2Key)) {
-					data.setParentId(strValue);
+					data.setParentG2Id(strValue);
 				}
 				else if(igKey == null) {
 					errors.add("no translation for attribute " + g2Key + " in " + g2ClassName);
@@ -332,20 +332,20 @@ public class RecipeDataTranslator {
 		List<Data> hierarchicalData = new ArrayList<Data>();
 		Map<String,Data> objectsById = new HashMap<String,Data>();
 		for(Data data: flatRecipeObjects) {
-			objectsById.put(data.getId(), data);
+			objectsById.put(data.getG2Id(), data);
 		}
 		for(Data data: flatRecipeObjects) {
-			if(data.getParentId() == null) {
+			if(data.getParentG2Id() == null) {
 				hierarchicalData.add(data);
 			}
-			if(data.getParentId() != null) {
-				Data parent = objectsById.get(data.getParentId());
+			if(data.getParentG2Id() != null) {
+				Data parent = objectsById.get(data.getParentG2Id());
 				if(parent == null) {
-					errors.add("no parent for id " + data.getParentId());
+					errors.add("no parent for id " + data.getParentG2Id());
 					continue;
 				}
 				else if(!(parent instanceof Group)) {
-					errors.add("parent object with id " + data.getParentId() + " is not a Group");			
+					errors.add("parent object with id " + data.getParentG2Id() + " is not a Group");			
 				}
 				else {
 					((Group)parent).getChildren().add(data);

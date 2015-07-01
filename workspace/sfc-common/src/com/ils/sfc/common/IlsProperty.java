@@ -69,6 +69,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> COLUMN_KEY = new IlsProperty<String>(Constants.COLUMN_KEY, String.class, Constants.NONE);
     public static final IlsProperty<Boolean> COLUMN_KEYED = new IlsProperty<Boolean>(Constants.COLUMN_KEYED, Boolean.class, Boolean.FALSE);
     public static final IlsProperty<String> COMPUTER = new IlsProperty<String>(Constants.COMPUTER, String.class, Constants.COMPUTER_CHOICES[0], Constants.COMPUTER_CHOICES);
+    public static final IlsProperty<String> DATA_ID = new IlsProperty<String>(Constants.DATA_ID, String.class, "");
     public static final IlsProperty<Double> DELAY = new IlsProperty<Double>(Constants.DELAY, Double.class, 0.);
     public static final IlsProperty<String> DELAY_UNIT = new IlsProperty<String>(Constants.DELAY_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);  
     public static final IlsProperty<String> DESCRIPTION = new IlsProperty<String>(Constants.DESCRIPTION, String.class, "");
@@ -90,6 +91,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> GUI_LABEL = new IlsProperty<String>(Constants.GUI_LABEL, String.class, "");
     public static final IlsProperty<String> HELP = new IlsProperty<String>(Constants.HELP, String.class, "");
     public static final IlsProperty<Double> HIGH_LIMIT = new IlsProperty<Double>(Constants.HIGH_LIMIT, Double.class, null);
+    public static final IlsProperty<String> ID = new IlsProperty<String>(Constants.ID, String.class, null);
     public static final IlsProperty<String> JSON_LIST = new IlsProperty<String>(Constants.VALUE, String.class, "[0., 0.]");
     public static final IlsProperty<String> JSON_MATRIX = new IlsProperty<String>(Constants.VALUE, String.class, "[0., 0.][0., 0.]");
     public static final IlsProperty<String> JSON_OBJECT = new IlsProperty<String>(Constants.VALUE, String.class, "{}", true);
@@ -106,7 +108,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<Double> MINIMUM_VALUE = new IlsProperty<Double>(Constants.MINIMUM_VALUE, Double.class, 0.);
     public static final IlsProperty<String> MONITOR_DOWNLOADS_CONFIG = new IlsProperty<String>(Constants.MONITOR_DOWNLOADS_CONFIG, String.class, EMPTY_MONITOR_DOWNLOAD_CONFIG, true, Constants.CONFIG);
     public static final IlsProperty<String> MONITOR_DOWNLOADS_POSTING_METHOD = new IlsProperty<String>(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.monitorDownload.defaultPostingMethod");
-    public static final IlsProperty<String> MONITOR_DOWNLOADS_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class,  "SFC/MonitorDownload", false);
+    public static final IlsProperty<String> MONITOR_DOWNLOADS_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class, Constants.SFC_MONITOR_DOWNLOADS_WINDOW, false);
 	public static final BasicProperty<String> NAME = new BasicProperty<String>(Constants.NAME, String.class);
     public static final IlsProperty<Object> NULLABLE_VALUE = new IlsProperty<Object>(Constants.VALUE, Object.class, null);
     public static final IlsProperty<Object> OUTPUT_VALUE_TYPE = new IlsProperty<Object>(Constants.VALUE_TYPE, Object.class, Constants.OUTPUT_VALUE_TYPE_CHOICES[0], Constants.OUTPUT_VALUE_TYPE_CHOICES);
@@ -128,8 +130,8 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> RECIPE_LOCATION = new IlsProperty<String>(Constants.RECIPE_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
     public static final IlsProperty<String> RESULTS_MODE = new IlsProperty<String>(Constants.RESULTS_MODE, String.class, Constants.RESULTS_MODE_CHOICES[0], Constants.RESULTS_MODE_CHOICES);
     public static final IlsProperty<String> REVIEW_DATA_POSTING_METHOD = new IlsProperty<String>(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.reviewData.defaultPostingMethod");
-    public static final IlsProperty<String> REVIEW_DATA_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class,  "SFC/ReviewData", false);
-    public static final IlsProperty<String> REVIEW_FLOWS_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class,  "SFC/ReviewFlows", false);
+    public static final IlsProperty<String> REVIEW_DATA_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class, Constants.SFC_REVIEW_DATA_WINDOW, false);
+    public static final IlsProperty<String> REVIEW_FLOWS_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class, Constants.SFC_REVIEW_FLOWS_WINDOW, false);
     public static final IlsProperty<String> REVIEW_FLOWS_POSTING_METHOD = new IlsProperty<String>(Constants.POSTING_METHOD, String.class, "");
     public static final IlsProperty<Integer> ROWS = new IlsProperty<Integer>(Constants.ROWS, Integer.class, 0);
     public static final IlsProperty<String> ROW_KEY = new IlsProperty<String>(Constants.ROW_KEY, String.class, Constants.NONE);

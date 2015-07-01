@@ -60,7 +60,7 @@ public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder
 		}
 		else if(selectedPropertyValue.getProperty().equals(IlsProperty.UNITS)) {
 			editor.stopCellEditing();
-			controller.getUnitChooser().activate(myIndex);
+			controller.getUnitChooser().activate(this);
 			// as activate may initialize units; we set unit AFTER activation:
 			controller.getUnitChooser().setValue(editor.getSelectedValue());
 		}

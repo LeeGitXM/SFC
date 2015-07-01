@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
@@ -56,8 +58,8 @@ public abstract class Data {
 	protected BasicPropertySet properties = new BasicPropertySet();
 	private Map<String, IlsProperty<?>> propertiesByName = new HashMap<String, IlsProperty<?>>();
 	// id and parentId come from the G2 export and are used to re-compose a hierarchy:
-	protected String id;
-	protected String parentId;
+	protected String g2Id;
+	protected String parentG2Id;
 	
 
 	public Data() {
@@ -67,20 +69,21 @@ public abstract class Data {
 		addProperty(IlsProperty.DESCRIPTION);
 		addProperty(IlsProperty.HELP);
 		addProperty(IlsProperty.ADVICE);
+		addProperty(IlsProperty.DATA_ID);
 		
 		properties.set(IlsProperty.CLASS, getClass().getSimpleName());
 	}
 
-	public String getId() {
-		return id;
+	public String getG2Id() {
+		return g2Id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setG2Id(String id) {
+		this.g2Id = id;
 	}
 
-	public String getParentId() {
-		return parentId;
+	public String getParentG2Id() {
+		return parentG2Id;
 	}
 	
 	public Object getValue(Property<?> property) {
@@ -102,8 +105,8 @@ public abstract class Data {
 		}
 	}
 	
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
+	public void setParentG2Id(String parentId) {
+		this.parentG2Id = parentId;
 	}
 
 	public String getKey() {
@@ -148,7 +151,7 @@ public abstract class Data {
 			if(!(key instanceof String)) continue;
 			// ignore the id and name step properties, and assume everything else
 			// is recipe data
-			if(level == 0 && ("id".equals(key) || "name".equals(key))) continue;
+			if(level == 0 && (Constants.ID.equals(key) || Constants.NAME.equals(key))) continue;
 			Object value = stepScope.get(key);
 			if(value instanceof PyChartScope) {
 				jsonObject.put((String)key, fromStepScope((PyChartScope)value));
@@ -218,12 +221,19 @@ public abstract class Data {
 		return recipeData;
 	}
 
+	/** Restore an object from JSON */
 	public static Data fromJson(JSONObject jsonObject) throws Exception {
 		String simpleClassName = jsonObject.getString(Constants.CLASS);
 		String packageName = Data.class.getPackage().getName();
 		String fullClassName = packageName + "." + simpleClassName;
-		Data data = (Data)Class.forName(fullClassName).newInstance();
+		Data data = createForRestore(Class.forName(fullClassName));
 		data.setFromJson(jsonObject);
+		
+		// if we're restoring an old instance from before we assigned UUIDs, give it one:
+		if(IlsSfcCommonUtils.isEmpty((String)data.getValue(IlsProperty.DATA_ID))) {
+			assignUniqueId(data);
+		}
+			 		
 		return data;
 	}
 	
@@ -261,6 +271,46 @@ public abstract class Data {
 		for(PropertyValue<?> pvalue: properties) {
 			printSpace(level);
 			System.out.println(pvalue.getProperty().getName() + ": " + pvalue.getValue());
+		}
+	}
+	
+	public static void main(String[] args) {
+		JSONObject obj = new JSONObject();
+		try {
+			obj.put("key", "");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(obj);
+	}
+
+	/** Create an instance of the given class to be used to restore
+	 *  an existing instance. */
+	public static Data createForRestore(Class<?> aClass) {
+		return basicCreate(aClass);
+	}
+	
+	/** Create a brand new instance of the given class. This includes
+	 *  recipe data converted from G2. */
+	public static Data createNewInstance(Class<?> aClass) {
+		Data newInstance = basicCreate(aClass);
+		assignUniqueId(newInstance);
+		return newInstance;
+	}
+
+	private static void assignUniqueId(Data newInstance) {
+		UUID uniqueId = UUID.randomUUID();
+		newInstance.setValue(IlsProperty.DATA_ID, uniqueId);
+	}
+	
+	/** Instantiate the given Data subclass. */
+	private static Data basicCreate(Class<?> aClass) {
+		try {
+			return (Data)aClass.newInstance();
+		} catch (Exception e) {
+			logger.error("error creating recipe data", e);
+			return null;
 		}
 	}
 

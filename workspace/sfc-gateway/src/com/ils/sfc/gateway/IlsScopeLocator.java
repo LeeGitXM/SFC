@@ -37,7 +37,7 @@ public class IlsScopeLocator implements ScopeLocator {
 	 *  in the chart scope of the level BELOW it
 	 */
 	@Override
-	public PyChartScope locate(ScopeContext scopeContext, String identifier) {
+	public synchronized PyChartScope locate(ScopeContext scopeContext, String identifier) {
 		// check this step first, then walk up the hierarchy:
 		PyChartScope stepScope = scopeContext.getStepScope();
 		PyChartScope chartScope = scopeContext.getChartScope();
@@ -46,7 +46,7 @@ public class IlsScopeLocator implements ScopeLocator {
 
 	/** @see #locate(ScopeContext, String) 
 	 * An alternate entry point that's more convenient for ILS code. */
-	public PyChartScope resolveScope(PyChartScope chartScope, 
+	public synchronized PyChartScope resolveScope(PyChartScope chartScope, 
 			PyChartScope stepScope, String scopeIdentifier) {
 		PyChartScope resolvedStepScope = null;
 		if(scopeIdentifier.equals(Constants.LOCAL)) {
@@ -80,7 +80,7 @@ public class IlsScopeLocator implements ScopeLocator {
 	/** Return the scope of the enclosing step. Return "global" if the chart scope
 	 *  has no parent. Returns null if no particular level is available.
 	 */
-	String getEnclosingStepScope(PyChartScope chartScope) {
+	private String getEnclosingStepScope(PyChartScope chartScope) {
 		if(chartScope.get(Constants.ENCLOSING_STEP_SCOPE_KEY) != null) {  // don't use containsKey !
 			PyChartScope parentChartScope = chartScope.getSubScope(ScopeContext.PARENT);
 			boolean parentIsRoot = parentChartScope.getSubScope(ScopeContext.PARENT) == null;
@@ -108,7 +108,7 @@ public class IlsScopeLocator implements ScopeLocator {
 	/** Get an object from a nested dictionary given a dot-separated
 	 *  path
 	 */
-	Object pathGet(PyChartScope scope, String path) {
+	private Object pathGet(PyChartScope scope, String path) {
 		String[] keys = splitPath(path);
 		String lastKey = keys[keys.length-1];
 		Object value = getLastScope(scope, keys, path).get(lastKey);
@@ -122,7 +122,7 @@ public class IlsScopeLocator implements ScopeLocator {
 	/** Set an object in a nested dictionary given a dot-separated
 	 *  path. All levels must already exist.
 	 */
-	void pathSet(PyChartScope scope, String path, Object value) {
+	private void pathSet(PyChartScope scope, String path, Object value) {
 		String[] keys = splitPath(path);
 		String lastKey = keys[keys.length-1];
 		
@@ -146,7 +146,7 @@ public class IlsScopeLocator implements ScopeLocator {
 	/** Get the penultimate object in the reference string, which should be
 	 *  a Map. May throw NPE or cast exception with bad data
 	 */
-	PyChartScope getLastScope(PyChartScope scope, String[] keys, String path) {
+	private PyChartScope getLastScope(PyChartScope scope, String[] keys, String path) {
 	   for(int i = 0; i < keys.length - 1; i++) {
 		   scope = scope.getSubScope(keys[i]);
 		   if(scope == null || !(scope instanceof PyChartScope)) {
@@ -169,7 +169,7 @@ public class IlsScopeLocator implements ScopeLocator {
 
 	/** Get a text representation of all the recipe data for a particular scope. 
 	 * @throws JSONException */
-	public String getRecipeDataText(PyChartScope chartScope, PyChartScope stepScope, 
+	public synchronized String getRecipeDataText(PyChartScope chartScope, PyChartScope stepScope, 
 		String scopeIdentifier) throws JSONException {
 			PyChartScope resolvedScope = resolveScope(chartScope, stepScope, scopeIdentifier);
 			JSONObject jsonObject;
@@ -177,7 +177,7 @@ public class IlsScopeLocator implements ScopeLocator {
 			return jsonObject.toString();
 		}
 
-	public Object s88Get(PyChartScope chartScope, PyChartScope stepScope, 
+	public synchronized Object s88Get(PyChartScope chartScope, PyChartScope stepScope, 
 		String path, String scopeIdentifier) {
 		if(IlsSfcCommonUtils.isEmpty(path)) return null;
 		Object value = null;
@@ -200,17 +200,18 @@ public class IlsScopeLocator implements ScopeLocator {
 		else {
 			PyChartScope resolvedScope = resolveScope(chartScope, stepScope, scopeIdentifier);
 			value = pathGet(resolvedScope, path);
+			//System.out.println("s88Get " + path + " = " + value + " scope " + chartScope.get("instanceId"));
 		}
 		return value;
 	}
 	
 	/** Set the given step scope as changed. */
-	public void s88ScopeChanged(PyChartScope chartScope, PyChartScope stepScope) {
+	public synchronized void s88ScopeChanged(PyChartScope chartScope, PyChartScope stepScope) {
 		String chartRunId = (String)getTopScope(chartScope).get("instanceId");
 		hook.getRecipeDataChangeMgr().addChangedScope(stepScope, chartRunId);		
 	}
 	
-	public void s88Set(PyChartScope chartScope, PyChartScope stepScope, 
+	public synchronized void s88Set(PyChartScope chartScope, PyChartScope stepScope, 
 		String path, String scopeIdentifier, Object value) {
 		if(Constants.TAG.equals(scopeIdentifier)) {
 			TagPath tagPath = null;
@@ -228,6 +229,7 @@ public class IlsScopeLocator implements ScopeLocator {
 		else {
 			PyChartScope resolvedScope = resolveScope(chartScope, stepScope, scopeIdentifier);
 			pathSet(resolvedScope, path, value);
+			//System.out.println("s88Set " + path + " = " + value + " scope " + chartScope.get("instanceId"));
 			s88ScopeChanged(chartScope, resolvedScope);
 		}
 	}
