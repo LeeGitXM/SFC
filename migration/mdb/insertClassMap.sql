@@ -58,7 +58,27 @@ insert into ClassMap values ('GDL-DATA-PATH-CONNECTION-POST','com.ils.block.Sink
 insert into ClassMap values('em-application','com.ils.blt.gateway.engine.ProcessApplication');
 insert into ClassMap values('em-diagnosis-family','com.ils.blt.gateway.engine.ProcessFamily');
 insert into ClassMap values('em-gda-final-diagnosis','com.ils.block.finaldiagnosis');
+insert into ClassMap values('em-s88-rate-change-callback','java.util.Map');
+insert into ClassMap values('em-s88-rate-change-current-data-callback','java.util.Map');
 -- These are generic classes used for SFC translation
-insert into ClassMap values ('quantity-array','list');
 insert into ClassMap values ('chart','chart');
+insert into ClassMap values ('error','java.util.Map');
+insert into ClassMap values ('g2-variable','java.util.Map');
+insert into ClassMap values ('kb-workspace','java.util.List');
+insert into ClassMap values ('procedure','java.util.Map');
+insert into ClassMap values ('quantity-array','java.util.List');
+insert into ClassMap values ('opc-text-conditional-text-output','java.util.Map');
+insert into ClassMap values ('s88-get-input-task','java.util.Map');
+insert into ClassMap values ('s88-review-data-with-advice-task','java.util.Map');
+insert into ClassMap values ('s88-poly-rate-chg-display','java.util.Map');
+insert into ClassMap values ('s88-pv-monitoring-task','java.util.Map');
 insert into ClassMap values ('s88-recipe-entity','step');
+insert into ClassMap values ('s88-recipe-output-data','com.ils.sfc.commmon.recipe.objects.Data');
+insert into ClassMap values ('s88-recipe-value-data','com.ils.sfc.commmon.recipe.objects.Data');
+insert into ClassMap values ('s88-review-data-task','java.util.Map');
+insert into ClassMap values ('s88-time-delay','java.util.Map');
+insert into ClassMap values ('s88-write-outputs-task','java.util.Map');
+insert into ClassMap values ('sequence','java.util.List');
+insert into ClassMap values ('structure','java.util.Map');
+insert into ClassMap values ('uir-data-entry-for-vistalon','java.util.Map');
+insert into ClassMap values ('value-array','java.util.List');

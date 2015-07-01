@@ -35,7 +35,7 @@ insert into PropertyValueMap values ('callback','em-c6-flow','emC6Flow.onStart')
 insert into PropertyValueMap values ('callback','em-calc-max-time','emCalcMaxTime.onStart');
 insert into PropertyValueMap values ('callback','em-catout-r2-delay','emCatoutR2Delay.onStart');
 insert into PropertyValueMap values ('callback','em-check-e204-control-modes','emCheckE204ControlModes.onStart');
-insert into PropertyValueMap values ('callback','em-coldstick-monitor-outlet-temp-bias','emColdstickMonitorOutlstTempBias.onStart');
+insert into PropertyValueMap values ('callback','em-coldstick-monitor-outlet-temp-bias','emColdstickMonitorOutletTempBias.onStart');
 insert into PropertyValueMap values ('callback','em-configure-model-input-blocks-fs','emConfigureModelInputBlocksFs.onStart');
 insert into PropertyValueMap values ('callback','em-configure-model-input-blocks','emConfigureModelInputBlocks.onStart');
 insert into PropertyValueMap values ('callback','em-configure-outlet-temp-crossover-times','emConfigureOutletTempCrossoverTimes.onStart');
