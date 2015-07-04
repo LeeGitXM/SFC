@@ -18,3 +18,11 @@ insert into SfcPropertyMap values ('com.ils.timedDelayStep','key','identifier-or
 insert into SfcPropertyMap values ('com.ils.timedDelayStep','postNotification','post-notification');
 insert into SfcPropertyMap values ('com.ils.timedDelayStep','recipeLocation','recipe-location');
 insert into SfcPropertyMap values ('com.ils.timedDelayStep','strategy','strategy');
+-- MISC STEPS
+insert into SfcPropertyMap values ('action-step','description','description');
+insert into SfcPropertyMap values ('com.ils.controlPanelMessageStep','description','description');
+insert into SfcPropertyMap values ('com.ils.inputStep','description','description');
+insert into SfcPropertyMap values ('com.ils.pauseStep','description','description');
+insert into SfcPropertyMap values ('com.ils.queueMessageStep','description','description');
+insert into SfcPropertyMap values ('com.ils.writeOutputStep','description','description');
+

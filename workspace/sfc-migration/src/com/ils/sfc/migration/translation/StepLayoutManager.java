@@ -23,7 +23,6 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
  */
 public class StepLayoutManager {
 	private final static String TAG = "StepLayoutManager";
-	private static int UNSET = -8888;
 	private final LoggerEx log = LogUtil.getLogger(StepLayoutManager.class.getPackage().getName());
 	private final Map<String,Element> blockMap;             // block by UUID
 	private final Map<String,ConnectionHub> connectionMap;  // Incoming/outgoing connections by UUID
@@ -44,7 +43,7 @@ public class StepLayoutManager {
 	 * Constructor: Immediately analyze the supplied chart.
 	 * @param g2chart
 	 */
-	public StepLayoutManager(Converter converter,Document ichart, Document g2chart) {
+	public StepLayoutManager(Converter converter,Document g2chart,Document ichart ) {
 		this.delegate = converter;
 		this.blockMap = new HashMap<>();
 		this.connectionMap = new HashMap<>();
@@ -131,6 +130,7 @@ public class StepLayoutManager {
 		}
 	}
 	// ========================================= This is where the work gets done ================================
+	// Note: the blocklist contains transitions
 	private void analyze(NodeList blocklist) {
 		int index = 0;
 		// First-time through create default entries in the grid map
@@ -138,7 +138,7 @@ public class StepLayoutManager {
 			Element block = (Element)blocklist.item(index);
 			String uuid = StepTranslator.canonicalForm(block.getAttribute("uuid"));
 			blockMap.put(uuid, block);
-			gridMap.put(uuid,new GridPoint(UNSET,UNSET));
+			gridMap.put(uuid,new GridPoint());   // Not connected yet
 			log.infof("%s.analyze: %s(%s)",TAG,block.getAttribute("name"),uuid);
 			ConnectionHub hub = connectionMap.get(uuid);
 			if( hub==null) {
@@ -155,7 +155,7 @@ public class StepLayoutManager {
 			while( jndex < connections.getLength() ) {
 				Element connection = (Element)connections.item(jndex);
 				String cxn = StepTranslator.canonicalForm(connection.getAttribute("uuid"));
-				//log.infof("%s.analyze: %s connected to %s",TAG,uuid,cxn);
+				log.infof("%s.analyze: %s connected to %s",TAG,uuid,cxn);
 				ConnectionHub destinationHub = connectionMap.get(cxn);
 				if( destinationHub==null) {
 					destinationHub = new ConnectionHub(chart.getDocumentElement());
@@ -167,14 +167,16 @@ public class StepLayoutManager {
 			}
 			index++;
 		}
-		// Find the begin block. There can be only one.
+		// Find the begin block. There can be only one. Instead of relying on
+		// nothing connected to it, check the class. There may be disconnected
+		// block just sitting there. We ignore these.
 		String beginuuid = null;
 		index = 0;
 		while( index < blocklist.getLength()) {
 			Element block = (Element)blocklist.item(index);
-			String uuid = StepTranslator.canonicalForm(block.getAttribute("uuid"));
-			ConnectionHub hub = connectionMap.get(uuid);
-			if( hub.getConnectionsFrom().isEmpty()) {
+			String className = block.getAttribute("class");
+			if( "S88-BEGIN".equalsIgnoreCase(className)) {
+				String uuid = StepTranslator.canonicalForm(block.getAttribute("uuid"));
 				beginuuid = uuid;
 				break;
 			}
@@ -188,6 +190,8 @@ public class StepLayoutManager {
 		// Now do the layout. Position the root. Walk the tree.
 		int x = 0;   // Center on zero so that we can scale if need be.
 		int y = 2;
+		GridPoint root = new GridPoint(x,y);
+		gridMap.put(beginuuid,root);
 		positionNode(null,beginuuid,x,y);
 	}
 	
@@ -225,8 +229,10 @@ public class StepLayoutManager {
 			}
 		}
 		
+		// The mere fact that we're at this point means that we're connected
 		GridPoint gp = gridMap.get(uuid);
-		
+		gp.setConnected(true);
+
 		if( pa!=null ) {
 			// We're either moving into or out of a parallel zone
 			if( sourceHub.isInParallelZone() ) {
@@ -276,7 +282,7 @@ public class StepLayoutManager {
 			gp.y = y;
 		}
 		
-		List<String> nextBlocks = hub.getConnectionsTo();
+		List<String> nextBlocks = new ArrayList<String>(hub.getConnectionsTo());
 		y = y+1;
 		if( nextBlocks.size() >= 2 && !hub.isParallelBlock() ) y = y+1; // Allow for connections
 		
@@ -290,7 +296,7 @@ public class StepLayoutManager {
 			moveAncestryRight(uuid,dx);
 		}
 
-		log.tracef("%s.positionNode: %s at %d,%d", TAG,uuid,x,y);
+		log.infof("%s.positionNode: at %d,%d %s ", TAG,x,y,uuid);
 		setRightmost(x,y);
 		  
 		int xpos = x - (nextBlocks.size()-1);
@@ -324,7 +330,7 @@ public class StepLayoutManager {
 			Element jump = createJump(chart,jumpuuid,anchorCount);
 			anchors.add(jump);
 			hub.getParent().appendChild(jump);
-			GridPoint gp = new GridPoint(UNSET,UNSET);
+			GridPoint gp = new GridPoint();    // Not connected yet
 			gridMap.put(jumpuuid,gp);
 			ConnectionHub jumpHub = new ConnectionHub(hub.getParent());
 			jumpHub.getConnectionsFrom().add(uuid);
@@ -346,6 +352,7 @@ public class StepLayoutManager {
 		x+=1;
 		GridPoint gp = new GridPoint(x,y);
 		gridMap.put(anchoruuid,gp);
+		log.infof("%s.createAnchor: %s at %d,%d",TAG,anchoruuid,x,y);
 		anchorCount++;
 		return x;
 	}
@@ -360,7 +367,9 @@ public class StepLayoutManager {
 		miny = Integer.MAX_VALUE;
 		maxx = Integer.MIN_VALUE;
 		maxy = Integer.MIN_VALUE;
+		// Ignore points that are unset
 		for( GridPoint gp:gridMap.values()) {
+			if( !gp.isConnected()) continue;
 			if( gp.x>maxx ) maxx = gp.x;
 			if( gp.y>maxy ) maxy = gp.y;
 			if( gp.x<minx ) minx = gp.x;
@@ -374,7 +383,9 @@ public class StepLayoutManager {
 		maxx = maxx - deltax;
 		miny = miny - deltay;
 		maxy = maxy - deltay;
+		//Ignore points that are UNSET
 		for( GridPoint gp:gridMap.values()) {
+			if( !gp.isConnected() ) continue;
 			gp.x = gp.x - deltax;
 			gp.y = gp.y - deltay;
 		}
@@ -441,7 +452,7 @@ public class StepLayoutManager {
 	}
 	
 	private Element createAnchor(Document chart,String uuid,int count) {
-		log.debugf("%s.createAnchor: %s", TAG,uuid);
+		log.debugf("%s.createAnchor: %c %s", TAG,'A'+count,uuid);
 		Element e = chart.createElement("anchor");
 		e.setAttribute("id", uuid);
 		Node node = chart.createTextNode(String.format("%c",'A'+count));
@@ -450,7 +461,7 @@ public class StepLayoutManager {
 	}
 	
 	private Element createJump(Document chart,String uuid,int count) {
-		log.debugf("%s.createJump: %s", TAG,uuid);
+		log.debugf("%s.createJump: %c %s", TAG, 'A'+count,uuid);
 		Element e = chart.createElement("jump");
 		e.setAttribute("id", uuid);
 		Node node = chart.createTextNode(String.format("%c",'A'+count));
@@ -458,7 +469,7 @@ public class StepLayoutManager {
 		return e;
 	}
 	private Element createParallel(Document chart,String uuid) {
-		log.infof("%s.createParallel: %s", TAG,uuid);
+		log.debugf("%s.createParallel: %s", TAG,uuid);
 		Element e = chart.createElement("parallel");
 		e.setAttribute("id", uuid);
 		return e;

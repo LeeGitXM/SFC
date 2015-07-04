@@ -1,0 +1,34 @@
+#!/bin/sh
+# Start-to-finish processing of unit tests.
+#   -- copy from svn repository
+#   -- translate all relevant procedures
+#   -- convert from G2 xml to Ignition xml
+#   -- create project files from the converted XML and translated procedures
+#
+SFC=$GIT_REPO/sfc
+INDIR="$SFC/migration/xml/ignition/vistalon"
+OUTDIR=$SFC/migration/projects/Vistalon
+mkdir -p $OUTDIR
+rm -rf $OUTDIR/*
+
+cd $SFC/migration
+#./clear-procs vistalon
+#./clear-xml vistalon
+#./copy-procs
+#./copy-xml
+#
+# Translare the procedures
+#./translate-vistalon
+#
+# Convert the XML 
+#./convert-vistalon
+
+#
+cd $INDIR
+for PROJ in *
+do
+    INFIL=${INDIR}/$PROJ
+    OUTFIL=${OUTDIR}/$PROJ
+    rm -f $OUTFIL
+    $SFC/migration/build-project "$INDIR" "$OUTFIL"
+done

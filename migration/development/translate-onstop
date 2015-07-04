@@ -13,34 +13,6 @@ then
     OPT=$1
 fi
 SFC=${GIT_REPO}/sfc
-# ======================= OnStop ====================
-APP=${SFC}/migration/translate-onstop
-mkdir -p ${SFC}/migration/procs/g2/vistalon/onstop
-cd ${SFC}/migration/procs/g2/vistalon/onstop
-OUTDIR=${SFC}/migration/procs/ignition/vistalon/onstop
-DIR=`pwd`
-for fil in *.txt
-do
-    if [ -f $DIR/$fil ]
-    then
-	   echo "Processing $fil..."
-       $APP $DIR/$fil $OUTDIR
-    else
-       continue
-    fi
-	if [ $OPT == "all" ]
-	then
-		continue
-	elif [ $OPT == "one" ]
-	then
-		exit
-	else
-		rm $DIR/$fil
-		OPT="one"
-	fi
-done
-exit
-# ======================= OnStart ====================
 APP=${SFC}/migration/translate-onstart
 mkdir -p ${SFC}/migration/procs/g2/vistalon/onstart
 cd ${SFC}/migration/procs/g2/vistalon/onstart

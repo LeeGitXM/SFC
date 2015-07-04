@@ -53,7 +53,13 @@ public class ProcedureMapper {
 				try { rs.close(); } catch(SQLException ignore) {}
 			}
 		}
-	}	
+	}
+	
+	public String pythonModule(String g2procedure) {
+		String result = procedureMap.get(g2procedure.toLowerCase());
+		//System.err.println(TAG+".g2Property for "+factoryId+":"+propertyName+"="+result);
+		return result;
+	}
 }
 	
 

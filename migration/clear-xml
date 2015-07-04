@@ -3,10 +3,15 @@
 # We do this to make sure there are no residual files from a 
 # previous copy.
 #
+OPT=""
+if [ $# -gt 0 ]
+then
+  OPT=$1
+fi
 BIN=`pwd`
 XML=${GIT_REPO}/sfc/migration/xml
-rm -rf ${XML}/g2
-rm -rf ${XML}/ignition
+rm -rf ${XML}/g2/$OPT
+rm -rf ${XML}/ignition/$OPT
 #
 #  Cleanup obsolete work area also
 rm -rf ${GIT_REPO}/sfc/xml

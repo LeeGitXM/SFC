@@ -6,21 +6,24 @@
 #   -- create project files from the converted XML and translated procedures
 #
 SFC=$GIT_REPO/sfc
-OUTDIR=$SFC/migration/projects/UseCases
+OUTDIR=$SFC/migration/projects/usecase
 mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
 
 cd $SFC/migration
-./clear-procs
-./clear-xml
-./copy-procs
+./clear-procs usecase
+./clear-xml usecase
+./copy-procs 
 ./copy-xml
 #
 # Translare the procedures
-./translate-usecases
+echo "========================== Procedure Translation ============================"
+./translate-usecases all
 #
 # Convert the XML 
-./convert-usecases
+echo "========================== Chart Translation ============================"
+./convert-usecases all
+echo "==========================      Complete         ============================"
 
 #
 #  We currently expect 16 use cases
@@ -28,7 +31,7 @@ cd $SFC/migration
 for TESTNO in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
 do
     DIRIN="TestUnitProcedure${TESTNO}"
-    INDIR="$SFC/migration/xml/ignition/usecases/$DIRIN"
+    INDIR="$SFC/migration/xml/ignition/usecase/$DIRIN"
     PROJ="testunitprocedure${TESTNO}.proj"
     OUTFIL=${OUTDIR}/$PROJ
     rm -f $OUTFIL

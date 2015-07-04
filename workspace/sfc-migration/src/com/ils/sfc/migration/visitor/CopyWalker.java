@@ -41,7 +41,7 @@ public class CopyWalker extends AbstractPathWalker implements FileVisitor<Path> 
 	 */
 	@Override
 	public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-		log.debugf("%s.preVisitDirectory: visiting %s",TAG,dir.toString());
+		//log.debugf("%s.preVisitDirectory: visiting %s",TAG,dir.toString());
 		String relative = relativize(inRoot,delegate.toCamelCase(dir.toString()));
 		// Before visiting entries in a directory we create the output directory
 		Path newdir = Paths.get(outRoot.toString(),relative);
@@ -79,7 +79,13 @@ public class CopyWalker extends AbstractPathWalker implements FileVisitor<Path> 
 			target = Paths.get(String.format("%s%c",newfile.toString(),'a'+version));
 		}
 		target = Paths.get(target.toString()+".xml");
-		log.tracef("%s.visitFile: %s -> %s",TAG,file.toString(),target.toString());
+		if( log.isTraceEnabled()) {
+			log.tracef("%s.visitFile: %s -> %s",TAG,file.toString(),target.toString());
+		}
+		else {
+			log.info("\n=============================================================================================================");
+			log.infof("%s.visitFile: processing %s",TAG,file.toString());
+		}
 		delegate.convertFile(file, target);
 		return FileVisitResult.CONTINUE;
 	}

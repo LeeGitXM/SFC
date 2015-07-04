@@ -41,7 +41,7 @@ insert into TagMap values ('CD-BALER-VOL-FTNIR-DATA','[]LabData/VFU/CD-BALER-VOL
 insert into TagMap values ('CD-BALER-VOL-FTNIR-SQC-PATH','[]Connections/CDBalerVolFtnir','STRING');
 insert into TagMap values ('CD-BALER-VOL-LAB-DATA','[]LabData/VFU/CD-BALER-VOL-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('CD-BALER-VOL-LAB-SQC-PATH','[]Connections/CDBalerVolLab','STRING');
-insert into TagMap values ('CD-BALER-VOL-ftnir-DATA','[]LabData//VFU/CD_BALER_VOL_FTNIR_DATA','DOUBLE');
+insert into TagMap values ('CD-BALER-VOL-ftnir-DATA','[]LabData/VFU/CD_BALER_VOL_FTNIR_DATA','DOUBLE');
 insert into TagMap values ('COLD-START-NLC','[]Site/Parameters/COLD-START-NLC','BOOLEAN');
 insert into TagMap values ('CNTR_AVG_TPR_TIP_HT','[]UnitParameter/CRx/CNTR_AVG_TPR_TIP_HT/value','DOUBLE');
 insert into TagMap values ('CNTR_AVG_TPR_TIP_HT_MAX_DEADBAND','[]UnitParameter/CRx/CNTR_AVG_TPR_TIP_HT_MAX_DEADBAND','DOUBLE');
@@ -69,7 +69,10 @@ insert into TagMap values ('DR-D128B-REGEN-TIME','[]Site/Parameters/DR-128B-REGE
 insert into TagMap values ('DR-D128b-ACT','[]Site/Parameters/DR-128B-ACT','DOUBLE');
 insert into TagMap values ('DR-D128C-REGEN-TIME','[]Site/Parameters/DR-128B-REGEN-TIME','DOUBLE');
 insert into TagMap values ('DR-D128C-ACT','[]Site/Parameters/DR-128c-ACT','DOUBLE');
+insert into TagMap values ('DR-HEATER-BYPASS-ROV-PV','[]Recipe/Local/DR-HEATER-BYPASS-ROV-PV','DOUBLE');
+insert into TagMap values ('DR-HEATER-IN-ROV-PV','[]Recipe/Local/DR-HEATER-IN-ROV-PV','DOUBLE');
 insert into TagMap values ('DR-MOISTURE-REMOVAL-START-TIME','[]Recipe/Local/DR-DRIER-REMOVAL-TIME','DOUBLE');
+insert into TagMap values ('DR-PE124B-PV','[]Site/Parameters/DR-PE124b-PV','DOUBLE');
 insert into TagMap values ('E202-BYPASS-DELTA-TIME','[]Recipe/Local/BYPASS-DELTA-TIME','DOUBLE');
 insert into TagMap values ('E-BALER-TEMP-LAB-DATA','[]LabData/VFU/E-BALER-TEMP-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('E-BALER-VOL-FTNIR-DATA','[]LabData/VFU/E-BALER-VOL-FTNIR/value','DOUBLE');
@@ -234,7 +237,7 @@ insert into TagMap values ('[the bad-value of ALKYL_FLOW]','[]DiagnosticToolkit/
 insert into TagMap values ('[the bad-value of C2_FLOW]','[]DiagnosticToolkit/CSTR/VRF002S/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of C3_CONVERSION]','[]DiagnosticToolkit/CRx/VRG521Z/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of C9-GRADE-FLAG]','[]DiagnosticToolkit/CSTR/C9-Grade-Flag/badValue','BOOLEAN');
-insert into TagMap values ('[the bad-value of CAT_EFFICIENCY]','[]DiagnosticToolkit/CRx/VRG531Z-1//badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of CAT_EFFICIENCY]','[]DiagnosticToolkit/CRx/VRG531Z-1/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of CAT_PREMIX_TEMP]','[]DiagnosticToolkit/CRx/VCT205X/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of CNTR_AVG_TPR_TIP_HT]','[]UnitParameter/CRx/CNTR_AVG_TPR_TIP_HT/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of CRX-BLOCK-POLYMER-FLAG]','[]DiagnosticToolkit/CRx/CRX_BLOCK_POLYMER_FLAG/badValue','BOOLEAN');

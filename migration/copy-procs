@@ -9,9 +9,11 @@ EXPORTS="${SVN_REPO}/EMChemicals/Migration/Vistalon/Exports/SequentialControl"
 PROCS=${GIT_REPO}/sfc/migration/procs
 mkdir -p $PROCS/g2/usecase/onstart
 mkdir -p $PROCS/g2/vistalon/onstart
+mkdir -p $PROCS/g2/vistalon/onstop
 mkdir -p $PROCS/g2/usecase/normal
 mkdir -p $PROCS/ignition/usecase/onstart
 mkdir -p $PROCS/ignition/vistalon/onstart
+mkdir -p $PROCS/ignition/vistalon/onstop
 mkdir -p $PROCS/ignition/usecase/normal
 #cp -a "${SVN}"/UnitTests/*/callbacks/*.txt $REPO/g2/onstart
 #cp -a "${SVN}"/Vistalon/*/callbacks/*.txt $REPO/g2/normal
@@ -24,4 +26,11 @@ for fil in ${EXPORTS}/*/callbacks/*.txt ${EXPORTS}/*/callbacks/*/*.txt
 do
 	name=`basename "$fil"`
 	cat "$fil" > ${PROCS}/g2/vistalon/onstart/$name
+done
+#onstop
+DIR="${SVN_REPO}/EMChemicals/G2Artifacts/Source code/artie-sequential-control/procedures"
+cd "${DIR}"
+for fil in DR-TERMINATION-MONITOR.txt DR-TIME-MONITOR.txt DR-TOP-TEMP-MONITOR.txt
+do
+	cat "$fil" > "${PROCS}/g2/vistalon/onstop/$fil"
 done

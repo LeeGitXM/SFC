@@ -1,7 +1,7 @@
 
 #!/bin/sh
-#  Generate projects for import that correspond to 
-#  unit tests (1-7)
+#  Generate projects for import that correspond to a
+#  unit test (1-14). The procedures are already translated.
 #
 if [ $# -lt 1 ]
 then
@@ -11,16 +11,17 @@ fi
 TESTNO=$1
 SFC=${GIT_REPO}/sfc
 START="Test-Unit-Procedure-${TESTNO}"
-INDIR="$SFC/migration/xml/g2/UnitTests"
-OUTDIR=$SFC/migration/xml/ignition/UnitTests
+INDIR="$SFC/migration/xml/g2/usecase"
+OUTDIR=$SFC/migration/xml/ignition/usecase
+PYDIR=${SFC}/migration/procs/ignition/usecase
 DIRIN="TestUnitProcedure${TESTNO}"
 mkdir -p $OUTDIR
 rm -rf $OUTDIR/$DIRIN
-$SFC/migration/convert "$INDIR" "$OUTDIR" "$START"
+$SFC/migration/convert "$INDIR" "$OUTDIR" "$PYDIR"  "$START"
 
 PROJ="testunitprocedure${TESTNO}.proj"
-INDIR="$SFC/migration/xml/ignition/UnitTests/$DIRIN"
-OUTDIR=$SFC/migration/projects/UseCases
+INDIR="$SFC/migration/xml/ignition/usecase/$DIRIN"
+OUTDIR=$SFC/migration/projects/usecase
 mkdir -p $OUTDIR
 OUTFIL=${OUTDIR}/$PROJ
 rm -f $OUTFIL

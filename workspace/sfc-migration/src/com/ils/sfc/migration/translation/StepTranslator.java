@@ -58,7 +58,7 @@ public class StepTranslator {
 		}
 		if( isTransition ) {
 			step = chart.createElement("transition");
-			TransitionTranslator transTrans = new TransitionTranslator(block);
+			TransitionTranslator transTrans = new TransitionTranslator(block,delegate);
 			transTrans.updateTransition(chart,step);
 		}
 		// Note: In the G2 export we find parallel blocks for both the start and end.
@@ -79,7 +79,7 @@ public class StepTranslator {
 				String convertedReference = delegate.toCamelCase(reference);
 				String chartPath = delegate.getPathForChart(convertedReference);
 				step.setAttribute("chart-path", chartPath);
-				log.infof("%s.translate: Encapsulation: %s translates to %s",TAG,convertedReference,chartPath);
+				log.tracef("%s.translate: Encapsulation: %s translates to %s",TAG,convertedReference,chartPath);
 				step.setAttribute("execution-mode", "RunUntilCompletion");   // versus RunUntilStopped
 			}
 			if( factoryId.equalsIgnoreCase("action-step") ) {
@@ -87,6 +87,10 @@ public class StepTranslator {
 			}
 			else {
 				delegate.updateStepFromG2Block(chart,step,block);
+			}
+			// We may have created stop methods based on a downstream transition
+			if( block.hasAttribute("stop-script")) {
+				step.setAttribute("stop-script",block.getAttribute("stop-script"));
 			}
 			// Now add recipe data - feed the translator the entire "data" element
 			Element recipe = makeRecipeDataElement(chart,step,block);

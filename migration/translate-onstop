@@ -1,0 +1,18 @@
+#!/bin/sh
+#  Procedure migration script for a SFC start script.
+# -- options for log.level:  INFO,DEBUG,TRACE
+#
+if [ $# -lt 1 ]
+then
+    echo "USAGE: translate <file> <outdir>"
+	exit 2
+fi
+REPO=${GIT_REPO}
+SFC=$REPO/sfc
+cd $SFC
+LIB=$REPO/external/lib
+JAR=${LIB}/g2-translation.jar
+DB=${SFC}/migration/mdb/conversion.db
+OUTDIR=$2
+mkdir -p ${OUTDIR}
+java -cp ${JAR} -Dg2.name= -Dprocedure.variant=sfc.onstop -Dlog.level=DEBUG com.ils.python.translation.G2ProcedureTranslator $1 ${OUTDIR} ${DB} 

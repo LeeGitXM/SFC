@@ -13,19 +13,15 @@ then
     OPT=$1
 fi
 SFC=$GIT_REPO/sfc
+# Expect ostart/onstop sub-directories
+PYDIR=$GIT_REPO/xom-python/XOM_Python/src/scripts/vistalon
 APP=$SFC/migration/convert
 INDIR=$SFC/migration/xml/g2/vistalon
-PYDIR=$SFC/migration/procs/ignition/vistalon/onstart
 OUTDIR=$SFC/migration/xml/ignition/vistalon
 mkdir -p $INDIR
 mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
 cd $INDIR
-for file in *
-do
-	echo "Processing $file ..."
-    exit
-done
 for file in *
 do
 	echo "Processing $fil..."

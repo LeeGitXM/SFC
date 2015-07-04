@@ -51,6 +51,7 @@ public class ConnectionRouter {
 	private void createConnections() {
 		for(String blockuuid:connectionMap.keySet()) {
 			GridPoint source = gridMap.get(blockuuid);
+			if( !source.isConnected())  continue;
 			ConnectionHub hub = connectionMap.get(blockuuid);
 			for(String destuuid:hub.getConnectionsTo()) {
 				GridPoint destination = gridMap.get(destuuid);
@@ -78,6 +79,7 @@ public class ConnectionRouter {
 		int maxy = Integer.MIN_VALUE;
 
 		for( GridPoint gp:gridPoints.values()) {
+			if( !gp.isConnected()) continue;
 			if( gp.x>maxx ) maxx = gp.x;
 			if( gp.y>maxy ) maxy = gp.y;
 		}
@@ -94,6 +96,10 @@ public class ConnectionRouter {
 			if( sourceHub!=null && sourceHub.isParallelBlock() && destinationHub.isParallelBlock()) {
 				// For a straight shot between two parallel bars, take the far-right lane
 				ParallelArea pa = sourceHub.getParallelArea();
+				if( pa==null ) {
+					log.errorf("%s.route: source block is parallel, buut has no parallel area",TAG);
+					return;
+				}
 				int x = source.x + pa.x2 - pa.x1 -1 ;
 				int y = source.y;
 				y++;
@@ -213,7 +219,7 @@ public class ConnectionRouter {
 			log.warnf("%s.isAdjacent: attempt to link two steps at same address (%d,%d)",TAG,a.x,a.y);
 		}
 		else if( a.y > b.y ) {
-			log.warnf("%s.isAdjacent: attempt to link destination above source (%d,%d),(%d,%d)",TAG,
+			log.warnf("%s.isAdjacent: attempt to connect destination above source (%d,%d)->(%d,%d) -- link ignored",TAG,
 					a.x,a.y,b.x,b.y);
 			adjacent = true;  // To ignore
 		}

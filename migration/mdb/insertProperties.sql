@@ -139,7 +139,7 @@ insert into PropertyMap(G2Class,G2Property,Property,Mode) values ('SYMBOLIC-PARA
 --                  2 => rename property
 --                  3 => constant
 -- chart - ignore debug-mode
-insert into PropertyMap(G2Class,G2Property,Property,Mode) values ('chart','debug-mode','log.isTraceEnabled(,2)',1);
+insert into PropertyMap(G2Class,G2Property,Property,Mode) values ('chart','debug-mode','log.isTraceEnabled()',1);
 insert into PropertyMap(G2Class,G2Property,Property,Mode) values ('structure','target-id','Target',2);
 -- step
 insert into PropertyMap(G2Class,G2Property,Property,Mode) values ('s88-recipe-entity','debug-mode','log.isTraceEnabled()',1);

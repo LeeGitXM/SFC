@@ -5,7 +5,7 @@
 SFC=$GIT_REPO/sfc
 APP=$SFC/migration/convert
 INDIR=$SFC/migration/xml/g2/usecase
-PYDIR=$SFC/migration/procs/ignition/usecase/onstart
+PYDIR=$SFC/migration/procs/ignition/usecase
 OUTDIR=$SFC/migration/xml/ignition/usecase
 mkdir -p $INDIR
 mkdir -p $OUTDIR

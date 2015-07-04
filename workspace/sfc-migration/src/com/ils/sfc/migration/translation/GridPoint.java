@@ -12,12 +12,15 @@ package com.ils.sfc.migration.translation;
  *  
  */
 public class GridPoint  {
+	private static int UNSET = -8888;
 	public int x = 0;      // column number
 	public int y = 0;      // row number
+	private boolean connected = false;
 	
 	public GridPoint() {
-		x = 0;
-		y = 0;
+		x = UNSET;
+		y = UNSET;
+		connected = false;
 	}
 	
 	/**
@@ -26,8 +29,11 @@ public class GridPoint  {
 	public GridPoint(int col,int row) {
 		this.x = col;
 		this.y = row;
+		connected = true;
 	}
 	
+	public boolean isConnected()           { return this.connected; }
+	public void setConnected(boolean flag) { this.connected=flag; }
 	/**
 	 * This is a debugging aid.
 	 */

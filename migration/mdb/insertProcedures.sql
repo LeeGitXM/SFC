@@ -61,6 +61,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('do_single_rate_
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('do_split_flying_switch-gda','ils.vistalon.fd.SplitFlyingSwitch.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('do_split_rate_chg-gda','ils.vistalon.fd.SplitRateChange.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('do_temp-gda','ils.vistalon.crx.TempOutputs.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('dr-top-temp-monitor','drTopTempMonitor.onstop');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-check-sqc-fs','ils.diagToolkit.finalDiagnosis.checkSQC');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-check-integer-data-fs','ils.diagToolkit.finalDiagnosis.checkInt');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-check-float-data-fs','ils.diagToolkit.finalDiagnosis.checkFloat');
@@ -124,6 +125,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('output-msg','il
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('output-msg-core','ils.diagToolkit.util.outputMessageCore.create');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('post-error','ils.vistalon.fd.ProductMooney.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('print-text-file','com.ils.sfc.python.File.print');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('prod-g2-port','com.ils.sfc.python.Product.getPort');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('prod-mooney-gda','ils.vistalon.fd.ProductMooney.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('recalc-cat-sps-gda','ils.vistalon.fd.CatSps.recalculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('reset_fd-gda','ils.diagToolkit.fd.reset');

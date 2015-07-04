@@ -50,6 +50,8 @@ import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
 import com.ils.sfc.migration.map.PropertyValueMapper;
+import com.ils.sfc.migration.map.TagMapper;
+import com.ils.sfc.migration.translation.ChartStructureTranslator;
 import com.ils.sfc.migration.translation.ConnectionHub;
 import com.ils.sfc.migration.translation.ConnectionRouter;
 import com.ils.sfc.migration.translation.GridPoint;
@@ -80,6 +82,7 @@ public class Converter {
 	private final PropertyValueMapper propertyValueMapper;
 	private final Map<String,String> pathForFile;     // A map of the complete path indexed by file name
 	private final StepTranslator stepTranslator;
+	private final TagMapper tagMapper;
 	private Path pythonRoot = null;
  
 	public Converter() {
@@ -89,9 +92,12 @@ public class Converter {
 		this.propertyValueMapper = new PropertyValueMapper();
 		this.pathForFile = new HashMap<>();
 		this.stepTranslator = new StepTranslator(this);
+		this.tagMapper = new TagMapper();
 	}
 	
-	public ClassNameMapper getClassMapper() { return classMapper; }
+	public ClassNameMapper getClassMapper()       { return classMapper; }
+	public ProcedureMapper getProcedureMapper()   { return procedureMapper; }
+	public TagMapper       getTagMapper()         { return tagMapper; }
 	
 	// The path of interest for a chart is an SFC folder hierarchy
 	public String getPathForChart(String filename)  { 
@@ -102,6 +108,7 @@ public class Converter {
 		}
 		return filepath;
 	}
+	public Path getPythonRoot() { return this.pythonRoot; }
 	public void setPythonRoot(Path root) { this.pythonRoot = root; }
 	/**
 	 * Step 1: Read the database and create maps between various elements.
@@ -119,6 +126,7 @@ public class Converter {
 			procedureMapper.createMap(connection);
 			propertyMapper.createMap(connection);
 			propertyValueMapper.createMap(connection);
+			tagMapper.createMap(connection);
 		}
 		catch(SQLException e) {
 			// if the error message is "out of memory", 
@@ -191,7 +199,7 @@ public class Converter {
 			Files.walkFileTree(startpath, walker);
 		}
 		catch(IOException ioe) {
-			log.infof("%s.createPathMap: Walk failed (%s)",TAG,ioe.getMessage());
+			log.warnf("%s.createPathMap: Walk failed (%s)",TAG,ioe.getMessage());
 		}
 	}
 	
@@ -209,7 +217,7 @@ public class Converter {
 		try {
 			
 			Path startpath = Paths.get(indir.toString(), start);
-			log.tracef("%s.processInput: Walking %s",TAG,startpath.toString());
+			log.debugf("%s.processInput: %s",TAG,startpath.toString());
 			Files.walkFileTree(startpath, walker);
 		}
 		catch(IOException ioe) {
@@ -252,18 +260,18 @@ public class Converter {
 			
 			// Write the chart to the output
 			String xml = docToString(chartdoc);
-			log.infof("%s.processInput: Writing to %s",TAG,outfile.toString());
-			log.debug(xml);
+			log.infof("%s.convertFile: Writing to %s ...",TAG,outfile.toString());
+			log.trace(xml);
 			Files.write(outfile, xml.getBytes(), StandardOpenOption.CREATE_NEW);
 		}
 		catch (ParserConfigurationException pce) {
-			log.errorf("%s.addChart: Error parsing %s (%s)",TAG,infile.toString(),pce.getMessage());
+			log.errorf("%s.convertFile: Error parsing %s (%s)",TAG,infile.toString(),pce.getMessage());
 		}
 		catch (SAXException sax) {
-			log.errorf("%s.addChart: Error analyzing %s (%s)",TAG,infile.toString(),sax.getMessage());
+			log.errorf("%s.convertFile: Error analyzing %s (%s)",TAG,infile.toString(),sax.getMessage());
 		}
 		catch (IOException ioe) {
-			log.errorf("%s.addChart: Failure to read %s or write %s (%s)",TAG,infile.toString(),outfile.toString(),ioe.getMessage());
+			log.errorf("%s.convertFile: Failure to read %s or write %s (%s)",TAG,infile.toString(),outfile.toString(),ioe.getMessage());
 		}
 		
 	}
@@ -281,11 +289,17 @@ public class Converter {
 			updateChartForSingletonStep(chart,block);
 		}
 		else {
-			StepLayoutManager layout = new StepLayoutManager(this,chart,g2doc);
+			// There are potential some structural inconsistencies between
+			// G2 and Ignition. Attempt to handle these before performing a layout.
+			ChartStructureTranslator cts = new ChartStructureTranslator(g2doc,this);
+			cts.refactor();
+
+			StepLayoutManager layout = new StepLayoutManager(this,g2doc,chart);
 			Map<String,Element> blockMap =  layout.getBlockMap();
 			Map<String,GridPoint> gridMap = layout.getGridMap();
 			for(String uuid:gridMap.keySet()) {
 				GridPoint gp = gridMap.get(uuid);
+				if( !gp.isConnected()) continue;    // This block was not connected, ignore
 				//g2block element has child "block", plus one or more recipes
 				// --- null returns apply to anchors and jumps, ignore
 				Element g2block = blockMap.get(uuid);
@@ -311,7 +325,7 @@ public class Converter {
 		}
 	}
 	/**
-	 * The G2 chart has only a single block. Add begin, end steps.
+	 * This G2 chart has only a single block. Add begin, end steps.
 	 * @param chart the result
 	 * @param g2doc the G2 export
 	 */
@@ -360,9 +374,9 @@ public class Converter {
 			String script = propertyValueMapper.modifyPropertyValueForIgnition("callback",g2attribute);
 			// As returned the script contains the module - strip it off.
 			script = pathNameForModule(script);
-			log.infof("%s.insertOnStartFromG2Block: callback = %s->%s",TAG,g2attribute,script);
+			log.tracef("%s.insertOnStartFromG2Block: callback (%s) = %s",TAG,g2attribute,script);
 			if( script!=null  ) {
-				Path scriptPath = Paths.get(pythonRoot.toString(),script);
+				Path scriptPath = Paths.get(pythonRoot.toString()+"/onstart",script);
 				try {
 					byte[] bytes = Files.readAllBytes(scriptPath);
 					if( bytes!=null && bytes.length>0) {
@@ -505,7 +519,7 @@ public class Converter {
 		chart.setAttribute("hot-editable", "false");
 		chart.setAttribute("persist-state", "true");
 		chart.setAttribute("timestamp", new Date().toString());
-		chart.setAttribute("version", "7.7.2 (b2014121709)");
+		chart.setAttribute("version", "7.7.5-beta22 (b2015061613)");
 		chart.setAttribute("zoom", "1.0");
 		doc.appendChild(chart);
 	}

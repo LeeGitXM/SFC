@@ -3,6 +3,11 @@
 # We do this to make sure there are no residual files from a 
 # previous copy.
 #
+OPT=""
+if [ $# -gt 0 ]
+then
+  OPT=$1
+fi
 PROCS=${GIT_REPO}/sfc/migration/procs
-rm -rf ${PROCS}/g2
-rm -rf ${PROCS}/ignition
+rm -rf ${PROCS}/g2/$OPT
+rm -rf ${PROCS}/ignition/$OPT
