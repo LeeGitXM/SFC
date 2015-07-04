@@ -33,7 +33,7 @@ do
 	then
 		exit
 	else
-		rm $DIR/$fil
+		rm -r "$INDIR/$file"
 		OPT="one"
 	fi
 done

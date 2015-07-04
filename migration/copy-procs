@@ -30,7 +30,7 @@ done
 #onstop
 DIR="${SVN_REPO}/EMChemicals/G2Artifacts/Source code/artie-sequential-control/procedures"
 cd "${DIR}"
-for fil in DR-TERMINATION-MONITOR.txt DR-TIME-MONITOR.txt DR-TOP-TEMP-MONITOR.txt
+for fil in DR-GAS-CIRCULATING-TEST.txt DR-MANAGE-HT-SOAK-CYCLES.txt DR-TERMINATION-MONITOR.txt DR-TIME-MONITOR.txt DR-TOP-TEMP-MONITOR.txt DR-TOP-TEMP-MONITOR-COOL-DOWN.txt
 do
 	cat "$fil" > "${PROCS}/g2/vistalon/onstop/$fil"
 done

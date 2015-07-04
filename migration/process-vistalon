@@ -12,16 +12,16 @@ mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
 
 cd $SFC/migration
-#./clear-procs vistalon
-#./clear-xml vistalon
-#./copy-procs
-#./copy-xml
+./clear-procs vistalon
+./clear-xml vistalon
+./copy-procs
+./copy-xml
 #
-# Translare the procedures
-#./translate-vistalon
+# Translate the procedures
+./translate-vistalon all
 #
 # Convert the XML 
-#./convert-vistalon
+./convert-vistalon all
 
 #
 cd $INDIR

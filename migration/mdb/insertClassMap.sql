@@ -76,6 +76,7 @@ insert into ClassMap values ('s88-recipe-entity','step');
 insert into ClassMap values ('s88-recipe-output-data','com.ils.sfc.commmon.recipe.objects.Data');
 insert into ClassMap values ('s88-recipe-value-data','com.ils.sfc.commmon.recipe.objects.Data');
 insert into ClassMap values ('s88-review-data-task','java.util.Map');
+insert into ClassMap values ('s88-termination-transition','java.util.Map');
 insert into ClassMap values ('s88-time-delay','java.util.Map');
 insert into ClassMap values ('s88-write-outputs-task','java.util.Map');
 insert into ClassMap values ('sequence','java.util.List');

@@ -39,7 +39,6 @@ do
 		OPT="one"
 	fi
 done
-exit
 # ======================= OnStart ====================
 APP=${SFC}/migration/translate-onstart
 mkdir -p ${SFC}/migration/procs/g2/vistalon/onstart

@@ -209,14 +209,20 @@ insert into TagMap values ('VRC262_SP','[]Site/CRx/VRC262/sp','DOUBLE');
 insert into TagMap values ('the action of the action-button upon the subworkspace of dr-oc-alert-msg','[]Site/DR-OC-ALERT-MSG/action','BOOLEAN');
 insert into TagMap values ('the arrow icon-color of the em-setpoint-display-button upon the subworkspace of the item named by console-list [post-index]','[]Site/SETPOINT-DISPLAY-BUTTON/arrowColor','BOOLEAN');
 insert into TagMap values ('the btm-message-text of dr-oc-alert-msg','[]Site/DR-OC-ALERT-MSG/bottomText','BOOLEAN');
+insert into TagMap values ('the dr-top-temp-reached-timer','[]Site/DRYER-REGEN/topTempReachedTimer','STRING');    --- found in s88
 insert into TagMap values ('the message-text of FS-DOWNLOAD-REMINDER-OPERATOR-DISPLAY','[]DiagnosticToolkit/CRx/FS-DOWNLOAD-REMONDER-OPERATOR-DISPLAY','STRING');    --- found in s88
 insert into TagMap values ('the cast-time-to-closed of CATOUT-RECIPE-STATUS','[]Site/CATOUT-RECIPE-STATUS/castTimeToCLosed','STRING');    --- found in s88
-insert into TagMap values ('the irg-time-to-closed of CATOUT-RECIPE-STATUS','[]Site/CATOUT-RECIPE-STATUS/irgTimeToCLosed','STRING');    --- found in s88
+insert into TagMap values ('the mid-temp of the driers named by drier-to-regen','[]Site/DRYER-REGEN/midTemp','STRING');    --- found in s88
+insert into TagMap values ('the outlet-temp of the driers named by drier-to-regen','[]Site/DRYER-REGEN/outletTemp','STRING');    --- found in s88
+insert into TagMap values ('the irg-time-to-closed of CATOUT-RECIPE-STATUS','[]Site/CATOUT-RECIPE-STATUS/irgTimeToClosed','STRING');    --- found in s88
 insert into TagMap values ('the rx-temp of RX-RECIPE','[]Site/RX-RECIPE/rxTemp','STRING'); 
 insert into TagMap values ('the oil-time-to-closed of CATOUT-RECIPE-STATUS','[]Site/CATOUT-RECIPE-STATUS/oilTimeToCLosed','STRING');    --- found in s88
 insert into TagMap values ('the lower_limit of DC9-LAB-DATA]','[]LabData/RLA3/DC9-LAB-DATA/owerLimit','DOUBLE');
 insert into TagMap values ('the upper_limit of DC9-LAB-DATA]','[]LabData/RLA3/DC9-LAB-DATA/upperLimit','DOUBLE');
 insert into TagMap values ('the state of cat-and-c2-is-in-gda','[]Site/CAT-AND-C2/state','STRING');
+insert into TagMap values ('the state of opr-no-reply','[]Site/OPR-NO-REPLY/state','STRING');
+insert into TagMap values ('the state of opr-stop','[]Site/OPR-STOP/state','STRING');
+insert into TagMap values ('the state of done','[]Site/DONE/state','STRING');
 insert into TagMap values ('the target-value of e204-level-ok-conditional','[]Site/E204-LEVEL_OK','BOOLEAN');
 insert into TagMap values ('the target-value of e204-level-not-ok-conditional','[]Site/E204-LEVEL_NOT_OK','BOOLEAN');
 insert into TagMap values ('the top-message-text of dr-oc-alert-msg','[]Site/DR-OC-ALERT-MSG/topText','BOOLEAN');
