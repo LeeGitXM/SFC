@@ -103,8 +103,11 @@ public class Converter {
 	public String getPathForChart(String filename)  { 
 		String filepath =  pathForFile.get(filename);
 		if( filepath==null ) {
-			log.infof("%s.getPathForChart: No path recorded for file %s",TAG,filepath);
+			log.infof("%s.getPathForChart: No path recorded for file %s",TAG,filename);
 			filepath = "";
+		}
+		else {
+			log.infof("%s.getPathForChart: Path for file %s = %s",TAG,filename,filepath);
 		}
 		return filepath;
 	}

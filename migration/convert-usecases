@@ -1,11 +1,22 @@
 #!/bin/sh
-# Process all of the json files in the repository "g2" area.
-# Save the results in the json storate area for ignition.
+# Process the .xml files in the repository "g2" area.
+# If the argument is "all", then all the files are processed.
+# If the argument is "next" then the current file is processed
+# and deleted. Then the next file is processed.
 #
+# We start with raw G2 exports. Convert, then save the
+# results in the procedure storage area for ignition.
+#
+OPT="one"
+if [ $# -gt 0 ]
+then
+    OPT=$1
+fi
 SFC=$GIT_REPO/sfc
+# Expect ostart/onstop sub-directories
+PYDIR=$GIT_REPO/xom-python/XOM_Python/src/scripts/vistalon
 APP=$SFC/migration/convert
 INDIR=$SFC/migration/xml/g2/usecase
-PYDIR=$SFC/migration/procs/ignition/usecase
 OUTDIR=$SFC/migration/xml/ignition/usecase
 mkdir -p $INDIR
 mkdir -p $OUTDIR
@@ -13,6 +24,16 @@ rm -rf $OUTDIR/*
 cd $INDIR
 for file in *
 do
-	echo "Processing $file ..."
+	echo "Processing $fil..."
     $APP "$INDIR" "$OUTDIR" $PYDIR $file
+	if [ $OPT == "all" ]
+	then
+		continue
+	elif [ $OPT == "one" ]
+	then
+		exit
+	else
+		rm -r "$INDIR/$file"
+		OPT="one"
+	fi
 done
