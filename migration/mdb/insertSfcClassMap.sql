@@ -17,7 +17,7 @@ insert into SfcClassMap values ('S88-GET-INPUT-TASK','com.ils.inputStep','');
 insert into SfcClassMap values ('S88-HOLD-TASK','com.ils.pauseStep','');
 insert into SfcClassMap values ('S88-LIBRARY-CALLER','enclosing-step','');
 insert into SfcClassMap values ('S88-LIBRARY-TASK','enclosing-step','');
-insert into SfcClassMap values ('S88-MANUAL-DATA-ENTRY-TASK','com.ils.inputStep','');
+insert into SfcClassMap values ('S88-MANUAL-DATA-ENTRY-TASK','action-step',''); -- unimplemented
 insert into SfcClassMap values ('S88-MESSAGE-CONSOLE-TASK','com.ils.controlPanelMessageStep','');
 insert into SfcClassMap values ('S88-MESSAGE-QUEUE-TASK','com.ils.queueMessageStep',''); 
 insert into SfcClassMap values ('S88-MONITOR-DOWNLOADS-TASK','com.ils.monitorDownloadsStep','');
