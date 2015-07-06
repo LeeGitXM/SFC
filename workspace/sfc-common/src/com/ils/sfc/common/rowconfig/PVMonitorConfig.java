@@ -28,8 +28,6 @@ public class PVMonitorConfig extends RowConfig {
 
 		// transient values used in monitoring (maybe this should be a separate object)
 		@JsonIgnore
-		public double presentValue;  
-		@JsonIgnore
 		public double targetValue;  
 		@JsonIgnore
 		public double lowLimit;  
@@ -46,7 +44,11 @@ public class PVMonitorConfig extends RowConfig {
 		@JsonIgnore
 		public boolean isDownloaded;
 		@JsonIgnore
-		public boolean success;
+		public boolean persistenceOK;
+		@JsonIgnore
+		public Object inputRD;   // recipe data for the IO object
+		@JsonIgnore
+		public Object io;   
 	}
 
 	public List<Row> getRows() {

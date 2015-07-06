@@ -20,6 +20,7 @@ public interface PVMonitorStepProperties extends ChartStepProperties {
         RECIPE_LOCATION,
         KEY,
         NON_NULL_VALUE,
+        DATA_LOCATION,
     	PV_MONITOR_CONFIG
     };
 }

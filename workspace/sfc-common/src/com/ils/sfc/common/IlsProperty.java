@@ -70,6 +70,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<Boolean> COLUMN_KEYED = new IlsProperty<Boolean>(Constants.COLUMN_KEYED, Boolean.class, Boolean.FALSE);
     public static final IlsProperty<String> COMPUTER = new IlsProperty<String>(Constants.COMPUTER, String.class, Constants.COMPUTER_CHOICES[0], Constants.COMPUTER_CHOICES);
     public static final IlsProperty<String> DATA_ID = new IlsProperty<String>(Constants.DATA_ID, String.class, "");
+    public static final IlsProperty<String> DATA_LOCATION = new IlsProperty<String>(Constants.DATA_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
     public static final IlsProperty<Double> DELAY = new IlsProperty<Double>(Constants.DELAY, Double.class, 0.);
     public static final IlsProperty<String> DELAY_UNIT = new IlsProperty<String>(Constants.DELAY_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);  
     public static final IlsProperty<String> DESCRIPTION = new IlsProperty<String>(Constants.DESCRIPTION, String.class, "");

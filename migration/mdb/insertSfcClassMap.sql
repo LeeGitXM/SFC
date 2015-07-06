@@ -34,7 +34,7 @@ insert into SfcClassMap values ('S88-RESET-TASK','action-step','');     -- unimp
 insert into SfcClassMap values ('S88-REVIEW-DATA-TASK','com.ils.reviewDataStep','');
 insert into SfcClassMap values ('S88-REVIEW-DATA-WITH-ADVICE-TASK', 'com.ils.reviewDataWithAdviceStep','');
 insert into SfcClassMap values ('S88-REVIEW-FLOWS-TASK','com.ils.reviewFlowsStep','');
-insert into SfcClassMap values ('S88-SAVE-QUEUE-TASK','action-step',''); -- unimplemented
+insert into SfcClassMap values ('S88-SAVE-QUEUE-TASK','com.ils.saveQueueStep',''); 
 insert into SfcClassMap values ('S88-SAVE-RECIPE-DATA-TO-CSV','com.ils.saveDataStep','');
 insert into SfcClassMap values ('S88-SELECT-INPUT-TASK','com.ils.selectInputStep','');
 insert into SfcClassMap values ('S88-SET-QUEUE-TASK','com.ils.setQueueStep','');
