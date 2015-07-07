@@ -143,7 +143,7 @@ public class TransitionTranslator {
 	// We expect the callback to be executed as the on-stop method of the upstream block.
 	// This procedure is expected to set the "stepResult" value
 	private String handleCallbackValue(String constant,String operator) {
-		String ans = String.format("{superior.stepResult} %s %s",convertOperator(operator),constant);
+		String ans = String.format("{previous.stepResult} %s \"%s\"",convertOperator(operator),constant);
 		return ans;
 	}
 	// Compare a tag value to a recipe value
