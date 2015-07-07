@@ -80,7 +80,7 @@ public class Converter {
 	private final ProcedureMapper procedureMapper;
 	private final PropertyMapper propertyMapper;
 	private final PropertyValueMapper propertyValueMapper;
-	private final Map<String,String> pathForFile;     // A map of the complete path indexed by file name
+	private final Map<String,String> pathFileMap;     // A map of the complete path indexed by file name
 	private final StepTranslator stepTranslator;
 	private final TagMapper tagMapper;
 	private Path pythonRoot = null;
@@ -90,7 +90,7 @@ public class Converter {
 		this.procedureMapper = new ProcedureMapper();
 		this.propertyMapper = new PropertyMapper();
 		this.propertyValueMapper = new PropertyValueMapper();
-		this.pathForFile = new HashMap<>();
+		this.pathFileMap = new HashMap<>();
 		this.stepTranslator = new StepTranslator(this);
 		this.tagMapper = new TagMapper();
 	}
@@ -101,7 +101,7 @@ public class Converter {
 	
 	// The path of interest for a chart is an SFC folder hierarchy
 	public String getPathForChart(String filename)  { 
-		String filepath =  pathForFile.get(filename);
+		String filepath =  pathFileMap.get(filename);
 		if( filepath==null ) {
 			log.infof("%s.getPathForChart: No path recorded for file %s",TAG,filename);
 			filepath = "";
@@ -196,7 +196,7 @@ public class Converter {
 		if( !ok ) return;
 		
 		// Create a path walker with the root
-		PathWalker walker = new PathWalker(indir,this.pathForFile,this);
+		PathWalker walker = new PathWalker(indir,this.pathFileMap,this);
 		try {
 			Path startpath = Paths.get(indir.toString(), start);
 			Files.walkFileTree(startpath, walker);

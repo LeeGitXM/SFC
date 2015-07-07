@@ -74,7 +74,7 @@ public class StepTranslator {
 			// Encapsulation have several additional properties. The encapsulation reference
 			// is to a chart name only. Ignition requires a path.
 			if( isEncapsulation ) {
-				String reference = block.getAttribute("block-full-path-label");
+				String reference = block.getAttribute("full-path");
 				if( reference.length()==0) reference = block.getAttribute("label");
 				String convertedReference = delegate.toCamelCase(reference);
 				String chartPath = delegate.getPathForChart(convertedReference);
