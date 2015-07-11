@@ -9,7 +9,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 
+import com.inductiveautomation.ignition.client.util.EDTUtil;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
@@ -43,7 +45,12 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 		rb = ResourceBundle.getBundle("com.ils.sfc.browser.browser");
 		JTabbedPane mainPanel = createTabPane(contentPanel,legendPanel);
 		init(mainPanel);
-		updateContentPanel();
+		EDTUtil.invokeAfterJoin(new Runnable() {
+			@Override
+			public void run() {
+				updateContentPanel();	
+			}
+		},Thread.currentThread());
 	}
 
 	/**

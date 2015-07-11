@@ -2,10 +2,10 @@
 
 	<import file="${basedir}/sfc-build/build.xml"/>
 
-	<property name="version.build" value="3" />	
+	<property name="version.build" value="0" />	
 	<!-- Change version.beta value to "" for release builds -->
 	<property name="version.beta" value="-development" />		
-	<property name="sfc.browser.version" value="1.0.0.${version.build}" />
+	<property name="sfc.browser.version" value="1.0.1.${version.build}" />
 	<property name="sfc.name" value="sfc" />
 	<property name="sfc.browser.name" value="sfc-browser" />
 	<property name="sfc.browser.description" value="Sequential Function Chart - Browser" />

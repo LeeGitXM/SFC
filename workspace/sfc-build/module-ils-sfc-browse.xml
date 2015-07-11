@@ -13,6 +13,7 @@
 		<!-- We depend on IA's SFC Module -->
 		<depends scope="D">com.inductiveautomation.sfc</depends>
 		
+		
 		<!-- Load in our jars for each scope -->
 		<jar scope="CD">ils-sfc-browser.jar.pack.gz</jar>
 		<jar scope="CD">lucene-1.4.3.jar.pack.gz</jar>

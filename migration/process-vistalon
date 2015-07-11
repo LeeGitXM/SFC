@@ -1,5 +1,5 @@
 #!/bin/sh
-# Start-to-finish processing of unit tests.
+# Start-to-finish processing of vistalon SFCs
 #   -- copy from svn repository
 #   -- translate all relevant procedures
 #   -- convert from G2 xml to Ignition xml
@@ -30,5 +30,5 @@ do
     INFIL=${INDIR}/$PROJ
     OUTFIL=${OUTDIR}/$PROJ
     rm -f $OUTFIL
-    $SFC/migration/build-project "$INDIR" "$OUTFIL"
+    $SFC/migration/build-project "$INFIL" "$OUTFIL"
 done
