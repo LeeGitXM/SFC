@@ -223,6 +223,7 @@ insert into TagMap values ('the state of cat-and-c2-is-in-gda','[]Site/CAT-AND-C
 insert into TagMap values ('the state of opr-no-reply','[]Site/OPR-NO-REPLY/state','STRING');
 insert into TagMap values ('the state of opr-stop','[]Site/OPR-STOP/state','STRING');
 insert into TagMap values ('the state of done','[]Site/DONE/state','STRING');
+insert into TagMap values ('the subworkspace of UIR-TABLES','[]Site/UIR-TABLES','STRING');
 insert into TagMap values ('the target-value of e204-level-ok-conditional','[]Site/E204-LEVEL_OK','BOOLEAN');
 insert into TagMap values ('the target-value of e204-level-not-ok-conditional','[]Site/E204-LEVEL_NOT_OK','BOOLEAN');
 insert into TagMap values ('the top-message-text of dr-oc-alert-msg','[]Site/DR-OC-ALERT-MSG/topText','BOOLEAN');

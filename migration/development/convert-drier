@@ -8,6 +8,6 @@ INDIR=$SFC/migration/xml/g2/vistalon
 OUTDIR=$SFC/migration/xml/ignition/vistalon
 mkdir -p $INDIR
 mkdir -p $OUTDIR
-FIL="DRIER-REGEN-PROCEDURE/S88-OPERATION-XXX-2526/DRIER REGEN.Drier Regen Operation.End.xml"
+FIL="DRIER-REGEN-PROCEDURE/S88-OPERATION-XXX-2526/DRIERREGEN.DrrRgnOprtn.End.xml"
 rm -f "$OUTDIR/$FIL"
 $APP "${INDIR}" "${OUTDIR}" $PYLIB "$FIL"

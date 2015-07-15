@@ -4,6 +4,8 @@
 -- A return type of "dictionary" has special meaning to the procedure translator.
 
 
+INSERT into ProcedureMap(G2Procedure,IgnitionProcedure) SELECT G2Value,IgnitionValue FROM PropertyValueMap WHERE Property='callback';
+
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('IRTLQ-VIEW','ils.??');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('_em-s88-test-simulate-production','com.ils.sfc.python.simulateProduction.test');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('_s88-abort','com.ils.sfc.python.S88State.abort');
@@ -99,6 +101,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('fs-r2-h2-eff-vs
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('fs-r2-nh3-eff-vs-pr-2','com.ils.sfc.python.block.fsR1Nh3EffVsPr2');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('g2-array-min','com.ils.util.Array.minimum');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('g2-array-subtract','com.ils.util.Array.subtract');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('g2-get-port-number-or-name','ils.vistalon.util.Component.getPortName');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('g2-scalar-multiply','com.ils.util.Scalar.multiply');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('g2-tw-popup','ils.vistalon.util.Window.displayClient');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('getblockName','ils.blt.lib.getBlockName');
@@ -141,6 +144,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-feed-enthal
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get','com.ils.sfc.python.ScopeData.get');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get-with-units','com.ils.sfc.python.ScopeData.getWithUnits');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get-block-in-hierarchy','ils.diagToolkit.finalDiagnosis.getBlock');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get-control-panel','ils.sfc.gateway.api.s88GetControlPanel');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get-data','ils.sfc.gateway.api.s88GetData');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get-superior-operation','com.ils.sfc.python.UnitProcedure.getSuperior');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get-unit-procedure','com.ils.sfc.python.UnitProcedure.get');
@@ -148,6 +152,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get-value',
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-heat','com.ils.sfc.python.heat.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-ht-of-rx-t','com.ils.sfc.python.heatOfRxT.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-post-error','ils.diagToolkit.finalDiagnosis.postError');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-post-message','com.ils.queue.post.messageToQueue');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-post-message-to-queue','com.ils.queue.post.messageToQueue');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-set','com.ils.sfc.python.ScopeData.set');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-set-data','ils.sfc.gateway.api.s88SetData');

@@ -7,9 +7,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
@@ -80,39 +80,23 @@ public class Converter {
 	private final ProcedureMapper procedureMapper;
 	private final PropertyMapper propertyMapper;
 	private final PropertyValueMapper propertyValueMapper;
-	private final Map<String,String> pathFileMap;     // A map of the complete path indexed by file name
+	private final Map<String,String> pathMap;     // A map "pretty" partial path indexed by file complete input path
 	private final StepTranslator stepTranslator;
 	private final TagMapper tagMapper;
 	private Path pythonRoot = null;
+	private String outRoot  = null;    // Root folder for SFC
  
 	public Converter() {
 		this.classMapper = new ClassNameMapper();
 		this.procedureMapper = new ProcedureMapper();
 		this.propertyMapper = new PropertyMapper();
 		this.propertyValueMapper = new PropertyValueMapper();
-		this.pathFileMap = new HashMap<>();
+		this.pathMap = new HashMap<>();
 		this.stepTranslator = new StepTranslator(this);
 		this.tagMapper = new TagMapper();
 	}
 	
-	public ClassNameMapper getClassMapper()       { return classMapper; }
-	public ProcedureMapper getProcedureMapper()   { return procedureMapper; }
-	public TagMapper       getTagMapper()         { return tagMapper; }
-	
-	// The path of interest for a chart is an SFC folder hierarchy
-	public String getPathForChart(String filename)  { 
-		String filepath =  pathFileMap.get(filename);
-		if( filepath==null ) {
-			log.infof("%s.getPathForChart: No path recorded for file %s",TAG,filename);
-			filepath = "";
-		}
-		else {
-			log.infof("%s.getPathForChart: Path for file %s = %s",TAG,filename,filepath);
-		}
-		return filepath;
-	}
-	public Path getPythonRoot() { return this.pythonRoot; }
-	public void setPythonRoot(Path root) { this.pythonRoot = root; }
+
 	/**
 	 * Step 1: Read the database and create maps between various elements.
 	 * 
@@ -150,16 +134,18 @@ public class Converter {
 	}
 	/**
 	 * Step 2: Guarantee that the output directory is ready. If it doesn't 
-	 *         exist, create it. If it is not empty, report an error.
+	 *         exist, create it.
 	 */
 	public void prepareOutput(Path dir) {
 		if( !ok ) return;
 		// Attempt to create
+		log.infof("%s.prepareOutput: Output root is: %s",TAG,dir.toString());
 		if( !Files.exists(dir) ) {
 			Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwxr-xr-x");
 			FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
 			try {
-				Files.createDirectory(dir,attr);
+				log.debugf("%s.prepareOutput: Creating %s",TAG,dir.toString()); 
+				Files.createDirectories(dir,attr);
 			}
 			catch(IOException ioe) {
 				ok = false;
@@ -171,43 +157,70 @@ public class Converter {
 			ok = false;
 			log.errorf("%s: Target output exists, but is not a directory (%s)",TAG,dir.toString());
 		}
-		// We don't know the exact name of the output yet, so we make sure that the entire directory is clear
-		/*
-		else {
-			// Look in the directory for any non-hidden files
-			File[] files = dir.toFile().listFiles();
-			int index = 0;
-			while(index<files.length) {
-				if( !files[index].isHidden() ) {
-					ok = false;
-					System.err.println(String.format("%s: Output directory exists, but is not empty (%s)",TAG,dir.toString()));
-				}
-				index++;
-			}
-		}
-		*/
+
 	}
 	/**
 	 * Step 3: Traverse the directory designated as input and create a 
-	 *         map of relative path versus file name. We use this later
-	 *         on to resolve paths to encapsulations 
+	 *         map of relative path versus "ugly" file name. We use this later
+	 *         on to resolve paths to encapsulations and to generate corresponding
+	 *         file paths for the output.
 	 */
 	public void createPathMap(Path indir,String start) {
 		if( !ok ) return;
 		
+		outRoot = toCamelCase(start);
+		
 		// Create a path walker with the root
-		PathWalker walker = new PathWalker(indir,this.pathFileMap,this);
+		PathWalker walker = new PathWalker(indir,this);
 		try {
 			Path startpath = Paths.get(indir.toString(), start);
+			log.infof("%s.createPathMap: Walking %s",TAG,startpath.toString());
 			Files.walkFileTree(startpath, walker);
 		}
 		catch(IOException ioe) {
 			log.warnf("%s.createPathMap: Walk failed (%s)",TAG,ioe.getMessage());
 		}
 	}
+	/**
+	 * Step 4: Traverse the path map and create any directories needed on output.
+	 */
+	public void createOutputDirectories(Path outdir) {
+		if( !ok ) return;
+		
+		for( String partpath:pathMap.values() ) {
+			int pos = partpath.lastIndexOf("/");
+			Path dir = Paths.get(outdir.toString(),outRoot,partpath.substring(0, pos));
+			log.debugf("%s.createOutputDirectories: Creating %s",TAG,dir.toString());
+			try {
+				Files.createDirectories(dir);
+			}
+			catch(IOException ioe) {
+				log.warnf("%s.createOutputDirectories: Failed to create %s",TAG,ioe.getMessage());
+			}
+		}
+	}
+	/**
+	 * Step 5: Traverse the path map one more time. If any files map directly
+	 *         to directories that have been created, then map them to files 
+	 *         of the same name within that subdirectory.
+	 */
+	public void revisePaths(Path outdir) {
+		if( !ok ) return;
+		
+		for( String key:pathMap.keySet() ) {
+			String path = pathMap.get(key);
+			Path dir = Paths.get(outdir.toString(),outRoot,path);
+			if( Files.isDirectory(dir, LinkOption.NOFOLLOW_LINKS)) {
+				Path fname = dir.getFileName();
+				Path extended = Paths.get(pathMap.get(key),fname.toString());
+				log.debugf("%s.revisePaths: Revised %s",TAG,extended.toString());
+				pathMap.put(key,extended.toString());
+			}
+		}
+	}
 	
 	/**
-	 * Step 4: Traverse the directory designated as input and replicate its
+	 * Step 6: Traverse the directory designated as input and replicate its
 	 *         structure on the output. Convert any .xml files found and
 	 *         place them in the output structure. Each .xml file represents
 	 *         a chart. 
@@ -220,13 +233,63 @@ public class Converter {
 		try {
 			
 			Path startpath = Paths.get(indir.toString(), start);
-			log.debugf("%s.processInput: %s",TAG,startpath.toString());
+			log.infof("%s.processInput: %s",TAG,startpath.toString());
 			Files.walkFileTree(startpath, walker);
 		}
 		catch(IOException ioe) {
 			log.warnf("%s.processInput: Walk failed (%s)",TAG,ioe.getMessage());
 		}
 	}
+	/**
+	 * Convert the file into an XML document, find the S88-Begin block. Extract the 
+	 * "pretty" chart path, add to lookup by ugly name. The "ugly" name is a partial path,
+	 * less the .xml.
+	 * 
+	 * @param inpath relative path to the G2 XML file 
+	 */
+	public void analyzePath(Path fullPath,String inpath) {
+		// First create the G2 chart as an XML document.
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = null;
+
+		try {
+			docBuilder = docFactory.newDocumentBuilder();
+
+			Document g2doc = docBuilder.parse(fullPath.toFile());
+			Element root = g2doc.getDocumentElement();
+			NodeList blocks = root.getElementsByTagName("block");
+			int count = blocks.getLength();
+			int index = 0;
+			Element block = null;
+			while(index<count) {
+				block = (Element)blocks.item(index);
+				String claz = block.getAttribute("class");
+				if( claz!=null && claz.equalsIgnoreCase("S88-BEGIN") ) {
+					break;
+				}
+				index++;
+			}
+			String path = block.getAttribute("block-full-path-label");
+			if( path==null ) path = block.getAttribute("name");
+			int pos = path.lastIndexOf(".");
+			if( pos>0 ) path = path.substring(0, pos); 
+			String prettyPath = prettyPath(path);
+			log.infof("%s.visitFile: path map of %s = %s",TAG,inpath,prettyPath);
+			pathMap.put(inpath, prettyPath);
+			
+		}
+		catch (ParserConfigurationException pce) {
+			log.errorf("%s.analyzeFile: Error parsing %s (%s)",TAG,inpath,pce.getMessage());
+		}
+		catch (SAXException sax) {
+			log.errorf("%s.analyzeFile: Error analyzing %s (%s)",TAG,inpath,sax.getMessage());
+		}
+		catch (IOException ioe) {
+			log.errorf("%s.analyzeFile: Failure to read %s (%s)",TAG,inpath,ioe.getMessage());
+		}
+		
+	}
+	
 	public String chartNameFromPath(Path path) {
 		String name = path.toString();
 		int index = name.lastIndexOf(File.separator);
@@ -263,9 +326,11 @@ public class Converter {
 			
 			// Write the chart to the output
 			String xml = docToString(chartdoc);
-			log.infof("%s.convertFile: Writing to %s ...",TAG,outfile.toString());
+			log.debugf("%s.convertFile: Creating directory %s ...",TAG,outfile.getParent().toString());
 			log.trace(xml);
-			Files.write(outfile, xml.getBytes(), StandardOpenOption.CREATE_NEW);
+			Files.createDirectories(outfile.getParent());
+			log.debugf("%s.convertFile: Writing to %s ...",TAG,outfile.toString());
+			Files.write(outfile, xml.getBytes());  // CREATE_NEW,TRUNCATE_EXISTING.WRITE
 		}
 		catch (ParserConfigurationException pce) {
 			log.errorf("%s.convertFile: Error parsing %s (%s)",TAG,infile.toString(),pce.getMessage());
@@ -274,11 +339,18 @@ public class Converter {
 			log.errorf("%s.convertFile: Error analyzing %s (%s)",TAG,infile.toString(),sax.getMessage());
 		}
 		catch (IOException ioe) {
-			log.errorf("%s.convertFile: Failure to read %s or write %s (%s)",TAG,infile.toString(),outfile.toString(),ioe.getMessage());
+			log.errorf("%s.convertFile: Failure to write %s (%s)",TAG,outfile.toString(),ioe.getMessage());
 		}
 		
 	}
 	
+
+	public ClassNameMapper getClassMapper()       { return classMapper; }
+	public ProcedureMapper getProcedureMapper()   { return procedureMapper; }
+	public TagMapper       getTagMapper()         { return tagMapper; }
+	
+	public Path getPythonRoot() { return this.pythonRoot; }
+	public void setPythonRoot(Path root) { this.pythonRoot = root; }
 	/**
 	 * Update the contents of an Ignition chart document based on a corresponding G2 version.
 	 * @param chart the result
@@ -424,6 +496,38 @@ public class Converter {
 		if( pos>0 ) out = out.substring(0, pos);
 		return out+".py";
 	}
+	
+	// The path of interest for a chart is an SFC folder hierarchy. Deduce this from
+	// the file path name.
+	public String partialPathFromInfile(String filename)  {
+		StringBuilder pathBuilder = new StringBuilder();
+		String filepath =  pathMap.get(filename);
+		if( filepath==null ) {
+			log.warnf("%s.partialPathFromInfile: No path recorded for file %s",TAG,filename);
+		}
+		else {
+			
+			pathBuilder.append(outRoot);
+			pathBuilder.append(filepath);
+			log.tracef("%s.partialPathFromInfile: Path for file %s = %s",TAG,filename,pathBuilder.toString());
+		}
+		return pathBuilder.toString();
+	}
+	
+	/**
+	 * Result will have a leading "/"
+	 * @param path
+	 * @return
+	 */
+	private String prettyPath(String path) {
+		String[] segments = path.split("[.]");
+		StringBuilder builder = new StringBuilder();
+		for(String seg:segments) {
+			builder.append("/");
+			builder.append(toCamelCase(seg));
+		}
+		return builder.toString();
+	}
 	/**
 	 * Remove dashes and spaces. Convert to camel-case.
 	 * @param input
@@ -463,7 +567,7 @@ public class Converter {
 	        }
 	        camelCase.append(c);
 	    }
-	    log.tracef("toCamelCase: result %s",camelCase.toString());
+	    //log.tracef("toCamelCase: result %s",camelCase.toString());
 	    return camelCase.toString();
 	}
 	/**
@@ -592,9 +696,12 @@ public class Converter {
 			// The output directory is the root holder for the new tree that will be created.
 			Path outdir = pathFromString(args[argi++]);
 			String rootFile = args[argi];
-			log.tracef("%s.main: outdir = %s",TAG,outdir.toString());
+			log.infof("%s.main: root = %s",TAG,rootFile);
+			log.infof("%s.main: outdir = %s",TAG,outdir.toString());
 			m.prepareOutput(outdir);
 			m.createPathMap(indir,rootFile);
+			m.createOutputDirectories(outdir);
+			m.revisePaths(outdir);
 			m.processInput(indir,outdir,rootFile);
 		}
 		catch(Exception ex) {

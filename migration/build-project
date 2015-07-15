@@ -16,6 +16,4 @@ LIB=$REPO/external/lib
 JAR=${LIB}/sfc-migration.jar
 OUTFIL=$2
 OUTFIL=${OUTFIL}.proj
-# Use for debugging - ruins output file however.
-#java -cp ${JAR} -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Dlog.level=INFO -Droot.class=APPLICATION com.ils.blt.migration.Migrator ${DB}
 java -cp ${JAR} -Dlog.level=INFO com.ils.sfc.migration.ProjectBuilder $1 ${OUTFIL}

@@ -1,0 +1,12 @@
+#!/bin/sh
+#  Use this version when debugging a single file.
+#
+SFC=${GIT_REPO}/sfc/migration
+APP=${SFC}/translate-onstart
+#FIL="EM-S88-GET-RX-DATA.txt"
+#FIL="EM-S88-INITIALIZE-CRX-SS-FRCT.txt"
+FIL="EM-S88-MID-RUN-CATOUT-UIR.txt"
+INDIR=${SFC}/procs/g2/vistalon/onstart
+OUTDIR=${SFC}/procs/ignition/vistalon/onstart
+cd $INDIR
+$APP $INDIR/$FIL $OUTDIR

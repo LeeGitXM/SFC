@@ -40,7 +40,7 @@ public abstract class AbstractPathWalker implements FileVisitor<Path>  {
 
 	@Override
 	public FileVisitResult visitFileFailed(Path file, IOException ioe) throws IOException {
-		log.errorf("%s.visitFileFailed: Error processing %s (%s)", TAG, file.toString(), ioe.getMessage());
+		log.errorf("%s.visitFileFailed: Error processing %s (%s)", TAG, file.toString(), ioe.getLocalizedMessage());
 		return FileVisitResult.CONTINUE;
 	}
 
@@ -65,7 +65,21 @@ public abstract class AbstractPathWalker implements FileVisitor<Path>  {
 		if( extended.length()>root.length()+1) {
 			result = extended.substring(root.length()+1);
 		}
-		log.tracef("%s.relativize: %s -> %s",TAG,extended,result);
+		//log.tracef("%s.relativize: %s -> %s",TAG,extended,result);
+		return result;
+	}
+	/**
+	 * Extract the file name from the path. Strip off any trailing extension.
+	 * 
+	 * @param path full path
+	 * @return
+	 */
+	protected String fileName(Path path) {
+		//log.infof("%s.relativize: %s to %s",TAG,root,extended);
+		Path fname = path.getFileName();
+		String result = fname.toString();
+		int pos = result.lastIndexOf(".");
+		if( pos>0 ) result = result.substring(0,pos);
 		return result;
 	}
 }

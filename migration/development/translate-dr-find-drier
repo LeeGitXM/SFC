@@ -1,7 +1,0 @@
-#!/bin/sh
-#  Use this version when debugging a single file.
-#
-SFC=${GIT_REPO}/sfc/migration
-FIL=DR-FIND-DRIER.txt
-DIR=${SFC}/procs/g2/onstart
-${SFC}/translate-onstart $DIR/$FIL

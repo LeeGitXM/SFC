@@ -51,7 +51,7 @@ public class ProjectBuilder {
 	 */
 	public void prepareOutput(Path project) {
 		try {
-			out = new PrintWriter(Files.newBufferedWriter(project,StandardOpenOption.TRUNCATE_EXISTING,StandardOpenOption.CREATE));
+			out = new PrintWriter(Files.newBufferedWriter(project,StandardOpenOption.TRUNCATE_EXISTING,StandardOpenOption.CREATE,StandardOpenOption.WRITE));
 		}
 		catch(IOException ioe) {
 			log.errorf("%s.prepareOutput: Unable to open %s for writing (%s)",TAG,project.toString(),ioe.getMessage());

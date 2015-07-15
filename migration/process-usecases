@@ -6,6 +6,7 @@
 #   -- create project files from the converted XML and translated procedures
 #
 SFC=$GIT_REPO/sfc
+PYDIR=$GIT_REPO/xom-python/XOM_Python/src/scripts/usecase
 OUTDIR=$SFC/migration/projects/usecase
 mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
@@ -19,6 +20,9 @@ cd $SFC/migration
 # Translare the procedures
 echo "========================== Procedure Translation ============================"
 ./translate-usecases all
+cd $SFC/migration/procs/ignition/usecase
+cp -a * $PYDIR
+cd $SFC/migration
 #
 # Convert the XML 
 echo "========================== Chart Translation ============================"
