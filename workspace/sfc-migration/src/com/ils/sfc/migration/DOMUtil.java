@@ -28,7 +28,7 @@ public class DOMUtil  {
 		int count = nodes.getLength();
 		if( count==0 ) return null;
 		if( count>1) throw new IllegalArgumentException(
-				String.format("DOMUtil.elementAttributeValue: the must be exactly one %s, %d found",tagName,count));
+				String.format("DOMUtil.elementAttributeValue: there must be exactly one %s, %d found",tagName,count));
 		
 		// Exactly one
 		Element e = (Element)nodes.item(0);

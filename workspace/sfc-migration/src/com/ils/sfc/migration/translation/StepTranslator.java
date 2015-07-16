@@ -76,10 +76,9 @@ public class StepTranslator {
 			if( isEncapsulation ) {
 				String reference = block.getAttribute("full-path");
 				if( reference.length()==0) reference = block.getAttribute("label");
-				String convertedReference = delegate.toCamelCase(reference);
-				String chartPath = delegate.getPathForChart(convertedReference);
+				String chartPath = delegate.partialPathFromInfile(reference);
 				step.setAttribute("chart-path", chartPath);
-				log.tracef("%s.translate: Encapsulation: %s translates to %s",TAG,convertedReference,chartPath);
+				log.tracef("%s.translate: Encapsulation: %s translates to %s",TAG,reference,chartPath);
 				step.setAttribute("execution-mode", "RunUntilCompletion");   // versus RunUntilStopped
 			}
 			if( factoryId.equalsIgnoreCase("action-step") ) {

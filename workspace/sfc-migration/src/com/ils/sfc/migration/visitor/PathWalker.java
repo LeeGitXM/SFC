@@ -8,28 +8,25 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Map;
 
 import com.ils.sfc.migration.Converter;
 /**
  * Before we can link encapsulations via path, we need to create a
  * complete path map. Traverse the input tree, convert the names in the same
- * way as the final converter, then make a lookup of relative path, versus chart name.
+ * way as the final converter, then make two lookups:
+ *   1)  lookup of relative path, versus chart name.
  */
 public class PathWalker extends AbstractPathWalker implements FileVisitor<Path>  {
-	private final static String TAG = "PathWalker";
-	private final Map<String,String> pathMap;
-	private final String root;
+	private final static String TAG = "PathWalker";;
 	private final Converter delegate;
+	private final String root;
 	 /**
 	  * @param g2Root
-	  * @param map the re
 	  * @param converter
 	  */
-	public PathWalker(Path g2Root,Map<String,String> map, Converter converter) {
+	public PathWalker(Path g2Root, Converter converter) {
+		this.root = g2Root.toString();
 		this.delegate = converter;
-		this.root = delegate.toCamelCase(g2Root.toString());
-		this.pathMap = map;
 	}
 
 	/** 
@@ -41,13 +38,9 @@ public class PathWalker extends AbstractPathWalker implements FileVisitor<Path> 
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 		//Ignore the OSX resource marker
 		if(file.toString().endsWith(".DS_Store")) return FileVisitResult.CONTINUE;
-		String chartName = delegate.chartNameFromPath(file);
-		String partialPath = relativize(root,file.toString());
-		// Remove the file extension, camel-case
-		if( partialPath.endsWith(".xml")) partialPath = partialPath.substring(0, partialPath.length()-4);
-		partialPath = delegate.toCamelCase(partialPath);
-		log.infof("%s.visitFile: path map of %s = %s",TAG,chartName,partialPath);
-		pathMap.put(chartName, partialPath);
+		String fname = fileName(file);
+		if( fname.equalsIgnoreCase("/") )         return FileVisitResult.CONTINUE;
+		delegate.analyzePath(file,fname);
 		return FileVisitResult.CONTINUE;
 	}
 }

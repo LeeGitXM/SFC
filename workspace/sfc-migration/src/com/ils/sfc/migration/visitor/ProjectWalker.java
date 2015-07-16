@@ -62,7 +62,7 @@ public class ProjectWalker extends AbstractPathWalker implements FileVisitor<Pat
 		if( parentId!=null) {
 			String uuid = UUID.randomUUID().toString();
 			uuidForPath.put(dirString, uuid);
-			log.infof("%s.previsitDirectory: directory %s = %s.",TAG,dirString,uuid);
+			log.tracef("%s.previsitDirectory: directory %s = %s.",TAG,dirString,uuid);
 			delegate.addFolder(dirname,uuid,parentId);
 		}
 		else {
