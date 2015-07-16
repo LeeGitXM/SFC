@@ -1,6 +1,6 @@
 <Tags>
-   <Tag name="Recipe Data" path="_types_" type="Folder"/>
-   <Tag name="Data" path="_types_/Recipe Data" type="UDT_DEF">
+   <Tag name="SFC" path="_types_" type="Folder"/>
+   <Tag name="Data" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
       <Parameters>
@@ -38,10 +38,10 @@
          <Property name="DataType">7</Property>
       </Tag>
    </Tag>
-   <Tag name="SQC" path="_types_/Recipe Data" type="UDT_DEF">
+   <Tag name="SQC" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
-      <Property name="UDTParentType">Recipe Data/DataWithUnits</Property>
+      <Property name="UDTParentType">SFC/DataWithUnits</Property>
       <Parameters>
       </Parameters>
       <Tag name="highLimit" path="" type="DB">
@@ -57,7 +57,7 @@
          <Property name="DataType">5</Property>
       </Tag>
    </Tag>
-   <Tag name="Recipe Details" path="_types_/Recipe Data" type="UDT_DEF">
+   <Tag name="Recipe Details" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
       <Parameters>
@@ -90,7 +90,7 @@
          <Property name="DataType">7</Property>
       </Tag>
    </Tag>
-   <Tag name="Download Trigger" path="_types_/Recipe Data" type="UDT_DEF">
+   <Tag name="Download Trigger" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
       <Parameters>
@@ -139,10 +139,10 @@
          <Property name="DataType">7</Property>
       </Tag>
    </Tag>
-   <Tag name="IO" path="_types_/Recipe Data" type="UDT_DEF">
+   <Tag name="IO" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
-      <Property name="UDTParentType">Recipe Data/DataWithUnits</Property>
+      <Property name="UDTParentType">SFC/DataWithUnits</Property>
       <Parameters>
       </Parameters>
       <Tag name="errorCode" path="" type="DB">
@@ -186,10 +186,10 @@
          <Property name="DataType">5</Property>
       </Tag>
    </Tag>
-   <Tag name="OutputRamp" path="_types_/Recipe Data" type="UDT_DEF">
+   <Tag name="OutputRamp" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
-      <Property name="UDTParentType">Recipe Data/Output</Property>
+      <Property name="UDTParentType">SFC/Output</Property>
       <Parameters>
       </Parameters>
       <Tag name="rampTime" path="" type="DB">
@@ -201,10 +201,10 @@
          <Property name="DataType">5</Property>
       </Tag>
    </Tag>
-   <Tag name="Matrix" path="_types_/Recipe Data" type="UDT_DEF">
+   <Tag name="Matrix" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
-      <Property name="UDTParentType">Recipe Data/DataWithUnits</Property>
+      <Property name="UDTParentType">SFC/DataWithUnits</Property>
       <Parameters>
       </Parameters>
       <Tag name="value" path="" type="DB">
@@ -212,10 +212,10 @@
          <Property name="DataType">7</Property>
       </Tag>
    </Tag>
-   <Tag name="Structure" path="_types_/Recipe Data" type="UDT_DEF">
+   <Tag name="Structure" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
-      <Property name="UDTParentType">Recipe Data/Data</Property>
+      <Property name="UDTParentType">SFC/Data</Property>
       <Parameters>
       </Parameters>
       <Tag name="value" path="" type="DB">
@@ -223,10 +223,10 @@
          <Property name="DataType">7</Property>
       </Tag>
    </Tag>
-   <Tag name="Output" path="_types_/Recipe Data" type="UDT_DEF">
+   <Tag name="Output" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
-      <Property name="UDTParentType">Recipe Data/IO</Property>
+      <Property name="UDTParentType">SFC/IO</Property>
       <Parameters>
       </Parameters>
       <Tag name="download" path="" type="DB">
@@ -271,17 +271,17 @@
          <Property name="DataType">6</Property>
       </Tag>
    </Tag>
-   <Tag name="Input" path="_types_/Recipe Data" type="UDT_DEF">
+   <Tag name="Input" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
-      <Property name="UDTParentType">Recipe Data/IO</Property>
+      <Property name="UDTParentType">SFC/IO</Property>
       <Parameters>
       </Parameters>
    </Tag>
-   <Tag name="DataWithUnits" path="_types_/Recipe Data" type="UDT_DEF">
+   <Tag name="DataWithUnits" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
-      <Property name="UDTParentType">Recipe Data/Data</Property>
+      <Property name="UDTParentType">SFC/Data</Property>
       <Parameters>
       </Parameters>
       <Tag name="units" path="" type="DB">
@@ -289,10 +289,10 @@
          <Property name="DataType">7</Property>
       </Tag>
    </Tag>
-   <Tag name="Array" path="_types_/Recipe Data" type="UDT_DEF">
+   <Tag name="Array" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
-      <Property name="UDTParentType">Recipe Data/DataWithUnits</Property>
+      <Property name="UDTParentType">SFC/DataWithUnits</Property>
       <Parameters>
       </Parameters>
       <Tag name="value" path="" type="DB">
@@ -300,10 +300,10 @@
          <Property name="DataType">7</Property>
       </Tag>
    </Tag>
-   <Tag name="Value" path="_types_/Recipe Data" type="UDT_DEF">
+   <Tag name="Value" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
-      <Property name="UDTParentType">Recipe Data/DataWithUnits</Property>
+      <Property name="UDTParentType">SFC/DataWithUnits</Property>
       <Parameters>
       </Parameters>
       <Tag name="category" path="" type="DB">

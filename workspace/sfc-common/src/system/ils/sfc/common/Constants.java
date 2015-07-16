@@ -122,7 +122,7 @@ public class Constants {
 	public static final String QUEUE = "queue";
 	public static final String RAMP_TIME = "rampTime";
 	public static final String RECIPE = "recipe";
-	public static final String RECIPE_DATA_FOLDER = "Recipe Data";
+	public static final String RECIPE_DATA_FOLDER = "SFC";
 	public static final String RECIPE_LOCATION = "recipeLocation"; 
 	public static final String REGISTER_AND_DISPLAY = "registerAndDisplay";
 	public static final String REGISTER_ONLY = "registerOnly";

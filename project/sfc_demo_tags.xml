@@ -1,0 +1,189 @@
+<Tags>
+   <Tag name="TestController" path="_types_" type="UDT_DEF">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Parameters>
+      </Parameters>
+      <Tag name="currentValue" path="" type="DB">
+         <Property name="Value">0.0</Property>
+         <Property name="DataType">5</Property>
+      </Tag>
+      <Tag name="setpoint" path="" type="DB">
+         <Property name="Value">0.0</Property>
+         <Property name="DataType">5</Property>
+      </Tag>
+   </Tag>
+   <Tag name="Configuration" path="" type="Folder"/>
+   <Tag name="DiagnosticToolkit" path="Configuration" type="Folder"/>
+   <Tag name="vectorClampMode" path="Configuration/DiagnosticToolkit" type="DB">
+      <Property name="Value">Implement</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="itemIdPrefix" path="Configuration/DiagnosticToolkit" type="DB">
+      <Property name="Value"></Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="RecipeToolkit" path="Configuration" type="Folder"/>
+   <Tag name="recipeMinimumDifference" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">1.0E-5</Property>
+      <Property name="DataType">5</Property>
+   </Tag>
+   <Tag name="backgroundColorWriteError" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">red</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="screenBackgroundColorDownloading" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">white</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="backgroundColorWritePending" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">yellow</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="backgroundColorWriteSuccess" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">lime</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="screenBackgroundColorFail" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">red</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="startTime" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">2015-05-28 14:36:54</Property>
+      <Property name="DataType">8</Property>
+   </Tag>
+   <Tag name="runningSeconds" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">2842367</Property>
+      <Property name="DataType">3</Property>
+      <Property name="ExpressionType">1</Property>
+      <Property name="Expression">dateDiff({[.]startTime}, now(0), &apos;sec&apos;)</Property>
+   </Tag>
+   <Tag name="recipeMinimumRelativeDifference" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">1.0E-5</Property>
+      <Property name="DataType">5</Property>
+   </Tag>
+   <Tag name="backgroundColorMismatch" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">plum</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="backgroundColorError" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">pink</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="backgroundColorReadWrite" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">lightcyan</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="screenBackgroundColorSuccess" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">limegreen</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="itemIdPrefix" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value"></Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="backgroundColorNoChange" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">lightblue</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="screenBackgroundColorInitializing" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">lightGrey</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="downloadTimeout" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">120</Property>
+      <Property name="DataType">2</Property>
+   </Tag>
+   <Tag name="localWriteAlias" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">LOCAL</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="backgroundColorReadOnly" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">lightblue</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="recipeWriteEnabled" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">true</Property>
+      <Property name="DataType">6</Property>
+   </Tag>
+   <Tag name="screenBackgroundColorUnknown" path="Configuration/RecipeToolkit" type="DB">
+      <Property name="Value">magenta</Property>
+      <Property name="DataType">7</Property>
+   </Tag>
+   <Tag name="LabData" path="Configuration" type="Folder"/>
+   <Tag name="standardDeviationsToValidityLimits" path="Configuration/LabData" type="DB">
+      <Property name="Value">4.5</Property>
+      <Property name="DataType">5</Property>
+   </Tag>
+   <Tag name="pollingEnabled" path="Configuration/LabData" type="DB">
+      <Property name="Value">true</Property>
+      <Property name="DataType">6</Property>
+   </Tag>
+   <Tag name="testController1" path="" type="UDT_INST">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Property name="UDTParentType">TestController</Property>
+      <Parameters>
+      </Parameters>
+      <Tag name="setpoint" path="" type="EXTENSION">
+         <Property name="Value">1.0</Property>
+      </Tag>
+   </Tag>
+   <Tag name="testController2" path="" type="UDT_INST">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Property name="UDTParentType">TestController</Property>
+      <Parameters>
+      </Parameters>
+      <Tag name="setpoint" path="" type="EXTENSION">
+         <Property name="Value">2.0</Property>
+      </Tag>
+   </Tag>
+   <Tag name="testController3" path="" type="UDT_INST">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Property name="UDTParentType">TestController</Property>
+      <Parameters>
+         <Property name="currentValue" type="Float">0.0</Property>
+         <Property name="setpoint" type="Float">0.0</Property>
+      </Parameters>
+      <Tag name="setpoint" path="" type="EXTENSION">
+         <Property name="Value">3.0</Property>
+      </Tag>
+   </Tag>
+   <Tag name="testController4" path="" type="UDT_INST">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Property name="UDTParentType">TestController</Property>
+      <Parameters>
+      </Parameters>
+   </Tag>
+   <Tag name="testInput1" path="" type="DB">
+      <Property name="Value">80.0</Property>
+      <Property name="DataType">5</Property>
+   </Tag>
+   <Tag name="testInput2" path="" type="DB">
+      <Property name="Value">0</Property>
+      <Property name="DataType">2</Property>
+   </Tag>
+   <Tag name="testOutput1" path="" type="DB">
+      <Property name="Value">0</Property>
+      <Property name="DataType">2</Property>
+   </Tag>
+   <Tag name="testOutput2" path="" type="DB">
+      <Property name="Value">0</Property>
+      <Property name="DataType">2</Property>
+   </Tag>
+   <Tag name="testTag1" path="" type="DB">
+      <Property name="Value">1</Property>
+      <Property name="DataType">2</Property>
+   </Tag>
+   <Tag name="testTag2" path="" type="DB">
+      <Property name="Value">2</Property>
+      <Property name="DataType">2</Property>
+   </Tag>
+   <Tag name="testTag3" path="" type="DB">
+      <Property name="Value">3</Property>
+      <Property name="DataType">2</Property>
+   </Tag>
+</Tags>
