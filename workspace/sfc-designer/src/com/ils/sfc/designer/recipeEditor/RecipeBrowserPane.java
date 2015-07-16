@@ -14,6 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Group;
 import com.ils.sfc.designer.panels.ButtonPanel;
@@ -105,6 +106,7 @@ public class RecipeBrowserPane extends EditorPanel {
 	
 	/** Recursively add a layer of nested recipe data to the tree. */
 	private void addLayer(DefaultMutableTreeNode parentNode, Data data) {
+		data.readFromTags();  // update the data to reflect the tag values
 		RecipeDataTreeNode childNode = new RecipeDataTreeNode(data);
 		parentNode.add(childNode);
 		if(showLeafNodes) {
@@ -121,6 +123,7 @@ public class RecipeBrowserPane extends EditorPanel {
 		}
 	}
 	
+
 	private Object formatValue(PropertyValue<?> pval) {
 		Object value = pval.getValue();
 		if(value instanceof double[][]) {
@@ -159,6 +162,8 @@ public class RecipeBrowserPane extends EditorPanel {
 			Group group = (Group) parent.getRecipeData();
 			group.getChildren().remove(selectedNode.getRecipeData());
 		}
+		selectedNode.getRecipeData().deleteTag();
+		controller.commit();
 		// need to rebuild explicitly since we're not sliding away + back
 		rebuildTree();
 	}

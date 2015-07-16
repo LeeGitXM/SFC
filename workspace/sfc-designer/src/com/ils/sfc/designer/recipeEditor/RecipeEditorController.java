@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 
 import org.json.JSONObject;
 
+import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.designer.EditorErrorHandler;
 import com.ils.sfc.designer.panels.MessagePanel;
@@ -108,13 +109,19 @@ public class RecipeEditorController extends PanelController implements EditorErr
 		messagePanel.activate(returnPanelIndex);
 	}
 
-	public void setElement(ChartUIElement element) {
+	public void setElement(ChartUIElement element, String chartPath) {
 		this.element = element;
+		String stepName = element.get(IlsProperty.NAME);
+		String stepPath = chartPath + "/" + stepName;
+		creator.setChartPath(stepPath);
 		if(element.contains(ChartStepProperties.AssociatedData)) {
 			JSONObject associatedData = element.getOrDefault(ChartStepProperties.AssociatedData);
 			try {
 				//System.out.println(associatedData.toString());
 				List<Data> recipeData = Data.fromAssociatedData(associatedData);
+				for(Data data: recipeData) {
+					data.setStepPath(stepPath);
+				}
 				setRecipeData(recipeData);
 			} catch (Exception e) {
 				showMessage("Error getting associated recipe data: " + e.getMessage(), BROWSER);
@@ -130,17 +137,10 @@ public class RecipeEditorController extends PanelController implements EditorErr
 		if(recipeData == null) return;
 		
 		try {
-			if(element.contains(ChartStepProperties.AssociatedData)) {
-				// set the recipe data in the existing associated data
-				JSONObject associatedData = element.getOrDefault(ChartStepProperties.AssociatedData);
-				Data.setAssociatedData(associatedData, recipeData);
-				element.set(ChartStepProperties.AssociatedData, associatedData);
-			}
-			else {
-				// create a new associated data object to hold recipe data
-				JSONObject associatedData = Data.toAssociatedData(recipeData);
-				element.set(ChartStepProperties.AssociatedData, associatedData);
-			}
+			// Note: we are assuming that we have exclusive use of the associatedData
+			// and can completely overwrite it.
+			JSONObject associatedData = Data.toAssociatedData(recipeData);
+			element.set(ChartStepProperties.AssociatedData, associatedData);
 		} catch (Exception e) {
 			showMessage("Error setting associated recipe data: " + e.getMessage(), BROWSER);
 		}

@@ -1,6 +1,7 @@
 package com.ils.sfc.common;
 
 import com.inductiveautomation.ignition.client.model.ClientContext;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
 
 /**
  * Provide additional functionality for python scripts
@@ -10,7 +11,6 @@ public class IlsClientScripts {
 	private static IlsSfcRequestHandler requestHandler = new IlsSfcRequestHandler();
 
 	public static void setContext(ClientContext ctx) { context = ctx; }
-	
 	/**
 	 * Find the database associated with the sequential function charts.
 	 * 
@@ -44,6 +44,28 @@ public class IlsClientScripts {
 	 */
 	public static void setTimeFactor(double factor) {
 		requestHandler.setTimeFactor(factor);
+	}
+	
+	/** Time the overhead for calling java-to-python */
+	public static void timePythonCalls() {
+		int numCalls = 10000;
+		Object[] args = {};
+		try {
+			PythonCall.DO_NOTHING.exec(args);  // call once to compile
+			long startMillis = System.currentTimeMillis();
+			long dummyTotal = 0;
+			for(int i = 0; i < numCalls; i++) {
+				Integer rval = (Integer)PythonCall.DO_NOTHING.exec(args);
+				// try to stop the compiler from optimizing this out by
+				// doing some fake work:
+				dummyTotal += rval;
+			}
+			long elapsedMillis = System.currentTimeMillis() - startMillis;
+			double millisPerCall = elapsedMillis / (double)numCalls;
+			System.out.println(Integer.toString(numCalls) + " python calls took " + elapsedMillis + " ms; (" + millisPerCall + " ms per call)" + " junk count " + dummyTotal);
+		} catch (JythonExecException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

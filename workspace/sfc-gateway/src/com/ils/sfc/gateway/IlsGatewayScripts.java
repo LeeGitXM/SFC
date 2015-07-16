@@ -3,6 +3,7 @@ package com.ils.sfc.gateway;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 
 import org.json.JSONException;
@@ -26,6 +27,7 @@ import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
+import com.inductiveautomation.ignition.common.script.message.MessageDispatchManager;
 import com.inductiveautomation.ignition.common.util.DatasetBuilder;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -64,9 +66,12 @@ public class IlsGatewayScripts {
 	 * @param isIsolation true if this the chart is in an isolation (test) state.
 	 * @return name of the tag provider for production or isolation mode, as appropriate.
 	 */
-	public static String getProviderName(boolean isIsolation)  {
-		String providerName = requestHandler.getProviderName(isIsolation);
-		return providerName;
+	public static String getProviderName(boolean isolationMode)  {
+		return RecipeDataAccess.getProviderName(isolationMode);
+	}
+	
+	public static boolean getIsolationMode(PyChartScope chartScope) {
+		return RecipeDataAccess.getIsolationMode(chartScope);		
 	}
 	
 	public static PyDictionary getResponse(String id) {
@@ -106,7 +111,7 @@ public class IlsGatewayScripts {
 			    		if(isEmpty(advice)) {
 			    			String adviceKey = changeValueKey(row.valueKey, "advice");
 			    			try {
-			    				advice = (String) s88BasicGet(chartScope, stepScope, adviceKey, row.recipeScope);
+			    				advice = (String) RecipeDataAccess.s88Get(chartScope, stepScope, adviceKey, row.recipeScope);
 			    			}
 			    			catch(Exception e) {
 			    				logger.error("Error getting advice from recipe data", e);
@@ -144,29 +149,29 @@ public class IlsGatewayScripts {
 	/** Get Review Data config info from recipe data. Tolerates nonexistent keys. */
 	private static void getScriptedConfig(PyChartScope chartScope, PyChartScope stepScope, String configKey, String configScope, Row scriptedConfig) {
 		String adviceKey = configKey + ".advice";
-		if(s88DataExists(chartScope, stepScope, adviceKey, configScope)) {
-			scriptedConfig.advice = (String)s88BasicGet(chartScope, stepScope, adviceKey, configScope);
+		if(RecipeDataAccess.s88DataExists(chartScope, stepScope, adviceKey, configScope)) {
+			scriptedConfig.advice = (String)RecipeDataAccess.s88Get(chartScope, stepScope, adviceKey, configScope);
 		}
 		String unitsKey = configKey + ".units";
-		if(s88DataExists(chartScope, stepScope, unitsKey, configScope)) {
-			scriptedConfig.units = (String)s88BasicGet(chartScope, stepScope, unitsKey, configScope);		
+		if(RecipeDataAccess.s88DataExists(chartScope, stepScope, unitsKey, configScope)) {
+			scriptedConfig.units = (String)RecipeDataAccess.s88Get(chartScope, stepScope, unitsKey, configScope);		
 		}
 		String promptKey = configKey + ".label";
-		if(s88DataExists(chartScope, stepScope, promptKey, configScope)) {
-			scriptedConfig.prompt = (String)s88BasicGet(chartScope, stepScope, promptKey, configScope);	
+		if(RecipeDataAccess.s88DataExists(chartScope, stepScope, promptKey, configScope)) {
+			scriptedConfig.prompt = (String)RecipeDataAccess.s88Get(chartScope, stepScope, promptKey, configScope);	
 		}
 	}
 
 	/** Convert the recipe data value to the display units given in the Review Data config. */
 	private static double getValueInDisplayUnits(PyChartScope chartScope, PyChartScope stepScope, Row row) {
-		Object oVal = s88BasicGet(chartScope, stepScope, row.valueKey, row.recipeScope);
+		Object oVal = RecipeDataAccess.s88Get(chartScope, stepScope, row.valueKey, row.recipeScope);
 		double doubleVal = 0.;
 		if(oVal instanceof Number) {
 			doubleVal = ((Number)oVal).doubleValue();
 		}
 		// else error!
 		String unitsKey = changeValueKey(row.valueKey,  "units");
-		String fromUnits = (String)s88BasicGet(chartScope, stepScope, unitsKey, row.recipeScope);
+		String fromUnits = (String)RecipeDataAccess.s88Get(chartScope, stepScope, unitsKey, row.recipeScope);
 		String toUnits = row.units;
 		if(IlsSfcCommonUtils.isEmpty(fromUnits) || IlsSfcCommonUtils.isEmpty(toUnits)) {
 			throw new IllegalArgumentException("null units in display conversion " + fromUnits + "->" + toUnits);
@@ -226,46 +231,7 @@ public class IlsGatewayScripts {
 		return null;  // all is well...		
 	}
 
-	/** Check if a particular piece of recipe data exists. */
-	public static boolean s88DataExists(PyChartScope chartScope, PyChartScope stepScope,
-		String path, String scopeIdentifier) {
-		try {
-			ilsSfcGatewayHook.getScopeLocator().s88Get(chartScope, stepScope, path, scopeIdentifier);
-			return true;
-		}
-		catch(IllegalArgumentException e) {
-			return false;
-		}
-	}
-
-	public static Object s88BasicGet(PyChartScope chartScope, PyChartScope stepScope,
-		String path, String scopeIdentifier) {
-		return ilsSfcGatewayHook.getScopeLocator().s88Get(chartScope, stepScope, path, scopeIdentifier);
-	}
 	
-	public static PyChartScope s88GetScope(PyChartScope chartScope, PyChartScope stepScope, String scopeIdentifier) {
-		return ilsSfcGatewayHook.getScopeLocator().resolveScope(chartScope, stepScope, scopeIdentifier);
-	}
-
-	public static void s88ScopeChanged(PyChartScope chartScope, PyChartScope stepScope) {
-		ilsSfcGatewayHook.getScopeLocator().s88ScopeChanged(chartScope, stepScope);
-	}
-
-	public static void s88BasicSet(PyChartScope chartScope, PyChartScope stepScope, 
-		String path, String scopeIdentifier, Object value) {
-		ilsSfcGatewayHook.getScopeLocator().s88Set(chartScope, stepScope, path, scopeIdentifier, value);
-	}
-
-	public static String getRecipeDataText(PyChartScope chartScope, PyChartScope stepScope,
-		String scopeIdentifier) {
-		try {
-			return ilsSfcGatewayHook.getScopeLocator().getRecipeDataText(chartScope, stepScope, scopeIdentifier);
-		} catch (JSONException e) {
-			logger.error("Error getting recipe data text", e);
-			return "";
-		}	
-	}
-		
 	public static void setHook(IlsSfcGatewayHook hook) {
 		ilsSfcGatewayHook = hook;		
 	}
@@ -397,5 +363,18 @@ public class IlsGatewayScripts {
 	public static Object dropboxGet(String chartRunId, String objectId) {
 		return ilsSfcGatewayHook.getDropBox().get(chartRunId, objectId);
 	}
- 
+	
+	// New recipe data stuff
+	
+	private static void sendMessageToClient(String project, String handler, PyDictionary resultPayload) {
+		Properties properties = new Properties();
+		properties.setProperty("scope", "C");
+		MessageDispatchManager msgMgr = ilsSfcGatewayHook.getContext().getMessageDispatchManager();
+		msgMgr.dispatch(project, handler, resultPayload, properties);
+	}
+	
+	public static String getRecipeDataTagPath(PyChartScope chartScope, PyChartScope stepScope, String scope) {
+		return RecipeDataAccess. getRecipeDataTagPath(chartScope, stepScope, scope);
+	}
+	
 }

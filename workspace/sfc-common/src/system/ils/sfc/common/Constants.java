@@ -64,8 +64,6 @@ public class Constants {
 	public static final String FETCH_MODE = "fetchMode";
 	public static final String FILENAME = "filename";
 	public static final String FILEPATH = "filepath";
-	public static final String GUI_LABEL = "guiLabel";
-	public static final String GUI_UNITS = "guiUnits";
 	public static final String HELP = "help";
 	public static final String HIGH = "High";
 	public static final String HIGH_LOW = "High/Low";
@@ -74,6 +72,7 @@ public class Constants {
 	public static final String IMMEDIATE = "Immediate";
 	public static final String INFO = "Info";
 	public static final String INSTANCE_ID = "instanceId";
+	public static final String ISOLATION_MODE = "isolationMode";
 	public static final String LOW_LIMIT = "lowLimit";
 	public static final String LOW = "Low";
 	public static final String KEY = "key";
@@ -95,9 +94,12 @@ public class Constants {
 	public static final String MULTIPLE = "multiple";
 	public static final String NAME = "name";
 	public static final String NONE = "none";
+	public static final String NOT_PERSISTENT = "NotPersistent";
+	public static final String NOT_CONSISTENT = "NotConsistent";
 	public static final String NUMBER_OF_TIMEOUTS = "numberOfTimeouts";
 	public static final String OFF = "Off";
 	public static final String OK = "OK";
+	public static final String OUT_OF_RANGE = "Out of Range";
 	public static final String PARENT_GROUP = "parent-group";
 	public static final String PCT = "Pct";
 	public static final String PENDING = "Pending";
@@ -120,6 +122,7 @@ public class Constants {
 	public static final String QUEUE = "queue";
 	public static final String RAMP_TIME = "rampTime";
 	public static final String RECIPE = "recipe";
+	public static final String RECIPE_DATA_FOLDER = "Recipe Data";
 	public static final String RECIPE_LOCATION = "recipeLocation"; 
 	public static final String REGISTER_AND_DISPLAY = "registerAndDisplay";
 	public static final String REGISTER_ONLY = "registerOnly";

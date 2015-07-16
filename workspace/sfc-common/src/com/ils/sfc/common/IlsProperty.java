@@ -88,8 +88,6 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> FACTORY_ID = new IlsProperty<String>("factory-id", String.class, "");
     public static final IlsProperty<String> FETCH_MODE = new IlsProperty<String>(Constants.FETCH_MODE, String.class, Constants.FETCH_MODE_CHOICES[0], Constants.FETCH_MODE_CHOICES);
     public static final IlsProperty<String> FILENAME = new IlsProperty<String>(Constants.FILENAME, String.class, "");
-    public static final IlsProperty<String> GUI_UNITS = new IlsProperty<String>(Constants.FILENAME, String.class, "");
-    public static final IlsProperty<String> GUI_LABEL = new IlsProperty<String>(Constants.GUI_LABEL, String.class, "");
     public static final IlsProperty<String> HELP = new IlsProperty<String>(Constants.HELP, String.class, "");
     public static final IlsProperty<Double> HIGH_LIMIT = new IlsProperty<Double>(Constants.HIGH_LIMIT, Double.class, null);
     public static final IlsProperty<String> ID = new IlsProperty<String>(Constants.ID, String.class, null);

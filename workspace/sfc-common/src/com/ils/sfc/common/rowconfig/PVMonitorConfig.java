@@ -46,9 +46,11 @@ public class PVMonitorConfig extends RowConfig {
 		@JsonIgnore
 		public boolean persistenceOK;
 		@JsonIgnore
-		public Object inputRD;   // recipe data for the IO object
+		public Object ioRD;   // recipe data for the IO object
 		@JsonIgnore
-		public Object io;   
+		public Object io;   // the controller
+		@JsonIgnore
+		public Object isOutput;   // is the io recipe data an Output object?
 	}
 
 	public List<Row> getRows() {

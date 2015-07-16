@@ -155,6 +155,24 @@ public class PythonCall {
 	public static final PythonCall TEST_QUERY = new PythonCall("ils.sfc.client.util." + "testQuery", 
 			PyList.class,  new String[]{"query", "database"} );
 
+	public static final PythonCall RECIPE_DATA_EXISTS = new PythonCall("ils.sfc.common.recipe." + "recipeDataTagExists", 
+			Object.class,  new String[]{"provider", "path"} );
+
+	public static final PythonCall GET_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "getRecipeData", 
+			Object.class,  new String[]{"provider", "path"} );
+
+	public static final PythonCall SET_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "setRecipeData", 
+			null,  new String[]{"provider", "path", "value", "synchronous"} );
+
+	public static final PythonCall CREATE_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "createRecipeDataTag", 
+			null,  new String[]{"provider", "folder", "rdName", "rdType"} );
+
+	public static final PythonCall DELETE_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "deleteRecipeDataTag", 
+			null,  new String[]{"provider", "fullPath"} );
+
+	public static final PythonCall DO_NOTHING = new PythonCall("ils.sfc.common.util." + "doNothing", 
+			null,  new String[0] );
+
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;

@@ -33,6 +33,7 @@ public class RecipeObjectCreatorPane extends EditorPanel {
 	private JTextField keyTextField = new JTextField();
 	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
 	private RecipeEditorController controller;
+	private String chartPath;
 	
 	public RecipeObjectCreatorPane(RecipeEditorController controller, int index) {
 		super(controller, index);
@@ -88,6 +89,8 @@ public class RecipeObjectCreatorPane extends EditorPanel {
 			Class<?> selectedClass = (Class<?>)selectedType.getObject();
 			Data newObject = Data.createNewInstance(selectedClass);
 			newObject.setKey(key);
+			newObject.setStepPath(chartPath);
+			newObject.createTag();
 			keyTextField.setText("");
 			controller.getRecipeData().add(newObject);
 			controller.getEditor().setRecipeData(newObject);
@@ -99,6 +102,12 @@ public class RecipeObjectCreatorPane extends EditorPanel {
 			controller.getMessagePane().activate(myIndex);
 			return;
 		}
+	}
+
+
+
+	public void setChartPath(String chartPath) {
+		this.chartPath = chartPath;
 	}
 	
 }

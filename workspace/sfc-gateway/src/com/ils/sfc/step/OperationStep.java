@@ -5,6 +5,7 @@ import org.python.core.PyDictionary;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.gateway.IlsScopeLocator;
+import com.ils.sfc.gateway.RecipeDataAccess;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -37,7 +38,7 @@ public class OperationStep extends FoundationStep {
 	
 	private void updateOperation(String operationName) {
 		// message the client to update the current operation
-			PyChartScope topScope = IlsScopeLocator.getTopScope(getChartContext().getChartScope());
+			PyChartScope topScope = RecipeDataAccess.getTopScope(getChartContext().getChartScope());
 			String chartRunId = (String)topScope.get("instanceId");
 			String projectName = (String)topScope.get("project");
 			PyDictionary payload = new PyDictionary();

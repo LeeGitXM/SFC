@@ -49,7 +49,7 @@ public abstract class IO extends DataWithUnits {
 		addProperty(IlsProperty.PV_MONITOR_ACTIVE);
 		addProperty(IlsProperty.PV_VALUE);
 		addProperty(IlsProperty.TARGET_VALUE);
-		addProperty(IlsProperty.GUI_UNITS);
-		addProperty(IlsProperty.GUI_LABEL);
+		addProperty(IlsProperty.UNITS);
+		addProperty(IlsProperty.LABEL);
 	}
 }

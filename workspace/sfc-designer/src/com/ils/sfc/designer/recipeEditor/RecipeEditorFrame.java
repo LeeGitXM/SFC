@@ -11,6 +11,7 @@ import com.inductiveautomation.ignition.designer.designable.DesignableWorkspaceL
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.ResourceWorkspaceFrame;
 import com.inductiveautomation.sfc.client.ui.StepComponent;
+import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
 import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
 import com.jidesoft.docking.event.DockableFrameAdapter;
@@ -23,9 +24,13 @@ public class RecipeEditorFrame extends com.jidesoft.docking.DockableFrame implem
 	private static String KEY = "ILS Recipe Editor";
 	private static String TITLE = "Recipe Data";
 	private RecipeEditorController controller;
+	private SFCWorkspace sfcWorkspace;
+	private DesignerContext context;
 	
-	public RecipeEditorFrame(DesignerContext ctx) {
+	public RecipeEditorFrame(DesignerContext ctx, SFCWorkspace sfcWorkspace) {
 		super(KEY);
+		this.sfcWorkspace = sfcWorkspace;
+		context = ctx;
        	setInitSide(DockContext.DOCK_SIDE_WEST);
        	setInitIndex(10);
        	setTitle(TITLE);
@@ -50,7 +55,9 @@ public class RecipeEditorFrame extends com.jidesoft.docking.DockableFrame implem
 		JComponent selectedComponent = selectedComponents.size() == 1 ? selectedComponents.get(0) : null;
 		if(selectedComponent instanceof StepComponent) {
 			StepComponent stepComponent = (StepComponent) selectedComponent;
-			controller.setElement(stepComponent.getElement());
+			long resourceId = sfcWorkspace.getSelectedContainer().getResourceId();
+			String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
+			controller.setElement(stepComponent.getElement(), chartPath);
 			controller.getBrowser().activate(-1);
 		}
 		else {

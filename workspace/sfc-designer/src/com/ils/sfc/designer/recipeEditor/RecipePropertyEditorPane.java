@@ -82,6 +82,7 @@ public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder
 	
 	private void doOK() {
 		recipeData.setProperties(editor.getPropertyValues());
+		recipeData.writeToTags();		
 		if(IlsSfcCommonUtils.isEmpty(recipeData.getKey())) {
 			controller.showMessage("A key is required", RecipeEditorController.OBJECT_EDITOR);
 		}

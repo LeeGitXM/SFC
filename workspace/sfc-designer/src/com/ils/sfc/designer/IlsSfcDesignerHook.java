@@ -181,7 +181,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		this.context = ctx;
         log.debug("IlsSfcDesignerHook.startup...");
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-		recipeEditorFrame = new RecipeEditorFrame(ctx);
+		recipeEditorFrame = new RecipeEditorFrame(ctx, iaSfcHook.getWorkspace());
       	iaSfcHook.getWorkspace().getInnerWorkspace().addDesignableWorkspaceListener(recipeEditorFrame);
 		
 		// Register steps

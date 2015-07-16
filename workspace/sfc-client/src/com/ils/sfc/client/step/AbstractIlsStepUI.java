@@ -28,6 +28,7 @@ import com.inductiveautomation.sfc.elements.steps.ExpressionParamCollection;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.elements.steps.enclosing.ExecutionMode;
 import com.inductiveautomation.sfc.elements.steps.enclosing.ReturnParamCollection;
+import com.inductiveautomation.sfc.rpc.ChartStatus.StepElementStatus;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public abstract class AbstractIlsStepUI extends AbstractStepUI {
@@ -126,7 +127,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	// draw connections to other steps
     	this.drawUpLink(g2d);
     	this.drawDownLink(g2d);
-    	
+    	StepElementStatus stepStatus = chartStatusContext.getStepStatus(propertyValues);
     	// IA's drawing uses some significant scaling--remove that for our label display,
     	// but retain the translation part:
     	AffineTransform oldTransform = g2d.getTransform();

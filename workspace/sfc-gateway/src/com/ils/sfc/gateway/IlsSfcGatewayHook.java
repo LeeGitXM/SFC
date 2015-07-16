@@ -85,7 +85,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private final IlsStepMonitor stepMonitor = new IlsStepMonitor();
 	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
 	private TestMgr testMgr = new TestMgr();
-	private RecipeDataChangeMgr recipeDataChangeMgr;
 	private IlsDropBox dropBox = new IlsDropBox();
 	
 	private static StepFactory[] stepFactories = {
@@ -168,10 +167,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		return chartManager;
 	}
 
-	public RecipeDataChangeMgr getRecipeDataChangeMgr() {
-		return recipeDataChangeMgr;
-	}
-
 	public IlsScopeLocator getScopeLocator() {
 		return scopeLocator;
 	}
@@ -234,8 +229,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public void startup(LicenseState licenseState) {			
 		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
 		stepMonitor.initialize(context,chartManager,iaSfcHook);				
-		recipeDataChangeMgr = new RecipeDataChangeMgr(context);
-		chartManager.addChartObserver(recipeDataChangeMgr);
 		chartManager.addChartObserver(dropBox);
 		log.infof("%s: Startup complete.",TAG);
 	}
@@ -265,7 +258,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 			chartManager.unregister(stepFactory);
 		}
 		chartManager.removeChartObserver(chartObserver);
-		chartManager.removeChartObserver(recipeDataChangeMgr);
 		chartManager = null;
 		stepMonitor.shutdown();
 	}

@@ -13,12 +13,15 @@ import org.json.JSONObject;
 
 import system.ils.sfc.common.Constants;
 
+import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
+import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.PyChartScope;
@@ -60,6 +63,7 @@ public abstract class Data {
 	// id and parentId come from the G2 export and are used to re-compose a hierarchy:
 	protected String g2Id;
 	protected String parentG2Id;
+	protected String stepPath;
 	
 
 	public Data() {
@@ -87,7 +91,7 @@ public abstract class Data {
 	}
 	
 	public Object getValue(Property<?> property) {
-		return properties.get(property);
+		return properties.getOrDefault(property);
 	}
 
 	public boolean hasProperty(String propName) {
@@ -116,7 +120,7 @@ public abstract class Data {
 	public void setKey(String value) {
 		properties.set(IlsProperty.KEY, value);
 	}
-	
+
 	public boolean isGroup() {
 		return this instanceof Group;
 	}
@@ -314,4 +318,115 @@ public abstract class Data {
 		}
 	}
 
+	public String getStepPath() {
+		return stepPath;
+	}
+	
+	public void setStepPath(String chartPath) {
+		this.stepPath = chartPath;
+	}
+	
+	/** Create the UDT tag if it doesn't already exist, 
+	 *  and initialize the tag values with the defaults. */
+	public void createTag() {
+		if(tagExists()) return;
+		String provider = IlsClientScripts.getProviderName(false);
+		String myType = (String) getValue(IlsProperty.CLASS);
+		String chartPath = getStepPath();
+		Object[] args = {provider, chartPath, getKey(), myType};
+		try {
+			PythonCall.CREATE_RECIPE_DATA.exec(args);
+		} catch (JythonExecException e) {
+			logger.error("Recipe Data tag creation failed", e);
+		}
+		basicWriteToTags();
+	}
+
+	/** Write to tags, creating them if they don't exist. */
+	public void writeToTags()  {
+		createTag();
+		basicWriteToTags();
+	}
+
+	/** Write all the attribute values out to the tags. */
+	private void basicWriteToTags() {
+		String provider = IlsClientScripts.getProviderName(false);
+		try {
+			for(PropertyValue<?> pval: getProperties()) {
+			String attributePath = getTagAttributePath(pval.getProperty());
+			Object initialValue =  getValue(pval.getProperty());
+			// note: Ignition will not allow a synchronous tag write from
+			// a UI thread, so writes from Designer UI must be async
+			Object[] setArgs = {provider, attributePath, initialValue, false};
+			PythonCall.SET_RECIPE_DATA.exec(setArgs);
+			}
+		} catch (JythonExecException e) {
+			logger.error("Recipe Data write to tags failed", e);
+		}
+	}
+
+	/** If the UDT tag exists and has a different value from the
+	 *  data, use the value from the tag. */
+	public void readFromTags() {
+		if(isGroup() || !tagExists()) return;
+		for(PropertyValue<?> pv: properties) {
+			Object pvalue = pv.getValue();
+			Object tagValue = getTagValue(pv.getProperty());
+			if(!IlsSfcCommonUtils.equal(pvalue, tagValue)) {
+				setValue(pv.getProperty(), tagValue);
+			}
+		}
+	}
+
+	/** Remove the UDT tag corresponding to this object. */
+	public void deleteTag() {
+		String provider = IlsClientScripts.getProviderName(false);
+		Object[] args = {provider, getTagPath()};
+		try {
+			PythonCall.DELETE_RECIPE_DATA.exec(args);
+		} catch (JythonExecException e) {
+			logger.error("Recipe Data tag deletion failed", e);
+		}		
+	}
+	
+	/** Get the tag path of the UDT instance corresponding to this object. */
+	public String getTagPath() {
+		String path = getStepPath() + "/" + getKey();
+		return path;
+	}
+	
+	/** Get the tag path for a particular property of this object. */
+	public String getTagAttributePath(Property<?> property) {
+		return getTagPath() + "/" + property.getName();
+	}
+	
+	/** Get the value of the given property from the tag. The tag must exist,
+	 *  or an error results. */
+	public Object getTagValue(Property<?> property) {
+		String provider = IlsClientScripts.getProviderName(false);
+		String valuePath = getTagAttributePath(property);
+		Object[] args = {provider, valuePath};
+		try {
+			Object value = PythonCall.GET_RECIPE_DATA.exec(args);
+			return value;
+		} catch (JythonExecException e) {
+			logger.error("Recipe Data tag read failed", e);
+			return null;
+		}		
+	}
+	
+	/** Check if the UDT tag corresponding to this object exists. */
+	public boolean tagExists() {
+		String provider = IlsClientScripts.getProviderName(false);
+		String tagPath = getTagPath();
+		Object[] args = {provider, tagPath};
+		try {
+			Boolean value = (Boolean)PythonCall.RECIPE_DATA_EXISTS.exec(args);
+			return value;
+		} catch (JythonExecException e) {
+			logger.error("Recipe Data tag existence check failed", e);
+			return false;
+		}				
+	}
+	
 }
