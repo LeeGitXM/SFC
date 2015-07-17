@@ -5,7 +5,9 @@ package com.ils.sfc.migration;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -44,6 +46,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.ils.sfc.migration.map.ClassNameMapper;
@@ -316,8 +319,14 @@ public class Converter {
 
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
-
-			Document g2doc = docBuilder.parse(infile.toFile());
+			// Read the file to a string so we can scrub it
+			byte[] encoded = Files.readAllBytes(infile);
+			String xml =  new String(encoded, StandardCharsets.UTF_8);
+			xml = xml.replaceAll("&", "&amp;");
+			xml = xml.replaceAll("&amp;amp;", "&amp;");  // In case it was laready escaped
+			
+			InputSource is = new InputSource(new StringReader(xml));
+			Document g2doc = docBuilder.parse(is);
 			g2doc.getDocumentElement().normalize();
 
 			Document chartdoc = docBuilder.newDocument();  // This is the Ignition version
@@ -325,7 +334,7 @@ public class Converter {
 			updateChartForG2(chartdoc,g2doc);
 			
 			// Write the chart to the output
-			String xml = docToString(chartdoc);
+			xml = docToString(chartdoc);
 			log.debugf("%s.convertFile: Creating directory %s ...",TAG,outfile.getParent().toString());
 			log.trace(xml);
 			Files.createDirectories(outfile.getParent());
@@ -587,7 +596,7 @@ public class Converter {
 				String value = g2block.getAttribute(g2attribute);
 				// Alter the value, if so specified
 				value = propertyValueMapper.modifyPropertyValueForIgnition(property, value);
-				log.debugf("%s.updateStepFromG2Block: %s(%s) = %s (altered)",TAG,property,g2attribute,value);
+				log.tracef("%s.updateStepFromG2Block: %s(g2=%s) = %s",TAG,property,g2attribute,value);
 				Element propelement = chart.createElement(property);
 				Node textNode = chart.createTextNode(value);
 				propelement.appendChild(textNode);

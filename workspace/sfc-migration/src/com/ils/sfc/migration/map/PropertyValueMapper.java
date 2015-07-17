@@ -70,6 +70,9 @@ public class PropertyValueMapper {
 		String key = makePropertyMapKey(propertyName,g2Value);
 		String modified = propertyValueMap.get(key);
 		if( modified!=null ) result = modified;
+		// Now some special munging ...
+		if( propertyName.equalsIgnoreCase("key")) result = result.toLowerCase();
+		if( result.endsWith(".val" )) result = result+"ue";
 		return result;
 	}
 	

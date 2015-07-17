@@ -44,11 +44,9 @@ public class CopyWalker extends AbstractPathWalker implements FileVisitor<Path> 
 		//Ignore the OSX resource marker
 		if(file.toString().endsWith(".DS_Store")) return FileVisitResult.CONTINUE;
 		log.infof("%s.visitFile: file: %s",TAG, file.toString());
-		log.infof("%s.visitFile: outroot: %s",TAG, outRoot.toString());
 		String infile = file.getFileName().toString();
 		int pos = infile.lastIndexOf(".");
 		if( pos>0 ) infile = infile.substring(0,pos);
-		log.infof("%s.visitFile: relative: %s",TAG, infile);
 		Path newfile = Paths.get(outRoot.toString(),delegate.partialPathFromInfile(infile));
 		log.infof("%s.visitFile: newFile: %s",TAG, newfile.toString());
 		// Make sure that the new file does not exist ... 

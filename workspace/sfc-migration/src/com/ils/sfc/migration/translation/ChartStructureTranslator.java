@@ -122,7 +122,8 @@ public class ChartStructureTranslator {
 	}
 	
 	private void addCallbackToUpstreamBlock(Element block,NodeList blocks) {
-		// Search for the block(s) connected to this transition.
+		// Search for the block(s) connected to this transition. 
+		// Create a
 		String uuid = block.getAttribute("uuid");
 		String procedureName = block.getAttribute("callback");
 		if( uuid==null || procedureName==null ) return;
@@ -134,8 +135,29 @@ public class ChartStructureTranslator {
 			while(jndex<connections.getLength()) {
 				Element connection = (Element)connections.item(jndex);
 				if( uuid.equalsIgnoreCase(connection.getAttribute("uuid"))) {
-					// We make sure this gets copied when converting to ignition
-					insertOnStopIntoG2Block(block,procedureName);
+					// Create an action step downstream of this block, fix the connections.
+					Element actionBlock = g2chart.createElement("block");
+					actionBlock.setAttribute("class", "action-block");
+					actionBlock.setAttribute("uuid", UUID.randomUUID().toString().replace("-", ""));
+					actionBlock.setAttribute("label", "Transition Callback");
+					actionBlock.setAttribute("name", "TRANSITION-CALLBACK-ACTION");
+					Element cxn = g2chart.createElement("connectedTo");
+					cxn.setAttribute("uuid", parent.getAttribute("uuid"));
+					cxn.setAttribute("label", parent.getAttribute("label"));
+					actionBlock.appendChild(cxn);
+					// Update the block's connection to the transition
+					NodeList cxns = block.getElementsByTagName("connectedTo");
+					int count = cxns.getLength();
+					int k = 0;
+					while(k<count) {
+						cxn = (Element)cxns.item(k);
+						if( cxn.getAttribute("uuid").equalsIgnoreCase(uuid) )  {
+							cxn.setAttribute("uuid", actionBlock.getAttribute("uuid"));
+						}
+						k++;
+					}
+					// We make sure the procedure gets copied when converting to ignition
+					insertOnStopIntoActionBlock(actionBlock,procedureName);
 				}
 				jndex++;
 			}
@@ -150,10 +172,10 @@ public class ChartStructureTranslator {
 	 * @param step
 	 * @param g2block
 	 */
-	public void insertOnStopIntoG2Block(Element block,String script) {
-		String path = delegate.pathNameForModule(script);
-		if( script!=null  ) {
-			Path scriptPath = Paths.get(delegate.getPythonRoot().toString()+"/onstop",script);
+	public void insertOnStopIntoActionBlock(Element block,String script) {
+		String path = delegate.pathNameForModule(delegate.toCamelCase(script));
+		if( path!=null  ) {
+			Path scriptPath = Paths.get(delegate.getPythonRoot().toString()+"/onstop",path);
 			try {
 				byte[] bytes = Files.readAllBytes(scriptPath);
 				if( bytes!=null && bytes.length>0) {
@@ -163,12 +185,12 @@ public class ChartStructureTranslator {
 					block.appendChild(stopelement);
 				}
 				else {
-					log.errorf("%s.insertOnStopFromG2Block: Empty file %s",TAG,scriptPath.toString());
+					log.errorf("%s.insertOnStopIntoActionBlock: Empty file %s",TAG,scriptPath.toString());
 				}
 
 			}
 			catch(IOException ioe) {
-				log.errorf("%s.insertOnStopFromG2Block: Error reading script %s (%s)",TAG,scriptPath.toString(),ioe.getMessage());
+				log.errorf("%s.insertOnStopIntoActionBlock: Error reading script %s (%s)",TAG,scriptPath.toString(),ioe.getMessage());
 			}
 		}
 	}
