@@ -5,7 +5,9 @@ SFC=${GIT_REPO}/sfc/migration
 APP=${SFC}/translate-onstart
 #FIL="EM-S88-GET-RX-DATA.txt"
 #FIL="EM-S88-INITIALIZE-CRX-SS-FRCT.txt"
-FIL="EM-S88-MID-RUN-CATOUT-UIR.txt"
+#FIL="EM-S88-MID-RUN-CATOUT-UIR.txt"
+FIL="DR-FIND-DRIER.txt"
+#FIL="DR-REGEN-DURATION-CALC.txt"
 INDIR=${SFC}/procs/g2/vistalon/onstart
 OUTDIR=${SFC}/procs/ignition/vistalon/onstart
 cd $INDIR

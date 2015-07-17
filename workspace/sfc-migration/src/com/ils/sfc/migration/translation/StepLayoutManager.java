@@ -139,7 +139,7 @@ public class StepLayoutManager {
 			String uuid = StepTranslator.canonicalForm(block.getAttribute("uuid"));
 			blockMap.put(uuid, block);
 			gridMap.put(uuid,new GridPoint());   // Not connected yet
-			log.infof("%s.analyze: %s(%s)",TAG,block.getAttribute("name"),uuid);
+			log.debugf("%s.analyze: %s(%s)",TAG,block.getAttribute("name"),uuid);
 			ConnectionHub hub = connectionMap.get(uuid);
 			if( hub==null) {
 				hub = new ConnectionHub(chart.getDocumentElement());
@@ -155,7 +155,7 @@ public class StepLayoutManager {
 			while( jndex < connections.getLength() ) {
 				Element connection = (Element)connections.item(jndex);
 				String cxn = StepTranslator.canonicalForm(connection.getAttribute("uuid"));
-				log.infof("%s.analyze: %s connected to %s",TAG,uuid,cxn);
+				log.debugf("%s.analyze: %s connected to %s",TAG,uuid,cxn);
 				ConnectionHub destinationHub = connectionMap.get(cxn);
 				if( destinationHub==null) {
 					destinationHub = new ConnectionHub(chart.getDocumentElement());
@@ -186,7 +186,7 @@ public class StepLayoutManager {
 			log.errorf("%s.analyze: Chart has no begin block", TAG);
 			return;
 		}
-		log.infof("%s.analyze: begin block is %s",TAG,beginuuid);
+		log.debugf("%s.analyze: begin block is %s",TAG,beginuuid);
 		// Now do the layout. Position the root. Walk the tree.
 		int x = 0;   // Center on zero so that we can scale if need be.
 		int y = 2;
@@ -296,7 +296,7 @@ public class StepLayoutManager {
 			moveAncestryRight(uuid,dx);
 		}
 
-		log.infof("%s.positionNode: at %d,%d %s ", TAG,x,y,uuid);
+		log.tracef("%s.positionNode: at %d,%d %s ", TAG,x,y,uuid);
 		setRightmost(x,y);
 		  
 		int xpos = x - (nextBlocks.size()-1);
@@ -352,7 +352,7 @@ public class StepLayoutManager {
 		x+=1;
 		GridPoint gp = new GridPoint(x,y);
 		gridMap.put(anchoruuid,gp);
-		log.infof("%s.createAnchor: %s at %d,%d",TAG,anchoruuid,x,y);
+		log.debugf("%s.createAnchor: %s at %d,%d",TAG,anchoruuid,x,y);
 		anchorCount++;
 		return x;
 	}

@@ -81,6 +81,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-calc-mon
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-c-rx-calc-dil-flows','com.ils.sfc.python.DilFlows.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-calc-delay-drivers-cold-stick','com.ils.sfc.python.DelayDriversColdStick.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-get-rate-change-data-block','ils.sfc.gateway.api.s88GetRateChangeBlock');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-mid-run-catout-uir','com.ils.sfc.python.uir.midRunCatout');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-move-cold-stick-data-from-the-model-screen','com.ils.sfc.python.coldStickData.moveFromScreen');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-set-recipe-data-cold-stick','ils.sfc.gateway.api.s88SetColdstick');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-set-targets-cold-stick','ils.sfc.gateway.api.s88SetColdstickTargets');

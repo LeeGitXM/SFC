@@ -19,7 +19,7 @@ mkdir -p $OUTDIR
 rm -rf $OUTDIR/$DIRIN
 $SFC/migration/convert "$INDIR" "$OUTDIR" "$PYDIR"  "$START"
 
-PROJ="testunitprocedure${TESTNO}.proj"
+PROJ="testunitprocedure${TESTNO}"
 INDIR="$SFC/migration/xml/ignition/usecase/$DIRIN"
 OUTDIR=$SFC/migration/projects/usecase
 mkdir -p $OUTDIR
