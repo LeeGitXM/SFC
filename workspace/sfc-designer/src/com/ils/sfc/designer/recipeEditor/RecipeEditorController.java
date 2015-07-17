@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 
 import org.json.JSONObject;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.designer.EditorErrorHandler;
@@ -139,8 +141,14 @@ public class RecipeEditorController extends PanelController implements EditorErr
 		try {
 			// Note: we are assuming that we have exclusive use of the associatedData
 			// and can completely overwrite it.
-			JSONObject associatedData = Data.toAssociatedData(recipeData);
-			element.set(ChartStepProperties.AssociatedData, associatedData);
+			JSONObject newAssociatedData = Data.toAssociatedData(recipeData);
+			// retain the s88Level
+			if(element.contains(ChartStepProperties.AssociatedData)) {
+				JSONObject oldAssociatedData = element.getOrDefault(ChartStepProperties.AssociatedData);
+				String s88Level = oldAssociatedData.getString(Constants.S88_LEVEL);
+				newAssociatedData.put(Constants.S88_LEVEL, s88Level);
+			}
+			element.set(ChartStepProperties.AssociatedData, newAssociatedData);
 		} catch (Exception e) {
 			showMessage("Error setting associated recipe data: " + e.getMessage(), BROWSER);
 		}
