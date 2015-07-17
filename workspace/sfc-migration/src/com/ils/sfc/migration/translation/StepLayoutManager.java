@@ -203,26 +203,26 @@ public class StepLayoutManager {
 	 *       by a block in the parallel zone. Make sure we only track its exit
 	 *       once.
 	 * 
-	 * @param source the name of the block from which we have a connection
-	 * @param uuid the block being placed
+	 * @param upstreamStepId the name of the block from which we have a connection
+	 * @param stepId the block being placed
 	 * @param x the block's new x
 	 * @param y the block's new y
 	 */
-	private void positionNode(String source,String uuid,int x,int y) {
+	private void positionNode(String upstreamStepId,String stepId,int x,int y) {
 		ConnectionHub sourceHub = null;
-		if( source!=null ) sourceHub = connectionMap.get(source);
-		ConnectionHub hub = connectionMap.get(uuid);
-		ParallelArea pa = parallelMap.get(uuid);
+		if( upstreamStepId!=null ) sourceHub = connectionMap.get(upstreamStepId);
+		ConnectionHub stepHub = connectionMap.get(stepId);
+		ParallelArea pa = parallelMap.get(stepId);
 		
 		// Multiple inputs are expected for an ending parallel block
-		if( blockMap.get(uuid)!=null && sourceHub!=null &&
+		if( blockMap.get(stepId)!=null && sourceHub!=null &&
 			(pa==null || !sourceHub.isInParallelZone()) ) {
 			// NOTE: anchors and jumps are not in the block map.
 			// If there are multiple inputs on a block
 			// then create an anchor and associated jumps. 
-			for(String input:hub.getConnectionsFrom()) {
-				if( !input.equals(source) ) {
-					x = createAnchors(hub,source,uuid,x,y-1);
+			for(String input:stepHub.getConnectionsFrom()) {
+				if( !input.equals(upstreamStepId) ) {
+					x = createAnchors(upstreamStepId,stepId,stepHub,x,y-1);
 					y+=1;  
 					break;
 				}
@@ -230,7 +230,7 @@ public class StepLayoutManager {
 		}
 		
 		// The mere fact that we're at this point means that we're connected
-		GridPoint gp = gridMap.get(uuid);
+		GridPoint gp = gridMap.get(stepId);
 		gp.setConnected(true);
 
 		if( pa!=null ) {
@@ -239,11 +239,11 @@ public class StepLayoutManager {
 				// Now the parallel areas are the same for both  begin and end.
 				// For the bottom bar, set the position to the lower right.
 				pa = sourceHub.getParallelArea();
-				hub.setForChart(chart.getDocumentElement());
+				stepHub.setForChart(chart.getDocumentElement());
 				// This is a terminating parallel block. We will
 				// see this once for every incoming connection.
 				// Only process its outputs the last time.
-				hub.incrementVisitCount();
+				stepHub.incrementVisitCount();
 				if( sourceHub.isParallelBlock() ) {
 					// Straight shot through parallel zone
 					pa.x2+=2;
@@ -252,10 +252,10 @@ public class StepLayoutManager {
 				y = pa.y2;
 				gp.x = pa.x2;
 				gp.y = pa.y2;
-				if( hub.getVisitCount()<hub.getConnectionsFrom().size() ) return;
+				if( stepHub.getVisitCount()<stepHub.getConnectionsFrom().size() ) return;
 			}
 			else {
-				hub.setForParallel(pa);
+				stepHub.setForParallel(pa);
 				// First approximation of the size. For the top bar, set the
 				// grid points to the upper left.
 				pa.x1 = x;
@@ -268,7 +268,7 @@ public class StepLayoutManager {
 		}
 		// Otherwise inherit the hub from the previous
 		else if(sourceHub!=null) {
-			hub.setParentage(sourceHub);
+			stepHub.setParentage(sourceHub);
 			gp.x = x;
 			gp.y = y;
 			if( sourceHub.isInParallelZone() ) {
@@ -282,9 +282,9 @@ public class StepLayoutManager {
 			gp.y = y;
 		}
 		
-		List<String> nextBlocks = new ArrayList<String>(hub.getConnectionsTo());
+		List<String> nextBlocks = new ArrayList<String>(stepHub.getConnectionsTo());
 		y = y+1;
-		if( nextBlocks.size() >= 2 && !hub.isParallelBlock() ) y = y+1; // Allow for connections
+		if( nextBlocks.size() >= 2 && !stepHub.isParallelBlock() ) y = y+1; // Allow for connections
 		
 		// In positioning the blocks, disregard the parallel zone.
 		// Later on we will size it to cover all its children.
@@ -293,15 +293,16 @@ public class StepLayoutManager {
 		if( rightmost > x-2 ) {
 			int dx = rightmost - x + 2;
 			x = x + dx;
-			moveAncestryRight(uuid,dx);
+			gp.x = x;    // Move self first, then ancestors
+			moveAncestryRight(stepId,dx);
 		}
 
-		log.tracef("%s.positionNode: at %d,%d %s ", TAG,x,y,uuid);
+		log.tracef("%s.positionNode: at %d,%d %s ", TAG,x,y,stepId);
 		setRightmost(x,y);
 		  
 		int xpos = x - (nextBlocks.size()-1);
 		for( String childuuid:nextBlocks) {
-			positionNode(uuid,childuuid,xpos,y);
+			positionNode(stepId,childuuid,xpos,y);
 			gp = gridMap.get(childuuid);  
 			xpos = gp.x + 2;                // Position for next block
 		}
@@ -310,41 +311,46 @@ public class StepLayoutManager {
 	/**
 	 * Create an anchor plus a corresponding jump for every block connecting to it.
 	 * Exclude the source 
-	 * @param uuid target step
+	 * @param upstreamStepId the uuid of the upstream block
+	 * @param stepId target step
+	 * @param stepHub the connection hub of the block
 	 * @param x
 	 * @param y
 	 * @return
 	 */
-	private int createAnchors(ConnectionHub hub,String source,String uuid,int x,int y) {
-		String anchoruuid = UUID.randomUUID().toString();
-		List<String> from = hub.getConnectionsFrom();
-		// Search all blocks connect connections to this block
-		// replace with a link to the anchor.
+	private int createAnchors(String upstreamStepId,String stepId,ConnectionHub stepHub,int x,int y) {
+		
+		List<String> from = stepHub.getConnectionsFrom();
+		// Search all steps with connections to this step
+		// replace with a jump to the new anchor.
 		for(String fromid:from) {
-			if(fromid.equalsIgnoreCase(source)) continue;
+			// The original link stands
+			if(fromid.equalsIgnoreCase(upstreamStepId)) continue;
 			ConnectionHub tohub = connectionMap.get(fromid);
 			List<String> tos = tohub.getConnectionsTo();
 			String jumpuuid = UUID.randomUUID().toString();
-			tos.remove(uuid);
+			tos.remove(stepId);
 			tos.add(jumpuuid);
+			log.debugf("%s.createAnchor: %s replacing link to %s with jump %s",TAG,fromid,stepId,jumpuuid);
 			Element jump = createJump(chart,jumpuuid,anchorCount);
 			anchors.add(jump);
-			hub.getParent().appendChild(jump);
+			stepHub.getParent().appendChild(jump);
 			GridPoint gp = new GridPoint();    // Not connected yet
 			gridMap.put(jumpuuid,gp);
-			ConnectionHub jumpHub = new ConnectionHub(hub.getParent());
-			jumpHub.getConnectionsFrom().add(uuid);
+			ConnectionHub jumpHub = new ConnectionHub(stepHub.getParent());
+			jumpHub.getConnectionsFrom().add(stepId);
 			connectionMap.put(jumpuuid,jumpHub);
 		}
-		// Now
+		// Now update the hub for the subject block
+		String anchoruuid = UUID.randomUUID().toString();
 		from.clear();
-		from.add(source);
+		from.add(upstreamStepId);
 		from.add(anchoruuid);
 		Element anchor = createAnchor(chart,anchoruuid,anchorCount);
 		anchors.add(anchor);
-		hub.getParent().appendChild(anchor);
-		ConnectionHub anchorHub = new ConnectionHub(hub.getParent());
-		anchorHub.getConnectionsTo().add(uuid);
+		stepHub.getParent().appendChild(anchor);
+		ConnectionHub anchorHub = new ConnectionHub(stepHub.getParent());
+		anchorHub.getConnectionsTo().add(stepId);
 		connectionMap.put(anchoruuid,anchorHub);
 		// We are given the y of the source block - the most compact location
 		// is immediately to the right of the source block. This spot should 
@@ -416,8 +422,9 @@ public class StepLayoutManager {
 		ConnectionHub hub = connectionMap.get(uuid);
 		if( hub!=null && !hub.getConnectionsFrom().isEmpty()) {
 			for(String parent:hub.getConnectionsFrom() ) {
-				int childcount = hub.getConnectionsTo().size();
-				int position   = hub.getConnectionsTo().indexOf(parent);
+				ConnectionHub parentHub = connectionMap.get(parent);
+				int childcount = parentHub.getConnectionsTo().size();
+				int position   = parentHub.getConnectionsTo().indexOf(uuid);
 				if( position>=0 && childcount>0) {
 					dx = dx*(childcount-position)/childcount;
 					GridPoint gp = gridMap.get(parent);
@@ -430,7 +437,7 @@ public class StepLayoutManager {
 					moveAncestryRight(parent,dx);
 				}
 				else {
-					log.warnf("%s.moveAncestryRight: Parent (%s) of %s has no children.", TAG,parent,uuid);
+					log.debugf("%s.moveAncestryRight: Parent %s of %s has %d children.", TAG,parent,uuid,childcount);
 				}
 			}
 		}

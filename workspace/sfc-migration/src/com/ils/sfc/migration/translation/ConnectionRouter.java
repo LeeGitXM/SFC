@@ -22,7 +22,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
  * be relative to the zone start point.
  */
 public class ConnectionRouter {
-	private final static String TAG = "ConnectionCreator";
+	private final static String TAG = "ConnectionRouter";
 	private final LoggerEx log = LogUtil.getLogger(StepLayoutManager.class.getPackage().getName());
 	private final GridPoint gridSize;
 	private final Map<String,ConnectionHub> connectionMap;  // Incoming/outgoing connections by UUID
@@ -91,6 +91,7 @@ public class ConnectionRouter {
 	 * horizontal routing create links one step below the source.
 	 */
 	private void route(GridPoint source,GridPoint destination,ConnectionHub sourceHub,ConnectionHub destinationHub) {
+		//log.infof("%s.route: %d,%d to %d,%d" ,TAG,source.x,source.y,destination.x,destination.y);
 		if( !isAdjacent(source,destination,sourceHub.isParallelBlock()||destinationHub.isParallelBlock())) {
 			Link link = null;
 			if( sourceHub!=null && sourceHub.isParallelBlock() && destinationHub.isParallelBlock()) {
@@ -193,18 +194,21 @@ public class ConnectionRouter {
 					link.setRight(true);
 					x++;
 				}
-				// Draw corner down
-				link = linkArray.get(sourceHub.getParent(),x,y);
-				link.setLeft(true);
-				link.setDown(true);
-				// Continue down to destination
-				y++;
-				while(y<destination.y) {
-					link = linkArray.get(sourceHub.getParent(),x, y);
-					link.setUp(true);
+				// If we're not there yet, draw corner down
+				if( y < destination.y) {
+					link = linkArray.get(sourceHub.getParent(),x,y);
+					link.setLeft(true);
 					link.setDown(true);
+					// Continue down to destination
 					y++;
+					while(y<destination.y) {
+						link = linkArray.get(sourceHub.getParent(),x, y);
+						link.setUp(true);
+						link.setDown(true);
+						y++;
+					}
 				}
+				
 			}
 		}
 	}

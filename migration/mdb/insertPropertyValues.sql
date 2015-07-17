@@ -29,7 +29,7 @@ insert into PropertyValueMap values ('callback','dr-regen-alert-operator','drReg
 insert into PropertyValueMap values ('callback','dr-regen-duration-calc','drRegenDurationCalc.onStart');
 insert into PropertyValueMap values ('callback','dr-termination-monitor','drTerminationMonitor.onStart');
 insert into PropertyValueMap values ('callback','dr-time-monitor','drTimeMonitorc.onStart');
-insert into PropertyValueMap values ('callback','dr-top-temp-monitor-cool-down','drTopTempCoolDownMonitor.onStart');
+insert into PropertyValueMap values ('callback','dr-top-temp-monitor-cool-down','drTopTempMonitorCoolDown.onStart');
 insert into PropertyValueMap values ('callback','dr-vmr801-close-counter','drVmr801CloseCounter.onStart');
 insert into PropertyValueMap values ('callback','dr-vmr801-open-counter','drVmr801OpenCounter.onStart');
 insert into PropertyValueMap values ('callback','dr-vmr803-close-counter','drVmr803CloseCounter.onStart');
