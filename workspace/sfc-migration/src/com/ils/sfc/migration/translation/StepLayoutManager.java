@@ -190,6 +190,7 @@ public class StepLayoutManager {
 		// Now do the layout. Position the root. Walk the tree.
 		int x = 0;   // Center on zero so that we can scale if need be.
 		int y = 2;
+		setRightmost(0,2);
 		GridPoint root = new GridPoint(x,y);
 		gridMap.put(beginuuid,root);
 		positionNode(null,beginuuid,x,y);
