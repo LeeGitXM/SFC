@@ -214,21 +214,6 @@ public class StepLayoutManager {
 		ConnectionHub stepHub = connectionMap.get(stepId);
 		ParallelArea pa = parallelMap.get(stepId);
 		
-		// Multiple inputs are expected for an ending parallel block
-		if( blockMap.get(stepId)!=null && sourceHub!=null &&
-			(pa==null || !sourceHub.isInParallelZone()) ) {
-			// NOTE: anchors and jumps are not in the block map.
-			// If there are multiple inputs on a block
-			// then create an anchor and associated jumps. 
-			for(String input:stepHub.getConnectionsFrom()) {
-				if( !input.equals(upstreamStepId) ) {
-					x = createAnchors(upstreamStepId,stepId,stepHub,x,y-1);
-					y+=1;  
-					break;
-				}
-			}
-		}
-		
 		// The mere fact that we're at this point means that we're connected
 		GridPoint gp = gridMap.get(stepId);
 		gp.setConnected(true);
@@ -282,9 +267,10 @@ public class StepLayoutManager {
 			gp.y = y;
 		}
 		
-		List<String> nextBlocks = new ArrayList<String>(stepHub.getConnectionsTo());
+		// By default position one step down. From here on x,y are for next blocks ...
 		y = y+1;
-		if( nextBlocks.size() >= 2 && !stepHub.isParallelBlock() ) y = y+1; // Allow for connections
+		List<String> nextBlocks = new ArrayList<String>(stepHub.getConnectionsTo());
+		if( nextBlocks.size() >= 2 && !stepHub.isParallelBlock() ) y = y+1; // Allow for horizontal connections
 		
 		// In positioning the blocks, disregard the parallel zone.
 		// Later on we will size it to cover all its children.
@@ -297,8 +283,23 @@ public class StepLayoutManager {
 			moveAncestryRight(stepId,dx);
 		}
 
-		log.tracef("%s.positionNode: at %d,%d %s ", TAG,x,y,stepId);
+		log.infof("%s.positionNode: at %d,%d %s ", TAG,x,y,stepId);
 		setRightmost(x,y);
+		
+		// Multiple inputs are expected for an ending parallel block
+		if( blockMap.get(stepId)!=null && sourceHub!=null &&
+			(pa==null || !sourceHub.isInParallelZone()) ) {
+			// NOTE: anchors and jumps are not in the block map.
+			// If there are multiple inputs on a block
+			// then create an anchor and associated jumps.
+			// Place the target block down 2 to make room for connections.
+			if( stepHub.getConnectionsFrom().size()>1) {
+				y++;
+				gp.y = gp.y+1;
+				setRightmost(x,gp.y);
+				createAnchors(upstreamStepId,stepId,stepHub,gp.x,gp.y-2); 
+			}
+		}
 		  
 		int xpos = x - (nextBlocks.size()-1);
 		for( String childuuid:nextBlocks) {
@@ -310,12 +311,12 @@ public class StepLayoutManager {
 	
 	/**
 	 * Create an anchor plus a corresponding jump for every block connecting to it.
-	 * Exclude the source 
+	 * Exclude the source.  
 	 * @param upstreamStepId the uuid of the upstream block
 	 * @param stepId target step
 	 * @param stepHub the connection hub of the block
-	 * @param x
-	 * @param y
+	 * @param x default position of the anchor
+	 * @param y default position of the anchor
 	 * @return
 	 */
 	private int createAnchors(String upstreamStepId,String stepId,ConnectionHub stepHub,int x,int y) {
@@ -335,7 +336,8 @@ public class StepLayoutManager {
 			Element jump = createJump(chart,jumpuuid,anchorCount);
 			anchors.add(jump);
 			stepHub.getParent().appendChild(jump);
-			GridPoint gp = new GridPoint();    // Not connected yet
+			// Cannot position jump because parent is probably not yet positioned.
+			GridPoint gp = new GridPoint();
 			gridMap.put(jumpuuid,gp);
 			ConnectionHub jumpHub = new ConnectionHub(stepHub.getParent());
 			jumpHub.getConnectionsFrom().add(stepId);
@@ -352,13 +354,20 @@ public class StepLayoutManager {
 		ConnectionHub anchorHub = new ConnectionHub(stepHub.getParent());
 		anchorHub.getConnectionsTo().add(stepId);
 		connectionMap.put(anchoruuid,anchorHub);
-		// We are given the y of the source block - the most compact location
-		// is immediately to the right of the source block. This spot should 
+		// We are given the y 2 above the source block. If this interferes with the 
+		// block connected upstream, tnen move one to the right. This spot should 
 		// ALWAYS be available.
-		x+=1;
+		int upstreamy = gridMap.get(upstreamStepId).y;
 		GridPoint gp = new GridPoint(x,y);
 		gridMap.put(anchoruuid,gp);
-		log.debugf("%s.createAnchor: %s at %d,%d",TAG,anchoruuid,x,y);
+		log.infof("%s.createAnchor: rightmost row %d = %d vs %d",TAG,upstreamy,getRightmost(upstreamy),x);
+		int rightmost = getRightmost(upstreamy);
+		if( rightmost >= x ) {
+			rightmost = x+1;
+			gp.x = rightmost;
+			setRightmost(rightmost,y);
+		}
+		log.infof("%s.createAnchor: %s at %d,%d",TAG,anchoruuid,gp.x,gp.y);
 		anchorCount++;
 		return x;
 	}
@@ -433,11 +442,12 @@ public class StepLayoutManager {
 						pa.x1 = pa.x1+dx;
 						pa.x2 = pa.x2+dx;
 					}
-					gp.x = gp.x + dx;
+					if( gp!=null ) gp.x = gp.x + dx;
+					log.warnf("%s.moveAncestryRight: Parent %s of %s has no location.", TAG,parent,uuid);
 					moveAncestryRight(parent,dx);
 				}
 				else {
-					log.debugf("%s.moveAncestryRight: Parent %s of %s has %d children.", TAG,parent,uuid,childcount);
+					log.warnf("%s.moveAncestryRight: Parent %s of %s has %d children.", TAG,parent,uuid,childcount);
 				}
 			}
 		}
@@ -449,13 +459,19 @@ public class StepLayoutManager {
 		rightmostIndex.set(y,new Integer(x));
 	}
 	
+	/**
+	 * Determine the x-position of the right-most step
+	 * at a y position.
+	 * @param y
+	 * @return
+	 */
 	private int getRightmost(int y) {
-		int index = Integer.MIN_VALUE;
-		if( y< rightmostIndex.size()) {
+		int xpos = Integer.MIN_VALUE;
+		if( y < rightmostIndex.size()) {
 			Integer val = rightmostIndex.get(y);
-			if( val!=null ) index = val.intValue();
+			if( val!=null ) xpos = val.intValue();
 		}
-		return index;
+		return xpos;
 	}
 	
 	private Element createAnchor(Document chart,String uuid,int count) {

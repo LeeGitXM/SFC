@@ -38,7 +38,7 @@ public class ConnectionRouter {
 	public ConnectionRouter(StepLayoutManager layout) {
 		this.connectionMap = layout.getConnectionMap();
 		this.gridMap = layout.getGridMap();
-		this.gridSize = computeGridDimension(gridMap);
+		this.gridSize = computeGridDimension(layout);
 		this.linkArray = new LinkArray(gridSize);
 		createConnections();
 	}
@@ -55,6 +55,12 @@ public class ConnectionRouter {
 			ConnectionHub hub = connectionMap.get(blockuuid);
 			for(String destuuid:hub.getConnectionsTo()) {
 				GridPoint destination = gridMap.get(destuuid);
+				// If the destination has never been positioned place below the source
+				if( destination.x==GridPoint.UNSET ) {
+					log.infof("%s.createConnections: Step %s has never been positioned.",TAG,destuuid);
+					destination.x = source.x;
+					destination.y = source.y+1;
+				}
 				route(source,destination,hub,connectionMap.get(destuuid));
 			}
 		}
@@ -73,15 +79,26 @@ public class ConnectionRouter {
 	 * Find the width and height
 	 * @return the grid dimension
 	 */
-	private GridPoint computeGridDimension(Map<String,GridPoint> gridPoints) {
+	private GridPoint computeGridDimension(StepLayoutManager layout) {
 		// First iteration gets the bounds
 		int maxx = Integer.MIN_VALUE;
 		int maxy = Integer.MIN_VALUE;
 
-		for( GridPoint gp:gridPoints.values()) {
+		Map<String,ConnectionHub> connectionHubMap = layout.getConnectionMap();  // Incoming/outgoing connections by UUID
+		Map<String,GridPoint> gridPointMap = layout.getGridMap();             // Grid by step UUID
+		for( String key: connectionMap.keySet()) {
+			GridPoint gp = gridPointMap.get(key);
+			ConnectionHub hub = connectionHubMap.get(key);
 			if( !gp.isConnected()) continue;
 			if( gp.x>maxx ) maxx = gp.x;
 			if( gp.y>maxy ) maxy = gp.y;
+			ParallelArea pa = hub.getParallelArea();
+			if( pa!=null ) {
+				int x = gp.x + pa.x2 - pa.x1 -1;
+				if( x>maxx ) maxx = x;
+				int y = pa.y2;
+				if( y>maxy ) maxy = y;
+			}
 		}
 		return new GridPoint(maxx,maxy);
 	}
@@ -91,14 +108,14 @@ public class ConnectionRouter {
 	 * horizontal routing create links one step below the source.
 	 */
 	private void route(GridPoint source,GridPoint destination,ConnectionHub sourceHub,ConnectionHub destinationHub) {
-		//log.infof("%s.route: %d,%d to %d,%d" ,TAG,source.x,source.y,destination.x,destination.y);
+		log.infof("%s.route: %d,%d to %d,%d",TAG,source.x,source.y,destination.x,destination.y);
 		if( !isAdjacent(source,destination,sourceHub.isParallelBlock()||destinationHub.isParallelBlock())) {
 			Link link = null;
 			if( sourceHub!=null && sourceHub.isParallelBlock() && destinationHub.isParallelBlock()) {
 				// For a straight shot between two parallel bars, take the far-right lane
 				ParallelArea pa = sourceHub.getParallelArea();
 				if( pa==null ) {
-					log.errorf("%s.route: source block is parallel, buut has no parallel area",TAG);
+					log.errorf("%s.route: source block is parallel, but has no parallel area",TAG);
 					return;
 				}
 				int x = source.x + pa.x2 - pa.x1 -1 ;
@@ -260,10 +277,17 @@ public class ConnectionRouter {
 		 * needs it. Different links get added to different parent elements. 
 		 */
 		public Link get(Element parent,int x,int y) {
-			Link link = array[x][y];
-			if( link==null ) {
-				link = new Link(parent,x,y);
-				array[x][y] = link;
+			Link link = null;
+			if (x>=0 && x<=maxx && y>=0 && y<=maxy ) {
+				link = array[x][y];
+				if( link==null ) {
+					link = new Link(parent,x,y);
+					array[x][y] = link;
+				}
+			}
+			else {
+				// This will eventually result in a null pointer exception
+				log.errorf("%s.get: %d,%d bounds are: %d,%d",TAG,x,y,maxx,maxy);
 			}
 			return link;
 		}
