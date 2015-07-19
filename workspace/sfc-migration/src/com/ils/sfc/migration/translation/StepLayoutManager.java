@@ -270,8 +270,6 @@ public class StepLayoutManager {
 		
 		// By default position one step down. From here on x,y are for next blocks ...
 		y = y+1;
-		List<String> nextBlocks = new ArrayList<String>(stepHub.getConnectionsTo());
-		if( nextBlocks.size() >= 2 && !stepHub.isParallelBlock() ) y = y+1; // Allow for horizontal connections
 		
 		// In positioning the blocks, disregard the parallel zone.
 		// Later on we will size it to cover all its children.
@@ -283,9 +281,6 @@ public class StepLayoutManager {
 			gp.x = x;    // Move self first, then ancestors
 			moveAncestryRight(stepId,dx);
 		}
-
-		log.infof("%s.positionNode: at %d,%d %s ", TAG,x,y,stepId);
-		setRightmost(x,y);
 		
 		// Multiple inputs are expected for an ending parallel block
 		if( blockMap.get(stepId)!=null && sourceHub!=null &&
@@ -297,10 +292,15 @@ public class StepLayoutManager {
 			if( stepHub.getConnectionsFrom().size()>1) {
 				y++;
 				gp.y = gp.y+1;
-				setRightmost(x,gp.y);
+				setRightmost(gp.x,gp.y);
 				createAnchors(upstreamStepId,stepId,stepHub,gp.x,gp.y-2); 
 			}
 		}
+		log.infof("%s.positionNode: at %d,%d %s ", TAG,gp.x,gp.y,stepId);
+		setRightmost(gp.x,gp.y);
+		
+		List<String> nextBlocks = new ArrayList<String>(stepHub.getConnectionsTo());
+		if( nextBlocks.size() >= 2 && !stepHub.isParallelBlock() ) y = y+1; // Allow for horizontal connections
 		  
 		int xpos = x - (nextBlocks.size()-1);
 		for( String childuuid:nextBlocks) {
