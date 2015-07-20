@@ -30,6 +30,7 @@ public class StepLayoutManager {
 	private final Map<String,ParallelArea> parallelMap;     // Parallel areas by UUID
 	private final List<Element> anchors;                    // Anchors and jumps created by this manager
 	private final ArrayList<Integer> rightmostIndex;        // Rightmost index by row number 
+	private String beginuuid = null;
 	private final Document chart;                           // Ignition chart
 	private final Converter delegate;
 	// Record the chart limits so that we can return a canvas size, if asked.
@@ -170,7 +171,6 @@ public class StepLayoutManager {
 		// Find the begin block. There can be only one. Instead of relying on
 		// nothing connected to it, check the class. There may be disconnected
 		// block just sitting there. We ignore these.
-		String beginuuid = null;
 		index = 0;
 		while( index < blocklist.getLength()) {
 			Element block = (Element)blocklist.item(index);
@@ -190,7 +190,8 @@ public class StepLayoutManager {
 		// Now do the layout. Position the root. Walk the tree.
 		int x = 0;   // Center on zero so that we can scale if need be.
 		int y = 2;
-		setRightmost(0,2);
+		setRightmost(0,y);
+
 		GridPoint root = new GridPoint(x,y);
 		gridMap.put(beginuuid,root);
 		positionNode(null,beginuuid,x,y);
@@ -269,7 +270,7 @@ public class StepLayoutManager {
 		}
 		
 		// By default position one step down. From here on x,y are for next blocks ...
-		y = y+1;
+		//y = y+1;
 		
 		// In positioning the blocks, disregard the parallel zone.
 		// Later on we will size it to cover all its children.
@@ -281,6 +282,9 @@ public class StepLayoutManager {
 			gp.x = x;    // Move self first, then ancestors
 			moveAncestryRight(stepId,dx);
 		}
+		
+		// By default position one step down. From here on x,y are for next blocks ...
+		y = y+1;
 		
 		// Multiple inputs are expected for an ending parallel block
 		if( blockMap.get(stepId)!=null && sourceHub!=null &&
@@ -327,7 +331,7 @@ public class StepLayoutManager {
 		// replace with a jump to the new anchor.
 		for(String fromid:from) {
 			// The original link stands
-			if(fromid.equalsIgnoreCase(upstreamStepId)) continue;
+			if(upstreamStepId!=null && fromid.equalsIgnoreCase(upstreamStepId)) continue;
 			ConnectionHub tohub = connectionMap.get(fromid);
 			List<String> tos = tohub.getConnectionsTo();
 			String jumpuuid = UUID.randomUUID().toString();
@@ -347,7 +351,7 @@ public class StepLayoutManager {
 		// Now update the hub for the subject block
 		String anchoruuid = UUID.randomUUID().toString();
 		from.clear();
-		from.add(upstreamStepId);
+		if( upstreamStepId!=null)from.add(upstreamStepId);
 		from.add(anchoruuid);
 		Element anchor = createAnchor(chart,anchoruuid,anchorCount);
 		anchors.add(anchor);
@@ -356,11 +360,13 @@ public class StepLayoutManager {
 		anchorHub.getConnectionsTo().add(stepId);
 		connectionMap.put(anchoruuid,anchorHub);
 		// We are given the y 2 above the source block. If this interferes with the 
-		// block connected upstream, tnen move one to the right. This spot should 
+		// block connected upstream, tnen move one to the right. This spot shouldrr
 		// ALWAYS be available.
-		int upstreamy = gridMap.get(upstreamStepId).y;
+		int upstreamy = 0;
+		if( upstreamStepId!=null ) upstreamy = gridMap.get(upstreamStepId).y;
 		GridPoint gp = new GridPoint(x,y);
 		gridMap.put(anchoruuid,gp);
+
 		log.infof("%s.createAnchor: rightmost row %d = %d vs %d",TAG,upstreamy,getRightmost(upstreamy),x);
 		int rightmost = getRightmost(upstreamy);
 		if( rightmost >= x ) {
@@ -420,35 +426,50 @@ public class StepLayoutManager {
 		if( maxy>max) max = maxy;
 		if( max>10) this.zoom =  10./(double)max;
 	}
-	
-	// Traverse the parentage of the specified block and 
-	// move them to the right, recursively. If the parent
-	// has multiple children, adjust the move to try and
-	// keep it centered.
-	//
-	// This depends on the fact that we have not yet placed
-	// the blocks to our right.
+	/**
+	 * Traverse the parentage of the specified block and 
+	 * move them to the right, recursively. If the parent
+	 * has multiple children, adjust the move to try and
+	 * keep it centered.
+	 *
+	 * This depends on the fact that we have not yet placed
+	 * the blocks to our right.
+	 * 
+	 * @param uuid the id of the source block. It has already been moved by dx.
+	 * @param dx nunber of position to move right 
+	 */
 	private void moveAncestryRight(String uuid,int dx) {
 		ConnectionHub hub = connectionMap.get(uuid);
 		if( hub!=null && !hub.getConnectionsFrom().isEmpty()) {
+			int maxchildren = 1;
 			for(String parent:hub.getConnectionsFrom() ) {
 				ConnectionHub parentHub = connectionMap.get(parent);
 				int childcount = parentHub.getConnectionsTo().size();
-				int position   = parentHub.getConnectionsTo().indexOf(uuid);
-				if( position>=0 && childcount>0) {
-					dx = dx*(childcount-position)/childcount;
-					GridPoint gp = gridMap.get(parent);
-					ParallelArea pa = parallelMap.get(parent);
-					if( pa!=null ) {
-						pa.x1 = pa.x1+dx;
-						pa.x2 = pa.x2+dx;
+				if( childcount>maxchildren ) {
+					// For other than the first, move the parent only a fraction to keep centered
+					maxchildren = childcount;
+					int position   = parentHub.getConnectionsTo().indexOf(uuid);
+					if( position>0 ) {
+						dx = dx*(childcount-position)/childcount;
 					}
-					if( gp!=null ) gp.x = gp.x + dx;
-					log.warnf("%s.moveAncestryRight: Parent %s of %s has no location.", TAG,parent,uuid);
+				}
+			}
+			
+			// Now move all ancestors the same amount
+			for(String parent:hub.getConnectionsFrom() ) {
+				GridPoint gp = gridMap.get(parent);
+				ParallelArea pa = parallelMap.get(parent);
+				if( pa!=null ) {
+					pa.x1 = pa.x1+dx;
+					pa.x2 = pa.x2+dx;
+				}
+				if( gp!=null ) {
+					gp.x = gp.x + dx;
+					if( gp.x> getRightmost(gp.y) ) setRightmost(gp.x,gp.y);
 					moveAncestryRight(parent,dx);
 				}
 				else {
-					log.warnf("%s.moveAncestryRight: Parent %s of %s has %d children.", TAG,parent,uuid,childcount);
+					log.warnf("%s.moveAncestryRight: Parent %s of %s has no location.", TAG,parent,uuid);
 				}
 			}
 		}
