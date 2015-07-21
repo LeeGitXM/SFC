@@ -32,8 +32,22 @@ insert into BltPythonPrototypes values ('xom.block.subdiagnosis.SubDiagnosis','v
 insert into BltPythonPrototypes values ('xom.block.subdiagnosis.SubDiagnosis','viewWidth','100');
 
 -- Columns are:  className, propertyName, propertyType, editable
-insert into PropertyMap values ('xom.block.action.Action','Script','STRING',1);
-insert into PropertyMap values ('xom.block.arithmetic.Arithmetic','Function','STRING',1);
-insert into PropertyMap values ('xom.block.finaldiagnosis.FinalDiagnosis','Label','STRING',1);
-insert into PropertyMap values ('xom.block.sqcdiagnosis.SQCDiagnosis','Label','STRING',1);
-insert into PropertyMap values ('xom.block.subdiagnosis.SubDiagnosis','Label','STRING',1);
+insert into BltPythonBlockProperties values ('xom.block.action.Action','Script','STRING',1);
+insert into BltPythonBlockProperties values ('xom.block.arithmetic.Arithmetic','Function','STRING',1);
+insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','CalculationMethod','SCRIPTREF',1);
+insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Explanation','STRING',1);
+insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Label','STRING',1);
+-- insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','LogToDatabase','BOOLEAN',1);
+-- insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','ManualMove','BOOLEAN',1);
+-- insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','ManualMoveValue','DOUBLE',1);
+insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','ManualTextRequired','BOOLEAN',1);
+-- insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Multiplier','DOUBLE',1);
+insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','PostRecommendation','BOOLEAN',1);
+insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Priority','DOUBLE',1);
+insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Recommendation','STRING',1);
+insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','RecommendationCallback','SCRIPTREF',1);
+insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','RecommendationRefreshInterval','DOUBLE',1);
+insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Targets','LIST',1);
+-- insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','TrapInsignificantConditions','BOOLEAN',1);
+insert into BltPythonBlockProperties values ('xom.block.sqcdiagnosis.SQCDiagnosis','Label','STRING',1);
+insert into BltPythonBlockProperties values ('xom.block.subdiagnosis.SubDiagnosis','Label','STRING',1);

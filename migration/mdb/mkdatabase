@@ -26,6 +26,7 @@ sqlite3 $DB < ${BIN}/insertTags.sql
 
 # BLT Tables
 sqlite3 $DB < ${BIN}/insertBltAnchorMap.sql
+sqlite3 $DB < ${BIN}/insertBltProperties.sql
 sqlite3 $DB < ${BIN}/insertBltPythonBlocks.sql
 # G2-Python
 sqlite3 $DB < ${BIN}/insertG2PyArguments.sql
