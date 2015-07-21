@@ -391,7 +391,7 @@ public class Converter {
 				if( g2block!=null && hub!=null ) {
 					Element child = stepTranslator.translate(chart,g2block,gp.x,gp.y);
 					// Parallel blocks are created by the layout manager and will be null here.
-					if( child!=null ) hub.getParent().appendChild(child);
+					if( child!=null ) hub.getChartElement().appendChild(child);
 				}
 			}
 
@@ -404,7 +404,7 @@ public class Converter {
 			// Go back to the layout and size any parallel zones to cover children.
 			// While we're at it, change the child locations relative to the zone.
 			layout.sizeParallelAreas();
-			
+			chart.getDocumentElement().setAttribute("canvas",layout.getCanvasSize());
 			chart.getDocumentElement().setAttribute("zoom", String.valueOf(layout.getZoom()));
 		}
 	}

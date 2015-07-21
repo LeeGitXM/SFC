@@ -108,7 +108,11 @@ public class ConnectionRouter {
 	 * horizontal routing create links one step below the source.
 	 */
 	private void route(GridPoint source,GridPoint destination,ConnectionHub sourceHub,ConnectionHub destinationHub) {
-		log.infof("%s.route: %d,%d to %d,%d",TAG,source.x,source.y,destination.x,destination.y);
+		log.debugf("%s.route: %d,%d to %d,%d",TAG,source.x,source.y,destination.x,destination.y);
+		if( !source.isConnected() || !destination.isConnected() ) {
+			log.warnf("%s.route: Disconnected node at %d,%d or %d,%d IGNORED",TAG,source.x,source.y,destination.x,destination.y);
+			return;
+		}
 		if( !isAdjacent(source,destination,sourceHub.isParallelBlock()||destinationHub.isParallelBlock())) {
 			Link link = null;
 			if( sourceHub!=null && sourceHub.isParallelBlock() && destinationHub.isParallelBlock()) {
@@ -122,7 +126,7 @@ public class ConnectionRouter {
 				int y = source.y;
 				y++;
 				while(y<destination.y) {
-					link = linkArray.get(sourceHub.getParent(),x, y);
+					link = linkArray.get(sourceHub.getChartElement(),x, y);
 					link.setUp(true);
 					link.setDown(true);
 					y++;
@@ -134,7 +138,7 @@ public class ConnectionRouter {
 				int y = source.y;
 				y++;
 				while(y<destination.y) {
-					link = linkArray.get(sourceHub.getParent(),x, y);
+					link = linkArray.get(sourceHub.getChartElement(),x, y);
 					link.setUp(true);
 					link.setDown(true);
 					y++;
@@ -146,7 +150,7 @@ public class ConnectionRouter {
 				int y = source.y;
 				y++;
 				while(y<destination.y) {
-					link = linkArray.get(sourceHub.getParent(),x, y);
+					link = linkArray.get(sourceHub.getChartElement(),x, y);
 					link.setUp(true);
 					link.setDown(true);
 					y++;
@@ -158,74 +162,69 @@ public class ConnectionRouter {
 				int y = source.y;
 				y++;
 				while(y<destination.y) {
-					link = linkArray.get(sourceHub.getParent(),x, y);
+					link = linkArray.get(sourceHub.getChartElement(),x, y);
 					link.setUp(true);
 					link.setDown(true);
 					y++;
 				}
 			}
 			else if( source.x > destination.x ) {
-				// Route is left and down
 				int x = source.x;
 				int y = source.y;
 				y++;
-				// Create link directly below.
-				link = linkArray.get(sourceHub.getParent(),x, y);
+				
+				// Create links directly below - until two above.
+				while( y<destination.y -1) {
+					link = linkArray.get(sourceHub.getChartElement(),x, y);
+					link.setUp(true);
+					link.setDown(true);
+					y++;
+				}
+				// Turn corner
+				link = linkArray.get(sourceHub.getChartElement(),x, y);
 				link.setUp(true);
 				link.setLeft(true);
 				x--;
 				// Draw horizontally left
 				while(x > destination.x) {
-					link = linkArray.get(sourceHub.getParent(),x,y);
+					link = linkArray.get(sourceHub.getChartElement(),x,y);
 					link.setLeft(true);
 					link.setRight(true);
 					x--;
 				}
 				// Draw corner down
-				link = linkArray.get(sourceHub.getParent(),x,y);
+				link = linkArray.get(sourceHub.getChartElement(),x,y);
 				link.setRight(true);
 				link.setDown(true);
-				// Continue down to destination
-				y++;
-				while(y<destination.y) {
-					link = linkArray.get(sourceHub.getParent(),x,y);
-					link.setUp(true);
-					link.setDown(true);
-					y++;
-				}
 			}
 			else if( source.x < destination.x ) {
 				// Route is right and down
 				int x = source.x;
 				int y = source.y;
 				y++;
-				// Create link directly below.
-				link = linkArray.get(sourceHub.getParent(),x,y);
+				// Create links directly below - until two above.
+				while(y<destination.y-1) {
+					link = linkArray.get(sourceHub.getChartElement(),x, y);
+					link.setUp(true);
+					link.setDown(true);
+					y++;
+				}
+				// Turn corner
+				link = linkArray.get(sourceHub.getChartElement(),x,y);
 				link.setUp(true);
 				link.setRight(true);
 				x++;
 				// Draw horizontally right
 				while(x < destination.x) {
-					link = linkArray.get(sourceHub.getParent(),x,y);
+					link = linkArray.get(sourceHub.getChartElement(),x,y);
 					link.setLeft(true);
 					link.setRight(true);
 					x++;
 				}
-				// If we're not there yet, draw corner down
-				if( y < destination.y) {
-					link = linkArray.get(sourceHub.getParent(),x,y);
-					link.setLeft(true);
-					link.setDown(true);
-					// Continue down to destination
-					y++;
-					while(y<destination.y) {
-						link = linkArray.get(sourceHub.getParent(),x, y);
-						link.setUp(true);
-						link.setDown(true);
-						y++;
-					}
-				}
-				
+				// Draw corner down
+				link = linkArray.get(sourceHub.getChartElement(),x,y);
+				link.setLeft(true);
+				link.setDown(true);
 			}
 		}
 	}

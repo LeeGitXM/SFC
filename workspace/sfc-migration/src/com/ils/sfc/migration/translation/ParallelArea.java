@@ -17,6 +17,8 @@ public class ParallelArea  {
 	public int x2 = 0;      // min x
 	public int y1 = 0;      // min x
 	public int y2 = 0;      // max y
+	// Keep track of the rightmost position of the current lane
+	public int rightmost = Integer.MIN_VALUE;
 	private final Element element;
 	
 	/**
