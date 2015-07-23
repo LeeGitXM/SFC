@@ -1,6 +1,6 @@
 #/bin/sh
 #
-# Save the source tree for sfc and common into a zip repository.
+# Save the regression test projects into SVN.
 # Do not intentionally include build products. Make clean before 
 # running this script.
 #
@@ -13,8 +13,6 @@ rm -rf $TMP
 cd ${GIT_REPO}
 mkdir $TMP
 cd ${GIT_REPO}/sfc/migration
-./clear-xml
-./clear-procs
 rm -f mdb/*.db
 cp -a mdb $TMP
 cd mdb

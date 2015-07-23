@@ -24,6 +24,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-cstr_ca_pr
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-cstr_dc2_problem-output-gda','project.vistalon.cstr.CstrDc2.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-cstr_denb_problem-output-gda','project.vistalon.cstr.CstrDenb.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-cstr_dml-problem-gda','project.vistalon.cstr.CstrDML.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-cstr_dml_problem-output-gda','project.vistalon.cstr.CstrDML.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-cstr_enb_problem-output-gda','project.vistalon.cstr.CstrEnb.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-cstr_ml_problem-output-gda','project.vistalon.cstr.CstrMl.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-cstr_mlr_problem-output-gda','project.vistalon.cstr.CstrMlr.calculate');

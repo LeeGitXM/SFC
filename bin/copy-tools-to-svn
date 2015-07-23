@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Save the migration tools tothe SVN repo area.
+#
+#set -x
+SVN=~/Development/ils/svn/EMChemicals/Release/src
+LIB=${GIT_REPO}/external/lib
+# Prepare directories
+TOOLDIR=$SVN/tools/sfc-migration
+mkdir -p $TOOLDIR
+cd ${GIT_REPO}/sfc/migration
+cp convert $TOOLDIR/convert.sh
+cp build-project $TOOLDIR/build-project.sh
+cp debug-project $TOOLDIR/debug-project.sh
+cp translate $TOOLDIR/translate.sh
+cp translate-onstart $TOOLDIR/translate.onstart.sh
+cp translate $TOOLDIR/translate.sh
+cp $LIB/sfc-migration.jar $TOOLDIR

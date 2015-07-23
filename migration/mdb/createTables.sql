@@ -21,7 +21,7 @@ CREATE TABLE PreferenceMap(
 );
 
 -- Map properties of G2 blocks to properties of
--- Ignition blocks.
+-- Ignition blocks. For use with procedure translation.
 CREATE TABLE PropertyMap(
     G2Class text NOT NULL,
     G2Property text NOT NULL,
@@ -63,6 +63,16 @@ CREATE TABLE BltAnchorMap(
 	Port    text NOT NULL,
 	Annotation text NULL
 );
+-- Map properties of G2 blocks to properties of
+-- Ignition blocks. For use with procedure translation.
+CREATE TABLE BltPropertyMap(
+    G2Class text NOT NULL,
+    G2Property text NOT NULL,
+	PropertyName  text NOT NULL,
+	Datatype  text NOT NULL,
+	Editable integer DEFAULT 1,
+	BindingType text DEFAULT 'NONE'
+);
 
 -- This table is used to define UI attributes for
 -- blocks that are defined in Python.
@@ -72,6 +82,14 @@ CREATE TABLE BltPythonPrototypes(
 	Value text
 );
 
+-- These are properties of blocks that are fixed
+-- no matter what. Applicable to python blocks.
+CREATE TABLE BltPythonBlockProperties(
+    BlockClass text NOT NULL,
+    PropertyName text NOT NULL,
+	PropertyType text NOT NULL,
+	Editable integer
+);
 -- ======================= G2-Python Tables ================
 -- Change the name of string arguments to procedures when
 -- converting from G2 to Python

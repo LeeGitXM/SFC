@@ -26,18 +26,24 @@ insert into SfcPropertyMap values ('com.ils.timedDelayStep','recipeLocation','re
 insert into SfcPropertyMap values ('com.ils.timedDelayStep','strategy','strategy');
 -- MISC STEPS
 insert into SfcPropertyMap values ('action-step','description','description');
-insert into SfcPropertyMap values ('com.ils.controlPanelMessageStep','description','ackRequired');
+insert into SfcPropertyMap values ('com.ils.inputStep','description','description');
+insert into SfcPropertyMap values ('com.ils.pauseStep','description','description');
+insert into SfcPropertyMap values ('com.ils.clearQueueStep','description','description');
+-- CONTROL PANEL MESSAGE
+insert into SfcPropertyMap values ('com.ils.controlPanelMessageStep','ackRequired','ackRequired');
+insert into SfcPropertyMap values ('com.ils.controlPanelMessageStep','description','description');
 insert into SfcPropertyMap values ('com.ils.controlPanelMessageStep','messageText','message');
 insert into SfcPropertyMap values ('com.ils.controlPanelMessageStep','postToQueue','postToQueue');
 insert into SfcPropertyMap values ('com.ils.controlPanelMessageStep','priority','priority');
 insert into SfcPropertyMap values ('com.ils.controlPanelMessageStep','timeout','timeout');
 insert into SfcPropertyMap values ('com.ils.controlPanelMessageStep','timeoutUnit','timeoutUnit');
-insert into SfcPropertyMap values ('com.ils.inputStep','description','description');
-insert into SfcPropertyMap values ('com.ils.pauseStep','description','description');
+-- QUEUE MESSAGE
 insert into SfcPropertyMap values ('com.ils.queueMessageStep','description','description');
+insert into SfcPropertyMap values ('com.ils.queueMessageStep','messageText','message');
 insert into SfcPropertyMap values ('com.ils.queueMessageStep','UNKNOWN','key');
 insert into SfcPropertyMap values ('com.ils.queueMessageStep','UNKNOWN','prompt');
 insert into SfcPropertyMap values ('com.ils.queueMessageStep','UNKNOWN','recipeLocation');
+-- SAVE DATA
 insert into SfcPropertyMap values ('com.ils.saveDataStep','description','description');
 insert into SfcPropertyMap values ('com.ils.saveDataStep','directory','directory');
 insert into SfcPropertyMap values ('com.ils.saveDataStep','extension','extension');
@@ -46,12 +52,14 @@ insert into SfcPropertyMap values ('com.ils.saveDataStep','recipeLocation','reci
 insert into SfcPropertyMap values ('com.ils.saveDataStep','appendTimestamp','timestamp');
 insert into SfcPropertyMap values ('com.ils.saveDataStep','printFile','printFile');
 insert into SfcPropertyMap values ('com.ils.saveDataStep','viewFile','viewFile');
+-- WRITE OUTPUT
 insert into SfcPropertyMap values ('com.ils.writeOutputStep','description','description');
 insert into SfcPropertyMap values ('com.ils.writeOutputStep','recipeLocation','recipeLocation');
 insert into SfcPropertyMap values ('com.ils.writeOutputStep','timerKey','timerKey');
 insert into SfcPropertyMap values ('com.ils.writeOutputStep','timerSource','timerLocation');
 insert into SfcPropertyMap values ('com.ils.writeOutputStep','setTimer','timerSet');
 insert into SfcPropertyMap values ('com.ils.writeOutputStep','description','writeOutputConfig');
+-- YES NO
 insert into SfcPropertyMap values ('com.ils.yesNoStep','description','description');
 insert into SfcPropertyMap values ('com.ils.yesNoStep','key','key');
 insert into SfcPropertyMap values ('com.ils.yesNoStep','recipeDataLocation','recipeLocation');

@@ -12,7 +12,7 @@ package com.ils.sfc.migration.translation;
  *  
  */
 public class GridPoint  {
-	private static int UNSET = -8888;
+	public static int UNSET = -8888;
 	public int x = 0;      // column number
 	public int y = 0;      // row number
 	private boolean connected = false;

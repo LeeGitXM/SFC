@@ -17,18 +17,18 @@ public class ConnectionHub {
 	protected boolean isParallel = false;
 	protected ParallelArea  parallelArea = null;
 	protected int visitCount = 0;
-	private Element parent;
+	private Element chartElement;
 	/**
 	 * The root is either a document (chart) root or a  parallel element
 	 * @param root
 	 */
 	public ConnectionHub(Element root) {
-		this.parent = root;
+		this.chartElement = root;
 		this.connectedTo = new ArrayList<>();
 		this.connectedFrom = new ArrayList<>();
 		
 	}
-	public Element getParent() { return this.parent; }
+	public Element getChartElement() { return this.chartElement; }
 	public void addConnectionTo(String uuid) { connectedTo.add(uuid); }
 	public void addConnectionFrom(String uuid) { connectedFrom.add(uuid); }
 	public List<String> getConnectionsTo() { return connectedTo; }
@@ -40,18 +40,18 @@ public class ConnectionHub {
 	public int getVisitCount()  { return this.visitCount; }
 	public void incrementVisitCount()  { this.visitCount++; }
 	public void setParallelBlock(boolean flag) { this.isParallel=flag; }
-	public void setForChart(Element e) {
-		this.parent = e; 
+	public void setChartElement(Element e) {
+		this.chartElement = e; 
 	}
 	// Use setForChart to counter the effect
 	public void setForParallel(ParallelArea pa) { 
 		this.parallelArea=pa;
-		this.parent = pa.getElement();
+		this.chartElement = pa.getElement();
 		this.isParallel = true;
 	}
 	// Use when inheriting from previous block
 	public void setParentage(ConnectionHub hub) { 
-		this.parent = hub.getParent();
+		this.chartElement = hub.getChartElement();
 		this.parallelArea = hub.parallelArea;
 	}
 }

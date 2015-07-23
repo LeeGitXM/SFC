@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -30,6 +31,7 @@ public class StepLayoutManager {
 	private final Map<String,ParallelArea> parallelMap;     // Parallel areas by UUID
 	private final List<Element> anchors;                    // Anchors and jumps created by this manager
 	private final ArrayList<Integer> rightmostIndex;        // Rightmost index by row number 
+	private String beginuuid = null;
 	private final Document chart;                           // Ignition chart
 	private final Converter delegate;
 	// Record the chart limits so that we can return a canvas size, if asked.
@@ -46,7 +48,7 @@ public class StepLayoutManager {
 	public StepLayoutManager(Converter converter,Document g2chart,Document ichart ) {
 		this.delegate = converter;
 		this.blockMap = new HashMap<>();
-		this.connectionMap = new HashMap<>();
+		this.connectionMap = new ConcurrentHashMap<>();
 		this.gridMap = new HashMap<>();
 		this.parallelMap = new HashMap<>();
 		this.rightmostIndex = new ArrayList<>();
@@ -60,11 +62,18 @@ public class StepLayoutManager {
 	public Map<String,ConnectionHub> getConnectionMap() { return this.connectionMap; }
 	public Map<String,GridPoint>     getGridMap() { return this.gridMap; }
 	public double getZoom() { return this.zoom; }
+	public String getCanvasSize() {
+		int width = maxx-minx+4;     // Allot a border
+		int height = maxy - miny+4;
+		if(width<10) width = 10;
+		if(height<10) height = 10;
+		return String.format("%d %d",width,height);
+	}
 	
 	/**
 	 * Iterate through the parallel zones and make sure that the areas cover their children.
 	 * Set element properties, add element to the chart.
-	 * Repeat the iteratation over children, relativize their location to the parallel block.
+	 * Repeat the iteration over children, relativize their location to the parallel block.
 	 * 
 	 * Ignore the terminating block.
 	 */
@@ -146,7 +155,7 @@ public class StepLayoutManager {
 				connectionMap.put(uuid,hub);
 			}
 			if(isParallel(block)) {
-				Element e = createParallel(chart,uuid);
+				Element e = createParallelElement(chart,uuid);
 				parallelMap.put(uuid, new ParallelArea(e));
 				hub.setParallelBlock(true);
 			}
@@ -170,7 +179,6 @@ public class StepLayoutManager {
 		// Find the begin block. There can be only one. Instead of relying on
 		// nothing connected to it, check the class. There may be disconnected
 		// block just sitting there. We ignore these.
-		String beginuuid = null;
 		index = 0;
 		while( index < blocklist.getLength()) {
 			Element block = (Element)blocklist.item(index);
@@ -188,8 +196,10 @@ public class StepLayoutManager {
 		}
 		log.debugf("%s.analyze: begin block is %s",TAG,beginuuid);
 		// Now do the layout. Position the root. Walk the tree.
-		int x = 0;   // Center on zero so that we can scale if need be.
+		int x = 0;   // Center on zero, we will scale later.
 		int y = 2;
+		setRightmost(0,y);
+
 		GridPoint root = new GridPoint(x,y);
 		gridMap.put(beginuuid,root);
 		positionNode(null,beginuuid,x,y);
@@ -203,48 +213,33 @@ public class StepLayoutManager {
 	 *       by a block in the parallel zone. Make sure we only track its exit
 	 *       once.
 	 * 
-	 * @param source the name of the block from which we have a connection
-	 * @param uuid the block being placed
+	 * @param upstreamStepId the name of the block from which we have a connection
+	 * @param stepId the block being placed
 	 * @param x the block's new x
 	 * @param y the block's new y
 	 */
-	private void positionNode(String source,String uuid,int x,int y) {
-		ConnectionHub sourceHub = null;
-		if( source!=null ) sourceHub = connectionMap.get(source);
-		ConnectionHub hub = connectionMap.get(uuid);
-		ParallelArea pa = parallelMap.get(uuid);
-		
-		// Multiple inputs are expected for an ending parallel block
-		if( blockMap.get(uuid)!=null && sourceHub!=null &&
-			(pa==null || !sourceHub.isInParallelZone()) ) {
-			// NOTE: anchors and jumps are not in the block map.
-			// If there are multiple inputs on a block
-			// then create an anchor and associated jumps. 
-			for(String input:hub.getConnectionsFrom()) {
-				if( !input.equals(source) ) {
-					x = createAnchors(hub,source,uuid,x,y-1);
-					y+=1;  
-					break;
-				}
-			}
-		}
+	private void positionNode(String parentId,String stepId,int x,int y) {
+		ConnectionHub parentHub = null;
+		if( parentId!=null ) parentHub = connectionMap.get(parentId);
+		ConnectionHub stepHub = connectionMap.get(stepId);
+		ParallelArea pa = parallelMap.get(stepId);
 		
 		// The mere fact that we're at this point means that we're connected
-		GridPoint gp = gridMap.get(uuid);
+		GridPoint gp = gridMap.get(stepId);
 		gp.setConnected(true);
 
 		if( pa!=null ) {
 			// We're either moving into or out of a parallel zone
-			if( sourceHub.isInParallelZone() ) {
+			if( parentHub.isInParallelZone() ) {
 				// Now the parallel areas are the same for both  begin and end.
 				// For the bottom bar, set the position to the lower right.
-				pa = sourceHub.getParallelArea();
-				hub.setForChart(chart.getDocumentElement());
+				pa = parentHub.getParallelArea();
+				stepHub.setChartElement(chart.getDocumentElement());
 				// This is a terminating parallel block. We will
 				// see this once for every incoming connection.
 				// Only process its outputs the last time.
-				hub.incrementVisitCount();
-				if( sourceHub.isParallelBlock() ) {
+				stepHub.incrementVisitCount();
+				if( parentHub.isParallelBlock() ) {
 					// Straight shot through parallel zone
 					pa.x2+=2;
 				}
@@ -252,27 +247,28 @@ public class StepLayoutManager {
 				y = pa.y2;
 				gp.x = pa.x2;
 				gp.y = pa.y2;
-				if( hub.getVisitCount()<hub.getConnectionsFrom().size() ) return;
+				if( stepHub.getVisitCount()<stepHub.getConnectionsFrom().size() ) return;
 			}
 			else {
-				hub.setForParallel(pa);
+				stepHub.setForParallel(pa);
 				// First approximation of the size. For the top bar, set the
 				// grid points to the upper left.
 				pa.x1 = x;
 				pa.y1 = y;
 				pa.x2 = x + 1;
 				pa.y2 = y+2;
+				pa.rightmost = pa.x1;
 				gp.x = pa.x1;
 				gp.y = pa.y1;
 			}
 		}
 		// Otherwise inherit the hub from the previous
-		else if(sourceHub!=null) {
-			hub.setParentage(sourceHub);
+		else if(parentHub!=null) {
+			stepHub.setParentage(parentHub); // Pass on the G2 block element
 			gp.x = x;
 			gp.y = y;
-			if( sourceHub.isInParallelZone() ) {
-				pa = sourceHub.getParallelArea();
+			if( parentHub.isInParallelZone() ) {
+				pa = parentHub.getParallelArea();
 				if( pa.x2 < x ) pa.x2 = x;
 				if( pa.y2 < y+1 ) pa.y2 = y+1;
 			}
@@ -282,9 +278,6 @@ public class StepLayoutManager {
 			gp.y = y;
 		}
 		
-		List<String> nextBlocks = new ArrayList<String>(hub.getConnectionsTo());
-		y = y+1;
-		if( nextBlocks.size() >= 2 && !hub.isParallelBlock() ) y = y+1; // Allow for connections
 		
 		// In positioning the blocks, disregard the parallel zone.
 		// Later on we will size it to cover all its children.
@@ -293,68 +286,130 @@ public class StepLayoutManager {
 		if( rightmost > x-2 ) {
 			int dx = rightmost - x + 2;
 			x = x + dx;
-			moveAncestryRight(uuid,dx);
+			gp.x = x;    // Move self first, then ancestors
+			moveAncestryRight(stepId,dx);
 		}
+		
+		// By default position one step down. From here on x,y are for next blocks ...
+		y = y+1;
+		log.debugf("%s.positionNode: at %d,%d %s ", TAG,gp.x,gp.y,stepId);
+		setRightmost(gp.x,gp.y);
+		if(pa!=null) pa.rightmost = gp.x;
 
-		log.tracef("%s.positionNode: at %d,%d %s ", TAG,x,y,uuid);
-		setRightmost(x,y);
-		  
-		int xpos = x - (nextBlocks.size()-1);
+		List<String> nextBlocks = new ArrayList<String>(stepHub.getConnectionsTo());
+		// Attempt to center the incoming connection
+		int dx = nextBlocks.size()-1;
+		if( dx>0 ) {
+			gp.x = gp.x+dx;    // Move self first, then ancestors
+			moveAncestryRight(stepId,dx);
+		}
+		 	
+		int index = 0;
 		for( String childuuid:nextBlocks) {
-			positionNode(uuid,childuuid,xpos,y);
-			gp = gridMap.get(childuuid);  
-			xpos = gp.x + 2;                // Position for next block
+			GridPoint childlocation = gridMap.get(childuuid);
+			// If we reference a block that is already connected, and not in a parallel zone
+			// then create an anchor. Multiple inputs are expected for an ending parallel block.
+			if( childlocation.isConnected() && pa==null ) {
+				createAnchor(stepId,childuuid);
+			}
+			else {
+				GridPoint parentlocation = gridMap.get(stepId);  // Can change between siblings
+				int dy = 1;
+				if( nextBlocks.size() >= 2 && !stepHub.isParallelBlock() ) dy++; // Allow for horizontal connections
+				positionNode(stepId,childuuid,parentlocation.x-dx+index*2,parentlocation.y+dy);
+			} 
+			index++;
 		}
 	}
 	
 	/**
-	 * Create an anchor plus a corresponding jump for every block connecting to it.
-	 * Exclude the source 
-	 * @param uuid target step
-	 * @param x
-	 * @param y
+	 * Create an anchor plus a corresponding jumps for every block connecting to it.  
+	 * @param upstreamStepId the uuid of the upstream block
+	 * @param stepId target step
+	 * @param stepHub the connection hub of the block
 	 * @return
 	 */
-	private int createAnchors(ConnectionHub hub,String source,String uuid,int x,int y) {
-		String anchoruuid = UUID.randomUUID().toString();
-		List<String> from = hub.getConnectionsFrom();
-		// Search all blocks connect connections to this block
-		// replace with a link to the anchor.
-		for(String fromid:from) {
-			if(fromid.equalsIgnoreCase(source)) continue;
-			ConnectionHub tohub = connectionMap.get(fromid);
-			List<String> tos = tohub.getConnectionsTo();
-			String jumpuuid = UUID.randomUUID().toString();
-			tos.remove(uuid);
-			tos.add(jumpuuid);
-			Element jump = createJump(chart,jumpuuid,anchorCount);
-			anchors.add(jump);
-			hub.getParent().appendChild(jump);
-			GridPoint gp = new GridPoint();    // Not connected yet
-			gridMap.put(jumpuuid,gp);
-			ConnectionHub jumpHub = new ConnectionHub(hub.getParent());
-			jumpHub.getConnectionsFrom().add(uuid);
-			connectionMap.put(jumpuuid,jumpHub);
+	private void createAnchor(String source,String target) {
+		String parent = null;  // The parent of the target block
+		ConnectionHub targetHub = connectionMap.get(target);
+		for(String from:targetHub.getConnectionsFrom() ) {
+			// We want an existing connection that is not our target
+			if( from.equals(source)) continue;
+			if( gridMap.get(from).isConnected() ) {
+				parent = from;
+				break;
+			}
 		}
-		// Now
-		from.clear();
-		from.add(source);
-		from.add(anchoruuid);
-		Element anchor = createAnchor(chart,anchoruuid,anchorCount);
+		
+		if( parent==null ) {
+			log.errorf("%s.createAnchor: Unable to find parent of target %s",TAG,target);
+			return;
+		}
+		
+		// Search all steps with connections to the target
+		// replace with a jump to the new anchor.
+		for(String key:connectionMap.keySet() ) {
+			if( key.equals(parent)) continue;  // Leave the existing link intact
+			ConnectionHub hub = connectionMap.get(key);
+			List<String> targets = hub.getConnectionsTo();
+			if( targets.contains(target) ) {
+				// Replace with link with jump.
+				String jumpuuid = UUID.randomUUID().toString();
+				targets.remove(target);
+				targets.add(jumpuuid);
+				log.debugf("%s.createAnchor: From %s, replacing link to %s with jump %s",TAG,key,target,jumpuuid);
+				Element jump = createJumpElement(chart,jumpuuid,anchorCount);
+				anchors.add(jump);
+				hub.getChartElement().appendChild(jump);
+				// Cannot position jump as parent is probably not yet positioned.
+				GridPoint jumplocation = new GridPoint();
+				gridMap.put(jumpuuid,jumplocation);
+				ConnectionHub jumpHub = new ConnectionHub(hub.getChartElement());
+				jumpHub.getConnectionsFrom().add(key);
+				connectionMap.put(jumpuuid,jumpHub);
+				// For our original source, we do know the location
+				if( key.equals(source)) {
+					GridPoint sourcelocation = gridMap.get(source);
+					jumplocation.x = sourcelocation.x;
+					jumplocation.y = sourcelocation.y+1;
+					jumplocation.setConnected(true);
+				}
+
+			}
+
+		}
+		// Now create the anchor
+		// Move all descendants of parent down one to make room for anchor connection
+		moveDescendantsDown(parent);
+		List<String> targetFrom = targetHub.getConnectionsFrom();
+		targetFrom.clear();
+
+		// Now create and position the anchor
+		String anchoruuid = UUID.randomUUID().toString();
+		targetFrom.add(parent);
+		targetFrom.add(anchoruuid);
+		Element anchor = createAnchorElement(chart,anchoruuid,anchorCount);
 		anchors.add(anchor);
-		hub.getParent().appendChild(anchor);
-		ConnectionHub anchorHub = new ConnectionHub(hub.getParent());
-		anchorHub.getConnectionsTo().add(uuid);
+		targetHub.getChartElement().appendChild(anchor);
+		
+		ConnectionHub anchorHub = new ConnectionHub(targetHub.getChartElement());
+		anchorHub.getConnectionsTo().add(target);
 		connectionMap.put(anchoruuid,anchorHub);
-		// We are given the y of the source block - the most compact location
-		// is immediately to the right of the source block. This spot should 
-		// ALWAYS be available.
-		x+=1;
-		GridPoint gp = new GridPoint(x,y);
-		gridMap.put(anchoruuid,gp);
-		log.debugf("%s.createAnchor: %s at %d,%d",TAG,anchoruuid,x,y);
+		
+		// Place the anchor immediately to the right of the parent.
+		// We rely on this being a ""safe" location
+		GridPoint ploc = gridMap.get(parent);
+		if(ploc.isConnected()) {
+			gridMap.put(anchoruuid,new GridPoint(ploc.x+1,ploc.y));
+			log.debugf("%s.createAnchor: %s at %d,%d",TAG,anchoruuid,ploc.x+1,ploc.y);
+		}
+			
+		else {
+			gridMap.put(anchoruuid,new GridPoint());
+			log.infof("%s.createAnchor: %s UNCONNECTED",TAG,anchoruuid);
+		}
+
 		anchorCount++;
-		return x;
 	}
 	
 	// The original layout may create indices that are out-of-range.
@@ -404,54 +459,132 @@ public class StepLayoutManager {
 		if( maxy>max) max = maxy;
 		if( max>10) this.zoom =  10./(double)max;
 	}
-	
-	// Traverse the parentage of the specified block and 
-	// move them to the right, recursively. If the parent
-	// has multiple children, adjust the move to try and
-	// keep it centered.
-	//
-	// This depends on the fact that we have not yet placed
-	// the blocks to our right.
+	/**
+	 * Traverse the parentage of the specified block and 
+	 * move them to the right, recursively. If the parent
+	 * has multiple children, adjust the move to try and
+	 * keep it centered.
+	 *
+	 * This depends on the fact that we have not yet placed
+	 * the blocks to our right. Stop when we pass through a parallel
+	 * boundary. 
+	 * 
+	 * @param uuid the id of the source block. It has already been moved by dx.
+	 * @param dx nunber of position to move right 
+	 */
 	private void moveAncestryRight(String uuid,int dx) {
+		if( dx==0 ) return;                   // Nothing to do
+		if( uuid.equals(beginuuid)) return;   // Hit the top
 		ConnectionHub hub = connectionMap.get(uuid);
 		if( hub!=null && !hub.getConnectionsFrom().isEmpty()) {
+			int maxchildren = 1;
 			for(String parent:hub.getConnectionsFrom() ) {
-				int childcount = hub.getConnectionsTo().size();
-				int position   = hub.getConnectionsTo().indexOf(parent);
-				if( position>=0 && childcount>0) {
-					dx = dx*(childcount-position)/childcount;
-					GridPoint gp = gridMap.get(parent);
-					ParallelArea pa = parallelMap.get(parent);
-					if( pa!=null ) {
-						pa.x1 = pa.x1+dx;
-						pa.x2 = pa.x2+dx;
+				ConnectionHub parentHub = connectionMap.get(parent);
+				int childcount = parentHub.getConnectionsTo().size();
+				if( childcount>maxchildren ) {
+					// For other than the first, move the parent only a fraction to keep centered
+					maxchildren = childcount;
+					int position   = parentHub.getConnectionsTo().indexOf(uuid);
+					if( position>0 ) {
+						dx = dx*(childcount-position)/childcount;
 					}
+				}
+			}
+			
+			// Now move all ancestors the same amount
+			for(String parent:hub.getConnectionsFrom() ) {
+				ConnectionHub parentHub = connectionMap.get(parent);
+				if( parentHub.isParallel != hub.isParallel ) continue;  // Coming out of a parallel section
+				
+				GridPoint gp = gridMap.get(parent);
+				if( !gp.isConnected()) continue;
+				ParallelArea pa = parallelMap.get(parent);
+				if( pa!=null ) {
+					pa.x1 = pa.x1+dx;
+					pa.x2 = pa.x2+dx;
+				}
+				if( gp!=null && gp.isConnected() ) {
 					gp.x = gp.x + dx;
-					moveAncestryRight(parent,dx);
+					if( gp.x> getRightmost(gp.y) ) setRightmost(gp.x,gp.y);
+					// Terminate if we're not going up any more
+					GridPoint currentPoint = gridMap.get(uuid);
+					if( gp.y<currentPoint.y)  moveAncestryRight(parent,dx);
 				}
 				else {
-					log.warnf("%s.moveAncestryRight: Parent (%s) of %s has no children.", TAG,parent,uuid);
+					log.warnf("%s.moveAncestryRight: Parent %s of %s has no location.", TAG,parent,uuid);
 				}
 			}
 		}
 	}
+	/**
+	 * Traverse the children of the specified block and 
+	 * move them down one block, recursively. This is used to make
+	 * room for a connection above the parent block. Since loops are
+	 * legal, we just do this until either our blocks have not been
+	 * positioned, or we 
+	 * 
+	 * @param uuid the id of the source block.  
+	 */
+	private void moveDescendantsDown(String uuid) {
+		ConnectionHub hub = connectionMap.get(uuid);
+		if( hub!=null && !hub.getConnectionsTo().isEmpty()) {
+			GridPoint ploc = gridMap.get(uuid);
+			// Now move all children down
+			for(String child:hub.getConnectionsTo() ) {
+				GridPoint gp = gridMap.get(child);
+				if( !gp.isConnected() ) continue;
+				if( gp.y<ploc.y-2 ) continue;
+				ParallelArea pa = parallelMap.get(child);
+				if( pa!=null ) {
+					pa.y1 = pa.y1+1;
+					pa.y2 = pa.y2+1;
+				}
+				if( gp!=null ) {
+					gp.y = gp.y + 1;
+					log.debugf("%s.moveDescendantsDown: %s to %d,%d.", TAG,child,gp.x,gp.y);
+					if( gp.x> getRightmost(gp.y) ) setRightmost(gp.x,gp.y);
+					// If there's an attached anchor, move it also
+					ConnectionHub childHub = connectionMap.get(child);
+					for(String step:childHub.getConnectionsFrom()) {
+						if(!step.equals(uuid) ) {
+							if( connectionMap.get(step).getConnectionsFrom().isEmpty() ) {
+								GridPoint ap = gridMap.get(step);
+								ap.y = ap.y+1;
+							}
+						}
+					}
+					moveDescendantsDown(child);
+				}
+				else {
+					log.warnf("%s.moveDescendantsDown: Child %s of %s has no location.", TAG,child,uuid);
+				}
+			}
+		}
+	}
+	// Ignore parallel areas.
 	private void setRightmost(int x,int y) {
 		while( y>=rightmostIndex.size() ) {
 			rightmostIndex.add(null);
 		}
-		rightmostIndex.set(y,new Integer(x));
+		if( y>=0 ) rightmostIndex.set(y,new Integer(x));
 	}
 	
+	/**
+	 * Determine the x-position of the right-most step
+	 * at a y position.
+	 * @param y
+	 * @return
+	 */
 	private int getRightmost(int y) {
-		int index = Integer.MIN_VALUE;
-		if( y< rightmostIndex.size()) {
+		int xpos = Integer.MIN_VALUE;
+		if( y>=0 && y < rightmostIndex.size()) {
 			Integer val = rightmostIndex.get(y);
-			if( val!=null ) index = val.intValue();
+			if( val!=null ) xpos = val.intValue();
 		}
-		return index;
+		return xpos;
 	}
 	
-	private Element createAnchor(Document chart,String uuid,int count) {
+	private Element createAnchorElement(Document chart,String uuid,int count) {
 		log.debugf("%s.createAnchor: %c %s", TAG,'A'+count,uuid);
 		Element e = chart.createElement("anchor");
 		e.setAttribute("id", uuid);
@@ -460,7 +593,7 @@ public class StepLayoutManager {
 		return e;
 	}
 	
-	private Element createJump(Document chart,String uuid,int count) {
+	private Element createJumpElement(Document chart,String uuid,int count) {
 		log.debugf("%s.createJump: %c %s", TAG, 'A'+count,uuid);
 		Element e = chart.createElement("jump");
 		e.setAttribute("id", uuid);
@@ -468,7 +601,7 @@ public class StepLayoutManager {
 		e.appendChild(node);
 		return e;
 	}
-	private Element createParallel(Document chart,String uuid) {
+	private Element createParallelElement(Document chart,String uuid) {
 		log.debugf("%s.createParallel: %s", TAG,uuid);
 		Element e = chart.createElement("parallel");
 		e.setAttribute("id", uuid);

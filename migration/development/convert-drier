@@ -3,11 +3,12 @@
 #
 SFC=${GIT_REPO}/sfc
 APP=$SFC/migration/convert
-PYLIB=$SFC/migration/procs/ignition/vistalon
+PYLIB=${GIT_REPO}/xom-python/XOM_Python/src/scripts/vistalon
 INDIR=$SFC/migration/xml/g2/vistalon
-OUTDIR=$SFC/migration/xml/ignition/vistalon
+OUTDIR=$SFC/migration/xml/ignition/vistalon/
 mkdir -p $INDIR
 mkdir -p $OUTDIR
-FIL="DRIER-REGEN-PROCEDURE/S88-OPERATION-XXX-2526/DRIERREGEN.DrrRgnOprtn.End.xml"
+#FIL="DRIER-REGEN-PROCEDURE/S88-OPERATION-XXX-2526/DRIERREGEN.DrrRgnOprtn.End.xml"
+FIL="DRIER-REGEN-PROCEDURE/S88-OPERATION-XXX-2526/DRIERREGEN.DrrRgnOprtn.ClDwnMntr.xml"
 rm -f "$OUTDIR/$FIL"
 $APP "${INDIR}" "${OUTDIR}" $PYLIB "$FIL"
