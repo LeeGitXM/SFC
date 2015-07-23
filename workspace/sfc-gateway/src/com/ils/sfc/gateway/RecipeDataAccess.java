@@ -82,7 +82,7 @@ public class RecipeDataAccess {
 	/** Get the chart scope corresponding to the given recipe data scope. */
 	private static PyChartScope resolveChartScope(PyChartScope chartScope, 
 		String scopeIdentifier) {
-		if(scopeIdentifier.equals(Constants.LOCAL) || scopeIdentifier.equals(Constants.PREVIOUS)) {
+		if(scopeIdentifier.equals(Constants.LOCAL) || scopeIdentifier.equals(Constants.PRIOR)) {
 			return chartScope;
 		}
 		else if(scopeIdentifier.equals(Constants.SUPERIOR)) {
@@ -109,7 +109,7 @@ public class RecipeDataAccess {
 		if(scopeIdentifier.equals(Constants.LOCAL)) {
 			resolvedStepScope = stepScope;
 		}
-		else if(scopeIdentifier.equals(Constants.PREVIOUS)) {
+		else if(scopeIdentifier.equals(Constants.PRIOR)) {
 			resolvedStepScope = stepScope.getSubScope(ScopeContext.PREVIOUS);
 		}
 		else if(scopeIdentifier.equals(Constants.SUPERIOR)) {
@@ -142,7 +142,7 @@ public class RecipeDataAccess {
 			PyChartScope parentChartScope = chartScope.getSubScope(ScopeContext.PARENT);
 			boolean parentIsRoot = parentChartScope.getSubScope(ScopeContext.PARENT) == null;
 			PyChartScope enclosingStepScope = chartScope.getSubScope(Constants.ENCLOSING_STEP_SCOPE_KEY);				
-			String scopeIdentifier = (String) enclosingStepScope.get(Constants.S88_LEVEL_KEY);
+			String scopeIdentifier = (String) enclosingStepScope.get(Constants.S88_LEVEL);
 			if(scopeIdentifier != null && !scopeIdentifier.toString().equals(Constants.NONE)) {
 				return scopeIdentifier;
 			}

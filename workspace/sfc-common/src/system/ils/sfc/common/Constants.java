@@ -192,7 +192,7 @@ public class Constants {
 
 	// scopes for recipe data:
 	public static final String LOCAL = "local";
-	public static final String PREVIOUS = "previous";
+	public static final String PRIOR = "prior";
 	public static final String SUPERIOR = "superior";
 	//public static final String NAMED = "named";
 	public static final String GLOBAL = "global";  // same as Procedure, Unit Procedure
@@ -211,11 +211,10 @@ public class Constants {
 	public static final String MESSAGE_ID = "messageId";
 	public static final String BY_NAME = "stepsByName";
 	public static final String ENCLOSING_STEP_SCOPE_KEY = "enclosingStep";
-	public static final String S88_LEVEL_KEY = "s88Level";
 
 	// choices:
 	public static final String[] RECIPE_STATIC_STRATEGY_CHOICES = {STATIC, RECIPE};
-	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, PREVIOUS, SUPERIOR,
+	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, PRIOR, SUPERIOR,
 		GLOBAL, OPERATION, PHASE, TAG};
 	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
 	public static final String[] TIME_LIMIT_STRATEGY_CHOICES = {STATIC, RECIPE};
