@@ -2,6 +2,8 @@ package com.ils.sfc.step;
 
 import org.python.core.PyDictionary;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.gateway.IlsScopeLocator;
@@ -25,9 +27,12 @@ public class OperationStep extends FoundationStep {
 
 	@Override
 	public void activateStep() {
+
 		String stepName = getDefinition().getProperties().get(IlsProperty.NAME);
 		updateOperation(stepName);		
 		super.activateStep();
+		// TODO: for migration this doesn't happen in initializeStep--resolve this!!
+		scopeContext.getStepScope().put(Constants.S88_LEVEL, Constants.OPERATION);
 	}
 
 	@Override

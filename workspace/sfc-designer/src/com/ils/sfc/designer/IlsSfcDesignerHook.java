@@ -6,7 +6,9 @@ package com.ils.sfc.designer;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -21,6 +23,7 @@ import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
+import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.step.CancelStepProperties;
 import com.ils.sfc.common.step.ClearQueueStepProperties;
@@ -126,7 +129,45 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         PVMonitorStepProperties.FACTORY_ID,   
         MonitorDownloadStepProperties.FACTORY_ID,   
 	};
-	
+
+	private static Class[] propertyClasses = {
+    	QueueMessageStepProperties.class,
+    	SetQueueStepProperties.class,
+    	ShowQueueStepProperties.class,
+    	ClearQueueStepProperties.class,
+       	SaveQueueStepProperties.class,
+    	YesNoStepProperties.class,
+    	CancelStepProperties.class,
+    	PauseStepProperties.class,
+    	ControlPanelMessageStepProperties.class,
+    	TimedDelayStepProperties.class,
+    	DeleteDelayNotificationStepProperties.class,
+    	PostDelayNotificationStepProperties.class,
+       	EnableDisableStepProperties.class,
+       	SelectInputStepProperties.class,
+       	LimitedInputStepProperties.class,
+       	DialogMessageStepProperties.class,
+       	CollectDataStepProperties.class,
+       	InputStepProperties.class,
+       	RawQueryStepProperties.class,
+       	SimpleQueryStepProperties.class,
+       	SaveDataStepProperties.class,
+       	PrintFileStepProperties.class,
+       	PrintWindowStepProperties.class,
+       	CloseWindowStepProperties.class,
+       	ShowWindowStepProperties.class,
+        ReviewDataStepProperties.class,   
+        ReviewDataWithAdviceStepProperties.class,   
+        ReviewFlowsStepProperties.class,   
+        ProcedureStepProperties.class,   
+        OperationStepProperties.class,   
+        PhaseStepProperties.class,   
+        ConfirmControllersStepProperties.class,   
+        WriteOutputStepProperties.class,   
+        PVMonitorStepProperties.class,   
+        MonitorDownloadStepProperties.class,   
+	};
+
 	public IlsSfcDesignerHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
@@ -245,5 +286,26 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
             setup.pack();
             setup.setVisible(true);
         }
+    }
+    
+    public static void main(String[] args) {
+    	try {
+    	for(Class clazz: propertyClasses) {
+    		String className = clazz.getSimpleName();
+    		for(Field field: clazz.getDeclaredFields()) {
+        		if(field.getName().equals("properties")) {
+        			Collection properties = (Collection)field.get(null);
+        			for(Object o: properties) {
+        				IlsProperty property = (IlsProperty) o;
+        				System.out.println(property.getName());
+        			}
+        		}
+    			
+    		}
+    	}
+    	}
+    	catch(Exception e) {
+    		e.printStackTrace();
+    	}
     }
 }
