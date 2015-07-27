@@ -11,7 +11,7 @@ TMP=${GIT_REPO}/$VERS
 # Cleanup
 rm -rf $TMP
 cd ${GIT_REPO}
-mkdir $TMP
+mkdir -p $TMP/usecase
 cd ${GIT_REPO}/sfc/migration
 rm -f mdb/*.db
 cp -a mdb $TMP
@@ -19,10 +19,10 @@ cd mdb
 ./mkdatabase
 cd ..
 ./process-usecases
-cp -a projects $TMP
+cp -a projects/usecase/* $TMP/usecase
 
 # Now zip and copy to subversion
 cd ${GIT_REPO}/$VERS
-zip -r sfc-regression.zip *
-cp sfc-regression.zip $SVN
+zip -r blt-regression.zip *
+cp blt-regression.zip $SVN
 rm -rf $TMP
