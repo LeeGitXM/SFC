@@ -38,6 +38,7 @@ import com.inductiveautomation.sfc.api.ExecutionQueue;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeLocator;
 import com.inductiveautomation.sfc.api.elements.ChartElement;
+import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 import static com.ils.sfc.common.IlsSfcCommonUtils.isEmpty;
@@ -205,6 +206,16 @@ public class IlsGatewayScripts {
 				public void pause() {}
 				public ScopeLocator getScopeLocator() {return null;}
 				public boolean isRunning() {return false;}
+				@Override
+				public ChartDefinition getChartDefinition() {
+					// TODO Auto-generated method stub
+					return null;
+				}
+				@Override
+				public UUID getInstanceId() {
+					// TODO Auto-generated method stub
+					return null;
+				}
 
 			};
 			BasicPropertySet propertySet = new BasicPropertySet();

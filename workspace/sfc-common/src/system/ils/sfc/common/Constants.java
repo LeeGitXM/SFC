@@ -107,6 +107,7 @@ public class Constants {
 	public static final String POST_TO_QUEUE = "postToQueue";
 	public static final String POST_NOTIFICATION = "postNotification";
 	public static final String POSTING_METHOD = "postingMethod";
+	public static final String PREVIOUS = "previous"; 
 	public static final String PRIMARY_REVIEW_DATA = "primaryReviewData"; 
 	public static final String PRIMARY_REVIEW_DATA_WITH_ADVICE = "primaryReviewDataWithAdvice"; 
 	public static final String PRIMARY_TAB_LABEL = "primaryTabLabel"; 

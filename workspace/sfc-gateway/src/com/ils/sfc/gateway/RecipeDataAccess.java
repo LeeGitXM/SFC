@@ -104,13 +104,10 @@ public class RecipeDataAccess {
 	
 	/** Get the step scope corresponding to the given recipe data scope. */
 	private static PyChartScope resolveStepScope(PyChartScope chartScope, 
-			PyChartScope stepScope, String scopeIdentifier) {
+			PyChartScope stepScopeOrPrior, String scopeIdentifier) {
 		PyChartScope resolvedStepScope = null;
-		if(scopeIdentifier.equals(Constants.LOCAL)) {
-			resolvedStepScope = stepScope;
-		}
-		else if(scopeIdentifier.equals(Constants.PRIOR)) {
-			resolvedStepScope = stepScope.getSubScope(ScopeContext.PREVIOUS);
+		if(scopeIdentifier.equals(Constants.LOCAL) || scopeIdentifier.equals(Constants.PRIOR)) {
+			resolvedStepScope = stepScopeOrPrior;
 		}
 		else if(scopeIdentifier.equals(Constants.SUPERIOR)) {
 			resolvedStepScope = (PyChartScope) chartScope.get(Constants.ENCLOSING_STEP_SCOPE_KEY);

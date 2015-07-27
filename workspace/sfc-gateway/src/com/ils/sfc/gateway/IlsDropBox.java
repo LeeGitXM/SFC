@@ -9,6 +9,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.ChartObserver;
 import com.inductiveautomation.sfc.ChartStateEnum;
 import com.inductiveautomation.sfc.ElementStateEnum;
+import com.inductiveautomation.sfc.api.ChartContext;
 
 /** Since we are having such trouble getting static module variables to work in external Python,
  *  this is a class that holds onto arbitrary objects associated with a particular chart run, 
@@ -58,6 +59,12 @@ public class IlsDropBox implements ChartObserver {
 	@Override
 	public void onElementStateChange(UUID arg0, UUID arg1,
 			ElementStateEnum arg2, ElementStateEnum arg3) {
+	}
+
+	@Override
+	public void onBeforeChartStart(ChartContext arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

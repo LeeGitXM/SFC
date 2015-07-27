@@ -22,7 +22,7 @@ public class IlsScopeLocator implements ScopeLocator {
 	@Override
 	public synchronized PyChartScope locate(ScopeContext scopeContext, String identifier) {
 		// check this step first, then walk up the hierarchy:
-		PyChartScope stepScope = scopeContext.getStepScope();
+		PyChartScope stepScope = scopeContext.getStepOrPrevious();
 		PyChartScope chartScope = scopeContext.getChartScope();
 		String tagPath = RecipeDataAccess.getRecipeDataTagPath(chartScope, stepScope, identifier);
 		String providerName = RecipeDataAccess.getProviderName(RecipeDataAccess.getIsolationMode(chartScope));

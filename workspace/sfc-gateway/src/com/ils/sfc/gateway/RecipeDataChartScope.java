@@ -7,6 +7,7 @@ import system.ils.sfc.common.Constants;
 
 import com.inductiveautomation.ignition.common.expressions.TagListener;
 import com.inductiveautomation.ignition.common.model.values.QualifiedValue;
+import com.inductiveautomation.ignition.common.sqltags.model.Tag;
 import com.inductiveautomation.ignition.common.sqltags.model.TagPath;
 import com.inductiveautomation.ignition.common.sqltags.parser.BasicTagPath;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
@@ -61,10 +62,17 @@ public class RecipeDataChartScope extends PyChartScope {
 			pathComponents.add(part);
 		}
 		BasicTagPath igTagPath = new BasicTagPath(providerName, pathComponents);
+		List<Tag> tags = gatewayContext.getTagManager().browse(igTagPath);
+		PyChartScope result = new PyChartScope();
+		for(Tag tag: tags) {
+			result.put(tag.getName(), tag.getValue().getValue());
+		}
+		/*
 		List<TagPath> paths = new ArrayList<TagPath>();
 		paths.add(igTagPath);
 		List<QualifiedValue> values = gatewayContext.getTagManager().read(paths);
 		Object currentValue = values.get(0).getValue();
+		*/
 		// TODO: listen to the tags so we can respond to changes
 		/*
 		TagListener tagListener = new TagListener() {
@@ -76,7 +84,7 @@ public class RecipeDataChartScope extends PyChartScope {
 		listeners.add(new ListenerInfo(igTagPath, tagListener));
 		gatewayContext.getTagManager().subscribe(igTagPath, tagListener);
 		*/
-		return currentValue;
+		return result;
 	}	
 }
 

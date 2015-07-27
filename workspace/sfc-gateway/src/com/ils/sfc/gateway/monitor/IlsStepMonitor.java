@@ -17,6 +17,7 @@ import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 import com.inductiveautomation.sfc.ChartObserver;
 import com.inductiveautomation.sfc.ChartStateEnum;
 import com.inductiveautomation.sfc.ElementStateEnum;
+import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ChartManagerService;
 import com.inductiveautomation.sfc.api.SfcGatewayHook;
 
@@ -108,5 +109,11 @@ public class IlsStepMonitor implements ChartObserver {
 		sb.append(":");
 		sb.append(stepId);
 		return sb.toString();
+	}
+
+	@Override
+	public void onBeforeChartStart(ChartContext arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }

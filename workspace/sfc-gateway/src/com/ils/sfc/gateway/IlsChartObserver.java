@@ -15,6 +15,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.ChartObserver;
 import com.inductiveautomation.sfc.ChartStateEnum;
 import com.inductiveautomation.sfc.ElementStateEnum;
+import com.inductiveautomation.sfc.api.ChartContext;
 
 /** An observer that listens to SFC chart status changes and messages the client
  *  so that the ControlPanel status display (e.g.) can stay up to date. */
@@ -61,6 +62,12 @@ public class IlsChartObserver implements ChartObserver {
 	@Override
 	public void onElementStateChange(UUID elementId, UUID chartId, ElementStateEnum oldElementState,
 			ElementStateEnum newElementState) {
+	}
+
+	@Override
+	public void onBeforeChartStart(ChartContext arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
