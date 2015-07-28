@@ -26,6 +26,7 @@ import com.ils.sfc.step.DialogMessageStepFactory;
 import com.ils.sfc.step.EnableDisableStepFactory;
 import com.ils.sfc.step.InputStepFactory;
 import com.ils.sfc.step.LimitedInputStepFactory;
+import com.ils.sfc.step.ManualDataEntryStepFactory;
 import com.ils.sfc.step.MonitorDownloadStepFactory;
 import com.ils.sfc.step.OperationStepFactory;
 import com.ils.sfc.step.PVMonitorStepFactory;
@@ -124,6 +125,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		new WriteOutputStepFactory(),
 		new PVMonitorStepFactory(),
 		new MonitorDownloadStepFactory(),
+		new ManualDataEntryStepFactory(),
 	};
 
 	// an index of step property names by the factory id:

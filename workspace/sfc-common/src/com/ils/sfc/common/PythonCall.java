@@ -32,6 +32,9 @@ public class PythonCall {
 	public static final PythonCall MONITOR_PV = new PythonCall(STEPS_PKG + "monitorPV", 
 			null, stepArgs);
 
+	public static final PythonCall MANUAL_DATA_ENTRY = new PythonCall(STEPS_PKG + "manualDataEntry", 
+			null, stepArgs);
+
 	public static final PythonCall MONITOR_DOWNLOAD = new PythonCall(STEPS_PKG + "monitorDownload", 
 			null, stepArgs);
 

@@ -28,6 +28,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 	private String label;
 	private static final String EMPTY_MONITOR_DOWNLOAD_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_CONFIRM_CONTROLLERS_CONFIG = "{\"rows\":[]}";
+	private static final String EMPTY_MANUAL_DATA_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_PV_MONITOR_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_WRITE_OUTPUT_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_REVIEW_DATA_CONFIG = "{\"rows\":[]}";
@@ -105,9 +106,12 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> MESSAGE_QUEUE = new IlsProperty<String>(Constants.MESSAGE_QUEUE, String.class, Constants.DEFAULT_MESSAGE_QUEUE);
     public static final IlsProperty<String> METHOD = new IlsProperty<String>(Constants.METHOD, String.class, "");
     public static final IlsProperty<Double> MINIMUM_VALUE = new IlsProperty<Double>(Constants.MINIMUM_VALUE, Double.class, 0.);
-    public static final IlsProperty<String> MONITOR_DOWNLOADS_CONFIG = new IlsProperty<String>(Constants.MONITOR_DOWNLOADS_CONFIG, String.class, EMPTY_MONITOR_DOWNLOAD_CONFIG, true, Constants.CONFIG);
-    public static final IlsProperty<String> MONITOR_DOWNLOADS_POSTING_METHOD = new IlsProperty<String>(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.monitorDownload.defaultPostingMethod");
-    public static final IlsProperty<String> MONITOR_DOWNLOADS_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class, Constants.SFC_MONITOR_DOWNLOADS_WINDOW, false);
+    public static final IlsProperty<String> MANUAL_DATA_CONFIG = new IlsProperty<String>(Constants.MONITOR_DOWNLOADS_CONFIG, String.class, EMPTY_MONITOR_DOWNLOAD_CONFIG, true, Constants.CONFIG);
+    public static final IlsProperty<String> MANUAL_DATA_POSTING_METHOD = new IlsProperty<String>(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.monitorDownload.defaultPostingMethod");
+    public static final IlsProperty<String> MANUAL_DATA_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class, Constants.SFC_MONITOR_DOWNLOADS_WINDOW, false);
+    public static final IlsProperty<String> MONITOR_DOWNLOADS_CONFIG = new IlsProperty<String>(Constants.MANUAL_DATA_CONFIG, String.class, EMPTY_MANUAL_DATA_CONFIG, true, Constants.CONFIG);
+    public static final IlsProperty<String> MONITOR_DOWNLOADS_POSTING_METHOD = new IlsProperty<String>(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.manualDataEntry.defaultPostingMethod");
+    public static final IlsProperty<String> MONITOR_DOWNLOADS_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class, Constants.SFC_MANUAL_DATA_WINDOW, false);
 	public static final BasicProperty<String> NAME = new BasicProperty<String>(Constants.NAME, String.class);
     public static final IlsProperty<Object> NULLABLE_VALUE = new IlsProperty<Object>(Constants.VALUE, Object.class, null);
     public static final IlsProperty<Object> OUTPUT_VALUE_TYPE = new IlsProperty<Object>(Constants.VALUE_TYPE, Object.class, Constants.OUTPUT_VALUE_TYPE_CHOICES[0], Constants.OUTPUT_VALUE_TYPE_CHOICES);
@@ -127,6 +131,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> QUEUE = new IlsProperty<String>(Constants.QUEUE, String.class, "");
     public static final IlsProperty<Double> RAMP_TIME = new IlsProperty<Double>(Constants.RAMP_TIME, Double.class, 5.);
     public static final IlsProperty<String> RECIPE_LOCATION = new IlsProperty<String>(Constants.RECIPE_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
+    public static final IlsProperty<Boolean> REQUIRE_INPUTS = new IlsProperty<Boolean>(Constants.REQUIRE_INPUTS, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<String> RESULTS_MODE = new IlsProperty<String>(Constants.RESULTS_MODE, String.class, Constants.RESULTS_MODE_CHOICES[0], Constants.RESULTS_MODE_CHOICES);
     public static final IlsProperty<String> REVIEW_DATA_POSTING_METHOD = new IlsProperty<String>(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.reviewData.defaultPostingMethod");
     public static final IlsProperty<String> REVIEW_DATA_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class, Constants.SFC_REVIEW_DATA_WINDOW, false);

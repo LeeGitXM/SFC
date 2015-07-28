@@ -79,6 +79,7 @@ public class Constants {
 	public static final String KEY_MODE = "keyMode";
 	public static final String KEYED = "keyed";
 	public static final String LABEL = "label";
+	public static final String MANUAL_DATA_CONFIG = "manualDataConfig";
 	public static final String MAX_TIMING = "maxTiming";
 	public static final String MESSAGE = "message";
 	public static final String MESSAGE_QUEUE = "msgQueue";
@@ -129,6 +130,7 @@ public class Constants {
 	public static final String REGISTER_AND_DISPLAY = "registerAndDisplay";
 	public static final String REGISTER_ONLY = "registerOnly";
 	public static final String RESULTS_MODE = "resultsMode"; 
+	public static final String REQUIRE_INPUTS = "requireInputs";
 	public static final String REVIEW_DATA_WITH_ADVICE = "reviewDataWithAdvice"; 
 	public static final String REVIEW_DATA_WINDOW = "reviewDataWindow";
 	public static final String REVIEW_FLOWS_WINDOW = "reviewFlowsWindow";
@@ -243,6 +245,7 @@ public class Constants {
 	
 	public static final String SFC_DOWNLOAD_KEY_WINDOW = "SFC/DownloadKey";
 	public static final String SFC_INPUT_WINDOW = "SFC/Input";
+	public static final String SFC_MANUAL_DATA_WINDOW = "SFC/ManualDataEntry";
 	public static final String SFC_MONITOR_DOWNLOADS_WINDOW = "SFC/MonitorDownloads";
 	public static final String SFC_REVIEW_DATA_WINDOW = "SFC/ReviewData";
 	public static final String SFC_REVIEW_FLOWS_WINDOW = "SFC/ReviewFlows";

@@ -25,44 +25,10 @@ import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
-import com.ils.sfc.common.step.CancelStepProperties;
-import com.ils.sfc.common.step.ClearQueueStepProperties;
-import com.ils.sfc.common.step.CloseWindowStepProperties;
-import com.ils.sfc.common.step.CollectDataStepProperties;
-import com.ils.sfc.common.step.ConfirmControllersStepProperties;
-import com.ils.sfc.common.step.ControlPanelMessageStepProperties;
-import com.ils.sfc.common.step.DeleteDelayNotificationStepProperties;
-import com.ils.sfc.common.step.DialogMessageStepProperties;
-import com.ils.sfc.common.step.EnableDisableStepProperties;
-import com.ils.sfc.common.step.InputStepProperties;
-import com.ils.sfc.common.step.LimitedInputStepProperties;
-import com.ils.sfc.common.step.MonitorDownloadStepProperties;
-import com.ils.sfc.common.step.OperationStepProperties;
-import com.ils.sfc.common.step.PVMonitorStepProperties;
-import com.ils.sfc.common.step.PauseStepProperties;
-import com.ils.sfc.common.step.PhaseStepProperties;
-import com.ils.sfc.common.step.PostDelayNotificationStepProperties;
-import com.ils.sfc.common.step.PrintFileStepProperties;
-import com.ils.sfc.common.step.PrintWindowStepProperties;
-import com.ils.sfc.common.step.ProcedureStepProperties;
-import com.ils.sfc.common.step.QueueMessageStepProperties;
-import com.ils.sfc.common.step.RawQueryStepProperties;
-import com.ils.sfc.common.step.ReviewDataStepProperties;
-import com.ils.sfc.common.step.ReviewDataWithAdviceStepProperties;
-import com.ils.sfc.common.step.ReviewFlowsStepProperties;
-import com.ils.sfc.common.step.SaveDataStepProperties;
-import com.ils.sfc.common.step.SaveQueueStepProperties;
-import com.ils.sfc.common.step.SelectInputStepProperties;
-import com.ils.sfc.common.step.SetQueueStepProperties;
-import com.ils.sfc.common.step.ShowQueueStepProperties;
-import com.ils.sfc.common.step.ShowWindowStepProperties;
-import com.ils.sfc.common.step.SimpleQueryStepProperties;
-import com.ils.sfc.common.step.TimedDelayStepProperties;
-import com.ils.sfc.common.step.WriteOutputStepProperties;
+import com.ils.sfc.common.step.*;
 import com.ils.sfc.common.step.YesNoStepProperties;
 import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame;
 import com.ils.sfc.designer.stepEditor.IlsStepEditor;
-import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
@@ -128,6 +94,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         WriteOutputStepProperties.FACTORY_ID,   
         PVMonitorStepProperties.FACTORY_ID,   
         MonitorDownloadStepProperties.FACTORY_ID,   
+        ManualDataEntryStepProperties.FACTORY_ID,   
 	};
 
 	private static Class[] propertyClasses = {
@@ -166,6 +133,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         WriteOutputStepProperties.class,   
         PVMonitorStepProperties.class,   
         MonitorDownloadStepProperties.class,   
+        ManualDataEntryStepProperties.class,   
 	};
 
 	public IlsSfcDesignerHook() {
