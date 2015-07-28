@@ -49,6 +49,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.ils.sfc.common.rowconfig.BlockConfigurationConverter;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
@@ -607,6 +608,16 @@ public class Converter {
 			if( factoryId.startsWith("com.ils") ) log.warnf("updateStepFromG2Block: WARNING: No properties found for class %s",factoryId);
 		}
 		
+		// Convert the block configurations, if any:
+		Map<String,String> blockPropertyMap = BlockConfigurationConverter.convert(factoryId, g2block);
+		if(blockPropertyMap != null) {
+			for(String key: blockPropertyMap.keySet()) {
+				Element propelement = chart.createElement(key);
+				Node textNode = chart.createTextNode(blockPropertyMap.get(key));
+				propelement.appendChild(textNode);
+				step.appendChild(propelement);
+			}
+		}
 	}
 	
 	// Add a single chart element to the document
