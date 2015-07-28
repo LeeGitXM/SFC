@@ -163,14 +163,8 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
         JSONObject associatedData = element.get(ChartStepProperties.AssociatedData);
         if(associatedData == null) {
         	associatedData = new JSONObject();
+    		element.set(ChartStepProperties.AssociatedData, associatedData);
         }
-        try {
-			associatedData.put(Constants.S88_LEVEL, s88Level);
-			element.set(ChartStepProperties.AssociatedData, associatedData);
-		} catch (JSONException e) {
-			logger.error("Error setting s88 level", e);
-		}
-
 	}	 
 	
 

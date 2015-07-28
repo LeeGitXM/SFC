@@ -135,7 +135,6 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<Integer> ROWS = new IlsProperty<Integer>(Constants.ROWS, Integer.class, 0);
     public static final IlsProperty<String> ROW_KEY = new IlsProperty<String>(Constants.ROW_KEY, String.class, Constants.NONE);
     public static final IlsProperty<Boolean> ROW_KEYED = new IlsProperty<Boolean>(Constants.ROW_KEYED, Boolean.class, Boolean.FALSE);
-    public static final IlsProperty<String> S88_LEVEL = new IlsProperty<String>(Constants.S88_LEVEL, String.class, Constants.S88_LEVEL_CHOICES[0], Constants.S88_LEVEL_CHOICES);
     public static final IlsProperty<String> SECURITY = new IlsProperty<String>(Constants.SECURITY, String.class, Constants.SECURITY_CHOICES[0], Constants.SECURITY_CHOICES);
     public static final IlsProperty<String> SECONDARY_REVIEW_DATA = new IlsProperty<String>(Constants.SECONDARY_REVIEW_DATA, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "secondary data");
     public static final IlsProperty<String> SECONDARY_REVIEW_DATA_WITH_ADVICE = new IlsProperty<String>(Constants.SECONDARY_REVIEW_DATA_WITH_ADVICE, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "secondary data");

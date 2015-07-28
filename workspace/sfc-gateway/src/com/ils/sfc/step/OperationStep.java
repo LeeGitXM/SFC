@@ -31,7 +31,6 @@ public class OperationStep extends FoundationStep {
 		String stepName = getDefinition().getProperties().get(IlsProperty.NAME);
 		updateOperation(stepName);		
 		super.activateStep();
-		// TODO: for migration this doesn't happen in initializeStep--resolve this!!
 		scopeContext.getStepScope().put(Constants.S88_LEVEL, Constants.OPERATION);
 	}
 

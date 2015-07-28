@@ -93,6 +93,7 @@ public class Constants {
 	public static final String MONITOR_DOWNLOADS_CONFIG = "monitorDownloadsConfig";
 	public static final String MULTIPLE = "multiple";
 	public static final String NAME = "name";
+	public static final String NO = "No";
 	public static final String NONE = "none";
 	public static final String NOT_PERSISTENT = "NotPersistent";
 	public static final String NOT_CONSISTENT = "NotConsistent";
@@ -189,6 +190,7 @@ public class Constants {
 	public static final String WRITE_CONFIRM = "writeConfirm";
 	public static final String WRITE_CONFIRMED = "writeConfirmed";
 	public static final String WRITE_OUTPUT_CONFIG = "writeOutputConfig";
+	public static final String YES = "Yes";
 
 
 	// scopes for recipe data:

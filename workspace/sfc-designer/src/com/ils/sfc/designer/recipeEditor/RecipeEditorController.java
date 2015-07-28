@@ -142,21 +142,7 @@ public class RecipeEditorController extends PanelController implements EditorErr
 		try {
 			// Note: we are assuming that we have exclusive use of the associatedData
 			// and can completely overwrite it.
-			JSONObject newAssociatedData = Data.toAssociatedData(recipeData);
-			
-			// TODO: is this still needed now that we set it dynamically ??
-			// retain the s88Level
-			if(element.contains(ChartStepProperties.AssociatedData)) {
-				JSONObject oldAssociatedData = element.getOrDefault(ChartStepProperties.AssociatedData);
-				try {
-					String s88Level = oldAssociatedData.getString(Constants.S88_LEVEL);
-					newAssociatedData.put(Constants.S88_LEVEL, s88Level);
-				} 
-				catch(JSONException e) {
-					// no s88 level was found
-				}
-			}
-			
+			JSONObject newAssociatedData = Data.toAssociatedData(recipeData);			
 			element.set(ChartStepProperties.AssociatedData, newAssociatedData);
 		} catch (Exception e) {
 			showMessage("Error setting associated recipe data: " + e.getMessage(), BROWSER);
