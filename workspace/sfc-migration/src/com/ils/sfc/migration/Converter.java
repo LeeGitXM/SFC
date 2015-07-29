@@ -49,7 +49,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.ils.sfc.common.rowconfig.BlockConfigurationConverter;
+import com.ils.sfc.common.rowconfig.RowConfig;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
@@ -609,7 +609,7 @@ public class Converter {
 		}
 		
 		// Convert the block configurations, if any:
-		Map<String,String> blockPropertyMap = BlockConfigurationConverter.convert(factoryId, g2block);
+		Map<String,String> blockPropertyMap = RowConfig.convert(factoryId, g2block);
 		if(blockPropertyMap != null) {
 			for(String key: blockPropertyMap.keySet()) {
 				Element propelement = chart.createElement(key);

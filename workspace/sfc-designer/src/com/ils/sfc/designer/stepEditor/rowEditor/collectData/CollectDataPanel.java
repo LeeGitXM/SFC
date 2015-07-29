@@ -17,6 +17,7 @@ import com.ils.sfc.common.rowconfig.RowConfig;
 import com.ils.sfc.designer.propertyEditor.ValueHolder;
 import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.ils.sfc.designer.stepEditor.rowEditor.GenericCellRenderer;
+import com.ils.sfc.designer.stepEditor.rowEditor.RowCellEditor;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowEditorPanel;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
@@ -62,7 +63,7 @@ public class CollectDataPanel extends RowEditorPanel  {
 		table = new JTable(tableModel);
 
 		tablePanel = createTablePanel(table, tablePanel,
-			new CollectDataCellEditor(), new GenericCellRenderer());
+			new RowCellEditor(), new GenericCellRenderer());
 		
 		// specific part:
 		errorHandlingCombo.setSelectedItem(config.errorHandling);

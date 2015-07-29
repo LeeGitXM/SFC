@@ -43,11 +43,13 @@ public class PVMonitorTableModel extends RowTableModel {
 		"Status"
 	};
 	
-	public static boolean isBooleanColumn(int col) {
+	@Override
+	public boolean isBooleanColumn(int col) {
 		return col == ENABLED_COLUMN;
 	}
 	
-	public static boolean isComboColumn(int col) {
+	@Override
+	public  boolean isComboColumn(int col) {
 		return col == TARGET_TYPE_COLUMN ||
 			col == STRATEGY_COLUMN ||
 			col == LIMITS_COLUMN ||
@@ -55,18 +57,20 @@ public class PVMonitorTableModel extends RowTableModel {
 			col == TYPE_COLUMN;
 	}
 
-	public static boolean isTextColumn(int col) {
+	@Override
+	public boolean isTextColumn(int col) {
 		return col == PV_KEY_COLUMN ||
 			col == TARGET_NAME_COLUMN;
 	}
 
-	public static boolean isDoubleColumn(int col) {
+	@Override
+	public boolean isDoubleColumn(int col) {
 		return col == PERSISTENCE_COLUMN ||
 			col == CONSISTENCY_COLUMN ||
 			col == DEADTIME_COLUMN ||
 			col == TOLERANCE_COLUMN;
 	}
-
+	
 	public PVMonitorTableModel(EditorErrorHandler errorHandler) {
 		this.errorHandler = errorHandler;
 	}
@@ -126,7 +130,8 @@ public class PVMonitorTableModel extends RowTableModel {
     	}
     }
 
-	public static String[] getChoices(int col) {
+    @Override
+	public String[] getChoices(int row, int col) {
 		if(col == TARGET_TYPE_COLUMN) {
 			return Constants.PV_TARGET_TYPE_CHOICES;					
 		}

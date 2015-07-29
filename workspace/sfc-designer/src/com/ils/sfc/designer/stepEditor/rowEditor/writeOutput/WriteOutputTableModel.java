@@ -35,5 +35,13 @@ public class WriteOutputTableModel extends RowTableModel {
     	}
     	fireTableCellUpdated(row, col);
     }
+    
+	protected boolean isBooleanColumn(int col) {
+		return col == WRITE_CONFIRM_COLUMN;
+	}
+	
+	protected boolean isTextColumn(int col) {
+		return !isBooleanColumn(col);
+	}
 
 }

@@ -3,10 +3,12 @@ package com.ils.sfc.designer.stepEditor.rowEditor.manualData;
 import javax.swing.JTable;
 
 
+
 import com.ils.sfc.common.rowconfig.ManualDataEntryConfig;
 import com.ils.sfc.common.rowconfig.RowConfig;
 import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.ils.sfc.designer.stepEditor.rowEditor.GenericCellRenderer;
+import com.ils.sfc.designer.stepEditor.rowEditor.RowCellEditor;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowEditorPanel;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
@@ -26,7 +28,7 @@ public class ManualDataPanel extends RowEditorPanel {
 		tableModel = new ManualDataTableModel(stepController);
 		tableModel.setConfig(config);		
 		table = new JTable(tableModel);
-		tablePanel = createTablePanel(table, tablePanel, new ManualDataCellEditor(),
+		tablePanel = createTablePanel(table, tablePanel, new RowCellEditor(),
 			new GenericCellRenderer());
 	}
 	

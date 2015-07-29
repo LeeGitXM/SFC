@@ -2,7 +2,11 @@ package com.ils.sfc.common.rowconfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.w3c.dom.Element;
 
 import system.ils.sfc.common.Constants;
 
@@ -47,5 +51,10 @@ public class CollectDataConfig extends RowConfig {
 	@Override
 	public int getRowCount() {
 		return rows.size();
+	}
+
+	public static Map<String,String> convert(Element g2block) {
+		Map<String, String> result = new HashMap<String, String>();
+		return result;
 	}
 }

@@ -1,8 +1,13 @@
 package com.ils.sfc.designer.stepEditor.rowEditor.reviewData;
 
-import com.ils.sfc.common.rowconfig.CollectDataConfig;
+import system.ils.sfc.common.Constants;
+
+import com.ils.sfc.common.IlsSfcCommonUtils;
+import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.rowconfig.ReviewDataConfig;
+import com.ils.sfc.common.rowconfig.ReviewDataConfig.Row;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowTableModel;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
 
 @SuppressWarnings("serial")
 public class ReviewDataTableModel extends RowTableModel {
@@ -15,19 +20,57 @@ public class ReviewDataTableModel extends RowTableModel {
 		this.showAdvice = showAdvice;
 	}
 	
-	public boolean isComboColumn(int col) {
+	@Override
+	protected boolean isComboColumn(int col) {
 		return isDestinationColumn(col) || isUnitTypesColumn(col) || isUnitsColumn(col);
 	}
 
-	public boolean isDestinationColumn(int col) {
+	@Override
+	protected boolean isTextColumn(int col) {
+		return !isComboColumn(col);
+	}
+	
+	@Override
+	protected String[] getChoices(int row, int col) {
+		String[] choices = null;
+		if(isDestinationColumn(col)) { // recipe scope
+			choices = Constants.RECIPE_LOCATION_CHOICES;
+		}
+		else if(isUnitTypesColumn(col)) { // unit types
+			try {
+				choices =  PythonCall.toArray(PythonCall.GET_UNIT_TYPES.exec());
+			} catch (JythonExecException e) {
+				return null;
+			}
+		}
+		else {//  units
+			try {
+				int unitTypeCol = (showAdvice ? 5 : 4);
+				String unitType = (String)getValueAt(row, unitTypeCol);
+				if(!IlsSfcCommonUtils.isEmpty(unitType)) {
+					choices =  PythonCall.toArray(PythonCall.GET_UNITS_OF_TYPE.exec(unitType));
+				}
+				else {
+					// no unit type has been chosen
+					choices =  new String[0];						
+				}
+			} 
+			catch (JythonExecException e) {
+				e.printStackTrace();
+			}
+		}
+		return choices;
+	}
+		
+	private boolean isDestinationColumn(int col) {
 		return col == 2;
 	}
 
-	public boolean isUnitTypesColumn(int col) {
+	private boolean isUnitTypesColumn(int col) {
 		return col == (showAdvice ? 5 : 4);
 	}
 
-	public boolean isUnitsColumn(int col) {
+	private boolean isUnitsColumn(int col) {
 		return col == (showAdvice ? 6 : 5);
 	}
 

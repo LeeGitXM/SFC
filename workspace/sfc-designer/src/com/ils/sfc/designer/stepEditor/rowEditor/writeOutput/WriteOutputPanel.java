@@ -6,6 +6,7 @@ import com.ils.sfc.common.rowconfig.RowConfig;
 import com.ils.sfc.common.rowconfig.WriteOutputConfig;
 import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.ils.sfc.designer.stepEditor.rowEditor.GenericCellRenderer;
+import com.ils.sfc.designer.stepEditor.rowEditor.RowCellEditor;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowEditorPanel;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
@@ -26,7 +27,7 @@ public class WriteOutputPanel extends RowEditorPanel {
 		tableModel = new WriteOutputTableModel();
 		tableModel.setConfig(config);		
 		table = new JTable(tableModel);
-		tablePanel = createTablePanel(table, tablePanel, new WriteOutputCellEditor(),
+		tablePanel = createTablePanel(table, tablePanel, new RowCellEditor(),
 			new GenericCellRenderer());
 	}
 

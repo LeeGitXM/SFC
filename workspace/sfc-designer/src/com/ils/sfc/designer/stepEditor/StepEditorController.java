@@ -14,6 +14,7 @@ import com.ils.sfc.designer.panels.TagBrowserPanel;
 import com.ils.sfc.designer.panels.UnitChooserPanel;
 import com.ils.sfc.designer.stepEditor.rowEditor.collectData.CollectDataPanel;
 import com.ils.sfc.designer.stepEditor.rowEditor.confirmControllers.ConfirmControllersPanel;
+import com.ils.sfc.designer.stepEditor.rowEditor.manualData.ManualDataPanel;
 import com.ils.sfc.designer.stepEditor.rowEditor.monitorDownloads.MonitorDownloadsPanel;
 import com.ils.sfc.designer.stepEditor.rowEditor.pvMonitor.PVMonitorPanel;
 import com.ils.sfc.designer.stepEditor.rowEditor.reviewData.ReviewDataPanel;
@@ -34,6 +35,7 @@ public class StepEditorController extends PanelController implements EditorError
 	public static final int MONITOR_DOWNLOADS = 8;
 	public static final int PV_MONITOR = 9;
 	public static final int WRITE_OUTPUT = 10;
+	public static final int MANUAL_DATA_ENTRY = 11;
 
 	// The sub-panes:
 	private StepPropertyEditorPane propertyEditor = new StepPropertyEditorPane(this, PROPERTY_EDITOR);
@@ -47,6 +49,7 @@ public class StepEditorController extends PanelController implements EditorError
 	private MonitorDownloadsPanel monitorDownloadsPanel = new MonitorDownloadsPanel(this, MONITOR_DOWNLOADS);
 	private PVMonitorPanel pvMonitorPanel = new PVMonitorPanel(this, PV_MONITOR);
 	private WriteOutputPanel writeOutputPanel = new WriteOutputPanel(this, WRITE_OUTPUT);
+	private ManualDataPanel manualDataEntryPanel = new ManualDataPanel(this, MANUAL_DATA_ENTRY);
 	
 	public StepEditorController(DesignerContext context) {
 		super(context);
@@ -61,6 +64,7 @@ public class StepEditorController extends PanelController implements EditorError
 		slidingPane.add(monitorDownloadsPanel);	
 		slidingPane.add(pvMonitorPanel);	
 		slidingPane.add(writeOutputPanel);	
+		slidingPane.add(manualDataEntryPanel);	
 	}
 
 	
@@ -106,6 +110,10 @@ public class StepEditorController extends PanelController implements EditorError
 
 	public WriteOutputPanel getWriteOutputPanel() {
 		return writeOutputPanel;
+	}
+	
+	public ManualDataPanel getManualDataEntryPanel() {
+		return manualDataEntryPanel;
 	}
 
 	public void showMessage(String message, int returnPanelIndex) {

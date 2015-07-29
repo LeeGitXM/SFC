@@ -1,6 +1,16 @@
 package com.ils.sfc.designer.stepEditor.rowEditor.collectData;
 
+import java.awt.Component;
+
+import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+
+import system.ils.sfc.common.Constants;
+
+import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.rowconfig.CollectDataConfig;
+import com.ils.sfc.designer.stepEditor.EditorUtil;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowTableModel;
 
 @SuppressWarnings("serial")
@@ -46,5 +56,25 @@ public class CollectDataTableModel extends RowTableModel {
     	}
     	fireTableCellUpdated(row, col);
     }
+
+	protected boolean isComboColumn(int col) {
+		return col == LOCATION_COLUMN || col == VALUE_TYPE_COLUMN;
+	}
+
+	protected String[] getChoices(int row, int col) {
+		if(col == LOCATION_COLUMN) {
+			return IlsProperty.RECIPE_LOCATION.getChoices();
+		}
+		else if(col == VALUE_TYPE_COLUMN) {
+			return Constants.COLLECT_DATA_VALUE_TYPE_CHOICES;
+		}
+		else {
+			return null;
+		}
+	}
+
+	protected boolean isTextColumn(int col) {
+		return !isComboColumn(col);
+	}
 
 }

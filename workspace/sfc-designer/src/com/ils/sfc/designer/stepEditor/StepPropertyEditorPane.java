@@ -103,6 +103,10 @@ public class StepPropertyEditorPane extends EditorPanel {
 			controller.getWriteOutputPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getWriteOutputPanel().activate(myIndex);							
 		}
+		else if(selectedPropertyValue.getProperty().equals(IlsProperty.MANUAL_DATA_CONFIG)) {
+			controller.getManualDataEntryPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getManualDataEntryPanel().activate(myIndex);							
+		}
 		else if(selectedPropertyValue.getProperty().getName().endsWith(Constants.UNIT_SUFFIX)) {
 			editor.stopCellEditing();
 			controller.getUnitChooser().activate(myIndex);

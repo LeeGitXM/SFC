@@ -2,6 +2,8 @@ package com.ils.sfc.designer.stepEditor.rowEditor.manualData;
 
 import java.text.ParseException;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.rowconfig.ManualDataEntryConfig;
 import com.ils.sfc.designer.EditorErrorHandler;
@@ -13,7 +15,6 @@ private EditorErrorHandler errorHandler;
 
 private static final String[] columnNames = {"Key", "Destination", "Prompt", "Units", "Default Value", "Low Limit", "High Limit"};
 	
-
 	public ManualDataTableModel(EditorErrorHandler errorHandler) {
 		this.errorHandler = errorHandler;
 	}
@@ -62,4 +63,20 @@ private static final String[] columnNames = {"Key", "Destination", "Prompt", "Un
 		}
 	}
 
+	protected boolean isComboColumn(int col) {
+		return col == 1;
+	}
+
+	protected String[] getChoices(int row, int col) {
+		if(col == 1) {
+			return Constants.S88_LEVEL_CHOICES;
+		}
+		else {
+			return null;
+		}
+	}
+	
+	protected boolean isTextColumn(int col) {
+		return col != 1;
+	}
 }

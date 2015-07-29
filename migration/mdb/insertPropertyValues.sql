@@ -168,3 +168,15 @@ insert into PropertyValueMap values ('callback','test-8-timeout-callback','test8
 -- Fields are: Ignition property, G2value, desired value
 insert into PropertyValueMap values ('trigger','.TRUE','TRUE');
 insert into PropertyValueMap values ('trigger','.FALSE','FALSE');
+
+insert into PropertyValueMap values ('position','CENTER','center');
+insert into PropertyValueMap values ('position','TOP-LEFT','topLeft');
+insert into PropertyValueMap values ('position','TOP-CENTER','topCenter');
+insert into PropertyValueMap values ('position','TOP-RIGHT','topRight');
+insert into PropertyValueMap values ('position','BOTTOM-LEFT','bottomLeft');
+insert into PropertyValueMap values ('position','BOTTOM-CENTER','bottomCenter');
+insert into PropertyValueMap values ('position','BOTTOM-RIGHT','bottomRight');
+
+insert into PropertyValueMap values ('mode','SEMI-AUTOMATIC','semiAutomatic');
+insert into PropertyValueMap values ('mode','AUTOMATIC','automatic');
+

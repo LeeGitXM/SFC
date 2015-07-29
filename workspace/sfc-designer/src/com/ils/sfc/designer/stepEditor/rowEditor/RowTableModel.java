@@ -46,8 +46,28 @@ public abstract class RowTableModel extends AbstractTableModel {
 		return rowConfig.getRowCount();
 	}
 	
+	@Override
     public boolean isCellEditable(int row, int col) { 
     	return true;
     }
  
+	protected boolean isComboColumn(int col) {
+		return false;
+	}
+
+	protected String[] getChoices(int row, int col) {
+		return null;
+	}
+
+	protected boolean isDoubleColumn(int col) {
+		return false;
+	}
+
+	protected boolean isBooleanColumn(int col) {
+		return false;
+	}
+	
+	protected boolean isTextColumn(int col) {
+		return true;
+	}
 }

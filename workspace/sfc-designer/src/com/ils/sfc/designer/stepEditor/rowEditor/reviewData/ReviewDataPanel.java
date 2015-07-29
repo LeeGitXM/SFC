@@ -7,6 +7,7 @@ import com.ils.sfc.common.rowconfig.ReviewDataConfig;
 import com.ils.sfc.common.rowconfig.RowConfig;
 import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.ils.sfc.designer.stepEditor.rowEditor.GenericCellRenderer;
+import com.ils.sfc.designer.stepEditor.rowEditor.RowCellEditor;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowEditorPanel;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
@@ -29,7 +30,7 @@ public class ReviewDataPanel extends RowEditorPanel {
 		table = new JTable(tableModel);
 		tableModel.setConfig(config);
 		tablePanel = createTablePanel(table, tablePanel,
-				new ReviewDataCellEditor(), new GenericCellRenderer());		
+				new RowCellEditor(), new GenericCellRenderer());		
 	}
 	
 	@Override

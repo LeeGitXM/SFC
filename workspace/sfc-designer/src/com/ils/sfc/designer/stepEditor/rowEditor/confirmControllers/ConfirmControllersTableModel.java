@@ -37,4 +37,13 @@ public class ConfirmControllersTableModel extends RowTableModel {
     	}
     }
     
+    @Override
+    protected boolean isBooleanColumn(int col) {
+    	return col == CHECK_SP_COLUMN || col == CHECK_PATH_COLUMN;
+    }
+    
+    @Override
+    protected boolean isTextColumn(int col) {
+    	return !isBooleanColumn(col);
+    }
 }
