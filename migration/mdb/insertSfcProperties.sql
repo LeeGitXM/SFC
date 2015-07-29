@@ -64,4 +64,14 @@ insert into SfcPropertyMap values ('com.ils.yesNoStep','description','descriptio
 insert into SfcPropertyMap values ('com.ils.yesNoStep','key','key');
 insert into SfcPropertyMap values ('com.ils.yesNoStep','recipeDataLocation','recipeLocation');
 insert into SfcPropertyMap values ('com.ils.yesNoStep','prompt','prompt');
+-- MANUAL DATA ENTRY
+-- Note that spreadsheetPopulateMethod and spreadsheetSpecification are not directly translated
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','manualEntryTimeoutInSeconds','timeout');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','requireAllInputs','requireInputs');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','mode','autoMode');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','dialog','window');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','header','windowTitle');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','toolbarButtonLabel','buttonLabel');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','workspaceScale','scale');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','workspaceLocation','position');
 
