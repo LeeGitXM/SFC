@@ -114,7 +114,7 @@ public class ManualDataEntryConfig extends RowConfig {
 		} catch(JsonProcessingException e) {
 			logger.error("Error generating json for ManualDataEntryConfig", e);
 		}
-		json.replace("\"", "&quot;");
+		json = json.replace("\"", "&quot;");
 		result.put(Constants.MANUAL_DATA_CONFIG, json);
 		return result;
 	}
