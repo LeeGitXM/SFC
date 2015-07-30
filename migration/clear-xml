@@ -8,7 +8,6 @@ if [ $# -gt 0 ]
 then
   OPT=$1
 fi
-BIN=`pwd`
 XML=${GIT_REPO}/sfc/migration/xml
 rm -rf ${XML}/g2/$OPT
 rm -rf ${XML}/ignition/$OPT

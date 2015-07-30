@@ -2,7 +2,6 @@
 # Copy XML export files from svn into our project
 # for viewing in Eclipse. Clean out irrelevant directories.
 #
-BIN=`pwd`
 SVNUC=${SVN_REPO}/EMChemicals/G2Artifacts/Sequential\ Control/UnitTests
 SVNVIST=${SVN_REPO}/EMChemicals/Migration/Vistalon/Exports/SequentialControl
 XML=${GIT_REPO}/sfc/migration/xml

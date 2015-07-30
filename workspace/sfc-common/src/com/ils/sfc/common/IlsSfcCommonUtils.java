@@ -2,6 +2,10 @@ package com.ils.sfc.common;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -10,6 +14,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sqlite.JDBC;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -181,4 +186,19 @@ public class IlsSfcCommonUtils {
 		return scope;
 	}
 	
+	public static void main(String[] args) {
+		/*
+		JDBC driver = new JDBC(); // Force driver to be loaded
+		String path = "c:/root/repo/git/sfc/migration/mdb/conversion.db";
+		String connectPath = "jdbc:sqlite:"+path;
+		try {
+			Connection connection = DriverManager.getConnection(connectPath);
+			System.out.println("connection OK");
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		*/
+		Paths.get("/","temp");
+	}
 }

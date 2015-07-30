@@ -3,7 +3,6 @@
 # for processing with conversion tools. Segregate "normal"
 # versus those destined to be "onstart"
 #
-BIN=`pwd`
 SVN="${SVN_REPO}/EMChemicals/G2Artifacts/Sequential Control"
 EXPORTS="${SVN_REPO}/EMChemicals/Migration/Vistalon/Exports/SequentialControl"
 PROCS=${GIT_REPO}/sfc/migration/procs

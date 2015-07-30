@@ -43,7 +43,7 @@ public abstract class RowTableModel extends AbstractTableModel {
 
 	@Override
 	public int getRowCount() {
-		return rowConfig.getRowCount();
+		return rowConfig != null ? rowConfig.getRowCount() : 0;
 	}
 	
 	@Override

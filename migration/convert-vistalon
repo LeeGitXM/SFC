@@ -24,7 +24,7 @@ rm -rf $OUTDIR/*
 cd $INDIR
 for file in *
 do
-	echo "Processing $fil..."
+	echo "Processing $file..."
     $APP "$INDIR" "$OUTDIR" $PYDIR $file
 	if [ $OPT == "all" ]
 	then

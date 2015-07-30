@@ -216,9 +216,11 @@ public class Converter {
 			Path dir = Paths.get(outdir.toString(),outRoot,path);
 			if( Files.isDirectory(dir, LinkOption.NOFOLLOW_LINKS)) {
 				Path fname = dir.getFileName();
-				Path extended = Paths.get(pathMap.get(key),fname.toString());
+				System.out.println("pathMap: " + pathMap.get(key) + " fname: " + fname.toString());
+				//Path extended = Paths.get(pathMap.get(key),fname.toString());
+				String extended = pathMap.get(key) + "/" + fname.toString();
 				log.debugf("%s.revisePaths: Revised %s",TAG,extended.toString());
-				pathMap.put(key,extended.toString());
+				pathMap.put(key,extended);
 			}
 		}
 	}

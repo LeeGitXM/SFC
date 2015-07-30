@@ -11,7 +11,6 @@ then
 fi
 REPO=${GIT_REPO}
 cd $REPO/sfc
-SFC=`pwd`
 LIB=$REPO/external/lib
 JAR=${LIB}/sfc-migration.jar
 OUTFIL=$2

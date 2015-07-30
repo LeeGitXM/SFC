@@ -18,7 +18,8 @@ APP=${SFC}/migration/translate-onstop
 mkdir -p ${SFC}/migration/procs/g2/vistalon/onstop
 cd ${SFC}/migration/procs/g2/vistalon/onstop
 OUTDIR=${SFC}/migration/procs/ignition/vistalon/onstop
-DIR=`pwd`
+DIR=`${SFC}/migration/pwd2`
+echo 'Rob, dir is' $DIR
 for fil in *.txt
 do
     if [ -f $DIR/$fil ]
@@ -44,7 +45,7 @@ APP=${SFC}/migration/translate-onstart
 mkdir -p ${SFC}/migration/procs/g2/vistalon/onstart
 cd ${SFC}/migration/procs/g2/vistalon/onstart
 OUTDIR=${SFC}/migration/procs/ignition/vistalon/onstart
-DIR=`pwd`
+DIR=`${SFC}/migration/pwd2`
 for fil in *.txt
 do
     if [ -f $DIR/$fil ]

@@ -76,6 +76,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 		throws XMLParseException {
 		for(Property<?> property: orderedProperties) {
 			String stringValue = IlsSfcCommonUtils.getPropertyAsString(property, dom);
+			System.out.println("fromXML " + property.getName() + " " + stringValue);
 			Object value = null;
 			if(stringValue!=null) {
 				try {
