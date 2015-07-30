@@ -72,6 +72,9 @@
 			<zipgroupfileset dir="${sdk.dir}" includes="designer-api.jar"/>
 			<zipgroupfileset dir="${sdk.dir}" includes="client-api.jar"/>
 			<zipgroupfileset dir="${jar.dir}" includes="ils-common.jar"/>
+			<zipgroupfileset dir="${jar.dir}" includes="jackson-annotations-2.2.3.jar"/>
+			<zipgroupfileset dir="${jar.dir}" includes="jackson-core-2.2.3.jar"/>
+			<zipgroupfileset dir="${jar.dir}" includes="jackson-databind-2.2.3.jar"/>
 			<zipgroupfileset dir="${basedir}/sfc-build/bin/ILS-SFC_Common/dist/" includes="*.jar"/>
 			<zipgroupfileset dir="${basedir}/sfc-build/bin/ILS-SFC_Designer/dist/" includes="*.jar"/>
 		</jar>
