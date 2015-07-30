@@ -64,7 +64,7 @@ public class RecipeDataChartScope extends PyChartScope {
 		BasicTagPath igTagPath = new BasicTagPath(providerName, pathComponents);
 		List<Tag> tags = gatewayContext.getTagManager().browse(igTagPath);
 		PyChartScope result = new PyChartScope();
-		super.
+
 		for(Tag tag: tags) {
 			result.put(tag.getName(), tag.getValue().getValue());
 		}
