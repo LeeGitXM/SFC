@@ -66,12 +66,12 @@ insert into SfcPropertyMap values ('com.ils.yesNoStep','recipeDataLocation','rec
 insert into SfcPropertyMap values ('com.ils.yesNoStep','prompt','prompt');
 -- MANUAL DATA ENTRY
 -- Note that spreadsheetPopulateMethod and spreadsheetSpecification are not directly translated
-insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','manualEntryTimeoutInSeconds','timeout');
-insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','requireAllInputs','requireInputs');
-insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','mode','autoMode');
-insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','dialog','window');
-insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','header','windowTitle');
-insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','toolbarButtonLabel','buttonLabel');
-insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','workspaceScale','scale');
-insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','workspaceLocation','position');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','timeout','manualEntryTimeoutInSeconds');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','requireInputs','requireAllInputs');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','autoMode','mode');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','window','dialog');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','windowTitle','header');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','buttonLabel','toolbarButtonLabel');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','scale','workspaceScale');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','position','workspaceLocation');
 
