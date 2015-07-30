@@ -2,10 +2,10 @@
 
 	<import file="${basedir}/sfc-build/build.xml"/>
 
-	<property name="version.build" value="4" />	
+	<property name="version.build" value="0" />	
 	<!-- Change version.beta value to "" for release builds -->
 	<property name="version.beta" value="-development" />		
-	<property name="ils.sfc.version" value="1.1.0.${version.build}" />
+	<property name="ils.sfc.version" value="1.1.1.${version.build}" />
 	<property name="ils.sfc.name" value="ILS-SFC" />
 	<property name="ils.sfc.release" value="0.5" />
 	<property name="ils.sfc.description" value="ILS SFC Customizations" />
