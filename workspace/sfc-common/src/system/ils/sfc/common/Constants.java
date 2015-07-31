@@ -204,6 +204,11 @@ public class Constants {
 	public static final String OPERATION = "operation";	
 	public static final String PHASE = "phase";
 
+	// recipe data value types
+	public static final String FLOAT = "float";
+	public static final String INT = "int";
+	public static final String STRING = "string";
+	public static final String BOOLEAN = "boolean";
 	
 	// symbols for a TimeDelayStep unit choice
 	// these have nothing to do with unit conversion, they

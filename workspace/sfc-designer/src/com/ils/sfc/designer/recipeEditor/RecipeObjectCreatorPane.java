@@ -19,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.designer.panels.ButtonPanel;
@@ -31,6 +33,8 @@ import com.ils.sfc.designer.panels.EditorPanel;
 public class RecipeObjectCreatorPane extends EditorPanel {
 	private JComboBox<ComboWrapper> typesCombo = new JComboBox<ComboWrapper>();
 	private JTextField keyTextField = new JTextField();
+	private String[] valueTypeChoices = {Constants.FLOAT, Constants.INT, Constants.BOOLEAN, Constants.STRING};
+	private JComboBox<String> valueTypeCombo = new JComboBox<String>(valueTypeChoices);
 	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
 	private RecipeEditorController controller;
 	private String chartPath;
@@ -58,6 +62,11 @@ public class RecipeObjectCreatorPane extends EditorPanel {
 		add(mainPanel, BorderLayout.CENTER);
 		GridBagConstraints con = new GridBagConstraints();
 
+		typesCombo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				doEnableValueTypesCombo();
+			}
+		});
 		DesignerUtil.setConstraints(con, EAST, NONE, 1, 1, 0, 0, new Insets(2, 0, 2, 5), 0, 0);
 		mainPanel.add(new JLabel("Type:", SwingConstants.RIGHT), con);
 		DesignerUtil.setConstraints(con, WEST, BOTH, 1, 1, 1, 0, new Insets(2, 5, 2, 0), 0, 0);
@@ -68,13 +77,30 @@ public class RecipeObjectCreatorPane extends EditorPanel {
 		DesignerUtil.setConstraints(con, WEST, BOTH, 1, 1, 1, 1, new Insets(2, 5, 2, 0), 0, 0);
 		mainPanel.add(keyTextField, con);
 		keyTextField.setPreferredSize(new Dimension(100,25));
+
+		DesignerUtil.setConstraints(con, EAST, NONE, 1, 1, 0, 2, new Insets(2, 0, 2, 5), 0, 0);
+		mainPanel.add(new JLabel("Value Type:", SwingConstants.RIGHT), con);
+		DesignerUtil.setConstraints(con, WEST, BOTH, 1, 1, 1, 2, new Insets(2, 5, 2, 0), 0, 0);
+		mainPanel.add(valueTypeCombo, con);
+		keyTextField.setPreferredSize(new Dimension(100,25));
+		
+		valueTypeCombo.setSelectedIndex(0);
 	}
 
+	private void doEnableValueTypesCombo() {
+		ComboWrapper selectedType = (ComboWrapper)typesCombo.getSelectedItem();
+		if(selectedType != null) {
+			boolean isValue = selectedType.getLabel().equals("Value");
+			valueTypeCombo.setEnabled(isValue);
+		}
+	}			
+	
 	private void initTypes() {
 		for(Class<?> type: RecipeDataTranslator.getConcreteClasses()) {
 			typesCombo.addItem(new ComboWrapper(type.getSimpleName(), type));
 		}
 		typesCombo.setSelectedIndex(0);
+		doEnableValueTypesCombo();
 	}
 
 	private void doCreate() {
@@ -90,7 +116,8 @@ public class RecipeObjectCreatorPane extends EditorPanel {
 			Data newObject = Data.createNewInstance(selectedClass);
 			newObject.setKey(key);
 			newObject.setStepPath(chartPath);
-			newObject.createTag();
+			String selectedValueType = (String) valueTypeCombo.getSelectedItem();
+			newObject.createTag(selectedValueType);
 			keyTextField.setText("");
 			controller.getRecipeData().add(newObject);
 			controller.getEditor().setRecipeData(newObject);
