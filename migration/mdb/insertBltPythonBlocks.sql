@@ -8,13 +8,17 @@ insert into BltPythonPrototypes values ('xom.block.action.Action','viewIcon','Bl
 insert into BltPythonPrototypes values ('xom.block.action.Action','viewFontSize','24');
 insert into BltPythonPrototypes values ('xom.block.action.Action','viewHeight','70');
 insert into BltPythonPrototypes values ('xom.block.action.Action','viewWidth','70');
+
 insert into BltPythonPrototypes values ('xom.block.arithmetic.Arithmetic','blockstyle','SQUARE');
 insert into BltPythonPrototypes values ('xom.block.arithmetic.Arithmetic','viewIcon','Block/icons/embedded/gear.png');
 insert into BltPythonPrototypes values ('xom.block.arithmetic.Arithmetic','viewFontSize','24');
 insert into BltPythonPrototypes values ('xom.block.arithmetic.Arithmetic','viewHeight','100');
 insert into BltPythonPrototypes values ('xom.block.arithmetic.Arithmetic','viewWidth','150');
+
 insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','blockstyle','SQUARE');
 insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','editorClass','com.ils.blt.designer.config.FinalDiagnosisConfiguration');
+insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','transmitEnabled','true');
+insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','viewBackgroundColor','16580350');
 insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','viewLabel','Final Diagnosis');
 insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','viewFontSize','24');
 insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','viewHeight','80');
@@ -31,23 +35,27 @@ insert into BltPythonPrototypes values ('xom.block.subdiagnosis.SubDiagnosis','v
 insert into BltPythonPrototypes values ('xom.block.subdiagnosis.SubDiagnosis','viewHeight','80');
 insert into BltPythonPrototypes values ('xom.block.subdiagnosis.SubDiagnosis','viewWidth','100');
 
+-- Define anchors for possibly dangling connections (Python only?)
+-- Columns are: IgnitionClass,Port,ConnectionType,Direction,Annotation
+insert into BltPythonAnchorMap values('xom.block.action.Action','in','TRUTHVALUE','INCOMING','');
+insert into BltPythonAnchorMap values('xom.block.action.Action','out','TRUTHVALUE','OUTGOING','');
+insert into BltPythonAnchorMap values('xom.block.arithmetic.Arithmetic','in','DATA','INCOMING','');
+insert into BltPythonAnchorMap values('xom.block.arithmetic.Arithmetic','out','DATA','OUTGOING','');
+insert into BltPythonAnchorMap values('xom.block.finaldiagnosis.FinalDiagnosis','in','TRUTHVALUE','INCOMING','');
+insert into BltPythonAnchorMap values('xom.block.finaldiagnosis.FinalDiagnosis','out','TRUTHVALUE','OUTGOING','');
+insert into BltPythonAnchorMap values('xom.block.finaldiagnosis.FinalDiagnosis','diagnosis','TEXT','OUTGOING','');
+insert into BltPythonAnchorMap values('xom.block.sqcdagnosis.SQCDiagnosis','in','TRUTHVALUE','INCOMING','');
+insert into BltPythonAnchorMap values('xom.block.sqcdiagnosis.SQCDiagnosis','out','TRUTHVALUE','OUTGOING','');
+insert into BltPythonAnchorMap values('xom.block.sqcdiagnosis.SQCDiagnosis','diagnosis','TEXT','OUTGOING','');
+insert into BltPythonAnchorMap values('xom.block.subdagnosis.SubDiagnosis','in','TRUTHVALUE','INCOMING','');
+insert into BltPythonAnchorMap values('xom.block.subdiagnosis.SubDiagnosis','out','SIGNAL','OUTGOING','');
+
 -- Columns are:  className, propertyName, propertyType, editable
-insert into BltPythonBlockProperties values ('xom.block.action.Action','Script','STRING',1);
+insert into BltPythonBlockProperties values ('xom.block.action.Action','Script','SCRIPTREF',1);
+insert into BltPythonBlockProperties values ('xom.block.action.Action','Trigger','BOOLEAN',1);
 insert into BltPythonBlockProperties values ('xom.block.arithmetic.Arithmetic','Function','STRING',1);
-insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','CalculationMethod','SCRIPTREF',1);
-insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Explanation','STRING',1);
+--- NOTE: For FinalDiagnosis, only the Label is a block property. Many others are aux (database) resident.
 insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Label','STRING',1);
--- insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','LogToDatabase','BOOLEAN',1);
--- insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','ManualMove','BOOLEAN',1);
--- insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','ManualMoveValue','DOUBLE',1);
-insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','ManualTextRequired','BOOLEAN',1);
--- insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Multiplier','DOUBLE',1);
-insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','PostRecommendation','BOOLEAN',1);
-insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Priority','DOUBLE',1);
-insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Recommendation','STRING',1);
-insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','RecommendationCallback','SCRIPTREF',1);
-insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','RecommendationRefreshInterval','DOUBLE',1);
-insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Targets','LIST',1);
--- insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','TrapInsignificantConditions','BOOLEAN',1);
+
 insert into BltPythonBlockProperties values ('xom.block.sqcdiagnosis.SQCDiagnosis','Label','STRING',1);
 insert into BltPythonBlockProperties values ('xom.block.subdiagnosis.SubDiagnosis','Label','STRING',1);

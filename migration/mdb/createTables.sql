@@ -53,14 +53,18 @@ CREATE TABLE ProcedureMap(
 	ReturnType text
 );
 
-
-
-
 -- ========================== BLT Tables ===================
 CREATE TABLE BltAnchorMap(
 	G2Class text NOT NULL,
 	G2Port  text NOT NULL,
 	Port    text NOT NULL,
+	Annotation text NULL
+);
+CREATE TABLE BltPythonAnchorMap(
+	IgnitionClass text NOT NULL,
+	Port    text NOT NULL,
+    ConnectionType text NOT NULL,
+    Direction text NOT NULL,
 	Annotation text NULL
 );
 -- Map properties of G2 blocks to properties of

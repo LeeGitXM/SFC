@@ -12,22 +12,24 @@ insert into BltPropertyMap values ('EM-GDA-DEADBAND-COMPARE','label','','STRING'
 insert into BltPropertyMap values ('EM-GDA-ELAPSED-TIME-VARIABLE','elapsedTimeMinutes','','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-ELAPSED-TIME-VARIABLE','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-EXPIRATION-FILTER','label','','STRING',1,'NONE');
-insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','explanation','Explanation','STRING',1,'NONE');
-insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','label','','STRING',1,'NONE');
+
 -- NOTE: properties that are not used in Ignition map to empty strings.
+insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','explanation','','STRING',1,'NONE');
+insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','label','Label','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','logDiagnosisToDatabase','','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','manualMove','','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','manualMoveValue','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','manualTextRequired','','BOOLEAN',1,'NONE');
-insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','postTextRecommendation','PostRecommendation','BOOLEAN',1,'NONE');
-insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','priority','Priority','DOUBLE',1,'NONE');
-insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','recommendationCalculationMethod','CalculationMethod','STRING',1,'NONE');
+insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','postTextRecommendation','','BOOLEAN',1,'NONE');
+insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','priority','','DOUBLE',1,'NONE');
+insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','recommendationCalculationMethod','','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','recommendationMultiplier','','DOUBLE',1,'NONE');
-insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','recommendationRefreshRateInMinutes','RecommendationRefreshInterval','DOUBLE',1,'NONE');
-insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','targets','Targets','LIST',1,'NONE');
-insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','textRecommendation','Recommendation','STRING',1,'NONE');
-insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','textRecommendationCallback','RecommendationCallback','STRING',1,'NONE');
+insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','recommendationRefreshRateInMinutes','','DOUBLE',1,'NONE');
+insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','targets','','',1,'NONE');
+insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','textRecommendation','','STRING',1,'NONE');
+insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','textRecommendationCallback','','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-FINAL-DIAGNOSIS','trapInsignificantRecommendationConditions','','BOOLEAN',1,'NONE');
+
 insert into BltPropertyMap values ('EM-GDA-HIGH-LIMIT','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-HIGH-LIMIT','statusOnInitialization','','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-HIGH-LIMIT','target','limit','DOUBLE',1,'NONE');
@@ -80,7 +82,8 @@ insert into BltPropertyMap values ('GDL-EQUALITY-OBSERVATION','equivalenceBand',
 insert into BltPropertyMap values ('GDL-EQUALITY-OBSERVATION','hysteresisWhen','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-EQUALITY-OBSERVATION','referenceValue','Nominal','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-EQUALITY-OBSERVATION','outputUncertainty','','DOUBLE',1,'NONE');
-insert into BltPropertyMap values ('GDL-GENERIC-ACTION','userDefinedProcedure','Script','BOOLEAN',1,'NONE');
+insert into BltPropertyMap values ('GDL-GENERIC-ACTION','userDefinedProcedure','Script','','STRING','NONE');
+insert into BltPropertyMap values ('GDL-GENERIC-ACTION','2','Trigger','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-HIGH-VALUE-OBSERVATION','hysteresisWhen','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-HIGH-VALUE-OBSERVATION','outputUncertainty','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-HIGH-VALUE-OBSERVATION','statusOnInitialization','','STRING',1,'NONE');
