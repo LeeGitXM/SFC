@@ -65,9 +65,7 @@ public class IlsChartObserver implements ChartObserver {
 	}
 
 	@Override
-	public void onBeforeChartStart(ChartContext arg0) {
-		// TODO Auto-generated method stub
-		
+	public void onBeforeChartStart(ChartContext chartContext) {
 	}
 
 }

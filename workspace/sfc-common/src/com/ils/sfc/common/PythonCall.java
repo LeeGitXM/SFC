@@ -168,7 +168,7 @@ public class PythonCall {
 			null,  new String[]{"provider", "path", "value", "synchronous"} );
 
 	public static final PythonCall CREATE_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "createRecipeDataTag", 
-			null,  new String[]{"provider", "folder", "rdName", "rdType"} );
+			null,  new String[]{"provider", "folder", "rdName", "rdType", "valueType"} );
 
 	public static final PythonCall DELETE_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "deleteRecipeDataTag", 
 			null,  new String[]{"provider", "fullPath"} );

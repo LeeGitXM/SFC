@@ -328,12 +328,18 @@ public abstract class Data {
 	
 	/** Create the UDT tag if it doesn't already exist, 
 	 *  and initialize the tag values with the defaults. */
-	public void createTag() {
+	public void createTag(String valueTypeOrNull) {
 		if(tagExists()) return;
 		String provider = IlsClientScripts.getProviderName(false);
 		String myType = (String) getValue(IlsProperty.CLASS);
 		String chartPath = getStepPath();
-		Object[] args = {provider, chartPath, getKey(), myType};
+		
+		// if value type not given, use the value as a cue:
+		if(this instanceof Value && valueTypeOrNull == null) {
+			valueTypeOrNull = inferValueType();
+		}
+		
+		Object[] args = {provider, chartPath, getKey(), myType, valueTypeOrNull};
 		try {
 			PythonCall.CREATE_RECIPE_DATA.exec(args);
 		} catch (JythonExecException e) {
@@ -342,9 +348,37 @@ public abstract class Data {
 		basicWriteToTags();
 	}
 
+	/** For Value instances, infer the type from the actual value. 
+	 *  returns null if value can't be inferred
+	 */
+	private String inferValueType() {
+		Object value = getValue(IlsProperty.NULLABLE_VALUE);
+		if(value != null) {
+			if(value instanceof Double || value instanceof Float) {
+				return Constants.FLOAT;
+			}
+			else if(value instanceof Integer) {
+				return Constants.INT;
+			}
+			else if(value instanceof Boolean) {
+				return Constants.BOOLEAN;
+			}
+			else if(value instanceof String) {
+				return Constants.STRING;
+			}
+			else {
+				logger.error("Could not infer type from value class " + value.getClass().getSimpleName());
+				return null;
+			}
+		}
+		else {
+			return null;
+		}
+	}
+
 	/** Write to tags, creating them if they don't exist. */
 	public void writeToTags()  {
-		createTag();
+		createTag(null);
 		basicWriteToTags();
 	}
 
