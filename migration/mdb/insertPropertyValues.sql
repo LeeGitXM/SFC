@@ -1,10 +1,21 @@
 -- Convert values found in G2 blocks or charts into proper Ignition equivalents.
 -- Fields are: Ignition property, G2value, desired value
 insert into PropertyValueMap values ('recipeLocation','LOCAL','local');
-insert into PropertyValueMap values ('recipeLocation','PREVIOUS','previous');
+insert into PropertyValueMap values ('recipeLocation','PREVIOUS','prior');
 insert into PropertyValueMap values ('recipeLocation','SUPERIOR','superior');
+insert into PropertyValueMap values ('recipeLocation','OPERATION','operation');
+insert into PropertyValueMap values ('recipeLocation','PHASE','phase');
+insert into PropertyValueMap values ('recipeLocation','PROCEDURE','global');
+insert into PropertyValueMap values ('recipeLocation','GLOBAL','global');
+insert into PropertyValueMap values ('recipeLocation','NAMED','named');
+
 insert into PropertyValueMap values ('strategy','LOCAL','static');   -- there is no local strategy
 insert into PropertyValueMap values ('strategy','STATIC','static');
+insert into PropertyValueMap values ('strategy','RECIPE-DATA','recipe');
+
+insert into PropertyValueMap values ('priority','INFORMATION','Info');
+insert into PropertyValueMap values ('priority','WARNING','Warning');
+insert into PropertyValueMap values ('priority','ERROR','Error');
 
 -- Names of callbacks get read from here and inserted into ProcedureMap also
 -- Formal test cases
@@ -177,6 +188,6 @@ insert into PropertyValueMap values ('position','BOTTOM-LEFT','bottomLeft');
 insert into PropertyValueMap values ('position','BOTTOM-CENTER','bottomCenter');
 insert into PropertyValueMap values ('position','BOTTOM-RIGHT','bottomRight');
 
-insert into PropertyValueMap values ('mode','SEMI-AUTOMATIC','semiAutomatic');
-insert into PropertyValueMap values ('mode','AUTOMATIC','automatic');
+insert into PropertyValueMap values ('autoMode','SEMI-AUTOMATIC','semiAutomatic');
+insert into PropertyValueMap values ('autoMode','AUTOMATIC','automatic');
 

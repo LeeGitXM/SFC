@@ -64,13 +64,9 @@ public class IlsSfcCommonUtils {
 			String value = dom.getAttribute(propertyName);
 			return value.length() > 0 ? value : null;
 		}
-		else if(list.getLength() == 1) {
+		else {
 			Node node = list.item(0);
 			return node.getTextContent();
-		}
-		else {
-			logger.error("property " + propertyName + " has > 1 element");
-			return null;
 		}
 	}
 

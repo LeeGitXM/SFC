@@ -28,7 +28,21 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 public abstract class RowConfig {
 	private static final LoggerEx logger = LogUtil.getLogger(RowConfig.class.getName());
-			
+	
+	// NOTE: all translation keys are uppercase, even if the actual
+	// G2 key is mixed case
+	protected static Map<String,String> recipeLocationTranslation = new HashMap<String,String>();
+	static {
+		recipeLocationTranslation.put("LOCAL","local");
+		recipeLocationTranslation.put("PREVIOUS","prior");
+		recipeLocationTranslation.put("SUPERIOR","superior");
+		recipeLocationTranslation.put("OPERATION","operation");
+		recipeLocationTranslation.put("PHASE","phase");
+		recipeLocationTranslation.put("PROCEDURE","global");
+		recipeLocationTranslation.put("GLOBAL","global");
+		recipeLocationTranslation.put("NAMED","named");
+	}
+	
 	public String toJSON() throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsString(this);

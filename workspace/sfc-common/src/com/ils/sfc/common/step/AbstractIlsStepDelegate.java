@@ -76,11 +76,12 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 		throws XMLParseException {
 		for(Property<?> property: orderedProperties) {
 			String stringValue = IlsSfcCommonUtils.getPropertyAsString(property, dom);
-			System.out.println("fromXML " + property.getName() + " " + stringValue);
+			String stepName = IlsSfcCommonUtils.getPropertyAsString(IlsProperty.NAME, dom);
 			Object value = null;
 			if(stringValue!=null) {
 				try {
 					value = IlsProperty.parsePropertyValue(property, stringValue);
+					checkValueChoices(property, stepName, value);
 				}
 				catch(ParseException e) {
 					log.warn("Error deserializing step property "+property+" from "+stringValue, e);
@@ -109,6 +110,27 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 			}
 			else {
 				log.warn("Unable to get value for Step property " + property + "; will be missing");				
+			}
+		}
+	}
+
+	private void checkValueChoices(Property<?> property, String stepName,
+			Object value) {
+		if(property instanceof IlsProperty) {
+			IlsProperty iprop = (IlsProperty)property;
+			// If the value is an enumeration, check that the assigned
+			// value is a member of the enumeration:
+			if(iprop.getChoices() != null) {
+				boolean valueIsChoice = false;
+				for(Object o: iprop.getChoices()) {
+					if(o.equals(value)) {
+						valueIsChoice = true;
+						break;
+					}
+				}
+				if(!valueIsChoice) {
+					log.error("Bad value for " + stepName + "." + property.getName() + ": " + value);
+				}
 			}
 		}
 	}
