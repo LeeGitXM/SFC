@@ -1,7 +1,14 @@
 package com.ils.sfc.gateway;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.python.core.PyObject;
+import org.python.core.PyString;
 
 import system.ils.sfc.common.Constants;
 
@@ -9,6 +16,8 @@ import com.inductiveautomation.ignition.common.expressions.TagListener;
 import com.inductiveautomation.ignition.common.model.values.QualifiedValue;
 import com.inductiveautomation.ignition.common.sqltags.model.Tag;
 import com.inductiveautomation.ignition.common.sqltags.model.TagPath;
+import com.inductiveautomation.ignition.common.sqltags.model.TagProp;
+import com.inductiveautomation.ignition.common.sqltags.model.event.TagChangeEvent;
 import com.inductiveautomation.ignition.common.sqltags.parser.BasicTagPath;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 import com.inductiveautomation.sfc.api.PyChartScope;
@@ -21,7 +30,7 @@ public class RecipeDataChartScope extends PyChartScope {
 	private String stepPath;
 	private String providerName;
 	private GatewayContext gatewayContext;
-	private List<ListenerInfo> listeners = new ArrayList<ListenerInfo>();
+	private Map<String,ListenerInfo> listenersByKey = new HashMap<String, ListenerInfo>();
 	
 	static class ListenerInfo {
 		public TagPath tagPath;
@@ -42,10 +51,10 @@ public class RecipeDataChartScope extends PyChartScope {
 	
 	@Override
 	public void removeScopeObserver(ScopeObserver observer) {
-		for(ListenerInfo listenerInfo: listeners) {
+		for(ListenerInfo listenerInfo: listenersByKey.values()) {
 			gatewayContext.getTagManager().unsubscribe(listenerInfo.tagPath, listenerInfo.tagListener);
 		}
-		listeners = null;
+		listenersByKey = null;
 	}
 	
 	@Override
@@ -55,14 +64,20 @@ public class RecipeDataChartScope extends PyChartScope {
 	
 	@Override 
 	public Object get(Object key) {		
+		// Build the tag path as far as the name of the UDT
 		String tagPath = Constants.RECIPE_DATA_FOLDER + "/" + stepPath + "/" + key;
 		List<String> pathComponents = new ArrayList<String>();
 		String[] parts = tagPath.split("/");
 		for(String part: parts) {
 			pathComponents.add(part);
 		}
+		
+		// create multiple tag paths to each UDT member
 		BasicTagPath igTagPath = new BasicTagPath(providerName, pathComponents);
 		List<Tag> tags = gatewayContext.getTagManager().browse(igTagPath);
+
+		
+		// Read the values of all the UDT members and put them in a PyChartScope, which is the return result
 		PyChartScope result = new PyChartScope();
 		for(Tag tag: tags) {
 			result.put(tag.getName(), tag.getValue().getValue());
@@ -73,18 +88,28 @@ public class RecipeDataChartScope extends PyChartScope {
 		List<QualifiedValue> values = gatewayContext.getTagManager().read(paths);
 		Object currentValue = values.get(0).getValue();
 		*/
-		// TODO: listen to the tags so we can respond to changes
-		/*
+		if(!listenersByKey.containsKey(key)) {
+			addTagChangeListener((String)key, igTagPath);
+		}
+		return result;
+	}
+
+	private void addTagChangeListener(final String key, BasicTagPath igTagPath) {
 		TagListener tagListener = new TagListener() {
 			@Override
 			public void tagChanged(TagChangeEvent e) {
-				//RecipeDataChartScope.this.notifyObservers();
+				RecipeDataChartScope.this.notifyObservers(new PyString(key), (PyObject)null);
+			}
+			public TagProp getTagProperty() {
+				return TagProp.Value;
 			}
 		};
-		listeners.add(new ListenerInfo(igTagPath, tagListener));
-		gatewayContext.getTagManager().subscribe(igTagPath, tagListener);
-		*/
-		return result;
+		// TODO: remove this hack:
+		// we should really listen for changes in all the tags, but initially
+		// we will just listen for a change in value:
+		TagPath valueTagPath = BasicTagPath.append(igTagPath, "value");
+		listenersByKey.put(key, new ListenerInfo(valueTagPath, tagListener));
+		gatewayContext.getTagManager().subscribe(valueTagPath, tagListener);
 	}	
 }
 

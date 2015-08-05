@@ -31,7 +31,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	private String auditLevel = Constants.OFF;
 	protected ScopeContext scopeContext;
 	private long startTime;
-	private enum Status {
+	protected enum Status {
 		Activate, Pause, Resume, Cancel
 	};
 	
@@ -105,10 +105,15 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	}
 
 	/** Set the status in the step scope so the Python code can see it */
-	private void setStatus(Status status) {
+	protected void setStatus(Status status) {
 		scopeContext.getStepScope().put("_status", status.toString());
 	}
-	
+
+	/** Set the status in the step scope so the Python code can see it */
+	protected String getStatus() {
+		return (String)scopeContext.getStepScope().get("_status");
+	}
+
 	protected void exec(PythonCall pcall) {
 		try {
 			logger.trace(pcall.getMethodName());
