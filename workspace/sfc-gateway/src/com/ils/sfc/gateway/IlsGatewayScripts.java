@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.recipe.objects.Data;
+import com.ils.sfc.common.rowconfig.ManualDataEntryConfig;
 import com.ils.sfc.common.rowconfig.MonitorDownloadsConfig;
 import com.ils.sfc.common.rowconfig.PVMonitorConfig;
 import com.ils.sfc.common.rowconfig.ReviewDataConfig;
@@ -346,7 +347,11 @@ public class IlsGatewayScripts {
 	public static WriteOutputConfig getWriteOutputConfig(String json) throws JsonParseException, JsonMappingException, IOException {
 		return WriteOutputConfig.fromJSON(json);
 	}
-	
+
+	public static ManualDataEntryConfig getManualDataEntryConfig(String json) throws JsonParseException, JsonMappingException, IOException {
+		return ManualDataEntryConfig.fromJSON(json);
+	}
+
 	public static void assertEqual(String testName, String stepName, PyObject expected, PyObject actual) {		
 		ilsSfcGatewayHook.getTestMgr().assertEqual(testName, stepName, expected, actual );
 	}
