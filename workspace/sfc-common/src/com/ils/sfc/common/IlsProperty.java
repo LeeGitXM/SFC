@@ -155,7 +155,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<String> RECIPE_STATIC_STRATEGY = new IlsProperty<String>(Constants.STRATEGY, String.class, Constants.RECIPE_STATIC_STRATEGY_CHOICES[0], Constants.RECIPE_STATIC_STRATEGY_CHOICES);
     public static final IlsProperty<Double> SCALE = new IlsProperty<Double>(Constants.SCALE, Double.class, .5);
     public static final IlsProperty<Double> TARGET_VALUE = new IlsProperty<Double>(Constants.TARGET_VALUE, Double.class, 0.);
-    public static final IlsProperty<Integer> TIMEOUT = new IlsProperty<Integer>(Constants.TIMEOUT, Integer.class, 0);
+    public static final IlsProperty<Integer> TIMEOUT = new IlsProperty<Integer>(Constants.TIMEOUT, Integer.class, -1);
     public static final IlsProperty<String> TIMEOUT_UNIT = new IlsProperty<String>(Constants.TIMEOUT_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);
     public static final IlsProperty<Boolean> TIMER_CLEAR = new IlsProperty<Boolean>(Constants.TIMER_CLEAR, Boolean.class, Boolean.TRUE);
     public static final IlsProperty<String> TIMER_KEY = new IlsProperty<String>(Constants.TIMER_KEY, String.class, "");

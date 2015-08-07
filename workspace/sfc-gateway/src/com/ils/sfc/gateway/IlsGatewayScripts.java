@@ -13,6 +13,7 @@ import org.python.core.PyObject;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.recipe.objects.Data;
@@ -391,6 +392,10 @@ public class IlsGatewayScripts {
 	
 	public static String getRecipeDataTagPath(PyChartScope chartScope, PyChartScope stepScope, String scope) {
 		return RecipeDataAccess. getRecipeDataTagPath(chartScope, stepScope, scope);
+	}
+	
+	public static Object parseValue(String strValue) {
+		return IlsProperty.parseObjectValue(strValue, null);
 	}
 	
 }
