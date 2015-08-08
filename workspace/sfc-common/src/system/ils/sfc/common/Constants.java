@@ -10,6 +10,7 @@ public class Constants {
 	public static final String ACK_REQUIRED = "ackRequired";
 	public static final String ADVICE = "advice";
 	public static final String ARRAY_KEY = "arrayKey";
+	public static final String ASSOCIATED_DATA = "associated-data";
 	public static final String AUDIT_LEVEL = "auditLevel";
 	public static final String AUTO_MODE = "autoMode";
 	public static final String AUTOMATIC = "automatic";

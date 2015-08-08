@@ -21,6 +21,7 @@ import javax.swing.SwingConstants;
 
 import system.ils.sfc.common.Constants;
 
+import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.designer.panels.ButtonPanel;
@@ -115,6 +116,8 @@ public class RecipeObjectCreatorPane extends EditorPanel {
 			Class<?> selectedClass = (Class<?>)selectedType.getObject();
 			Data newObject = Data.createNewInstance(selectedClass);
 			newObject.setKey(key);
+			String provider = IlsClientScripts.getProviderName(false);
+			newObject.setProvider(provider);
 			newObject.setStepPath(chartPath);
 			String selectedValueType = (String) valueTypeCombo.getSelectedItem();
 			newObject.createTag(selectedValueType);

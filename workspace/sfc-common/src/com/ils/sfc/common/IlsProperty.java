@@ -43,7 +43,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 		ignoreProperties.add("id");
 		ignoreProperties.add("type");
 		ignoreProperties.add("factory-id");
-		ignoreProperties.add("associated-data");
+		ignoreProperties.add(Constants.ASSOCIATED_DATA);
 		// ILS recipe data type:
 		ignoreProperties.add("class");
 		ignoreProperties.add("execution-mode");  // hide this for ILS encapsulations like Procedure
@@ -54,6 +54,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
     public static final IlsProperty<Boolean> ACK_REQUIRED = new IlsProperty<Boolean>(Constants.ACK_REQUIRED, Boolean.class, Boolean.FALSE);
     public static final IlsProperty<String> ADVICE = new IlsProperty<String>(Constants.ADVICE, String.class, "");
     public static final IlsProperty<String> ARRAY_KEY = new IlsProperty<String>(Constants.ARRAY_KEY, String.class, Constants.NONE);
+    public static final BasicProperty<JSONObject> ASSOCIATED_DATA = new BasicProperty<JSONObject>(Constants.ASSOCIATED_DATA, JSONObject.class, null);
     //public static final IlsProperty<String> AUDIT_LEVEL = new IlsProperty<String>(IlsSfcNames.AUDIT_LEVEL, String.class, IlsSfcNames.AUDIT_LEVEL_CHOICES[0], IlsSfcNames.AUDIT_LEVEL_CHOICES);
     public static final IlsProperty<String> AUTO_MODE = new IlsProperty<String>(Constants.AUTO_MODE, String.class, Constants.AUTO_MODE_CHOICES[0], Constants.AUTO_MODE_CHOICES);
     public static final IlsProperty<String> BUTTON_KEY = new IlsProperty<String>(Constants.BUTTON_KEY, String.class, "");

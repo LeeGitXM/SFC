@@ -130,7 +130,7 @@ public class RecipeDataTranslator {
 	public Element createAssociatedDataElement(Document chartDocument, String factoryId) throws JSONException {	
 		List<Data> recipeData = DOMToData();
 		JSONObject assocDataJsonObj = Data.toAssociatedData(recipeData);
-		Element assocdata = chartDocument.createElement("associated-data");
+		Element assocdata = chartDocument.createElement(Constants.ASSOCIATED_DATA);
 		Node textNode = chartDocument.createTextNode(assocDataJsonObj.toString());
 		assocdata.appendChild(textNode);
 		return assocdata;

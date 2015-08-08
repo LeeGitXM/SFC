@@ -13,7 +13,6 @@ import org.json.JSONObject;
 
 import system.ils.sfc.common.Constants;
 
-import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
@@ -64,7 +63,7 @@ public abstract class Data {
 	protected String g2Id;
 	protected String parentG2Id;
 	protected String stepPath;
-	
+	protected String provider;
 
 	public Data() {
 		addProperty(IlsProperty.CLASS);
@@ -326,20 +325,26 @@ public abstract class Data {
 		this.stepPath = chartPath;
 	}
 	
+	public String getProvider() {
+		return provider;
+	}
+
+	public void setProvider(String provider) {
+		this.provider = provider;
+	}
+
 	/** Create the UDT tag if it doesn't already exist, 
 	 *  and initialize the tag values with the defaults. */
 	public void createTag(String valueTypeOrNull) {
 		if(tagExists()) return;
-		String provider = IlsClientScripts.getProviderName(false);
 		String myType = (String) getValue(IlsProperty.CLASS);
-		String chartPath = getStepPath();
 		
 		// if value type not given, use the value as a cue:
 		if(this instanceof Value && valueTypeOrNull == null) {
 			valueTypeOrNull = inferValueType();
 		}
 		
-		Object[] args = {provider, chartPath, getKey(), myType, valueTypeOrNull};
+		Object[] args = {provider, stepPath, getKey(), myType, valueTypeOrNull};
 		try {
 			PythonCall.CREATE_RECIPE_DATA.exec(args);
 		} catch (JythonExecException e) {
@@ -384,7 +389,6 @@ public abstract class Data {
 
 	/** Write all the attribute values out to the tags. */
 	private void basicWriteToTags() {
-		String provider = IlsClientScripts.getProviderName(false);
 		try {
 			for(PropertyValue<?> pval: getProperties()) {
 			String attributePath = getTagAttributePath(pval.getProperty());
@@ -414,7 +418,6 @@ public abstract class Data {
 
 	/** Remove the UDT tag corresponding to this object. */
 	public void deleteTag() {
-		String provider = IlsClientScripts.getProviderName(false);
 		Object[] args = {provider, getTagPath()};
 		try {
 			PythonCall.DELETE_RECIPE_DATA.exec(args);
@@ -437,7 +440,6 @@ public abstract class Data {
 	/** Get the value of the given property from the tag. The tag must exist,
 	 *  or an error results. */
 	public Object getTagValue(Property<?> property) {
-		String provider = IlsClientScripts.getProviderName(false);
 		String valuePath = getTagAttributePath(property);
 		Object[] args = {provider, valuePath};
 		try {
@@ -451,7 +453,6 @@ public abstract class Data {
 	
 	/** Check if the UDT tag corresponding to this object exists. */
 	public boolean tagExists() {
-		String provider = IlsClientScripts.getProviderName(false);
 		String tagPath = getTagPath();
 		Object[] args = {provider, tagPath};
 		try {
