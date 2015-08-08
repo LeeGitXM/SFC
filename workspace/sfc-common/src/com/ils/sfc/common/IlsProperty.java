@@ -292,6 +292,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 	}
 
 	public static Boolean parseBoolean(String stringValue) throws ParseException {
+		if(IlsSfcCommonUtils.isEmpty(stringValue)) return null;
 		try {
 			return Boolean.valueOf(stringValue);
 		}
@@ -301,6 +302,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 	}
 
 	public static Double parseDouble(String stringValue) throws ParseException {
+		if(IlsSfcCommonUtils.isEmpty(stringValue)) return null;
 		try {
 			return Double.parseDouble(stringValue);
 		}
@@ -310,6 +312,7 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 	}
 
 	public static Integer parseInt(String stringValue) throws ParseException {
+		if(IlsSfcCommonUtils.isEmpty(stringValue)) return null;
 		try {
 			return Integer.parseInt(stringValue);
 		}
