@@ -3,16 +3,10 @@ package com.ils.sfc.step;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import system.ils.sfc.common.Constants;
-
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.step.annotation.ILSStep;
-import com.inductiveautomation.ignition.common.config.BasicProperty;
-import com.inductiveautomation.ignition.common.config.PropertySet;
-import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.sfc.api.ChartContext;
-import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.api.elements.AbstractChartElement;
 import com.inductiveautomation.sfc.api.elements.StepElement;
@@ -28,9 +22,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 @ILSStep
 public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefinition> implements StepElement {
 	private static final Logger logger = LoggerFactory.getLogger(IlsAbstractChartStep.class);
-	private String auditLevel = Constants.OFF;
 	protected ScopeContext scopeContext;
-	private long startTime;
 	protected enum Status {
 		Activate, Pause, Resume, Cancel
 	};
@@ -38,15 +30,6 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	protected IlsAbstractChartStep(ChartContext context,  ScopeContext scopeContext, StepDefinition definition) {
 		super(context, definition);
 		this.scopeContext = scopeContext;
-	}
-
-	private void setAuditLevel() {
-		for(PropertyValue<?> propertyValue: getDefinition().getProperties()) {
-			String propName = propertyValue.getProperty().getName();
-			if(Constants.AUDIT_LEVEL.equals(propName)) {
-				auditLevel = (String) propertyValue.getValue();
-			}
-		}
 	}
 	
 	public String getName() {
@@ -58,50 +41,28 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		return getClass().getSimpleName() + " " + getName(); 
 	}
 	
-	private boolean auditOn() {
-		return !auditLevel.equals(Constants.OFF);
-	}
-            
 	@Override
 	public void activateStep() {
 		setStatus(Status.Activate);
-		setAuditLevel();
-		startTime = System.currentTimeMillis();
-		if(auditOn()) {
-			logger.debug(toString() + " activated");
-		}
 	}
 
 	@Override
 	public void deactivateStep() {
-		long elapsedMillis = System.currentTimeMillis() - startTime;
-		if(auditOn()) {
-			logger.debug(toString() + " deactivated; elapsed time " + (elapsedMillis/1000.) + " sec ");
-		}
 	}
 
 	@Override
 	public void pauseStep() {
 		setStatus(Status.Pause);
-		if(auditOn()) {
-			logger.debug(toString() + " paused");
-		}
 	}
 
 	@Override
 	public void resumeStep() {
 		setStatus(Status.Resume);
-		if(auditOn()) {
-			logger.debug(toString() + " resumed");
-		}
 	}
 
 	@Override
 	public void cancelStep() {
 		setStatus(Status.Cancel);
-		if(auditOn()) {
-			logger.debug(toString() + " cancelled");
-		}
 	}
 
 	/** Set the status in the step scope so the Python code can see it */
@@ -124,82 +85,9 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		}
 	}
 
-	private Object toPyChartScope(PropertySet properties) {
-		PyChartScope chartScope = new PyChartScope();
-		for(PropertyValue<?> pvalue: properties) {
-			chartScope.put(pvalue.getProperty().getName(), pvalue.getValue());
-		}
-		return chartScope;
-	}
-
-	/** Lazily initialize chart properties with things we need, like local scopes
-	 *  and predecessors
-	private void indexElements(ChartContext context) {
-		PyChartScope chartScope = context.getChartScope();
-		if(chartScope.get(IlsSfcNames.BY_NAME) != null) return;
-		
-		PyDictionary byName = new PyDictionary();
-		
-		List<ChartElement<?>> namedStepElements = new ArrayList<ChartElement<?>>();
-		for(ChartElement<?> element: context.getElements()) {
-			if(element.getDefinition() instanceof StepDefinition) {
-				StepDefinition definition = (StepDefinition) element.getDefinition();
-				String name = getName(definition);
-				// Find all the named steps in the chart, and index their properties by
-				// their name
-				if(name != null) {
-					namedStepElements.add(element);
-					PyDictionary stepProperties = new PyDictionary();
-					for(PropertyValue<?> propertyValue: definition.getProperties()) {
-						String propName = propertyValue.getProperty().getName();
-						if(!IlsProperty.ignoreProperties.contains(propName)) {
-							stepProperties.put(propName,propertyValue.getValue());
-						}
-					}
-					//System.out.println("indexing " + name + ": " + stepProperties);
-					byName.put(name, stepProperties);
-				}
-			}
-		}
-	
-		// wire the predecessors
-		for(ChartElement<?> element: namedStepElements) {
-			StepDefinition definition = (StepDefinition) element.getDefinition();
-			String predecessorName = getName(definition);
-			setPredecessor(element, byName, predecessorName);
-		}
-		
-		// try to be pseudo-transactional by putting everything in at once:
-		chartScope.put(IlsSfcNames.BY_NAME, byName);
-		if(context.getChartScope().get(IlsSfcNames.BY_NAME) == null ) {
-			logger.error("update of step properties in chart scope failed");
-		}
-	}
-*/
 	/** Get the name of a step from its definition */
 	private String getName(StepDefinition definition) {
 		return (String)definition.getProperties().getOrDefault(IlsProperty.NAME);
 	}
 	
-	/** Set each step's closest _step_ predecessor (i.e. not a transition etc) 
-	 *  in its local scope. If there is more than one such predecessor, one is 
-	 *  chosen at random.  
-	private void setPredecessor(ChartElement<?> element, PyDictionary byName, String predecessorName) {
-		for(Object obj: element.getNextElements()) {
-			if(obj instanceof ChartElement) {
-				ChartElement<?> successor = (ChartElement<?>)obj;
-				if(successor.getDefinition() instanceof StepDefinition) {
-					String successorName = getName((StepDefinition)successor.getDefinition());
-					PyDictionary successorProperties = (PyDictionary)byName.get(successorName);
-					successorProperties.put(IlsSfcNames.PREVIOUS, predecessorName);
-					//System.out.println("indexing predecessor " + predecessorProperties + ": successor " + successorName);
-				}
-				else {  // not a step; recurse
-					setPredecessor(successor, byName, predecessorName);
-				}
-			}
-		}		
-	}
-
-*/	
 }
