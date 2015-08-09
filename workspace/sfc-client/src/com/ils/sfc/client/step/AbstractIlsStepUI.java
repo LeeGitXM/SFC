@@ -17,9 +17,11 @@ import org.json.JSONObject;
 
 import system.ils.sfc.common.Constants;
 
+import com.google.common.base.Optional;
 import com.ils.sfc.common.IlsProperty;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
+import com.inductiveautomation.sfc.ChartStateEnum;
 import com.inductiveautomation.sfc.client.api.ChartStatusContext;
 import com.inductiveautomation.sfc.client.ui.AbstractStepUI;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
@@ -28,6 +30,7 @@ import com.inductiveautomation.sfc.elements.steps.ExpressionParamCollection;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.elements.steps.enclosing.ExecutionMode;
 import com.inductiveautomation.sfc.elements.steps.enclosing.ReturnParamCollection;
+import com.inductiveautomation.sfc.rpc.ChartStatus;
 import com.inductiveautomation.sfc.rpc.ChartStatus.StepElementStatus;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
@@ -116,7 +119,6 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     @Override
     public void drawStep(ChartUIElement propertyValues, ChartStatusContext chartStatusContext, 
     	Graphics2D g2d) {
-    	
     	// get the size of the cell:
     	double cellWidth = g2d.getClipBounds().getWidth() * g2d.getTransform().getScaleX();
     	double cellHeight = g2d.getClipBounds().getHeight() * g2d.getTransform().getScaleY();
@@ -145,6 +147,21 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     		label.setText(oldLabelText.replace("</html>", "<br>" + stepName + "</html>"));
     	}
 
+    	Optional<ChartStatus> status = chartStatusContext.getChartStatus();
+    	Color background = Color.white;
+    	if(status.isPresent()) {
+    		ChartStateEnum chartState = status.get().getChartState();
+    		if(ChartStateEnum.Running == chartState) {
+    			background = Color.green.brighter();
+    		}
+    		else if(ChartStateEnum.Paused == chartState) {
+    			background = Color.blue.brighter();
+    		}
+    		else if(chartState.isTerminal()) {
+    			background = Color.lightGray;
+    		}
+    	}
+    	label.setBackground(background);
     	g2d.setTransform(transform);
     	label.paint(g2d);
     	g2d.setTransform(oldTransform);
