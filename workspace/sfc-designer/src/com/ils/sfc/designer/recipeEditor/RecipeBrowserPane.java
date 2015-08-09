@@ -3,6 +3,8 @@ package com.ils.sfc.designer.recipeEditor;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JScrollPane;
@@ -77,6 +79,12 @@ public class RecipeBrowserPane extends EditorPanel {
 		selectedNode = null;
 		rootNode.removeAllChildren();
 		treeModel = new DefaultTreeModel(rootNode);
+		Collections.sort(recipeData, new Comparator<Data>() {
+			@Override
+			public int compare(Data d1, Data d2) {
+				return d1.getKey().compareTo(d2.getKey());
+			}			
+		});
 		for(Data data: recipeData) {
 			addLayer(rootNode, data);
 		}

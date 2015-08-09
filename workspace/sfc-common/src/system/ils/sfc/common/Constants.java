@@ -200,7 +200,7 @@ public class Constants {
 	public static final String LOCAL = "local";
 	public static final String PRIOR = "prior";
 	public static final String SUPERIOR = "superior";
-	//public static final String NAMED = "named";
+	public static final String NAMED = "named";
 	public static final String GLOBAL = "global";  // same as Procedure, Unit Procedure
 	public static final String OPERATION = "operation";	
 	public static final String PHASE = "phase";
