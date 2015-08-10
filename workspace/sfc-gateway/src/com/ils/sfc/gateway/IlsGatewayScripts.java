@@ -326,12 +326,6 @@ public class IlsGatewayScripts {
 		return (String)topScope.get("chartPath");
 	}
 
-	public static String getFullStepName(PyChartScope chartScope, PyChartScope stepScope) {
-		String stepName = (String)stepScope.get("name");
-		String chartName = (String)chartScope.get("chartPath");
-		return chartName + ":" + stepName;
-	}
-	
 	public static String getJSONForScope(PyChartScope scope) throws JSONException {
 		JSONObject jsonObject = Data.fromStepScope(scope);
 		return jsonObject.toString();
@@ -379,15 +373,6 @@ public class IlsGatewayScripts {
 	
 	public static Object dropboxGet(String chartRunId, String objectId) {
 		return ilsSfcGatewayHook.getDropBox().get(chartRunId, objectId);
-	}
-	
-	// New recipe data stuff
-	
-	private static void sendMessageToClient(String project, String handler, PyDictionary resultPayload) {
-		Properties properties = new Properties();
-		properties.setProperty("scope", "C");
-		MessageDispatchManager msgMgr = ilsSfcGatewayHook.getContext().getMessageDispatchManager();
-		msgMgr.dispatch(project, handler, resultPayload, properties);
 	}
 	
 	public static String getRecipeDataTagPath(PyChartScope chartScope, PyChartScope stepScope, String scope) {

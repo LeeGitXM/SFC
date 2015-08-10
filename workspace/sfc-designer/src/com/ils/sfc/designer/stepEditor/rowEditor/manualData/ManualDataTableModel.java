@@ -50,7 +50,7 @@ private static final String[] columnNames = {"Key", "Destination", "Prompt", "Un
 				case 1: rowObj.destination = svalue;break;
 				case 2: rowObj.prompt = svalue;break;
 				case 3: rowObj.units = svalue;break;
-				case 4: rowObj.defaultValue = IlsProperty.parseDouble(svalue);break;
+				case 4: rowObj.defaultValue = IlsProperty.parseObjectValue(svalue, null);break;
 				case 5: rowObj.lowLimit = IlsProperty.parseDouble(svalue);break;
 				case 6: rowObj.highLimit = IlsProperty.parseDouble(svalue);break;
 			}
