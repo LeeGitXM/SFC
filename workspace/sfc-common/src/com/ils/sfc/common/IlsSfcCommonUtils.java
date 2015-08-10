@@ -180,16 +180,6 @@ public class IlsSfcCommonUtils {
 		return scope;
 	}
 	
-	/**
-	 * Use the toXML method of a chart step factory to create an
-	 * XML document. Client/designer scope.
-	 * @param csf ChartStepFactory for some particular step
-	 * @return a DOM document with its contents
-	 */
-	public Document chartStepToDocument(ClientStepFactory csf ) {
-		StringWriter  
-		
-	}
 	
 	public static void main(String[] args) {
 		/*
