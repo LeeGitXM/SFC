@@ -3,9 +3,6 @@ package com.ils.sfc.common;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -14,7 +11,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.sqlite.JDBC;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -24,6 +21,7 @@ import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.sfc.api.PyChartScope;
+import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** Misc. utilities that don't fit into any ILS class or superclass. */
@@ -181,6 +179,7 @@ public class IlsSfcCommonUtils {
 		}
 		return scope;
 	}
+	
 	
 	public static void main(String[] args) {
 		/*

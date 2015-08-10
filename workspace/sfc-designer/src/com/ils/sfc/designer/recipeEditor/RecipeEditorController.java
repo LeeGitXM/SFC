@@ -5,10 +5,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-
-import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.recipe.objects.Data;
@@ -18,7 +15,6 @@ import com.ils.sfc.designer.panels.PanelController;
 import com.ils.sfc.designer.panels.StringEditorPanel;
 import com.ils.sfc.designer.panels.TagBrowserPanel;
 import com.ils.sfc.designer.panels.UnitChooserPanel;
-import com.ils.sfc.designer.propertyEditor.PropertyTableModel;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
