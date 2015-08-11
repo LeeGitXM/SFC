@@ -225,6 +225,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void startup(DesignerContext ctx, LicenseState activationState) throws Exception {
 		this.context = ctx;
+		DesignerUtil.context = ctx;
         log.debug("IlsSfcDesignerHook.startup...");
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
 		recipeEditorFrame = new RecipeEditorFrame(ctx, iaSfcHook.getWorkspace());

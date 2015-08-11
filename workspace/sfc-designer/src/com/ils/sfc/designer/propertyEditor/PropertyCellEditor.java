@@ -11,6 +11,10 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
 
+import com.ils.sfc.designer.DesignerUtil;
+import com.inductiveautomation.sfc.designer.workspace.editors.ChartPathComboBox;
+import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
+
 /** A table cell editor for the property grid */
 @SuppressWarnings("serial")
 class PropertyCellEditor extends AbstractCellEditor implements TableCellEditor{
@@ -30,6 +34,9 @@ class PropertyCellEditor extends AbstractCellEditor implements TableCellEditor{
 			});
 			return component = combo;
 		}
+		else if(rowObj.getProperty().equals(EnclosingStepProperties.CHART_PATH)) {
+			return component = DesignerUtil.getChartPathComboBox();
+		}
 		else {
 			int alignment = factory.getHorizontalAlignment(col);
 			return component = factory.getComponentForValue(rowObj, alignment);
@@ -43,6 +50,11 @@ class PropertyCellEditor extends AbstractCellEditor implements TableCellEditor{
 		}
 	    else if(component instanceof JCheckBox) {
 	    	return Boolean.valueOf(((JCheckBox)component).isSelected()).toString();
+	    }
+	    else if(component instanceof ChartPathComboBox) {
+	    	Object selectedItem = ((ChartPathComboBox)component).getSelectedItem();
+	    	String selectedChartPath = ((ChartPathComboBox)component).getSelectedChartPath();
+	    	return selectedChartPath;
 	    }
 	    else if(component instanceof JComboBox) {
 	    	return ((JComboBox<Object>)component).getSelectedItem();

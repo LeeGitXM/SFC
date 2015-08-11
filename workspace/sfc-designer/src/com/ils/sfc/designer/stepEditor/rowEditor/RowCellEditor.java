@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
 
 import com.ils.sfc.designer.stepEditor.EditorUtil;
+import com.inductiveautomation.sfc.designer.workspace.editors.ChartPathComboBox;
 
 @SuppressWarnings("serial")
 public class RowCellEditor extends AbstractCellEditor implements TableCellEditor{
