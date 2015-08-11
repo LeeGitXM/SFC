@@ -58,7 +58,7 @@ attributes:sequence (structure (
 public abstract class Data {
 	private static LoggerEx logger = LogUtil.getLogger(Data.class.getName());
 	protected BasicPropertySet properties = new BasicPropertySet();
-	private Map<String, IlsProperty<?>> propertiesByName = new HashMap<String, IlsProperty<?>>();
+	private Map<String, BasicProperty<?>> propertiesByName = new HashMap<String, BasicProperty<?>>();
 	// id and parentId come from the G2 export and are used to re-compose a hierarchy:
 	protected String g2Id;
 	protected String parentG2Id;
@@ -99,7 +99,7 @@ public abstract class Data {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setValue(Property<?> property, Object value) {
-		IlsProperty myProperty = getProperty(property.getName());
+		BasicProperty myProperty = getProperty(property.getName());
 		if(myProperty != null) {
 			properties.set(myProperty, value);
 		}
@@ -134,13 +134,13 @@ public abstract class Data {
 
 	/** Add a property with the default value. */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void addProperty(IlsProperty property) {
+	protected void addProperty(BasicProperty property) {
 		propertiesByName.put(property.getName(), property);
 		properties.set(property, property.getDefaultValue());
 	}	
 
 	/** Get the property with the given name, or null if none. */
-	IlsProperty<?> getProperty(String propertyName) {
+	BasicProperty<?> getProperty(String propertyName) {
 		return propertiesByName.get(propertyName);
 	}
 	
@@ -260,7 +260,7 @@ public abstract class Data {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addDynamicProperty(String name, Object value) {
-		IlsProperty<?> newProperty = new IlsProperty(name, value.getClass(), value);
+		BasicProperty<?> newProperty = IlsProperty.createProperty(name, Object.class, value);
 		addProperty(newProperty);	
 	}
 	

@@ -23,6 +23,7 @@ import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.step.OperationStepDelegate;
 import com.ils.sfc.common.step.PhaseStepDelegate;
 import com.ils.sfc.common.step.ProcedureStepDelegate;
+import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
@@ -161,7 +162,7 @@ public class RecipeDataTranslator {
 	 *  unless this is a Structure in which case it will be created.  
 	 * @throws org.apache.wicket.ajax.json.JSONException */
 	public void setProperty(Data data, String name, String strValue) throws JSONException, org.apache.wicket.ajax.json.JSONException {		
-		IlsProperty<?> property = data.getProperty(name);
+		BasicProperty<?> property = data.getProperty(name);
 		
 		if(data instanceof RecipeList && property.equals(IlsProperty.NULLABLE_VALUE)) {
 			data.setValue(property, parseListValue(strValue));

@@ -63,7 +63,7 @@ public class CollectDataTableModel extends RowTableModel {
 
 	protected String[] getChoices(int row, int col) {
 		if(col == LOCATION_COLUMN) {
-			return IlsProperty.RECIPE_LOCATION.getChoices();
+			return IlsProperty.getChoices(IlsProperty.RECIPE_LOCATION);
 		}
 		else if(col == VALUE_TYPE_COLUMN) {
 			return Constants.COLLECT_DATA_VALUE_TYPE_CHOICES;

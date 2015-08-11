@@ -24,9 +24,9 @@ public class PropertyRow {
 
 	/** Create a user-friendly label for this property */
 	private String createDisplayLabel() {
-		if(propertyValue.getProperty() instanceof IlsProperty) {
-			IlsProperty<?> ilsProperty = (IlsProperty<?>)propertyValue.getProperty();
-			return ilsProperty.getLabel();
+		if(propertyValue.getProperty() instanceof BasicProperty) {
+			BasicProperty<?> prop = (BasicProperty<?>)propertyValue.getProperty();
+			return IlsProperty.getLabel(prop);
 		}
 		else {
 			return IlsProperty.labelize(propertyValue.getProperty().getName());
@@ -47,8 +47,8 @@ public class PropertyRow {
 				return null;
 			}
 		}
-		else if(propertyValue.getProperty() instanceof IlsProperty) {
-			return ((IlsProperty<?>)propertyValue.getProperty()).getChoices();
+		else if(propertyValue.getProperty() instanceof BasicProperty) {
+			return IlsProperty.getChoices((BasicProperty<?>)propertyValue.getProperty());
 		}
 		else {
 			return null;

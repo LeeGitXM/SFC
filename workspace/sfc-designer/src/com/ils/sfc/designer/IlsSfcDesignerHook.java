@@ -64,6 +64,7 @@ import com.ils.sfc.common.step.YesNoStepProperties;
 import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame;
 import com.ils.sfc.designer.search.IlsSfcSearchProvider;
 import com.ils.sfc.designer.stepEditor.IlsStepEditor;
+import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
@@ -302,7 +303,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         		if(field.getName().equals("properties")) {
         			Collection properties = (Collection)field.get(null);
         			for(Object o: properties) {
-        				IlsProperty property = (IlsProperty) o;
+        				Property property = (Property) o;
         				System.out.println(property.getName());
         			}
         		}

@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
+import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -25,9 +26,8 @@ import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	private static LoggerEx log = LogUtil.getLogger(AbstractIlsStepDelegate.class.getName());
-	private static final IlsProperty<?>[] commonProperties = {
-		com.ils.sfc.common.IlsProperty.DESCRIPTION, 
-		//com.ils.sfc.common.IlsProperty.AUDIT_LEVEL
+	private static final BasicProperty<?>[] commonProperties = {
+		IlsProperty.DESCRIPTION, 
 	};
 	private Property<?>[] orderedProperties;
 	
@@ -116,13 +116,14 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 
 	private void checkValueChoices(Property<?> property, String stepName,
 			Object value) {
-		if(property instanceof IlsProperty) {
-			IlsProperty iprop = (IlsProperty)property;
+		if(property instanceof BasicProperty) {
+			BasicProperty<?> iprop = (BasicProperty<?>)property;
 			// If the value is an enumeration, check that the assigned
 			// value is a member of the enumeration:
-			if(iprop.getChoices() != null) {
+			String[] choices = IlsProperty.getChoices(iprop);
+			if(choices != null) {
 				boolean valueIsChoice = false;
-				for(Object o: iprop.getChoices()) {
+				for(Object o: choices) {
 					if(o.equals(value)) {
 						valueIsChoice = true;
 						break;
