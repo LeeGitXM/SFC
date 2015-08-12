@@ -3,6 +3,8 @@ package com.ils.sfc.designer;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
+import javax.swing.border.EmptyBorder;
+
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.designer.workspace.editors.ChartPathComboBox;
@@ -14,6 +16,7 @@ public class DesignerUtil {
 		ChartPathComboBox cb = new ChartPathComboBox();
 		Project globalProject = context.getGlobalProject().getProject();
 		cb.initRoot(globalProject);
+		cb.setBorder(new EmptyBorder(0,0,0,0));
 		return cb;
 	}
 	
