@@ -1,6 +1,6 @@
 package com.ils.sfc.common.step;
 
-import com.ils.sfc.common.IlsProperty;
+import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 
 import static com.ils.sfc.common.IlsProperty.*;
@@ -12,7 +12,7 @@ import static com.ils.sfc.common.IlsProperty.*;
 public interface PrintWindowStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.printWindowStep";
 	
-    public static final IlsProperty<?>[] properties = {
+    public static final BasicProperty<?>[] properties = {
     	WINDOW,
     	SHOW_PRINT_DIALOG,
     	};

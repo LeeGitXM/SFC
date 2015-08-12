@@ -4,8 +4,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -20,12 +22,7 @@ import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 @SuppressWarnings("serial")
-public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializable {
-	private static LoggerEx logger = LogUtil.getLogger(IlsProperty.class.getName());
-	private int sortOrder;
-	private boolean isSerializedObject;
-	private String[] choices;
-	private String label;
+public class IlsProperty {
 	private static final String EMPTY_MONITOR_DOWNLOAD_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_CONFIRM_CONTROLLERS_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_MANUAL_DATA_CONFIG = "{\"rows\":[]}";
@@ -33,6 +30,22 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 	private static final String EMPTY_WRITE_OUTPUT_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_REVIEW_DATA_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_COLLECT_DATA_CONFIG = "{\"errorHandling\": \"" + Constants.DEFAULT_VALUE + "\", \"rows\":[]}";
+	
+	private static final Map<String, PropertyInfo> infoByName = new HashMap<String, PropertyInfo>();
+	
+	public static class PropertyInfo {
+		boolean isSerializedObject = false;
+		String[] choices;
+		String label;
+		
+		public PropertyInfo(boolean isSerializedObject, String[] choices,
+				String label) {
+			super();
+			this.isSerializedObject = isSerializedObject;
+			this.choices = choices;
+			this.label = label;
+		}
+	}
 	
 	// properties to omit from the editor
 	public static final Set<String> ignoreProperties = new HashSet<String>();
@@ -51,129 +64,129 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 		ignoreProperties.add("return-parameters");  // hide this for ILS encapsulations like Procedure
 	}
 
-    public static final IlsProperty<Boolean> ACK_REQUIRED = new IlsProperty<Boolean>(Constants.ACK_REQUIRED, Boolean.class, Boolean.FALSE);
-    public static final IlsProperty<String> ADVICE = new IlsProperty<String>(Constants.ADVICE, String.class, "");
-    public static final IlsProperty<String> ARRAY_KEY = new IlsProperty<String>(Constants.ARRAY_KEY, String.class, Constants.NONE);
+    public static final BasicProperty<Boolean> ACK_REQUIRED = createProperty(Constants.ACK_REQUIRED, Boolean.class, Boolean.FALSE);
+    public static final BasicProperty<String> ADVICE = createProperty(Constants.ADVICE, String.class, "");
+    public static final BasicProperty<String> ARRAY_KEY = createProperty(Constants.ARRAY_KEY, String.class, Constants.NONE);
     public static final BasicProperty<JSONObject> ASSOCIATED_DATA = new BasicProperty<JSONObject>(Constants.ASSOCIATED_DATA, JSONObject.class, null);
-    //public static final IlsProperty<String> AUDIT_LEVEL = new IlsProperty<String>(IlsSfcNames.AUDIT_LEVEL, String.class, IlsSfcNames.AUDIT_LEVEL_CHOICES[0], IlsSfcNames.AUDIT_LEVEL_CHOICES);
-    public static final IlsProperty<String> AUTO_MODE = new IlsProperty<String>(Constants.AUTO_MODE, String.class, Constants.AUTO_MODE_CHOICES[0], Constants.AUTO_MODE_CHOICES);
-    public static final IlsProperty<String> BUTTON_KEY = new IlsProperty<String>(Constants.BUTTON_KEY, String.class, "");
-    public static final IlsProperty<String> BUTTON_KEY_LOCATION = new IlsProperty<String>(Constants.BUTTON_KEY_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
-    public static final IlsProperty<String> BUTTON_LABEL = new IlsProperty<String>(Constants.BUTTON_LABEL, String.class, "");
-    public static final IlsProperty<String> CALLBACK = new IlsProperty<String>(Constants.CALLBACK, String.class, "");
-    public static final IlsProperty<String> CATEGORY = new IlsProperty<String>(Constants.CATEGORY, String.class, "");
-    public static final IlsProperty<String> CHOICES_RECIPE_LOCATION = new IlsProperty<String>(Constants.CHOICES_RECIPE_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
-    public static final IlsProperty<String> CHOICES_KEY = new IlsProperty<String>(Constants.CHOICES_KEY, String.class, "");
-    public static final IlsProperty<String> CLASS = new IlsProperty<String>(Constants.CLASS, String.class, "");
-    public static final IlsProperty<String> COLLECT_DATA_CONFIG = new IlsProperty<String>(Constants.COLLECT_DATA_CONFIG, String.class, EMPTY_COLLECT_DATA_CONFIG, true, Constants.CONFIG);
-    public static final IlsProperty<String> CONFIRM_CONTROLLERS_CONFIG = new IlsProperty<String>(Constants.CONFIRM_CONTROLLERS_CONFIG, String.class, EMPTY_CONFIRM_CONTROLLERS_CONFIG, true, Constants.CONFIG);
-    public static final IlsProperty<Integer> COLUMNS = new IlsProperty<Integer>(Constants.COLUMNS, Integer.class, 0);
-    public static final IlsProperty<String> COLUMN_KEY = new IlsProperty<String>(Constants.COLUMN_KEY, String.class, Constants.NONE);
-    public static final IlsProperty<Boolean> COLUMN_KEYED = new IlsProperty<Boolean>(Constants.COLUMN_KEYED, Boolean.class, Boolean.FALSE);
-    public static final IlsProperty<String> COMPUTER = new IlsProperty<String>(Constants.COMPUTER, String.class, Constants.COMPUTER_CHOICES[0], Constants.COMPUTER_CHOICES);
-    public static final IlsProperty<String> DATA_ID = new IlsProperty<String>(Constants.DATA_ID, String.class, "");
-    public static final IlsProperty<String> DATA_LOCATION = new IlsProperty<String>(Constants.DATA_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
-    public static final IlsProperty<Double> DELAY = new IlsProperty<Double>(Constants.DELAY, Double.class, 0.);
-    public static final IlsProperty<String> DELAY_UNIT = new IlsProperty<String>(Constants.DELAY_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);  
-    public static final IlsProperty<String> DESCRIPTION = new IlsProperty<String>(Constants.DESCRIPTION, String.class, "");
-    public static final IlsProperty<String> DIALOG = new IlsProperty<String>(Constants.DIALOG, String.class, "");
-    public static final IlsProperty<String> DIRECTORY = new IlsProperty<String>(Constants.DIRECTORY, String.class, "");
-    public static final IlsProperty<Boolean> DOWNLOAD = new IlsProperty<Boolean>(Constants.DOWNLOAD, Boolean.class, Boolean.TRUE);
-    public static final IlsProperty<String> DOWNLOAD_STATUS = new IlsProperty<String>(Constants.DOWNLOAD_STATUS, String.class, "");
-    public static final IlsProperty<Integer> ELEMENTS = new IlsProperty<Integer>(Constants.ELEMENTS, Integer.class, 0);
-    public static final IlsProperty<Boolean> ENABLE_PAUSE = new IlsProperty<Boolean>(Constants.ENABLE_PAUSE, Boolean.class, Boolean.TRUE);
-    public static final IlsProperty<Boolean> ENABLE_RESUME = new IlsProperty<Boolean>(Constants.ENABLE_RESUME, Boolean.class, Boolean.TRUE);
-    public static final IlsProperty<Boolean> ENABLE_CANCEL = new IlsProperty<Boolean>(Constants.ENABLE_CANCEL, Boolean.class, Boolean.TRUE);
-    public static final IlsProperty<Double> ERROR_CODE = new IlsProperty<Double>(Constants.ERROR_CODE, Double.class, 0.);
-    public static final IlsProperty<String> ERROR_TEXT = new IlsProperty<String>(Constants.ERROR_TEXT, String.class, "");
-    public static final IlsProperty<String> EXTENSION = new IlsProperty<String>(Constants.EXTENSION, String.class, ".txt");
-    public static final IlsProperty<String> FACTORY_ID = new IlsProperty<String>("factory-id", String.class, "");
-    public static final IlsProperty<String> FETCH_MODE = new IlsProperty<String>(Constants.FETCH_MODE, String.class, Constants.FETCH_MODE_CHOICES[0], Constants.FETCH_MODE_CHOICES);
-    public static final IlsProperty<String> FILENAME = new IlsProperty<String>(Constants.FILENAME, String.class, "");
-    public static final IlsProperty<String> HELP = new IlsProperty<String>(Constants.HELP, String.class, "");
-    public static final IlsProperty<Double> HIGH_LIMIT = new IlsProperty<Double>(Constants.HIGH_LIMIT, Double.class, null);
-    public static final IlsProperty<String> ID = new IlsProperty<String>(Constants.ID, String.class, null);
-    public static final IlsProperty<String> JSON_LIST = new IlsProperty<String>(Constants.VALUE, String.class, "[0., 0.]");
-    public static final IlsProperty<String> JSON_MATRIX = new IlsProperty<String>(Constants.VALUE, String.class, "[0., 0.][0., 0.]");
-    public static final IlsProperty<String> JSON_OBJECT = new IlsProperty<String>(Constants.VALUE, String.class, "{}", true);
-    public static final IlsProperty<String> KEY = new IlsProperty<String>(Constants.KEY, String.class, "");
-    public static final IlsProperty<Boolean> KEYED = new IlsProperty<Boolean>(Constants.KEYED, Boolean.class, Boolean.FALSE);
-    public static final IlsProperty<String> KEY_MODE = new IlsProperty<String>(Constants.KEY_MODE, String.class, "", Constants.KEY_MODE_CHOICES);
-    public static final IlsProperty<String> LABEL = new IlsProperty<String>(Constants.LABEL, String.class, "");
-    public static final IlsProperty<Double> LOW_LIMIT = new IlsProperty<Double>(Constants.LOW_LIMIT, Double.class, null);
-    public static final IlsProperty<Double> MAX_TIMING = new IlsProperty<Double>(Constants.MAX_TIMING, Double.class, 0.);
-    public static final IlsProperty<Double> MAXIMUM_VALUE = new IlsProperty<Double>(Constants.MAXIMUM_VALUE, Double.class, 0.);
-    public static final IlsProperty<String> MESSAGE = new IlsProperty<String>(Constants.MESSAGE, String.class, "");
-    public static final IlsProperty<String> MESSAGE_QUEUE = new IlsProperty<String>(Constants.MESSAGE_QUEUE, String.class, Constants.DEFAULT_MESSAGE_QUEUE);
-    public static final IlsProperty<String> METHOD = new IlsProperty<String>(Constants.METHOD, String.class, "");
-    public static final IlsProperty<Double> MINIMUM_VALUE = new IlsProperty<Double>(Constants.MINIMUM_VALUE, Double.class, 0.);
-    public static final IlsProperty<String> MANUAL_DATA_CONFIG = new IlsProperty<String>(Constants.MANUAL_DATA_CONFIG, String.class, EMPTY_MONITOR_DOWNLOAD_CONFIG, true, Constants.CONFIG);
-    public static final IlsProperty<String> MANUAL_DATA_POSTING_METHOD = new IlsProperty<String>(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.manualDataEntry.defaultPostingMethod");
-    public static final IlsProperty<String> MANUAL_DATA_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class, Constants.SFC_MANUAL_DATA_WINDOW, false);
-    public static final IlsProperty<String> MONITOR_DOWNLOADS_CONFIG = new IlsProperty<String>(Constants.MONITOR_DOWNLOADS_CONFIG, String.class, EMPTY_MANUAL_DATA_CONFIG, true, Constants.CONFIG);
-    public static final IlsProperty<String> MONITOR_DOWNLOADS_POSTING_METHOD = new IlsProperty<String>(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.manualDataEntry.defaultPostingMethod");
-    public static final IlsProperty<String> MONITOR_DOWNLOADS_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class, Constants.SFC_MANUAL_DATA_WINDOW, false);
+    //public static final BasicProperty<String> AUDIT_LEVEL = createProperty(IlsSfcNames.AUDIT_LEVEL, String.class, IlsSfcNames.AUDIT_LEVEL_CHOICES[0], IlsSfcNames.AUDIT_LEVEL_CHOICES);
+    public static final BasicProperty<String> AUTO_MODE = createProperty(Constants.AUTO_MODE, String.class, Constants.AUTO_MODE_CHOICES[0], Constants.AUTO_MODE_CHOICES);
+    public static final BasicProperty<String> BUTTON_KEY = createProperty(Constants.BUTTON_KEY, String.class, "");
+    public static final BasicProperty<String> BUTTON_KEY_LOCATION = createProperty(Constants.BUTTON_KEY_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
+    public static final BasicProperty<String> BUTTON_LABEL = createProperty(Constants.BUTTON_LABEL, String.class, "");
+    public static final BasicProperty<String> CALLBACK = createProperty(Constants.CALLBACK, String.class, "");
+    public static final BasicProperty<String> CATEGORY = createProperty(Constants.CATEGORY, String.class, "");
+    public static final BasicProperty<String> CHOICES_RECIPE_LOCATION = createProperty(Constants.CHOICES_RECIPE_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
+    public static final BasicProperty<String> CHOICES_KEY = createProperty(Constants.CHOICES_KEY, String.class, "");
+    public static final BasicProperty<String> CLASS = createProperty(Constants.CLASS, String.class, "");
+    public static final BasicProperty<String> COLLECT_DATA_CONFIG = createProperty(Constants.COLLECT_DATA_CONFIG, String.class, EMPTY_COLLECT_DATA_CONFIG, true, Constants.CONFIG);
+    public static final BasicProperty<String> CONFIRM_CONTROLLERS_CONFIG = createProperty(Constants.CONFIRM_CONTROLLERS_CONFIG, String.class, EMPTY_CONFIRM_CONTROLLERS_CONFIG, true, Constants.CONFIG);
+    public static final BasicProperty<Integer> COLUMNS = createProperty(Constants.COLUMNS, Integer.class, 0);
+    public static final BasicProperty<String> COLUMN_KEY = createProperty(Constants.COLUMN_KEY, String.class, Constants.NONE);
+    public static final BasicProperty<Boolean> COLUMN_KEYED = createProperty(Constants.COLUMN_KEYED, Boolean.class, Boolean.FALSE);
+    public static final BasicProperty<String> COMPUTER = createProperty(Constants.COMPUTER, String.class, Constants.COMPUTER_CHOICES[0], Constants.COMPUTER_CHOICES);
+    public static final BasicProperty<String> DATA_ID = createProperty(Constants.DATA_ID, String.class, "");
+    public static final BasicProperty<String> DATA_LOCATION = createProperty(Constants.DATA_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
+    public static final BasicProperty<Double> DELAY = createProperty(Constants.DELAY, Double.class, 0.);
+    public static final BasicProperty<String> DELAY_UNIT = createProperty(Constants.DELAY_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);  
+    public static final BasicProperty<String> DESCRIPTION = createProperty(Constants.DESCRIPTION, String.class, "");
+    public static final BasicProperty<String> DIALOG = createProperty(Constants.DIALOG, String.class, "");
+    public static final BasicProperty<String> DIRECTORY = createProperty(Constants.DIRECTORY, String.class, "");
+    public static final BasicProperty<Boolean> DOWNLOAD = createProperty(Constants.DOWNLOAD, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<String> DOWNLOAD_STATUS = createProperty(Constants.DOWNLOAD_STATUS, String.class, "");
+    public static final BasicProperty<Integer> ELEMENTS = createProperty(Constants.ELEMENTS, Integer.class, 0);
+    public static final BasicProperty<Boolean> ENABLE_PAUSE = createProperty(Constants.ENABLE_PAUSE, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<Boolean> ENABLE_RESUME = createProperty(Constants.ENABLE_RESUME, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<Boolean> ENABLE_CANCEL = createProperty(Constants.ENABLE_CANCEL, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<Double> ERROR_CODE = createProperty(Constants.ERROR_CODE, Double.class, 0.);
+    public static final BasicProperty<String> ERROR_TEXT = createProperty(Constants.ERROR_TEXT, String.class, "");
+    public static final BasicProperty<String> EXTENSION = createProperty(Constants.EXTENSION, String.class, ".txt");
+    public static final BasicProperty<String> FACTORY_ID = createProperty("factory-id", String.class, "");
+    public static final BasicProperty<String> FETCH_MODE = createProperty(Constants.FETCH_MODE, String.class, Constants.FETCH_MODE_CHOICES[0], Constants.FETCH_MODE_CHOICES);
+    public static final BasicProperty<String> FILENAME = createProperty(Constants.FILENAME, String.class, "");
+    public static final BasicProperty<String> HELP = createProperty(Constants.HELP, String.class, "");
+    public static final BasicProperty<Double> HIGH_LIMIT = createProperty(Constants.HIGH_LIMIT, Double.class, null);
+    public static final BasicProperty<String> ID = createProperty(Constants.ID, String.class, null);
+    public static final BasicProperty<String> JSON_LIST = createProperty(Constants.VALUE, String.class, "[0., 0.]");
+    public static final BasicProperty<String> JSON_MATRIX = createProperty(Constants.VALUE, String.class, "[0., 0.][0., 0.]");
+    public static final BasicProperty<String> JSON_OBJECT = createProperty(Constants.VALUE, String.class, "{}", true);
+    public static final BasicProperty<String> KEY = createProperty(Constants.KEY, String.class, "");
+    public static final BasicProperty<Boolean> KEYED = createProperty(Constants.KEYED, Boolean.class, Boolean.FALSE);
+    public static final BasicProperty<String> KEY_MODE = createProperty(Constants.KEY_MODE, String.class, "", Constants.KEY_MODE_CHOICES);
+    public static final BasicProperty<String> LABEL = createProperty(Constants.LABEL, String.class, "");
+    public static final BasicProperty<Double> LOW_LIMIT = createProperty(Constants.LOW_LIMIT, Double.class, null);
+    public static final BasicProperty<Double> MAX_TIMING = createProperty(Constants.MAX_TIMING, Double.class, 0.);
+    public static final BasicProperty<Double> MAXIMUM_VALUE = createProperty(Constants.MAXIMUM_VALUE, Double.class, 0.);
+    public static final BasicProperty<String> MESSAGE = createProperty(Constants.MESSAGE, String.class, "");
+    public static final BasicProperty<String> MESSAGE_QUEUE = createProperty(Constants.MESSAGE_QUEUE, String.class, Constants.DEFAULT_MESSAGE_QUEUE);
+    public static final BasicProperty<String> METHOD = createProperty(Constants.METHOD, String.class, "");
+    public static final BasicProperty<Double> MINIMUM_VALUE = createProperty(Constants.MINIMUM_VALUE, Double.class, 0.);
+    public static final BasicProperty<String> MANUAL_DATA_CONFIG = createProperty(Constants.MANUAL_DATA_CONFIG, String.class, EMPTY_MONITOR_DOWNLOAD_CONFIG, true, Constants.CONFIG);
+    public static final BasicProperty<String> MANUAL_DATA_POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.manualDataEntry.defaultPostingMethod");
+    public static final BasicProperty<String> MANUAL_DATA_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_MANUAL_DATA_WINDOW, false);
+    public static final BasicProperty<String> MONITOR_DOWNLOADS_CONFIG = createProperty(Constants.MONITOR_DOWNLOADS_CONFIG, String.class, EMPTY_MANUAL_DATA_CONFIG, true, Constants.CONFIG);
+    public static final BasicProperty<String> MONITOR_DOWNLOADS_POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.manualDataEntry.defaultPostingMethod");
+    public static final BasicProperty<String> MONITOR_DOWNLOADS_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_MANUAL_DATA_WINDOW, false);
 	public static final BasicProperty<String> NAME = new BasicProperty<String>(Constants.NAME, String.class);
-    public static final IlsProperty<Object> NULLABLE_VALUE = new IlsProperty<Object>(Constants.VALUE, Object.class, null);
-    public static final IlsProperty<Object> OUTPUT_VALUE_TYPE = new IlsProperty<Object>(Constants.VALUE_TYPE, Object.class, Constants.OUTPUT_VALUE_TYPE_CHOICES[0], Constants.OUTPUT_VALUE_TYPE_CHOICES);
-    public static final IlsProperty<String> POSITION = new IlsProperty<String>(Constants.POSITION, String.class, Constants.POSITION_CHOICES[0], Constants.POSITION_CHOICES);
-    public static final IlsProperty<Boolean> POST_NOTIFICATION = new IlsProperty<Boolean>(Constants.POST_NOTIFICATION, Boolean.class, Boolean.FALSE);
-    public static final IlsProperty<Boolean> POST_TO_QUEUE = new IlsProperty<Boolean>(Constants.POST_TO_QUEUE, Boolean.class, Boolean.FALSE);
-    public static final IlsProperty<String> PRIMARY_REVIEW_DATA = new IlsProperty<String>(Constants.PRIMARY_REVIEW_DATA, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "primary data");
-    public static final IlsProperty<String> PRIMARY_REVIEW_DATA_WITH_ADVICE = new IlsProperty<String>(Constants.PRIMARY_REVIEW_DATA_WITH_ADVICE, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "primary data");
-    public static final IlsProperty<String> PRIMARY_TAB_LABEL = new IlsProperty<String>(Constants.PRIMARY_TAB_LABEL, String.class, "Primary");
-    public static final IlsProperty<String> PROMPT = new IlsProperty<String>(Constants.PROMPT, String.class, "");
-    public static final IlsProperty<Boolean> PRINT_FILE = new IlsProperty<Boolean>(Constants.PRINT_FILE, Boolean.class, Boolean.TRUE);
-    public static final IlsProperty<String> PRIORITY = new IlsProperty<String>(Constants.PRIORITY, String.class, Constants.PRIORITY_CHOICES[0], Constants.PRIORITY_CHOICES);
-    public static final IlsProperty<String> PV_MONITOR_STATUS = new IlsProperty<String>(Constants.PV_MONITOR_STATUS, String.class, "");
-    public static final IlsProperty<String> PV_MONITOR_ACTIVE = new IlsProperty<String>(Constants.PV_MONITOR_ACTIVE, String.class, "");
-    public static final IlsProperty<Double> PV_VALUE = new IlsProperty<Double>(Constants.PV_VALUE, Double.class, 0.);
-    public static final IlsProperty<String> PV_MONITOR_CONFIG = new IlsProperty<String>(Constants.PV_MONITOR_CONFIG, String.class, EMPTY_PV_MONITOR_CONFIG, true, Constants.CONFIG);
-    public static final IlsProperty<String> QUEUE = new IlsProperty<String>(Constants.QUEUE, String.class, "");
-    public static final IlsProperty<Double> RAMP_TIME = new IlsProperty<Double>(Constants.RAMP_TIME, Double.class, 5.);
-    public static final IlsProperty<String> RECIPE_LOCATION = new IlsProperty<String>(Constants.RECIPE_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
-    public static final IlsProperty<Boolean> REQUIRE_INPUTS = new IlsProperty<Boolean>(Constants.REQUIRE_INPUTS, Boolean.class, Boolean.TRUE);
-    public static final IlsProperty<String> RESULTS_MODE = new IlsProperty<String>(Constants.RESULTS_MODE, String.class, Constants.RESULTS_MODE_CHOICES[0], Constants.RESULTS_MODE_CHOICES);
-    public static final IlsProperty<String> REVIEW_DATA_POSTING_METHOD = new IlsProperty<String>(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.reviewData.defaultPostingMethod");
-    public static final IlsProperty<String> REVIEW_DATA_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class, Constants.SFC_REVIEW_DATA_WINDOW, false);
-    public static final IlsProperty<String> REVIEW_FLOWS_WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class, Constants.SFC_REVIEW_FLOWS_WINDOW, false);
-    public static final IlsProperty<String> REVIEW_FLOWS_POSTING_METHOD = new IlsProperty<String>(Constants.POSTING_METHOD, String.class, "");
-    public static final IlsProperty<Integer> ROWS = new IlsProperty<Integer>(Constants.ROWS, Integer.class, 0);
-    public static final IlsProperty<String> ROW_KEY = new IlsProperty<String>(Constants.ROW_KEY, String.class, Constants.NONE);
-    public static final IlsProperty<Boolean> ROW_KEYED = new IlsProperty<Boolean>(Constants.ROW_KEYED, Boolean.class, Boolean.FALSE);
-    public static final IlsProperty<String> SECURITY = new IlsProperty<String>(Constants.SECURITY, String.class, Constants.SECURITY_CHOICES[0], Constants.SECURITY_CHOICES);
-    public static final IlsProperty<String> SECONDARY_REVIEW_DATA = new IlsProperty<String>(Constants.SECONDARY_REVIEW_DATA, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "secondary data");
-    public static final IlsProperty<String> SECONDARY_REVIEW_DATA_WITH_ADVICE = new IlsProperty<String>(Constants.SECONDARY_REVIEW_DATA_WITH_ADVICE, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "secondary data");
-    public static final IlsProperty<String> SECONDARY_TAB_LABEL = new IlsProperty<String>(Constants.SECONDARY_TAB_LABEL, String.class, "Secondary");
-    public static final IlsProperty<Boolean> SHOW_PRINT_DIALOG = new IlsProperty<Boolean>(Constants.SHOW_PRINT_DIALOG, Boolean.class, Boolean.TRUE);
-    public static final IlsProperty<String> SQL = new IlsProperty<String>(Constants.SQL, String.class, "");
-    public static final IlsProperty<Double> STEP_TIME = new IlsProperty<Double>(Constants.STEP_TIME, Double.class, 0.);
-    public static final IlsProperty<String> STEP_TIMESTAMP = new IlsProperty<String>(Constants.STEP_TIMESTAMP, String.class, "");
-    public static final IlsProperty<String> TAG_PATH = new IlsProperty<String>(Constants.TAG_PATH, String.class, "");
-    public static final IlsProperty<String> TIME_DELAY_STRATEGY = new IlsProperty<String>(Constants.STRATEGY, String.class, Constants.TIME_DELAY_STRATEGY_CHOICES[0], Constants.TIME_DELAY_STRATEGY_CHOICES);
-    public static final IlsProperty<String> TIME_LIMIT_STRATEGY = new IlsProperty<String>(Constants.STRATEGY, String.class, Constants.TIME_LIMIT_STRATEGY_CHOICES[0], Constants.TIME_LIMIT_STRATEGY_CHOICES);
-    public static final IlsProperty<Double> TIMING = new IlsProperty<Double>(Constants.TIMING, Double.class, 0.);
-    public static final IlsProperty<String> RECIPE_STATIC_STRATEGY = new IlsProperty<String>(Constants.STRATEGY, String.class, Constants.RECIPE_STATIC_STRATEGY_CHOICES[0], Constants.RECIPE_STATIC_STRATEGY_CHOICES);
-    public static final IlsProperty<Double> SCALE = new IlsProperty<Double>(Constants.SCALE, Double.class, .5);
-    public static final IlsProperty<Double> TARGET_VALUE = new IlsProperty<Double>(Constants.TARGET_VALUE, Double.class, 0.);
-    public static final IlsProperty<Integer> TIMEOUT = new IlsProperty<Integer>(Constants.TIMEOUT, Integer.class, -1);
-    public static final IlsProperty<String> TIMEOUT_UNIT = new IlsProperty<String>(Constants.TIMEOUT_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);
-    public static final IlsProperty<Boolean> TIMER_CLEAR = new IlsProperty<Boolean>(Constants.TIMER_CLEAR, Boolean.class, Boolean.TRUE);
-    public static final IlsProperty<String> TIMER_KEY = new IlsProperty<String>(Constants.TIMER_KEY, String.class, "");
-    public static final IlsProperty<String> TIMER_LOCATION = new IlsProperty<String>(Constants.TIMER_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
-    public static final IlsProperty<Boolean> TIMER_SET = new IlsProperty<Boolean>(Constants.TIMER_SET, Boolean.class, Boolean.FALSE);
-    public static final IlsProperty<Boolean> TIMESTAMP = new IlsProperty<Boolean>(Constants.TIMESTAMP, Boolean.class, Boolean.TRUE);
-    public static final IlsProperty<String> TYPE = new IlsProperty<String>(Constants.TYPE, String.class, "");
-    public static final IlsProperty<String> UNITS = new IlsProperty<String>(Constants.UNITS, String.class, "");
-    public static final IlsProperty<Double> UPDATE_FREQUENCY = new IlsProperty<Double>(Constants.UPDATE_FREQUENCY, Double.class, 10.);
-    public static final IlsProperty<Object> NON_NULL_VALUE = new IlsProperty<Object>(Constants.VALUE, Object.class, "");
-    public static final IlsProperty<Boolean> VERBOSE = new IlsProperty<Boolean>(Constants.VERBOSE, Boolean.class, Boolean.TRUE);
-    public static final IlsProperty<Boolean> VIEW_FILE = new IlsProperty<Boolean>(Constants.VIEW_FILE, Boolean.class, Boolean.TRUE);
-    public static final IlsProperty<String> WINDOW = new IlsProperty<String>(Constants.WINDOW, String.class, "");
-    public static final IlsProperty<String> WINDOW_TITLE = new IlsProperty<String>(Constants.WINDOW_TITLE, String.class, "");
-    public static final IlsProperty<Boolean> WRITE_CONFIRM = new IlsProperty<Boolean>(Constants.WRITE_CONFIRM, Boolean.class, Boolean.TRUE);
-    public static final IlsProperty<Boolean> WRITE_CONFIRMED = new IlsProperty<Boolean>(Constants.WRITE_CONFIRMED, Boolean.class, Boolean.TRUE);
-    public static final IlsProperty<String> WRITE_OUTPUT_CONFIG = new IlsProperty<String>(Constants.WRITE_OUTPUT_CONFIG, String.class, EMPTY_WRITE_OUTPUT_CONFIG, true, Constants.CONFIG);
+    public static final BasicProperty<Object> NULLABLE_VALUE = createProperty(Constants.VALUE, Object.class, null);
+    public static final BasicProperty<Object> OUTPUT_VALUE_TYPE = createProperty(Constants.VALUE_TYPE, Object.class, Constants.OUTPUT_VALUE_TYPE_CHOICES[0], Constants.OUTPUT_VALUE_TYPE_CHOICES);
+    public static final BasicProperty<String> POSITION = createProperty(Constants.POSITION, String.class, Constants.POSITION_CHOICES[0], Constants.POSITION_CHOICES);
+    public static final BasicProperty<Boolean> POST_NOTIFICATION = createProperty(Constants.POST_NOTIFICATION, Boolean.class, Boolean.FALSE);
+    public static final BasicProperty<Boolean> POST_TO_QUEUE = createProperty(Constants.POST_TO_QUEUE, Boolean.class, Boolean.FALSE);
+    public static final BasicProperty<String> PRIMARY_REVIEW_DATA = createProperty(Constants.PRIMARY_REVIEW_DATA, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "primary data");
+    public static final BasicProperty<String> PRIMARY_REVIEW_DATA_WITH_ADVICE = createProperty(Constants.PRIMARY_REVIEW_DATA_WITH_ADVICE, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "primary data");
+    public static final BasicProperty<String> PRIMARY_TAB_LABEL = createProperty(Constants.PRIMARY_TAB_LABEL, String.class, "Primary");
+    public static final BasicProperty<String> PROMPT = createProperty(Constants.PROMPT, String.class, "");
+    public static final BasicProperty<Boolean> PRINT_FILE = createProperty(Constants.PRINT_FILE, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<String> PRIORITY = createProperty(Constants.PRIORITY, String.class, Constants.PRIORITY_CHOICES[0], Constants.PRIORITY_CHOICES);
+    public static final BasicProperty<String> PV_MONITOR_STATUS = createProperty(Constants.PV_MONITOR_STATUS, String.class, "");
+    public static final BasicProperty<String> PV_MONITOR_ACTIVE = createProperty(Constants.PV_MONITOR_ACTIVE, String.class, "");
+    public static final BasicProperty<Double> PV_VALUE = createProperty(Constants.PV_VALUE, Double.class, 0.);
+    public static final BasicProperty<String> PV_MONITOR_CONFIG = createProperty(Constants.PV_MONITOR_CONFIG, String.class, EMPTY_PV_MONITOR_CONFIG, true, Constants.CONFIG);
+    public static final BasicProperty<String> QUEUE = createProperty(Constants.QUEUE, String.class, "");
+    public static final BasicProperty<Double> RAMP_TIME = createProperty(Constants.RAMP_TIME, Double.class, 5.);
+    public static final BasicProperty<String> RECIPE_LOCATION = createProperty(Constants.RECIPE_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
+    public static final BasicProperty<Boolean> REQUIRE_INPUTS = createProperty(Constants.REQUIRE_INPUTS, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<String> RESULTS_MODE = createProperty(Constants.RESULTS_MODE, String.class, Constants.RESULTS_MODE_CHOICES[0], Constants.RESULTS_MODE_CHOICES);
+    public static final BasicProperty<String> REVIEW_DATA_POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.reviewData.defaultPostingMethod");
+    public static final BasicProperty<String> REVIEW_DATA_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_REVIEW_DATA_WINDOW, false);
+    public static final BasicProperty<String> REVIEW_FLOWS_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_REVIEW_FLOWS_WINDOW, false);
+    public static final BasicProperty<String> REVIEW_FLOWS_POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, "");
+    public static final BasicProperty<Integer> ROWS = createProperty(Constants.ROWS, Integer.class, 0);
+    public static final BasicProperty<String> ROW_KEY = createProperty(Constants.ROW_KEY, String.class, Constants.NONE);
+    public static final BasicProperty<Boolean> ROW_KEYED = createProperty(Constants.ROW_KEYED, Boolean.class, Boolean.FALSE);
+    public static final BasicProperty<String> SECURITY = createProperty(Constants.SECURITY, String.class, Constants.SECURITY_CHOICES[0], Constants.SECURITY_CHOICES);
+    public static final BasicProperty<String> SECONDARY_REVIEW_DATA = createProperty(Constants.SECONDARY_REVIEW_DATA, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "secondary data");
+    public static final BasicProperty<String> SECONDARY_REVIEW_DATA_WITH_ADVICE = createProperty(Constants.SECONDARY_REVIEW_DATA_WITH_ADVICE, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "secondary data");
+    public static final BasicProperty<String> SECONDARY_TAB_LABEL = createProperty(Constants.SECONDARY_TAB_LABEL, String.class, "Secondary");
+    public static final BasicProperty<Boolean> SHOW_PRINT_DIALOG = createProperty(Constants.SHOW_PRINT_DIALOG, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<String> SQL = createProperty(Constants.SQL, String.class, "");
+    public static final BasicProperty<Double> STEP_TIME = createProperty(Constants.STEP_TIME, Double.class, 0.);
+    public static final BasicProperty<String> STEP_TIMESTAMP = createProperty(Constants.STEP_TIMESTAMP, String.class, "");
+    public static final BasicProperty<String> TAG_PATH = createProperty(Constants.TAG_PATH, String.class, "");
+    public static final BasicProperty<String> TIME_DELAY_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.TIME_DELAY_STRATEGY_CHOICES[0], Constants.TIME_DELAY_STRATEGY_CHOICES);
+    public static final BasicProperty<String> TIME_LIMIT_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.TIME_LIMIT_STRATEGY_CHOICES[0], Constants.TIME_LIMIT_STRATEGY_CHOICES);
+    public static final BasicProperty<Double> TIMING = createProperty(Constants.TIMING, Double.class, 0.);
+    public static final BasicProperty<String> RECIPE_STATIC_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.RECIPE_STATIC_STRATEGY_CHOICES[0], Constants.RECIPE_STATIC_STRATEGY_CHOICES);
+    public static final BasicProperty<Double> SCALE = createProperty(Constants.SCALE, Double.class, .5);
+    public static final BasicProperty<Double> TARGET_VALUE = createProperty(Constants.TARGET_VALUE, Double.class, 0.);
+    public static final BasicProperty<Integer> TIMEOUT = createProperty(Constants.TIMEOUT, Integer.class, -1);
+    public static final BasicProperty<String> TIMEOUT_UNIT = createProperty(Constants.TIMEOUT_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);
+    public static final BasicProperty<Boolean> TIMER_CLEAR = createProperty(Constants.TIMER_CLEAR, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<String> TIMER_KEY = createProperty(Constants.TIMER_KEY, String.class, "");
+    public static final BasicProperty<String> TIMER_LOCATION = createProperty(Constants.TIMER_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
+    public static final BasicProperty<Boolean> TIMER_SET = createProperty(Constants.TIMER_SET, Boolean.class, Boolean.FALSE);
+    public static final BasicProperty<Boolean> TIMESTAMP = createProperty(Constants.TIMESTAMP, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<String> TYPE = createProperty(Constants.TYPE, String.class, "");
+    public static final BasicProperty<String> UNITS = createProperty(Constants.UNITS, String.class, "");
+    public static final BasicProperty<Double> UPDATE_FREQUENCY = createProperty(Constants.UPDATE_FREQUENCY, Double.class, 10.);
+    public static final BasicProperty<Object> NON_NULL_VALUE = createProperty(Constants.VALUE, Object.class, "");
+    public static final BasicProperty<Boolean> VERBOSE = createProperty(Constants.VERBOSE, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<Boolean> VIEW_FILE = createProperty(Constants.VIEW_FILE, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<String> WINDOW = createProperty(Constants.WINDOW, String.class, "");
+    public static final BasicProperty<String> WINDOW_TITLE = createProperty(Constants.WINDOW_TITLE, String.class, "");
+    public static final BasicProperty<Boolean> WRITE_CONFIRM = createProperty(Constants.WRITE_CONFIRM, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<Boolean> WRITE_CONFIRMED = createProperty(Constants.WRITE_CONFIRMED, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<String> WRITE_OUTPUT_CONFIG = createProperty(Constants.WRITE_OUTPUT_CONFIG, String.class, EMPTY_WRITE_OUTPUT_CONFIG, true, Constants.CONFIG);
    
  // These are the names of toolkit properties that are to be stored in HSQLdb
  	public static final String TOOLKIT_PROPERTY_DATABASE            = "Database";           // Production database
@@ -181,54 +194,33 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
  	public static final String TOOLKIT_PROPERTY_PROVIDER            = "Provider";           // Production tag provider
  	public static final String TOOLKIT_PROPERTY_ISOLATION_PROVIDER  = "SecondaryProvider";  // Tag provider when in isolation
  	public static final String TOOLKIT_PROPERTY_ISOLATION_TIME      = "SecondaryTimeFactor";// Time speedup when in isolation
- 	
-    public IlsProperty() {}
-    
-	public IlsProperty(String name, Class<T> clazz, T defaultValue) {
-		super(name, clazz, defaultValue);
-		//if(defaultValue == null) {
-		//	throw new IllegalArgumentException("Null not allowed as a default value for JSON");
-		//}
+
+	public static <C> BasicProperty<C> createProperty(String name, Class<C> clazz, C defaultValue) {
+		return new BasicProperty<C>(name, clazz, defaultValue);
 	}
 
-	public IlsProperty(String name, Class<T> clazz, T defaultValue, boolean isSerializedObject, String label) {
-		this(name, clazz, defaultValue);
-		this.isSerializedObject = isSerializedObject;
-		this.label = label;
-	}
-	
-	public IlsProperty(String name, Class<T> clazz, T defaultValue, boolean isSerializedObject) {
-		this(name, clazz, defaultValue, isSerializedObject, null);
+	public static <C> BasicProperty<C> createProperty(String name, Class<C> clazz, C defaultValue, boolean isSerializedObject, String label) {
+		infoByName.put(name, new PropertyInfo(isSerializedObject, null, label));
+		return new BasicProperty<C>(name, clazz, defaultValue);
 	}
 
-	public IlsProperty(String name, Class<T> clazz, T defaultValue, String[] choices) {
-		this(name, clazz, defaultValue);
-		this.choices = choices;
+	public static <C> BasicProperty<C> createProperty(String name, Class<C> clazz, C defaultValue, boolean isSerializedObject) {
+		infoByName.put(name, new PropertyInfo(isSerializedObject, null, null));
+		return new BasicProperty<C>(name, clazz, defaultValue);
 	}
 
-	public int getSortOrder() {
-		return sortOrder;
+	public static <C> BasicProperty<C> createProperty(String name, Class<C> clazz, C defaultValue, String[] choices) {
+		infoByName.put(name, new PropertyInfo(false, choices, null));
+		return new BasicProperty<C>(name, clazz, defaultValue);
 	}
 
-	public void setSortOrder(int sortOrder) {
-		this.sortOrder = sortOrder;
-	}
-
-	public boolean isSerializedObject() {
-		return isSerializedObject;
-	}
-
-	public String[] getChoices() {
-		return choices;
-	}
-	
 	public static List<String> getAllPropertyNames() throws Exception {
 		List<String> allPropertyNames = new ArrayList<String>();
 		Field[] fields = IlsProperty.class.getFields();
 		for(Field field: fields) {
 			int modifiers = field.getModifiers();
 			if(field.getType() == IlsProperty.class && Modifier.isStatic(modifiers)) {
-				IlsProperty<?> property = (IlsProperty<?>)field.get(null);
+				BasicProperty<?> property = (BasicProperty<?>)field.get(null);
 				allPropertyNames.add(property.getName());
 			}
 		}
@@ -338,18 +330,27 @@ public class IlsProperty<T> extends BasicProperty<T> implements java.io.Serializ
 		return strValue;  // nothing else worked, just make it a string
 	}
 
+	public static String[] getChoices(Property<?> property) {
+		PropertyInfo info = infoByName.get(property.getName());
+		return info != null ? info.choices : null;
+	}
+	
 	public static boolean isSerializedObject(Property<?> property) {
-		return property instanceof IlsProperty && ((IlsProperty<?>)property).isSerializedObject();
+		PropertyInfo info = infoByName.get(property.getName());
+		return info != null ? info.isSerializedObject : false;
 	}
 	
 	/** Get the user-visible display string. Usually this is a munged version of the name,
 	 *  but sometimes a property has an explicit label. 
 	 */
-	public String getLabel() {
-		if(label == null) {
-			label = labelize(getName());
+	public static String getLabel(Property<?> property) {
+		PropertyInfo info = infoByName.get(property.getName());
+		if(info != null && info.label != null) {
+			return info.label;
 		}
-		return label;
+		else {
+			return labelize(property.getName());
+		}
 	}
 	
 	/** Create a human-friendly label from a camelcase name. */

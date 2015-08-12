@@ -1,6 +1,6 @@
 package com.ils.sfc.common.step;
 
-import com.ils.sfc.common.IlsProperty;
+import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 
 import static com.ils.sfc.common.IlsProperty.*;
@@ -12,5 +12,5 @@ import static com.ils.sfc.common.IlsProperty.*;
 public interface CollectDataStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.collectDataStep";
 	
-    public static final IlsProperty<?>[] properties = { COLLECT_DATA_CONFIG };
+    public static final BasicProperty<?>[] properties = { COLLECT_DATA_CONFIG };
 }

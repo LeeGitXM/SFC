@@ -29,14 +29,6 @@ public class RecipeDataAccess {
 		return resolvedStepPath;
 	}	
 
-	/** Get a text representation of all the recipe data for a particular scope. 
-	 * @throws JSONException */
-	public static String getRecipeDataText(PyChartScope chartScope, PyChartScope stepScope, 
-		String scopeIdentifier) {
-	// TODO: reimplement
-		return "";
-	}
-
 	public static boolean s88DataExists(PyChartScope chartScope,
 			PyChartScope stepScope, String path, String scopeIdentifier) {
 		String providerName = getProviderName(getIsolationMode(chartScope));

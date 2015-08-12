@@ -4,7 +4,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -113,32 +115,36 @@ public class PropertyTableModel extends AbstractTableModel {
 	public void setPropertyValues(BasicPropertySet propertyValues, Property<?>[] orderedPropertiesOrNull) {
 		this.propertyValues = propertyValues;		
 		rows.clear();
-		
-		for(PropertyValue<?> pValue: propertyValues.getValues()) {
-			String name = pValue.getProperty().getName();
-			if(name.equals("id")) {
-				stepId = pValue.getValue().toString();
-			}
-			if( !IlsProperty.ignoreProperties.contains(name)) {
-				PropertyRow newRow = new PropertyRow(pValue);
-				rows.add(newRow);				
-			}
-		}
-		
+				
 		if(orderedPropertiesOrNull != null) {
 			// order the properties in the order they are declared in the array--
-			// e.g. in the Step Properties definition
-			for(int i = 0; i < orderedPropertiesOrNull.length; i++) {
-				if(orderedPropertiesOrNull[i] instanceof IlsProperty) {
-					((IlsProperty<?>)orderedPropertiesOrNull[i]).setSortOrder(i);
-				}
+			Map<String, PropertyValue<?>> pvsByName = new HashMap<String, PropertyValue<?>>();
+			for(PropertyValue<?> pValue: propertyValues.getValues()) {
+				pvsByName.put(pValue.getProperty().getName(), pValue);
 			}
-			sortRowsInternal();
+			for(Property<?> prop: orderedPropertiesOrNull) {
+				PropertyValue<?> pval = pvsByName.get(prop.getName());
+				addPropertyValue(pval);
+			}
 		}
 		else{
+			for(PropertyValue<?> pValue: propertyValues.getValues()) {
+				addPropertyValue(pValue);
+			}
 			sortRowsAlphabetical();
 		}
 		fireTableStructureChanged();
+	}
+
+	private void addPropertyValue(PropertyValue<?> pValue) {
+		String name = pValue.getProperty().getName();
+		if(name.equals("id")) {
+			stepId = pValue.getValue().toString();
+		}
+		if( !IlsProperty.ignoreProperties.contains(name)) {
+			PropertyRow newRow = new PropertyRow(pValue);
+			rows.add(newRow);				
+		}
 	}
 
 	private void sortRowsAlphabetical() {
@@ -152,23 +158,4 @@ public class PropertyTableModel extends AbstractTableModel {
 		});
 	}
 
-	/** sort the rows in the order that the property array was declared */
-	private void sortRowsInternal() {
-		Collections.sort(rows, new Comparator<PropertyRow>() {
-			public int compare(PropertyRow o1, PropertyRow o2) {
-				if(!(o1.getProperty() instanceof IlsProperty)) {
-					return -1; // put IA properties first
-				}
-				else if(!(o2.getProperty() instanceof IlsProperty)) {
-					return 1;
-				}
-				else {
-					IlsProperty<?> p1 = (IlsProperty<?>) o1.getProperty();
-					IlsProperty<?> p2 = (IlsProperty<?>) o2.getProperty();
-					return Integer.compare(p1.getSortOrder(), p2.getSortOrder());
-				}
-			}
-			
-		});
-	}
 }
