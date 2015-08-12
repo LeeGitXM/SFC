@@ -16,13 +16,15 @@ public class JSONSearchCursor extends SearchObjectCursor {
 	private final DesignerContext context;
 	private final String key;
 	private final String parent;
+	private final long resourceId;
 	private Object value = null;
 	private int index = 0;
 
-	public JSONSearchCursor(DesignerContext ctx,String parentName,String keyName,Object val) {
+	public JSONSearchCursor(DesignerContext ctx,String parentName,long resid,String keyName,Object val) {
 		this.context = ctx;
 		this.key = keyName;
 		this.parent = parentName;
+		this.resourceId = resid;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.value = val;
 		this.index = 0;
@@ -33,34 +35,27 @@ public class JSONSearchCursor extends SearchObjectCursor {
 		// We expect the type to be a JSONObject or a simple
 		//log.infof("%s.next %d %s:%s",TAG,index,block.getName(),property.getName());
 		
-		if( index==0 ) {
-			so= new RecipeValueSearchObject(context,parent,key);
-		}
-		else if(index==1 ) {
-			// Test for a nested object
-			int subindex = 1;
-			if( value instanceof JSONObject ) {
-				Iterator<String> iter = ((JSONObject)value).keys();
-				while( iter.hasNext() ){
-					String k = iter.next();
-					if( subindex==index ) {
-						try {
-							so= new JSONSearchCursor(context,key,k,((JSONObject)value).get(k));
-						}
-						catch(JSONException jse) {
-							log.warnf("%s.next: Exception getting value for key ^%s (&%s)", TAG,k,jse.getLocalizedMessage());
-						}
-						break;
+		if( value instanceof JSONObject ) {
+			int subindex = 0;
+			Iterator<String> iter = ((JSONObject)value).keys();
+			while( iter.hasNext() ){
+				String k = iter.next();
+				if( subindex==index ) {
+					try {
+						so= new JSONSearchCursor(context,key,resourceId,k,((JSONObject)value).get(k));
 					}
-					subindex++;
+					catch(JSONException jse) {
+						log.warnf("%s.next: Exception getting value for key ^%s (&%s)", TAG,k,jse.getLocalizedMessage());
+					}
+					break;
 				}
+				subindex++;
 			}
-			else {
-				so= new RecipeValueSearchObject(context,key,value.toString());
-			}
-			subindex++;
 		}
-		
+		else if(index==0) {
+			so= new RecipeValueSearchObject(context,key,resourceId,value.toString());
+		}
+
 		index++;
 		return so;
 	}

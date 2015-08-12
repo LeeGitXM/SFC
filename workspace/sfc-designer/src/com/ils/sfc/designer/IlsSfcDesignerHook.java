@@ -25,6 +25,7 @@ import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
+import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.step.CancelStepProperties;
 import com.ils.sfc.common.step.ClearQueueStepProperties;
 import com.ils.sfc.common.step.CloseWindowStepProperties;
@@ -90,6 +91,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	//private SFCWorkspace sfcWorkspace;
 	//private JPopupMenu stepPopup;
 	private SFCDesignerHook iaSfcHook;
+	private ChartStructureManager structureManager = null;
 	private IlsSfcSearchProvider searchProvider = null;
 	private RecipeEditorFrame recipeEditorFrame;
 	
@@ -242,13 +244,17 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     		configRegistry.register(factoryId, editorFactory);
     	} 
     	IlsClientScripts.setContext(context);
-    	searchProvider = new IlsSfcSearchProvider(context,stepRegistry);
+    	// Provide a central repository for the structure of the charts
+    	structureManager = new ChartStructureManager(context,stepRegistry);
+    	searchProvider = new IlsSfcSearchProvider(context);
 		context.registerSearchProvider(searchProvider);
  	}
 	
 	@Override
 	public void shutdown() {	
 	}
+	
+	public ChartStructureManager getChartStructureManager() {return structureManager;}
 
 	// Search the menu tree to see if the same menu has been added by another module
 	private boolean menuExists(Frame frame,String title) {

@@ -4,13 +4,15 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
+import com.ils.sfc.common.IlsSfcModule;
+import com.ils.sfc.common.chartStructure.ChartStructureManager;
+import com.ils.sfc.designer.IlsSfcDesignerHook;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObjectCursor;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.api.XMLParseException;
-import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
 import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
@@ -27,41 +29,57 @@ public class ChartSearchCursor extends SearchObjectCursor {
 	private final String TAG = "ChartSearchCursor";
 	private final DesignerContext context;
 	private ChartDefinition chart = null; 
+	private String chartPath = null;
+	private String folderPath = null; 
 	private ElementDefinition element = null;
 	private final LoggerEx log;
-	private final ClientStepRegistry registry;
 	private final ProjectResource res;
+	private final int searchKey;
 	private int index = 0;
 	private int subindex = 0;
 	
-	public ChartSearchCursor(DesignerContext ctx,ClientStepRegistry reg,ProjectResource resource) {
+	public ChartSearchCursor(DesignerContext ctx,ProjectResource resource,int key) {
 		this.context = ctx;
-		this.registry = reg;
 		this.res = resource;
+		this.searchKey = key;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.index = 0;
+		log.infof("%s.new - res=%d",TAG,res.getResourceId());
 	}
 	@Override
 	public Object next() {
+		log.infof("%s.next - res=%d index=%d",TAG,res.getResourceId(),index);
 		Object so = null;   // Search Object
+		boolean browseChart = (searchKey&IlsSfcSearchProvider.SEARCH_CHART)!=0;
 		// Deserialize here - first time through only - return next block cursor
 		if( index==0 ) {
-			chart = deserializeResource(res);
-			so = new ChartNameSearchObject(context,res);
+			ChartStructureManager structureManager = ((IlsSfcDesignerHook)context.getModule(IlsSfcModule.MODULE_ID)).getChartStructureManager();
+			chart = structureManager.getChartDefinition(res.getResourceId());
+			if( chart==null ) {
+				log.infof("%s.next Failed to deserialize chart resource %s(%d)",TAG,res.getName(),res.getResourceId());
+				return null;
+			}
+			chartPath = structureManager.getChartPath(res.getResourceId());
+			folderPath = structureManager.getParentPath(res.getResourceId());
+		}
+		
+		if( index==0 && (searchKey&IlsSfcSearchProvider.SEARCH_CHART)!=0 ) {
+			
+			so = new ChartNameSearchObject(context,folderPath,res);
 			log.infof("%s.next %s",TAG,res.getName());
 		}
-		else if(index==1) {
+		else if(index==(browseChart?1:0) ) {
 			element = chart.getBeginElement();
 			if( element instanceof StepDefinition ) {
-				so = new StepSearchCursor(context,res.getName(),(StepDefinition) element);
+				so = new StepSearchCursor(context,chartPath,res.getResourceId(),(StepDefinition) element,searchKey);
 			}
 		}
 		else {
 			element = chart.getBeginElement();
-			subindex = 1;
+			subindex = (browseChart?1:0);
 			StepDefinition chosenElement = visitChildren(element); 
 			if( chosenElement!=null ) {
-				so = new StepSearchCursor(context,res.getName(),chosenElement);
+				so = new StepSearchCursor(context,chartPath,res.getResourceId(),chosenElement,searchKey);
 			}
 		}
 		index++;
@@ -78,32 +96,5 @@ public class ChartSearchCursor extends SearchObjectCursor {
 			}
 		}
 		return null;
-	}
-
-	private ChartDefinition deserializeResource(ProjectResource res) {
-		ChartDefinition definition = null;
-		try {
-			GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(res.getData()));
-			ChartUIModel chartModel = ChartUIModel.fromXML(xmlInput,registry );
-			ChartCompiler compiler = new ChartCompiler(chartModel,registry);
-			ChartCompilationResults ccr = compiler.compile();
-			if(ccr.isSuccessful()) {
-				definition = ccr.getChartDefinition();
-			}
-			else {
-				log.warnf("%s.deserializeResource: Chart %s has compilation errors", TAG,res.getName());
-			}
-		}
-		catch(IOException ioe ) {
-			log.warnf("%s.deserializeResource: IO Exception for %s (%s)", TAG,res.getName(),ioe.getLocalizedMessage());
-		}
-		catch(NumberFormatException nfe ) {
-			log.warnf("%s.deserializeResource: Chart instantiation error for %s (%s)", TAG,res.getName(),nfe.getLocalizedMessage());
-		}
-		catch(XMLParseException xpe ) {
-			log.warnf("%s.deserializeResource: Parse Exception for %s (%s)", TAG,res.getName(),xpe.getLocalizedMessage());
-		}
-
-		return definition;
 	}
 }

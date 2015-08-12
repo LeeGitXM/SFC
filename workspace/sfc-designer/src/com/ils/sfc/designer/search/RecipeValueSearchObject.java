@@ -1,7 +1,12 @@
 package com.ils.sfc.designer.search;
 
-import javax.swing.Icon;
+import java.util.ResourceBundle;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
+import com.ils.sfc.client.step.AbstractIlsStepUI;
+import com.inductiveautomation.ignition.client.util.gui.ErrorUtil;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 /**
@@ -14,16 +19,21 @@ public class RecipeValueSearchObject implements SearchObject {
 	private final DesignerContext context;
 	private final String parentName;
 	private final String property;
+	private final long resourceId;
+	private final ResourceBundle rb;
 	
-	public RecipeValueSearchObject(DesignerContext ctx,String parent,String prop) {
+	public RecipeValueSearchObject(DesignerContext ctx,String parent,long resid,String prop) {
 		this.context = ctx;
 		this.parentName = parent;
 		this.property = prop;
+		this.resourceId = resid;
+		this.rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
 	}
 	
 	@Override
 	public Icon getIcon() {
-		return null;
+		ImageIcon icon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/table.png"));
+		return icon;
 	}
 
 	@Override
@@ -43,13 +53,13 @@ public class RecipeValueSearchObject implements SearchObject {
 
 	@Override
 	public void locate() {
-		// TODO Auto-generated method stub
-		
+		ChartLocator locator = new ChartLocator(context);
+		locator.locate(resourceId);
 	}
 
 	@Override
 	public void setText(String arg0) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
+		ErrorUtil.showWarning(rb.getString("Locator.RecipeDataChangeWarning"), rb.getString("Locator.WarningTitle"));
 		
 	}
 }

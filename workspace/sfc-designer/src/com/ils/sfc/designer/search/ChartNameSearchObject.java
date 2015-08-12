@@ -1,54 +1,63 @@
 package com.ils.sfc.designer.search;
 
-import javax.swing.Icon;
+import java.util.ResourceBundle;
 
-import com.ils.sfc.common.IlsSfcModule;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+
+import com.ils.sfc.client.step.AbstractIlsStepUI;
+import com.inductiveautomation.ignition.client.util.gui.ErrorUtil;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 /**
- * Simply return the diagram name for editing.
+ * Simply return the chart name for editing.
  * @author chuckc
  *
  */
 public class ChartNameSearchObject implements SearchObject {
-	private final ProjectResource chart;
+
+	private final String parentPath;
+	private final ProjectResource chartResource;
 	private final DesignerContext context;
+	private final ResourceBundle rb;
 	
-	public ChartNameSearchObject(DesignerContext ctx,ProjectResource pr) {
+	public ChartNameSearchObject(DesignerContext ctx,String parent,ProjectResource pr) {
 		this.context = ctx;
-		this.chart = pr;
+		this.chartResource = pr;
+		this.parentPath = parent;
+		this.rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
 	}
 	@Override
 	public Icon getIcon() {
-		return null;
+		ImageIcon icon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/chart.png"));
+		return icon;
 	}
 
 	@Override
 	public String getName() {
-		return chart.getName();
+		return chartResource.getName();
 	}
 
 	@Override
 	public String getOwnerName() {
-		return IlsSfcModule.MODULE_NAME;
+		return parentPath;
 	}
 
 	@Override
 	public String getText() {
-		return chart.getName();
+		return chartResource.getName();
 	}
 
 	@Override
 	public void locate() {
-		// TODO Auto-generated method stub
-		
+		ChartLocator locator = new ChartLocator(context);
+		locator.locate(chartResource.getResourceId());
 	}
 
 	@Override
 	public void setText(String arg0) throws IllegalArgumentException {
-		throw new IllegalArgumentException("A chart name can be changed only in the Designer navigation tree");
-		
+		ErrorUtil.showWarning(rb.getString("Locator.ChartChangeWarning"), rb.getString("Locator.WarningTitle"));
 	}
 
 }
