@@ -31,7 +31,7 @@ public class IlsProperty {
 	private static final String EMPTY_REVIEW_DATA_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_COLLECT_DATA_CONFIG = "{\"errorHandling\": \"" + Constants.DEFAULT_VALUE + "\", \"rows\":[]}";
 	
-	private static final Map<String, PropertyInfo> infoByName = new HashMap<String, PropertyInfo>();
+	private static final Map<Integer, PropertyInfo> infoById = new HashMap<Integer, PropertyInfo>();
 	
 	public static class PropertyInfo {
 		boolean isSerializedObject = false;
@@ -196,22 +196,31 @@ public class IlsProperty {
  	public static final String TOOLKIT_PROPERTY_ISOLATION_TIME      = "SecondaryTimeFactor";// Time speedup when in isolation
 
 	public static <C> BasicProperty<C> createProperty(String name, Class<C> clazz, C defaultValue) {
-		return new BasicProperty<C>(name, clazz, defaultValue);
+		return createProperty(name, clazz, defaultValue, false, null, null);
 	}
 
 	public static <C> BasicProperty<C> createProperty(String name, Class<C> clazz, C defaultValue, boolean isSerializedObject, String label) {
-		infoByName.put(name, new PropertyInfo(isSerializedObject, null, label));
-		return new BasicProperty<C>(name, clazz, defaultValue);
+		return createProperty(name, clazz, defaultValue, isSerializedObject, null, label);
 	}
 
 	public static <C> BasicProperty<C> createProperty(String name, Class<C> clazz, C defaultValue, boolean isSerializedObject) {
-		infoByName.put(name, new PropertyInfo(isSerializedObject, null, null));
-		return new BasicProperty<C>(name, clazz, defaultValue);
+		return createProperty(name, clazz, defaultValue, isSerializedObject, null, null);
 	}
 
 	public static <C> BasicProperty<C> createProperty(String name, Class<C> clazz, C defaultValue, String[] choices) {
-		infoByName.put(name, new PropertyInfo(false, choices, null));
-		return new BasicProperty<C>(name, clazz, defaultValue);
+		return createProperty(name, clazz, defaultValue, false, choices, null);
+	}
+
+	private static Integer getPropertyId(Property<?> prop) {
+		return System.identityHashCode(prop);
+	}
+	
+	private static <C> BasicProperty<C> createProperty(String name, Class<C> clazz, C defaultValue,
+		boolean isSerializedObject, String[] choices, String label) {
+		BasicProperty<C> prop = new BasicProperty<C>(name, clazz, defaultValue);
+		PropertyInfo info = new PropertyInfo(isSerializedObject, null, null);		
+		infoById.put(getPropertyId(prop), info);
+		return prop;
 	}
 
 	public static List<String> getAllPropertyNames() throws Exception {
@@ -331,12 +340,12 @@ public class IlsProperty {
 	}
 
 	public static String[] getChoices(Property<?> property) {
-		PropertyInfo info = infoByName.get(property.getName());
+		PropertyInfo info = infoById.get(getPropertyId(property));
 		return info != null ? info.choices : null;
 	}
 	
 	public static boolean isSerializedObject(Property<?> property) {
-		PropertyInfo info = infoByName.get(property.getName());
+		PropertyInfo info = infoById.get(getPropertyId(property));
 		return info != null ? info.isSerializedObject : false;
 	}
 	
@@ -344,7 +353,7 @@ public class IlsProperty {
 	 *  but sometimes a property has an explicit label. 
 	 */
 	public static String getLabel(Property<?> property) {
-		PropertyInfo info = infoByName.get(property.getName());
+		PropertyInfo info = infoById.get(getPropertyId(property));
 		if(info != null && info.label != null) {
 			return info.label;
 		}
