@@ -91,6 +91,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-set-catout-d
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-set-crossover-time','com.ils.sfc.python.crossoverTime.set');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-start-clock-timer','ils.diagToolkit.timer.start');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-write-file','com.ils.sfc.python.File.write');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('freezer-sample-problem-reset','ils.diagToolkit.crx.freezer.reset');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('fs-r1-c2-conv-vs-pr','com.ils.sfc.python.block.fsR1C2ConvVsPr');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('fs-r1-c3-conv-vs-pr','com.ils.sfc.python.block.fsR1C3ConvVsPr');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('fs-r1-c9-conv-vs-pr','com.ils.sfc.python.block.fsR1C9ConvVsPr');
