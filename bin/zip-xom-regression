@@ -6,8 +6,8 @@
 # Additionally save testing pylib to svn
 #
 #set -x
-SVN=~/Development/ils/svn/EMChemicals/Release/src
-PYLIB=~/Development/ils/svn/EMChemicals/Migration/Commpn/pylib
+SVN=${SVN_REPO}/EMChemicals/Release/src
+PYLIB=${SVN_REPO}/EMChemicals/Migration/Commpn/pylib
 VERS=TRANSLATION
 TMP=${GIT_REPO}/$VERS
 # Cleanup
@@ -18,10 +18,10 @@ mkdir -p $TMP/pylib
 mkdir -p $PYLIB
 cd ${GIT_REPO}/sfc/migration
 cp -a mdb/*.sql $TMP/mdb
-cp -a mkdatabase $TMP/mdb
-cd ${GIT_REPO}/regression
+cp -a mdb/mkdatabase $TMP/mdb
+cd ${GIT_REPO}/sfc/regression
 cp -a usecases $TMP
-cp -a pyib/*.py $TMP/pylib
+cp -a pylib/*.py $TMP/pylib
 cp -a pylib/*.py $PYLIB
 
 # Now zip and copy to subversion
