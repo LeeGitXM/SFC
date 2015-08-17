@@ -5,7 +5,7 @@
 # VERS, DATE files updated
 #
 #set -x
-SVN=~/Development/ils/svn/Lafarge/Release/src
+SVN=${SVN_REPO}/Lafarge/Release/src
 # Prepare directories
 mkdir -p $SVN/project
 mkdir -p $SVN/data
