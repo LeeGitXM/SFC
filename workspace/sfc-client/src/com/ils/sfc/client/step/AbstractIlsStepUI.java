@@ -22,6 +22,7 @@ import com.ils.sfc.common.IlsProperty;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.ChartStateEnum;
+import com.inductiveautomation.sfc.ElementStateEnum;
 import com.inductiveautomation.sfc.client.api.ChartStatusContext;
 import com.inductiveautomation.sfc.client.ui.AbstractStepUI;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
@@ -141,26 +142,27 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 
     	// For foundation steps, add the step name
     	String oldLabelText = null;
+		String stepName = propertyValues.get(IlsProperty.NAME);
     	if(isFoundationStep()) {
     		oldLabelText = label.getText();
-    		String stepName = propertyValues.get(IlsProperty.NAME);
     		label.setText(oldLabelText.replace("</html>", "<br>" + stepName + "</html>"));
     	}
 
-    	Optional<ChartStatus> status = chartStatusContext.getChartStatus();
+    	ElementStateEnum state = chartStatusContext.getStepStatus(propertyValues).getElementState();
     	Color background = Color.white;
-    	if(status.isPresent()) {
-    		ChartStateEnum chartState = status.get().getChartState();
-    		if(ChartStateEnum.Running == chartState) {
-    			background = Color.green.brighter();
-    		}
-    		else if(ChartStateEnum.Paused == chartState) {
-    			background = Color.blue.brighter();
-    		}
-    		else if(chartState.isTerminal()) {
-    			background = Color.lightGray;
-    		}
-    	}
+		if(state.isRunning()) {
+			background = Color.green.brighter();
+		}
+		else if(ElementStateEnum.Paused == state) {
+			background = Color.blue.brighter();
+		}
+		else if(
+			ElementStateEnum.Aborted == state ||
+			ElementStateEnum.Canceled == state ||
+			ElementStateEnum.Inactive == state 
+				) {
+			background = Color.lightGray;
+		}
     	label.setBackground(background);
     	g2d.setTransform(transform);
     	label.paint(g2d);
