@@ -19,6 +19,7 @@ public class PhaseStep extends FoundationStep {
 
 	@Override
 	public void activateStep() {
+		super.activateStep();
 		scopeContext.getStepScope().put(Constants.S88_LEVEL, Constants.PHASE);
 	}
 

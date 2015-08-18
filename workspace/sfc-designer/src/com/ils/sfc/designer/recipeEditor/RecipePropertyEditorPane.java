@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
+import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.recipe.objects.Data;
@@ -82,6 +83,8 @@ public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder
 	
 	private void doOK() {
 		recipeData.setProperties(editor.getPropertyValues());
+		String provider = IlsClientScripts.getProviderName(false);
+		recipeData.setProvider(provider);
 		recipeData.writeToTags();		
 		if(IlsSfcCommonUtils.isEmpty(recipeData.getKey())) {
 			controller.showMessage("A key is required", RecipeEditorController.OBJECT_EDITOR);

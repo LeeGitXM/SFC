@@ -7,7 +7,7 @@
 #
 #set -x
 SVN=${SVN_REPO}/EMChemicals/Release/src
-PYLIB=${SVN_REPO}/EMChemicals/Migration/Commpn/pylib
+PYLIB=${SVN_REPO}/EMChemicals/Migration/Common/sfc/pylib
 VERS=TRANSLATION
 TMP=${GIT_REPO}/$VERS
 # Cleanup
