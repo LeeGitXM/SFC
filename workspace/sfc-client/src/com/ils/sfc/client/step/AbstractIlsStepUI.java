@@ -148,18 +148,24 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     		label.setText(oldLabelText.replace("</html>", "<br>" + stepName + "</html>"));
     	}
 
-    	ElementStateEnum state = chartStatusContext.getStepStatus(propertyValues).getElementState();
+    	Optional<ChartStatus> chartStatus = chartStatusContext.getChartStatus();
+    	boolean chartNotStarted = !chartStatus.isPresent();
+    	ElementStateEnum stepState = chartStatusContext.getStepStatus(propertyValues).getElementState();
+    	
     	Color background = Color.white;
-		if(state.isRunning()) {
+    	if(chartNotStarted) {
+    		background = Color.white;
+    	}
+    	else if(stepState.isRunning()) {
 			background = Color.green.brighter();
 		}
-		else if(ElementStateEnum.Paused == state) {
+		else if(ElementStateEnum.Paused == stepState) {
 			background = Color.blue.brighter();
 		}
 		else if(
-			ElementStateEnum.Aborted == state ||
-			ElementStateEnum.Canceled == state ||
-			ElementStateEnum.Inactive == state 
+			ElementStateEnum.Aborted == stepState ||
+			ElementStateEnum.Canceled == stepState ||
+			ElementStateEnum.Inactive == stepState 
 				) {
 			background = Color.lightGray;
 		}

@@ -218,7 +218,7 @@ public class IlsProperty {
 	private static <C> BasicProperty<C> createProperty(String name, Class<C> clazz, C defaultValue,
 		boolean isSerializedObject, String[] choices, String label) {
 		BasicProperty<C> prop = new BasicProperty<C>(name, clazz, defaultValue);
-		PropertyInfo info = new PropertyInfo(isSerializedObject, null, null);		
+		PropertyInfo info = new PropertyInfo(isSerializedObject, choices, label);		
 		infoById.put(getPropertyId(prop), info);
 		return prop;
 	}
