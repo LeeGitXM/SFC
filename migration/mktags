@@ -7,10 +7,8 @@ then
     echo "USAGE: mktags"
 	exit 2
 fi
-REPO=${GIT_REPO}
-cd $REPO/sfc
-SFC=`./pwd2`
-LIB=$REPO/external/lib
+SFC=${GIT_REPO}/sfc
+LIB=${GIT_REPO}/external/lib
 JAR=${LIB}/sfc-migration.jar
 DB=${SFC}/migration/mdb/conversion.db
 java -cp ${JAR} -Dlog.level=INFO com.ils.sfc.migration.TagMigrator ${DB} 

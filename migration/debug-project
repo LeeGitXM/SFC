@@ -8,7 +8,7 @@ then
 	exit 2
 fi
 REPO=${GIT_REPO}
-SFC=`./pwd2`
-LIB=$REPO/external/lib
+SFC=${GIT_REPO}/sfc
+LIB=${GIT_REPO}/external/lib
 JAR=${LIB}/sfc-migration.jar
 cat $1 | java -cp ${JAR} -Dlog.level=INFO com.ils.sfc.migration.ProjectDebugger $1 

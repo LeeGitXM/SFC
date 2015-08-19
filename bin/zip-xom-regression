@@ -3,11 +3,9 @@
 # Save the regression test projects into SVN.
 # Do not intentionally include build products. Make clean before 
 # running this script.
-# Additionally save testing pylib to svn
 #
 #set -x
 SVN=${SVN_REPO}/EMChemicals/Release/src
-PYLIB=${SVN_REPO}/EMChemicals/Migration/Common/sfc/pylib
 VERS=TRANSLATION
 TMP=${GIT_REPO}/$VERS
 # Cleanup
@@ -15,14 +13,11 @@ rm -rf $TMP
 cd ${GIT_REPO}
 mkdir -p $TMP/mdb
 mkdir -p $TMP/pylib
-mkdir -p $PYLIB
 cd ${GIT_REPO}/sfc/migration
 cp -a mdb/*.sql $TMP/mdb
 cp -a mdb/mkdatabase $TMP/mdb
 cd ${GIT_REPO}/sfc/regression
 cp -a usecases $TMP
-cp -a pylib/*.py $TMP/pylib
-cp -a pylib/*.py $PYLIB
 
 # Now zip and copy to subversion
 cd ${GIT_REPO}/$VERS

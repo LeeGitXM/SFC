@@ -17,7 +17,7 @@ APP=${SFC}/migration/translate-onstart
 mkdir -p ${SFC}/migration/procs/g2/usecase/onstart
 cd ${SFC}/migration/procs/g2/usecase/onstart
 OUTDIR=${SFC}/migration/procs/ignition/usecase/onstart
-DIR=`${SFC}/migration/pwd2`
+DIR=${SFC}/migration
 echo 'Rob, DIR is' $DIR
 for fil in *.txt
 do
