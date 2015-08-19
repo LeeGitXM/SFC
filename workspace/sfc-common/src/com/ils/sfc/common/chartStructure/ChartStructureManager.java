@@ -10,6 +10,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
 import com.inductiveautomation.sfc.definitions.ChartDefinition;
+import com.inductiveautomation.sfc.definitions.ElementDefinition;
 
 /** Basically a container to hold structure info for all the SFC charts, 
  *  plus any utility methods that need to go across charts. The compiler
@@ -64,8 +65,14 @@ public class ChartStructureManager implements ProjectChangeListener {
 	public String getStepName(String stepId) {
 		String name = "UNKNOWN";
 		StepStructure stepStruct = compiler.getStepInformation(stepId);
-		if( stepStruct!=null ) name = stepStruct.name;
+		if( stepStruct!=null ) name = stepStruct.getName();
 		return name;
+	}
+	public ElementDefinition.ElementType getStepType(String stepId) {
+		ElementDefinition.ElementType type = null;
+		StepStructure stepStruct = compiler.getStepInformation(stepId);
+		if( stepStruct!=null ) type = stepStruct.getElementType();
+		return type;
 	}
 	// =================================== Project Change Listener ========================
 	// No matter what the change is, we re-compute the maps

@@ -25,6 +25,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	public final static int SEARCH_SCOPE_DATA = 8;
 	public final static int SEARCH_KEY        = 16;
 	public final static int SEARCH_DATA       = 32;
+	public final static int SEARCH_EXPRESSION = 64;
 	private final LoggerEx log;
 	private final DesignerContext context;
 	
@@ -42,6 +43,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		cts.add("Scope Value");
 		cts.add("Recipe Key");
 		cts.add("Recipe Data Value");
+		cts.add("Expression");
 		return cts;
 	}
 
@@ -71,6 +73,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		if( selectedCategories.contains("Scope Value"))        searchKey += SEARCH_SCOPE_DATA;
 		if( selectedCategories.contains("Recipe Key"))         searchKey += SEARCH_KEY;
 		if( selectedCategories.contains("Recipe Data Value"))  searchKey += SEARCH_DATA;
+		if( selectedCategories.contains("Expression"))         searchKey += SEARCH_EXPRESSION;
 		
 		String resourceType = ChartStructureCompiler.CHART_RESOURCE_TYPE;
 		List<ProjectResource> resources = context.getGlobalProject().getProject().getResourcesOfType(SFCModule.MODULE_ID,resourceType);

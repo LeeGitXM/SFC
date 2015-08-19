@@ -70,14 +70,12 @@ public class ChartSearchCursor extends SearchObjectCursor {
 		}
 		else if(index==(browseChart?1:0) ) {
 			element = chart.getBeginElement();
-			if( element instanceof StepDefinition ) {
-				so = new StepSearchCursor(context,chartPath,res.getResourceId(),(StepDefinition) element,searchKey);
-			}
+			so = new StepSearchCursor(context,chartPath,res.getResourceId(),element,searchKey);
 		}
 		else {
 			element = chart.getBeginElement();
 			subindex = (browseChart?1:0);
-			StepDefinition chosenElement = visitChildren(element); 
+			ElementDefinition chosenElement = visitChildren(element); 
 			if( chosenElement!=null ) {
 				so = new StepSearchCursor(context,chartPath,res.getResourceId(),chosenElement,searchKey);
 			}
@@ -86,14 +84,12 @@ public class ChartSearchCursor extends SearchObjectCursor {
 		return so;
 	}
 	
-	private StepDefinition visitChildren(ElementDefinition ed) {
-		if( ed instanceof StepDefinition ) {
-			if(subindex==index) return (StepDefinition)ed;
-			subindex++;
-			for(ElementDefinition def:ed.getNextElements() ) {
-				StepDefinition child = visitChildren(def);
-				if(child!=null ) return child;
-			}
+	private ElementDefinition visitChildren(ElementDefinition ed) {
+		if(subindex==index) return ed;
+		subindex++;
+		for(ElementDefinition def:ed.getNextElements() ) {
+			ElementDefinition child = visitChildren(def);
+			if(child!=null ) return child;
 		}
 		return null;
 	}
