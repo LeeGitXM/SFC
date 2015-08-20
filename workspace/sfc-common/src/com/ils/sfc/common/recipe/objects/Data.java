@@ -218,7 +218,7 @@ public abstract class Data {
 			catch(Exception e) {
 				// ?? what to do...we are blindly assuming that everything in the associated
 				// data object is recipe data, which isn't necessarily true...
-				logger.warn("non-recipe data in associated data for key " + key);
+				logger.error("Error creating recipe data", e);
 			}
 		}		
 		return recipeData;

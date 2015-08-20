@@ -2,7 +2,7 @@ package com.ils.sfc.common.chartStructure;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,7 +19,6 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.api.StepRegistry;
 import com.inductiveautomation.sfc.api.XMLParseException;
-import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
 import com.inductiveautomation.sfc.definitions.ParallelDefinition;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
@@ -86,6 +85,10 @@ public class ChartStructureCompiler {
 	
 	public ChartModelInfo  getChartInformation(long resourceId) { return modelInfoByResourceId.get(new Long(resourceId)); }
 	public StepStructure   getStepInformation(String stepId) { return stepsById.get(stepId); }
+	
+	public Collection<StepStructure> getSteps() {
+		return stepsById.values();
+	}
 	
 	// ===================================== Private Helper Methods =========================
 	// Deserialize all SFC charts from the global project.
@@ -185,6 +188,7 @@ public class ChartStructureCompiler {
 		}
 		return stepsById.get(stepId);			
 	}
+	
 	// Return the step structure for the given id, creating if it doesn't exist. 
 	private StepStructure getOrCreateStep(ChartStructure chart, StepStructure previousStep, ParallelDefinition pDef,Set<UUID> seen) {
 		String stepId = pDef.getElementId().toString();
@@ -199,6 +203,7 @@ public class ChartStructureCompiler {
 		}
 		return stepsById.get(stepId);			
 	}
+	
 	// Return the step structure for the given id, creating if it doesn't exist. 
 	private StepStructure getOrCreateStep(ChartStructure chart, StepStructure previousStep, TransitionDefinition transDef) {
 		String stepId = transDef.getElementId().toString();
@@ -217,15 +222,21 @@ public class ChartStructureCompiler {
 			if( chartStruct!=null ) {
 				for(StepStructure step: chartStruct.getSteps()) {
 					if(step.isEnclosure()) {
-						String path = step.getEnclosedChartName();
-						ChartStructure enclosedChart = modelInfoByChartPath.get(path).chartStructure;
-						if(enclosedChart != null) {
-							step.setEnclosedChart(enclosedChart);
-							enclosedChart.addParent(modelInfo.chartStructure, step);
+						String chartPath = step.getEnclosedChartName();
+						ChartModelInfo chartInfo = modelInfoByChartPath.get(chartPath);
+						if(chartInfo != null) {
+								 ChartStructure enclosedChart = chartInfo.chartStructure;
+							if(enclosedChart != null) {
+								step.setEnclosedChart(enclosedChart);
+								enclosedChart.addParent(modelInfo.chartStructure, step);
+							}
+							else {
+								log.infof("%s.linkParents: Enclosed chart %s not found for step %s in chart %s",
+										TAG,step.getEnclosedChartName(),step.getName(),modelInfo.chartStructure.getName() );
+							}
 						}
 						else {
-							log.infof("%s.linkParents: Enclosed chart %s not found for step %s in chart %s",
-									TAG,step.getEnclosedChartName(),step.getName(),modelInfo.chartStructure.getName() );
+							log.errorf("No info found for chart path %s", chartPath);
 						}
 					}
 				}	
@@ -234,24 +245,6 @@ public class ChartStructureCompiler {
 		}
 	}
 
-	// ================================ Nested Classes ===============================
-	// A helper class that holds useful information about a chart. Has "package" access.
-	static class ChartModelInfo {
-		final ChartUIModel uiModel;
-		final ProjectResource resource;
-		final String chartPath;
-		ChartDefinition chartDefinition;
-		ChartStructure chartStructure   = null;
-		
-		public ChartModelInfo(ChartUIModel uiModel, ProjectResource resource,String path) {
-			super();
-			this.uiModel = uiModel;
-			this.resource = resource;
-			this.chartPath = path;
-			this.chartDefinition = null;
-		}
-	}
-	
 	// Holder for parent structures so that we walk the tree
 	public static class Parent {
 		ChartStructure chart;
@@ -260,212 +253,6 @@ public class ChartStructureCompiler {
 		public Parent(ChartStructure chart, StepStructure step) {
 			this.chart = chart;
 			this.step = step;
-		}
-	}
-	
-	/** 
-	 * A class to hold the relationship structure of a single SFC chart in a way that is 
-	 *  convenient for our purposes. 
-	 */
-	public static class ChartStructure {
-
-		// Enclosing Steps in another chart that contain this chart:
-		private List<Parent> parents = new ArrayList<Parent>();
-		private final List<StepStructure> steps; 	// the steps in this chart
-		private final String name;                  // the name (path) of this chart
-		private final long resourceId;
-		
-		public ChartStructure(String name,long resid) {
-			this.name = name;
-			this.resourceId = resid;
-			this.steps= new ArrayList<StepStructure>();
-		}
-		
-		
-		public void addParent(ChartStructure chart, StepStructure step) {
-			parents.add(new Parent(chart,step));
-		}  
-		
-		
-		public String getName() {return this.name;}
-		public long getResourceId() { return this.resourceId; }
-
-		//Get all chart steps that enclose this chart.
-		public List<Parent> getParents() {return parents;}
-		public List<StepStructure> getSteps() {return steps;}
-		
-		/** 
-		 * Find a step with the given factory id, recursing down to enclosed charts if any.
-		 * @return null if none found.
-		 */ 
-		public StepStructure findStepWithFactoryId(String factoryId) {
-			for(StepStructure step: getSteps()) {
-				if(ElementDefinition.ElementType.Step.equals(step.getElementType()) && step.getFactoryId().equals(factoryId)) {
-					return step;
-				}
-			}
-			return null;
-		}
-	
-		/** Find a step with the given factory id, recursing down to enclosed charts if any.
-		 * @return null if none found.
-		 */
-		public StepStructure findStepWithFactoryIdInSubtree(String factoryId) {
-			StepStructure result = null;
-			if((result = findStepWithFactoryId(factoryId)) != null ) {
-				return result;
-			}
-			// Didn't find it in this chart; look in subcharts, or parallel section
-			for(StepStructure step: getSteps()) {
-				if(step.getEnclosedChart() != null) {
-					if((result = step.getEnclosedChart().findStepWithFactoryIdInSubtree(factoryId)) != null) {
-						return result;
-					}
-				}
-			}
-			return null;
-		}
-
-		/** Find a step with the given id, recursing down to enclosed charts if any. 
-		 * @return null if none found.
-		 */ 
-		public StepStructure findStepWithId(String id) {
-			for(StepStructure step: getSteps()) {
-				if(step.getId().equals(id)) {
-					return step;
-				}
-			}
-			return null;
-		}
-		
-		/** Find a step with the given factory id, recursing down to enclosed charts if any.
-		* @return null if none found.
-		*/  
-		public StepStructure findStepWithIdInSubtree(String id) {
-			StepStructure result = null;
-			if((result = findStepWithId(id)) != null ) {
-				return result;
-			}
-			// Didn't find it in this chart; look in subcharts
-			for(StepStructure step: getSteps()) {
-				if(step.getEnclosedChart() != null) {
-					if((result = step.getEnclosedChart().findStepWithIdInSubtree(id)) != null) {
-						return result;
-					}
-				}
-			}
-			return null;
-		}
-
-		public void addStep(StepStructure step) {
-			steps.add(step);
-		}
-	}
-
-	
-	/** 
-	 * A class to hold an SFC Step's relationships in a way that is handy for us. 
-	 * Package access for ChartStructureManager. 
-	 */
-	 static class StepStructure {
-		private final String id;        // required, globally unique UUID
-		private final String name;              // required; unique within chart
-		private final String factoryId; // required
-		private final ChartStructure chart;   // the chart that contains this step; required
-		private final StepStructure previous; // preceding step, if any; nullable
-		private String enclosedChartName;     // the full path name of the enclosed chart; may be null or bogus
-		private ChartStructure enclosedChart; // null unless enclosedChartName refers to a valid chart
-		private final String expression;      // null unless this is a transition
-		private final boolean isEnclosingStep;
-		private final ElementDefinition.ElementType elementType;
-		
-		/**
-		 * Constructor for a StepDefinition
-		 * @param chart
-		 * @param stepDef
-		 */
-		public StepStructure(ChartStructure chart, StepStructure previous, StepDefinition stepDef) {
-			this.chart = chart;
-			this.elementType = stepDef.getElementType();
-			this.id = stepDef.getElementId().toString();
-			this.factoryId = stepDef.getFactoryId().toString();
-			this.previous = previous;
-			this.name = (String)IlsSfcCommonUtils.getStepPropertyValue(stepDef.getProperties(), NAME_PROPERTY);
-			this.isEnclosingStep = stepDef.getFactoryId().equals(ENCLOSING_FACTORY_ID);
-			this.expression   = null;
-		}
-		/**
-		 * Constructor for a ParallelDefinition
-		 * @param chart
-		 * @param stepDef
-		 */
-		public StepStructure(ChartStructure chart, StepStructure previous, ParallelDefinition pDef) {
-			this.chart = chart;
-			this.elementType = pDef.getElementType();
-			this.id = pDef.getElementId().toString();
-			this.factoryId = null;
-			this.previous = previous;
-			this.name = "";
-			this.isEnclosingStep = false;
-			this.expression   = pDef.getCancelConditionExpression();
-		}
-		/**
-		 * Constructor for a TransitionDefinition
-		 * @param chart
-		 * @param stepDef
-		 */
-		public StepStructure(ChartStructure chart, StepStructure previous, TransitionDefinition transDef) {
-			this.chart = chart;
-			this.elementType = transDef.getElementType();
-			this.id = transDef.getElementId().toString();
-			this.factoryId = null;
-			this.previous = previous;
-			this.name = "";
-			this.isEnclosingStep = false;
-			this.expression   = transDef.getExpression();
-		}
-		public ChartStructure getChart() {return chart;}
-		public String getFactoryId() {return factoryId;}
-		public String getId() {return id;}
-		public String getExpression() {return expression;}
-		public String getName() {return name;}
-		public StepStructure getPrevious() {return previous;}
-		public ElementDefinition.ElementType getElementType() { return elementType; }
-		public ChartStructure getEnclosedChart() {return enclosedChart;}
-		public String getEnclosedChartName() {return enclosedChartName;}
-		public boolean isEnclosure() { return this.isEnclosingStep; }
-		public void setEnclosedChart(ChartStructure enclosedChart) {this.enclosedChart = enclosedChart;}
-		public void setEnclosedChartName(String enclosedChartName) {this.enclosedChartName = enclosedChartName;}
-		
-		/** return the step that encloses this one, else null. If more than one step encloses this one, 
-		 *  one is arbitrarily chosen.
-		 */
-		public StepStructure getParent() {
-			if(chart.getParents().size() > 0) {
-				return chart.getParents().get(0).step;
-			}
-			else {
-				return null;
-			}
-		}
-		
-		/** 
-		 * Find an enclosing parent (or self) with the given suffix. 
-		 * @return null if none found. 
-		 */
-		public StepStructure findParentWithNameEnding(String ending) {
-			if(name.endsWith(ending)) {
-				return this;
-			}
-			else {
-				StepStructure result = null;
-				for(Parent parent: chart.getParents()) {
-					if((result = parent.step.findParentWithNameEnding(ending)) != null) {
-						return result;
-					}
-				}
-			}
-			return null;
 		}
 	}
 }

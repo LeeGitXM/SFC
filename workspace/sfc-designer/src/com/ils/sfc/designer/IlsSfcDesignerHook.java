@@ -23,7 +23,6 @@ import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
-import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.step.CancelStepProperties;
@@ -192,6 +191,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		PythonCall.setScriptMgr(mgr);
 		mgr.addStaticFields("system.ils.sfc", Constants.class);
 		mgr.addScriptModule("system.ils.sfc", IlsClientScripts.class);
+		mgr.addScriptModule("system.ils.sfc", IlsDesignerScripts.class);
 		// Initialize units. Since this is a lazy initialization, 
     	Object[] args = {null};
     	try {
@@ -246,6 +246,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     		configRegistry.register(factoryId, editorFactory);
     	} 
     	IlsClientScripts.setContext(context);
+    	IlsDesignerScripts.setHook(this);
     	// Provide a central repository for the structure of the charts
     	structureManager = new ChartStructureManager(context,stepRegistry);
     	searchProvider = new IlsSfcSearchProvider(context);
