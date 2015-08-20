@@ -1,8 +1,8 @@
 package com.ils.sfc.designer.search;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.zip.GZIPInputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import com.ils.sfc.common.IlsSfcModule;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
@@ -12,13 +12,8 @@ import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObjectCursor;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
-import com.inductiveautomation.sfc.api.XMLParseException;
 import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
-import com.inductiveautomation.sfc.definitions.StepDefinition;
-import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
-import com.inductiveautomation.sfc.uimodel.ChartCompiler;
-import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
 /**
  * The chart search cursor iterates over steps in a chart
@@ -37,6 +32,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 	private final int searchKey;
 	private int index = 0;
 	private int subindex = 0;
+	private final List<UUID> visited;
 	
 	public ChartSearchCursor(DesignerContext ctx,ProjectResource resource,int key) {
 		this.context = ctx;
@@ -44,6 +40,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 		this.searchKey = key;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.index = 0;
+		this.visited = new ArrayList<>();
 		log.infof("%s.new - res=%d",TAG,res.getResourceId());
 	}
 	@Override
@@ -86,6 +83,8 @@ public class ChartSearchCursor extends SearchObjectCursor {
 	
 	private ElementDefinition visitChildren(ElementDefinition ed) {
 		if(subindex==index) return ed;
+		if( visited.contains(ed.getElementId())) return null;
+		visited.add(ed.getElementId());
 		subindex++;
 		for(ElementDefinition def:ed.getNextElements() ) {
 			ElementDefinition child = visitChildren(def);
