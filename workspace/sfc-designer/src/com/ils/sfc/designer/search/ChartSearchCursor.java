@@ -45,7 +45,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 	}
 	@Override
 	public Object next() {
-		log.infof("%s.next - res=%d index=%d",TAG,res.getResourceId(),index);
+		//log.infof("%s.next - res=%d index=%d",TAG,res.getResourceId(),index);
 		Object so = null;   // Search Object
 		boolean browseChart = (searchKey&IlsSfcSearchProvider.SEARCH_CHART)!=0;
 		// Deserialize here - first time through only - return next block cursor
@@ -53,7 +53,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 			ChartStructureManager structureManager = ((IlsSfcDesignerHook)context.getModule(IlsSfcModule.MODULE_ID)).getChartStructureManager();
 			chart = structureManager.getChartDefinition(res.getResourceId());
 			if( chart==null ) {
-				log.infof("%s.next Failed to deserialize chart resource %s(%d)",TAG,res.getName(),res.getResourceId());
+				log.warnf("%s.next Failed to deserialize chart resource %s(%d)",TAG,res.getName(),res.getResourceId());
 				return null;
 			}
 			chartPath = structureManager.getChartPath(res.getResourceId());
@@ -63,7 +63,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 		if( index==0 && (searchKey&IlsSfcSearchProvider.SEARCH_CHART)!=0 ) {
 			
 			so = new ChartNameSearchObject(context,folderPath,res);
-			log.infof("%s.next %s",TAG,res.getName());
+			//log.infof("%s.next %s",TAG,res.getName());
 		}
 		else if(index==(browseChart?1:0) ) {
 			element = chart.getBeginElement();
@@ -72,6 +72,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 		else {
 			element = chart.getBeginElement();
 			subindex = (browseChart?1:0);
+			visited.clear();
 			ElementDefinition chosenElement = visitChildren(element); 
 			if( chosenElement!=null ) {
 				so = new StepSearchCursor(context,chartPath,res.getResourceId(),chosenElement,searchKey);

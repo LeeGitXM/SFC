@@ -58,7 +58,7 @@ public class StepSearchCursor extends SearchObjectCursor {
 				return null;
 			}
 			so = new StepNameSearchObject(context,parent,resourceId,stepName);
-			log.infof("%s.next Found step %s(%s)",TAG,parent,step.getElementId().toString());
+			//log.infof("%s.next Found step %s(%s)",TAG,parent,step.getElementId().toString());
 		}
 		else if( index==0 && searchExpression && ElementDefinition.ElementType.Parallel.equals(elementType) ) {
 			ParallelDefinition element = (ParallelDefinition)step;
@@ -67,6 +67,7 @@ public class StepSearchCursor extends SearchObjectCursor {
 		else if( index==0 && searchExpression && ElementDefinition.ElementType.Transition.equals(elementType) ) {
 			TransitionDefinition element = (TransitionDefinition)step;
 			so = new StepExpressionSearchObject(context,parent,resourceId,element);
+			//log.infof("%s.next Found transition %s(%s)",TAG,parent,step.getElementId().toString());
 		}
 		else {
 			int subindex = (searchStepName?1:0);
