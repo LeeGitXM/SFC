@@ -1,7 +1,5 @@
 package com.ils.sfc.common.chartStructure;
 
-import com.ils.sfc.common.chartStructure.ChartStructureCompiler.ChartModelInfo;
-import com.ils.sfc.common.chartStructure.ChartStructureCompiler.StepStructure;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
@@ -35,6 +33,10 @@ public class ChartStructureManager implements ProjectChangeListener {
 		compiler.compile();
 	}
 	
+	public ChartStructureCompiler getCompiler() {
+		return compiler;
+	}
+
 	/**
 	 * @param resid resource Id
 	 * @return a compiled chart definition. If the lookup fails return NULL.
