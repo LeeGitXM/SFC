@@ -1,20 +1,47 @@
 package com.ils.sfc.common.rowconfig;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
+import system.ils.sfc.common.Constants;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ils.sfc.common.IlsProperty;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
+import com.inductiveautomation.ignition.gateway.localdb.DBInterface.Transaction;
 
 public class PVMonitorConfig extends RowConfig {
+	private static LoggerEx logger = LogUtil.getLogger(PVMonitorConfig.class.getName());
 	private List<Row> rows = new ArrayList<Row>();
+	private static Map<String,String> translationMap = new HashMap<String,String>();
+	static {
+		translationMap.put(Constants.MONITOR.toLowerCase(), Constants.MONITOR);
+		translationMap.put(Constants.WATCH.toLowerCase(), Constants.WATCH);
+		translationMap.put(Constants.ABS.toLowerCase(), Constants.ABS);
+		translationMap.put(Constants.PCT.toLowerCase(), Constants.PCT);
+		translationMap.put(Constants.IMMEDIATE.toLowerCase(), Constants.IMMEDIATE);
+		translationMap.put(Constants.WAIT.toLowerCase(), Constants.WAIT);
+		translationMap.put(Constants.HIGH_LOW.toLowerCase(), Constants.HIGH_LOW);
+		translationMap.put(Constants.HIGH.toLowerCase(), Constants.HIGH);
+		translationMap.put(Constants.LOW.toLowerCase(), Constants.LOW);
+		translationMap.put("setpoint", Constants.SETPOINT);
+		translationMap.put("value", Constants.VALUE);
+		translationMap.put("named item", Constants.TAG);
+		translationMap.put("recipe data", Constants.RECIPE);
+	}
 	public static class Row {
 		public boolean enabled = true;
 		public String pvKey;
@@ -84,6 +111,72 @@ public class PVMonitorConfig extends RowConfig {
 
 	public static Map<String,String> convert(Element g2block) {
 		Map<String, String> result = new HashMap<String, String>();
+		PVMonitorConfig config = new PVMonitorConfig();
+		List<Element> configElements = getBlockConfigurationElements(g2block);
+		for(Element configElement: configElements) {
+			PVMonitorConfig.Row newRow = new PVMonitorConfig.Row();
+			config.getRows().add(newRow);
+			NamedNodeMap attributes = configElement.getAttributes();
+			for(int i = 0; i < attributes.getLength(); i++) {
+				Node item = attributes.item(i);
+				String name = item.getNodeName();
+				String strValue = item.getTextContent();	
+
+				if(name.equals("strategy")) {
+					newRow.strategy = translationMap.get(strValue.toLowerCase());
+				}
+				else if(name.equals("toleranceType")) {
+					newRow.strategy = translationMap.get(strValue.toLowerCase());
+				}
+				else if(name.equals("tolerance")) {
+					try {
+						newRow.tolerance = IlsProperty.parseDouble(strValue);
+					} catch (ParseException e) {
+						logger.error("Error parsing PVMonitorConfig.tolerance double value from " + strValue);
+					}
+				}
+				else if(name.equals("consistency")) {
+					try {
+						newRow.consistency = IlsProperty.parseDouble(strValue);
+					} catch (ParseException e) {
+						logger.error("Error parsing PVMonitorConfig.consistency double value from " + strValue);
+					}
+				}
+				else if(name.equals("persistence")) {
+					try {
+						newRow.persistence = IlsProperty.parseDouble(strValue);
+					} catch (ParseException e) {
+						logger.error("Error parsing PVMonitorConfig.persistence double value from " + strValue);
+					}
+				}
+				else if(name.equals("download")) {
+					newRow.strategy = translationMap.get(strValue.toLowerCase());
+				}
+				else if(name.equals("limits")) {
+					newRow.strategy = translationMap.get(strValue.toLowerCase());
+				}
+				else if(name.equals("targetId")) {
+					newRow.targetNameIdOrValue = strValue;
+				}
+				else if(name.equals("targetType")) {
+					newRow.targetType = strValue;
+				}
+				else if(name.equals("pvId")) {
+					newRow.pvKey = strValue;
+				}
+				else if(name.equals("state")) {
+					// TODO: should this be an enum?
+					newRow.status = strValue;
+				}
+			}
+		}
+		String json = null;
+		try {
+			json = config.toJSON();
+		} catch(JsonProcessingException e) {
+			logger.error("Error generating json for PVMonitorConfig", e);
+		}
+		result.put(Constants.PV_MONITOR_CONFIG, json);
 		return result;
 	}
 
