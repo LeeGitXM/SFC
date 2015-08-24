@@ -14,6 +14,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import system.ils.sfc.common.Constants;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ils.sfc.common.step.CollectDataStepProperties;
@@ -33,14 +35,23 @@ public abstract class RowConfig {
 	// G2 key is mixed case
 	protected static Map<String,String> recipeLocationTranslation = new HashMap<String,String>();
 	static {
-		recipeLocationTranslation.put("LOCAL","local");
-		recipeLocationTranslation.put("PREVIOUS","prior");
-		recipeLocationTranslation.put("SUPERIOR","superior");
-		recipeLocationTranslation.put("OPERATION","operation");
-		recipeLocationTranslation.put("PHASE","phase");
-		recipeLocationTranslation.put("PROCEDURE","global");
-		recipeLocationTranslation.put("GLOBAL","global");
-		recipeLocationTranslation.put("NAMED","named");
+		recipeLocationTranslation.put("local", Constants.LOCAL);
+		recipeLocationTranslation.put("previous", Constants.PRIOR);
+		recipeLocationTranslation.put("superior", Constants.SUPERIOR );
+		recipeLocationTranslation.put("operation", Constants.OPERATION);
+		recipeLocationTranslation.put("phase", Constants.PHASE);
+		recipeLocationTranslation.put("procedure", Constants.GLOBAL);
+		recipeLocationTranslation.put("global", Constants.GLOBAL);
+		recipeLocationTranslation.put("named", Constants.NAMED);
+	}
+	
+	protected static String translateRecipeKey(String key) {
+		if(key.endsWith(".val")) {
+			return key.replace(".val", ".value");
+		}
+		else {
+			return key;
+		}
 	}
 	
 	public String toJSON() throws JsonProcessingException {

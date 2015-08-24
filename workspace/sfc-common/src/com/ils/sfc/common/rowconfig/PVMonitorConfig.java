@@ -159,6 +159,7 @@ public class PVMonitorConfig extends RowConfig {
 					newRow.targetNameIdOrValue = strValue;
 				}
 				else if(name.equals("targetType")) {
+					// TODO: should this be an enum?
 					newRow.targetType = strValue;
 				}
 				else if(name.equals("pvId")) {
