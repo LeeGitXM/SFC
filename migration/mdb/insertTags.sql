@@ -52,7 +52,7 @@ insert into TagMap values ('CRX-BLOCK-POLYMER-FLAG','[]DiagnosticToolkit/CRx/CRX
 -- tag not built came from a Pete test
 insert into TagMap values ('CRX_HB-3','[]Tags/CRX_HB_3','DOUBLE');
 insert into TagMap values ('C_FLYING_SWITCH-GDA-INPUT','[]Site/FlyingSwitch/CRX_FLYING_SWITCH-INPUT','BOOLEAN');
-insert into TagMap values ('C_FLYING_SWITCH_OUTPUT','[]DiagnosticToolkit/Connections/CRxFlyingSwitchOutput','STRING');
+insert into TagMap values ('C_FLYING_SWITCH_OUTPUT','[]DiagnosticToolkit/Connections/CFlyingSwitchOutput','STRING');
 insert into TagMap values ('C-RX_GRADE_FLAG','[]Site/Parameters/C_RX_GRADE_FLAG','BOOLEAN');
 insert into TagMap values ('CS-H2-MTR-IDEAL','[]Site/RLA3/CS-H2-MTR-IDEAL','DOUBLE');
 insert into TagMap values ('CS-H2-MTR-USED','[]Site/RLA3/CS-H2-MTR-USED','DOUBLE');
@@ -81,7 +81,7 @@ insert into TagMap values ('E-BALER-TEMP-LAB-DATA','[]LabData/VFU/E-BALER-TEMP-L
 insert into TagMap values ('E-BALER-VOL-FTNIR-DATA','[]LabData/VFU/E-BALER-VOL-FTNIR-DATA/value','DOUBLE');
 insert into TagMap values ('E-BALER-VOL-FTNIR-SQC-PATH','[]DiagnosticToolkit/Connections/EBalerVolFtnir','STRING');
 insert into TagMap values ('E-BALER-VOL-LAB-DATA','[]LabData/VFU/E-BALER-VOL-LAB-DATA/value','DOUBLE');
-insert into TagMap values ('E-BALER-VOL-LAB-SQC-PATH','[]DiagnosticToolkit/Connections/EBalerVolLab','STRING');
+insert into TagMap values ('E-BALER-VOL-LAB-SQC-PATH','[]DiagnosticToolki/Connections/EBalerVolLab','STRING');
 insert into TagMap values ('EM-COLD-STICK-RX-OUTLET-TEMP-MONITOR-BLOCK-1','[]Site/VFU/COLDSTICK-OUTLET-TEMP-MONITOR','STRING');
 insert into TagMap values ('EM-MONITOR-COLDSTICK-DCS-SETPOINTS-BLOCK','[]Site/VFU/COLDSTICK-DCS-SETPOINT','STRING');
 insert into TagMap values ('EM-GDA-LOGICAL-VARIABLE-XXX-2','[]Site/VFU/VFU_FREEZER_SWITCH_REMINDER','BOOLEAN');
@@ -347,7 +347,7 @@ insert into TagMap values ('[the target of DC2-LAB-DATA]','[]LabData/RLA3/DC2-LA
 insert into TagMap values ('[the target of DML-LAB-DATA]','[]LabData/RLA3/DML-LAB-DATA-SQC/target','DOUBLE');
 insert into TagMap values ('[the target of Dc9-lab-data]','[]LabData/RLA3/DC9-LAB-DATA-SQC/target','DOUBLE');
 insert into TagMap values ('[the target of E-BALER-TEMP-LAB-DATA]','[]LabData/VFU/E-BALER-TEMP-LAB-DATA-SQC/target','DOUBLE');
-insert into TagMap values ('[the target of E-BALER-VOL-ftnir-DATA]','[]VFU/VFU/E-BALER-VOL-FTNIR-DATA-SQC/target','DOUBLE');
+insert into TagMap values ('[the target of E-BALER-VOL-ftnir-DATA]','[]LabData/VFU/E-BALER-VOL-FTNIR-DATA-SQC/target','DOUBLE');
 insert into TagMap values ('[the target of E-BALER-VOL-lab-DATA]','[]LabData/VFU/E-BALER-VOL-LAB-DATA-SQC/target','DOUBLE');
 insert into TagMap values ('[the target of MLR-LAB-DATA]','[]LabData/RLA3/MLR-LAB-DATA-SQC/target','DOUBLE');
 insert into TagMap values ('[the target of MOONEY-LAB-DATA]','[]LabData/RLA3/MOONEY-LAB-DATA-SQC/target','DOUBLE');
