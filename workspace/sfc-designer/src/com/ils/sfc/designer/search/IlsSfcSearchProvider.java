@@ -78,7 +78,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		String resourceType = ChartStructureCompiler.CHART_RESOURCE_TYPE;
 		List<ProjectResource> resources = context.getGlobalProject().getProject().getResourcesOfType(SFCModule.MODULE_ID,resourceType);
 		for(ProjectResource res:resources) {
-			log.infof("%s.retrieveSearchableObjects resId = %d",TAG,res.getResourceId());
+			log.debugf("%s.retrieveSearchableObjects resId = %d",TAG,res.getResourceId());
 			agg.add(new ChartSearchCursor(context,res,searchKey));
 		}
 		return agg;

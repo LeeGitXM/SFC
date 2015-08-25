@@ -28,8 +28,7 @@ public class IlsDesignerScripts {
 			String chartPath = chartInfo.chartPath;
 			String stepName = step.getName();
 			if(step.getProperties() == null) {
-				logger.errorf("no properties for step %s", stepName);
-				continue;
+				continue;  // might be an end step or similar
 			}
 			JSONObject assDataJson = step.getProperties().get(IlsProperty.ASSOCIATED_DATA);
 			if(assDataJson == null) continue;
@@ -39,8 +38,8 @@ public class IlsDesignerScripts {
 				for(Data data: recipeData) {
 					data.setProvider(provider);
 					data.setStepPath(stepPath);
-					data.createTag(null);
-					logger.infof("Created tag %s", data.getTagPath());
+					data.writeToTags();  // creates tag and writes current values
+					logger.debugf("Created tag %s", data.getTagPath());
 				}
 			}
 			catch(Exception e) {

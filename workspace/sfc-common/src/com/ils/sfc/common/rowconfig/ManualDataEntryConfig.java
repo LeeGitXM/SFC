@@ -84,7 +84,7 @@ public class ManualDataEntryConfig extends RowConfig {
 					newRow.prompt = strValue;
 				}
 				else if(name.equals("destination")) {
-					String translation = recipeLocationTranslation.get(strValue.toUpperCase());
+					String translation = recipeLocationTranslation.get(strValue.toLowerCase());
 					if(translation == null) {
 						logger.error("No translation for destination " + strValue);
 					}

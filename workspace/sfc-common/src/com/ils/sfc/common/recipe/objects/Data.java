@@ -218,7 +218,7 @@ public abstract class Data {
 			catch(Exception e) {
 				// ?? what to do...we are blindly assuming that everything in the associated
 				// data object is recipe data, which isn't necessarily true...
-				logger.error("Error creating recipe data", e);
+				logger.debug("Error creating recipe data", e);
 			}
 		}		
 		return recipeData;
@@ -340,8 +340,11 @@ public abstract class Data {
 		String myType = (String) getValue(IlsProperty.CLASS);
 		
 		// if value type not given, use the value as a cue:
-		if(this instanceof Value && valueTypeOrNull == null) {
+		if(valueTypeOrNull == null) {
 			valueTypeOrNull = inferValueType();
+			if(valueTypeOrNull != null) {
+				logger.debugf("Inferred value type %s for tag %s.%s", valueTypeOrNull, stepPath, getKey());
+			}
 		}
 		
 		Object[] args = {provider, stepPath, getKey(), myType, valueTypeOrNull};
@@ -357,6 +360,19 @@ public abstract class Data {
 	 *  returns null if value can't be inferred
 	 */
 	private String inferValueType() {
+		if(properties.contains(IlsProperty.TYPE)) {
+			String g2Type = ((String)getValue(IlsProperty.TYPE)).toLowerCase();
+			if(g2Type.equals("float") || g2Type.equals("quantity") ) {
+				return Constants.FLOAT;
+			}
+			else if(g2Type.equals("integer")) {
+				return Constants.INT;
+			}
+			else if(g2Type.equals("symbol")) {
+				return Constants.STRING;
+			}
+		}
+		
 		Object value = getValue(IlsProperty.NULLABLE_VALUE);
 		if(value != null) {
 			if(value instanceof Double || value instanceof Float) {
