@@ -164,6 +164,9 @@ public class PythonCall {
 	public static final PythonCall GET_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "getRecipeData", 
 			Object.class,  new String[]{"provider", "path"} );
 
+	public static final PythonCall GET_RECIPE_DATA_BATCH = new PythonCall("ils.sfc.common.recipe." + "getRecipeDataBatch", 
+			Object.class,  new String[]{"provider", "paths"} );
+
 	public static final PythonCall SET_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "setRecipeData", 
 			null,  new String[]{"provider", "path", "value", "synchronous"} );
 

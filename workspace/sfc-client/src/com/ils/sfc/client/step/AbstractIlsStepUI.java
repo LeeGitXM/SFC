@@ -163,6 +163,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 			background = Color.blue.brighter();
 		}
 		else if(
+			chartStatus.get().getChartState().isTerminal() ||
 			ElementStateEnum.Aborted == stepState ||
 			ElementStateEnum.Canceled == stepState ||
 			ElementStateEnum.Inactive == stepState 
