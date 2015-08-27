@@ -14,11 +14,10 @@ then
 fi
 SFC=${GIT_REPO}/sfc
 APP=${SFC}/migration/translate-onstart
-mkdir -p ${SFC}/migration/procs/g2/usecase/onstart
-cd ${SFC}/migration/procs/g2/usecase/onstart
+DIR=${SFC}/migration/procs/g2/usecase/onstart
+mkdir -p ${DIR}
+cd ${DIR}
 OUTDIR=${SFC}/migration/procs/ignition/usecase/onstart
-DIR=${SFC}/migration
-echo 'Rob, DIR is' $DIR
 for fil in *.txt
 do
     if [ -f $DIR/$fil ]
