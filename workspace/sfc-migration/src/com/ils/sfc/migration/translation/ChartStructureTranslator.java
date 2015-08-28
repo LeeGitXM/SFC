@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.w3c.dom.Document;
@@ -42,12 +44,12 @@ public class ChartStructureTranslator {
 		 *         Add a transition downstream of the start block, and connect the
 		 *         others to the original as well.
 		 */
-		NodeList blocks = g2chart.getElementsByTagName("block");
 		boolean needsRestructure = false;
 		// Search for blocks-to-morph-to-transitions
 		int index = 0;
 		int startIndex = 0;
 		// First-time through create default entries in the grid map
+		NodeList blocks = g2chart.getElementsByTagName("block");
 		while( index < blocks.getLength()) {
 			Element block = (Element)blocks.item(index);
 			String claz = block.getAttribute("class");
@@ -107,64 +109,119 @@ public class ChartStructureTranslator {
 		 *          Take the value of the callback and define it as the onstop
 		 *          method of the previous block. 
 		 */
-		index = 0;
 		// Search for transitions with Callback strategies
+		List<Element> transitions = new ArrayList<>();
+		index = 0;
 		while( index < blocks.getLength()) {
 			Element block = (Element)blocks.item(index);
 			String claz = block.getAttribute("class");
 			if( claz.equalsIgnoreCase("S88-CONDITIONAL-TRANSITION")) {
 				if( "callback".equalsIgnoreCase(block.getAttribute("strategy"))) {
-					addCallbackToUpstreamBlock(block,blocks);
+					transitions.add(block);
 				}
 			}
 			index++;
+		}
+		// Re-query with each loop as the nodes my be added
+		for(Element transition:transitions) {
+			blocks = g2chart.getElementsByTagName("block");
+			addCallbackToUpstreamStep(transition,blocks);
 		}
 	}
 	
-	private void addCallbackToUpstreamBlock(Element block,NodeList blocks) {
-		// Search for the block(s) connected to this transition. 
-		// Create a
-		String uuid = block.getAttribute("uuid");
-		String procedureName = block.getAttribute("callback");
+	/** 
+	 * The element will be a transition
+	 * @param transition
+	 * @param blocks current list of blocks
+	 */
+	private void addCallbackToUpstreamStep(Element transition,NodeList blocks) {
+		
+		// Search for the block(s) connected upstream of this transition. 
+		// If this is a custom ILS block, then insert a generic action step 
+		String uuid = transition.getAttribute("uuid");
+		String procedureName = transition.getAttribute("callback");
 		if( uuid==null || procedureName==null ) return;
-		int index = 0;
-		while( index < blocks.getLength())  {
-			Element parent = (Element)blocks.item(index);
-			NodeList connections = parent.getElementsByTagName("connectedTo");
-			int jndex = 0;
-			while(jndex<connections.getLength()) {
-				Element connection = (Element)connections.item(jndex);
-				if( uuid.equalsIgnoreCase(connection.getAttribute("uuid"))) {
-					// Create an action step downstream of this block, fix the connections.
-					Element actionBlock = g2chart.createElement("block");
-					actionBlock.setAttribute("class", "action-block");
-					actionBlock.setAttribute("uuid", UUID.randomUUID().toString().replace("-", ""));
-					actionBlock.setAttribute("label", "Transition Callback");
-					actionBlock.setAttribute("name", "TRANSITION-CALLBACK-ACTION");
-					Element cxn = g2chart.createElement("connectedTo");
-					cxn.setAttribute("uuid", parent.getAttribute("uuid"));
-					cxn.setAttribute("label", parent.getAttribute("label"));
-					actionBlock.appendChild(cxn);
-					// Update the block's connection to the transition
-					NodeList cxns = block.getElementsByTagName("connectedTo");
-					int count = cxns.getLength();
-					int k = 0;
-					while(k<count) {
-						cxn = (Element)cxns.item(k);
-						if( cxn.getAttribute("uuid").equalsIgnoreCase(uuid) )  {
-							cxn.setAttribute("uuid", actionBlock.getAttribute("uuid"));
-						}
-						k++;
-					}
-					// We make sure the procedure gets copied when converting to ignition
-					insertOnStopIntoActionBlock(actionBlock,procedureName);
+
+		Element parent = findParent(transition,blocks);
+		if( parent!=null) {
+			// We can only add stop methods to an action-step
+			// If the parent is one, then we're in good shape. 
+			// --- else we need to create one and insert.
+			Element actionBlock = null;
+			if( parent.hasAttribute("class") && !parent.getAttribute("class").equalsIgnoreCase("action-step") ) {
+				// Create an action step between the parent and the subject block, fix the connections.
+				actionBlock = g2chart.createElement("block");
+				//actionBlock.setAttribute("class", "action-step");  // Generic block does not have this attribute
+				actionBlock.setAttribute("uuid", UUID.randomUUID().toString().replace("-", ""));
+				actionBlock.setAttribute("label", "Transition Callback");
+				actionBlock.setAttribute("name", "TRANSITION-CALLBACK-ACTION");
+				log.infof("%s.addCallbackToUpstreamStep: Added action-block %s (%s)",TAG,actionBlock.getAttribute("name"),actionBlock.getAttribute("uuid"));
+				g2chart.getDocumentElement().insertBefore(actionBlock, transition);
+				// Move parent links to the new block
+				// The new block takes on all the connections of the parent
+				NodeList downstreamBlocks = parent.getElementsByTagName("connectedTo");
+				Element downstreamNode = null;
+				int count = downstreamBlocks.getLength();
+				int k = 0;
+				List<Element> elementsToMove = new ArrayList<Element>();
+				while(k<count) {
+					downstreamNode = (Element)downstreamBlocks.item(k);
+					elementsToMove.add(downstreamNode);
+					k++;
 				}
-				jndex++;
+				for(Element e:elementsToMove) {
+					parent.removeChild(e);
+					actionBlock.appendChild(e);
+				}
+
+				// Add a connection between the parent and the new action-step
+				Element cxn = g2chart.createElement("connectedTo");
+				cxn.setAttribute("uuid",  actionBlock.getAttribute("uuid"));
+				cxn.setAttribute("label", actionBlock.getAttribute("label"));
+				parent.appendChild(cxn);
+			}
+			else {
+				actionBlock = parent;
+			}
+			// We make sure this procedure gets copied when converting to ignition
+			insertOnStopIntoActionBlock(actionBlock,procedureName);
+		}
+		else {
+			log.warnf("%s.addCallbackToUpdstream:could not find parent of transition %s. Transition expression will be invalid.", TAG,transition.getAttribute("name"));	
+		}
+	}
+	
+	/**
+	 * Search for a node that has "connectedTo" links to the subject node.
+	 * @param block
+	 * @param blocks
+	 * @return
+	 */
+	private Element findParent(Element block,NodeList blocks) {
+		Element parent = null;
+		int index = 0;
+		int nodeCount = blocks.getLength();
+		String targetUuid = block.getAttribute("uuid");
+		//log.infof("%s.findParent: Looking for node of %d with connection to %s",TAG,nodeCount,targetUuid);
+		while( index<nodeCount) {
+			Element e = (Element)blocks.item(index);
+			NodeList connections = e.getElementsByTagName("connectedTo");
+			int connectionIndex = 0;
+			int connectionCount = connections.getLength();
+			while( connectionIndex<connectionCount) {
+				Element connection = (Element)connections.item(connectionIndex);
+				String uuid = connection.getAttribute("uuid");
+				if( targetUuid.equals(uuid)) {
+					log.infof("%s.findParent: Found %s as parent of %s out of %d blocks",TAG,e.getAttribute("uuid"),uuid,nodeCount);
+					return e;
+				}
+				connectionIndex++;
 			}
 			index++;
 		}
-		
+		return parent;
 	}
+	
 	/**
 	 * If the G2 block contains a "callback", then read its converted value from the 
 	 * file system and insert as a step property.
