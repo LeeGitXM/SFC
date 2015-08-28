@@ -15,11 +15,10 @@ fi
 SFC=${GIT_REPO}/sfc
 # ======================= OnStop ====================
 APP=${SFC}/migration/translate-onstop
-mkdir -p ${SFC}/migration/procs/g2/vistalon/onstop
-cd ${SFC}/migration/procs/g2/vistalon/onstop
+DIR=${SFC}/migration/procs/g2/vistalon/onstop
+mkdir -p ${DIR}
+cd ${DIR}
 OUTDIR=${SFC}/migration/procs/ignition/vistalon/onstop
-DIR=${SFC}/migration
-echo 'Rob, dir is' $DIR
 for fil in *.txt
 do
     if [ -f $DIR/$fil ]
@@ -42,10 +41,10 @@ do
 done
 # ======================= OnStart ====================
 APP=${SFC}/migration/translate-onstart
-mkdir -p ${SFC}/migration/procs/g2/vistalon/onstart
-cd ${SFC}/migration/procs/g2/vistalon/onstart
+DIR=${SFC}/migration/procs/g2/vistalon/onstart
+mkdir -p ${DIR}
+cd ${DIR}
 OUTDIR=${SFC}/migration/procs/ignition/vistalon/onstart
-DIR=${SFC}/migration
 for fil in *.txt
 do
     if [ -f $DIR/$fil ]

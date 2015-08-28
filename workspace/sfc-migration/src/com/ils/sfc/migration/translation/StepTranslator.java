@@ -44,7 +44,7 @@ public class StepTranslator {
 		boolean isEncapsulation = false;
 		boolean isTransition = false;
 		boolean isParallel = false;
-		if( claz!=null ) {
+		if( claz!=null && !claz.isEmpty() ) {
 			String fid = delegate.getClassMapper().factoryIdForClass(claz);
 			isEncapsulation= delegate.getClassMapper().isEncapsulation(claz);
 			isTransition= delegate.getClassMapper().isTransition(claz);

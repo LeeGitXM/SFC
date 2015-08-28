@@ -169,6 +169,14 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('uil-post-delay-
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('unset-value','ils.vistalon.util.UnsetValue.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('write-recipe-data-to-file','ils.sfc.gateway.api.s88WriteData');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure,ReturnType) values ('em-get-quant-recommendation-def','ils.diagToolkit.recommendation.defineQuantOutput','dictionary');
+-- Test precedure references
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('g2-clear-histories','com.ils.sfc.python.History.clear');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ph-callback-3','com.ils.test.Callback.execute3');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('test-14-callback','com.ils.test.Callback.execute14');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('test-15-initialize','com.ils.test.Callback.initialize15');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('test-15-writer','com.ils.sfc.python.File.print');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('test-16-initialize','com.ils.test.Callback.initialize16');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('test-16-writer','com.ils.sfc.python.File.print');
 -- Built-into Python
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('round-to-x-places','ils.vistalon.util.round');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('max','max');

@@ -15,8 +15,12 @@ mkdir -p $PROCS/ignition/vistalon/onstart
 mkdir -p $PROCS/ignition/vistalon/onstop
 mkdir -p $PROCS/ignition/usecase/normal
 #cp -a "${SVN}"/UnitTests/*/callbacks/*.txt $REPO/g2/onstart
-#cp -a "${SVN}"/Vistalon/*/callbacks/*.txt $REPO/g2/normal
 for fil in "${SVN}"/UnitTests/*/callbacks/*.txt
+do
+	name=`basename "$fil"`
+	cat "$fil"  > ${PROCS}/g2/usecase/onstart/$name
+done
+for fil in "${SVN}"/UnitTests/*/callbacks/*/*.txt
 do
 	name=`basename "$fil"`
 	cat "$fil"  > ${PROCS}/g2/usecase/onstart/$name

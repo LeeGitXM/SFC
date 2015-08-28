@@ -17,7 +17,6 @@ import com.ils.sfc.migration.Converter;
  *   1)  lookup of relative path, versus chart name.
  */
 public class PathWalker extends AbstractPathWalker implements FileVisitor<Path>  {
-	private final static String TAG = "PathWalker";;
 	private final Converter delegate;
 	private final String root;
 	 /**

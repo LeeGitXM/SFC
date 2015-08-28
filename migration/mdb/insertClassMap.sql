@@ -64,6 +64,7 @@ insert into ClassMap values('em-s88-rate-change-current-data-callback','java.uti
 insert into ClassMap values ('chart','chart');
 insert into ClassMap values ('error','java.util.Map');
 insert into ClassMap values ('g2Variable','java.util.Map');
+insert into ClassMap values ('float-variable','java.lang.Double');
 insert into ClassMap values ('kb-workspace','java.util.List');
 insert into ClassMap values ('procedure','java.util.Map');
 insert into ClassMap values ('quantity-array','java.util.List');

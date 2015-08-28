@@ -27,8 +27,10 @@ insert into SfcPropertyMap values ('com.ils.timedDelayStep','strategy','strategy
 -- MISC STEPS
 insert into SfcPropertyMap values ('action-step','description','description');
 insert into SfcPropertyMap values ('com.ils.inputStep','description','description');
+insert into SfcPropertyMap values ('com.ils.monitorDownloadStep','description','description');
 insert into SfcPropertyMap values ('com.ils.pauseStep','description','description');
-insert into SfcPropertyMap values ('com.ils.clearQueueStep','description','description');
+insert into SfcPropertyMap values ('com.ils.pauseStep','description','description');
+insert into SfcPropertyMap values ('com.ils.pvMonitoringStep','description','description');
 -- CONTROL PANEL MESSAGE
 insert into SfcPropertyMap values ('com.ils.controlPanelMessageStep','ackRequired','ackRequired');
 insert into SfcPropertyMap values ('com.ils.controlPanelMessageStep','description','description');

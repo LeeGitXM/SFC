@@ -74,6 +74,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 public class Converter {
 	private final static String TAG = "Converter";
 	private static final String USAGE = "Usage: converter [-x] <database> <from> <to> <start>";
+	private final static String NOLABEL = "nolabel";
 	public static boolean haltOnError = false;
 	private static final LoggerEx log = LogUtil.getLogger(Converter.class.getPackage().getName());
 	
@@ -280,18 +281,18 @@ public class Converter {
 			int pos = path.lastIndexOf(".");
 			if( pos>0 ) path = path.substring(0, pos); 
 			String prettyPath = prettyPath(path);
-			log.infof("%s.visitFile: path map of %s = %s",TAG,inpath,prettyPath);
+			log.infof("%s.analyzePath: path map of %s becomes %s",TAG,inpath,prettyPath);
 			pathMap.put(inpath, prettyPath);
 			
 		}
 		catch (ParserConfigurationException pce) {
-			log.errorf("%s.analyzeFile: Error parsing %s (%s)",TAG,inpath,pce.getMessage());
+			log.errorf("%s.analyzePath: Error parsing %s (%s)",TAG,inpath,pce.getMessage());
 		}
 		catch (SAXException sax) {
-			log.errorf("%s.analyzeFile: Error analyzing %s (%s)",TAG,inpath,sax.getMessage());
+			log.errorf("%s.analyzePath: Error analyzing %s (%s)",TAG,inpath,sax.getMessage());
 		}
 		catch (IOException ioe) {
-			log.errorf("%s.analyzeFile: Failure to read %s (%s)",TAG,inpath,ioe.getMessage());
+			log.errorf("%s.analyzePath: Failure to read %s (%s)",TAG,inpath,ioe.getMessage());
 		}
 		
 	}
@@ -532,6 +533,8 @@ public class Converter {
 	 * @return
 	 */
 	private String prettyPath(String path) {
+		path.replaceAll("[.][.]", String.format(".%s.",NOLABEL));
+		if( path.endsWith(".")) path = path+NOLABEL;
 		String[] segments = path.split("[.]");
 		StringBuilder builder = new StringBuilder();
 		for(String seg:segments) {
