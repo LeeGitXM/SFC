@@ -27,6 +27,7 @@ import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
 import com.inductiveautomation.sfc.definitions.ParallelDefinition;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
+import com.inductiveautomation.sfc.definitions.TransitionDefinition;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartCompiler;
@@ -222,6 +223,7 @@ public class ChartTreeDataModel {
 	// @param parentRow the row in the nodes table corresponding to the enclosing block. Guaranteed 
 	//                  to be non-null
 	private void handleEnclosingSteps(Integer parentRow,String stepName,List<ElementDefinition> steps) {
+		log.debugf("%s.handleEnclosingStep: for parent %d (%s), %d steps", TAG,parentRow,stepName,steps.size());
 		List<String> stepNames = stepMap.get(parentRow);
 		if( stepNames==null) {
 			stepNames = new ArrayList<>();
@@ -229,7 +231,7 @@ public class ChartTreeDataModel {
 		}
 		else {
 			if( stepNames.contains(stepName)) return;
-			else stepNames.add(stepName);
+			else if(stepName!=null)  stepNames.add(stepName);
 		}
 		for( ElementDefinition step:steps) {
 			if( step instanceof StepDefinition ) {
@@ -240,11 +242,11 @@ public class ChartTreeDataModel {
 					String name = stepDef.getProperties().get(EnclosingStepProperties.Name);
 					String path = stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH);
 					log.debugf("%s.handleEnclosingStep: enclosing step %d.%s = %s", TAG,parentRow,name,path);
-					// Create the step-that-is-an-enclosure node
-					// Link it to the base and create an EnclosingStep reference.
+					// Create the step-that-is-an-enclosure node (if it doesn't already exist)
 					int newRow = addNodeTableRow(name,BrowserConstants.NO_RESOURCE);
 					addEdgeTableRow(parentRow.intValue(),newRow);
 					lineage.put(new Integer(newRow), new Integer(parentRow));
+					// Link it to the base and create an EnclosingStep reference.
 					EnclosingStep es = new EnclosingStep(parentRow,newRow,name,path);
 					enclosingSteps.add(es);
 				}
@@ -255,6 +257,10 @@ public class ChartTreeDataModel {
 				for(ElementDefinition ed:starters) {
 					handleEnclosingSteps(parentRow,stepName,ed.getNextElements());
 				}
+			}
+			// Do nothing - a transition can't enclose
+			else if( step instanceof TransitionDefinition ) {
+				;
 			}
 			// Careful here -- it is perfectly legal for the chart itself to loop
 			handleEnclosingSteps(parentRow,stepName,step.getNextElements());
@@ -287,23 +293,23 @@ public class ChartTreeDataModel {
 	// @param step contains actual parent, actual step. These may or may not be the same node as 
 	//       was found originally when the step was created.
 	private void linkEnclosureStepToReferencedNode(int newStepRow,EnclosingStep step) {
-		Integer refrow = rowLookup.get(step.getReferencePath());
+		Integer refrow = rowLookup.get(step.getChartPath());
 		if( refrow!=null ) {
 			if( !isLoop(step.getParentRow(),refrow) ) {
-				int targetRow = refrow.intValue();
 				int count = nodes.getInt(refrow, BrowserConstants.CXNS);
-				log.debugf("%s.populateEnclosureReference: enclosure %d.%s->%d, count=%d", TAG,newStepRow,step.getStepName(),refrow,count);
+				log.tracef("%s.linkEnclosureStepToReferencedNode: enclosure %d.%s->%d, count=%d", TAG,newStepRow,step.getStepName(),refrow,count);
 				if( count==0) {
 					// We're good to go, just make the connection
 					addEdgeTableRow(newStepRow,refrow);   // Increments connection count
 				}
 				else {
 					// Create a copy, then copy the rest of its node hierarchy as a completely new linkage.
-					refrow = addNodeTableRow( step.getReferenceName(),nodes.getInt(refrow, BrowserConstants.RESOURCE));
-					lineage.put(new Integer(refrow), new Integer(step.getParentRow()));
-					addEdgeTableRow(newStepRow,refrow);
+					int newrow = addNodeTableRow( step.getReferenceName(),nodes.getInt(refrow, BrowserConstants.RESOURCE));
+					lineage.put(new Integer(newrow), new Integer(step.getParentRow()));
+					addEdgeTableRow(newStepRow,newrow);
+					populateTargetNode(newrow,refrow.intValue());
 				}
-				populateTargetNode(targetRow,refrow.intValue());
+				
 			}
 			else {
 				nodes.setInt(step.getStepRow(), BrowserConstants.STATUS, BrowserConstants.STATUS_LOOP);
@@ -318,28 +324,31 @@ public class ChartTreeDataModel {
 		}
 	}
 	
-	// Search the node for enclosing steps. Link the node to the step,
-	// then expand the step.
+	// Recursively scan the edge hierarchy for children of the reference. When found create a clone
+	// linked to the actual row.
 	private void populateTargetNode(int actualRow,int referenceRow) {
 		if( actualRow==referenceRow ) return;   // We're linked into an existing sub-tree.
-		// Search known enclosing steps for enclosures under the target
-		for( EnclosingStep es:enclosingSteps) {
-			if( es.getParentRow()==referenceRow)	 {
-				int refStepRow = es.getStepRow();
-				int count = nodes.getInt(refStepRow, BrowserConstants.CXNS);
-				log.debugf("%s.populateTargetNode: enclosure %d(%s)->%d, count=%d", TAG,es.getParentRow(),es.getStepName(),es.getStepRow(),count);
-				if( count==0) {
-					// We're good to go, just make the connection
-					addEdgeTableRow(actualRow,refStepRow);
-				}
-				else {
-					// Create a copy, then link to the parent
-					Integer newRow = addNodeTableRow( es.getReferenceName(),BrowserConstants.NO_RESOURCE);
-					addEdgeTableRow(actualRow,newRow.intValue());
-					refStepRow = newRow.intValue();
-				}
-				linkEnclosureStepToReferencedNode(refStepRow,es);
+		
+		log.tracef("%s.populateTargetNode. %d:%d",TAG,actualRow,referenceRow);
+		// Search edges for children. Make a separate list to avoid concurrent modifications
+		List<Integer> childrenToClone = new ArrayList<>();
+		int count = edges.getRowCount();
+		int index = 0;
+		while( index<count ) {
+			// We're only interested in the parent ..
+			int parent = edges.getInt(index, Graph.DEFAULT_SOURCE_KEY);
+			if( parent==referenceRow) {
+				// Create a copy, link to the parent and recurse.
+				int sibling = edges.getInt(index, Graph.DEFAULT_TARGET_KEY);
+				childrenToClone.add(new Integer(sibling));
 			}
+			index++;
+		}
+		
+		for(Integer sibling:childrenToClone) {
+			Integer newRow = addNodeTableRow( nodes.getString(sibling.intValue(),BrowserConstants.NAME),BrowserConstants.NO_RESOURCE);
+			addEdgeTableRow(actualRow,newRow.intValue());
+			populateTargetNode(newRow.intValue(),sibling.intValue());
 		}
 	}
 	
@@ -461,7 +470,7 @@ public class ChartTreeDataModel {
 	private class EnclosingStep {
 		private final String referenceName;
 		private final String stepName;
-		private final String path;
+		private final String chartPath;   // Path to chart pointed to by this step
 		private final int    parentRow;
 		private final int    stepRow;
 		
@@ -470,11 +479,13 @@ public class ChartTreeDataModel {
 			this.stepRow = sRow;
 			this.referenceName = getLastPathElement(referencePath);
 			this.stepName   = sName;
-			this.path = referencePath;
+			this.chartPath = referencePath;
+			log.debugf("EnclosingStep.constructor: %s %d (parent %d) at %s",stepName,stepRow,parentRow,chartPath);
 		}
+		
 		public String getReferenceName() { return referenceName; }
 		public String getStepName() { return stepName; }     // May be null
-		public String getReferencePath() { return path; }
+		public String getChartPath() { return chartPath; }
 		public int getParentRow() { return parentRow; }
 		public int getStepRow() { return stepRow; }
 		private String getLastPathElement(String path) {
