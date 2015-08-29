@@ -39,8 +39,7 @@ public class CollectDataConfig extends RowConfig {
 		public String tagPath;
 		public String valueType;
 		public String pastWindow;
-		public String defaultValue;
-		
+		public String defaultValue;		
 	}
 
 	public List<Row> getRows() {

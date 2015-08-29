@@ -28,7 +28,7 @@ insert into SfcClassMap values ('S88-PHASE','com.ils.phaseStep','enclosure');
 insert into SfcClassMap values ('S88-POST-BUSY-NOTIFICATION-TASK','com.ils.postDelayNotification','');
 insert into SfcClassMap values ('S88-PRINT-OR-VIEW-FILE-TASK','com.ils.printFileStep','');
 insert into SfcClassMap values ('S88-PRINT-WORKSPACE-TASK','com.ils.printWindowStep','');
-insert into SfcClassMap values ('S88-PV-MONITORING-TASK','com.ils.PVMonitorStep','');
+insert into SfcClassMap values ('S88-PV-MONITORING-TASK','com.ils.pvMonitorStep','');
 insert into SfcClassMap values ('S88-REMOVE-BUSY-NOTIFICATION-TASK','com.ils.deleteDelayNotification','');
 insert into SfcClassMap values ('S88-RESET-TASK','action-step','');     -- unimplemented
 insert into SfcClassMap values ('S88-REVIEW-DATA-TASK','com.ils.reviewDataStep','');
