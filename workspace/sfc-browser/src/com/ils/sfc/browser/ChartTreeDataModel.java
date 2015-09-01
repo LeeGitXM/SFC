@@ -250,6 +250,8 @@ public class ChartTreeDataModel {
 					EnclosingStep es = new EnclosingStep(parentRow,newRow,name,path);
 					enclosingSteps.add(es);
 				}
+				// Careful here -- it is perfectly legal for the chart itself to loop
+				handleEnclosingSteps(parentRow,stepName,step.getNextElements());
 			}
 			else if( step instanceof ParallelDefinition ) {
 				ParallelDefinition parallelDef = (ParallelDefinition)step;
@@ -262,8 +264,6 @@ public class ChartTreeDataModel {
 			else if( step instanceof TransitionDefinition ) {
 				;
 			}
-			// Careful here -- it is perfectly legal for the chart itself to loop
-			handleEnclosingSteps(parentRow,stepName,step.getNextElements());
 		}
 	}
 	
@@ -313,13 +313,13 @@ public class ChartTreeDataModel {
 			}
 			else {
 				nodes.setInt(step.getStepRow(), BrowserConstants.STATUS, BrowserConstants.STATUS_LOOP);
-				log.warnf("%s.populateEnclosureReference. Detected loop at node %s referenced by enclosure %d:%d:%s", TAG,
+				log.warnf("%s.linkEnclosureStepToReferencedNode. Detected loop at node %s referenced by enclosure %d:%d:%s", TAG,
 						step.getReferenceName(),step.getParentRow(),step.getStepRow(),step.getStepName());
 			}
 		}
 		else {
 			nodes.setInt(step.getStepRow(), BrowserConstants.STATUS, BrowserConstants.STATUS_PATH);
-			log.warnf("%s.populateEnclosureReference. Unable to find node %s referenced by enclosure %d:%d:%s", TAG,
+			log.warnf("%s.linkEnclosureStepToReferencedNode. Unable to find node %s referenced by enclosure %d:%d:%s", TAG,
 					step.getReferenceName(),step.getParentRow(),step.getStepRow(),step.getStepName());
 		}
 	}
