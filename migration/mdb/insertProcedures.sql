@@ -11,6 +11,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('_em-s88-test-si
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('_s88-abort','com.ils.sfc.python.S88State.abort');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('_s88-post-message-to-queue','com.ils.queue.post.messageToQueue');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('average','com.ils.blt.functions.average');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('build-message-on-wksp','ils.blt.lib.noopint');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('build-message-on-workspace','ils.blt.lib.noopint');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('bypass-output-limits','ils.blt.lib.bypassOutputLimits');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-baler-temp-problem-output-gda','ils.vistalon.vfu.BalerTemperatureOutput.calculate');
@@ -122,6 +123,8 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-update-stru
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('insert-at-end','append');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('instancesOfClass','com.ils.function.find');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('lab-baler-sqc-problem-start-uir','ils.vistalon.crx.uir.startLabBalerSqc');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('max-mst-var-gda','ils.blt.lib.maxMstVar');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ml-mst-bias-ctl-gain-gda','ils.blt.lib.mlBstBiasCtlGain');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('named-item-exists','ils.blt.lib.namedItemExists');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('not-specified','ils.vistalon.util.NoOutput.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('oc-alert-start-exe','ils.vistalon.alert.start');
@@ -132,7 +135,8 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('output-msg-core
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('post-error','ils.vistalon.fd.ProductMooney.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('print-text-file','com.ils.sfc.python.File.print');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('prod-g2-port','com.ils.sfc.python.Product.getPort');
-insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('prod-mooney-gda','ils.vistalon.fd.ProductMooney.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('prod-mooney-gda','project.vistalon.cstr.ProductMooney.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('prod-mooney-reset-mooney-gda','project.vistalon.cstr.ProductMooney.resetMooney');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('recalc-cat-sps-gda','ils.vistalon.fd.CatSps.recalculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('reset_fd-gda','ils.diagToolkit.fd.reset');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('rx-type','ils.sfc.python.rx.getType');
