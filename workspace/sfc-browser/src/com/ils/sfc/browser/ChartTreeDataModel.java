@@ -41,6 +41,7 @@ import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 public class ChartTreeDataModel {
 	private static final String TAG = "ChartTreeDataModel";
 	private int ROOT_ROW = 0;           // Number of the root row
+	private String NO_NAME = "NO_NAME";
 	
 	private final Map<Integer,Integer> lineage;       // Find parent given child
 	private final Map<String,Integer>  rowLookup;     // Find node row by path
@@ -223,16 +224,16 @@ public class ChartTreeDataModel {
 	// @param parentRow the row in the nodes table corresponding to the enclosing block. Guaranteed 
 	//                  to be non-null
 	private void handleEnclosingSteps(Integer parentRow,String stepName,List<ElementDefinition> steps) {
+		if(stepName==null) stepName = NO_NAME;
 		log.debugf("%s.handleEnclosingStep: for parent %d (%s), %d steps", TAG,parentRow,stepName,steps.size());
 		List<String> stepNames = stepMap.get(parentRow);
 		if( stepNames==null) {
 			stepNames = new ArrayList<>();
 			stepMap.put(parentRow, stepNames);
 		}
-		else {
-			if( stepNames.contains(stepName)) return;
-			else if(stepName!=null)  stepNames.add(stepName);
-		}
+		if( stepNames.contains(stepName)) return;
+		else if(stepName!=null)  stepNames.add(stepName);
+		
 		for( ElementDefinition step:steps) {
 			if( step instanceof StepDefinition ) {
 				StepDefinition stepDef = (StepDefinition)step;
