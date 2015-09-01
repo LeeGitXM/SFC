@@ -132,7 +132,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('output-msg-core
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('post-error','ils.vistalon.fd.ProductMooney.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('print-text-file','com.ils.sfc.python.File.print');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('prod-g2-port','com.ils.sfc.python.Product.getPort');
-insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('prod-mooney-gda','ils.vistalon.fd.ProductMooney.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('prod-mooney-gda','project.vistalon.cstr.ProductMooney.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('recalc-cat-sps-gda','ils.vistalon.fd.CatSps.recalculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('reset_fd-gda','ils.diagToolkit.fd.reset');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('rx-type','ils.sfc.python.rx.getType');
