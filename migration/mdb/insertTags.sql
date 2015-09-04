@@ -81,7 +81,7 @@ insert into TagMap values ('E-BALER-TEMP-LAB-DATA','[]LabData/VFU/E-BALER-TEMP-L
 insert into TagMap values ('E-BALER-VOL-FTNIR-DATA','[]LabData/VFU/E-BALER-VOL-FTNIR-DATA/value','DOUBLE');
 insert into TagMap values ('E-BALER-VOL-FTNIR-SQC-PATH','[]DiagnosticToolkit/Connections/EBalerVolFtnir','STRING');
 insert into TagMap values ('E-BALER-VOL-LAB-DATA','[]LabData/VFU/E-BALER-VOL-LAB-DATA/value','DOUBLE');
-insert into TagMap values ('E-BALER-VOL-LAB-SQC-PATH','[]DiagnosticToolki/Connections/EBalerVolLab','STRING');
+insert into TagMap values ('E-BALER-VOL-LAB-SQC-PATH','[]DiagnosticToolkit/Connections/EBalerVolLab','STRING');
 insert into TagMap values ('EM-COLD-STICK-RX-OUTLET-TEMP-MONITOR-BLOCK-1','[]Site/VFU/COLDSTICK-OUTLET-TEMP-MONITOR','STRING');
 insert into TagMap values ('EM-MONITOR-COLDSTICK-DCS-SETPOINTS-BLOCK','[]Site/VFU/COLDSTICK-DCS-SETPOINT','STRING');
 insert into TagMap values ('EM-GDA-LOGICAL-VARIABLE-XXX-2','[]Site/VFU/VFU_FREEZER_SWITCH_REMINDER','BOOLEAN');
@@ -417,3 +417,5 @@ insert into TagMap values ('stab_filtered_value','[]LabData/RLA3/STAB-LAB-DATA/f
 
 -- Miscellaneous Named Objects
 insert into TagMap values ('the em-sqc-plot upon the subworkspace of toolkit-console','[]Site/Plots/SqcPlotName','STRING');
+-- New reference for GDL-NUMERIC-ENTRY-POINT-XXX-59
+insert into TagMap values ('the unix-sample-time of mooneu-lab-data','[]LabData/RLA3/MOONEY-LAB-DATA/sampleTime','STRING');
