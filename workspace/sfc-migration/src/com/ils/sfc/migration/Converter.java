@@ -49,7 +49,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.recipe.objects.StepPropertyTranslator;
 import com.ils.sfc.common.rowconfig.RowConfig;
+import com.ils.sfc.common.step.AllSteps;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
@@ -63,6 +66,8 @@ import com.ils.sfc.migration.translation.StepLayoutManager;
 import com.ils.sfc.migration.translation.StepTranslator;
 import com.ils.sfc.migration.visitor.CopyWalker;
 import com.ils.sfc.migration.visitor.PathWalker;
+import com.inductiveautomation.ignition.common.config.BasicProperty;
+import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 /**
@@ -443,6 +448,7 @@ public class Converter {
 			log.errorf("%s.docToString: Error creating transformer for string conversion (%s)",TAG,tce.getMessage());
 		}
 		catch(TransformerException te) {
+			te.printStackTrace();
 			log.errorf("%s.docToString: Error transforming document (%s)",TAG,te.getMessage());
 		}
 		return result;
@@ -595,6 +601,34 @@ public class Converter {
 	public void updateStepFromG2Block(Document chart,Element step,Element g2block) {
 		String factoryId = step.getAttribute("factory-id");
 		log.debugf("%s.updateStepFromG2Block: step class = %s",TAG,factoryId);
+		Map<String,String> translation = StepPropertyTranslator.getStepTranslation(factoryId, g2block, log);
+		
+		// cross-check with all step properties we expect to be translated:
+		if(factoryId.startsWith("com.ils")) {
+			Property<?>[] igProperties = AllSteps.getProperties(factoryId);
+			for(Property<?> prop: igProperties) {
+				String propName = prop.getName();
+				if(IlsProperty.isIgnoredProperty(prop.getName()) ||
+					propName.equals("chart-path")) {
+					continue;
+				}
+				if(!translation.keySet().contains(propName)) {
+					log.warnf("no g2 translation for step property %s in %s", propName, factoryId);
+				}
+			}
+		}
+		
+		for(String propName: translation.keySet()) {
+			Element propelement = chart.createElement(propName);
+			String propValue = translation.get(propName);
+			// null values will cause the XML transformation to blow up, so
+			// substitute an empty string:
+			if(propValue == null) propValue = "";
+			Node textNode = chart.createTextNode(propValue);
+			propelement.appendChild(textNode);
+			step.appendChild(propelement);
+		}
+		/*
 		List<String> properties = propertyMapper.getPropertyList(factoryId);
 		if( properties!=null ) {
 			for( String property:properties ) {
@@ -612,6 +646,7 @@ public class Converter {
 		else {
 			if( factoryId.startsWith("com.ils") ) log.warnf("updateStepFromG2Block: WARNING: No properties found for class %s",factoryId);
 		}
+		*/
 		
 		// Convert the block configurations, if any:
 		Map<String,String> blockPropertyMap = RowConfig.convert(factoryId, g2block);
@@ -731,7 +766,6 @@ public class Converter {
 		}
 		catch(Exception ex) {
 			System.err.println(String.format("%s.main: UncaughtException (%s)",TAG,ex.getMessage()));
-			ex.printStackTrace(System.err);
 		}
 		log.infof("%s.main: COMPLETE",TAG);
 	}

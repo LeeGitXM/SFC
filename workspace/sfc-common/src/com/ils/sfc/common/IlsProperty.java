@@ -18,10 +18,8 @@ import system.ils.sfc.common.Constants;
 
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
-import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
-@SuppressWarnings("serial")
 public class IlsProperty {
 	private static final String EMPTY_MONITOR_DOWNLOAD_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_CONFIRM_CONTROLLERS_CONFIG = "{\"rows\":[]}";
@@ -33,10 +31,65 @@ public class IlsProperty {
 	
 	private static final Map<Integer, PropertyInfo> infoById = new HashMap<Integer, PropertyInfo>();
 	
+	private static final Map<String,String> g2ValueTrans = new HashMap<String,String>();
+	private static void addValueTranslation(String key, String value) {
+		if(g2ValueTrans.get(key) != null) {
+			throw new Error("Translation already exists for " +  key);
+		}
+		else {
+			g2ValueTrans.put(key, value);
+		}
+	}
+	static {
+		// RECIPE_LOCATION_CHOICES = {LOCAL, PRIOR, SUPERIOR, GLOBAL, OPERATION, PHASE, TAG};
+		addValueTranslation("GLOBAL", Constants.GLOBAL);
+		addValueTranslation("OPERATION", Constants.OPERATION);
+		addValueTranslation("PHASE", Constants.PHASE);
+		addValueTranslation("SUPERIOR", Constants.SUPERIOR);
+		addValueTranslation("PROCEDURE", Constants.GLOBAL);
+		addValueTranslation("PREVIOUS", Constants.PREVIOUS);
+		addValueTranslation("LOCAL", Constants.LOCAL);
+		
+		// Constants.POSITION_CHOICES
+		addValueTranslation("CENTER", Constants.CENTER);
+		addValueTranslation("TOP-LEFT", Constants.TOP_LEFT);
+		addValueTranslation("TOP-CENTER", Constants.TOP_CENTER);
+		addValueTranslation("TOP-RIGHT", Constants.TOP_RIGHT);
+		addValueTranslation("BOTTOM-LEFT", Constants.BOTTOM_LEFT);
+		addValueTranslation("BOTTOM-CENTER", Constants.BOTTOM_CENTER);
+		addValueTranslation("BOTTOM-RIGHT", Constants.BOTTOM_RIGHT);
+		
+		// Constants.TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK}
+		addValueTranslation("STATIC", Constants.STATIC);
+		addValueTranslation("RECIPE", Constants.RECIPE);
+		addValueTranslation("CALLBACK", Constants.CALLBACK);
+
+		// AUTO_MODE_CHOICES = {AUTOMATIC, SEMI_AUTOMATIC};
+		addValueTranslation("SEMI-AUTOMATIC", Constants.SEMI_AUTOMATIC);
+		addValueTranslation("AUTOMATIC", Constants.AUTOMATIC);
+		
+		// PRIORITY_CHOICES = {INFO, WARNING, ERROR};
+		addValueTranslation("INFORMATION", Constants.INFO);
+		addValueTranslation("WARNING", Constants.WARNING);
+		addValueTranslation("ERROR", Constants.ERROR);
+		
+		// TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
+		addValueTranslation("SEC", Constants.DELAY_UNIT_SECOND);
+		addValueTranslation("MIN", Constants.DELAY_UNIT_MINUTE);
+		addValueTranslation("HR", Constants.DELAY_UNIT_HOUR);
+		
+		// TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK};
+		addValueTranslation("ATATIC", Constants.STATIC);
+		addValueTranslation("SEC", Constants.RECIPE);
+		addValueTranslation("SEC", Constants.CALLBACK);
+
+}
+	
 	public static class PropertyInfo {
 		boolean isSerializedObject = false;
 		String[] choices;
 		String label;
+		Map<String,String> g2ValueTranslation;
 		
 		public PropertyInfo(boolean isSerializedObject, String[] choices,
 				String label) {
@@ -47,7 +100,7 @@ public class IlsProperty {
 		}
 	}
 	
-	// properties to omit from the editor
+	// properties to omit from the Ignition editor
 	public static final Set<String> ignoreProperties = new HashSet<String>();
 	static {
 		// Ignition step properties:
@@ -63,6 +116,7 @@ public class IlsProperty {
 		ignoreProperties.add("passed-parameters");  // hide this for ILS encapsulations like Procedure
 		ignoreProperties.add("return-parameters");  // hide this for ILS encapsulations like Procedure
 	}
+	public static boolean isIgnoredProperty(String name) { return ignoreProperties.contains(name); }
 
     public static final BasicProperty<Boolean> ACK_REQUIRED = createProperty(Constants.ACK_REQUIRED, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<String> ADVICE = createProperty(Constants.ADVICE, String.class, "");
@@ -374,5 +428,74 @@ public class IlsProperty {
 			buf.append(Character.toLowerCase(c));
 		}
 		return buf.toString();
+	}
+
+	private static Map<String, BasicProperty<?>> g2ToIgProperty = new HashMap<String, BasicProperty<?>>();
+	static {
+		g2ToIgProperty.put("callback", CALLBACK);
+		g2ToIgProperty.put("clearTimer", TIMER_CLEAR);
+		g2ToIgProperty.put("description", DESCRIPTION);
+		g2ToIgProperty.put("delay-time", DELAY);
+		g2ToIgProperty.put("delay-units", DELAY_UNIT);
+		g2ToIgProperty.put("dialogId", DIALOG);
+		g2ToIgProperty.put("directory", DIRECTORY);
+		g2ToIgProperty.put("filename", FILENAME);
+		g2ToIgProperty.put("identifier-or-name", KEY);
+		g2ToIgProperty.put("key", KEY);
+		g2ToIgProperty.put("label", LABEL);
+		g2ToIgProperty.put("label", LABEL);
+		g2ToIgProperty.put("message-queue-name", MESSAGE_QUEUE);
+		g2ToIgProperty.put("messageQueueName", MESSAGE_QUEUE);
+		g2ToIgProperty.put("messageText", MESSAGE);
+		g2ToIgProperty.put("mode", MESSAGE);
+		g2ToIgProperty.put("monitorItemName", KEY);
+		g2ToIgProperty.put("monitorKey", KEY);
+		g2ToIgProperty.put("monitorLocalValue", KEY);
+		g2ToIgProperty.put("monitorRecipeLocation", RECIPE_LOCATION);
+		g2ToIgProperty.put("monitorStrategy", RECIPE_LOCATION);
+		g2ToIgProperty.put("name", NAME);
+		g2ToIgProperty.put("post-notification", POST_NOTIFICATION);
+		g2ToIgProperty.put("priority", PRIORITY);
+		g2ToIgProperty.put("prompt", PROMPT);
+		g2ToIgProperty.put("recipe-data-location", RECIPE_LOCATION);
+		g2ToIgProperty.put("recipe-location", RECIPE_LOCATION);
+		g2ToIgProperty.put("recipeLocation", RECIPE_LOCATION);
+		g2ToIgProperty.put("setTimer", TIMER_SET);
+		g2ToIgProperty.put("strategy", TIME_DELAY_STRATEGY); // ?? multiple??		
+		g2ToIgProperty.put("timerKey", TIMER_KEY);
+		g2ToIgProperty.put("timerSource", TIMER_LOCATION);
+		g2ToIgProperty.put("workspace-location", POSITION);
+		g2ToIgProperty.put("workspace-scale", SCALE);
+		g2ToIgProperty.put("workspaceLocation", POSITION);
+		g2ToIgProperty.put("workspaceScale", SCALE);
+			
+	}
+	
+	public static BasicProperty<?> getTranslationForG2Property(String name) {
+		return g2ToIgProperty.get(name);
+	}
+
+	public static String getTranslationForG2Value(String factoryId, BasicProperty<?> property, 
+		String g2Value, LoggerEx logger) {
+		if(IlsSfcCommonUtils.isEmpty(g2Value)) return null;
+		PropertyInfo info = infoById.get(getPropertyId(property));
+		if(info != null && info.choices != null) {
+			String transValue = null;
+			// values are constrained
+			if(info.g2ValueTranslation != null && info.g2ValueTranslation.get(g2Value) != null)  {
+				transValue = info.g2ValueTranslation.get(g2Value);
+			}
+			else {
+				transValue = g2ValueTrans.get(g2Value);
+			}
+			if(transValue == null) {
+				logger.errorf("no translation for g2 value %s in %s.%s", g2Value, factoryId, property.getName() );
+			}
+			return transValue;
+		}
+		else {
+			// no constraint on value
+			return g2Value;
+		}
 	}
 }
