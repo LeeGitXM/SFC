@@ -34,7 +34,7 @@ public class IlsProperty {
 	private static final Map<String,String> g2ValueTrans = new HashMap<String,String>();
 	private static void addValueTranslation(String key, String value) {
 		if(g2ValueTrans.get(key) != null) {
-			throw new Error("Translation already exists for " +  key);
+			//throw new Error("Translation already exists for " +  key);
 		}
 		else {
 			g2ValueTrans.put(key, value);
