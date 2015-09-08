@@ -84,7 +84,8 @@ public class IlsSfcCommonUtils {
 		// it doesn't handle single quotes. Should we handle that?
 		try {
 			for(PropertyValue<?> pvalue: element) {
-				if(IlsProperty.ignoreProperties.contains(pvalue.getProperty().getName())) continue;
+				// Note: the ignition code will take care of writing xml for ignition properties:
+				if(IlsProperty.isHiddenProperty(pvalue.getProperty().getName())) continue;
 				writer.writeStartElement(pvalue.getProperty().getName());
 				if(pvalue.getValue() != null) {
 					String saveValue = pvalue.getValue().toString();
@@ -101,6 +102,15 @@ public class IlsSfcCommonUtils {
 		}
 	}
 
+	// Escape XML so it can be imbedded in xml as text
+	public static String unescapeXml(String xml) {
+		xml = xml.replace("&amp;", "&");
+		xml = xml.replace("&lt;", "<");
+		xml = xml.replace("&gt;", ">");
+		xml = xml.replace("&quot;", "\"");
+		xml = xml.replace("&apos;", "'");
+		return xml;
+	}
 	public static Object getDefaultValue(Property<?> prop) {
 		if(prop.getDefaultValue() != null) {
 			return prop.getDefaultValue();

@@ -150,6 +150,7 @@ public class RecipeDataTranslator {
 					Node item = attributes.item(i);
 					String name = item.getNodeName();
 					String value = item.getTextContent();
+					//System.out.println(name + " " + value);
 					attMap.put(name, value);					
 				}
 				createObject(flatRecipeObjects, attMap);

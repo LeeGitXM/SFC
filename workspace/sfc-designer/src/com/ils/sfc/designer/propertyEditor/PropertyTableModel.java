@@ -141,7 +141,7 @@ public class PropertyTableModel extends AbstractTableModel {
 		if(name.equals("id")) {
 			stepId = pValue.getValue().toString();
 		}
-		if( !IlsProperty.ignoreProperties.contains(name)) {
+		if(!IlsProperty.isHiddenProperty(name)) {
 			PropertyRow newRow = new PropertyRow(pValue);
 			rows.add(newRow);				
 		}

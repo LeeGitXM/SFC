@@ -340,7 +340,7 @@ public class Converter {
 
 			Document chartdoc = docBuilder.newDocument();  // This is the Ignition version
 			initializeChart(chartdoc);
-			updateChartForG2(chartdoc,g2doc);
+			updateChartForG2(chartdoc,g2doc,xml);
 			
 			// Write the chart to the output
 			xml = docToString(chartdoc);
@@ -374,12 +374,12 @@ public class Converter {
 	 * @param chart the result
 	 * @param g2doc the G2 export
 	 */
-	private void updateChartForG2(Document chart,Document g2doc) {
+	private void updateChartForG2(Document chart,Document g2doc,String xml) {
 		NodeList steps = g2doc.getElementsByTagName("block");
 		// A common idiom is a single block in the chart. We need to add begin/end.
 		if(steps.getLength()==1) {
 			Element block = (Element)steps.item(0);
-			updateChartForSingletonStep(chart,block);
+			updateChartForSingletonStep(chart,block,xml);
 		}
 		else {
 			// There are potential some structural inconsistencies between
@@ -398,7 +398,7 @@ public class Converter {
 				Element g2block = blockMap.get(uuid);
 				ConnectionHub hub = layout.getConnectionMap().get(uuid);
 				if( g2block!=null && hub!=null ) {
-					Element child = stepTranslator.translate(chart,g2block,gp.x,gp.y);
+					Element child = stepTranslator.translate(chart,g2block,gp.x,gp.y,xml);
 					// Parallel blocks are created by the layout manager and will be null here.
 					if( child!=null ) hub.getChartElement().appendChild(child);
 				}
@@ -422,10 +422,10 @@ public class Converter {
 	 * @param chart the result
 	 * @param g2doc the G2 export
 	 */
-	private void updateChartForSingletonStep(Document chart,Element g2block) {
+	private void updateChartForSingletonStep(Document chart,Element g2block,String xml) {
 		Element root = chart.getDocumentElement();   // "sfc"
 		root.appendChild(createBeginStep(chart,UUID.randomUUID(),1,1));
-		root.appendChild(stepTranslator.translate(chart,g2block,1,2));
+		root.appendChild(stepTranslator.translate(chart,g2block,1,2, xml));
 		root.appendChild(createEndStep(chart,UUID.randomUUID(),1,3));
 	}
 	
@@ -602,28 +602,14 @@ public class Converter {
 		String factoryId = step.getAttribute("factory-id");
 		log.debugf("%s.updateStepFromG2Block: step class = %s",TAG,factoryId);
 		Map<String,String> translation = StepPropertyTranslator.getStepTranslation(factoryId, g2block, log);
-		
-		// cross-check with all step properties we expect to be translated:
-		if(factoryId.startsWith("com.ils")) {
-			Property<?>[] igProperties = AllSteps.getProperties(factoryId);
-			for(Property<?> prop: igProperties) {
-				String propName = prop.getName();
-				if(IlsProperty.isIgnoredProperty(prop.getName()) ||
-					propName.equals("chart-path")) {
-					continue;
-				}
-				if(!translation.keySet().contains(propName)) {
-					log.warnf("no g2 translation for step property %s in %s", propName, factoryId);
-				}
-			}
-		}
-		
+				
 		for(String propName: translation.keySet()) {
 			Element propelement = chart.createElement(propName);
 			String propValue = translation.get(propName);
-			// null values will cause the XML transformation to blow up, so
-			// substitute an empty string:
-			if(propValue == null) propValue = "";
+			// null values indicate a translation error
+			// nulls will cause the XML transformation to blow up, and
+			// we also want to indicate an error, so we insert an error string:
+			if(propValue == null) propValue = "Translation Error!!";
 			Node textNode = chart.createTextNode(propValue);
 			propelement.appendChild(textNode);
 			step.appendChild(propelement);

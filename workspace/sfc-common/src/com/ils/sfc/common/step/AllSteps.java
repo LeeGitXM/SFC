@@ -104,12 +104,15 @@ public class AllSteps {
 		}
 	}
 
-	public static Property<?>[] getProperties(String factoryId) {
+	/** Get the declared properties of an Ils step. This will not include the
+	 * Ignition step properties like id, name, etc. 
+	 */
+	public static Property<?>[] getIlsProperties(String factoryId) {
 		return propertiesByFactoryId.get(factoryId);
 	}
 	
 	public static void main(String[] args) {
-		for(Property<?> p : getProperties("com.ils.timedDelayStep")) {
+		for(Property<?> p : getIlsProperties("com.ils.timedDelayStep")) {
 			System.out.println(p.getName());
 		}
 	}

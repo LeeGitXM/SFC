@@ -61,7 +61,7 @@ public class IlsProperty {
 		
 		// Constants.TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK}
 		addValueTranslation("STATIC", Constants.STATIC);
-		addValueTranslation("RECIPE", Constants.RECIPE);
+		addValueTranslation("RECIPE-DATA", Constants.RECIPE);
 		addValueTranslation("CALLBACK", Constants.CALLBACK);
 
 		// AUTO_MODE_CHOICES = {AUTOMATIC, SEMI_AUTOMATIC};
@@ -77,11 +77,6 @@ public class IlsProperty {
 		addValueTranslation("SEC", Constants.DELAY_UNIT_SECOND);
 		addValueTranslation("MIN", Constants.DELAY_UNIT_MINUTE);
 		addValueTranslation("HR", Constants.DELAY_UNIT_HOUR);
-		
-		// TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK};
-		addValueTranslation("ATATIC", Constants.STATIC);
-		addValueTranslation("SEC", Constants.RECIPE);
-		addValueTranslation("SEC", Constants.CALLBACK);
 
 }
 	
@@ -100,23 +95,34 @@ public class IlsProperty {
 		}
 	}
 	
-	// properties to omit from the Ignition editor
-	public static final Set<String> ignoreProperties = new HashSet<String>();
+	// Ignition properties that we wish to omit from the editor
+	public static final Set<String> ignitionPropertiesToHide = new HashSet<String>();
 	static {
 		// Ignition step properties:
-		ignoreProperties.add("location");
-		ignoreProperties.add("location-adjustment");
-		ignoreProperties.add("id");
-		ignoreProperties.add("type");
-		ignoreProperties.add("factory-id");
-		ignoreProperties.add(Constants.ASSOCIATED_DATA);
+		ignitionPropertiesToHide.add("location");
+		ignitionPropertiesToHide.add("location-adjustment");
+		ignitionPropertiesToHide.add("type");
+		ignitionPropertiesToHide.add("factory-id");
+		ignitionPropertiesToHide.add(Constants.ASSOCIATED_DATA);
 		// ILS recipe data type:
-		ignoreProperties.add("class");
-		ignoreProperties.add("execution-mode");  // hide this for ILS encapsulations like Procedure
-		ignoreProperties.add("passed-parameters");  // hide this for ILS encapsulations like Procedure
-		ignoreProperties.add("return-parameters");  // hide this for ILS encapsulations like Procedure
+		ignitionPropertiesToHide.add("class");
+		ignitionPropertiesToHide.add("execution-mode");  // hide this for ILS encapsulations like Procedure
+		ignitionPropertiesToHide.add("passed-parameters");  // hide this for ILS encapsulations like Procedure
+		ignitionPropertiesToHide.add("return-parameters");  // hide this for ILS encapsulations like Procedure
 	}
-	public static boolean isIgnoredProperty(String name) { return ignoreProperties.contains(name); }
+	public static boolean isHiddenProperty(String name) { return ignitionPropertiesToHide.contains(name); }
+	
+	/** Return if the (Ignition) property is not present in the translation map. This doesn't
+	 *  necessarily mean it is untranslated; some translations like id and name are done
+	 *  in a different way than mapping...
+	 */
+	public static boolean isUnMappedProperty(String name) { 
+		return isHiddenProperty(name) ||
+		name.equals("chart-path") ||
+		name.equals(Constants.G2_XML) ||
+		name.equals("name") ||
+		name.equals("id");
+	}
 
     public static final BasicProperty<Boolean> ACK_REQUIRED = createProperty(Constants.ACK_REQUIRED, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<String> ADVICE = createProperty(Constants.ADVICE, String.class, "");
@@ -157,6 +163,7 @@ public class IlsProperty {
     public static final BasicProperty<String> FACTORY_ID = createProperty("factory-id", String.class, "");
     public static final BasicProperty<String> FETCH_MODE = createProperty(Constants.FETCH_MODE, String.class, Constants.FETCH_MODE_CHOICES[0], Constants.FETCH_MODE_CHOICES);
     public static final BasicProperty<String> FILENAME = createProperty(Constants.FILENAME, String.class, "");
+    public static final BasicProperty<String> G2_XML = createProperty(Constants.G2_XML, String.class, "");
     public static final BasicProperty<String> HELP = createProperty(Constants.HELP, String.class, "");
     public static final BasicProperty<Double> HIGH_LIMIT = createProperty(Constants.HIGH_LIMIT, Double.class, null);
     public static final BasicProperty<String> ID = createProperty(Constants.ID, String.class, null);
@@ -432,6 +439,8 @@ public class IlsProperty {
 
 	private static Map<String, BasicProperty<?>> g2ToIgProperty = new HashMap<String, BasicProperty<?>>();
 	static {
+		g2ToIgProperty.put("acknowledgementRequired", ACK_REQUIRED);
+		g2ToIgProperty.put("appendTimestamp", TIMESTAMP);
 		g2ToIgProperty.put("callback", CALLBACK);
 		g2ToIgProperty.put("clearTimer", TIMER_CLEAR);
 		g2ToIgProperty.put("description", DESCRIPTION);
@@ -439,11 +448,18 @@ public class IlsProperty {
 		g2ToIgProperty.put("delay-units", DELAY_UNIT);
 		g2ToIgProperty.put("dialogId", DIALOG);
 		g2ToIgProperty.put("directory", DIRECTORY);
+		g2ToIgProperty.put("displayMode", AUTO_MODE);
+		g2ToIgProperty.put("extension", EXTENSION);
+		g2ToIgProperty.put("fetchMode", FETCH_MODE);
 		g2ToIgProperty.put("filename", FILENAME);
+		g2ToIgProperty.put("fullFilename", FILENAME);
+		g2ToIgProperty.put("header", WINDOW_TITLE);
 		g2ToIgProperty.put("identifier-or-name", KEY);
 		g2ToIgProperty.put("key", KEY);
 		g2ToIgProperty.put("label", LABEL);
-		g2ToIgProperty.put("label", LABEL);
+		g2ToIgProperty.put("keyMode", KEY_MODE);
+		g2ToIgProperty.put("location", RECIPE_LOCATION);		
+		g2ToIgProperty.put("manualEntryTimeoutInSeconds", TIMEOUT);
 		g2ToIgProperty.put("message-queue-name", MESSAGE_QUEUE);
 		g2ToIgProperty.put("messageQueueName", MESSAGE_QUEUE);
 		g2ToIgProperty.put("messageText", MESSAGE);
@@ -455,11 +471,15 @@ public class IlsProperty {
 		g2ToIgProperty.put("monitorStrategy", RECIPE_LOCATION);
 		g2ToIgProperty.put("name", NAME);
 		g2ToIgProperty.put("post-notification", POST_NOTIFICATION);
+		g2ToIgProperty.put("postMessageToQueue", POST_TO_QUEUE);
+		g2ToIgProperty.put("printFile", PRINT_FILE);
 		g2ToIgProperty.put("priority", PRIORITY);
 		g2ToIgProperty.put("prompt", PROMPT);
 		g2ToIgProperty.put("recipe-data-location", RECIPE_LOCATION);
 		g2ToIgProperty.put("recipe-location", RECIPE_LOCATION);
 		g2ToIgProperty.put("recipeLocation", RECIPE_LOCATION);
+		g2ToIgProperty.put("requireAllInputs", REQUIRE_INPUTS);
+		g2ToIgProperty.put("selectedButtonKey", BUTTON_KEY);
 		g2ToIgProperty.put("setTimer", TIMER_SET);
 		g2ToIgProperty.put("strategy", TIME_DELAY_STRATEGY); // ?? multiple??		
 		g2ToIgProperty.put("timerKey", TIMER_KEY);
@@ -475,7 +495,7 @@ public class IlsProperty {
 		return g2ToIgProperty.get(name);
 	}
 
-	public static String getTranslationForG2Value(String factoryId, BasicProperty<?> property, 
+	public static String getTranslationForG2Value(String factoryId, String stepName, BasicProperty<?> property, 
 		String g2Value, LoggerEx logger) {
 		if(IlsSfcCommonUtils.isEmpty(g2Value)) return null;
 		PropertyInfo info = infoById.get(getPropertyId(property));
@@ -489,7 +509,7 @@ public class IlsProperty {
 				transValue = g2ValueTrans.get(g2Value);
 			}
 			if(transValue == null) {
-				logger.errorf("no translation for g2 value %s in %s.%s", g2Value, factoryId, property.getName() );
+				logger.errorf("no translation for g2 value %s in property %s. step %s factoryId %s", g2Value, property.getName(), stepName, factoryId);
 			}
 			return transValue;
 		}

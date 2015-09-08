@@ -8,6 +8,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 /** A helper class to make Swing components for editing/rendering various
@@ -63,12 +64,20 @@ public class PropertyCellComponentFactory {
 	    	if(IlsProperty.isSerializedObject(rowObj.getProperty())) {
 	    		sValue = "<Use Editor>";
 	    	}
+	    	else if(rowObj.getProperty().equals(IlsProperty.G2_XML)) {
+	    		sValue = IlsSfcCommonUtils.unescapeXml(getRowStringValue(rowObj));
+	    	}
 	    	else {
-	    		sValue = rowObj.getValue() != null ? rowObj.getValue().toString() : "";	    		
+	    		sValue = getRowStringValue(rowObj);	    		
 	    	}
 	    	textField.setText(sValue);
 	    	textField.setToolTipText(sValue);
 	    	return textField;
 	    }		
 	}
+
+	private String getRowStringValue(PropertyRow rowObj) {
+		return rowObj.getValue() != null ? rowObj.getValue().toString() : "";
+	}
+
 }

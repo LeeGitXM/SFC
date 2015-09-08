@@ -8,10 +8,12 @@ import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.panels.EditorPanel;
 import com.ils.sfc.designer.propertyEditor.PropertyEditor;
+import com.ils.sfc.designer.propertyEditor.ValueHolder;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
@@ -20,7 +22,7 @@ import com.inductiveautomation.ignition.common.script.JythonExecException;
  *  Also provides add/remove for dynamic properties, and extended
  *  editing for strings and tags.  */
 @SuppressWarnings("serial")
-public class StepPropertyEditorPane extends EditorPanel {
+public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 	private StepEditorController controller;
 	private PropertyEditor editor = new PropertyEditor();
 	private ButtonPanel buttonPanel = new ButtonPanel(false, false, false, true, true,  true);
@@ -115,8 +117,12 @@ public class StepPropertyEditorPane extends EditorPanel {
 		}
 		else if(selectedPropertyValue.getProperty().getType() == String.class) {
 			editor.stopCellEditing();
-			controller.getStringEditor().setValue(selectedPropertyValue.getValue());
-			controller.getStringEditor().activate(myIndex);
+			Object value = selectedPropertyValue.getValue();
+	    	if(selectedPropertyValue.getProperty().equals(IlsProperty.G2_XML)) {
+	    		value = IlsSfcCommonUtils.unescapeXml((String)value);
+	    	}
+			controller.getStringEditor().setValue(value);
+			controller.getStringEditor().activate(this);
 		}
 		// else do nothing
 	}
@@ -128,6 +134,11 @@ public class StepPropertyEditorPane extends EditorPanel {
 	@Override
 	public void commitEdit() {
 		editor.stopCellEditing();
+	}
+
+	@Override
+	public void setValue(Object value) {
+		getPropertyEditor().setSelectedValue(value);
 	}
 
 }

@@ -65,6 +65,7 @@ public class Constants {
 	public static final String FETCH_MODE = "fetchMode";
 	public static final String FILENAME = "filename";
 	public static final String FILEPATH = "filepath";
+	public static final String G2_XML = "g2Xml";
 	public static final String HELP = "help";
 	public static final String HIGH = "High";
 	public static final String HIGH_LOW = "High/Low";

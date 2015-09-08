@@ -29,6 +29,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	private static final BasicProperty<?>[] commonProperties = {
 		IlsProperty.NAME, 
 		IlsProperty.DESCRIPTION, 
+		IlsProperty.G2_XML
 	};
 	private Property<?>[] orderedProperties;
 	

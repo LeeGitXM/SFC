@@ -9,6 +9,8 @@ import org.json.JSONException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.migration.Converter;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -33,7 +35,7 @@ public class StepTranslator {
 	 * @param block g2block corresponding to a step within the chart
 	 * @return
 	 */
-	public Element translate(Document chart,Element block,int x,int y) {
+	public Element translate(Document chart,Element block,int x,int y,String xml) {
 		
 		Element step = null;
 		// Get attributes from the block element
@@ -86,6 +88,7 @@ public class StepTranslator {
 			}
 			else {
 				delegate.updateStepFromG2Block(chart,step,block);
+				step.setAttribute(Constants.G2_XML, escapeXml(xml));
 			}
 			// We may have created stop methods based on a downstream transition
 			if( block.hasAttribute("stop-script")) {
@@ -102,6 +105,17 @@ public class StepTranslator {
 		return step;
 	}
 	
+	// Escape XML so it can be imbedded in xml as text
+	private String escapeXml(String xml) {
+		xml = xml.replace("&", "&amp;");
+		xml = xml.replace("&amp;amp;", "&amp;");
+		xml = xml.replace("<", "&lt;");
+		xml = xml.replace(">", "&gt;");
+		xml = xml.replace("\"", "&quot;");
+		xml = xml.replace("'", "&apos;");
+		return xml;
+	}
+
 	/**
 	 * Remove dashes and spaces. Convert to camel-case.
 	 * Attempt to shorten.

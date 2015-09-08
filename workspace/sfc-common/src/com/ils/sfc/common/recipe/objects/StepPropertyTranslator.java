@@ -9,41 +9,49 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.step.AllSteps;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
+import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 public class StepPropertyTranslator {
 	// G2 properties that have no direct translation to Ignition step properties:
-	static Set<String> ignoredProperties = new HashSet<String>();
-	static Set<String> ignoredClasses = new HashSet<String>();
+	static Set<String> ignoredG2Properties = new HashSet<String>();
+	static Set<String> migratedG2Properties = new HashSet<String>();
+	static Set<String> ignoredG2Classes = new HashSet<String>();
 	static {
-		ignoredClasses.add("S88-PARALLEL-TRANSITION");
-		ignoredClasses.add("S88-CONDITIONAL-TRANSITION");
-		ignoredClasses.add("S88-ENCAPSULATION-TASK");
+		ignoredG2Classes.add("S88-PARALLEL-TRANSITION");
+		ignoredG2Classes.add("S88-CONDITIONAL-TRANSITION");
+		ignoredG2Classes.add("S88-ENCAPSULATION-TASK");
 		
-		ignoredProperties.add("block-full-path-label");
-		ignoredProperties.add("class");
-		ignoredProperties.add("conditional-block-recheck-interval-seconds");
-		ignoredProperties.add("configurationDialogId");
-		ignoredProperties.add("configurationDialogActions");
-		ignoredProperties.add("dcsTagAttribute"); // ?? in MonitorDownloads 
-		ignoredProperties.add("full-path");
-		ignoredProperties.add("hide-control-panel-when-complete"); // G2 Operation has this
-		ignoredProperties.add("post-to-error-queue-procedure"); // G2 Unit Procedure has this
-		ignoredProperties.add("post-to-message-queue-procedure"); // G2 Unit Procedure has this
+		migratedG2Properties.add("classToCreate");  // class type for SimpleQuery
+		migratedG2Properties.add("interfaceName");  // data source for Simple Query
+		migratedG2Properties.add("printer");  // SaveData
+		migratedG2Properties.add("spreadsheetPopulateMethod");  // ManualDataEntry		
 		
-		ignoredProperties.add("publish-status-to-control-panel"); // G2 Operation has this
-		ignoredProperties.add("set-message-queue-name"); // G2 Operation has this
-		ignoredProperties.add("show-control-panel"); // G2 Unit Procedure has this
-		ignoredProperties.add("show-message-queue-procedure"); // G2 Unit Procedure has this
+		ignoredG2Properties.add("block-full-path-label");
+		ignoredG2Properties.add("class");
+		ignoredG2Properties.add("conditional-block-recheck-interval-seconds");
+		ignoredG2Properties.add("configurationDialogId");
+		ignoredG2Properties.add("configurationDialogActions");
+		ignoredG2Properties.add("dcsTagAttribute"); // ?? in MonitorDownloads 
+		ignoredG2Properties.add("full-path");
+		ignoredG2Properties.add("hide-control-panel-when-complete"); // G2 Operation has this
+		ignoredG2Properties.add("post-to-error-queue-procedure"); // G2 Unit Procedure has this
+		ignoredG2Properties.add("post-to-message-queue-procedure"); // G2 Unit Procedure has this
+		
+		ignoredG2Properties.add("publish-status-to-control-panel"); // G2 Operation has this
+		ignoredG2Properties.add("set-message-queue-name"); // G2 Operation has this
+		ignoredG2Properties.add("show-control-panel"); // G2 Unit Procedure has this
+		ignoredG2Properties.add("show-message-queue-procedure"); // G2 Unit Procedure has this
 
-		ignoredProperties.add("execution-mode");
-		ignoredProperties.add("passed-parameters");
-		ignoredProperties.add("return-parameters");
+		ignoredG2Properties.add("execution-mode");
+		ignoredG2Properties.add("passed-parameters");
+		ignoredG2Properties.add("return-parameters");
 
-		ignoredProperties.add("uuid");
-		ignoredProperties.add("x");
-		ignoredProperties.add("y");
+		ignoredG2Properties.add("uuid");
+		ignoredG2Properties.add("x");
+		ignoredG2Properties.add("y");
 	}
 	
 	/** Get a dictionary of Ignition property names and values corresponding to the
@@ -51,9 +59,9 @@ public class StepPropertyTranslator {
 	 */
 	public static Map<String, String> getStepTranslation(String factoryId, Node stepNode, 
 		LoggerEx logger) {
+		
     	// First, collect the property names/values in a Map for ease of use
     	Map<String,String> g2Properties = new HashMap<String,String>();
-    	Map<String, String> translation = new HashMap<String, String>();
     	NamedNodeMap attributes = stepNode.getAttributes();
     	for(int j = 0; j < attributes.getLength(); j++ ) {
     		String name =  attributes.item(j).getNodeName();
@@ -61,35 +69,61 @@ public class StepPropertyTranslator {
     		g2Properties.put(name, value);
     	}
     	
-    	// Now do the translation, ignoring 
+    	// Now do the translation
+    	Map<String, String> translation = new HashMap<String, String>();    	
+    	String g2Id = g2Properties.get("uuid");
     	String g2Class = g2Properties.get("class");
-    	String stepName = g2Properties.get("name");
-    	if(ignoredClasses.contains(g2Class)) {
-    		logger.debugf("ignoring %s %s", g2Class, stepName);
+    	String g2StepName = g2Properties.get("name");
+    	if(ignoredG2Classes.contains(g2Class)) {
+    		logger.debugf("ignoring %s %s", g2Class, g2StepName);
     	}
     	else {
-    		logger.debugf("translating %s %s", g2Class, stepName);
+    		logger.debugf("translating %s %s %s", g2Class, g2StepName, g2Id);
             for(String propName: g2Properties.keySet()) {
         		String propValueStr = g2Properties.get(propName);
-        		if(ignoredProperties.contains(propName)) {
+        		if(ignoredG2Properties.contains(propName)) {
             		logger.debugf("ignoring property %s", propName);
         		}
         		else {
         			BasicProperty<?> mappedProperty = IlsProperty.getTranslationForG2Property(propName);
         			if(mappedProperty != null) {
-        				String mappedValueStr = IlsProperty.getTranslationForG2Value(factoryId, 
+        				String mappedValueStr = IlsProperty.getTranslationForG2Value(factoryId, g2StepName,
         					mappedProperty, propValueStr, logger);
         				// TODO: check enum translation
+        				if(mappedValueStr == null) {
+        					mappedValueStr = "Translation Error!";
+        				}
                 		logger.debugf("mapped property %s : %s to %s : %s", propName, propValueStr, mappedProperty.getName(), mappedValueStr);
          				translation.put(mappedProperty.getName(), mappedValueStr);
         			}
         			else {
-        				logger.errorf("no translation for property %s in class %s", propName, g2Class);
+        				if(migratedG2Properties.contains(propName)) {
+        					logger.warnf("property %s : %s in step %s %s may require manual migration", propName, propValueStr, g2StepName, g2Id);        					
+        				}
+        				else {
+        					logger.errorf("no translation for property %s in %s %s %s", propName, g2Class, g2StepName, g2Id);
+        				}
         			}
         		}
         	}
     	}
-    	return translation;
+
+		// cross-check with all step properties we expect to be translated:
+		if(factoryId.startsWith("com.ils")) {
+			Property<?>[] ilsSfcProperties = AllSteps.getIlsProperties(factoryId);
+			for(Property<?> prop: ilsSfcProperties) {
+				String propName = prop.getName();
+				// some properties are not translated, or are treated differently:
+				if(IlsProperty.isUnMappedProperty(propName)) {
+					continue;
+				}
+				if(!translation.keySet().contains(propName)) {
+					logger.errorf("no g2 info for Ignition step property %s in %s", propName, factoryId);
+				}
+			}
+		}
+
+		return translation;
 	}
 	
 }
