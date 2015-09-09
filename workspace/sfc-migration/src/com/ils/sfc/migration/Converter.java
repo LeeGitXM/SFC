@@ -49,6 +49,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.recipe.objects.StepPropertyTranslator;
 import com.ils.sfc.common.rowconfig.RowConfig;
@@ -598,10 +600,11 @@ public class Converter {
 	 * @param step
 	 * @param g2block
 	 */
-	public void updateStepFromG2Block(Document chart,Element step,Element g2block) {
+	public void updateStepFromG2Block(Document chart,Element step,Element g2block,String igStepName) {
 		String factoryId = step.getAttribute("factory-id");
 		log.debugf("%s.updateStepFromG2Block: step class = %s",TAG,factoryId);
-		Map<String,String> translation = StepPropertyTranslator.getStepTranslation(factoryId, g2block, log);
+		Map<String,String> translation = StepPropertyTranslator.getStepTranslation(factoryId, 
+			igStepName, g2block, log);
 				
 		for(String propName: translation.keySet()) {
 			Element propelement = chart.createElement(propName);
@@ -609,7 +612,7 @@ public class Converter {
 			// null values indicate a translation error
 			// nulls will cause the XML transformation to blow up, and
 			// we also want to indicate an error, so we insert an error string:
-			if(propValue == null) propValue = "Translation Error!!";
+			if(propValue == null) propValue = Constants.TRANSLATION_ERROR;
 			Node textNode = chart.createTextNode(propValue);
 			propelement.appendChild(textNode);
 			step.appendChild(propelement);

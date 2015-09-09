@@ -172,6 +172,7 @@ public class Constants {
 	public static final String TIMER_LOCATION = "timerLocation";
 	public static final String TIMER_SET = "timerSet";
 	public static final String TIMESTAMP = "timestamp";
+	public static final String TRANSLATION_ERROR = "Translation Error!";
 	public static final String TOP_CENTER = "topCenter";
 	public static final String TOP_LEFT = "topLeft";
 	public static final String TOP_RIGHT = "topRight";
@@ -230,7 +231,7 @@ public class Constants {
 		GLOBAL, OPERATION, PHASE, TAG};
 	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
 	public static final String[] TIME_LIMIT_STRATEGY_CHOICES = {STATIC, RECIPE};
-	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK};
+	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK, TAG};
 	public static final String[] RESULTS_MODE_CHOICES = {UPDATE, UPDATE_OR_CREATE};
 	public static final String[] FETCH_MODE_CHOICES = {SINGLE, MULTIPLE};
 	public static final String[] KEY_MODE_CHOICES = {STATIC, DYNAMIC};

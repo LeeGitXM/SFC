@@ -7,6 +7,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
@@ -66,6 +68,9 @@ public class PropertyCellComponentFactory {
 	    	}
 	    	else if(rowObj.getProperty().equals(IlsProperty.G2_XML)) {
 	    		sValue = IlsSfcCommonUtils.unescapeXml(getRowStringValue(rowObj));
+	    	}
+	    	else if(Constants.TRANSLATION_ERROR.equals(sValue)) {
+	    		textField.setBackground(Color.red);
 	    	}
 	    	else {
 	    		sValue = getRowStringValue(rowObj);	    		

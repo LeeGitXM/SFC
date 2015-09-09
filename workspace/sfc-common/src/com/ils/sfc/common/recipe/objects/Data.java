@@ -373,7 +373,7 @@ public abstract class Data {
 			}
 		}
 		
-		Object value = getValue(IlsProperty.NULLABLE_VALUE);
+		Object value = getValue(IlsProperty.VALUE);
 		if(value != null) {
 			if(value instanceof Double || value instanceof Float) {
 				return Constants.FLOAT;

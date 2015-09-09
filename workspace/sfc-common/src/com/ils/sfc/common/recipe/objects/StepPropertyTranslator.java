@@ -8,6 +8,8 @@ import java.util.Set;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.step.AllSteps;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
@@ -28,6 +30,7 @@ public class StepPropertyTranslator {
 		migratedG2Properties.add("interfaceName");  // data source for Simple Query
 		migratedG2Properties.add("printer");  // SaveData
 		migratedG2Properties.add("spreadsheetPopulateMethod");  // ManualDataEntry		
+		migratedG2Properties.add("spreadsheetSpecification");
 		
 		ignoredG2Properties.add("block-full-path-label");
 		ignoredG2Properties.add("class");
@@ -57,8 +60,8 @@ public class StepPropertyTranslator {
 	/** Get a dictionary of Ignition property names and values corresponding to the
 	 *  g2 names/values found in the given XML Node of a G2 block.
 	 */
-	public static Map<String, String> getStepTranslation(String factoryId, Node stepNode, 
-		LoggerEx logger) {
+	public static Map<String, String> getStepTranslation(String factoryId, 
+		String igStepName, Node stepNode, LoggerEx logger) {
 		
     	// First, collect the property names/values in a Map for ease of use
     	Map<String,String> g2Properties = new HashMap<String,String>();
@@ -79,29 +82,29 @@ public class StepPropertyTranslator {
     	}
     	else {
     		logger.debugf("translating %s %s %s", g2Class, g2StepName, g2Id);
-            for(String propName: g2Properties.keySet()) {
-        		String propValueStr = g2Properties.get(propName);
-        		if(ignoredG2Properties.contains(propName)) {
-            		logger.debugf("ignoring property %s", propName);
+            for(String g2PropName: g2Properties.keySet()) {
+        		String g2PropValue = g2Properties.get(g2PropName);
+        		if(ignoredG2Properties.contains(g2PropName)) {
+            		logger.debugf("ignoring property %s", g2PropName);
         		}
         		else {
-        			BasicProperty<?> mappedProperty = IlsProperty.getTranslationForG2Property(propName);
+        			BasicProperty<?> mappedProperty = IlsProperty.getTranslationForG2Property(g2PropName);
         			if(mappedProperty != null) {
         				String mappedValueStr = IlsProperty.getTranslationForG2Value(factoryId, g2StepName,
-        					mappedProperty, propValueStr, logger);
+        					mappedProperty, g2PropValue, logger);
         				// TODO: check enum translation
         				if(mappedValueStr == null) {
-        					mappedValueStr = "Translation Error!";
+        					mappedValueStr = Constants.TRANSLATION_ERROR;
         				}
-                		logger.debugf("mapped property %s : %s to %s : %s", propName, propValueStr, mappedProperty.getName(), mappedValueStr);
+                		logger.debugf("mapped property %s : %s to %s : %s", g2PropName, g2PropValue, mappedProperty.getName(), mappedValueStr);
          				translation.put(mappedProperty.getName(), mappedValueStr);
         			}
         			else {
-        				if(migratedG2Properties.contains(propName)) {
-        					logger.warnf("property %s : %s in step %s %s may require manual migration", propName, propValueStr, g2StepName, g2Id);        					
+        				if(migratedG2Properties.contains(g2PropName)) {
+        					logger.warnf("property %s : %s in step %s %s may require manual migration", g2PropName, g2PropValue, g2StepName, g2Id);        					
         				}
         				else {
-        					logger.errorf("no translation for property %s in %s %s %s", propName, g2Class, g2StepName, g2Id);
+        					logger.errorf("no translation for property %s in %s %s %s", g2PropName, g2Class, g2StepName, g2Id);
         				}
         			}
         		}
@@ -118,7 +121,7 @@ public class StepPropertyTranslator {
 					continue;
 				}
 				if(!translation.keySet().contains(propName)) {
-					logger.errorf("no g2 info for Ignition step property %s in %s", propName, factoryId);
+					logger.errorf("no g2 info for Ignition step property %s in %s %s %s", propName, factoryId, g2StepName, g2Id);
 				}
 			}
 		}

@@ -1,5 +1,7 @@
 package com.ils.sfc.common;
 
+import static com.ils.sfc.common.IlsProperty.MONITOR_DOWNLOADS_POSTING_METHOD;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.ParseException;
@@ -59,10 +61,12 @@ public class IlsProperty {
 		addValueTranslation("BOTTOM-CENTER", Constants.BOTTOM_CENTER);
 		addValueTranslation("BOTTOM-RIGHT", Constants.BOTTOM_RIGHT);
 		
-		// Constants.TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK}
+		// Constants.TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK,TAG}
 		addValueTranslation("STATIC", Constants.STATIC);
 		addValueTranslation("RECIPE-DATA", Constants.RECIPE);
+		addValueTranslation("RECIPE-BLOCK", Constants.RECIPE); // ?
 		addValueTranslation("CALLBACK", Constants.CALLBACK);
+		addValueTranslation("NAMED-PARAM-OR-VAR", Constants.TAG);
 
 		// AUTO_MODE_CHOICES = {AUTOMATIC, SEMI_AUTOMATIC};
 		addValueTranslation("SEMI-AUTOMATIC", Constants.SEMI_AUTOMATIC);
@@ -111,17 +115,29 @@ public class IlsProperty {
 		ignitionPropertiesToHide.add("return-parameters");  // hide this for ILS encapsulations like Procedure
 	}
 	public static boolean isHiddenProperty(String name) { return ignitionPropertiesToHide.contains(name); }
+
+	public static final Set<String> unmappedIgnitionProperties = new HashSet<String>();
+	static {
+		unmappedIgnitionProperties.add("chart-path");
+		unmappedIgnitionProperties.add(Constants.G2_XML);
+		unmappedIgnitionProperties.add(Constants.NAME);
+		unmappedIgnitionProperties.add(Constants.ID);
+		unmappedIgnitionProperties.add(Constants.PV_MONITOR_CONFIG);
+		unmappedIgnitionProperties.add(Constants.COLLECT_DATA_CONFIG);
+		unmappedIgnitionProperties.add(Constants.CONFIRM_CONTROLLERS_CONFIG);
+		unmappedIgnitionProperties.add(Constants.MONITOR_DOWNLOADS_CONFIG);
+		unmappedIgnitionProperties.add(Constants.MANUAL_DATA_CONFIG);
+		//unmappedIgnitionProperties.add(Constants.REVIEW_DATA_CONFIG);
+		unmappedIgnitionProperties.add(Constants.VERBOSE);  // ? Shows in WriteOutput fn spec, but don't see in G2 XML
+		unmappedIgnitionProperties.add(Constants.WRITE_OUTPUT_CONFIG);
+	}
 	
 	/** Return if the (Ignition) property is not present in the translation map. This doesn't
 	 *  necessarily mean it is untranslated; some translations like id and name are done
 	 *  in a different way than mapping...
 	 */
 	public static boolean isUnMappedProperty(String name) { 
-		return isHiddenProperty(name) ||
-		name.equals("chart-path") ||
-		name.equals(Constants.G2_XML) ||
-		name.equals("name") ||
-		name.equals("id");
+		return isHiddenProperty(name) || unmappedIgnitionProperties.contains(name);		
 	}
 
     public static final BasicProperty<Boolean> ACK_REQUIRED = createProperty(Constants.ACK_REQUIRED, Boolean.class, Boolean.FALSE);
@@ -149,7 +165,6 @@ public class IlsProperty {
     public static final BasicProperty<Double> DELAY = createProperty(Constants.DELAY, Double.class, 0.);
     public static final BasicProperty<String> DELAY_UNIT = createProperty(Constants.DELAY_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);  
     public static final BasicProperty<String> DESCRIPTION = createProperty(Constants.DESCRIPTION, String.class, "");
-    public static final BasicProperty<String> DIALOG = createProperty(Constants.DIALOG, String.class, "");
     public static final BasicProperty<String> DIRECTORY = createProperty(Constants.DIRECTORY, String.class, "");
     public static final BasicProperty<Boolean> DOWNLOAD = createProperty(Constants.DOWNLOAD, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> DOWNLOAD_STATUS = createProperty(Constants.DOWNLOAD_STATUS, String.class, "");
@@ -188,11 +203,11 @@ public class IlsProperty {
     public static final BasicProperty<String> MONITOR_DOWNLOADS_POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.manualDataEntry.defaultPostingMethod");
     public static final BasicProperty<String> MONITOR_DOWNLOADS_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_MANUAL_DATA_WINDOW, false);
 	public static final BasicProperty<String> NAME = new BasicProperty<String>(Constants.NAME, String.class);
-    public static final BasicProperty<Object> NULLABLE_VALUE = createProperty(Constants.VALUE, Object.class, null);
     public static final BasicProperty<Object> OUTPUT_VALUE_TYPE = createProperty(Constants.VALUE_TYPE, Object.class, Constants.OUTPUT_VALUE_TYPE_CHOICES[0], Constants.OUTPUT_VALUE_TYPE_CHOICES);
     public static final BasicProperty<String> POSITION = createProperty(Constants.POSITION, String.class, Constants.POSITION_CHOICES[0], Constants.POSITION_CHOICES);
     public static final BasicProperty<Boolean> POST_NOTIFICATION = createProperty(Constants.POST_NOTIFICATION, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<Boolean> POST_TO_QUEUE = createProperty(Constants.POST_TO_QUEUE, Boolean.class, Boolean.FALSE);
+    public static final BasicProperty<String> POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, null);
     public static final BasicProperty<String> PRIMARY_REVIEW_DATA = createProperty(Constants.PRIMARY_REVIEW_DATA, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "primary data");
     public static final BasicProperty<String> PRIMARY_REVIEW_DATA_WITH_ADVICE = createProperty(Constants.PRIMARY_REVIEW_DATA_WITH_ADVICE, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "primary data");
     public static final BasicProperty<String> PRIMARY_TAB_LABEL = createProperty(Constants.PRIMARY_TAB_LABEL, String.class, "Primary");
@@ -240,7 +255,7 @@ public class IlsProperty {
     public static final BasicProperty<String> TYPE = createProperty(Constants.TYPE, String.class, "");
     public static final BasicProperty<String> UNITS = createProperty(Constants.UNITS, String.class, "");
     public static final BasicProperty<Double> UPDATE_FREQUENCY = createProperty(Constants.UPDATE_FREQUENCY, Double.class, 10.);
-    public static final BasicProperty<Object> NON_NULL_VALUE = createProperty(Constants.VALUE, Object.class, "");
+    public static final BasicProperty<Object> VALUE = createProperty(Constants.VALUE, Object.class, null);
     public static final BasicProperty<Boolean> VERBOSE = createProperty(Constants.VERBOSE, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<Boolean> VIEW_FILE = createProperty(Constants.VIEW_FILE, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> WINDOW = createProperty(Constants.WINDOW, String.class, "");
@@ -443,10 +458,11 @@ public class IlsProperty {
 		g2ToIgProperty.put("appendTimestamp", TIMESTAMP);
 		g2ToIgProperty.put("callback", CALLBACK);
 		g2ToIgProperty.put("clearTimer", TIMER_CLEAR);
+		g2ToIgProperty.put("dataLocation", DESCRIPTION);
 		g2ToIgProperty.put("description", DESCRIPTION);
 		g2ToIgProperty.put("delay-time", DELAY);
 		g2ToIgProperty.put("delay-units", DELAY_UNIT);
-		g2ToIgProperty.put("dialogId", DIALOG);
+		g2ToIgProperty.put("dialogId", WINDOW);
 		g2ToIgProperty.put("directory", DIRECTORY);
 		g2ToIgProperty.put("displayMode", AUTO_MODE);
 		g2ToIgProperty.put("extension", EXTENSION);
@@ -468,9 +484,10 @@ public class IlsProperty {
 		g2ToIgProperty.put("monitorKey", KEY);
 		g2ToIgProperty.put("monitorLocalValue", KEY);
 		g2ToIgProperty.put("monitorRecipeLocation", RECIPE_LOCATION);
-		g2ToIgProperty.put("monitorStrategy", RECIPE_LOCATION);
+		g2ToIgProperty.put("monitorStrategy", TIME_LIMIT_STRATEGY);
 		g2ToIgProperty.put("name", NAME);
-		g2ToIgProperty.put("post-notification", POST_NOTIFICATION);
+		g2ToIgProperty.put("post-notification", POST_NOTIFICATION);		
+		g2ToIgProperty.put("postingMethod", MONITOR_DOWNLOADS_POSTING_METHOD);
 		g2ToIgProperty.put("postMessageToQueue", POST_TO_QUEUE);
 		g2ToIgProperty.put("printFile", PRINT_FILE);
 		g2ToIgProperty.put("priority", PRIORITY);
@@ -480,10 +497,14 @@ public class IlsProperty {
 		g2ToIgProperty.put("recipeLocation", RECIPE_LOCATION);
 		g2ToIgProperty.put("requireAllInputs", REQUIRE_INPUTS);
 		g2ToIgProperty.put("selectedButtonKey", BUTTON_KEY);
-		g2ToIgProperty.put("setTimer", TIMER_SET);
+		g2ToIgProperty.put("setTimer", TIMER_SET);		
+		g2ToIgProperty.put("spreadsheetPopulateMethod", POSTING_METHOD); // ?? multiple??		
 		g2ToIgProperty.put("strategy", TIME_DELAY_STRATEGY); // ?? multiple??		
 		g2ToIgProperty.put("timerKey", TIMER_KEY);
 		g2ToIgProperty.put("timerSource", TIMER_LOCATION);
+		g2ToIgProperty.put("value", VALUE);
+		g2ToIgProperty.put("window", WINDOW);
+		g2ToIgProperty.put("windowTitle", WINDOW_TITLE);
 		g2ToIgProperty.put("workspace-location", POSITION);
 		g2ToIgProperty.put("workspace-scale", SCALE);
 		g2ToIgProperty.put("workspaceLocation", POSITION);
