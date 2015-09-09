@@ -500,6 +500,7 @@ public class IlsProperty {
 		g2ToIgProperty.put("setTimer", TIMER_SET);		
 		g2ToIgProperty.put("spreadsheetPopulateMethod", POSTING_METHOD); // ?? multiple??		
 		g2ToIgProperty.put("strategy", TIME_DELAY_STRATEGY); // ?? multiple??		
+		g2ToIgProperty.put("timeoutBehavior", TIMEOU);
 		g2ToIgProperty.put("timerKey", TIMER_KEY);
 		g2ToIgProperty.put("timerSource", TIMER_LOCATION);
 		g2ToIgProperty.put("value", VALUE);
