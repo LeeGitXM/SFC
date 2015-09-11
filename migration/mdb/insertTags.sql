@@ -145,7 +145,7 @@ insert into TagMap values ('MOONEY_RESET_TIME_FOR_SF-3','[]Site/CRX/MOONEY_RESET
 insert into TagMap values ('MOONEY_SQC_TO_CSTR_MOONEY-GDA','[]DiagnosticToolkit/Connections/MooneySqcToCstrMooney','STRING');
 insert into TagMap values ('MY-CONNECTION-POST','[]DiagnosticToolkit/Connections/MyConnectionPost','STRING');
 insert into TagMap values ('OK_TO_FETCH_SC-4_DATA-GDA','[]Site/CRx/OK-TO-FETCH-SC4','BOOLEAN');
-insert into TagMap values ('OIL-GRADE-FLAG','[]DiagnosticToolkit/CSTR/OIL-GRADE-FLAG','DOUBLE');
+insert into TagMap values ('OIL-GRADE-FLAG','[]DiagnosticToolkit/CSTR/OIL-GRADE-FLAG/value','DOUBLE');
 insert into TagMap values ('OIL-LAB-DATA','[]LabData/RLA3/OIL-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('POLYSPLIT-DATA','[]LabData/RLA3/POLYSPLIT-DATA-SQC','DOUBLE');
 insert into TagMap values ('POLYSPLIT-DATA','[]LabData/RLA3/POLYSPLIT-DATA','DOUBLE');
@@ -168,7 +168,7 @@ insert into TagMap values ('RLA3-CURRENT-GRADE','[]DiagnosticToolkit/CSTR/RLA3-C
 insert into TagMap values ('rla3-run-hours','[]Site/RLA3-RUN-HOURS','DOUBLE');
 insert into TagMap values ('RX-ML-OK-PATH-GDA','[]DiagnosticToolkit/Connections/RxMlOk','STRING');
 insert into TagMap values ('RX_CONFIGURATION','[]DiagnosticToolkit/CSTR/RX-CONFIGURATION/value','DOUBLE');
-insert into TagMap values ('SD-STRM-C2_FLOW','[]DiagnosticToolkit/CRX/VRF202S','DOUBLE');
+insert into TagMap values ('SD-STRM-C2_FLOW','[]DiagnosticToolkit/CRX/VRF202S/value','DOUBLE');
 insert into TagMap values ('SDSTRM-1','[]DiagnosticToolkit/CRx/SDSTRM-1','DOUBLE');
 insert into TagMap values ('SDSTRM-2','[]DiagnosticToolkit/CRx/SDSTRM-2','DOUBLE');
 insert into TagMap values ('SDSTRM-3','[]DiagnosticToolkit/CRx/SDSTRM-3','DOUBLE');
