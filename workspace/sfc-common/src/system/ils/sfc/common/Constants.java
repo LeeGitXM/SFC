@@ -166,6 +166,7 @@ public class Constants {
 	public static final String TIME = "time";
 	public static final String TIMING = "timing";
 	public static final String TIMEOUT = "timeout";
+	public static final String TIMEOUT_BEHAVIOR = "timeoutBehavior";
 	public static final String TIMEOUT_UNIT = "timeoutUnit";
 	public static final String TIMER_CLEAR = "timerClear";
 	public static final String TIMER_KEY = "timerKey";
@@ -231,7 +232,7 @@ public class Constants {
 		GLOBAL, OPERATION, PHASE, TAG};
 	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
 	public static final String[] TIME_LIMIT_STRATEGY_CHOICES = {STATIC, RECIPE};
-	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK, TAG};
+	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {LOCAL, RECIPE, CALLBACK, TAG};
 	public static final String[] RESULTS_MODE_CHOICES = {UPDATE, UPDATE_OR_CREATE};
 	public static final String[] FETCH_MODE_CHOICES = {SINGLE, MULTIPLE};
 	public static final String[] KEY_MODE_CHOICES = {STATIC, DYNAMIC};
@@ -243,7 +244,7 @@ public class Constants {
 	public static final String[] AUDIT_LEVEL_CHOICES = {OFF, LOW, HIGH};
 	public static final String[] S88_LEVEL_CHOICES = {NONE, GLOBAL, OPERATION, PHASE};
 	public static final String[] COLLECT_DATA_VALUE_TYPE_CHOICES = {CURRENT, AVERAGE, MINIMUM, MAXIMUM, STANDARD_DEVIATION};
-	public static final String[] ERROR_HANDLING_CHOICES = {ABORT, TIMEOUT, DEFAULT_VALUE};
+	public static final String[] TIMEOUT_BEHAVIOR_CHOICES = {ABORT, TIMEOUT, DEFAULT_VALUE};
 	public static final String[] PV_TARGET_TYPE_CHOICES = {SETPOINT, VALUE, TAG, RECIPE};
 	public static final String[] PV_STRATEGY_CHOICES = {MONITOR, WATCH};
 	public static final String[] PV_LIMITS_CHOICES = {HIGH_LOW, HIGH, LOW};

@@ -10,17 +10,23 @@ import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.rowconfig.CollectDataConfig;
+import com.ils.sfc.designer.EditorErrorHandler;
 import com.ils.sfc.designer.stepEditor.EditorUtil;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowTableModel;
 
 @SuppressWarnings("serial")
 public class CollectDataTableModel extends RowTableModel {
+	private EditorErrorHandler errorHandler;
 
 	public static final int LOCATION_COLUMN = 1;
 	public static final int TAG_COLUMN = 2;
 	public static final int VALUE_TYPE_COLUMN = 3;
 	public static final int PAST_WINDOW_COLUMN = 4;
 	private static final String[] columnNames = {"Recipe Key", "Location", "Tag Path", "Value Type",  "Past Window (min)", "Default Value"};
+
+	public CollectDataTableModel(EditorErrorHandler errorHandler) {
+		this.errorHandler = errorHandler;
+	}
 	
 	public String[] getColumnNames() {
 		return columnNames;

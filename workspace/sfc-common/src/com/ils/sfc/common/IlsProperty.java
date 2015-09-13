@@ -1,7 +1,5 @@
 package com.ils.sfc.common;
 
-import static com.ils.sfc.common.IlsProperty.MONITOR_DOWNLOADS_POSTING_METHOD;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.ParseException;
@@ -43,6 +41,8 @@ public class IlsProperty {
 		}
 	}
 	static {
+		addValueTranslation("description", Constants.DESCRIPTION);
+		
 		// RECIPE_LOCATION_CHOICES = {LOCAL, PRIOR, SUPERIOR, GLOBAL, OPERATION, PHASE, TAG};
 		addValueTranslation("GLOBAL", Constants.GLOBAL);
 		addValueTranslation("OPERATION", Constants.OPERATION);
@@ -61,8 +61,7 @@ public class IlsProperty {
 		addValueTranslation("BOTTOM-CENTER", Constants.BOTTOM_CENTER);
 		addValueTranslation("BOTTOM-RIGHT", Constants.BOTTOM_RIGHT);
 		
-		// Constants.TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK,TAG}
-		addValueTranslation("STATIC", Constants.STATIC);
+		// Constants.TIME_DELAY_STRATEGY_CHOICES = {LOCAL, RECIPE, CALLBACK,TAG}
 		addValueTranslation("RECIPE-DATA", Constants.RECIPE);
 		addValueTranslation("RECIPE-BLOCK", Constants.RECIPE); // ?
 		addValueTranslation("CALLBACK", Constants.CALLBACK);
@@ -246,6 +245,7 @@ public class IlsProperty {
     public static final BasicProperty<Double> SCALE = createProperty(Constants.SCALE, Double.class, .5);
     public static final BasicProperty<Double> TARGET_VALUE = createProperty(Constants.TARGET_VALUE, Double.class, 0.);
     public static final BasicProperty<Integer> TIMEOUT = createProperty(Constants.TIMEOUT, Integer.class, -1);
+    public static final BasicProperty<String> TIMEOUT_BEHAVIOR = createProperty(Constants.TIMEOUT_BEHAVIOR, String.class, Constants.TIMEOUT_BEHAVIOR_CHOICES[0], Constants.TIMEOUT_BEHAVIOR_CHOICES);
     public static final BasicProperty<String> TIMEOUT_UNIT = createProperty(Constants.TIMEOUT_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);
     public static final BasicProperty<Boolean> TIMER_CLEAR = createProperty(Constants.TIMER_CLEAR, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> TIMER_KEY = createProperty(Constants.TIMER_KEY, String.class, "");
@@ -453,12 +453,13 @@ public class IlsProperty {
 	}
 
 	private static Map<String, BasicProperty<?>> g2ToIgProperty = new HashMap<String, BasicProperty<?>>();
+	private static Map<String,Map<String, BasicProperty<?>>> g2ToIgPropertyByFactoryId = new HashMap<String,Map<String, BasicProperty<?>>>();
 	static {
 		g2ToIgProperty.put("acknowledgementRequired", ACK_REQUIRED);
 		g2ToIgProperty.put("appendTimestamp", TIMESTAMP);
 		g2ToIgProperty.put("callback", CALLBACK);
 		g2ToIgProperty.put("clearTimer", TIMER_CLEAR);
-		g2ToIgProperty.put("dataLocation", DESCRIPTION);
+		g2ToIgProperty.put("dataLocation", DATA_LOCATION);
 		g2ToIgProperty.put("description", DESCRIPTION);
 		g2ToIgProperty.put("delay-time", DELAY);
 		g2ToIgProperty.put("delay-units", DELAY_UNIT);
@@ -479,10 +480,10 @@ public class IlsProperty {
 		g2ToIgProperty.put("message-queue-name", MESSAGE_QUEUE);
 		g2ToIgProperty.put("messageQueueName", MESSAGE_QUEUE);
 		g2ToIgProperty.put("messageText", MESSAGE);
-		g2ToIgProperty.put("mode", MESSAGE);
+		//g2ToIgProperty.put("mode", MODE);
 		g2ToIgProperty.put("monitorItemName", KEY);
 		g2ToIgProperty.put("monitorKey", KEY);
-		g2ToIgProperty.put("monitorLocalValue", KEY);
+		g2ToIgProperty.put("monitorLocalValue", VALUE);
 		g2ToIgProperty.put("monitorRecipeLocation", RECIPE_LOCATION);
 		g2ToIgProperty.put("monitorStrategy", TIME_LIMIT_STRATEGY);
 		g2ToIgProperty.put("name", NAME);
@@ -494,7 +495,6 @@ public class IlsProperty {
 		g2ToIgProperty.put("prompt", PROMPT);
 		g2ToIgProperty.put("recipe-data-location", RECIPE_LOCATION);
 		g2ToIgProperty.put("recipe-location", RECIPE_LOCATION);
-		g2ToIgProperty.put("recipeLocation", RECIPE_LOCATION);
 		g2ToIgProperty.put("requireAllInputs", REQUIRE_INPUTS);
 		g2ToIgProperty.put("selectedButtonKey", BUTTON_KEY);
 		g2ToIgProperty.put("setTimer", TIMER_SET);		
@@ -502,6 +502,7 @@ public class IlsProperty {
 		g2ToIgProperty.put("strategy", TIME_DELAY_STRATEGY); // ?? multiple??		
 		g2ToIgProperty.put("timerKey", TIMER_KEY);
 		g2ToIgProperty.put("timerSource", TIMER_LOCATION);
+		g2ToIgProperty.put("timeoutBehavior", TIMEOUT_BEHAVIOR);
 		g2ToIgProperty.put("value", VALUE);
 		g2ToIgProperty.put("window", WINDOW);
 		g2ToIgProperty.put("windowTitle", WINDOW_TITLE);
@@ -509,16 +510,31 @@ public class IlsProperty {
 		g2ToIgProperty.put("workspace-scale", SCALE);
 		g2ToIgProperty.put("workspaceLocation", POSITION);
 		g2ToIgProperty.put("workspaceScale", SCALE);
-			
+		
+		addSpecificTranslation("com.ils.pvMonitorStep", "recipeLocation", DATA_LOCATION);			
 	}
 	
-	public static BasicProperty<?> getTranslationForG2Property(String name) {
-		return g2ToIgProperty.get(name);
+	private static void addSpecificTranslation(String factoryId, String name, BasicProperty<?> property) {
+		Map<String, BasicProperty<?>> specificTranslations = g2ToIgPropertyByFactoryId.get(factoryId);
+		if(specificTranslations == null) {
+			specificTranslations = new HashMap<String, BasicProperty<?>>();
+			g2ToIgPropertyByFactoryId.put(factoryId, specificTranslations);
+		}
+		specificTranslations.put(name,  property);
+	}
+	
+	public static BasicProperty<?> getTranslationForG2Property(String factoryId, String name) {
+		Map<String, BasicProperty<?>> specificTranslations = g2ToIgPropertyByFactoryId.get(factoryId);
+		if(specificTranslations != null && specificTranslations.get(name) != null) {
+			return specificTranslations.get(name);
+		}
+		else {
+			return g2ToIgProperty.get(name);
+		}
 	}
 
 	public static String getTranslationForG2Value(String factoryId, String stepName, BasicProperty<?> property, 
 		String g2Value, LoggerEx logger) {
-		if(IlsSfcCommonUtils.isEmpty(g2Value)) return null;
 		PropertyInfo info = infoById.get(getPropertyId(property));
 		if(info != null && info.choices != null) {
 			String transValue = null;
@@ -529,13 +545,19 @@ public class IlsProperty {
 			else {
 				transValue = g2ValueTrans.get(g2Value);
 			}
+			//logger.infof("factoryId %s prop %s g2 value %s -> enum %s", factoryId, property.getName(), g2Value, transValue);
 			if(transValue == null) {
+				transValue = Constants.TRANSLATION_ERROR;
 				logger.errorf("no translation for g2 value %s in property %s. step %s factoryId %s", g2Value, property.getName(), stepName, factoryId);
 			}
 			return transValue;
 		}
 		else {
 			// no constraint on value
+			if(g2Value.endsWith(".val")) {
+				g2Value += "ue"; // change to .value
+			}
+			//logger.infof("factoryId %s prop %s g2 value %s -> free %s", factoryId, property.getName(), g2Value, g2Value);
 			return g2Value;
 		}
 	}

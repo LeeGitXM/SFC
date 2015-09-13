@@ -8,8 +8,6 @@ import java.util.Set;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import system.ils.sfc.common.Constants;
-
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.step.AllSteps;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
@@ -69,7 +67,8 @@ public class StepPropertyTranslator {
     	for(int j = 0; j < attributes.getLength(); j++ ) {
     		String name =  attributes.item(j).getNodeName();
     		String value =  attributes.item(j).getNodeValue();
-    		g2Properties.put(name, value);
+    		// need to avoid null values for xml representation
+     		g2Properties.put(name, value != null ? value : "");
     	}
     	
     	// Now do the translation
@@ -88,15 +87,12 @@ public class StepPropertyTranslator {
             		logger.debugf("ignoring property %s", g2PropName);
         		}
         		else {
-        			BasicProperty<?> mappedProperty = IlsProperty.getTranslationForG2Property(g2PropName);
+        			BasicProperty<?> mappedProperty = IlsProperty.getTranslationForG2Property(factoryId, g2PropName);
         			if(mappedProperty != null) {
         				String mappedValueStr = IlsProperty.getTranslationForG2Value(factoryId, g2StepName,
         					mappedProperty, g2PropValue, logger);
         				// TODO: check enum translation
-        				if(mappedValueStr == null) {
-        					mappedValueStr = Constants.TRANSLATION_ERROR;
-        				}
-                		logger.debugf("mapped property %s : %s to %s : %s", g2PropName, g2PropValue, mappedProperty.getName(), mappedValueStr);
+                   		logger.debugf("mapped property %s : %s to %s : %s", g2PropName, g2PropValue, mappedProperty.getName(), mappedValueStr);
          				translation.put(mappedProperty.getName(), mappedValueStr);
         			}
         			else {

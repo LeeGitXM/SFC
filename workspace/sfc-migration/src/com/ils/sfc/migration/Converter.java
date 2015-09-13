@@ -609,10 +609,6 @@ public class Converter {
 		for(String propName: translation.keySet()) {
 			Element propelement = chart.createElement(propName);
 			String propValue = translation.get(propName);
-			// null values indicate a translation error
-			// nulls will cause the XML transformation to blow up, and
-			// we also want to indicate an error, so we insert an error string:
-			if(propValue == null) propValue = Constants.TRANSLATION_ERROR;
 			Node textNode = chart.createTextNode(propValue);
 			propelement.appendChild(textNode);
 			step.appendChild(propelement);

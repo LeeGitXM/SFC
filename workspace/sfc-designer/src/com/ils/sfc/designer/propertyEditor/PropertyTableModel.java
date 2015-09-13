@@ -137,6 +137,10 @@ public class PropertyTableModel extends AbstractTableModel {
 	}
 
 	private void addPropertyValue(PropertyValue<?> pValue) {
+		if(pValue == null) {
+			logger.error("Null property value!?");
+			return;
+		}
 		String name = pValue.getProperty().getName();
 		if(name.equals("id")) {
 			stepId = pValue.getValue().toString();

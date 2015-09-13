@@ -15,7 +15,7 @@ public interface MonitorDownloadStepProperties extends ChartStepProperties {
     public static final BasicProperty<?>[] properties = {
     	POSITION,
     	SCALE,
-    	WINDOW_TITLE,
+    	WINDOW_TITLE, 
     	MONITOR_DOWNLOADS_WINDOW,
     	MONITOR_DOWNLOADS_POSTING_METHOD,
     	TIMER_LOCATION,

@@ -82,7 +82,7 @@ public class RecipeBrowserPane extends EditorPanel {
 		Collections.sort(recipeData, new Comparator<Data>() {
 			@Override
 			public int compare(Data d1, Data d2) {
-				return d1.getKey().compareTo(d2.getKey());
+				return d1.getKey().toLowerCase().compareTo(d2.getKey().toLowerCase());
 			}			
 		});
 		for(Data data: recipeData) {

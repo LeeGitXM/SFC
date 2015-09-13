@@ -69,11 +69,11 @@ public class PropertyCellComponentFactory {
 	    	else if(rowObj.getProperty().equals(IlsProperty.G2_XML)) {
 	    		sValue = IlsSfcCommonUtils.unescapeXml(getRowStringValue(rowObj));
 	    	}
-	    	else if(Constants.TRANSLATION_ERROR.equals(sValue)) {
-	    		textField.setBackground(Color.red);
-	    	}
 	    	else {
 	    		sValue = getRowStringValue(rowObj);	    		
+	    	}
+	    	if(Constants.TRANSLATION_ERROR.equals(sValue)) {
+	    		textField.setBackground(Color.red);
 	    	}
 	    	textField.setText(sValue);
 	    	textField.setToolTipText(sValue);
