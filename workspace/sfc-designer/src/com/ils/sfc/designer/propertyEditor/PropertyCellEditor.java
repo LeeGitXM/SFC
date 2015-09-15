@@ -35,7 +35,8 @@ class PropertyCellEditor extends AbstractCellEditor implements TableCellEditor{
 			return component = combo;
 		}
 		else if(rowObj.getProperty().equals(EnclosingStepProperties.CHART_PATH)) {
-			return component = DesignerUtil.getChartPathComboBox();
+			String currentPath = (String)rowObj.getValue();
+			return component = DesignerUtil.getChartPathComboBox(currentPath);
 		}
 		else {
 			int alignment = factory.getHorizontalAlignment(col);

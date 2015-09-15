@@ -12,10 +12,11 @@ import com.inductiveautomation.sfc.designer.workspace.editors.ChartPathComboBox;
 public class DesignerUtil {
 	static DesignerContext context; 
 	
-	public static ChartPathComboBox getChartPathComboBox() {
+	public static ChartPathComboBox getChartPathComboBox(String currentValue) {
 		ChartPathComboBox cb = new ChartPathComboBox();
 		Project globalProject = context.getGlobalProject().getProject();
 		cb.initRoot(globalProject);
+		cb.setSelectedItem(currentValue);
 		cb.setBorder(new EmptyBorder(0,0,0,0));
 		return cb;
 	}
