@@ -222,9 +222,7 @@ public class PythonCall {
 					ScopeContext scopeContext = (ScopeContext)argValues[0];
 					HANDLE_STEP_ERROR.exec(scopeContext.getChartScope(), msg);
 				}
-				else {
-					logger.error("Error invoking script : " + msg1, ex);					
-				}
+				logger.error("Error invoking script : " + msg, ex);					
 			}
 			else {
 				logger.error("Couldn't invoke handleUnexpectedError script : " + ex.toString(), ex);
