@@ -5,6 +5,9 @@ import javax.swing.JTable;
 
 
 
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import com.ils.sfc.common.rowconfig.CollectDataConfig;
 import com.ils.sfc.common.rowconfig.RowConfig;
 import com.ils.sfc.designer.stepEditor.StepEditorController;
@@ -31,6 +34,18 @@ public class CollectDataPanel extends RowEditorPanel {
 		table = new JTable(tableModel);
 		tablePanel = createTablePanel(table, tablePanel, new RowCellEditor(),
 			new GenericCellRenderer());
+		table.getColumnModel().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				int col = table.getSelectedColumn();
+				buttonPanel.getEditButton().setEnabled(col == CollectDataTableModel.TAG_COLUMN);
+			}			
+		});
+	}
+	
+	@Override
+	protected void doEdit() {
+		super.doEdit();
+		stepController.getTagBrowser().activate(this);
 	}
 	
 	@Override
