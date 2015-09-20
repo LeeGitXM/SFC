@@ -52,12 +52,13 @@ public class PropertyCellComponentFactory {
 	/** Get a swing component suitable for editing/rendering a value of
 	 *  the given type.
 	 */
-	protected Component getComponentForValue(PropertyRow rowObj, int alignment) {
-	    if(rowObj.getProperty().getType() == Boolean.class) {
+	protected Component getComponentForValue(PropertyRow rowObj, int alignment, boolean isEditable) {
+	    Component component = null;
+		if(rowObj.getProperty().getType() == Boolean.class) {
 	    	JCheckBox checkBox = createCheckBox();
 	    	boolean value = rowObj.getValue() != null ? ((Boolean)rowObj.getValue()).booleanValue() : false;
 	    	checkBox.setSelected(value);
-	    	return checkBox;
+	    	component = checkBox;
 	    }
 	    else {
 	    	JTextField textField = createTextField();
@@ -77,8 +78,10 @@ public class PropertyCellComponentFactory {
 	    	}
 	    	textField.setText(sValue);
 	    	textField.setToolTipText(sValue);
-	    	return textField;
+	    	component = textField;
 	    }		
+		component.setEnabled(isEditable);
+		return component;
 	}
 
 	private String getRowStringValue(PropertyRow rowObj) {

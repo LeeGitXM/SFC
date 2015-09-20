@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -131,7 +133,6 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	// draw connections to other steps
     	this.drawUpLink(g2d);
     	this.drawDownLink(g2d);
-    	StepElementStatus stepStatus = chartStatusContext.getStepStatus(propertyValues);
     	// IA's drawing uses some significant scaling--remove that for our label display,
     	// but retain the translation part:
     	AffineTransform oldTransform = g2d.getTransform();
@@ -148,28 +149,33 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     		label.setText(oldLabelText.replace("</html>", "<br>" + stepName + "</html>"));
     	}
 
-    	Optional<ChartStatus> chartStatus = chartStatusContext.getChartStatus();
-    	boolean chartNotStarted = !chartStatus.isPresent();
-    	ElementStateEnum stepState = chartStatusContext.getStepStatus(propertyValues).getElementState();
-    	
-    	Color background = Color.white;
+    	boolean chartNotStarted = !chartStatusContext.getChartStatus().isPresent();
+    	StepElementStatus stepElementStatus = chartStatusContext.getStepStatus(propertyValues);
+    	ElementStateEnum stepState = stepElementStatus.getElementState();
+    	boolean wasActivated = stepElementStatus.getLastActivation() != null;
+    	Color background = null;
     	if(chartNotStarted) {
     		background = Color.white;
     	}
-    	else if(stepState.isRunning()) {
-			background = Color.green.brighter();
-		}
-		else if(ElementStateEnum.Paused == stepState) {
-			background = Color.blue.brighter();
-		}
-		else if(
-			chartStatus.get().getChartState().isTerminal() ||
-			ElementStateEnum.Aborted == stepState ||
-			ElementStateEnum.Canceled == stepState ||
-			ElementStateEnum.Inactive == stepState 
-				) {
-			background = Color.lightGray;
-		}
+    	else {
+    		ChartStatus chartStatus = chartStatusContext.getChartStatus().get();
+			if(chartStatus.getChartState().isTerminal()) {
+				background = Color.lightGray;
+			}
+    		else if(stepState.isRunning()) {
+				background = Color.green.brighter();
+    		}
+			else if(ElementStateEnum.Paused == stepState) {
+				background = Color.blue.brighter();
+			}
+			else if(wasActivated) {
+				background = Color.lightGray;
+			}
+			else {
+				// hasn't run yet
+				background = Color.white;
+			}			
+    	}
     	label.setBackground(background);
     	g2d.setTransform(transform);
     	label.paint(g2d);

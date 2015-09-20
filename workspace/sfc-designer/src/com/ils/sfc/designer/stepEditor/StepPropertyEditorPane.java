@@ -70,7 +70,7 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 
 		if(selectedPropertyValue.getProperty().equals(IlsProperty.TAG_PATH)) {
 			editor.stopCellEditing();
-			controller.getTagBrowser().activate(myIndex);
+			controller.getTagBrowser().activate(this);
 		}
 		else if(selectedPropertyValue.getProperty().equals(IlsProperty.PRIMARY_REVIEW_DATA) ||
 				selectedPropertyValue.getProperty().equals(IlsProperty.PRIMARY_REVIEW_DATA_WITH_ADVICE) ||

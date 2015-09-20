@@ -23,6 +23,7 @@ class PropertyCellEditor extends AbstractCellEditor implements TableCellEditor{
 
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected,
 		int row, int col) {
+		PropertyTableModel model = (PropertyTableModel) table.getModel();
 		PropertyRow rowObj = ((PropertyTableModel) table.getModel()).getRowObject(row);
 		if(rowObj.getChoices() != null) {
 			JComboBox<Object> combo = new JComboBox<Object>(rowObj.getChoices());
@@ -40,7 +41,8 @@ class PropertyCellEditor extends AbstractCellEditor implements TableCellEditor{
 		}
 		else {
 			int alignment = factory.getHorizontalAlignment(col);
-			return component = factory.getComponentForValue(rowObj, alignment);
+			boolean valueIsEditable = col == 1 && model.isCellEditable(row, col);
+			return component = factory.getComponentForValue(rowObj, alignment, valueIsEditable);
 		}
 	}
 

@@ -104,6 +104,7 @@ public class Constants {
 	public static final String OFF = "Off";
 	public static final String OK = "OK";
 	public static final String OUT_OF_RANGE = "Out of Range";
+	public static final String OUTPUT = "output";
 	public static final String PARENT_GROUP = "parent-group";
 	public static final String PCT = "Pct";
 	public static final String PENDING = "Pending";
@@ -232,7 +233,7 @@ public class Constants {
 		GLOBAL, OPERATION, PHASE, TAG};
 	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
 	public static final String[] TIME_LIMIT_STRATEGY_CHOICES = {STATIC, RECIPE};
-	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {LOCAL, RECIPE, CALLBACK, TAG};
+	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK, TAG};
 	public static final String[] RESULTS_MODE_CHOICES = {UPDATE, UPDATE_OR_CREATE};
 	public static final String[] FETCH_MODE_CHOICES = {SINGLE, MULTIPLE};
 	public static final String[] KEY_MODE_CHOICES = {STATIC, DYNAMIC};
@@ -250,7 +251,7 @@ public class Constants {
 	public static final String[] PV_LIMITS_CHOICES = {HIGH_LOW, HIGH, LOW};
 	public static final String[] PV_DOWNLOAD_CHOICES = {IMMEDIATE, WAIT};
 	public static final String[] PV_TYPE_CHOICES = {ABS, PCT};
-	public static final String[] OUTPUT_VALUE_TYPE_CHOICES = {SETPOINT, VALUE};
+	public static final String[] OUTPUT_VALUE_TYPE_CHOICES = {MODE, SETPOINT, OUTPUT, VALUE};
 	
 	public static final String SFC_DOWNLOAD_KEY_WINDOW = "SFC/DownloadKey";
 	public static final String SFC_INPUT_WINDOW = "SFC/Input";

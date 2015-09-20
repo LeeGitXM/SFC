@@ -40,7 +40,15 @@ public class TagBrowserPanel extends ValueHoldingEditorPanel  {
 
 	@Override
 	public Object getValue() {
-		return tagBrowser.getTagPath();
+		String tagPath = tagBrowser.getTagPath();
+		// strip off provider:
+		if(tagPath.startsWith("[")) {
+			int rbIndex = tagPath.indexOf("]");
+			if(rbIndex != -1) {
+				tagPath = tagPath.substring(rbIndex+1, tagPath.length());
+			}
+		}
+		return tagPath;
 	}
 
 	@Override

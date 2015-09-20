@@ -85,6 +85,7 @@ public class IlsProperty {
 	
 	public static class PropertyInfo {
 		boolean isSerializedObject = false;
+		boolean isReadOnly = false;
 		String[] choices;
 		String label;
 		Map<String,String> g2ValueTranslation;
@@ -160,7 +161,7 @@ public class IlsProperty {
     public static final BasicProperty<Boolean> COLUMN_KEYED = createProperty(Constants.COLUMN_KEYED, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<String> COMPUTER = createProperty(Constants.COMPUTER, String.class, Constants.COMPUTER_CHOICES[0], Constants.COMPUTER_CHOICES);
     public static final BasicProperty<String> DATA_ID = createProperty(Constants.DATA_ID, String.class, "");
-    public static final BasicProperty<String> DATA_LOCATION = createProperty(Constants.DATA_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
+    public static final BasicProperty<String> TIME_LIMIT_RECIPE_LOCATION = createProperty(Constants.DATA_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], false, Constants.RECIPE_LOCATION_CHOICES, "time limit recipe location");
     public static final BasicProperty<Double> DELAY = createProperty(Constants.DELAY, Double.class, 0.);
     public static final BasicProperty<String> DELAY_UNIT = createProperty(Constants.DELAY_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);  
     public static final BasicProperty<String> DESCRIPTION = createProperty(Constants.DESCRIPTION, String.class, "");
@@ -238,12 +239,14 @@ public class IlsProperty {
     public static final BasicProperty<Double> STEP_TIME = createProperty(Constants.STEP_TIME, Double.class, 0.);
     public static final BasicProperty<String> STEP_TIMESTAMP = createProperty(Constants.STEP_TIMESTAMP, String.class, "");
     public static final BasicProperty<String> TAG_PATH = createProperty(Constants.TAG_PATH, String.class, "");
+    public static final BasicProperty<String> TIME_LIMIT_RECIPE_KEY = createProperty(Constants.KEY, String.class, "", false, "time limit recipe key");
     public static final BasicProperty<String> TIME_DELAY_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.TIME_DELAY_STRATEGY_CHOICES[0], Constants.TIME_DELAY_STRATEGY_CHOICES);
-    public static final BasicProperty<String> TIME_LIMIT_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.TIME_LIMIT_STRATEGY_CHOICES[0], Constants.TIME_LIMIT_STRATEGY_CHOICES);
+    public static final BasicProperty<String> TIME_LIMIT_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.TIME_LIMIT_STRATEGY_CHOICES[0], false, Constants.TIME_LIMIT_STRATEGY_CHOICES, "time limit strategy");
     public static final BasicProperty<Double> TIMING = createProperty(Constants.TIMING, Double.class, 0.);
     public static final BasicProperty<String> RECIPE_STATIC_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.RECIPE_STATIC_STRATEGY_CHOICES[0], Constants.RECIPE_STATIC_STRATEGY_CHOICES);
     public static final BasicProperty<Double> SCALE = createProperty(Constants.SCALE, Double.class, .5);
     public static final BasicProperty<Double> TARGET_VALUE = createProperty(Constants.TARGET_VALUE, Double.class, 0.);
+    public static final BasicProperty<Object> TIME_LIMIT_STATIC_VALUE = createProperty(Constants.VALUE, Object.class, null, false, "time limit static value");
     public static final BasicProperty<Integer> TIMEOUT = createProperty(Constants.TIMEOUT, Integer.class, -1);
     public static final BasicProperty<String> TIMEOUT_BEHAVIOR = createProperty(Constants.TIMEOUT_BEHAVIOR, String.class, Constants.TIMEOUT_BEHAVIOR_CHOICES[0], Constants.TIMEOUT_BEHAVIOR_CHOICES);
     public static final BasicProperty<String> TIMEOUT_UNIT = createProperty(Constants.TIMEOUT_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);
@@ -425,6 +428,16 @@ public class IlsProperty {
 		return info != null ? info.isSerializedObject : false;
 	}
 	
+	public static void setReadOnly(Property<?> property) {
+		PropertyInfo info = infoById.get(getPropertyId(property));
+		info.isReadOnly = true;
+	}
+
+	public static boolean isReadOnly(Property<?> property) {
+		PropertyInfo info = infoById.get(getPropertyId(property));
+		return info != null ? info.isReadOnly : false;
+	}
+
 	/** Get the user-visible display string. Usually this is a munged version of the name,
 	 *  but sometimes a property has an explicit label. 
 	 */
@@ -452,6 +465,20 @@ public class IlsProperty {
 		return buf.toString();
 	}
 
+	// define read-only properties:
+	static {
+		setReadOnly(DOWNLOAD_STATUS);
+		setReadOnly(ERROR_CODE);
+		setReadOnly(ERROR_TEXT);
+		setReadOnly(PV_MONITOR_ACTIVE);
+		setReadOnly(PV_MONITOR_STATUS);
+		setReadOnly(PV_VALUE);
+		setReadOnly(STEP_TIME);
+		setReadOnly(STEP_TIMESTAMP);
+		setReadOnly(TARGET_VALUE);
+		setReadOnly(WRITE_CONFIRMED);
+	}
+	
 	private static Map<String, BasicProperty<?>> g2ToIgProperty = new HashMap<String, BasicProperty<?>>();
 	private static Map<String,Map<String, BasicProperty<?>>> g2ToIgPropertyByFactoryId = new HashMap<String,Map<String, BasicProperty<?>>>();
 	static {
@@ -459,7 +486,7 @@ public class IlsProperty {
 		g2ToIgProperty.put("appendTimestamp", TIMESTAMP);
 		g2ToIgProperty.put("callback", CALLBACK);
 		g2ToIgProperty.put("clearTimer", TIMER_CLEAR);
-		g2ToIgProperty.put("dataLocation", DATA_LOCATION);
+		g2ToIgProperty.put("dataLocation", TIME_LIMIT_RECIPE_LOCATION);
 		g2ToIgProperty.put("description", DESCRIPTION);
 		g2ToIgProperty.put("delay-time", DELAY);
 		g2ToIgProperty.put("delay-units", DELAY_UNIT);
@@ -482,9 +509,9 @@ public class IlsProperty {
 		g2ToIgProperty.put("messageText", MESSAGE);
 		//g2ToIgProperty.put("mode", MODE);
 		g2ToIgProperty.put("monitorItemName", KEY);
-		g2ToIgProperty.put("monitorKey", KEY);
-		g2ToIgProperty.put("monitorLocalValue", VALUE);
-		g2ToIgProperty.put("monitorRecipeLocation", RECIPE_LOCATION);
+		g2ToIgProperty.put("monitorKey", TIME_LIMIT_RECIPE_KEY);
+		g2ToIgProperty.put("monitorLocalValue", TIME_LIMIT_STATIC_VALUE);
+		g2ToIgProperty.put("monitorRecipeLocation", TIME_LIMIT_RECIPE_LOCATION);
 		g2ToIgProperty.put("monitorStrategy", TIME_LIMIT_STRATEGY);
 		g2ToIgProperty.put("name", NAME);
 		g2ToIgProperty.put("post-notification", POST_NOTIFICATION);		
@@ -511,7 +538,7 @@ public class IlsProperty {
 		g2ToIgProperty.put("workspaceLocation", POSITION);
 		g2ToIgProperty.put("workspaceScale", SCALE);
 		
-		addSpecificTranslation("com.ils.pvMonitorStep", "recipeLocation", DATA_LOCATION);			
+		addSpecificTranslation("com.ils.pvMonitorStep", "recipeLocation", TIME_LIMIT_RECIPE_LOCATION);			
 	}
 	
 	private static void addSpecificTranslation(String factoryId, String name, BasicProperty<?> property) {
