@@ -23,7 +23,6 @@ public class ReviewDataConfig  extends RowConfig {
 		public String recipeScope;
 		public String prompt;
 		public String advice;
-		public String unitType;
 		public String units;
 		
 		@JsonIgnore
