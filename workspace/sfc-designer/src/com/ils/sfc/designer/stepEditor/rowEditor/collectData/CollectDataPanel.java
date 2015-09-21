@@ -34,6 +34,7 @@ public class CollectDataPanel extends RowEditorPanel {
 		table = new JTable(tableModel);
 		tablePanel = createTablePanel(table, tablePanel, new RowCellEditor(),
 			new GenericCellRenderer());
+		buttonPanel.getEditButton().setEnabled(false);
 		table.getColumnModel().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				int col = table.getSelectedColumn();

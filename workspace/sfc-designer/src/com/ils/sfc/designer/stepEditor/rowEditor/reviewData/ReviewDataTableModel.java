@@ -12,8 +12,9 @@ import com.inductiveautomation.ignition.common.script.JythonExecException;
 @SuppressWarnings("serial")
 public class ReviewDataTableModel extends RowTableModel {
 	public static final int VALUE_COLUMN = 1;
-	private static final String[] columnNames = {"Config Key", "Value Key", "Destination", "Prompt", "Unit Type", "Units"};
-	private static final String[] columnNamesWithAdvice = {"Config Key", "Value Key", "Destination", "Prompt", "Advice", "Unit Type", "Units"};
+	public static final int UNITS_COLUMN = 4;
+	private static final String[] columnNames = {"Config Key", "Value Key", "Destination", "Prompt", "Units"};
+	private static final String[] columnNamesWithAdvice = {"Config Key", "Value Key", "Destination", "Prompt", "Units", "Advice"};
 	private boolean showAdvice;
 	
 	public ReviewDataTableModel(boolean showAdvice) {
@@ -22,7 +23,7 @@ public class ReviewDataTableModel extends RowTableModel {
 	
 	@Override
 	protected boolean isComboColumn(int col) {
-		return isDestinationColumn(col) || isUnitTypesColumn(col) || isUnitsColumn(col);
+		return isDestinationColumn(col);
 	}
 
 	@Override
@@ -36,29 +37,6 @@ public class ReviewDataTableModel extends RowTableModel {
 		if(isDestinationColumn(col)) { // recipe scope
 			choices = Constants.RECIPE_LOCATION_CHOICES;
 		}
-		else if(isUnitTypesColumn(col)) { // unit types
-			try {
-				choices =  PythonCall.toArray(PythonCall.GET_UNIT_TYPES.exec());
-			} catch (JythonExecException e) {
-				return null;
-			}
-		}
-		else {//  units
-			try {
-				int unitTypeCol = (showAdvice ? 5 : 4);
-				String unitType = (String)getValueAt(row, unitTypeCol);
-				if(!IlsSfcCommonUtils.isEmpty(unitType)) {
-					choices =  PythonCall.toArray(PythonCall.GET_UNITS_OF_TYPE.exec(unitType));
-				}
-				else {
-					// no unit type has been chosen
-					choices =  new String[0];						
-				}
-			} 
-			catch (JythonExecException e) {
-				e.printStackTrace();
-			}
-		}
 		return choices;
 	}
 		
@@ -66,12 +44,8 @@ public class ReviewDataTableModel extends RowTableModel {
 		return col == 2;
 	}
 
-	private boolean isUnitTypesColumn(int col) {
-		return col == (showAdvice ? 5 : 4);
-	}
-
-	private boolean isUnitsColumn(int col) {
-		return col == (showAdvice ? 6 : 5);
+	public boolean isUnitsColumn(int col) {
+		return col == 4;
 	}
 
 	public String[] getColumnNames() {
@@ -89,9 +63,8 @@ public class ReviewDataTableModel extends RowTableModel {
     		case 1: return rowObj.valueKey;
     		case 2: return rowObj.recipeScope;
     		case 3: return rowObj.prompt;
-    		case 4: return showAdvice ? rowObj.advice : rowObj.unitType;
-    		case 5: return showAdvice ? rowObj.unitType :  rowObj.units;
-    		case 6: return showAdvice ? rowObj.units : "";
+    		case 4: return rowObj.units;
+    		case 5: return showAdvice ? rowObj.advice : "";
     		default: return null;
     	}
     }
@@ -104,27 +77,11 @@ public class ReviewDataTableModel extends RowTableModel {
     		case 1: rowObj.valueKey = sValue; break;
     		case 2: rowObj.recipeScope = sValue; break;
     		case 3: rowObj.prompt = sValue; break;
-    		case 4: 
-    			if(showAdvice)
-    				rowObj.advice = sValue; 
-    			else {
-        			rowObj.unitType = sValue; 
-    				setValueAt(null, row, 5);
-    			}
-     			break;
+    		case 4: rowObj.units = sValue; break;
     		case 5: 
     			if(showAdvice) {
-    				rowObj.unitType = sValue; 
-    				setValueAt(null, row, 6);
-    			}
-    			else
-        			rowObj.units = sValue; 
-    			break;
-    		case 6: 
-    			if(showAdvice)
-    				rowObj.units = sValue; 
-    			else
-        			;//
+    				rowObj.advice = sValue; 
+     			}
     			break;
     	}
     }

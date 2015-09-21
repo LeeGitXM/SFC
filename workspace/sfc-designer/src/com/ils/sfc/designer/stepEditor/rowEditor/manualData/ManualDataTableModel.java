@@ -12,7 +12,8 @@ import com.ils.sfc.designer.stepEditor.rowEditor.RowTableModel;
 @SuppressWarnings("serial")
 public class ManualDataTableModel extends RowTableModel {
 private EditorErrorHandler errorHandler;
-
+public static final int DESTINATION_COL = 1;
+public static final int UNITS_COL = 3;
 private static final String[] columnNames = {"Key", "Destination", "Prompt", "Units", "Default Value", "Low Limit", "High Limit"};
 	
 	public ManualDataTableModel(EditorErrorHandler errorHandler) {
@@ -64,12 +65,12 @@ private static final String[] columnNames = {"Key", "Destination", "Prompt", "Un
 	}
 
 	protected boolean isComboColumn(int col) {
-		return col == 1;
+		return col == DESTINATION_COL;
 	}
 
 	protected String[] getChoices(int row, int col) {
-		if(col == 1) {
-			return Constants.S88_LEVEL_CHOICES;
+		if(col == DESTINATION_COL) {
+			return Constants.RECIPE_LOCATION_CHOICES;
 		}
 		else {
 			return null;
@@ -77,6 +78,6 @@ private static final String[] columnNames = {"Key", "Destination", "Prompt", "Un
 	}
 	
 	protected boolean isTextColumn(int col) {
-		return col != 1;
+		return col != DESTINATION_COL;
 	}
 }

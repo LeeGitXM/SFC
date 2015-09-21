@@ -230,7 +230,7 @@ public class Constants {
 	// choices:
 	public static final String[] RECIPE_STATIC_STRATEGY_CHOICES = {STATIC, RECIPE};
 	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, PRIOR, SUPERIOR,
-		GLOBAL, OPERATION, PHASE, TAG};
+		GLOBAL, OPERATION, PHASE};
 	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
 	public static final String[] TIME_LIMIT_STRATEGY_CHOICES = {STATIC, RECIPE};
 	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK, TAG};
@@ -243,7 +243,6 @@ public class Constants {
 	public static final String[] SECURITY_CHOICES = {PUBLIC, PRIVATE};
 	public static final String[] PRIORITY_CHOICES = {INFO, WARNING, ERROR};
 	public static final String[] AUDIT_LEVEL_CHOICES = {OFF, LOW, HIGH};
-	public static final String[] S88_LEVEL_CHOICES = {NONE, GLOBAL, OPERATION, PHASE};
 	public static final String[] COLLECT_DATA_VALUE_TYPE_CHOICES = {CURRENT, AVERAGE, MINIMUM, MAXIMUM, STANDARD_DEVIATION};
 	public static final String[] TIMEOUT_BEHAVIOR_CHOICES = {ABORT, TIMEOUT, DEFAULT_VALUE};
 	public static final String[] PV_TARGET_TYPE_CHOICES = {SETPOINT, VALUE, TAG, RECIPE};

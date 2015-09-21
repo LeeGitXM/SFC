@@ -5,8 +5,9 @@ import com.ils.sfc.designer.stepEditor.rowEditor.RowTableModel;
 
 @SuppressWarnings("serial")
 public class MonitorDownloadsTableModel extends RowTableModel {
+	public static final int UNITS_COL = 2;
 
-private static final String[] columnNames = {"Key", "Label Attribute", "Units"};
+	private static final String[] columnNames = {"Key", "Label Attribute", "Units"};
 	
 	public String[] getColumnNames() {
 		return columnNames;
