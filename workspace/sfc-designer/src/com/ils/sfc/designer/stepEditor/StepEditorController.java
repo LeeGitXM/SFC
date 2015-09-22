@@ -18,6 +18,7 @@ import com.ils.sfc.designer.stepEditor.rowEditor.manualData.ManualDataPanel;
 import com.ils.sfc.designer.stepEditor.rowEditor.monitorDownloads.MonitorDownloadsPanel;
 import com.ils.sfc.designer.stepEditor.rowEditor.pvMonitor.PVMonitorPanel;
 import com.ils.sfc.designer.stepEditor.rowEditor.reviewData.ReviewDataPanel;
+import com.ils.sfc.designer.stepEditor.rowEditor.reviewFlows.ReviewFlowsPanel;
 import com.ils.sfc.designer.stepEditor.rowEditor.writeOutput.WriteOutputPanel;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
@@ -36,6 +37,7 @@ public class StepEditorController extends PanelController implements EditorError
 	public static final int PV_MONITOR = 9;
 	public static final int WRITE_OUTPUT = 10;
 	public static final int MANUAL_DATA_ENTRY = 11;
+	public static final int REVIEW_FLOWS = 12;
 
 	// The sub-panes:
 	private StepPropertyEditorPane propertyEditor = new StepPropertyEditorPane(this, PROPERTY_EDITOR);
@@ -44,6 +46,7 @@ public class StepEditorController extends PanelController implements EditorError
 	private UnitChooserPanel unitChooser = new UnitChooserPanel(this, UNIT_CHOOSER);
 	private MessagePanel messagePanel = new MessagePanel(this, MESSAGE);
 	private ReviewDataPanel reviewDataPanel = new ReviewDataPanel(this, REVIEW_DATA);
+	private ReviewFlowsPanel reviewFlowsPanel = new ReviewFlowsPanel(this, REVIEW_FLOWS);
 	private CollectDataPanel collectDataPanel = new CollectDataPanel(this, COLLECT_DATA);
 	private ConfirmControllersPanel confirmControllersPanel = new ConfirmControllersPanel(this, CONFIRM_CONTROLLERS);
 	private MonitorDownloadsPanel monitorDownloadsPanel = new MonitorDownloadsPanel(this, MONITOR_DOWNLOADS);
@@ -65,6 +68,7 @@ public class StepEditorController extends PanelController implements EditorError
 		slidingPane.add(pvMonitorPanel);	
 		slidingPane.add(writeOutputPanel);	
 		slidingPane.add(manualDataEntryPanel);	
+		slidingPane.add(reviewFlowsPanel);	
 	}
 
 	
@@ -90,6 +94,10 @@ public class StepEditorController extends PanelController implements EditorError
 
 	public ReviewDataPanel getReviewDataPanel() {
 		return reviewDataPanel;
+	}
+
+	public ReviewFlowsPanel getReviewFlowsPanel() {
+		return reviewFlowsPanel;
 	}
 
 	public CollectDataPanel getCollectDataPanel() {

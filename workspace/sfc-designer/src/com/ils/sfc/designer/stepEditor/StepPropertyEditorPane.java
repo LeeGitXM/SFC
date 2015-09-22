@@ -80,6 +80,10 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 			controller.getReviewDataPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getReviewDataPanel().activate(myIndex);				
 		}
+		else if(selectedPropertyValue.getProperty().equals(IlsProperty.REVIEW_FLOWS)) {
+			controller.getReviewFlowsPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getReviewFlowsPanel().activate(myIndex);							
+		}
 		else if(selectedPropertyValue.getProperty().equals(IlsProperty.COLLECT_DATA_CONFIG)) {
 			// COLLECT_DATA properties hold a complex configuration in a stringified JSON object
 			controller.getCollectDataPanel().setConfig((PropertyValue<String>) selectedPropertyValue);

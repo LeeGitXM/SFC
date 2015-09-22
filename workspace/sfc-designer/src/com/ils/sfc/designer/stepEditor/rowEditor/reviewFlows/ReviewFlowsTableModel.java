@@ -8,12 +8,12 @@ import com.ils.sfc.designer.stepEditor.rowEditor.RowTableModel;
 @SuppressWarnings("serial")
 public class ReviewFlowsTableModel extends RowTableModel {
 	public static final int DESTINATION_COLUMN = 4;
-	public static final int UNITS_COLUMN = 6;
+	public static final int UNITS_COLUMN = 7;
 	private static final String[] columnNames = {"Config Key", "Flow 1", "Flow 2", "Total Flow", "Destination", "Prompt", "Advice", "Units"};
 
 	@Override
 	protected boolean isComboColumn(int col) {
-		return false;
+		return col == DESTINATION_COLUMN;
 	}
 
 	@Override
