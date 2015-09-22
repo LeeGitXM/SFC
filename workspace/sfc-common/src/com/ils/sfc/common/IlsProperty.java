@@ -27,6 +27,7 @@ public class IlsProperty {
 	private static final String EMPTY_PV_MONITOR_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_WRITE_OUTPUT_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_REVIEW_DATA_CONFIG = "{\"rows\":[]}";
+	private static final String EMPTY_REVIEW_FLOWS_CONFIG = "{\"rows\":[]}";
 	private static final String EMPTY_COLLECT_DATA_CONFIG = "{\"errorHandling\": \"" + Constants.DEFAULT_VALUE + "\", \"rows\":[]}";
 	
 	private static final Map<Integer, PropertyInfo> infoById = new HashMap<Integer, PropertyInfo>();
@@ -225,8 +226,9 @@ public class IlsProperty {
     public static final BasicProperty<String> RESULTS_MODE = createProperty(Constants.RESULTS_MODE, String.class, Constants.RESULTS_MODE_CHOICES[0], Constants.RESULTS_MODE_CHOICES);
     public static final BasicProperty<String> REVIEW_DATA_POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.reviewData.defaultPostingMethod");
     public static final BasicProperty<String> REVIEW_DATA_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_REVIEW_DATA_WINDOW, false);
+    public static final BasicProperty<String> REVIEW_FLOWS = createProperty(Constants.REVIEW_FLOWS, String.class, EMPTY_REVIEW_FLOWS_CONFIG, true);
     public static final BasicProperty<String> REVIEW_FLOWS_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_REVIEW_FLOWS_WINDOW, false);
-    public static final BasicProperty<String> REVIEW_FLOWS_POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, "");
+    public static final BasicProperty<String> REVIEW_FLOWS_POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.reviewFlows.defaultPostingMethod");
     public static final BasicProperty<Integer> ROWS = createProperty(Constants.ROWS, Integer.class, 0);
     public static final BasicProperty<String> ROW_KEY = createProperty(Constants.ROW_KEY, String.class, Constants.NONE);
     public static final BasicProperty<Boolean> ROW_KEYED = createProperty(Constants.ROW_KEYED, Boolean.class, Boolean.FALSE);

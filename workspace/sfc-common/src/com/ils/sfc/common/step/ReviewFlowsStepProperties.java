@@ -23,6 +23,6 @@ public interface ReviewFlowsStepProperties extends ChartStepProperties {
     	BUTTON_KEY_LOCATION,
     	POSITION,
     	SCALE,
-    	// # REVIEW_DATA ?? do we have secondary here as well ?
+    	REVIEW_FLOWS
     };
 }

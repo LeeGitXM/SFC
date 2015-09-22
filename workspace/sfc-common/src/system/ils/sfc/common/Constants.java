@@ -137,6 +137,7 @@ public class Constants {
 	public static final String REVIEW_DATA_WITH_ADVICE = "reviewDataWithAdvice"; 
 	public static final String REVIEW_DATA_WINDOW = "reviewDataWindow";
 	public static final String REVIEW_FLOWS_WINDOW = "reviewFlowsWindow";
+	public static final String REVIEW_FLOWS = "reviewFlows";
 	public static final String ROW_KEY = "rowKey"; 
 	public static final String ROW_KEYED = "rowKeyed"; 
 	public static final String ROWS = "rows"; 

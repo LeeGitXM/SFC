@@ -21,7 +21,7 @@ import com.ils.sfc.common.rowconfig.ManualDataEntryConfig;
 import com.ils.sfc.common.rowconfig.MonitorDownloadsConfig;
 import com.ils.sfc.common.rowconfig.PVMonitorConfig;
 import com.ils.sfc.common.rowconfig.ReviewDataConfig;
-import com.ils.sfc.common.rowconfig.ReviewDataConfig.Row;
+import com.ils.sfc.common.rowconfig.ReviewFlowsConfig;
 import com.ils.sfc.common.rowconfig.WriteOutputConfig;
 import com.ils.sfc.step.IlsAbstractChartStep;
 import com.inductiveautomation.ignition.common.Dataset;
@@ -103,7 +103,7 @@ public class IlsGatewayScripts {
 		    	if(!row.isBlank()) {
 			    	int i = 0;
 			    	// Get any config data that has been created programmatically
-			    	Row scriptedConfig = new Row();
+			    	ReviewDataConfig.Row scriptedConfig = new ReviewDataConfig.Row();
 			    	if(!isEmpty(row.configKey)) {
 			    		getScriptedConfig(chartScope, stepScope, row.configKey, row.recipeScope, scriptedConfig);
 			    	}
@@ -122,7 +122,8 @@ public class IlsGatewayScripts {
 			    		}
 			    		buffer[i++] = advice;
 			    	}
-					Object value = getValueInDisplayUnits(chartScope, stepScope, row);
+					Object value = getValueInDisplayUnits(chartScope, stepScope, row.valueKey,
+						row.recipeScope, row.units);
 			    	buffer[i++] = value;
 			    	String units = !isEmpty(scriptedConfig.units) ? scriptedConfig.units : row.units;
 			    	buffer[i++] = units;
@@ -136,6 +137,71 @@ public class IlsGatewayScripts {
 			return null;
 		}	
 	}
+
+	public static Dataset getReviewFlows(PyChartScope chartScope, PyChartScope stepScope,
+			String reviewFlowsConfigJson) {
+			try {
+				ReviewFlowsConfig config = ReviewFlowsConfig.fromJSON(reviewFlowsConfigJson);
+				DatasetBuilder builder = new DatasetBuilder();
+
+				builder.colNames("", "", "R1 Flows", "R2 Flows", "Total Flows", "Units");
+				builder.colTypes(String.class, String.class, Double.class, Double.class, Double.class, String.class);
+				Object[] buffer = new Object[6];
+			    for(ReviewFlowsConfig.Row row: config.getRows()) {
+			    	if(!row.isBlank()) {
+				    	int i = 0;
+				    	// Get any config data that has been created programmatically
+				    	ReviewFlowsConfig.Row scriptedConfig = new ReviewFlowsConfig.Row();
+				    	if(!isEmpty(row.configKey)) {
+				    		getScriptedConfig(chartScope, stepScope, row.configKey, row.destination, scriptedConfig);
+				    	}
+				    	// Prompt
+				    	String prompt = !isEmpty(scriptedConfig.prompt) ? scriptedConfig.prompt : row.prompt;
+				    	buffer[i++] = prompt;
+				    	// Advice
+				    	String advice = !isEmpty(scriptedConfig.advice) ? scriptedConfig.advice : row.advice;
+			    		if(isEmpty(advice)) {
+			    			// TODO: should we check the other flow keys?
+			    			String adviceKey = changeValueKey(row.flow1Key, "advice");
+			    			try {
+			    				advice = (String) RecipeDataAccess.s88Get(chartScope, stepScope, adviceKey, row.destination);
+			    			}
+			    			catch(Exception e) {
+			    				logger.error("Error getting advice from recipe data", e);
+			    			}
+			    		}
+			    		buffer[i++] = advice;
+			    		// flow1
+						double flow1 = getValueInDisplayUnits(chartScope, stepScope, 
+							row.flow1Key, row.destination, row.units);
+				    	buffer[i++] = flow1;
+			    		// flow2
+				    	double flow2 = getValueInDisplayUnits(chartScope, stepScope, 
+							row.flow2Key, row.destination, row.units);
+				    	buffer[i++] = flow2;
+				    	// Total flow
+				    	double totalFlow = 0;
+				    	if(row.totalFlowKey.toLowerCase().equals("sum")) {
+				    		totalFlow = flow1 + flow2;
+				    	}
+				    	else {
+							totalFlow = getValueInDisplayUnits(chartScope, stepScope, 
+								row.totalFlowKey, row.destination, row.units);
+				    	}
+				    	buffer[i++] = totalFlow;
+				    	// Units
+				    	String units = !isEmpty(scriptedConfig.units) ? scriptedConfig.units : row.units;
+				    	buffer[i++] = units;
+			    	}
+			    	builder.addRow(buffer);
+			    }
+				return builder.build();
+			}
+			catch(Exception e) {
+				logger.error("Error building review data", e);
+				return null;
+			}	
+		}
 	
 	/** Change a recipe data key to get a "sibling" value, e.g. "advice" instead of "value" */
 	private static String changeValueKey(String path, String newKey) {
@@ -150,7 +216,25 @@ public class IlsGatewayScripts {
 	}
 	
 	/** Get Review Data config info from recipe data. Tolerates nonexistent keys. */
-	private static void getScriptedConfig(PyChartScope chartScope, PyChartScope stepScope, String configKey, String configScope, Row scriptedConfig) {
+	private static void getScriptedConfig(PyChartScope chartScope, PyChartScope stepScope, 
+		String configKey, String configScope, ReviewDataConfig.Row scriptedConfig) {
+		String adviceKey = configKey + ".advice";
+		if(RecipeDataAccess.s88DataExists(chartScope, stepScope, adviceKey, configScope)) {
+			scriptedConfig.advice = (String)RecipeDataAccess.s88Get(chartScope, stepScope, adviceKey, configScope);
+		}
+		String unitsKey = configKey + ".units";
+		if(RecipeDataAccess.s88DataExists(chartScope, stepScope, unitsKey, configScope)) {
+			scriptedConfig.units = (String)RecipeDataAccess.s88Get(chartScope, stepScope, unitsKey, configScope);		
+		}
+		String promptKey = configKey + ".label";
+		if(RecipeDataAccess.s88DataExists(chartScope, stepScope, promptKey, configScope)) {
+			scriptedConfig.prompt = (String)RecipeDataAccess.s88Get(chartScope, stepScope, promptKey, configScope);	
+		}
+	}
+
+	/** Get Review Flows config info from recipe data. Tolerates nonexistent keys. */
+	private static void getScriptedConfig(PyChartScope chartScope, PyChartScope stepScope, 
+		String configKey, String configScope, ReviewFlowsConfig.Row scriptedConfig) {
 		String adviceKey = configKey + ".advice";
 		if(RecipeDataAccess.s88DataExists(chartScope, stepScope, adviceKey, configScope)) {
 			scriptedConfig.advice = (String)RecipeDataAccess.s88Get(chartScope, stepScope, adviceKey, configScope);
@@ -166,16 +250,16 @@ public class IlsGatewayScripts {
 	}
 
 	/** Convert the recipe data value to the display units given in the Review Data config. */
-	private static double getValueInDisplayUnits(PyChartScope chartScope, PyChartScope stepScope, Row row) {
-		Object oVal = RecipeDataAccess.s88Get(chartScope, stepScope, row.valueKey, row.recipeScope);
+	private static double getValueInDisplayUnits(PyChartScope chartScope, PyChartScope stepScope, 
+		String valueKey, String recipeScope, String toUnits) {
+		Object oVal = RecipeDataAccess.s88Get(chartScope, stepScope, valueKey, recipeScope);
 		double doubleVal = 0.;
 		if(oVal instanceof Number) {
 			doubleVal = ((Number)oVal).doubleValue();
 		}
 		// else error!
-		String unitsKey = changeValueKey(row.valueKey,  "units");
-		String fromUnits = (String)RecipeDataAccess.s88Get(chartScope, stepScope, unitsKey, row.recipeScope);
-		String toUnits = row.units;
+		String unitsKey = changeValueKey(valueKey,  "units");
+		String fromUnits = (String)RecipeDataAccess.s88Get(chartScope, stepScope, unitsKey, recipeScope);
 		if(IlsSfcCommonUtils.isEmpty(fromUnits) || IlsSfcCommonUtils.isEmpty(toUnits)) {
 			throw new IllegalArgumentException("null units in display conversion " + fromUnits + "->" + toUnits);
 		}
