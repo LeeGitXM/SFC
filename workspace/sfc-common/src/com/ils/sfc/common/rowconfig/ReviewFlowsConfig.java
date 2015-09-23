@@ -21,7 +21,7 @@ public class ReviewFlowsConfig  extends RowConfig {
 		public String configKey;
 		public String flow1Key;
 		public String flow2Key;
-		public String totalFlowKey;
+		public String flow3Key;
 		public String destination;
 		public String prompt;
 		public String units;

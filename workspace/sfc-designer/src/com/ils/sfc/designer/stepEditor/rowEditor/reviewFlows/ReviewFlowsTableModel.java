@@ -44,7 +44,7 @@ public class ReviewFlowsTableModel extends RowTableModel {
     		case 0: return rowObj.configKey;
     		case 1: return rowObj.flow1Key;
     		case 2: return rowObj.flow2Key;
-    		case 3: return rowObj.totalFlowKey;
+    		case 3: return rowObj.flow3Key;
     		case 4: return rowObj.destination;
     		case 5: return rowObj.prompt;
        		case 6: return rowObj.units;
@@ -60,7 +60,7 @@ public class ReviewFlowsTableModel extends RowTableModel {
     		case 0: rowObj.configKey = sValue; break;
     		case 1: rowObj.flow1Key = sValue; break;
     		case 2: rowObj.flow2Key = sValue; break;
-    		case 3: rowObj.totalFlowKey = sValue; break;
+    		case 3: rowObj.flow3Key = sValue; break;
     		case 4: rowObj.destination = sValue; break;
     		case 5: rowObj.prompt = sValue; break;
     		case 6: rowObj.units = sValue; break;

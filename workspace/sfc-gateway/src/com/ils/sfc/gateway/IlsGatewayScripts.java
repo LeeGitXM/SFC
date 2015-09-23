@@ -144,9 +144,9 @@ public class IlsGatewayScripts {
 				ReviewFlowsConfig config = ReviewFlowsConfig.fromJSON(reviewFlowsConfigJson);
 				DatasetBuilder builder = new DatasetBuilder();
 
-				builder.colNames("", "", "R1 Flows", "R2 Flows", "Total Flows", "Units");
-				builder.colTypes(String.class, String.class, Double.class, Double.class, Double.class, String.class);
-				Object[] buffer = new Object[6];
+				builder.colNames("prompt", "advice", "flow1", "flow2", "flow3", "units", "sumFlows");
+				builder.colTypes(String.class, String.class, Double.class, Double.class, Double.class, String.class, Boolean.class);
+				Object[] buffer = new Object[7];
 			    for(ReviewFlowsConfig.Row row: config.getRows()) {
 			    	if(!row.isBlank()) {
 				    	int i = 0;
@@ -181,17 +181,20 @@ public class IlsGatewayScripts {
 				    	buffer[i++] = flow2;
 				    	// Total flow
 				    	double totalFlow = 0;
-				    	if(row.totalFlowKey.toLowerCase().equals("sum")) {
+				    	boolean sumFlows = row.flow3Key.toLowerCase().equals("sum");
+				    	if(sumFlows) {
 				    		totalFlow = flow1 + flow2;
 				    	}
 				    	else {
 							totalFlow = getValueInDisplayUnits(chartScope, stepScope, 
-								row.totalFlowKey, row.destination, row.units);
+								row.flow3Key, row.destination, row.units);
 				    	}
 				    	buffer[i++] = totalFlow;
 				    	// Units
 				    	String units = !isEmpty(scriptedConfig.units) ? scriptedConfig.units : row.units;
 				    	buffer[i++] = units;
+				    	// Sum Flows (hidden)
+				    	buffer[i++] = sumFlows;
 			    	}
 			    	builder.addRow(buffer);
 			    }
@@ -429,6 +432,14 @@ public class IlsGatewayScripts {
 
 	public static ManualDataEntryConfig getManualDataEntryConfig(String json) throws JsonParseException, JsonMappingException, IOException {
 		return ManualDataEntryConfig.fromJSON(json);
+	}
+
+	public static ReviewDataConfig getReviewDataConfig(String json) throws JsonParseException, JsonMappingException, IOException {
+		return ReviewDataConfig.fromJSON(json);
+	}
+
+	public static ReviewFlowsConfig getReviewFlowsConfig(String json) throws JsonParseException, JsonMappingException, IOException {
+		return ReviewFlowsConfig.fromJSON(json);
 	}
 
 	public static void assertEqual(String testName, String stepName, PyObject expected, PyObject actual) {		
