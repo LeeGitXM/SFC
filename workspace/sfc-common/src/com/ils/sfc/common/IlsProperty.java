@@ -180,7 +180,10 @@ public class IlsProperty {
     public static final BasicProperty<String> FETCH_MODE = createProperty(Constants.FETCH_MODE, String.class, Constants.FETCH_MODE_CHOICES[0], Constants.FETCH_MODE_CHOICES);
     public static final BasicProperty<String> FILENAME = createProperty(Constants.FILENAME, String.class, "");
     public static final BasicProperty<String> G2_XML = createProperty(Constants.G2_XML, String.class, "");
-    public static final BasicProperty<String> HELP = createProperty(Constants.HELP, String.class, "");
+    public static final BasicProperty<String> HEADING1 = createProperty(Constants.HEADING1, String.class, "");
+    public static final BasicProperty<String> HEADING2 = createProperty(Constants.HEADING2, String.class, "");
+    public static final BasicProperty<String> HEADING3 = createProperty(Constants.HEADING3, String.class, "");
+   public static final BasicProperty<String> HELP = createProperty(Constants.HELP, String.class, "");
     public static final BasicProperty<Double> HIGH_LIMIT = createProperty(Constants.HIGH_LIMIT, Double.class, null);
     public static final BasicProperty<String> ID = createProperty(Constants.ID, String.class, null);
     public static final BasicProperty<String> JSON_LIST = createProperty(Constants.VALUE, String.class, "[0., 0.]");

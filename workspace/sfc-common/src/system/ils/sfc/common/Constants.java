@@ -66,6 +66,9 @@ public class Constants {
 	public static final String FILENAME = "filename";
 	public static final String FILEPATH = "filepath";
 	public static final String G2_XML = "g2Xml";
+	public static final String HEADING1 = "heading1";
+	public static final String HEADING2 = "heading2";
+	public static final String HEADING3 = "heading3";
 	public static final String HELP = "help";
 	public static final String HIGH = "High";
 	public static final String HIGH_LOW = "High/Low";
