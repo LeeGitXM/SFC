@@ -7,7 +7,7 @@
 		<version>@VERSION@</version>
 		<license>license.html</license>
 		<requiredignitionversion>7.7.1</requiredignitionversion>
-		<requiredframeworkversion>6</requiredframeworkversion>
+		<requiredframeworkversion>7</requiredframeworkversion>
 		<freemodule>true</freemodule>
 		<documentation>index.html</documentation>
 

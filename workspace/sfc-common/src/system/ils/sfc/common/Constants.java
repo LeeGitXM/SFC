@@ -77,6 +77,7 @@ public class Constants {
 	public static final String IMMEDIATE = "Immediate";
 	public static final String INFO = "Info";
 	public static final String INSTANCE_ID = "instanceId";
+	public static final String ITEM_ID = "itemid";
 	public static final String ISOLATION_MODE = "isolationMode";
 	public static final String LOW_LIMIT = "lowLimit";
 	public static final String LOW = "Low";
@@ -255,6 +256,7 @@ public class Constants {
 	public static final String[] PV_DOWNLOAD_CHOICES = {IMMEDIATE, WAIT};
 	public static final String[] PV_TYPE_CHOICES = {ABS, PCT};
 	public static final String[] OUTPUT_VALUE_TYPE_CHOICES = {MODE, SETPOINT, OUTPUT, VALUE};
+	public static final String[] MONITOR_DOWNLOADS_LABEL_CHOICES = {NAME, ITEM_ID};
 	
 	public static final String SFC_DOWNLOAD_KEY_WINDOW = "SFC/DownloadKey";
 	public static final String SFC_INPUT_WINDOW = "SFC/Input";
