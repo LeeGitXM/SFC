@@ -3,9 +3,14 @@
  */
 package com.ils.sfc.browser;
 
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.SwingUtilities;
 
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.modules.ModuleInfo;
@@ -15,6 +20,9 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.AbstractDesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.DesignerModuleHook;
+import com.inductiveautomation.ignition.designer.model.menu.JMenuMerge;
+import com.inductiveautomation.ignition.designer.model.menu.MenuBarMerge;
+import com.inductiveautomation.ignition.designer.model.menu.WellKnownMenuConstants;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.designer.SFCDesignerHook;
 import com.jidesoft.docking.DockContext;
@@ -23,6 +31,7 @@ import com.jidesoft.docking.DockableFrame;
 
 public class IlsSfcBrowserHook extends AbstractDesignerModuleHook implements DesignerModuleHook {
 	private final static String TAG = "IlsSfcBrowserHook";
+	private static final String VALIDATION_MENU_TITLE = "Validate Charts";
 	private DesignerContext context = null;
 	private final LoggerEx log;
 	private IlsBrowserFrame browser = null;
@@ -59,6 +68,25 @@ public class IlsSfcBrowserHook extends AbstractDesignerModuleHook implements Des
 	public void shutdown() {
 		iaSfcHook.getFrames().remove(browser);
 	}
+	// Insert a menu to allow control of database and tag provider.
+    @Override
+    public MenuBarMerge getModuleMenu() {
+
+        MenuBarMerge merge = new MenuBarMerge(BrowserConstants.MODULE_ID);  // as suggested in javadocs
+        merge.addSeparator();
+        
+        Action validateAction = new AbstractAction(VALIDATION_MENU_TITLE) {
+            private static final long serialVersionUID = 5374667367733312464L;
+            public void actionPerformed(ActionEvent ae) {
+                SwingUtilities.invokeLater(new ValidationDialogRunner());
+            }
+        };
+
+        JMenuMerge controlMenu = new JMenuMerge(WellKnownMenuConstants.VIEW_MENU_NAME);
+        controlMenu.add(validateAction);
+        merge.add(WellKnownMenuConstants.VIEW_MENU_LOCATION, controlMenu);
+        return merge;
+    }
 	/**
 	 * We are dependent on the Ignition SFC module, but don't know about other modules that
 	 * also may be dependent on "com.inductiveautomation.sfc". In order for any custom chart
@@ -90,4 +118,18 @@ public class IlsSfcBrowserHook extends AbstractDesignerModuleHook implements Des
 			ctx.addProjectChangeListener(browser);
 		}
 	}
+	
+	/**
+     * Display a popup dialog for configuration of dialog execution parameters.
+     * Run in a separate thread, as a modal dialog in-line here will freeze the UI.
+     */
+    private class ValidationDialogRunner implements Runnable {
+
+        public void run() {
+            log.debugf("%s.Launching setup dialog...",TAG);
+            ValidationDialog validator = new ValidationDialog(context);
+            validator.pack();
+            validator.setVisible(true);
+        }
+    }
 }
