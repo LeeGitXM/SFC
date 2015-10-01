@@ -172,6 +172,9 @@ public class PythonCall {
 
 	public static final PythonCall SET_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "setRecipeData", 
 			null,  new String[]{"provider", "path", "value", "synchronous"} );
+	
+	public static final PythonCall CLEANUP_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "cleanupRecipeData", 
+			null,  new String[]{"provider", "chartPath", "stepNames"} );
 
 	public static final PythonCall CREATE_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "createRecipeDataTag", 
 			null,  new String[]{"provider", "folder", "rdName", "rdType", "valueType"} );

@@ -104,7 +104,6 @@ public class Constants {
 	public static final String NONE = "none";
 	public static final String NOT_PERSISTENT = "NotPersistent";
 	public static final String NOT_CONSISTENT = "NotConsistent";
-	public static final String NUMBER_OF_TIMEOUTS = "numberOfTimeouts";
 	public static final String OFF = "Off";
 	public static final String OK = "OK";
 	public static final String OUT_OF_RANGE = "Out of Range";
