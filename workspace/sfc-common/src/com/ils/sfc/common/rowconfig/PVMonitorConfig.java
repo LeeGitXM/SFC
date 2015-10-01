@@ -56,6 +56,7 @@ public class PVMonitorConfig extends RowConfig {
 		public double tolerance;
 		public String toleranceType;
 		public String status;
+		public String setpointStatus;
 
 		// transient values used in monitoring (maybe this should be a separate object)
 		@JsonIgnore
