@@ -155,6 +155,7 @@ public class Constants {
 	public static final String SEQUENCE = "sequence";
 	public static final String SERVER = "server";
 	public static final String SETPOINT = "setpoint";
+	public static final String SETPOINT_STATUS = "setpointStatus";
 	public static final String SHOW_PRINT_DIALOG = "showPrintDialog";
 	public static final String SINGLE = "single";
 	public static final String SQL = "sql";

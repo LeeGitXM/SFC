@@ -239,6 +239,7 @@ public class IlsProperty {
     public static final BasicProperty<String> SECONDARY_REVIEW_DATA = createProperty(Constants.SECONDARY_REVIEW_DATA, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "secondary data");
     public static final BasicProperty<String> SECONDARY_REVIEW_DATA_WITH_ADVICE = createProperty(Constants.SECONDARY_REVIEW_DATA_WITH_ADVICE, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "secondary data");
     public static final BasicProperty<String> SECONDARY_TAB_LABEL = createProperty(Constants.SECONDARY_TAB_LABEL, String.class, "Secondary");
+    public static final BasicProperty<String> SETPOINT_STATUS = createProperty(Constants.SETPOINT_STATUS, String.class, "");
     public static final BasicProperty<Boolean> SHOW_PRINT_DIALOG = createProperty(Constants.SHOW_PRINT_DIALOG, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> SQL = createProperty(Constants.SQL, String.class, "");
     public static final BasicProperty<Double> STEP_TIME = createProperty(Constants.STEP_TIME, Double.class, 0.);
@@ -477,6 +478,7 @@ public class IlsProperty {
 		setReadOnly(ERROR_TEXT);
 		setReadOnly(PV_MONITOR_ACTIVE);
 		setReadOnly(PV_MONITOR_STATUS);
+		setReadOnly(SETPOINT_STATUS);
 		setReadOnly(PV_VALUE);
 		setReadOnly(STEP_TIME);
 		setReadOnly(STEP_TIMESTAMP);
