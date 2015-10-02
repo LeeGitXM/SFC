@@ -12,6 +12,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
 
+import com.ils.sfc.browser.validation.ValidationDialog;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.modules.ModuleInfo;
 import com.inductiveautomation.ignition.common.modules.ModuleInfo.ModuleDependency;
@@ -127,9 +128,10 @@ public class IlsSfcBrowserHook extends AbstractDesignerModuleHook implements Des
 
         public void run() {
             log.debugf("%s.Launching setup dialog...",TAG);
-            ValidationDialog validator = new ValidationDialog(context);
+            ValidationDialog validator = new ValidationDialog(context,browser.getModel());
             validator.pack();
             validator.setVisible(true);
+            browser.addChangeListener(validator);
         }
     }
 }
