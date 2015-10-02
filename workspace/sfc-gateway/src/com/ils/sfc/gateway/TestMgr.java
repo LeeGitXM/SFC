@@ -12,12 +12,12 @@ public class TestMgr {
 	private String reportFilePath = "c:/temp/sfcTestReport.txt";
 	private java.text.DateFormat dateFormat = new java.text.SimpleDateFormat();
 	
-	class TestInfo {
-		String name;
-		long startMillis;
-		long endMillis;
-		boolean passed = true;
-		String message;
+	static class TestInfo {
+		private String name;
+		private long startMillis;
+		private long endMillis;
+		private boolean passed = true;
+		private String message;
 		
 		public TestInfo(String name) {
 			this.name = name;
@@ -63,6 +63,10 @@ public class TestMgr {
 			endMillis = System.currentTimeMillis();			
 		}
 
+		public boolean passed() {
+			return passed && endMillis > 0;
+			
+		}
 		public boolean report(BufferedWriter out) throws IOException {
 			out.write(name);
 			out.write(": ");
@@ -156,7 +160,7 @@ public class TestMgr {
 			int passCount = 0;
 			for(TestInfo test: testsByName.values()) {
 				++totalCount;
-				if(test.passed) {
+				if(test.passed() ) {
 					++passCount;
 				}
 			}
