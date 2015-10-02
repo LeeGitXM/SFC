@@ -104,7 +104,6 @@ public class Constants {
 	public static final String NONE = "none";
 	public static final String NOT_PERSISTENT = "NotPersistent";
 	public static final String NOT_CONSISTENT = "NotConsistent";
-	public static final String NUMBER_OF_TIMEOUTS = "numberOfTimeouts";
 	public static final String OFF = "Off";
 	public static final String OK = "OK";
 	public static final String OUT_OF_RANGE = "Out of Range";
@@ -156,6 +155,7 @@ public class Constants {
 	public static final String SEQUENCE = "sequence";
 	public static final String SERVER = "server";
 	public static final String SETPOINT = "setpoint";
+	public static final String SETPOINT_STATUS = "setpointStatus";
 	public static final String SHOW_PRINT_DIALOG = "showPrintDialog";
 	public static final String SINGLE = "single";
 	public static final String SQL = "sql";

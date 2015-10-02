@@ -90,7 +90,6 @@
 		
 		
 		<!-- Copy dependent jars -->
-		<copy file="${basedir}/../../external/lib/ils-common.jar" todir="${basedir}/sfc-build/temp_modl/" />
 		<copy file="${basedir}/../../external/lib/jackson-core-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
 		<copy file="${basedir}/../../external/lib/jackson-databind-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
 		<copy file="${basedir}/../../external/lib/jackson-annotations-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />

@@ -9,7 +9,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.EventListenerList;
 
 import com.inductiveautomation.ignition.client.util.EDTUtil;
 import com.inductiveautomation.ignition.common.project.Project;
@@ -31,15 +33,20 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 	private static final String TAG = "IlsBrowserFrame";
 	private static final String DOCKING_KEY = "SfcChartBrowserFrame";
 	private ResourceBundle rb = null;
+	private final ChangeEvent changeEvent;
 	private final DesignerContext context;
+	private final EventListenerList eventListeners;
 	private final LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
 	private final JPanel contentPanel;
 	private final JPanel legendPanel;
+	private ChartTreeDataModel model = null;
 	private ChartTreeView view = null;
 	
 	public IlsBrowserFrame(DesignerContext ctx) {
 		super(DOCKING_KEY);  // Pinned icon
-		context = ctx;
+		this.context = ctx;
+		this.eventListeners = new EventListenerList();
+		this.changeEvent = new ChangeEvent(this);
 		contentPanel = new JPanel(new BorderLayout());
 		legendPanel  = createLegendPanel();
 		rb = ResourceBundle.getBundle("com.ils.sfc.browser.browser");
@@ -51,6 +58,11 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 				updateContentPanel();	
 			}
 		},Thread.currentThread());
+	}
+	
+	public ChartTreeDataModel getModel() { return this.model; }
+	public void addChangeListener() {
+		
 	}
 
 	/**
@@ -85,7 +97,7 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 	
 	private ChartTreeView createChartTreeView() {
 		log.infof("%s.createChartTreeView: New view ....",TAG);
-		ChartTreeDataModel model = new ChartTreeDataModel(context);
+		model = new ChartTreeDataModel(context);
 		return new ChartTreeView(context,model,BrowserConstants.NAME);
 	}
 	
@@ -135,6 +147,30 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 	public boolean isInitiallyVisible() {
 		return true;
 	}
+	// =============================== Handle Event Listeners ===================
+	public void addChangeListener(ChangeListener l) {
+		eventListeners.add(ChangeListener.class,l);
+	}
+	public void removeChangeListener(ChangeListener l) {
+		eventListeners.remove(ChangeListener.class,l);
+	}
+
+	// Notify all listeners that have registered interest for
+	// notification on this event type.  The event instance
+	// is lazily created using the parameters passed into
+	// the fire method.
+
+	private void fireStateChanged() {
+		// Guaranteed to return a non-null array
+		Object[] listnrs = listenerList.getListenerList();
+		// Process the listeners last to first, notifying
+		// those that are interested in this event
+		for (int i = listnrs.length-2; i>=0; i-=2) {
+			if (listnrs[i]==ChangeListener.class) {
+				((ChangeListener)listnrs[i+1]).stateChanged(changeEvent);
+			}
+		}
+	}
 	
 	// =============================== Project Change Listener ===================
 	@Override
@@ -143,6 +179,7 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 		log.infof("%s.projectResourceModified: %s = %d (%s:%s)", TAG,changeType.name(),res.getResourceId(),res.getName(),res.getResourceType());
 		if( res.getResourceType().equals(BrowserConstants.CHART_RESOURCE_TYPE)) {
 			updateContentPanel();
+			fireStateChanged();
 		}
 	}
 
@@ -150,5 +187,6 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 	public void projectUpdated(Project arg0) {
 		log.infof("%s.projectResourceUpdated", TAG);
 		updateContentPanel();
+		fireStateChanged();
 	}
 }

@@ -46,6 +46,7 @@ public abstract class IO extends DataWithUnits {
 		addProperty(IlsProperty.ERROR_CODE);
 		addProperty(IlsProperty.ERROR_TEXT);
 		addProperty(IlsProperty.PV_MONITOR_STATUS);
+		addProperty(IlsProperty.SETPOINT_STATUS);
 		addProperty(IlsProperty.PV_MONITOR_ACTIVE);
 		addProperty(IlsProperty.PV_VALUE);
 		addProperty(IlsProperty.TARGET_VALUE);

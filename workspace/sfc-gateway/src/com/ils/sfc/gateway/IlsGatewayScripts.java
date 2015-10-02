@@ -399,20 +399,6 @@ public class IlsGatewayScripts {
 		ilsSfcGatewayHook.getChartObserver().registerSfcProject(projectName);
 	}
 
-	public static void initializeTests(String reportFilePath) {
-		ilsSfcGatewayHook.getTestMgr().initialize();
-		ilsSfcGatewayHook.getTestMgr().setReportFilePath(reportFilePath);
-	}
-
-	public static void startTest(String testName) {
-		ilsSfcGatewayHook.getTestMgr().startTest(testName);
-	}
-
-	public static String getTestName(PyChartScope chartScope) {
-		PyChartScope topScope = IlsSfcCommonUtils.getTopScope(chartScope);
-		return (String)topScope.get("chartPath");
-	}
-
 	public static String getJSONForScope(PyChartScope scope) throws JSONException {
 		JSONObject jsonObject = Data.fromStepScope(scope);
 		return jsonObject.toString();
@@ -441,26 +427,6 @@ public class IlsGatewayScripts {
 	public static ReviewFlowsConfig getReviewFlowsConfig(String json) throws JsonParseException, JsonMappingException, IOException {
 		return ReviewFlowsConfig.fromJSON(json);
 	}
-
-	public static void assertEqual(String testName, String stepName, PyObject expected, PyObject actual) {		
-		ilsSfcGatewayHook.getTestMgr().assertEqual(testName, stepName, expected, actual );
-	}
-
-	public static void assertTrue(String testName, String stepName, boolean condition, String msg) {
-		ilsSfcGatewayHook.getTestMgr().assertTrue(testName, stepName, condition,  msg);
-	}
-	
-	public static void failTest(String testName, String message) {
-		ilsSfcGatewayHook.getTestMgr().fail(testName, message);
-	}
-	
-	public static void passTest(String testName) {
-		ilsSfcGatewayHook.getTestMgr().pass(testName);
-	}
-	
-	public static void reportTests() {
-		ilsSfcGatewayHook.getTestMgr().report();
-	}
 	
 	public static void dropboxPut(String chartRunId, String objectId, Object object) {
 		ilsSfcGatewayHook.getDropBox().put(chartRunId, objectId, object);
@@ -477,5 +443,46 @@ public class IlsGatewayScripts {
 	public static Object parseValue(String strValue) {
 		return IlsProperty.parseObjectValue(strValue, null);
 	}
+
+	public static String getTestName(PyChartScope chartScope) {
+		PyChartScope topScope = IlsSfcCommonUtils.getTopScope(chartScope);
+		return (String)topScope.get("chartPath");
+	}
 	
+	public static void initializeTests(String reportFilePath) {
+		ilsSfcGatewayHook.getTestMgr().initialize();
+		ilsSfcGatewayHook.getTestMgr().setReportFilePath(reportFilePath);
+	}
+
+	public static void startTest(String testName) {
+		ilsSfcGatewayHook.getTestMgr().startTest(testName);
+	}
+
+	public static void assertEqual(PyChartScope chartScope, PyChartScope stepScope, 
+		PyObject expected, PyObject actual) {		
+		String testName = getTestName(chartScope);
+		String stepPath = RecipeDataAccess.getFullStepPath(chartScope, stepScope);
+		ilsSfcGatewayHook.getTestMgr().assertEqual(testName, stepPath, expected, actual );
+	}
+
+	public static void assertTrue(PyChartScope chartScope, PyChartScope stepScope, 
+		boolean condition, String msg) {
+		String testName = getTestName(chartScope);
+		String stepPath = RecipeDataAccess.getFullStepPath(chartScope, stepScope);
+		ilsSfcGatewayHook.getTestMgr().assertTrue(testName, stepPath, condition,  msg);
+	}
+	
+	public static void failTest(PyChartScope chartScope, String message) {
+		String testName = getTestName(chartScope);
+		ilsSfcGatewayHook.getTestMgr().fail(testName, message);
+	}
+	
+	public static void passTest(PyChartScope chartScope) {
+		String testName = getTestName(chartScope);
+		ilsSfcGatewayHook.getTestMgr().pass(testName);
+	}
+	
+	public static void reportTests() {
+		ilsSfcGatewayHook.getTestMgr().report();
+	}
 }

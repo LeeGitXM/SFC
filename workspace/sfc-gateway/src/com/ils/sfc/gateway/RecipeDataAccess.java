@@ -23,10 +23,14 @@ public class RecipeDataAccess {
 	public static String getRecipeDataTagPath(PyChartScope chartScope, PyChartScope stepScope, String scope) {
 		PyChartScope resolvedStepScope = resolveStepScope(chartScope, stepScope, scope);
 		PyChartScope resolvedChartScope = resolveChartScope(chartScope, scope);
-		String stepName = (String)resolvedStepScope.get("name");
-		String chartPath = (String) resolvedChartScope.get("chartPath");
-		String resolvedStepPath = chartPath + "/" + stepName;
-		return resolvedStepPath;
+		return getFullStepPath(resolvedChartScope, resolvedStepScope);
+	}
+
+	public static String getFullStepPath(PyChartScope chartScope, PyChartScope stepScope) {
+		String stepName = (String)stepScope.get("name");
+		String chartPath = (String) chartScope.get("chartPath");
+		String stepPath = chartPath + "/" + stepName;
+		return stepPath;
 	}	
 
 	public static boolean s88DataExists(PyChartScope chartScope,

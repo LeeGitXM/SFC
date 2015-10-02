@@ -95,6 +95,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private ChartStructureManager structureManager = null;
 	private IlsSfcSearchProvider searchProvider = null;
 	private RecipeEditorFrame recipeEditorFrame;
+	private RecipeDataCleaner recipeDataCleaner;
 	
 	public IlsSfcDesignerHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
@@ -160,6 +161,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		for(ClientStepFactory clientStepFactory: AbstractIlsStepUI.clientStepFactories) {
 			stepRegistry.register(clientStepFactory);
 		}
+				
+		recipeDataCleaner = new RecipeDataCleaner(context, stepRegistry);
+		context.addProjectChangeListener(recipeDataCleaner);
 		    	
 		// register the step config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory(context);
@@ -177,6 +181,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	
 	@Override
 	public void shutdown() {	
+		context.removeProjectChangeListener(recipeDataCleaner);
 	}
 	
 	public ChartStructureManager getChartStructureManager() {return structureManager;}

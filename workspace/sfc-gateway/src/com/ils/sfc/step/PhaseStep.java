@@ -2,7 +2,6 @@ package com.ils.sfc.step;
 
 import system.ils.sfc.common.Constants;
 
-import com.ils.sfc.common.IlsProperty;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.ChartContext;

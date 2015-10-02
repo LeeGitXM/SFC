@@ -43,7 +43,7 @@ insert into BltAnchorMap values ('EM-GDA-SIMPLE-TREND-OBSERVATION','DP-IN-STANDA
 insert into BltAnchorMap values ('EM-GDA-SIMPLE-TREND-OBSERVATION','IP-OUT','out','');
 insert into BltAnchorMap values ('EM-GDA-SQC-DIAGNOSIS','IP-IN','in','');
 insert into BltAnchorMap values ('EM-GDA-SQC-DIAGNOSIS','IP-OUT','out','');
-insert into BltAnchorMap values ('EM-GDA-SQC-DIAGNOSIS','CP-OUT','out','');
+insert into BltAnchorMap values ('EM-GDA-SQC-DIAGNOSIS','CP-OUT','','');
 insert into BltAnchorMap values ('EM-GDA-SQC-LIMIT-OBSERVATION','DP-IN-TARGET','target','T');
 insert into BltAnchorMap values ('EM-GDA-SQC-LIMIT-OBSERVATION','DP-IN-VALUE','value','V');
 insert into BltAnchorMap values ('EM-GDA-SQC-LIMIT-OBSERVATION','DP-IN-STANDARD-DEVIATION','standardDeviation','S');
