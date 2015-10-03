@@ -16,6 +16,7 @@
 		
 		<!-- Load in our jars for each scope -->
 		<jar scope="CD">ils-sfc-browser.jar.pack.gz</jar>
+		<jar scope="CD">ils-sfc-common.jar.pack.gz</jar>
 		<jar scope="CD">lucene-1.4.3.jar.pack.gz</jar>
 		<jar scope="CD">prefuse-1.0.1.jar.pack.gz</jar>
 		<jar scope="D">jackson-core-2.2.3.jar</jar>

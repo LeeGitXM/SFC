@@ -58,8 +58,6 @@ public class StepErrorsPanel extends AbstractChartValidationPanel {
 		Table nodes = dataModel.getNodes();
 		Map<String,Integer> rowLookup = dataModel.getRowLookup();
 		tableModel = new DefaultTableModel(columnNames,0);
-		int ncols = columnNames.length;
-		Object[] tableRow = new Object[ncols];
 		List<ProjectResource> resources = context.getGlobalProject().getProject().getResources();
 		for(ProjectResource res:resources) {
 			if( res.getResourceType().equals(BrowserConstants.CHART_RESOURCE_TYPE)) {

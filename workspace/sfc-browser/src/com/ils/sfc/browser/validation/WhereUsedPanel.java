@@ -50,9 +50,9 @@ public class WhereUsedPanel extends AbstractChartValidationPanel {;
 		List<EnclosingStep> enclosures = dataModel.getEnclosingSteps();
 		for( EnclosingStep enclosure:enclosures) {
 			int parent = enclosure.getParentRow();
-			long resId = nodes.getLong(parent, BrowserConstants.RESOURCE);
+			Long resId = nodes.getLong(parent, BrowserConstants.RESOURCE);
 			String path   = nodes.getString(parent, BrowserConstants.PATH);
-			tableRow[0] = new Long(resId);
+			tableRow[0] = resId;
 			tableRow[1] = enclosure.getChartPath();
 			tableRow[2] = path+"/"+enclosure.getStepName();
 			tableModel.addRow(tableRow);

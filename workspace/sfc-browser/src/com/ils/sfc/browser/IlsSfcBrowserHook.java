@@ -12,6 +12,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.SwingUtilities;
 
+import com.ils.sfc.browser.execute.ChartRunner;
 import com.ils.sfc.browser.validation.ValidationDialog;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.modules.ModuleInfo;
@@ -32,6 +33,7 @@ import com.jidesoft.docking.DockableFrame;
 
 public class IlsSfcBrowserHook extends AbstractDesignerModuleHook implements DesignerModuleHook {
 	private final static String TAG = "IlsSfcBrowserHook";
+	private static final String START_MENU_TITLE      = "Start Chart";
 	private static final String VALIDATION_MENU_TITLE = "Validate Charts";
 	private DesignerContext context = null;
 	private final LoggerEx log;
@@ -74,18 +76,32 @@ public class IlsSfcBrowserHook extends AbstractDesignerModuleHook implements Des
     public MenuBarMerge getModuleMenu() {
 
         MenuBarMerge merge = new MenuBarMerge(BrowserConstants.MODULE_ID);  // as suggested in javadocs
-        merge.addSeparator();
         
+        // ----------------------- Menu to launch chart validator -----------------------------
         Action validateAction = new AbstractAction(VALIDATION_MENU_TITLE) {
             private static final long serialVersionUID = 5374667367733312464L;
             public void actionPerformed(ActionEvent ae) {
                 SwingUtilities.invokeLater(new ValidationDialogRunner());
             }
         };
-
         JMenuMerge controlMenu = new JMenuMerge(WellKnownMenuConstants.VIEW_MENU_NAME);
+        controlMenu.addSeparator();
         controlMenu.add(validateAction);
         merge.add(WellKnownMenuConstants.VIEW_MENU_LOCATION, controlMenu);
+        
+        // ----------------------- Menu to start current chart -----------------------------
+        Action executeAction = new AbstractAction(START_MENU_TITLE) {
+            private static final long serialVersionUID = 5374667367733312464L;
+            public void actionPerformed(ActionEvent ae) {
+            	SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
+                Thread runner = new Thread(new ChartRunner(context,iaSfcHook.getWorkspace(),browser.getModel()));
+                runner.start();
+            }
+        };
+        JMenuMerge executeMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
+        executeMenu.addSeparator();
+        executeMenu.add(executeAction);
+        merge.add(WellKnownMenuConstants.TOOLS_MENU_LOCATION, executeMenu);
         return merge;
     }
 	/**

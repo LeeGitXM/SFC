@@ -127,7 +127,8 @@ public abstract class AbstractChartValidationPanel extends JPanel {
             public void valueChanged(ListSelectionEvent event) {
                 // On a click we get the chart path and display it.
             	SFCDesignerHook hook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-            	long resId = ((Long)tableModel.getValueAt(table.getSelectedRow(),0)).longValue();
+            	int baseRow = table.convertRowIndexToModel(table.getSelectedRow());
+            	long resId = ((Long)tableModel.getValueAt(baseRow,0)).longValue();
 				hook.getWorkspace().openChart(resId);
             }
         });
@@ -164,5 +165,28 @@ public abstract class AbstractChartValidationPanel extends JPanel {
 			row++;
 		}
 		return path;
+	}
+	/**
+	 * Loop through the nodelist looking for the indicated resource. Once found, return
+	 * the path. If not found, Simple return the resource name.
+	 * @param res
+	 * @param nodes
+	 * @return
+	 */
+	protected long getResourceForPath(String path,Table nodes) {
+		int rows = nodes.getRowCount();
+		int row = 0;
+		Long resid = new Long(-1);
+		while( row<rows ) {
+			String nodePath = nodes.getString(row, BrowserConstants.PATH);
+			if( path.equalsIgnoreCase(nodePath)) {
+				resid = nodes.getLong(row, BrowserConstants.RESOURCE);
+				if( resid<0 ) continue;  // We've found an enclosing step
+				break;
+			}
+			row++;
+		}
+		log.infof("%s.getResourceForPath: %s (%d)", TAG,path,resid.longValue());
+		return resid.longValue();
 	}
 }

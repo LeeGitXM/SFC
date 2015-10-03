@@ -4,19 +4,13 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
-import com.ils.sfc.common.recipe.objects.Data;
 import com.inductiveautomation.ignition.client.designable.DesignableContainer;
-import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.designer.designable.DesignableWorkspaceListener;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.ResourceWorkspaceFrame;
 import com.inductiveautomation.sfc.client.ui.StepComponent;
 import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
 import com.jidesoft.docking.DockContext;
-import com.jidesoft.docking.DockableFrame;
-import com.jidesoft.docking.event.DockableFrameAdapter;
-import com.jidesoft.docking.event.DockableFrameEvent;
-import com.jidesoft.docking.event.DockableFrameListener;
 
 /** Provides a dockable frame in the Ignition Designer to hold our recipe data editor. */
 @SuppressWarnings("serial")

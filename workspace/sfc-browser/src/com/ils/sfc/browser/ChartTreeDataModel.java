@@ -42,8 +42,9 @@ public class ChartTreeDataModel {
 	private static final String TAG = "ChartTreeDataModel";
 	public static int ROOT_ROW = 0;           // Number of the root row
 	
-	private final Map<Integer,Integer> lineage;       // Find parent given child
-	private final Map<String,Integer>  rowLookup;     // Find node row by path
+	private final Map<Long,ChartDefinition> definitions;   // Chart definition by resourceId
+	private final Map<Integer,Integer> lineage;            // Find parent given child
+	private final Map<String,Integer>  rowLookup;          // Find node row by path
 	private final Map<Integer,List<String>> stepMap;       // For checking step for parent
 	private final Map<String,FolderHolder> folderHierarchy;
 	private final List<EnclosingStep> enclosingSteps;
@@ -57,6 +58,7 @@ public class ChartTreeDataModel {
 		context = ctx;
 		lineage = new HashMap<>();
 		folderHierarchy = new HashMap<>();
+		definitions = new HashMap<>();
 		rowLookup = new HashMap<>();
 		stepMap = new HashMap<>();
 		nodes = new Table();
@@ -90,6 +92,7 @@ public class ChartTreeDataModel {
 		log.tracef("%s.initialize: ROOT_FOLDER = %s",TAG,root.toString());
 		configureRootNode();
 		FolderHolder rootHolder = new FolderHolder(root,null,"");
+		lineage.clear();
 		rowLookup.clear();
 		rootHolder.setPath("");
 		folderHierarchy.put(root.toString(), rootHolder);
@@ -105,6 +108,7 @@ public class ChartTreeDataModel {
 					ChartCompilationResults ccr = compiler.compile();
 					if(ccr.isSuccessful()) {
 						ChartDefinition definition = ccr.getChartDefinition();
+						definitions.put(new Long(res.getResourceId()), definition);
 						int row = addNodeTableRow(res.getName(),res.getResourceId());
 						lineage.put(new Integer(row), new Integer(ROOT_ROW));
 						nodes.setString(row, BrowserConstants.PARENT, res.getParentUuid().toString());
@@ -154,6 +158,10 @@ public class ChartTreeDataModel {
 	}
 	
 	/**
+	 * @return a map of chart definitions indexed by resourceId.
+	 */
+	public Map<Long,ChartDefinition>  getDefinitions() { return definitions; }
+	/**
 	 * @return the list of chart connections.
 	 */
 	public Table getEdges() { return this.edges; }
@@ -161,7 +169,11 @@ public class ChartTreeDataModel {
 	 * @return a list of enclosing steps
 	 */
 	public List<EnclosingStep> getEnclosingSteps() { return this.enclosingSteps; }
-	
+	/**
+	 * @return a map of parent given child. These are indices into the nodes
+	 *         structure.
+	 */
+	public Map<Integer,Integer>  getLineage() { return lineage; }
 	/**
 	 * @return the list of chart nodes.
 	 */
@@ -200,7 +212,7 @@ public class ChartTreeDataModel {
 	// @return the row corresponding to the newly discovered chart.
 	private int addNodeTableRow(String name,long resourceId) {
 		int row = nodes.getRowCount();
-		log.debugf("%s.addNodeTableRow: %d = %s (%d)", TAG,row,name,resourceId);
+		log.infof("%s.addNodeTableRow: %d = %s (%d)", TAG,row,name,resourceId);
 		nodes.addRow();
 		nodes.setInt(row,BrowserConstants.CXNS,0); 
 		nodes.setInt(row,BrowserConstants.STATUS,BrowserConstants.STATUS_OK);  

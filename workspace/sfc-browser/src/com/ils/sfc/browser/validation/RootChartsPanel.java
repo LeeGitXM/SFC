@@ -59,5 +59,4 @@ public class RootChartsPanel extends AbstractChartValidationPanel {
 		}
 		table.setModel(tableModel);
 	}
-
 }
