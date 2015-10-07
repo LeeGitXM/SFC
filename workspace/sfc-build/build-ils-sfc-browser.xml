@@ -26,9 +26,9 @@
 
 	<!-- Browser jar classpath -->
 	<path id="sfc.browser.classpath">
+		<fileset dir="${basedir}/sfc-build/bin/${sfc.common.name}/dist/" includes="*.jar" />
 		<path refid="Ignition_SDK.classpath" />
 		<path refid="ExternalJar.classpath" />
-		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/" includes="*.jar" />
 	</path>
 
 	<!-- This target will build the toolkit module and deploy it to the local Ignition gateway -->
@@ -39,35 +39,10 @@
 		<delete file="${basedir}/sfc-build/modules/${sfc.browser.name}-module-unsigned.modl" />
 		<delete dir="${basedir}/sfc-build/release" />
 	</target>	
+
 	
-	<!-- Compile the Browser Designer -->
-	<target name="browser.designer.build" description="Compile the source">
-		<echo  message="Using Java version ${ant.java.version}."/>
-		<mkdir dir="${browser.designer.bin.dir}"/>
-		<javac destdir="${browser.designer.bin.dir}" debug="true" includeantruntime="false">
-			<src path="${browser.designer.src.dir}"/>
-			<classpath refid="sfc.browser.classpath"/>
-		</javac>
-	</target>
-	<target name ="browser.designer.jar" description="Create a jar for the ILS SFC Browser">
-	    <jar destfile="${jar.dir}/${browser.jar.name}-designer.jar" includes="**/*.class" basedir="${browser.designer.bin.dir}"/>
-	</target>
-	
-	<!-- Compile the Browser Designer -->
-	<target name="browser.gateway.build" description="Compile the source">
-		<echo  message="Using Java version ${ant.java.version}."/>
-		<mkdir dir="${browser.gateway.bin.dir}"/>
-		<javac destdir="${browser.gateway.bin.dir}" debug="true" includeantruntime="false">
-			<src path="${browser.gateway.src.dir}"/>
-			<classpath refid="sfc.browser.classpath"/>
-		</javac>
-	</target>
-	<target name ="browser.gateway.jar" description="Create a jar for the ILS SFC Browser">
-		   <jar destfile="${jar.dir}/${browser.jar.name}-gateway.jar" includes="**/*.class" basedir="${browser.gateway.bin.dir}"/>
-	</target>
-	
-	<!-- Builds the toolkit module jars and the final .modl file -->
-	<target name="build" depends="browser.designer.build,browser.designer.jar,browser.gateway.build,browser.gateway.jar" description="Compile the source">
+	<!-- Builds the toolkit module jars and the final .modl file-->
+	<target name="build"  description="Compile the source">
 		<echo message="${sfc.browser.name} ${sfc.browser.version}" />	
 		<delete dir="${basedir}/sfc-build/temp_modl" />	
 		
@@ -117,7 +92,7 @@
 		
 		<!-- Copy gateway jar -->
 		<copy file="${basedir}/sfc-build/bin/${sfc.browser.name}-gateway/dist/${browser.jar.name}-gateway.jar" todir="${basedir}/sfc-build/temp_modl/" />
-		<copy file="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/ils-sfc-common.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${basedir}/sfc-build/bin/${sfc.common.name}/dist/${common.jar.name}.jar" todir="${basedir}/sfc-build/temp_modl/" />
 		
 		<!-- Copy dependent jars -->
 		<copy file="${root.dir}/external/lib/jackson-core-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />

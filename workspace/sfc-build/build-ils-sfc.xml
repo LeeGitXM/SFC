@@ -70,7 +70,7 @@
 		<!-- build.date and version.build are both defined in build.xml -->
 		<echo message="Build date: ${build.date}" />
 		<echo message="Build version: ${version.build}" />	
-				
+
 		<!-- sfc-common jar -->
 		<antcall target="MakeProject">
 			<param name="modName" value="${ils.sfc.name}_Common" />
@@ -79,13 +79,12 @@
 			<param name="javacSource" value="1.7" />
 			<param name="module.build.classpath" value="sfc.common.classpath"/>
 		</antcall>
-				
 		<!-- sfc-gateway jar -->
 		<antcall target="MakeProject">
 			<param name="modName" value="${ils.sfc.name}_Gateway" />
 			<param name="sourceDirFolder" value="sfc-gateway" />
 			<param name="jarName" value="ils-sfc-gateway" />
-			<param name="javacSource" value="1.7" />
+			<param name="javacSource" value="1.8" />
 			<param name="[replace]sfc.gateway.properties:Meta.Version" value="${version.build}" />
 			<param name="[replace]sfc.gateway.properties:Meta.ReleaseDate" value="${build.date}" />
 			<param name="module.build.classpath" value="sfc.gateway.classpath"/>
@@ -96,7 +95,7 @@
 			<param name="modName" value="${ils.sfc.name}_Client" />
 			<param name="sourceDirFolder" value="sfc-client" />
 			<param name="jarName" value="ils-sfc-client" />
-			<param name="javacSource" value="1.7" />
+			<param name="javacSource" value="1.8" />
 			<param name="module.build.classpath" value="sfc.client.classpath"/>
 		</antcall>
 		
@@ -105,7 +104,7 @@
 			<param name="modName" value="${ils.sfc.name}_Designer" />
 			<param name="sourceDirFolder" value="sfc-designer" />
 			<param name="jarName" value="ils-sfc-designer" />
-			<param name="javacSource" value="1.7" />
+			<param name="javacSource" value="1.8" />
 			<param name="module.build.classpath" value="sfc.designer.classpath"/>
 		</antcall>
 		

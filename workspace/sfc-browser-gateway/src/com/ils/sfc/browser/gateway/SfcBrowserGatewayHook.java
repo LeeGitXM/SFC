@@ -5,9 +5,12 @@ package com.ils.sfc.browser.gateway;
 
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
+import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
 import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
+import com.inductiveautomation.sfc.SFCModule;
+import com.inductiveautomation.sfc.api.SfcGatewayHook;
 
 
 
@@ -31,9 +34,9 @@ public class SfcBrowserGatewayHook extends AbstractGatewayModuleHook  {
 	@Override
 	public void setup(GatewayContext ctxt) {
 		this.context = ctxt;
+		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
 		// Provide a central repository for the structure of the charts
-		// Provide a central repository for the structure of the charts
-    	structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject().getProject(),stepRegistry);
+    	structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
     	context.getProjectManager().addProjectListener(structureManager);
 	}
 
@@ -44,6 +47,6 @@ public class SfcBrowserGatewayHook extends AbstractGatewayModuleHook  {
 
 
 	@Override
-	public void startup(LicenseState arg0) {
+	public void startup(LicenseState state) {
 	}
 }

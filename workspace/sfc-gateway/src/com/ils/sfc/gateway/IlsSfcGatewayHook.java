@@ -55,6 +55,7 @@ import com.ils.sfc.step.WriteOutputStepFactory;
 import com.ils.sfc.step.YesNoStepFactory;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
+import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -86,6 +87,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private IlsScopeLocator scopeLocator = new IlsScopeLocator(this);
 	private IlsChartObserver chartObserver = new IlsChartObserver();
 	private final IlsStepMonitor stepMonitor = new IlsStepMonitor();
+	private ChartStructureManager structureManager = null;
 	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
 	private TestMgr testMgr = new TestMgr();
 	private IlsDropBox dropBox = new IlsDropBox();
@@ -203,7 +205,8 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 			log.error("IlsSfcGatewayHook.setup: Error registering ToolkitRecord",sqle);
 		}
     	// Provide a central repository for the structure of the charts
-    	structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject().getProject(),stepRegistry);
+		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
+		structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
     	context.getProjectManager().addProjectListener(structureManager);
 	}
 
