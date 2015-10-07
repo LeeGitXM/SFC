@@ -16,7 +16,6 @@ import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
-import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.api.StepRegistry;
 import com.inductiveautomation.sfc.api.XMLParseException;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
@@ -47,8 +46,7 @@ public class ChartStructureCompiler {
 	public static final String FOLDER_RESOURCE_TYPE="__folder";
 	public static final String ENCLOSING_FACTORY_ID = EnclosingStepProperties.FACTORY_ID;
 	static final UUID ROOT_FOLDER_ID = ChartUIModel.ROOT_FOLDER;	
-	private final DesignerContext context;
-	private final Project globalProject;
+	private final Project project;
 	private final StepRegistry stepRegistry;
 	
 	// intermediate structures:
@@ -56,9 +54,8 @@ public class ChartStructureCompiler {
 	private final Map<String,ChartModelInfo> modelInfoByChartPath;     // Reverse directory
 	private final Map<String,StepStructure> stepsById;
 
-	public ChartStructureCompiler(DesignerContext ctx, StepRegistry stepRegistry) {
-		this.context = ctx;
-		this.globalProject = context.getGlobalProject().getProject();
+	public ChartStructureCompiler(Project proj, StepRegistry stepRegistry) {
+		this.project = proj;
 		this.stepRegistry = stepRegistry;
 		this.modelInfoByResourceId = new HashMap<>();
 		this.modelInfoByChartPath = new HashMap<>();
@@ -93,7 +90,7 @@ public class ChartStructureCompiler {
 	// ===================================== Private Helper Methods =========================
 	// Deserialize all SFC charts from the global project.
 	private boolean loadModels() {
-		List<ProjectResource> resources = globalProject.getResources();		
+		List<ProjectResource> resources = project.getResources();
 		for(ProjectResource res:resources) {
 			if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
 				try {
@@ -101,7 +98,7 @@ public class ChartStructureCompiler {
 					//IlsSfcCommonUtils.printResource(data);					
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 					ChartUIModel uiModel = ChartUIModel.fromXML(xmlInput, stepRegistry );
-					String path = context.getGlobalProject().getProject().getFolderPath(res.getResourceId());
+					String path = project.getFolderPath(res.getResourceId());
 					ChartModelInfo info = new ChartModelInfo(uiModel,res,path);
 					modelInfoByResourceId.put(new Long(res.getResourceId()),info);
 					modelInfoByChartPath.put(path,info);

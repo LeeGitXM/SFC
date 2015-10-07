@@ -14,7 +14,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 
 /**
- *  This class is a common point for managing requests to the gateway dealing.
+ *  This class is a common point for managing requests to the gateway dealing .
  *  It is designed for use by Java code in the designer as well as Python scripting. 
  *  It provides a way to request/set properties in persistent (HSQLdb) storage,
  *  among other things.

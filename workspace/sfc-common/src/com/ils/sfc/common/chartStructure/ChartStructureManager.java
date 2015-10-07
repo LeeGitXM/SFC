@@ -3,10 +3,9 @@ package com.ils.sfc.common.chartStructure;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
-import com.inductiveautomation.ignition.common.util.LogUtil;
-import com.inductiveautomation.ignition.common.util.LoggerEx;
-import com.inductiveautomation.ignition.designer.model.DesignerContext;
-import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
+import com.inductiveautomation.ignition.common.project.ProjectVersion;
+import com.inductiveautomation.ignition.gateway.project.ProjectListener;
+import com.inductiveautomation.sfc.api.StepRegistry;
 import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
 
@@ -14,22 +13,21 @@ import com.inductiveautomation.sfc.definitions.ElementDefinition;
  *  plus any utility methods that need to go across charts. The compiler
  *  holds all the various maps.
  *
+ * Implementing both ProjectListener and ProjectChangeListener allows us to 
+ * use this in both Designer/Client and Gateway contexts.
  */
-public class ChartStructureManager implements ProjectChangeListener {
-	private static String TAG = "ChartStructureManager";
-	private final LoggerEx log;
+public class ChartStructureManager implements ProjectChangeListener,ProjectListener  {
 	private final ChartStructureCompiler compiler;
-	private final DesignerContext context;
+	private final Project project;
 	
 	/**
 	 * Create a new structure manager. The compiler contains all the various maps
 	 * that we use to make useful methods.
 	 * @param ctx
 	 */
-	public ChartStructureManager(DesignerContext ctx,ClientStepRegistry registry) {
-		this.context = ctx;
-		this.compiler = new ChartStructureCompiler(context,registry);
-		this.log = LogUtil.getLogger(getClass().getPackage().getName());
+	public ChartStructureManager(Project proj,StepRegistry registry) {
+		this.project = proj;
+		this.compiler = new ChartStructureCompiler(project,registry);
 		compiler.compile();
 	}
 	
@@ -48,7 +46,7 @@ public class ChartStructureManager implements ProjectChangeListener {
 		return def;
 	}
 	
-	public String getChartPath(long resourceId) { return context.getGlobalProject().getProject().getFolderPath(resourceId); }
+	public String getChartPath(long resourceId) { return project.getFolderPath(resourceId); }
 	/**
 	 * Remove the final segment of a chart path to get its parent folder. If there is no parent
 	 * return a "/". If the resource doesn't exist, return a null.
@@ -56,7 +54,7 @@ public class ChartStructureManager implements ProjectChangeListener {
 	 * @return the path to the chart's enclosing folder in the NavTree. 
 	 */
 	public String getParentPath(long resourceId) { 
-		String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
+		String chartPath = project.getFolderPath(resourceId);
 		if( chartPath!=null ) {
 			int pos = chartPath.lastIndexOf("/");
 			if( pos>0 )  chartPath = chartPath.substring(0, pos);
@@ -79,41 +77,28 @@ public class ChartStructureManager implements ProjectChangeListener {
 	// =================================== Project Change Listener ========================
 	// No matter what the change is, we re-compute the maps
 	@Override
-	public void projectResourceModified(ProjectResource arg0,ResourceModification arg1) {
+	public void projectResourceModified(ProjectResource res,ResourceModification modType) {
 		compiler.compile();
 		
 	}
 
 	@Override
-	public void projectUpdated(Project arg0) {
+	public void projectUpdated(Project proj) {
 		compiler.compile();
 	}
-	
-	
-	
-	
-	/*
-	// Looking across all charts, find the step with the given id.
-	public IlsSfcStepStructure getStepWithId(String id) {
-		IlsSfcStepStructure result = null;
-		for(IlsSfcChartStructure chart: chartsByName.values()) {
-			if((result = chart.findStepWithId(id)) != null) {
-				return result;
-			}
-		}
-		logger.error("Couldn't find step with id " + id);
-		return null;
+
+	// =================================== Project Listener ========================
+	@Override
+	public void projectAdded(Project proj1, Project proj2) {
 	}
 
-	// Looking across all charts, find the step with the given id.
-	public IlsSfcStepStructure getStepWithFactoryId(String factoryId) {
-		IlsSfcStepStructure result = null;
-		for(IlsSfcChartStructure chart: chartsByName.values()) {
-			if((result = chart.findStepWithFactoryId(factoryId)) != null) {
-				return result;
-			}
-		}
-		return null;
+	@Override
+	public void projectDeleted(long projectId) {
 	}
-	*/
+
+	@Override
+	public void projectUpdated(Project proj, ProjectVersion vers) {
+		compiler.compile();
+		
+	}
 }

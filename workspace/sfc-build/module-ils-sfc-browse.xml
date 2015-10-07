@@ -12,17 +12,20 @@
 		
 		<!-- We depend on IA's SFC Module -->
 		<depends scope="D">com.inductiveautomation.sfc</depends>
-		
+		<depends scope="G">com.inductiveautomation.sfc</depends>
 		
 		<!-- Load in our jars for each scope -->
-		<jar scope="CD">ils-sfc-browser.jar.pack.gz</jar>
+		<jar scope="CD">ils-sfc-browser-designer.jar.pack.gz</jar>
 		<jar scope="CD">ils-sfc-common.jar.pack.gz</jar>
+		<jar scope="G">ils-sfc-common.jar</jar>
+		<jar scope="CD">ils-sfc-browser-gateway.jar</jar>
 		<jar scope="CD">lucene-1.4.3.jar.pack.gz</jar>
 		<jar scope="CD">prefuse-1.0.1.jar.pack.gz</jar>
 		<jar scope="D">jackson-core-2.2.3.jar</jar>
 		<jar scope="D">jackson-databind-2.2.3.jar</jar>
 		<jar scope="D">jackson-annotations-2.2.3.jar</jar>
 		<!-- Tell the Gateway and/or Designer where to find the hooks -->
-		<hook scope="D">com.ils.sfc.browser.IlsSfcBrowserHook</hook>
+		<hook scope="D">com.ils.sfc.browser.SfcBrowserDesignerHook</hook>
+		<hook scope="G">com.ils.sfc.browser.SfcBrowserGatewayHook</hook>
 	</module>
 </modules>

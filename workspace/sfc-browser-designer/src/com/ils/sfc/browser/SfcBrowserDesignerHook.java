@@ -31,17 +31,17 @@ import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
 
 
-public class IlsSfcBrowserHook extends AbstractDesignerModuleHook implements DesignerModuleHook {
+public class SfcBrowserDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook {
 	private final static String TAG = "IlsSfcBrowserHook";
 	private static final String START_MENU_TITLE      = "Start Chart";
 	private static final String VALIDATION_MENU_TITLE = "Validate Charts";
 	private DesignerContext context = null;
 	private final LoggerEx log;
-	private IlsBrowserFrame browser = null;
+	private SfcBrowserFrame browser = null;
 	private SFCDesignerHook iaSfcHook = null;
 
 	
-	public IlsSfcBrowserHook() {
+	public SfcBrowserDesignerHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
 		
@@ -49,7 +49,7 @@ public class IlsSfcBrowserHook extends AbstractDesignerModuleHook implements Des
 	public List<DockableFrame> getFrames() {
 		// Add a frame for our custom chart browser
        	List<DockableFrame> frames = new ArrayList<>();
-       	browser = new IlsBrowserFrame(context);
+       	browser = new SfcBrowserFrame(context);
        	browser.setInitMode(DockContext.STATE_AUTOHIDE);
        	browser.setInitSide(DockContext.DOCK_SIDE_WEST);
        	browser.setInitIndex(1);
@@ -86,6 +86,7 @@ public class IlsSfcBrowserHook extends AbstractDesignerModuleHook implements Des
         };
         JMenuMerge controlMenu = new JMenuMerge(WellKnownMenuConstants.VIEW_MENU_NAME);
         controlMenu.addSeparator();
+        controlMenu.addSeparator();   // Sometimes this makes one show up. Have never seen this doubled.
         controlMenu.add(validateAction);
         merge.add(WellKnownMenuConstants.VIEW_MENU_LOCATION, controlMenu);
         

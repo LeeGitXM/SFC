@@ -14,19 +14,23 @@
 	<property name="root.dir" value="${basedir}/../.." />
 	<property name="jar.dir" value="${root.dir}/external/lib" />
 	<property name="sdk.dir" value="${root.dir}/ignition-77/lib" />
+	<property name="ils.sfc.name" value="ILS-SFC" />
 	<property name="browser.jar.name" value="ils-sfc-browser" />
-	<property name="browser.bin.dir" value="${basedir}/${sfc.browser.name}/bin" />
-	<property name="browser.src.dir" value="${basedir}/${sfc.browser.name}/src" />
+	<property name="browser.designer.bin.dir" value="${basedir}/${sfc.browser.name}-designer/bin" />
+	<property name="browser.designer.src.dir" value="${basedir}/${sfc.browser.name}-designer/src" />
+	<property name="browser.gateway.bin.dir" value="${basedir}/${sfc.browser.name}-gateway/bin" />
+	<property name="browser.gateway.src.dir" value="${basedir}/${sfc.browser.name}-gateway/src" />
 	<property name="ant.build.javac.source" value="1.7"/>
 	<property name="ant.build.javac.target" value="1.7"/>
 		
 
 	<!-- Browser jar classpath -->
-	<path id="sfc.browser.designer.classpath">
+	<path id="sfc.browser.classpath">
 		<path refid="Ignition_SDK.classpath" />
 		<path refid="ExternalJar.classpath" />
+		<fileset dir="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/" includes="*.jar" />
 	</path>
-	
+
 	<!-- This target will build the toolkit module and deploy it to the local Ignition gateway -->
 		<target name="BuildAndInstallModule" depends="clean, build, deploy" />
 
@@ -36,21 +40,34 @@
 		<delete dir="${basedir}/sfc-build/release" />
 	</target>	
 	
-	<!-- Compile the Browser -->
-	<target name="browser.build" description="Compile the source">
+	<!-- Compile the Browser Designer -->
+	<target name="browser.designer.build" description="Compile the source">
 		<echo  message="Using Java version ${ant.java.version}."/>
-		<mkdir dir="${browser.bin.dir}"/>
-		<javac destdir="${browser.bin.dir}" debug="true" includeantruntime="false">
-			<src path="${browser.src.dir}"/>
-			<classpath refid="sfc.browser.designer.classpath"/>
+		<mkdir dir="${browser.designer.bin.dir}"/>
+		<javac destdir="${browser.designer.bin.dir}" debug="true" includeantruntime="false">
+			<src path="${browser.designer.src.dir}"/>
+			<classpath refid="sfc.browser.classpath"/>
 		</javac>
 	</target>
-	<target name ="browser.jar" description="Create a jar for the ILS SFC Browser">
-	    <jar destfile="${jar.dir}/${browser.jar.name}.jar" includes="**/*.class" basedir="${browser.bin.dir}"/>
+	<target name ="browser.designer.jar" description="Create a jar for the ILS SFC Browser">
+	    <jar destfile="${jar.dir}/${browser.jar.name}-designer.jar" includes="**/*.class" basedir="${browser.designer.bin.dir}"/>
+	</target>
+	
+	<!-- Compile the Browser Designer -->
+	<target name="browser.gateway.build" description="Compile the source">
+		<echo  message="Using Java version ${ant.java.version}."/>
+		<mkdir dir="${browser.gateway.bin.dir}"/>
+		<javac destdir="${browser.gateway.bin.dir}" debug="true" includeantruntime="false">
+			<src path="${browser.gateway.src.dir}"/>
+			<classpath refid="sfc.browser.classpath"/>
+		</javac>
+	</target>
+	<target name ="browser.gateway.jar" description="Create a jar for the ILS SFC Browser">
+		   <jar destfile="${jar.dir}/${browser.jar.name}-gateway.jar" includes="**/*.class" basedir="${browser.gateway.bin.dir}"/>
 	</target>
 	
 	<!-- Builds the toolkit module jars and the final .modl file -->
-	<target name="build" depends="browser.build,browser.jar" description="Compile the source">
+	<target name="build" depends="browser.designer.build,browser.designer.jar,browser.gateway.build,browser.gateway.jar" description="Compile the source">
 		<echo message="${sfc.browser.name} ${sfc.browser.version}" />	
 		<delete dir="${basedir}/sfc-build/temp_modl" />	
 		
@@ -58,14 +75,22 @@
 		<echo message="Build date: ${build.date}" />
 		<echo message="Build version: ${version.build}" />	
 
-		
-		<!-- SFC Browser  -->
+		<!-- SFC Browser Designer  -->
 		<antcall target="MakeProject">
-			<param name="modName" value="${sfc.browser.name}" />
-			<param name="sourceDirFolder" value="sfc-browser" />
-			<param name="jarName" value="${browser.jar.name}" />
+			<param name="modName" value="${sfc.browser.name}-designer" />
+			<param name="sourceDirFolder" value="sfc-browser-designer" />
+			<param name="jarName" value="${browser.jar.name}-designer" />
 			<param name="javacSource" value="1.8" />
-			<param name="module.build.classpath" value="sfc.browser.designer.classpath"/>
+			<param name="module.build.classpath" value="sfc.browser.classpath"/>
+		</antcall>
+		
+		<!-- SFC Browser Gateway -->
+		<antcall target="MakeProject">
+			<param name="modName" value="${sfc.browser.name}-gateway" />
+			<param name="sourceDirFolder" value="sfc-browser-gateway" />
+			<param name="jarName" value="${browser.jar.name}-gateway" />
+			<param name="javacSource" value="1.8" />
+			<param name="module.build.classpath" value="sfc.browser.classpath"/>
 		</antcall>
 		
 		<!-- Create .modl file -->
@@ -81,8 +106,8 @@
 		<replace file="${basedir}/sfc-build/temp_modl/module.xml" token="@DESCRIPTION@" value="${sfc.browser.description}" />
 		<replace file="${basedir}/sfc-build/temp_modl/module.xml" token="@VERSION@" value="${sfc.browser.version}" />
 
-		<!-- Pack200 and then copy the designer, client jars -->
-		<pack200 src="${basedir}/sfc-build/bin/${sfc.browser.name}/dist/${browser.jar.name}.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-browser.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
+		<!-- Pack200 and then copy the designer, gateway jars -->
+		<pack200 src="${basedir}/sfc-build/bin/${sfc.browser.name}-designer/dist/${browser.jar.name}-designer.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-browser-designer.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		<pack200 src="${basedir}/sfc-build/bin/${sfc.common.name}/dist/${common.jar.name}.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-common.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		<pack200 src="${root.dir}/external/lib/lucene-1.4.3.jar" destfile="${basedir}/sfc-build/temp_modl/lucene-1.4.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		<pack200 src="${root.dir}/external/lib/prefuse-1.0.1.jar" destfile="${basedir}/sfc-build/temp_modl/prefuse-1.0.1.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
@@ -90,6 +115,9 @@
 		<pack200 src="${root.dir}/external/lib/jackson-databind-2.2.3.jar" destfile="${basedir}/sfc-build/temp_modl/jackson-databind-2.2.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		<pack200 src="${root.dir}/external/lib/jackson-annotations-2.2.3.jar" destfile="${basedir}/sfc-build/temp_modl/jackson-annotations-2.2.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		
+		<!-- Copy gateway jar -->
+		<copy file="${basedir}/sfc-build/bin/${sfc.browser.name}-gateway/dist/${browser.jar.name}-gateway.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/ils-sfc-common.jar" todir="${basedir}/sfc-build/temp_modl/" />
 		
 		<!-- Copy dependent jars -->
 		<copy file="${root.dir}/external/lib/jackson-core-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />

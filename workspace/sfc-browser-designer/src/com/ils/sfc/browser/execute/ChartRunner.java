@@ -1,10 +1,12 @@
 package com.ils.sfc.browser.execute;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.UUID;
 
 import org.json.JSONObject;
 
@@ -12,8 +14,11 @@ import prefuse.data.Table;
 
 import com.ils.sfc.browser.BrowserConstants;
 import com.ils.sfc.browser.ChartTreeDataModel;
+import com.ils.sfc.browser.SfcBrowserRequestHandler;
 import com.ils.sfc.common.recipe.objects.Data;
+import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
+import com.inductiveautomation.ignition.common.user.AuthenticatedUser;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
@@ -29,6 +34,7 @@ public class ChartRunner implements Runnable {
 	private final DesignerContext context;
 	private final LoggerEx log;
 	private final ChartTreeDataModel dataModel;
+	private final SfcBrowserRequestHandler requestHandler;
 	private final SFCWorkspace workspace;
 	
 	/**
@@ -38,6 +44,7 @@ public class ChartRunner implements Runnable {
 		this.context = ctx;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.dataModel = data;
+		this.requestHandler = new SfcBrowserRequestHandler();
 		this.workspace = wksp;
 	}
 	
@@ -49,18 +56,19 @@ public class ChartRunner implements Runnable {
 			String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
 			
 			SfcScriptingFunctions fncs = workspace.getRPC();
-			Map<String,Object> map = createMapFromLineage(resourceId);
+			//Map<String,Object> map = createMapFromLineage(resourceId);
 			try {
-				fncs.startChart(chartPath, map);
+				UUID instance = requestHandler.startChart(chartPath);
+				tab.startMonitoring(instance);
 			}
 			catch(Exception ex) {
 				log.infof("%s.run: Failed to start chart %s (%s)",TAG,chartPath,ex.getMessage());
 			}
 		}
 	}
-	
+	/*
 	private Map<String,Object> createMapFromLineage(long resourceId) {
-		Map<String,Object> map = new HashMap<>();
+		Map<String,Object> map = initializeMap();
 		Map<Long,ChartDefinition> definitions = dataModel.getDefinitions();
 		Map<Integer,Integer> lineage = dataModel.getLineage();
 		Table nodes = dataModel.getNodes();
@@ -70,6 +78,7 @@ public class ChartRunner implements Runnable {
 			Integer parent = lineage.get(new Integer(row));
 			Stack<Integer> stack = new Stack<>();
 			stack.push(new Integer(row));  // Self is bottom of stack
+			map.put("chartName",nodes.getString(row, BrowserConstants.PATH));
 			while( parent!=null ) {
 				stack.push(parent);
 				parent = lineage.get(parent);
@@ -115,7 +124,13 @@ public class ChartRunner implements Runnable {
 						}
 					}
 					else {
-						//map.put(pv.getProperty().getName(), pv.getValue());  // This doesn't work
+						if( pv.getValue()!=null ) {
+							log.infof("%s.enhanceMapFromNode: Add %s = %s", TAG,pv.getProperty().getName(),pv.getValue().toString());
+							map.put(pv.getProperty().getName(), pv.getValue());
+						}
+						else {
+							log.infof("%s.enhanceMapFromNode: Skip %s (null)", TAG,pv.getProperty().getName());
+						}
 					}
 				}
 			}
@@ -130,7 +145,7 @@ public class ChartRunner implements Runnable {
 	 * @param res
 	 * @param nodes
 	 * @return
-	 */
+
 	private int getIndexForResource(long resid,Table nodes) {
 		int rows = nodes.getRowCount();
 		int row = -1;
@@ -145,4 +160,23 @@ public class ChartRunner implements Runnable {
 		}
 		return row;
 	}
+	
+	/**
+	 * Set attributes in the initial parameters.
+	 * @return an initial version of the chart parameters.
+
+	private Map<String,Object> initializeMap() {
+		Map<String,Object> map = new HashMap<>();
+		map.put("isolationMode",new Boolean(Boolean.FALSE));
+		map.put("project",context.getProject().getName());
+		try {
+			AuthenticatedUser user = (AuthenticatedUser)GatewayConnectionManager.getInstance().getGatewayInterface().invoke("Users.getCurrentUser", new Serializable[0]);
+			map.put("user",user.getUsername());
+		}
+		catch(Exception ex) {
+			log.infof("%s.initializeMap: Failed to obtain user name (%s)",TAG,ex.getMessage());
+		}
+		return map;
+	}
+	*/
 }

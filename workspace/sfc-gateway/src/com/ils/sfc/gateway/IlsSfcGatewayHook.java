@@ -12,6 +12,7 @@ import java.util.Map;
 import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.common.PythonCall;
+import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.gateway.monitor.IlsStepMonitor;
 import com.ils.sfc.gateway.persistence.ToolkitRecord;
@@ -200,6 +201,9 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		catch(SQLException sqle) {
 			log.error("IlsSfcGatewayHook.setup: Error registering ToolkitRecord",sqle);
 		}
+    	// Provide a central repository for the structure of the charts
+    	structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject().getProject(),stepRegistry);
+    	context.getProjectManager().addProjectListener(structureManager);
 	}
 
 	@Override

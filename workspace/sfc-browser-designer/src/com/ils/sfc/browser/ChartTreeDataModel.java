@@ -212,7 +212,7 @@ public class ChartTreeDataModel {
 	// @return the row corresponding to the newly discovered chart.
 	private int addNodeTableRow(String name,long resourceId) {
 		int row = nodes.getRowCount();
-		log.infof("%s.addNodeTableRow: %d = %s (%d)", TAG,row,name,resourceId);
+		log.tracef("%s.addNodeTableRow: %d = %s (%d)", TAG,row,name,resourceId);
 		nodes.addRow();
 		nodes.setInt(row,BrowserConstants.CXNS,0); 
 		nodes.setInt(row,BrowserConstants.STATUS,BrowserConstants.STATUS_OK);  

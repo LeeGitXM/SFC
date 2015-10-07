@@ -28,7 +28,7 @@ import com.jidesoft.docking.DockableFrame;
  * 
  * It is the controller for the tree model and Perfuse view.
  */
-public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceFrame, ProjectChangeListener  {
+public class SfcBrowserFrame extends DockableFrame implements ResourceWorkspaceFrame, ProjectChangeListener  {
 	private static final long serialVersionUID = 4278524462387470494L;
 	private static final String TAG = "IlsBrowserFrame";
 	private static final String DOCKING_KEY = "SfcChartBrowserFrame";
@@ -42,7 +42,7 @@ public class IlsBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 	private ChartTreeDataModel model = null;
 	private ChartTreeView view = null;
 	
-	public IlsBrowserFrame(DesignerContext ctx) {
+	public SfcBrowserFrame(DesignerContext ctx) {
 		super(DOCKING_KEY);  // Pinned icon
 		this.context = ctx;
 		this.eventListeners = new EventListenerList();
