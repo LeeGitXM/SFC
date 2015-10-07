@@ -1,9 +1,9 @@
 package com.ils.sfc.gateway;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.UUID;
 
 import org.json.JSONException;
@@ -15,6 +15,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
+import com.ils.sfc.common.MockEnclosingScopeFactory;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.rowconfig.ManualDataEntryConfig;
@@ -23,18 +24,17 @@ import com.ils.sfc.common.rowconfig.PVMonitorConfig;
 import com.ils.sfc.common.rowconfig.ReviewDataConfig;
 import com.ils.sfc.common.rowconfig.ReviewFlowsConfig;
 import com.ils.sfc.common.rowconfig.WriteOutputConfig;
+import com.ils.sfc.gateway.recipe.RecipeDataAccess;
 import com.ils.sfc.step.IlsAbstractChartStep;
 import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
-import com.inductiveautomation.ignition.common.script.message.MessageDispatchManager;
 import com.inductiveautomation.ignition.common.util.DatasetBuilder;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
-import com.inductiveautomation.opcua.types.structs.MonitoringParameters;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ExecutionQueue;
 import com.inductiveautomation.sfc.api.PyChartScope;
@@ -485,4 +485,24 @@ public class IlsGatewayScripts {
 	public static void reportTests() {
 		ilsSfcGatewayHook.getTestMgr().report();
 	}
+	
+	/** Arbitrary content for dev testing */
+	public static void devTest() {
+		try {
+			Map<String,Object> initialParams = new HashMap<String,Object>();
+			initialParams.put("isolationMode", false);
+			initialParams.put("project", "SFC_Demo");
+			MockEnclosingScopeFactory factory = new MockEnclosingScopeFactory(initialParams);
+			factory.addLevelBottomUp("MockParents/Parent", "E1", "");
+			factory.addLevelBottomUp("MockParents/Phase", "1", "com.ils.phaseStep");
+			factory.addLevelBottomUp("MockParents/Operation", "1", "com.ils.operationStep");
+			factory.addLevelBottomUp("MockParents/Procedure", "1", "com.ils.procedureStep");
+			Map<String,Object> mockParams = factory.getInitialChartParams();
+			ilsSfcGatewayHook.getChartManager().startChart("MockParents/Child", mockParams, "admin");
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

@@ -24,6 +24,7 @@ public class Constants {
 	public static final String CALLBACK = "callback";
 	public static final String CATEGORY = "category";
 	public static final String CENTER = "center";
+	public static final String CHART_PATH = "chartPath";
 	public static final String CHILDREN = "children";
 	public static final String CLASS = "class";
 	public static final String COMMAND = "callback";
@@ -109,6 +110,7 @@ public class Constants {
 	public static final String OUT_OF_RANGE = "Out of Range";
 	public static final String OUTPUT = "output";
 	public static final String PARENT_GROUP = "parent-group";
+	public static final String PARENT = "parent";
 	public static final String PCT = "Pct";
 	public static final String PENDING = "Pending";
 	public static final String POSITION = "position";
@@ -123,6 +125,7 @@ public class Constants {
 	public static final String PRIORITY = "priority";
 	public static final String PRIVATE = "private";
 	public static final String PROMPT = "prompt";
+	public static final String PROJECT = "project";
 	public static final String PUBLIC = "public";
 	public static final String PV_VALUE = "pvValue";
 	public static final String PV_MONITOR_ACTIVE = "pvMonitorActive";
@@ -189,6 +192,7 @@ public class Constants {
 	public static final String UPDATE = "update";
 	public static final String UPDATE_FREQUENCY = "updateFrequency";
 	public static final String UPDATE_OR_CREATE = "updateOrCreate";
+	public static final String USER = "user";
 	public static final String UUID = "uuid";
 	public static final String VALUE = "value";
 	public static final String VALUE_TYPE = "valueType";
