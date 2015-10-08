@@ -190,6 +190,7 @@ public class RecipeBrowserPane extends EditorPanel {
 		}
 		createTree(controller.getRecipeData());
 		validate();	
+		repaint();
 	}
 	
 	@Override
