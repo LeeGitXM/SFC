@@ -25,7 +25,7 @@ public class BrowserRpcDispatcher   {
 		this.requestHandler = new GatewayRequestHandler(context,session,projectId);
 	}
 	
-	public UUID startChart(String chartName) {
-		return requestHandler.startChart(chartName);
+	public UUID startChart(String chartName,String user,Boolean isolation) {
+		return requestHandler.startChart(chartName,user,isolation);
 	}
 }

@@ -3,7 +3,6 @@ package com.ils.sfc.common.chartStructure;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ils.sfc.common.chartStructure.ChartStructureCompiler.Parent;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
 
 /** 
@@ -13,7 +12,7 @@ import com.inductiveautomation.sfc.definitions.ElementDefinition;
 public class ChartStructure {
 
 	// Enclosing Steps in another chart that contain this chart:
-	private List<Parent> parents = new ArrayList<Parent>();
+	private final List<StepStructure> parents = new ArrayList<StepStructure>();
 	private final List<StepStructure> steps; 	// the steps in this chart
 	private final String name;                  // the name (path) of this chart
 	private final long resourceId;
@@ -25,8 +24,8 @@ public class ChartStructure {
 	}
 	
 	
-	public void addParent(ChartStructure chart, StepStructure step) {
-		parents.add(new Parent(chart,step));
+	public void addParent(StepStructure step) {
+		parents.add(step);
 	}  
 	
 	
@@ -34,7 +33,7 @@ public class ChartStructure {
 	public long getResourceId() { return this.resourceId; }
 
 	//Get all chart steps that enclose this chart.
-	public List<Parent> getParents() {return parents;}
+	public List<StepStructure> getParents() {return parents;}
 	public List<StepStructure> getSteps() {return steps;}
 	
 	/** 

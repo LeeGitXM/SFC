@@ -63,10 +63,14 @@ public class MockEnclosingScopeFactory {
 			childScope.put(Constants.ENCLOSING_STEP_SCOPE_KEY, enclosingStepScope);
 			childScope = parentScope;
 		}
-		// copy expected top-level params to top-level mock parent:
-		parentScope.put(Constants.PROJECT, initialParams.get(Constants.PROJECT));
-		parentScope.put(Constants.USER, initialParams.get(Constants.USER));
-		parentScope.put(Constants.ISOLATION_MODE, initialParams.get(Constants.ISOLATION_MODE));
+		
+		if( parentScope!=null ) {
+			// copy expected top-level params to top-level mock parent:
+			parentScope.put(Constants.PROJECT, initialParams.get(Constants.PROJECT));
+			parentScope.put(Constants.USER, initialParams.get(Constants.USER));
+			parentScope.put(Constants.ISOLATION_MODE, initialParams.get(Constants.ISOLATION_MODE));
+		}
+		
 		// copy lowest child scope info to initial Params
 		initialParams.putAll(lowestChildScope);
 		return initialParams;

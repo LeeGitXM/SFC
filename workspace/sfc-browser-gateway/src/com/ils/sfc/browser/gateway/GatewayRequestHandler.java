@@ -4,7 +4,6 @@
  */
 package com.ils.sfc.browser.gateway;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -15,10 +14,7 @@ import system.ils.sfc.common.Constants;
 import com.ils.sfc.common.MockEnclosingScopeFactory;
 import com.ils.sfc.common.MockInfo;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
-import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
-import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.common.project.ProjectVersion;
-import com.inductiveautomation.ignition.common.user.AuthenticatedUser;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
@@ -54,13 +50,16 @@ public class GatewayRequestHandler {
 	 * @param chartPath path to the chart as shown in the Designer Nav tree.
 	 * @return unique id for the new chart instance
 	 */
-	public UUID startChart(String chartPath) {
+	public UUID startChart(String chartPath,String user,Boolean isolation) {
+		log.infof("%s.startChart: Request to start %s",TAG,chartPath);
 		SfcGatewayHook sfcHook = (SfcGatewayHook)(context.getModule(SFCModule.MODULE_ID));
 		SfcRpcHandler rpcHandler = (SfcRpcHandler)sfcHook.getRPCHandler(session, projectId);
 		UUID instance = null;
 		try {
-			Map<String,Object> parameters = new HashMap<>();
 			Map<String,Object> initialParameters = createInitialParameters();
+			initialParameters.put(Constants.ISOLATION_MODE,isolation);
+			initialParameters.put(Constants.USER,user); 
+			
 			// Create a mock enclosing scope
 			MockEnclosingScopeFactory factory = new MockEnclosingScopeFactory(initialParameters);
 			ChartStructureManager structureManager = ((SfcBrowserGatewayHook)(context.getModule(GatewayBrowserConstants.MODULE_ID))).getChartStructureManager();
@@ -69,7 +68,7 @@ public class GatewayRequestHandler {
 			while( stack!=null && !stack.isEmpty() ) {
 				factory.addLevelBottomUp(stack.pop());
 			}
-						
+			log.infof("%s.startChart: Parameters \n%s\n",TAG,factory.getInitialChartParams());
 			instance =  rpcHandler.startChart(chartPath, factory.getInitialChartParams());
 		}
 		catch( Exception ex ) {
@@ -78,18 +77,10 @@ public class GatewayRequestHandler {
 		return instance;
 	}
 	
+	// Create any initial parameters that we can default
 	private Map<String,Object> createInitialParameters() {
 		Map<String,Object> parameters = new HashMap<>();
-		Map<String,Object> map = new HashMap<>();
-		map.put(Constants.ISOLATION_MODE,Boolean.FALSE);
-		map.put(Constants.PROJECT,context.getProjectManager().getProjectName(projectId, ProjectVersion.Published));
-		try {
-			AuthenticatedUser user = (AuthenticatedUser)GatewayConnectionManager.getInstance().getGatewayInterface().invoke("Users.getCurrentUser", new Serializable[0]);
-			map.put(Constants.USER,user.getUsername());
-		}
-		catch(Exception ex) {
-			log.infof("%s.initializeMap: Failed to obtain user name (%s)",TAG,ex.getMessage());
-		}
+		parameters.put(Constants.PROJECT,context.getProjectManager().getProjectName(projectId, ProjectVersion.Published));
 		return parameters;
 	}
 	

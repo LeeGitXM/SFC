@@ -1,7 +1,6 @@
 package com.ils.sfc.common.chartStructure;
 
 import com.ils.sfc.common.IlsSfcCommonUtils;
-import com.ils.sfc.common.chartStructure.ChartStructureCompiler.Parent;
 import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
 import com.inductiveautomation.sfc.definitions.ParallelDefinition;
@@ -17,15 +16,14 @@ public class StepStructure {
 	private final String factoryId; // required
 	private final ChartStructure chart;   // the chart that contains this step; required
 	private final StepStructure previous; // preceding step, if any; nullable
-	private String enclosedChartName;     // the full path name of the enclosed chart; may be null or bogus
+	private final String enclosedChartName;     // the full path name of the enclosed chart; may be null or bogus
 	private ChartStructure enclosedChart; // null unless enclosedChartName refers to a valid chart
 	private final String expression;      // null unless this is a transition
-	private final boolean isEnclosingStep;
 	private final ElementDefinition.ElementType elementType;
 	private PropertySet properties;
 	
 	/**
-	 * Constructor for a StepDefinition
+	 * Constructor for a StepDefinition. We are an enclosing step if we have a chart-path property
 	 * @param chart
 	 * @param stepDef
 	 */
@@ -36,7 +34,7 @@ public class StepStructure {
 		this.factoryId = stepDef.getFactoryId().toString();
 		this.previous = previous;
 		this.name = (String)IlsSfcCommonUtils.getStepPropertyValue(stepDef.getProperties(), ChartStructureCompiler.NAME_PROPERTY);
-		this.isEnclosingStep = stepDef.getFactoryId().equals(ChartStructureCompiler.ENCLOSING_FACTORY_ID);
+		this.enclosedChartName =  (String)IlsSfcCommonUtils.getStepPropertyValue(stepDef.getProperties(),ChartStructureCompiler.CHART_PATH_PROPERTY);
 		this.expression   = null;
 		this.properties = stepDef.getProperties();
 	}
@@ -52,7 +50,7 @@ public class StepStructure {
 		this.factoryId = null;
 		this.previous = previous;
 		this.name = "";
-		this.isEnclosingStep = false;
+		this.enclosedChartName = null;
 		this.expression   = pDef.getCancelConditionExpression();
 	}
 	/**
@@ -67,7 +65,7 @@ public class StepStructure {
 		this.factoryId = null;
 		this.previous = previous;
 		this.name = "";
-		this.isEnclosingStep = false;
+		this.enclosedChartName = null;
 		this.expression   = transDef.getExpression();
 	}
 	public ChartStructure getChart() {return chart;}
@@ -80,38 +78,13 @@ public class StepStructure {
 	public ElementDefinition.ElementType getElementType() { return elementType; }
 	public ChartStructure getEnclosedChart() {return enclosedChart;}
 	public String getEnclosedChartName() {return enclosedChartName;}
-	public boolean isEnclosure() { return this.isEnclosingStep; }
+	public boolean isEnclosure() { return (this.enclosedChartName!=null); }
 	public void setEnclosedChart(ChartStructure enclosedChart) {this.enclosedChart = enclosedChart;}
-	public void setEnclosedChartName(String enclosedChartName) {this.enclosedChartName = enclosedChartName;}
-	
-	/** return the step that encloses this one, else null. If more than one step encloses this one, 
-	 *  one is arbitrarily chosen.
-	 */
-	public StepStructure getParent() {
-		if(chart.getParents().size() > 0) {
-			return chart.getParents().get(0).step;
-		}
-		else {
-			return null;
-		}
-	}
 	
 	/** 
-	 * Find an enclosing parent (or self) with the given suffix. 
-	 * @return null if none found. 
+	 * The "parent" of this step is the chart that owns it.
 	 */
-	public StepStructure findParentWithNameEnding(String ending) {
-		if(name.endsWith(ending)) {
-			return this;
-		}
-		else {
-			StepStructure result = null;
-			for(Parent parent: chart.getParents()) {
-				if((result = parent.step.findParentWithNameEnding(ending)) != null) {
-					return result;
-				}
-			}
-		}
-		return null;
+	public ChartStructure getParent() {
+		return chart;
 	}
 }

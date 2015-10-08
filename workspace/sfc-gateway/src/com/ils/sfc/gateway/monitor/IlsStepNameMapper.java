@@ -94,7 +94,7 @@ public class IlsStepNameMapper {
 							if( path.startsWith("/")) path = path.substring(1);
 							// Use the chart-specific logger to announce its creation
 							LoggerEx logger = LogUtil.getLogger(path);
-							logger.infof("%s.initilize: Created chart resource and logger  %s",TAG,path);
+							logger.debugf("%s.initilize: Created chart resource and logger  %s",TAG,path);
 							mapElement(path,res.getResourceId(),definition.getBeginElement());
 						}
 						else {
@@ -138,7 +138,7 @@ public class IlsStepNameMapper {
 			String name = stepDef.getProperties().get(ChartStepProperties.Name);
 			stepIdByName.put(makeKey(chartName,name), stepId);
 			resourceIdByStep.put(stepId, new Long(resId));
-			log.infof("%s.mapElement: %s:%s is %s",TAG,chartName,name,stepId);
+			log.debugf("%s.mapElement: %s:%s is %s",TAG,chartName,name,stepId);
 
 			for( ElementDefinition def:stepDef.getNextElements() ) {
 				mapElement(chartName,resId,def);
@@ -149,7 +149,7 @@ public class IlsStepNameMapper {
 	// Creates complete folder paths for each folder.
 	// We expect the parents to be resolved before their children.
 	private void resolveFolderHierarchy() {
-		log.infof("%s.resolveFolderHierarchy ...", TAG);
+		log.debugf("%s.resolveFolderHierarchy ...", TAG);
 		int MAX_DEPTH = 100;
 		int depth = 0;
 		boolean success = false;

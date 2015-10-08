@@ -1,39 +1,22 @@
 package com.ils.sfc.browser.execute;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
 import java.util.UUID;
 
-import org.json.JSONObject;
-
-import prefuse.data.Table;
-
-import com.ils.sfc.browser.BrowserConstants;
 import com.ils.sfc.browser.ChartTreeDataModel;
 import com.ils.sfc.browser.SfcBrowserRequestHandler;
-import com.ils.sfc.common.recipe.objects.Data;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
-import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.user.AuthenticatedUser;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
-import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.designer.workspace.SFCDesignableContainer;
 import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
-import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
-import com.inductiveautomation.sfc.scripting.SfcScriptingFunctions;
-import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public class ChartRunner implements Runnable {
 	private final static String TAG = "ChartRunner";
 	private final DesignerContext context;
 	private final LoggerEx log;
-	private final ChartTreeDataModel dataModel;
 	private final SfcBrowserRequestHandler requestHandler;
 	private final SFCWorkspace workspace;
 	
@@ -43,7 +26,6 @@ public class ChartRunner implements Runnable {
 	public ChartRunner(DesignerContext ctx,SFCWorkspace wksp,ChartTreeDataModel data) {
 		this.context = ctx;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
-		this.dataModel = data;
 		this.requestHandler = new SfcBrowserRequestHandler();
 		this.workspace = wksp;
 	}
@@ -54,13 +36,26 @@ public class ChartRunner implements Runnable {
 		if( tab!=null ) {
 			long resourceId = workspace.getSelectedContainer().getResourceId();
 			String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
-			
+			String username = "UNDEFINED";
 			try {
-				UUID instance = requestHandler.startChart(chartPath);
-				tab.startMonitoring(instance);
+				AuthenticatedUser authUser = (AuthenticatedUser)GatewayConnectionManager.getInstance().getGatewayInterface().invoke("Users.getCurrentUser", new Serializable[0]);
+				username = authUser.getUsername();
 			}
 			catch(Exception ex) {
-				log.infof("%s.run: Failed to start chart %s (%s)",TAG,chartPath,ex.getMessage());
+				log.infof("%s.initializeMap: Failed to obtain user name (%s)",TAG,ex.getMessage());
+			}
+			try {
+				UUID instance = requestHandler.startChart(chartPath,username,false);  // Not Isolation
+				if( instance != null ) {
+					log.infof("%s.run: Started chart %s",TAG,chartPath);
+					tab.startMonitoring(instance);
+				}
+				else {
+					log.infof("%s.run: Failed to start chart %s",TAG,chartPath);
+				}
+			}
+			catch(Exception ex) {
+				log.infof("%s.run: Exception starting chart %s (%s)",TAG,chartPath,ex.getMessage());
 			}
 		}
 	}

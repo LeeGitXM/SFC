@@ -12,7 +12,6 @@ import java.util.Stack;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
-import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.MockInfo;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
@@ -71,6 +70,10 @@ public class ChartStructureCompiler {
 	 *  the errors were severe enough we couldn't get any useful info.
 	 */
 	public void compile() {
+		stepsById.clear();
+		modelInfoByResourceId.clear();
+		modelInfoByChartPath.clear();
+		
 		if(loadModels()) {
 			compileCharts();  // do the IA chart compilation
 		}
@@ -113,15 +116,18 @@ public class ChartStructureCompiler {
 		Stack<MockInfo> lineage = new Stack<>();
 		ChartModelInfo info = modelInfoByResourceId.get((new Long(resourceId)));
 		while(info!=null) {
-			List<Parent> parents = info.chartStructure.getParents();
+			List<StepStructure> parents = info.chartStructure.getParents();
 			String path = info.chartPath;
 			info = null;
-			for(Parent parent:parents) {
-				// If there are multiples, pick one
-				long resid = parent.chart.getResourceId();
-				MockInfo mock = new MockInfo(path,parent.step.getFactoryId(),parent.step.getName());
+			for(StepStructure step:parents) {
+				MockInfo mock = new MockInfo(path,step.getFactoryId(),step.getName());
 				lineage.push(mock);
-				info = modelInfoByResourceId.get((new Long(resid)));
+				if( step.getParent().getResourceId()==resourceId) {
+					log.warnf("%s.getAncestors: enclosed chart and parent have same resourceId (%d), truncating ancestry",TAG,resourceId);
+					break;
+				}
+				resourceId = step.getParent().getResourceId();
+				info = modelInfoByResourceId.get((new Long(resourceId)));
 				break;
 			}	
 		}
@@ -143,7 +149,7 @@ public class ChartStructureCompiler {
 					ChartModelInfo info = new ChartModelInfo(uiModel,res,path);
 					modelInfoByResourceId.put(new Long(res.getResourceId()),info);
 					modelInfoByChartPath.put(path,info);
-					log.infof("%s.loadModels: found resource %s (%d)",TAG,path,res.getResourceId());
+					log.debugf("%s.loadModels: found resource %s (%d)",TAG,path,res.getResourceId());
 				}
 				catch(IOException ioe) {
 					log.errorf("%s.loadModels: IO exception deserializing chart (%s)",TAG,ioe.getLocalizedMessage());
@@ -218,10 +224,6 @@ public class ChartStructureCompiler {
 		if(!stepsById.containsKey(stepId)) {
 			StepStructure newStep = new StepStructure(chart, previousStep, stepDef); 
 			chart.addStep(newStep);
-			if(newStep.isEnclosure()) {
-				String enclosedChartName =  (String)IlsSfcCommonUtils.getStepPropertyValue(stepDef.getProperties(), CHART_PATH_PROPERTY);
-				newStep.setEnclosedChartName(enclosedChartName);
-			}
 			stepsById.put(stepId, newStep);
 		}
 		return stepsById.get(stepId);			
@@ -255,6 +257,8 @@ public class ChartStructureCompiler {
 
 	//Create the relationships for chart inclusion.
 	private void linkParents() {
+		log.infof("%s.linkParents: .....",TAG);
+
 		for(ChartModelInfo modelInfo: modelInfoByResourceId.values() ) {
 			ChartStructure chartStruct = modelInfo.chartStructure;  // Null if compile failed
 			if( chartStruct!=null ) {
@@ -263,10 +267,14 @@ public class ChartStructureCompiler {
 						String chartPath = step.getEnclosedChartName();
 						ChartModelInfo chartInfo = modelInfoByChartPath.get(chartPath);
 						if(chartInfo != null) {
-								 ChartStructure enclosedChart = chartInfo.chartStructure;
+							ChartStructure enclosedChart = chartInfo.chartStructure;
 							if(enclosedChart != null) {
 								step.setEnclosedChart(enclosedChart);
-								enclosedChart.addParent(modelInfo.chartStructure, step);
+								enclosedChart.addParent(step);
+								if( log.isInfoEnabled()) {
+									ChartModelInfo stepInfo = modelInfoByResourceId.get(new Long(enclosedChart.getResourceId()));
+									log.infof("%s.linkParents: %s is a parent of %s",TAG,modelInfo.chartPath,stepInfo.chartPath);
+								}
 							}
 							else {
 								log.infof("%s.linkParents: Enclosed chart %s not found for step %s in chart %s",
@@ -282,15 +290,21 @@ public class ChartStructureCompiler {
 							
 		}
 	}
-
+/*
 	// Holder for parent structures so that we walk the tree
+	// The step, the enclosure, is the parent of the chart.
 	public static class Parent {
-		ChartStructure chart;
-		StepStructure step;
+		private final ChartStructure enclosedChart;
+		private final StepStructure parent;
 		
-		public Parent(ChartStructure chart, StepStructure step) {
-			this.chart = chart;
-			this.step = step;
+		public Parent(StepStructure step,ChartStructure chart) {
+			this.enclosedChart = chart;
+			this.parent = step;
 		}
+
+		public ChartStructure getEnclosedChart() {return enclosedChart;}
+		public StepStructure getParent() { return parent;}
+		
 	}
+*/
 }
