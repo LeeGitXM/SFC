@@ -8,10 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
 import com.ils.sfc.common.IlsSfcCommonUtils;
+import com.ils.sfc.common.MockInfo;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -51,7 +53,7 @@ public class ChartStructureCompiler {
 	
 	// intermediate structures:
 	private final Map<Long,ChartModelInfo> modelInfoByResourceId;
-	private final Map<String,ChartModelInfo> modelInfoByChartPath;     // Reverse directory
+	private final Map<String,ChartModelInfo> modelInfoByChartPath; // Reverse directory
 	private final Map<String,StepStructure> stepsById;
 
 	public ChartStructureCompiler(Project proj, StepRegistry stepRegistry) {
@@ -85,6 +87,45 @@ public class ChartStructureCompiler {
 	
 	public Collection<StepStructure> getSteps() {
 		return stepsById.values();
+	}
+	/** 
+	 * We realize that this is potentially ambiguous. 
+	 * @param path chart path
+	 * @return a stack of ancestors of the specified resource. The top of the
+	 *        stack is the root node (has no parents). The bottom of the stack
+	 *        is the supplied node.
+	 */
+	public Stack<MockInfo> getAncestors(String path) {
+		Stack<MockInfo> lineage = new Stack<>();
+		ChartModelInfo info = modelInfoByChartPath.get(path);
+		if( info!=null ) lineage = getAncestors(info.chartStructure.getResourceId());
+		return lineage;
+	}
+	
+	/** 
+	 * @param resourceId
+	 * @return a stack of ancestors of the specified resource. The top of the
+	 *        stack is the root node (has no parents). The bottom of the stack
+	 *        is the supplied node.
+	 */
+	public Stack<MockInfo> getAncestors(long resourceId) {
+		// Create a stack of our lineage
+		Stack<MockInfo> lineage = new Stack<>();
+		ChartModelInfo info = modelInfoByResourceId.get((new Long(resourceId)));
+		while(info!=null) {
+			List<Parent> parents = info.chartStructure.getParents();
+			String path = info.chartPath;
+			info = null;
+			for(Parent parent:parents) {
+				// If there are multiples, pick one
+				long resid = parent.chart.getResourceId();
+				MockInfo mock = new MockInfo(path,parent.step.getFactoryId(),parent.step.getName());
+				lineage.push(mock);
+				info = modelInfoByResourceId.get((new Long(resid)));
+				break;
+			}	
+		}
+		return lineage;
 	}
 	
 	// ===================================== Private Helper Methods =========================

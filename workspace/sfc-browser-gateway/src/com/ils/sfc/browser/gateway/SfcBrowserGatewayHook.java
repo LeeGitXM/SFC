@@ -6,9 +6,12 @@ package com.ils.sfc.browser.gateway;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.model.ApplicationScope;
+import com.inductiveautomation.ignition.common.project.Project;
+import com.inductiveautomation.ignition.common.project.ProjectVersion;
 import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
 import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
+import com.inductiveautomation.ignition.gateway.project.ProjectListener;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.api.SfcGatewayHook;
 
@@ -21,7 +24,7 @@ import com.inductiveautomation.sfc.api.SfcGatewayHook;
  * @author chuckc
  *
  */
-public class SfcBrowserGatewayHook extends AbstractGatewayModuleHook  {
+public class SfcBrowserGatewayHook extends AbstractGatewayModuleHook implements ProjectListener  {
 	private transient GatewayContext context = null;
 	private ChartStructureManager structureManager = null;
 
@@ -37,16 +40,34 @@ public class SfcBrowserGatewayHook extends AbstractGatewayModuleHook  {
 		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
 		// Provide a central repository for the structure of the charts
     	structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
-    	context.getProjectManager().addProjectListener(structureManager);
+    	context.getProjectManager().addProjectListener(this);
 	}
 
 
 	@Override
-	public void shutdown() {	
+	public void shutdown() {
+		context.getProjectManager().removeProjectListener(this);
 	}
 
 
 	@Override
 	public void startup(LicenseState state) {
+	}
+	
+	public ChartStructureManager getChartStructureManager() { return structureManager; }
+
+
+	// =================================== Project Listener ========================
+	@Override
+	public void projectAdded(Project proj1, Project proj2) {
+	}
+
+	@Override
+	public void projectDeleted(long projectId) {
+	}
+
+	@Override
+	public void projectUpdated(Project proj, ProjectVersion vers) {
+		structureManager.getCompiler().compile();
 	}
 }

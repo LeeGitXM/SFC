@@ -55,8 +55,6 @@ public class ChartRunner implements Runnable {
 			long resourceId = workspace.getSelectedContainer().getResourceId();
 			String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
 			
-			SfcScriptingFunctions fncs = workspace.getRPC();
-			//Map<String,Object> map = createMapFromLineage(resourceId);
 			try {
 				UUID instance = requestHandler.startChart(chartPath);
 				tab.startMonitoring(instance);
@@ -66,79 +64,8 @@ public class ChartRunner implements Runnable {
 			}
 		}
 	}
-	/*
-	private Map<String,Object> createMapFromLineage(long resourceId) {
-		Map<String,Object> map = initializeMap();
-		Map<Long,ChartDefinition> definitions = dataModel.getDefinitions();
-		Map<Integer,Integer> lineage = dataModel.getLineage();
-		Table nodes = dataModel.getNodes();
-		int row = getIndexForResource(resourceId,nodes);
-		if( row>=0 ) {
-			// Create a stack of our lineage
-			Integer parent = lineage.get(new Integer(row));
-			Stack<Integer> stack = new Stack<>();
-			stack.push(new Integer(row));  // Self is bottom of stack
-			map.put("chartName",nodes.getString(row, BrowserConstants.PATH));
-			while( parent!=null ) {
-				stack.push(parent);
-				parent = lineage.get(parent);
-			}
-			// Pop the stack and enhance the map
-			while( !stack.isEmpty() ) {
-				Integer nodeIndex = stack.pop();
-				enhanceMapFromNode(map,nodeIndex.intValue(),nodes,definitions);
-			}
-		}
-		else {
-			log.infof("%s.createMapFromLineage: Chart resource %d not found in nodelist", TAG,resourceId);
-		}
-		
-		return map;
-	}
 	
-	private void enhanceMapFromNode(Map<String,Object>map,int row,Table nodes,Map<Long,ChartDefinition> definitions) {
-		// Skip nodes that are enclosures, not charts
-		long resid = nodes.getLong(row, BrowserConstants.RESOURCE);
-		if( resid<0 ) return;
-		String chartPath = nodes.getString(row, BrowserConstants.PATH);
-		log.infof("%s.enhanceMapFromNode: Operating on %s", TAG,chartPath);
-		ChartDefinition chartDef = definitions.get(new Long(resid));
-		if( chartDef!=null ) {
-			Iterator<ChartUIElement> walker =  chartDef.getModel().getChartElements().iterator();
-			while(walker.hasNext()) {
-				ChartUIElement element = walker.next();
-				for(PropertyValue<?> pv: element.getValues() ) {
-					if(pv.getProperty().equals(ChartStepProperties.AssociatedData)) {
-						JSONObject associatedData = element.getOrDefault(ChartStepProperties.AssociatedData);
-						try {
-							log.infof("%s.enhanceMapFromNode: Associated data for %s = %s", TAG,chartPath,associatedData.toString());
-							List<Data> recipeData = Data.fromAssociatedData(associatedData);
-							String stepPath = chartPath+"/"+ "??";
-							for(Data data: recipeData) {
-								data.setStepPath(stepPath);
-							}
-							//setRecipeData(recipeData);
-						} 
-						catch (Exception ex) {
-							log.infof("%s.enhanceMapFromNode: Exception processing recipe data for %s (%s)", TAG,chartPath,ex.getMessage());
-						}
-					}
-					else {
-						if( pv.getValue()!=null ) {
-							log.infof("%s.enhanceMapFromNode: Add %s = %s", TAG,pv.getProperty().getName(),pv.getValue().toString());
-							map.put(pv.getProperty().getName(), pv.getValue());
-						}
-						else {
-							log.infof("%s.enhanceMapFromNode: Skip %s (null)", TAG,pv.getProperty().getName());
-						}
-					}
-				}
-			}
-		}
-		else {
-			log.infof("%s.enhanceMapFromNode: Chart definition for %s (%d) not found", TAG,chartPath,resid);
-		}
-	}
+	
 	/**
 	 * Loop through the nodelist looking for the indicated resource. Once found, return
 	 * the index. If not found, return -1;

@@ -4,10 +4,21 @@
  */
 package com.ils.sfc.browser.gateway;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 import java.util.UUID;
 
+import system.ils.sfc.common.Constants;
+
+import com.ils.sfc.common.MockEnclosingScopeFactory;
+import com.ils.sfc.common.MockInfo;
+import com.ils.sfc.common.chartStructure.ChartStructureManager;
+import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
+import com.inductiveautomation.ignition.common.model.ApplicationScope;
+import com.inductiveautomation.ignition.common.project.ProjectVersion;
+import com.inductiveautomation.ignition.common.user.AuthenticatedUser;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
@@ -49,7 +60,17 @@ public class GatewayRequestHandler {
 		UUID instance = null;
 		try {
 			Map<String,Object> parameters = new HashMap<>();
-			instance =  rpcHandler.startChart(chartPath, parameters);
+			Map<String,Object> initialParameters = createInitialParameters();
+			// Create a mock enclosing scope
+			MockEnclosingScopeFactory factory = new MockEnclosingScopeFactory(initialParameters);
+			ChartStructureManager structureManager = ((SfcBrowserGatewayHook)(context.getModule(GatewayBrowserConstants.MODULE_ID))).getChartStructureManager();
+			Stack<MockInfo> stack = structureManager.getCompiler().getAncestors(chartPath);
+			// Pop the stack and enhance the map
+			while( stack!=null && !stack.isEmpty() ) {
+				factory.addLevelBottomUp(stack.pop());
+			}
+						
+			instance =  rpcHandler.startChart(chartPath, factory.getInitialChartParams());
 		}
 		catch( Exception ex ) {
 			log.warnf("%s.startChart: Failed to start %s (%s)",TAG,chartPath,ex.getMessage());
@@ -57,6 +78,20 @@ public class GatewayRequestHandler {
 		return instance;
 	}
 	
+	private Map<String,Object> createInitialParameters() {
+		Map<String,Object> parameters = new HashMap<>();
+		Map<String,Object> map = new HashMap<>();
+		map.put(Constants.ISOLATION_MODE,Boolean.FALSE);
+		map.put(Constants.PROJECT,context.getProjectManager().getProjectName(projectId, ProjectVersion.Published));
+		try {
+			AuthenticatedUser user = (AuthenticatedUser)GatewayConnectionManager.getInstance().getGatewayInterface().invoke("Users.getCurrentUser", new Serializable[0]);
+			map.put(Constants.USER,user.getUsername());
+		}
+		catch(Exception ex) {
+			log.infof("%s.initializeMap: Failed to obtain user name (%s)",TAG,ex.getMessage());
+		}
+		return parameters;
+	}
 	
 }
 

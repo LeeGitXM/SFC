@@ -56,6 +56,8 @@ import com.ils.sfc.step.YesNoStepFactory;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.model.ApplicationScope;
+import com.inductiveautomation.ignition.common.project.Project;
+import com.inductiveautomation.ignition.common.project.ProjectVersion;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -63,6 +65,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
 import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
+import com.inductiveautomation.ignition.gateway.project.ProjectListener;
 import com.inductiveautomation.ignition.gateway.services.ModuleServiceConsumer;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.api.ChartManagerService;
@@ -78,7 +81,7 @@ import com.inductiveautomation.sfc.api.elements.StepFactory;
  * we obtain the gateway context. It serves as our entry point into the
  * Ignition core.
  */
-public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements ModuleServiceConsumer {
+public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements ModuleServiceConsumer,ProjectListener {
 	public static String TAG = "SFCGatewayHook";
 	private final LoggerEx log;
 	private transient GatewayContext context = null;
@@ -207,7 +210,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
     	// Provide a central repository for the structure of the charts
 		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
 		structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
-    	context.getProjectManager().addProjectListener(structureManager);
+    	context.getProjectManager().addProjectListener(this);
 	}
 
 	@Override
@@ -245,6 +248,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	
 	@Override
 	public void shutdown() {
+		context.getProjectManager().removeProjectListener(this);
 		System.out.println("shutdown");
 	}
 
@@ -275,5 +279,17 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public static Map<String, List<String>> getPropertyNamesById() {
 		return propertyNamesById;
 	}
+	// =================================== Project Listener ========================
+	@Override
+	public void projectAdded(Project proj1, Project proj2) {
+	}
 
+	@Override
+	public void projectDeleted(long projectId) {
+	}
+
+	@Override
+	public void projectUpdated(Project proj, ProjectVersion vers) {
+		structureManager.getCompiler().compile();
+	}
 }

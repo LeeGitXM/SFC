@@ -31,6 +31,9 @@ import com.ils.sfc.designer.search.IlsSfcSearchProvider;
 import com.ils.sfc.designer.stepEditor.IlsStepEditor;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
+import com.inductiveautomation.ignition.common.project.Project;
+import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
+import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -49,7 +52,7 @@ import com.inductiveautomation.sfc.designer.SFCDesignerHook;
 import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
 import com.jidesoft.docking.DockableFrame;
 
-public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook {
+public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectChangeListener {
 	private static final String INTERFACE_MENU_TITLE  = "External Interface Configuration";
 	private DesignerContext context = null;
 	private final LoggerEx log;
@@ -139,10 +142,12 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	structureManager = new ChartStructureManager(context.getGlobalProject().getProject(),stepRegistry);
     	searchProvider = new IlsSfcSearchProvider(context);
 		context.registerSearchProvider(searchProvider);
+		context.addProjectChangeListener(this);
  	}
 	
 	@Override
 	public void shutdown() {	
+		context.removeProjectChangeListener(this);
 		context.removeProjectChangeListener(recipeDataCleaner);
 	}
 	
@@ -179,6 +184,19 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		}
 		return false;
 	}
+	// =================================== Project Change Listener ========================
+	// No matter what the change is, we re-compute the maps
+	@Override
+	public void projectResourceModified(ProjectResource res,ResourceModification modType) {
+		structureManager.getCompiler().compile();
+		
+	}
+	@Override
+	public void projectUpdated(Project proj) {
+		structureManager.getCompiler().compile();
+	}
+	
+	
 	/**
      * Display a popup dialog for configuration of dialog execution parameters.
      * Run in a separate thread, as a modal dialog in-line here will freeze the UI.

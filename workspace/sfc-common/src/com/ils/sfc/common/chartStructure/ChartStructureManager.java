@@ -13,10 +13,8 @@ import com.inductiveautomation.sfc.definitions.ElementDefinition;
  *  plus any utility methods that need to go across charts. The compiler
  *  holds all the various maps.
  *
- * Implementing both ProjectListener and ProjectChangeListener allows us to 
- * use this in both Designer/Client and Gateway contexts.
  */
-public class ChartStructureManager implements ProjectChangeListener,ProjectListener  {
+public class ChartStructureManager  {
 	private final ChartStructureCompiler compiler;
 	private final Project project;
 	
@@ -73,32 +71,5 @@ public class ChartStructureManager implements ProjectChangeListener,ProjectListe
 		StepStructure stepStruct = compiler.getStepInformation(stepId);
 		if( stepStruct!=null ) type = stepStruct.getElementType();
 		return type;
-	}
-	// =================================== Project Change Listener ========================
-	// No matter what the change is, we re-compute the maps
-	@Override
-	public void projectResourceModified(ProjectResource res,ResourceModification modType) {
-		compiler.compile();
-		
-	}
-
-	@Override
-	public void projectUpdated(Project proj) {
-		compiler.compile();
-	}
-
-	// =================================== Project Listener ========================
-	@Override
-	public void projectAdded(Project proj1, Project proj2) {
-	}
-
-	@Override
-	public void projectDeleted(long projectId) {
-	}
-
-	@Override
-	public void projectUpdated(Project proj, ProjectVersion vers) {
-		compiler.compile();
-		
 	}
 }
