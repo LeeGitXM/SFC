@@ -37,10 +37,6 @@ public class SfcBrowserGatewayHook extends AbstractGatewayModuleHook implements 
 	@Override
 	public void setup(GatewayContext ctxt) {
 		this.context = ctxt;
-		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
-		// Provide a central repository for the structure of the charts
-    	structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
-    	context.getProjectManager().addProjectListener(this);
 	}
 
 
@@ -52,6 +48,10 @@ public class SfcBrowserGatewayHook extends AbstractGatewayModuleHook implements 
 
 	@Override
 	public void startup(LicenseState state) {
+		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
+		// Provide a central repository for the structure of the charts
+    	structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
+    	context.getProjectManager().addProjectListener(this);
 	}
 	
 	public ChartStructureManager getChartStructureManager() { return structureManager; }

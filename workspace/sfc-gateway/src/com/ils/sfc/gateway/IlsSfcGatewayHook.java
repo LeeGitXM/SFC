@@ -210,8 +210,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
     	// Provide a central repository for the structure of the charts
 		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
 		structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
-    	//context.getProjectManager().addProjectListener(structureManager);
-
 	}
 
 	@Override
@@ -244,6 +242,10 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
 		stepMonitor.initialize(context,chartManager,iaSfcHook);				
 		chartManager.addChartObserver(dropBox);
+		
+    	// Provide a central repository for the structure of the charts
+		structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
+    	context.getProjectManager().addProjectListener(this);
 		log.infof("%s: Startup complete.",TAG);
 	}
 	

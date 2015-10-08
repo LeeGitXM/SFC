@@ -4,7 +4,6 @@
  */
 package com.ils.sfc.browser;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
@@ -32,13 +31,15 @@ public class SfcBrowserRequestHandler {
 	 * Find the database associated with the sequential function charts.
 	 * 
 	 * @param path the chart path in the Designer navigation tree.
+	 * @param user name of the user for launching client windows
+	 * @param isolation true if the chart is to run in isloation mode
 	 * @return the unique ID of the running instance.
 	 */
-	public UUID startChart(String path) {
+	public UUID startChart(String path,String user,boolean isolation) {
 		UUID result = null;
 		try {
 			result = (UUID)GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
-					BrowserConstants.MODULE_ID, "startChart",path);
+					BrowserConstants.MODULE_ID, "startChart",path,user,new Boolean(isolation));
 		}
 		catch(Exception ge) {
 			log.infof("%s.startChart: GatewayException (%s)",TAG,ge.getMessage());

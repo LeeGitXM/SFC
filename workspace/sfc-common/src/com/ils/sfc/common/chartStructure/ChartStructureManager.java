@@ -1,9 +1,6 @@
 package com.ils.sfc.common.chartStructure;
 
 import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
-import com.inductiveautomation.ignition.common.project.ProjectResource;
-import com.inductiveautomation.ignition.common.project.ProjectVersion;
 import com.inductiveautomation.sfc.api.StepRegistry;
 import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
