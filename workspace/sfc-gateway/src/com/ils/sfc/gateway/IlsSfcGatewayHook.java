@@ -210,7 +210,8 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
     	// Provide a central repository for the structure of the charts
 		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
 		structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
-    	context.getProjectManager().addProjectListener(this);
+    	//context.getProjectManager().addProjectListener(structureManager);
+
 	}
 
 	@Override

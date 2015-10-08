@@ -21,11 +21,12 @@ import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Group;
 import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.panels.EditorPanel;
+import com.ils.sfc.designer.propertyEditor.ValueHolder;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 /** Provide a tree view of all recipe data. */
 @SuppressWarnings("serial")
-public class RecipeBrowserPane extends EditorPanel {
+public class RecipeBrowserPane extends EditorPanel implements ValueHolder {
 	private ButtonPanel buttonPanel = new ButtonPanel(false, true, true, true, false, false);
 	private JTree tree;
 	private JScrollPane treeScroll;
@@ -103,10 +104,14 @@ public class RecipeBrowserPane extends EditorPanel {
 		setButtonState();
 	}
 	
+	private Data getSelectedData() {
+		selectedNode = (RecipeDataTreeNode) tree.getLastSelectedPathComponent();
+		return selectedNode != null ? selectedNode.getRecipeData() : null;
+	}
+	
 	/** Enable/Disable buttons based on tree selection. */
 	private void setButtonState() {
-		selectedNode = (RecipeDataTreeNode) tree.getLastSelectedPathComponent();
-		Data selectedData = selectedNode != null ? selectedNode.getRecipeData() : null;
+		Data selectedData = getSelectedData();
 		buttonPanel.getAddButton().setEnabled(selectedData == null || selectedData.isGroup());
 		buttonPanel.getRemoveButton().setEnabled(selectedData != null);
 		buttonPanel.getEditButton().setEnabled(selectedData != null && !selectedData.isGroup());
@@ -158,7 +163,7 @@ public class RecipeBrowserPane extends EditorPanel {
 	}
 
 	private void doAdd() {				
-		controller.getCreator().activate(myIndex);
+		controller.getCreator().activate(this);
 	}
 	
 	private void doRemove() {
@@ -197,6 +202,19 @@ public class RecipeBrowserPane extends EditorPanel {
 	public void activate(int returnIndex) {
 		rebuildTree();
 		super.activate(returnIndex);
+	}
+
+	@Override
+	public void setValue(Object value) {
+		Data newData = (Data) value;
+		Data selectedData = getSelectedData();
+		if(selectedData != null && selectedData.isGroup()) {
+			((Group)selectedData).getChildren().add(newData);
+		}
+		else {
+			controller.getRecipeData().add(newData);
+		}
+		rebuildTree();
 	}
 
 }

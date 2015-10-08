@@ -4,7 +4,6 @@ import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.project.ProjectVersion;
-import com.inductiveautomation.ignition.gateway.project.ProjectListener;
 import com.inductiveautomation.sfc.api.StepRegistry;
 import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
@@ -14,7 +13,9 @@ import com.inductiveautomation.sfc.definitions.ElementDefinition;
  *  holds all the various maps.
  *
  */
-public class ChartStructureManager  {
+
+public class ChartStructureManager   {
+
 	private final ChartStructureCompiler compiler;
 	private final Project project;
 	
@@ -72,4 +73,5 @@ public class ChartStructureManager  {
 		if( stepStruct!=null ) type = stepStruct.getElementType();
 		return type;
 	}
+
 }

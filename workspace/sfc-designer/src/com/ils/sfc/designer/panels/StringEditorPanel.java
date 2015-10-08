@@ -36,7 +36,7 @@ public class StringEditorPanel extends ValueHoldingEditorPanel {
 	}
 
 	@Override
-	Object getValue() {
+	public Object getValue() {
 		return textField.getText();
 	}
 	

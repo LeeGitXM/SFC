@@ -11,9 +11,9 @@ public abstract class ValueHoldingEditorPanel extends EditorPanel {
 		super(controller, index);
 	}
 
-	abstract Object getValue();
+	abstract public Object getValue();
 	
-	abstract void setValue(Object value);
+	abstract public void setValue(Object value);
 	
 	@Override
 	/** This implementation blocks subclasses from using the wrong form of activate() */

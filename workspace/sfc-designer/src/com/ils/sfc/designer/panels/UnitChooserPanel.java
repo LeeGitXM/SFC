@@ -44,7 +44,7 @@ public class UnitChooserPanel extends ValueHoldingEditorPanel {
 	}
 
 	@Override
-	Object getValue() {
+	public Object getValue() {
 		return basicPanel.getSelectedUnits();
 	}
 	

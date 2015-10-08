@@ -25,13 +25,14 @@ import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.designer.panels.ButtonPanel;
+import com.ils.sfc.designer.panels.ValueHoldingEditorPanel;
 import com.ils.sfc.designer.ComboWrapper;
 import com.ils.sfc.designer.DesignerUtil;
 import com.ils.sfc.designer.panels.EditorPanel;
 
 /** An editor for creating a Recipe Data object. */
 @SuppressWarnings("serial")
-public class RecipeObjectCreatorPane extends EditorPanel {
+public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 	private JComboBox<ComboWrapper> typesCombo = new JComboBox<ComboWrapper>();
 	private JTextField keyTextField = new JTextField();
 	private String[] valueTypeChoices = {Constants.FLOAT, Constants.INT, Constants.BOOLEAN, Constants.STRING};
@@ -39,6 +40,7 @@ public class RecipeObjectCreatorPane extends EditorPanel {
 	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
 	private RecipeEditorController controller;
 	private String chartPath;
+	private Data newObject;
 	
 	public RecipeObjectCreatorPane(RecipeEditorController controller, int index) {
 		super(controller, index);
@@ -46,7 +48,7 @@ public class RecipeObjectCreatorPane extends EditorPanel {
 		initTypes();
 		initUI();
 		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) { doCreate(); }		
+			public void actionPerformed(ActionEvent e) { accept(); }		
 		});
 	}
 
@@ -104,7 +106,8 @@ public class RecipeObjectCreatorPane extends EditorPanel {
 		doEnableValueTypesCombo();
 	}
 
-	private void doCreate() {
+	@Override
+	public void accept() {
 		ComboWrapper selectedType = (ComboWrapper)typesCombo.getSelectedItem();
 		String key = keyTextField.getText().trim();
 		if(key.length() == 0) {
@@ -114,7 +117,7 @@ public class RecipeObjectCreatorPane extends EditorPanel {
 		}
 		try {
 			Class<?> selectedClass = (Class<?>)selectedType.getObject();
-			Data newObject = Data.createNewInstance(selectedClass);
+			newObject = Data.createNewInstance(selectedClass);
 			newObject.setKey(key);
 			String provider = IlsClientScripts.getProviderName(false);
 			newObject.setProvider(provider);
@@ -122,9 +125,7 @@ public class RecipeObjectCreatorPane extends EditorPanel {
 			String selectedValueType = (String) valueTypeCombo.getSelectedItem();
 			newObject.createTag(selectedValueType);
 			keyTextField.setText("");
-			controller.getRecipeData().add(newObject);
-			controller.getEditor().setRecipeData(newObject);
-			controller.getEditor().activate(myIndex);
+			super.accept();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -134,10 +135,18 @@ public class RecipeObjectCreatorPane extends EditorPanel {
 		}
 	}
 
-
-
 	public void setChartPath(String chartPath) {
 		this.chartPath = chartPath;
+	}
+
+	@Override
+	public Object getValue() {
+		return newObject;
+	}
+
+	@Override
+	public void setValue(Object value) {
+		// not used in this context		
 	}
 	
 }

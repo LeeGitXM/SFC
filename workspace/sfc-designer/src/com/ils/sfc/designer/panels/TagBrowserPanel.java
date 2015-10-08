@@ -52,7 +52,7 @@ public class TagBrowserPanel extends ValueHoldingEditorPanel  {
 	}
 
 	@Override
-	void setValue(Object value) {
+	public void setValue(Object value) {
 		// in theory we could set the tag browser to select the current value,
 		// but at the moment we do nothing...
 	}

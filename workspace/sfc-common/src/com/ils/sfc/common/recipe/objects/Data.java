@@ -337,7 +337,7 @@ public abstract class Data {
 	 *  and initialize the tag values with the defaults. */
 	public void createTag(String valueTypeOrNull) {
 		if(tagExists()) return;
-		String myType = (String) getValue(IlsProperty.CLASS);
+		String myType = isGroup() ? "Data" : (String) getValue(IlsProperty.CLASS);
 		
 		// if value type not given, use the value as a cue:
 		if(valueTypeOrNull == null) {
