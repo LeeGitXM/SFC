@@ -143,6 +143,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('rx-type','ils.s
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('sequence','');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('set_output-gda','ils.diagToolkit.util.setOutput');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('set-rx-nlc-problem','ils.diagToolkit.util.setRxNlcProblem');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('sf3-rules-set-attribute','ils.diagToolkit.rules.setSf3Attribute');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-catout-data-collector-c-reactor-ss','ils.sfc.python.s88CatoutCReactor.collect');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-copy-recipe-data','ils.sfc.gateway.api.s88CopyData');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-delete-recipe-data','ils.sfc.gateway.api.s88DeleteData');
@@ -171,6 +172,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-update-reci
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('taper_list_build-gda','ils.blt.lib.buildTaperList');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('uil-post-delay-notification','ils.diagToolkit.util.outputMessage.create');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('unset-value','ils.vistalon.util.UnsetValue.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('write-ml-gravity-file-gda','ils.diagToolkit.util.writeMlGravity');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('write-recipe-data-to-file','ils.sfc.gateway.api.s88WriteData');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure,ReturnType) values ('em-get-quant-recommendation-def','ils.diagToolkit.recommendation.defineQuantOutput','dictionary');
 -- Test precedure references
