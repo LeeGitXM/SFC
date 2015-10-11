@@ -140,7 +140,7 @@ insert into TagMap values ('MLR-GRADE-FLAG','[]Recipe/Local/MLR-GRADE-FLAG','DOU
 insert into TagMap values ('MLR-LAB-DATA','[]LabData/RLA3/MLR-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('ML_HIGH-GDA','[]DiagnosticToolkit/Connections/MlHigh','STRING');
 insert into TagMap values ('ML_LOW_PATH-GDA','[]DiagnosticToolkit/Connections/MlLow','STRING');
-insert into TagMap values ('MOONEY-LAB-DATA','[]LabData/RLA3/MOONEY-LAB-DATA','DOUBLE');
+insert into TagMap values ('MOONEY-LAB-DATA','[]LabData/RLA3/MOONEY-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('MOONEY_RESET_TIME_FOR_SF-3','[]Site/CRX/MOONEY_RESET_TIME_FOR_SF-3/value','DOUBLE');
 insert into TagMap values ('MOONEY_SQC_TO_CSTR_MOONEY-GDA','[]DiagnosticToolkit/Connections/MooneySqcToCstrMooney','STRING');
 insert into TagMap values ('MY-CONNECTION-POST','[]DiagnosticToolkit/Connections/MyConnectionPost','STRING');
@@ -148,7 +148,7 @@ insert into TagMap values ('OK_TO_FETCH_SC-4_DATA-GDA','[]Site/CRx/OK-TO-FETCH-S
 insert into TagMap values ('OIL-GRADE-FLAG','[]DiagnosticToolkit/CSTR/OIL-GRADE-FLAG/value','DOUBLE');
 insert into TagMap values ('OIL-LAB-DATA','[]LabData/RLA3/OIL-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('POLYSPLIT-DATA','[]LabData/RLA3/POLYSPLIT-DATA-SQC','DOUBLE');
-insert into TagMap values ('POLYSPLIT-DATA','[]LabData/RLA3/POLYSPLIT-DATA','DOUBLE');
+insert into TagMap values ('POLYSPLIT-DATA','[]LabData/RLA3/POLYSPLIT-DATA/value','DOUBLE');
 insert into TagMap values ('POLYSPLIT-SQC-FLAG','[]Recipe/Local/POLYSPLIT-SQC-FLAG','DOUBLE');
 insert into TagMap values ('POLY_RATE_CHANGE-GDA-INPUT','[]Site/RateChange/CRX_RATE_CHANGE-INPUT','BOOLEAN');
 insert into TagMap values ('POLY_RATE_CHANGE_OUTPUT','[]DiagnosticToolkit/Connections/PolyRateChangeOutput','STRING');
