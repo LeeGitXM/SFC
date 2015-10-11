@@ -10,10 +10,10 @@ insert into BltPythonPrototypes values ('xom.block.action.Action','viewHeight','
 insert into BltPythonPrototypes values ('xom.block.action.Action','viewWidth','70');
 
 insert into BltPythonPrototypes values ('xom.block.arithmetic.Arithmetic','blockstyle','SQUARE');
-insert into BltPythonPrototypes values ('xom.block.arithmetic.Arithmetic','viewIcon','Block/icons/embedded/gear.png');
+insert into BltPythonPrototypes values ('xom.block.arithmetic.Arithmetic','viewIcon','Block/icons/embedded/fx.png');
 insert into BltPythonPrototypes values ('xom.block.arithmetic.Arithmetic','viewFontSize','24');
-insert into BltPythonPrototypes values ('xom.block.arithmetic.Arithmetic','viewHeight','100');
-insert into BltPythonPrototypes values ('xom.block.arithmetic.Arithmetic','viewWidth','150');
+insert into BltPythonPrototypes values ('xom.block.arithmetic.Arithmetic','viewHeight','70');
+insert into BltPythonPrototypes values ('xom.block.arithmetic.Arithmetic','viewWidth','70');
 
 insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','blockstyle','SQUARE');
 insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','editorClass','com.ils.blt.designer.config.FinalDiagnosisConfiguration');
