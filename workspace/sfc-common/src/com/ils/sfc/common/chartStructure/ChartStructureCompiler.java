@@ -120,7 +120,7 @@ public class ChartStructureCompiler {
 			String path = info.chartPath;
 			info = null;
 			for(StepStructure step:parents) {
-				MockInfo mock = new MockInfo(path,step.getFactoryId(),step.getName());
+				MockInfo mock = new MockInfo(path,step.getName(),step.getFactoryId());
 				lineage.push(mock);
 				if( step.getParent().getResourceId()==resourceId) {
 					log.warnf("%s.getAncestors: enclosed chart and parent have same resourceId (%d), truncating ancestry",TAG,resourceId);
