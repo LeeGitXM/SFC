@@ -106,32 +106,42 @@ public class ChartStructureCompiler {
 		return lineage;
 	}
 	
+	/** Choose one of possibly many enclosing parent charts */
+	private StepStructure chooseParent(ChartModelInfo info) {
+		if(info.chartStructure.getParents().size() > 0) {
+		// we start with info for the level we have already done--the child info
+		// Get the enclosing chart--if > 1 parent; choose one arbitrarily:
+		return info.chartStructure.getParents().get(0);
+		}
+		else {
+			return null;
+		}
+	}
+	
 	/** 
 	 * @param resourceId
 	 * @return a stack of ancestors of the specified resource. The top of the
 	 *        stack is the root node (has no parents). The bottom of the stack
 	 *        is the supplied node.
 	 */
-	public List<MockInfo> getAncestors(long resourceId) {
+	public List<MockInfo> getAncestors(long bottomResourceId) {
 		// Create a stack of our lineage
 		List<MockInfo> lineage = new ArrayList<>();
-		ChartModelInfo info = modelInfoByResourceId.get((new Long(resourceId)));
-		while(info!=null) {
-			List<StepStructure> parents = info.chartStructure.getParents();
-			String path = info.chartPath;
-			info = null;
-			for(StepStructure step:parents) {
-				MockInfo mock = new MockInfo(path,step.getName(),step.getFactoryId());
-				lineage.add(mock);
-				if( step.getParent().getResourceId()==resourceId) {
-					log.warnf("%s.getAncestors: enclosed chart and parent have same resourceId (%d), truncating ancestry",TAG,resourceId);
-					break;
-				}
-				resourceId = step.getParent().getResourceId();
-				info = modelInfoByResourceId.get((new Long(resourceId)));
+		ChartModelInfo info = modelInfoByResourceId.get((new Long(bottomResourceId)));
+		StepStructure parentStep = null;
+		long childChartResourceId = info.chartStructure.getResourceId();
+		while((parentStep = chooseParent(info)) != null) {
+			long parentChartResourceId = parentStep.getChart().getResourceId();
+			info = modelInfoByResourceId.get((new Long(parentChartResourceId)));
+			if( parentChartResourceId == childChartResourceId) {
+				log.warnf("%s.getAncestors: enclosed chart and parent have same resourceId (%d), truncating ancestry",TAG, parentChartResourceId);
 				break;
-			}	
-		}
+			}
+			childChartResourceId = parentChartResourceId;
+			String parentChartPath = info.chartPath;
+			MockInfo mock = new MockInfo(parentChartPath, parentStep.getName(), parentStep.getFactoryId());
+			lineage.add(mock);
+		} 
 		return lineage;
 	}
 	
