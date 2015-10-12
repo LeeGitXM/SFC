@@ -5,6 +5,7 @@
 package com.ils.sfc.browser.gateway;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.UUID;
@@ -63,10 +64,9 @@ public class GatewayRequestHandler {
 			// Create a mock enclosing scope
 			MockEnclosingScopeFactory factory = new MockEnclosingScopeFactory(initialParameters);
 			ChartStructureManager structureManager = ((SfcBrowserGatewayHook)(context.getModule(GatewayBrowserConstants.MODULE_ID))).getChartStructureManager();
-			Stack<MockInfo> stack = structureManager.getCompiler().getAncestors(chartPath);
-			// Pop the stack and enhance the map
-			while( stack!=null && !stack.isEmpty() ) {
-				factory.addLevelBottomUp(stack.pop());
+			List<MockInfo> ancestorsBottomUp = structureManager.getCompiler().getAncestors(chartPath);
+			for(MockInfo info: ancestorsBottomUp) {
+				factory.addLevelBottomUp(info);
 			}
 			log.infof("%s.startChart: Parameters \n%s\n",TAG,factory.getInitialChartParams());
 			instance =  rpcHandler.startChart(chartPath, factory.getInitialChartParams());

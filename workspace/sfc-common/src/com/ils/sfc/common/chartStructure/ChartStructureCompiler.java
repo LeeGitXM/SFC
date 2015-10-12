@@ -2,6 +2,7 @@ package com.ils.sfc.common.chartStructure;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -98,8 +99,8 @@ public class ChartStructureCompiler {
 	 *        stack is the root node (has no parents). The bottom of the stack
 	 *        is the supplied node.
 	 */
-	public Stack<MockInfo> getAncestors(String path) {
-		Stack<MockInfo> lineage = new Stack<>();
+	public List<MockInfo> getAncestors(String path) {
+		List<MockInfo> lineage = new ArrayList<>();
 		ChartModelInfo info = modelInfoByChartPath.get(path);
 		if( info!=null ) lineage = getAncestors(info.chartStructure.getResourceId());
 		return lineage;
@@ -111,9 +112,9 @@ public class ChartStructureCompiler {
 	 *        stack is the root node (has no parents). The bottom of the stack
 	 *        is the supplied node.
 	 */
-	public Stack<MockInfo> getAncestors(long resourceId) {
+	public List<MockInfo> getAncestors(long resourceId) {
 		// Create a stack of our lineage
-		Stack<MockInfo> lineage = new Stack<>();
+		List<MockInfo> lineage = new ArrayList<>();
 		ChartModelInfo info = modelInfoByResourceId.get((new Long(resourceId)));
 		while(info!=null) {
 			List<StepStructure> parents = info.chartStructure.getParents();
@@ -121,7 +122,7 @@ public class ChartStructureCompiler {
 			info = null;
 			for(StepStructure step:parents) {
 				MockInfo mock = new MockInfo(path,step.getName(),step.getFactoryId());
-				lineage.push(mock);
+				lineage.add(mock);
 				if( step.getParent().getResourceId()==resourceId) {
 					log.warnf("%s.getAncestors: enclosed chart and parent have same resourceId (%d), truncating ancestry",TAG,resourceId);
 					break;

@@ -86,6 +86,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private final LoggerEx log;
 	private transient GatewayContext context = null;
 	private transient GatewayRpcDispatcher dispatcher = null;
+	private SfcGatewayHook iaSfcHook;
 	private ChartManagerService chartManager;
 	private IlsScopeLocator scopeLocator = new IlsScopeLocator(this);
 	private IlsChartObserver chartObserver = new IlsChartObserver();
@@ -207,9 +208,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		catch(SQLException sqle) {
 			log.error("IlsSfcGatewayHook.setup: Error registering ToolkitRecord",sqle);
 		}
-    	// Provide a central repository for the structure of the charts
-		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
-		structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
 	}
 
 	@Override
@@ -239,10 +237,10 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 	@Override
 	public void startup(LicenseState licenseState) {			
-		SfcGatewayHook iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
+		iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
 		stepMonitor.initialize(context,chartManager,iaSfcHook);				
 		chartManager.addChartObserver(dropBox);
-		
+
     	// Provide a central repository for the structure of the charts
 		structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
     	context.getProjectManager().addProjectListener(this);
@@ -252,24 +250,23 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	@Override
 	public void shutdown() {
 		context.getProjectManager().removeProjectListener(this);
-		System.out.println("shutdown");
 	}
 
 	@Override
 	public void serviceReady(Class<?> serviceClass) {
 		if (serviceClass == ChartManagerService.class) {
             chartManager = context.getModuleServicesManager().getService(ChartManagerService.class);
-    		chartManager.registerScopeLocator(scopeLocator);
-    		chartManager.addChartObserver(chartObserver);
-            for(StepFactory stepFactory: stepFactories) {
+             for(StepFactory stepFactory: stepFactories) {
     			chartManager.register(stepFactory);
-    		}
+    		}            
+        	chartManager.registerScopeLocator(scopeLocator);
+        	chartManager.addChartObserver(chartObserver);
         }
+		System.out.println("serviceReady end");
 	}
 
 	@Override
 	public void serviceShutdown(Class<?> arg0) {
-		System.out.println("serviceShutdown");
 		chartManager.unregisterScopeLocator(scopeLocator);
 		for(StepFactory stepFactory: stepFactories) {
 			chartManager.unregister(stepFactory);
