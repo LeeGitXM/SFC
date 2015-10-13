@@ -93,8 +93,9 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 	private void doEnableValueTypesCombo() {
 		ComboWrapper selectedType = (ComboWrapper)typesCombo.getSelectedItem();
 		if(selectedType != null) {
-			boolean isValue = selectedType.getLabel().equals("Value");
-			valueTypeCombo.setEnabled(isValue);
+			String typeName = selectedType.getLabel();
+			boolean allowsTypes = typeName.equals("Value") || typeName.equals("Output") ;
+			valueTypeCombo.setEnabled(allowsTypes);
 		}
 	}			
 	

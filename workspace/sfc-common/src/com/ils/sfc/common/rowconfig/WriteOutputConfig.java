@@ -34,7 +34,7 @@ public class WriteOutputConfig extends RowConfig implements java.io.Serializable
 		@JsonIgnore
 		public String tagPath;
 		@JsonIgnore
-		public double value;
+		public Object value;
 		@JsonIgnore
 		public double timingMinutes;
 		@JsonIgnore
