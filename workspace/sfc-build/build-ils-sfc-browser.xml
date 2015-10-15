@@ -13,7 +13,7 @@
 	<property name="common.jar.name" value="ils-sfc-common" />
 	<property name="root.dir" value="${basedir}/../.." />
 	<property name="jar.dir" value="${root.dir}/external/lib" />
-	<property name="sdk.dir" value="${root.dir}/ignition-77/lib" />
+	<property name="sdk.dir" value="${root.dir}/ignition-78/lib" />
 	<property name="ils.sfc.name" value="ILS-SFC" />
 	<property name="browser.jar.name" value="ils-sfc-browser" />
 	<property name="browser.designer.bin.dir" value="${basedir}/${sfc.browser.name}-designer/bin" />
