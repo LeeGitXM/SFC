@@ -436,6 +436,31 @@ public class IlsGatewayScripts {
 		return ilsSfcGatewayHook.getDropBox().get(chartRunId, objectId);
 	}
 	
+	/** Check if ILS code has initiated a cancel (even if IA hasn't processed it yet)  */
+	public static void ilsSetChartCancelled(String chartRunId) {
+		ilsSfcGatewayHook.getChartObserver().ilsSetChartCancelled(chartRunId);
+	}
+	
+	/** Check if ILS code has initiated a paused (even if IA hasn't processed it yet)  */
+	public static void ilsSetChartPaused(String chartRunId) {
+		ilsSfcGatewayHook.getChartObserver().ilsSetChartPaused(chartRunId);
+	}
+
+	/** Check if ILS code has initiated a paused (even if IA hasn't processed it yet)  */
+	public static void ilsSetChartResumed(String chartRunId) {
+		ilsSfcGatewayHook.getChartObserver().ilsSetChartResumed(chartRunId);
+	}
+	
+	/** Check if ILS code has initiated a cancel (even if IA hasn't processed it yet)  */
+	public static boolean ilsGetChartCanceled(String chartRunId) {
+		return ilsSfcGatewayHook.getChartObserver().ilsGetChartCanceled(chartRunId);
+	}
+	
+	/** Check if ILS code has initiated a paused (even if IA hasn't processed it yet)  */
+	public static boolean ilsGetChartPaused(String chartRunId) {
+		return ilsSfcGatewayHook.getChartObserver().ilsGetChartPaused(chartRunId);
+	}
+	
 	public static String getRecipeDataTagPath(PyChartScope chartScope, PyChartScope stepScope, String scope) {
 		return RecipeDataAccess. getRecipeDataTagPath(chartScope, stepScope, scope);
 	}
@@ -489,16 +514,6 @@ public class IlsGatewayScripts {
 	/** Arbitrary content for dev testing */
 	public static void devTest() {
 		try {
-			Map<String,Object> initialParams = new HashMap<String,Object>();
-			initialParams.put("isolationMode", false);
-			initialParams.put("project", "SFC_Demo");
-			MockEnclosingScopeFactory factory = new MockEnclosingScopeFactory(initialParams);
-			factory.addLevelBottomUp("MockParents/Parent", "E1", "");
-			factory.addLevelBottomUp("MockParents/Phase", "1", "com.ils.phaseStep");
-			factory.addLevelBottomUp("MockParents/Operation", "1", "com.ils.operationStep");
-			factory.addLevelBottomUp("MockParents/Procedure", "1", "com.ils.procedureStep");
-			Map<String,Object> mockParams = factory.getInitialChartParams();
-			ilsSfcGatewayHook.getChartManager().startChart("MockParents/Child", mockParams, "admin");
 		}
 		catch(Exception e) {
 			e.printStackTrace();

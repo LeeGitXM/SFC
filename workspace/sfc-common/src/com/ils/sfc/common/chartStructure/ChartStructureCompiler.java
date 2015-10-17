@@ -105,7 +105,14 @@ public class ChartStructureCompiler {
 		if( info!=null ) lineage = getAncestors(info.chartStructure.getResourceId());
 		return lineage;
 	}
-	
+
+	public List<MockInfo> getAncestors2(String path) {
+		List<MockInfo> lineage = new ArrayList<>();
+		ChartModelInfo info = modelInfoByChartPath.get(path);
+		if( info!=null ) lineage = getAncestors(info.chartStructure.getResourceId());
+		return lineage;
+	}
+
 	/** Choose one of possibly many enclosing parent charts */
 	private StepStructure chooseParent(ChartModelInfo info) {
 		if(info.chartStructure.getParents().size() > 0) {
@@ -180,20 +187,18 @@ public class ChartStructureCompiler {
 		for(ChartModelInfo modelInfo: modelInfoByResourceId.values() ) {
 			ChartCompiler chartCompiler = new ChartCompiler(modelInfo.uiModel, stepRegistry);
 			ChartCompilationResults ccr = chartCompiler.compile();
-			if(ccr.isSuccessful() ) {
-				modelInfo.chartDefinition = ccr.getChartDefinition();
-				ChartStructure newChart = new ChartStructure(modelInfo.resource.getName(),modelInfo.resource.getResourceId());
-				modelInfo.chartStructure = newChart;
-				Set<UUID> seen = new HashSet<UUID>();
-				for(ElementDefinition def: ccr.getRootDefinitions()) {
-					createSteps(newChart, null, def, seen);
-				}
+			modelInfo.chartDefinition = ccr.getChartDefinition();
+			ChartStructure newChart = new ChartStructure(modelInfo.resource.getName(),modelInfo.resource.getResourceId());
+			modelInfo.chartStructure = newChart;
+			Set<UUID> seen = new HashSet<UUID>();
+			for(ElementDefinition def: ccr.getRootDefinitions()) {
+				createSteps(newChart, null, def, seen);
 			}
-			else {
+
+			if(!ccr.isSuccessful()) {
 				for(CompilationError ce:ccr.getErrors()) {
 					log.warnf("%s.compileCharts: Chart %s has compilation error (%s)",TAG,modelInfo.chartPath,ce.getMessage());
-				}
-				
+				}				
 			}
 		} 
 		return true;

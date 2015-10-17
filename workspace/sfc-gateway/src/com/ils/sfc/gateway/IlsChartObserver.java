@@ -31,25 +31,51 @@ import com.inductiveautomation.sfc.elements.AbstractStepElement;
 public class IlsChartObserver implements ChartObserver {
 	private static LoggerEx logger = LogUtil.getLogger(IlsChartObserver.class.getName());
 	private Set<String> sfcProjectNames = new HashSet<String>();
-	private Map<String, String> chartStatesByRunId = new HashMap<String, String>();
+	private Map<String, ChartStateEnum> chartStatesByRunId = new HashMap<String, ChartStateEnum>();
+	private Set<String> ilsCancelledCharts = new HashSet<String>();
+	private Set<String> ilsPausedCharts = new HashSet<String>();
 	
-	public void registerSfcProject(String projectName) {
+	public synchronized void registerSfcProject(String projectName) {
 		sfcProjectNames.add(projectName);
+	}
+
+	/** ILS code has initiated a cancel (even if IA hasn't processed it yet)  */
+	public synchronized void ilsSetChartCancelled(String chartRunId) {
+		ilsCancelledCharts.add(chartRunId);
+	}
+	
+	/** ILS code has initiated a paused (even if IA hasn't processed it yet)  */
+	public synchronized void ilsSetChartPaused(String chartRunId) {
+		ilsPausedCharts.add(chartRunId);
+	}
+
+	/** ILS code has initiated a paused (even if IA hasn't processed it yet)  */
+	public synchronized void ilsSetChartResumed(String chartRunId) {
+		ilsPausedCharts.remove(chartRunId);
+	}
+
+	/** Check if ILS code has initiated a cancel (even if IA hasn't processed it yet)  */
+	public synchronized boolean ilsGetChartCanceled(String chartRunId) {
+		return ilsCancelledCharts.contains(chartRunId);
+	}
+	
+	/** Check if ILS code has initiated a paused (even if IA hasn't processed it yet)  */
+	public synchronized boolean ilsGetChartPaused(String chartRunId) {
+		return ilsPausedCharts.contains(chartRunId);
 	}
 	
 	@Override
-	public void onChartStateChange(UUID chartId, ChartStateEnum oldChartState,
+	public synchronized void onChartStateChange(UUID chartId, ChartStateEnum oldChartState,
 			ChartStateEnum newChartState) {
 		String runIdAsString = chartId.toString();
-		String status =  newChartState.toString();
-		chartStatesByRunId.put(runIdAsString, status);
+		chartStatesByRunId.put(runIdAsString, newChartState);
 		
 		// message the clients about the chart status:
 		if(sfcProjectNames.size() > 0) {
 			for(String projectName: sfcProjectNames) {
 				PyDictionary payload = new PyDictionary();
 				payload.put("instanceId", runIdAsString);
-				payload.put("status", status);
+				payload.put("status", newChartState.toString());
 				try {
 					PythonCall.SEND_CHART_STATUS.exec(projectName, payload);
 				} catch (JythonExecException e) {
@@ -60,6 +86,8 @@ public class IlsChartObserver implements ChartObserver {
 			// prevent a memory leak by clearing the map after the chart finishes
 			if(newChartState.isTerminal()) {
 				chartStatesByRunId.remove(runIdAsString);
+				ilsCancelledCharts.remove(runIdAsString);
+				ilsPausedCharts.remove(runIdAsString);
 			}
 		}
 		else {
@@ -69,19 +97,19 @@ public class IlsChartObserver implements ChartObserver {
 	}
 
 	@Override
-	public void onElementStateChange(UUID elementId, UUID chartId, ElementStateEnum oldElementState,
+	public synchronized void onElementStateChange(UUID elementId, UUID chartId, ElementStateEnum oldElementState,
 			ElementStateEnum newElementState) {
 	}
 
 	@Override
-	public void onBeforeChartStart(ChartContext chartContext) {
+	public synchronized void onBeforeChartStart(ChartContext chartContext) {
 		createTags(chartContext);
 		//String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
 		//controller.setElement(stepComponent.getElement(), chartPath);
 
 	}
 
-	private void createTags(ChartContext chartContext) {
+	private synchronized void createTags(ChartContext chartContext) {
 		String chartPath = (String)chartContext.getChartScope().get("chartPath");
 		for(ChartElement<?> element: chartContext.getElements()) {
 			if(element instanceof StepElement) {

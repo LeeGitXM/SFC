@@ -6,6 +6,7 @@ import java.util.Map;
 
 import system.ils.sfc.common.Constants;
 
+import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer.EnclosureInfo;
 import com.ils.sfc.common.step.OperationStepProperties;
 import com.ils.sfc.common.step.PhaseStepProperties;
 import com.ils.sfc.common.step.ProcedureStepProperties;
@@ -24,40 +25,37 @@ import com.inductiveautomation.sfc.api.PyChartScope;
  */
 public class MockEnclosingScopeFactory {
 	private Map<String, Object> initialParams;
-	private List<MockInfo> levelsBottomUp = new ArrayList<MockInfo>();
-
+	private List<EnclosureInfo> enclosureHierarchyBottomUp = new ArrayList<EnclosureInfo>();
 
 	/**
 	 * @param initialParams the initial params you would ordinarily pass to startChart()
+	 * @param enclosureHierarchyBottomUp enclosure hierarchy as produced by SimpleHierarchyAnalyzer
 	 */
-	public MockEnclosingScopeFactory(Map<String, Object> initialParams) {
+ 	public MockEnclosingScopeFactory(Map<String, Object> initialParams,
+		List<EnclosureInfo> enclosureHierarchyBottomUp) {
 		this.initialParams = initialParams;		
+		this.enclosureHierarchyBottomUp = enclosureHierarchyBottomUp;
 	}
-	
- 	public void addLevelBottomUp(String chartPath, String stepName, String stepFactoryId) {
- 		levelsBottomUp.add(new MockInfo(chartPath, stepName, stepFactoryId)); 		
- 	}
- 	public void addLevelBottomUp(MockInfo mock) {
- 		levelsBottomUp.add(mock); 		
- 	}
+
 	@SuppressWarnings("unchecked")
 	public Map<String,Object> getInitialChartParams() {
 		PyChartScope childScope = new PyChartScope();
 		PyChartScope lowestChildScope = childScope;
 		PyChartScope parentScope = null;
-		for(MockInfo parentInfo: levelsBottomUp) {
+		for(EnclosureInfo parentInfo: enclosureHierarchyBottomUp) {
 			parentScope = new PyChartScope();
 			childScope.put("parent", parentScope);
-			parentScope.put("chartPath", parentInfo.getChartPath());
+			parentScope.put(Constants.INSTANCE_ID, "mock");
+			parentScope.put("chartPath", parentInfo.parentChartPath);
 			PyChartScope enclosingStepScope = new PyChartScope();
-			enclosingStepScope.put("name", parentInfo.getStepName());
-			if(parentInfo.getStepFactoryId().equals(ProcedureStepProperties.FACTORY_ID)) {
+			enclosingStepScope.put("name", parentInfo.parentStepName);
+			if(parentInfo.parentStepFactoryId.equals(ProcedureStepProperties.FACTORY_ID)) {
 				enclosingStepScope.put(Constants.S88_LEVEL, Constants.GLOBAL);
 			}
-			else if(parentInfo.getStepFactoryId().equals(OperationStepProperties.FACTORY_ID)) {
+			else if(parentInfo.parentStepFactoryId.equals(OperationStepProperties.FACTORY_ID)) {
 				enclosingStepScope.put(Constants.S88_LEVEL, Constants.OPERATION);
 			}
-			else if(parentInfo.getStepFactoryId().equals(PhaseStepProperties.FACTORY_ID)) {
+			else if(parentInfo.parentStepFactoryId.equals(PhaseStepProperties.FACTORY_ID)) {
 				enclosingStepScope.put(Constants.S88_LEVEL, Constants.PHASE);
 			}
 			childScope.put(Constants.ENCLOSING_STEP_SCOPE_KEY, enclosingStepScope);

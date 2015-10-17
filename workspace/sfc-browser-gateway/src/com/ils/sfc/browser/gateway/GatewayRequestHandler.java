@@ -15,6 +15,8 @@ import system.ils.sfc.common.Constants;
 import com.ils.sfc.common.MockEnclosingScopeFactory;
 import com.ils.sfc.common.MockInfo;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
+import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
+import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.common.project.ProjectVersion;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -62,14 +64,19 @@ public class GatewayRequestHandler {
 			initialParameters.put(Constants.USER,user); 
 			
 			// Create a mock enclosing scope
-			MockEnclosingScopeFactory factory = new MockEnclosingScopeFactory(initialParameters);
-			ChartStructureManager structureManager = ((SfcBrowserGatewayHook)(context.getModule(GatewayBrowserConstants.MODULE_ID))).getChartStructureManager();
-			List<MockInfo> ancestorsBottomUp = structureManager.getCompiler().getAncestors(chartPath);
-			for(MockInfo info: ancestorsBottomUp) {
-				factory.addLevelBottomUp(info);
+			SimpleHierarchyAnalyzer analyzer = new SimpleHierarchyAnalyzer(
+				context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY), 
+				sfcHook.getStepRegistry());
+			try {
+				analyzer.analyze();
+				MockEnclosingScopeFactory factory = new MockEnclosingScopeFactory(
+					initialParameters, analyzer.getEnclosureHierarchyBottomUp(chartPath, false));
+				log.infof("%s.startChart: Parameters \n%s\n",TAG,factory.getInitialChartParams());
+				instance =  rpcHandler.startChart(chartPath, factory.getInitialChartParams());
 			}
-			log.infof("%s.startChart: Parameters \n%s\n",TAG,factory.getInitialChartParams());
-			instance =  rpcHandler.startChart(chartPath, factory.getInitialChartParams());
+			catch(Exception e) {
+				log.errorf("%s.startChart: exception trying to start chart %s\n",TAG, chartPath, e);				
+			}
 		}
 		catch( Exception ex ) {
 			log.warnf("%s.startChart: Failed to start %s (%s)",TAG,chartPath,ex.getMessage());
