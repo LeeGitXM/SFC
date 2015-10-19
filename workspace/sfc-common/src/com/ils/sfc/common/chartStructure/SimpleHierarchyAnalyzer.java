@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
+import com.ils.sfc.common.IlsProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
@@ -33,13 +34,15 @@ public class SimpleHierarchyAnalyzer {
 		public String parentChartPath;
 		public String parentStepName;
 		public String parentStepFactoryId;
+		public String messageQueue;
 		
 		public EnclosureInfo(String childChartPath, String parentChartPath, 
-			String parentStepName, String parentStepFactoryId) {
+			String parentStepName, String parentStepFactoryId, String messageQueue) {
 			super();
 			this.parentChartPath = parentChartPath;
 			this.parentStepName = parentStepName;
 			this.parentStepFactoryId = parentStepFactoryId;
+			this.messageQueue = messageQueue;
 		}
 	}
 	
@@ -66,13 +69,14 @@ public class SimpleHierarchyAnalyzer {
 							String parentStepPath = element.get(stepNameProperty);
 							String parentStepFactoryId = element.get(factoryIdProperty);
 							String childChartPath = element.get(chartPathProperty);
+							String messageQueue = element.get(IlsProperty.MESSAGE_QUEUE);
 							List<EnclosureInfo> parentEnclosures = parentsByChildChartPath.get(childChartPath);
 							if(parentEnclosures == null) {
 								parentEnclosures = new ArrayList<EnclosureInfo>();
 								parentsByChildChartPath.put(childChartPath, parentEnclosures);
 							}
 							parentEnclosures.add(new EnclosureInfo(childChartPath, 
-								parentChartPath, parentStepPath, parentStepFactoryId));
+								parentChartPath, parentStepPath, parentStepFactoryId, messageQueue));
 						}
 					}
 					
@@ -114,4 +118,18 @@ public class SimpleHierarchyAnalyzer {
 		return enclosures;
 	}
 
+	/** Get the message queue, as inferred from property settings in enclosing Foundation steps.
+	 *  Returns null if none found.
+	 */
+	public String getMessageQueue(String childChartPath) {
+		String queue = null;
+		List<EnclosureInfo> hierarchy = getEnclosureHierarchyBottomUp(childChartPath, false);
+		for(EnclosureInfo info: hierarchy) {
+			if(info.messageQueue != null && info.messageQueue.length() > 0) {
+				queue = info.messageQueue;
+				break;
+			}
+		}
+		return queue;
+	}
 }

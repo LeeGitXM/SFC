@@ -69,6 +69,10 @@ public class GatewayRequestHandler {
 				sfcHook.getStepRegistry());
 			try {
 				analyzer.analyze();
+				String messageQueue = analyzer.getMessageQueue(chartPath);
+				if(messageQueue == null) messageQueue = "Unknown";
+				initialParameters.put(Constants.MESSAGE_QUEUE, messageQueue);
+				initialParameters.put("startTime", new java.util.Date());
 				MockEnclosingScopeFactory factory = new MockEnclosingScopeFactory(
 					initialParameters, analyzer.getEnclosureHierarchyBottomUp(chartPath, false));
 				log.infof("%s.startChart: Parameters \n%s\n",TAG,factory.getInitialChartParams());

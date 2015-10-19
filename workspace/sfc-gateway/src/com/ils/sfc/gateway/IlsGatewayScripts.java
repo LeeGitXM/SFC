@@ -452,7 +452,7 @@ public class IlsGatewayScripts {
 	}
 	
 	/** Check if ILS code has initiated a cancel (even if IA hasn't processed it yet)  */
-	public static boolean ilsGetChartCanceled(String chartRunId) {
+	public static boolean ilsGetChartCancelled(String chartRunId) {
 		return ilsSfcGatewayHook.getChartObserver().ilsGetChartCanceled(chartRunId);
 	}
 	
