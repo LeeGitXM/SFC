@@ -32,36 +32,36 @@ public class IlsChartObserver implements ChartObserver {
 	private static LoggerEx logger = LogUtil.getLogger(IlsChartObserver.class.getName());
 	private Set<String> sfcProjectNames = new HashSet<String>();
 	private Map<String, ChartStateEnum> chartStatesByRunId = new HashMap<String, ChartStateEnum>();
-	private Set<String> ilsCancelledCharts = new HashSet<String>();
-	private Set<String> ilsPausedCharts = new HashSet<String>();
+	private Set<String> cancelRequests = new HashSet<String>();
+	private Set<String> pauseRequests = new HashSet<String>();
 	
 	public synchronized void registerSfcProject(String projectName) {
 		sfcProjectNames.add(projectName);
 	}
 
 	/** ILS code has initiated a cancel (even if IA hasn't processed it yet)  */
-	public synchronized void ilsSetChartCancelled(String chartRunId) {
-		ilsCancelledCharts.add(chartRunId);
+	public synchronized void setCancelRequested(String chartRunId) {
+		cancelRequests.add(chartRunId);
 	}
 	
 	/** ILS code has initiated a paused (even if IA hasn't processed it yet)  */
-	public synchronized void ilsSetChartPaused(String chartRunId) {
-		ilsPausedCharts.add(chartRunId);
+	public synchronized void setPauseRequested(String chartRunId) {
+		pauseRequests.add(chartRunId);
 	}
 
 	/** ILS code has initiated a paused (even if IA hasn't processed it yet)  */
-	public synchronized void ilsSetChartResumed(String chartRunId) {
-		ilsPausedCharts.remove(chartRunId);
+	public synchronized void setResumeRequested(String chartRunId) {
+		pauseRequests.remove(chartRunId);
 	}
 
 	/** Check if ILS code has initiated a cancel (even if IA hasn't processed it yet)  */
-	public synchronized boolean ilsGetChartCanceled(String chartRunId) {
-		return ilsCancelledCharts.contains(chartRunId);
+	public synchronized boolean getCancelRequested(String chartRunId) {
+		return cancelRequests.contains(chartRunId);
 	}
 	
 	/** Check if ILS code has initiated a paused (even if IA hasn't processed it yet)  */
-	public synchronized boolean ilsGetChartPaused(String chartRunId) {
-		return ilsPausedCharts.contains(chartRunId);
+	public synchronized boolean getPauseRequested(String chartRunId) {
+		return pauseRequests.contains(chartRunId);
 	}
 	
 	@Override
@@ -86,8 +86,8 @@ public class IlsChartObserver implements ChartObserver {
 			// prevent a memory leak by clearing the map after the chart finishes
 			if(newChartState.isTerminal()) {
 				chartStatesByRunId.remove(runIdAsString);
-				ilsCancelledCharts.remove(runIdAsString);
-				ilsPausedCharts.remove(runIdAsString);
+				cancelRequests.remove(runIdAsString);
+				pauseRequests.remove(runIdAsString);
 			}
 		}
 		else {

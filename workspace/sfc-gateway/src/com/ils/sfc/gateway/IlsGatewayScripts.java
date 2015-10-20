@@ -437,28 +437,23 @@ public class IlsGatewayScripts {
 	}
 	
 	/** Check if ILS code has initiated a cancel (even if IA hasn't processed it yet)  */
-	public static void ilsSetChartCancelled(String chartRunId) {
-		ilsSfcGatewayHook.getChartObserver().ilsSetChartCancelled(chartRunId);
+	public static void setCancelRequested(String chartRunId) {
+		ilsSfcGatewayHook.getChartObserver().setCancelRequested(chartRunId);
 	}
 	
-	/** Check if ILS code has initiated a paused (even if IA hasn't processed it yet)  */
-	public static void ilsSetChartPaused(String chartRunId) {
-		ilsSfcGatewayHook.getChartObserver().ilsSetChartPaused(chartRunId);
+	/** Check if ILS code has initiated a pause (even if IA hasn't processed it yet)  */
+	public static void setPauseRequested(String chartRunId) {
+		ilsSfcGatewayHook.getChartObserver().setPauseRequested(chartRunId);
 	}
 
-	/** Check if ILS code has initiated a paused (even if IA hasn't processed it yet)  */
-	public static void ilsSetChartResumed(String chartRunId) {
-		ilsSfcGatewayHook.getChartObserver().ilsSetChartResumed(chartRunId);
-	}
-	
 	/** Check if ILS code has initiated a cancel (even if IA hasn't processed it yet)  */
-	public static boolean ilsGetChartCancelled(String chartRunId) {
-		return ilsSfcGatewayHook.getChartObserver().ilsGetChartCanceled(chartRunId);
+	public static boolean getCancelRequested(String chartRunId) {
+		return ilsSfcGatewayHook.getChartObserver().getCancelRequested(chartRunId);
 	}
 	
 	/** Check if ILS code has initiated a paused (even if IA hasn't processed it yet)  */
-	public static boolean ilsGetChartPaused(String chartRunId) {
-		return ilsSfcGatewayHook.getChartObserver().ilsGetChartPaused(chartRunId);
+	public static boolean getPauseRequested(String chartRunId) {
+		return ilsSfcGatewayHook.getChartObserver().getPauseRequested(chartRunId);
 	}
 	
 	public static String getRecipeDataTagPath(PyChartScope chartScope, PyChartScope stepScope, String scope) {
