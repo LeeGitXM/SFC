@@ -35,15 +35,13 @@ public class SfcBrowserRequestHandler {
 	 * @param isolation true if the chart is to run in isloation mode
 	 * @return the unique ID of the running instance.
 	 */
-	public UUID startChart(String path,String user,boolean isolation) {
-		UUID result = null;
+	public void startChart(String path,String clientProject, String user,boolean isolation) {
 		try {
-			result = (UUID)GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
-					BrowserConstants.MODULE_ID, "startChart",path,user,new Boolean(isolation));
+			GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
+				BrowserConstants.MODULE_ID, "startChart",path,clientProject,user,new Boolean(isolation));
 		}
 		catch(Exception ge) {
 			log.infof("%s.startChart: GatewayException (%s)",TAG,ge.getMessage());
 		}
-		return result;
 	}
 }

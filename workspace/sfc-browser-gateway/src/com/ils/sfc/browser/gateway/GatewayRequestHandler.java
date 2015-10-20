@@ -4,27 +4,10 @@
  */
 package com.ils.sfc.browser.gateway;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-import java.util.UUID;
-
-import system.ils.sfc.common.Constants;
-
-import com.ils.sfc.common.MockEnclosingScopeFactory;
-import com.ils.sfc.common.MockInfo;
-import com.ils.sfc.common.chartStructure.ChartStructureManager;
-import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
-import com.inductiveautomation.ignition.common.model.ApplicationScope;
-import com.inductiveautomation.ignition.common.project.ProjectVersion;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
-import com.inductiveautomation.sfc.SFCModule;
-import com.inductiveautomation.sfc.SfcGatewayHookImpl.SfcRpcHandler;
-import com.inductiveautomation.sfc.api.SfcGatewayHook;
 
 /**
  *  This handler provides is a common class for handling requests
@@ -45,54 +28,6 @@ public class GatewayRequestHandler {
 		this.session = sess;
 		this.projectId = proj;
 		log = LogUtil.getLogger(getClass().getPackage().getName());
-	}
-
-	/**
-	 * Start the chart after assembling the chart and recipe data in its lineage.
-	 * 
-	 * @param chartPath path to the chart as shown in the Designer Nav tree.
-	 * @return unique id for the new chart instance
-	 */
-	public UUID startChart(String chartPath,String user,Boolean isolation) {
-		log.infof("%s.startChart: Request to start %s",TAG,chartPath);
-		SfcGatewayHook sfcHook = (SfcGatewayHook)(context.getModule(SFCModule.MODULE_ID));
-		SfcRpcHandler rpcHandler = (SfcRpcHandler)sfcHook.getRPCHandler(session, projectId);
-		UUID instance = null;
-		try {
-			Map<String,Object> initialParameters = createInitialParameters();
-			initialParameters.put(Constants.ISOLATION_MODE,isolation);
-			initialParameters.put(Constants.USER,user); 
-			
-			// Create a mock enclosing scope
-			SimpleHierarchyAnalyzer analyzer = new SimpleHierarchyAnalyzer(
-				context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY), 
-				sfcHook.getStepRegistry());
-			try {
-				analyzer.analyze();
-				String messageQueue = analyzer.getMessageQueue(chartPath);
-				if(messageQueue == null) messageQueue = "Unknown";
-				initialParameters.put(Constants.MESSAGE_QUEUE, messageQueue);
-				initialParameters.put("startTime", new java.util.Date());
-				MockEnclosingScopeFactory factory = new MockEnclosingScopeFactory(
-					initialParameters, analyzer.getEnclosureHierarchyBottomUp(chartPath, false));
-				log.infof("%s.startChart: Parameters \n%s\n",TAG,factory.getInitialChartParams());
-				instance =  rpcHandler.startChart(chartPath, factory.getInitialChartParams());
-			}
-			catch(Exception e) {
-				log.errorf("%s.startChart: exception trying to start chart %s\n",TAG, chartPath, e);				
-			}
-		}
-		catch( Exception ex ) {
-			log.warnf("%s.startChart: Failed to start %s (%s)",TAG,chartPath,ex.getMessage());
-		}
-		return instance;
-	}
-	
-	// Create any initial parameters that we can default
-	private Map<String,Object> createInitialParameters() {
-		Map<String,Object> parameters = new HashMap<>();
-		parameters.put(Constants.PROJECT,context.getProjectManager().getProjectName(projectId, ProjectVersion.Published));
-		return parameters;
 	}
 	
 }

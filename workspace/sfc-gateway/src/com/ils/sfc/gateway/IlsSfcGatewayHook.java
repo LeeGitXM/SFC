@@ -67,6 +67,7 @@ import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 import com.inductiveautomation.ignition.gateway.project.ProjectListener;
 import com.inductiveautomation.ignition.gateway.services.ModuleServiceConsumer;
+import com.inductiveautomation.sfc.ChartManager;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.api.ChartManagerService;
 import com.inductiveautomation.sfc.api.SfcGatewayHook;
@@ -95,6 +96,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
 	private TestMgr testMgr = new TestMgr();
 	private IlsDropBox dropBox = new IlsDropBox();
+	private ChartDebugger chartDebugger = null;
 	
 	private static StepFactory[] stepFactories = {
 		new QueueMessageStepFactory(),
@@ -158,6 +160,10 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 	public TestMgr getTestMgr() {
 		return testMgr;
+	}
+
+	public ChartDebugger getChartDebugger() {
+		return chartDebugger;
 	}
 
 	public IlsDropBox getDropBox() {
@@ -241,8 +247,10 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		stepMonitor.initialize(context,chartManager,iaSfcHook);				
 		chartManager.addChartObserver(dropBox);
 
-    	// Provide a central repository for the structure of the charts
-		structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
+ 		structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
+		chartDebugger = new ChartDebugger(
+			context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY), 
+			iaSfcHook.getStepRegistry());
     	context.getProjectManager().addProjectListener(this);
 		log.infof("%s: Startup complete.",TAG);
 	}

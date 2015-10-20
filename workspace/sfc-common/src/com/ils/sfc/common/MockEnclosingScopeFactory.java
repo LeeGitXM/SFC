@@ -47,7 +47,6 @@ public class MockEnclosingScopeFactory {
 			childScope.put("parent", parentScope);
 			parentScope.put(Constants.INSTANCE_ID, "de305d54-75b4-431b-adb2-eb6b9e546014");
 			parentScope.put("chartPath", parentInfo.parentChartPath);
-			parentScope.put(Constants.MESSAGE_QUEUE, "mockQueue");
 			parentScope.put("startTime", "mock");
 			PyChartScope enclosingStepScope = new PyChartScope();
 			enclosingStepScope.put("name", parentInfo.parentStepName);

@@ -11,12 +11,15 @@ import org.json.JSONObject;
 import org.python.core.PyDictionary;
 import org.python.core.PyObject;
 
+import system.ils.sfc.common.Constants;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.MockEnclosingScopeFactory;
 import com.ils.sfc.common.PythonCall;
+import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.rowconfig.ManualDataEntryConfig;
 import com.ils.sfc.common.rowconfig.MonitorDownloadsConfig;
@@ -29,16 +32,20 @@ import com.ils.sfc.step.IlsAbstractChartStep;
 import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
+import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.DatasetBuilder;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
+import com.inductiveautomation.sfc.SFCModule;
+import com.inductiveautomation.sfc.SfcGatewayHookImpl.SfcRpcHandler;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ExecutionQueue;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeLocator;
+import com.inductiveautomation.sfc.api.SfcGatewayHook;
 import com.inductiveautomation.sfc.api.elements.ChartElement;
 import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
@@ -513,6 +520,10 @@ public class IlsGatewayScripts {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void debugChart(String chartPath, String clientProject, String user, boolean isolation) {
+		ilsSfcGatewayHook.getChartDebugger().debugChart(chartPath, clientProject, user, isolation);
 	}
 	
 }

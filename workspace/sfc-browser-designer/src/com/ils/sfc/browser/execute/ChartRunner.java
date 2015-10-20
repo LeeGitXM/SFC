@@ -36,6 +36,7 @@ public class ChartRunner implements Runnable {
 		if( tab!=null ) {
 			long resourceId = workspace.getSelectedContainer().getResourceId();
 			String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
+			String clientProject = context.getProject().getName();
 			String username = "UNDEFINED";
 			try {
 				AuthenticatedUser authUser = (AuthenticatedUser)GatewayConnectionManager.getInstance().getGatewayInterface().invoke("Users.getCurrentUser", new Serializable[0]);
@@ -45,14 +46,7 @@ public class ChartRunner implements Runnable {
 				log.infof("%s.initializeMap: Failed to obtain user name (%s)",TAG,ex.getMessage());
 			}
 			try {
-				UUID instance = requestHandler.startChart(chartPath,username,false);  // Not Isolation
-				if( instance != null ) {
-					log.infof("%s.run: Started chart %s",TAG,chartPath);
-					tab.startMonitoring(instance);
-				}
-				else {
-					log.infof("%s.run: Failed to start chart %s",TAG,chartPath);
-				}
+				requestHandler.startChart(chartPath,clientProject,username,false);  // Not Isolation
 			}
 			catch(Exception ex) {
 				log.infof("%s.run: Exception starting chart %s (%s)",TAG,chartPath,ex.getMessage());

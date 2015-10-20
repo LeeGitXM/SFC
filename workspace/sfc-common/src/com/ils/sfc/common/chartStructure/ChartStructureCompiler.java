@@ -2,18 +2,15 @@ package com.ils.sfc.common.chartStructure;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
-import com.ils.sfc.common.MockInfo;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -92,66 +89,7 @@ public class ChartStructureCompiler {
 	public Collection<StepStructure> getSteps() {
 		return stepsById.values();
 	}
-	/** 
-	 * We realize that this is potentially ambiguous. 
-	 * @param path chart path
-	 * @return a stack of ancestors of the specified resource. The top of the
-	 *        stack is the root node (has no parents). The bottom of the stack
-	 *        is the supplied node.
-	 */
-	public List<MockInfo> getAncestors(String path) {
-		List<MockInfo> lineage = new ArrayList<>();
-		ChartModelInfo info = modelInfoByChartPath.get(path);
-		if( info!=null ) lineage = getAncestors(info.chartStructure.getResourceId());
-		return lineage;
-	}
-
-	public List<MockInfo> getAncestors2(String path) {
-		List<MockInfo> lineage = new ArrayList<>();
-		ChartModelInfo info = modelInfoByChartPath.get(path);
-		if( info!=null ) lineage = getAncestors(info.chartStructure.getResourceId());
-		return lineage;
-	}
-
-	/** Choose one of possibly many enclosing parent charts */
-	private StepStructure chooseParent(ChartModelInfo info) {
-		if(info.chartStructure.getParents().size() > 0) {
-		// we start with info for the level we have already done--the child info
-		// Get the enclosing chart--if > 1 parent; choose one arbitrarily:
-		return info.chartStructure.getParents().get(0);
-		}
-		else {
-			return null;
-		}
-	}
-	
-	/** 
-	 * @param resourceId
-	 * @return a stack of ancestors of the specified resource. The top of the
-	 *        stack is the root node (has no parents). The bottom of the stack
-	 *        is the supplied node.
-	 */
-	public List<MockInfo> getAncestors(long bottomResourceId) {
-		// Create a stack of our lineage
-		List<MockInfo> lineage = new ArrayList<>();
-		ChartModelInfo info = modelInfoByResourceId.get((new Long(bottomResourceId)));
-		StepStructure parentStep = null;
-		long childChartResourceId = info.chartStructure.getResourceId();
-		while((parentStep = chooseParent(info)) != null) {
-			long parentChartResourceId = parentStep.getChart().getResourceId();
-			info = modelInfoByResourceId.get((new Long(parentChartResourceId)));
-			if( parentChartResourceId == childChartResourceId) {
-				log.warnf("%s.getAncestors: enclosed chart and parent have same resourceId (%d), truncating ancestry",TAG, parentChartResourceId);
-				break;
-			}
-			childChartResourceId = parentChartResourceId;
-			String parentChartPath = info.chartPath;
-			MockInfo mock = new MockInfo(parentChartPath, parentStep.getName(), parentStep.getFactoryId());
-			lineage.add(mock);
-		} 
-		return lineage;
-	}
-	
+		
 	// ===================================== Private Helper Methods =========================
 	// Deserialize all SFC charts from the global project.
 	private boolean loadModels() {
