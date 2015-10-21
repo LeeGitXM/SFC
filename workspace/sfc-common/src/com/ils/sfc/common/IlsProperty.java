@@ -225,7 +225,7 @@ public class IlsProperty {
     public static final BasicProperty<String> QUEUE = createProperty(Constants.QUEUE, String.class, "");
     public static final BasicProperty<Double> RAMP_TIME = createProperty(Constants.RAMP_TIME, Double.class, 5.);
     public static final BasicProperty<String> RECIPE_LOCATION = createProperty(Constants.RECIPE_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
-    public static final BasicProperty<Boolean> REQUIRE_INPUTS = createProperty(Constants.REQUIRE_INPUTS, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<Boolean> REQUIRE_ALL_INPUTS = createProperty(Constants.REQUIRE_ALL_INPUTS, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> RESULTS_MODE = createProperty(Constants.RESULTS_MODE, String.class, Constants.RESULTS_MODE_CHOICES[0], Constants.RESULTS_MODE_CHOICES);
     public static final BasicProperty<String> REVIEW_DATA_POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.reviewData.defaultPostingMethod");
     public static final BasicProperty<String> REVIEW_DATA_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_REVIEW_DATA_WINDOW, false);
@@ -529,7 +529,7 @@ public class IlsProperty {
 		g2ToIgProperty.put("prompt", PROMPT);
 		g2ToIgProperty.put("recipe-data-location", RECIPE_LOCATION);
 		g2ToIgProperty.put("recipe-location", RECIPE_LOCATION);
-		g2ToIgProperty.put("requireAllInputs", REQUIRE_INPUTS);
+		g2ToIgProperty.put("requireAllInputs", REQUIRE_ALL_INPUTS);
 		g2ToIgProperty.put("selectedButtonKey", BUTTON_KEY);
 		g2ToIgProperty.put("setTimer", TIMER_SET);		
 		g2ToIgProperty.put("spreadsheetPopulateMethod", POSTING_METHOD); // ?? multiple??		

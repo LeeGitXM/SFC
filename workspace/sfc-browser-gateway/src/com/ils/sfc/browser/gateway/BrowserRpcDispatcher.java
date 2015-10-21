@@ -3,12 +3,6 @@
  */
 package com.ils.sfc.browser.gateway;
 
-import java.util.Properties;
-
-import system.ils.sfc.common.Constants;
-import org.python.core.PyDictionary;
-
-import com.inductiveautomation.ignition.common.script.message.MessageDispatchManager;
 import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 
@@ -31,14 +25,4 @@ public class BrowserRpcDispatcher   {
 		this.requestHandler = new GatewayRequestHandler(context,session,projectId);
 	}
 	
-	public void startChart(String chartPath,String clientProject, String user,Boolean isolation) {
-		PyDictionary payload = new PyDictionary();
-		payload.put(Constants.CHART_PATH, chartPath);
-		payload.put(Constants.PROJECT, clientProject);
-		payload.put(Constants.USER, user);
-		payload.put(Constants.ISOLATION_MODE, isolation);
-		Properties filterParams = new Properties();
-		filterParams.setProperty(MessageDispatchManager.KEY_SCOPE, MessageDispatchManager.SCOPE_GATEWAY_ONLY); 
-		context.getMessageDispatchManager().dispatch(clientProject, "sfcDebugChart", payload, filterParams);
-	}
 }

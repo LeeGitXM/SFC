@@ -522,8 +522,8 @@ public class IlsGatewayScripts {
 		}
 	}
 	
-	public static void debugChart(String chartPath, String clientProject, String user, boolean isolation) {
-		ilsSfcGatewayHook.getChartDebugger().debugChart(chartPath, clientProject, user, isolation);
+	public static UUID debugChart(String chartPath, String clientProject, String user, boolean isolation) {
+		return ilsSfcGatewayHook.getChartDebugger().debugChart(chartPath, clientProject, user, isolation);
 	}
 	
 }

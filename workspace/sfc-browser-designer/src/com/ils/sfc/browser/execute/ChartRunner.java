@@ -46,7 +46,8 @@ public class ChartRunner implements Runnable {
 				log.infof("%s.initializeMap: Failed to obtain user name (%s)",TAG,ex.getMessage());
 			}
 			try {
-				requestHandler.startChart(chartPath,clientProject,username,false);  // Not Isolation
+				UUID instanceId = requestHandler.startChart(chartPath,clientProject,username,false);  // Not Isolation
+				tab.startMonitoring(instanceId);
 			}
 			catch(Exception ex) {
 				log.infof("%s.run: Exception starting chart %s (%s)",TAG,chartPath,ex.getMessage());

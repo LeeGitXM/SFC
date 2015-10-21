@@ -139,7 +139,7 @@ public class Constants {
 	public static final String REGISTER_AND_DISPLAY = "registerAndDisplay";
 	public static final String REGISTER_ONLY = "registerOnly";
 	public static final String RESULTS_MODE = "resultsMode"; 
-	public static final String REQUIRE_INPUTS = "requireInputs";
+	public static final String REQUIRE_ALL_INPUTS = "requireAllInputs";
 	public static final String REVIEW_DATA_WITH_ADVICE = "reviewDataWithAdvice"; 
 	public static final String REVIEW_DATA_WINDOW = "reviewDataWindow";
 	public static final String REVIEW_FLOWS_WINDOW = "reviewFlowsWindow";

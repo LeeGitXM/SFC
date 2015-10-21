@@ -2,6 +2,7 @@ package com.ils.sfc.gateway;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import system.ils.sfc.common.Constants;
 
@@ -26,7 +27,7 @@ public class ChartDebugger {
 	}
 	
 	/** Run a chart in isolation, mocking out parent hierarchy if necessary. */
-	public void debugChart(String chartPath, String clientProject, String user, boolean isolation) {
+	public UUID debugChart(String chartPath, String clientProject, String user, boolean isolation) {
 		try {
 			
 			// add the normal expected properties at the top level
@@ -49,10 +50,11 @@ public class ChartDebugger {
 			getTopParams(debugParams).put(Constants.MESSAGE_QUEUE, messageQueue);
 			
 			// start the chart
-			ChartManager.get().startChart(chartPath, debugParams, user);
+			return ChartManager.get().startChart(chartPath, debugParams, user);
 		}
 		catch(Exception e) {
-			logger.errorf("%s.startChart: exception trying to start chart %s\n", TAG, chartPath, e);				
+			logger.errorf("%s.startChart: exception trying to start chart %s\n", TAG, chartPath, e);
+			return null;			
 		}
 	}
 	

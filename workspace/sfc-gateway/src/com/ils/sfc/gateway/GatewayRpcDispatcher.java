@@ -4,7 +4,14 @@
 package com.ils.sfc.gateway;
 
 import java.util.List;
+import java.util.Properties;
+import java.util.UUID;
 
+import org.python.core.PyDictionary;
+
+import system.ils.sfc.common.Constants;
+
+import com.inductiveautomation.ignition.common.script.message.MessageDispatchManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
@@ -51,4 +58,7 @@ public class GatewayRpcDispatcher   {
 		requestHandler.setToolkitProperty(propertyName,value);
 	}
 	
+	public UUID startChart(String chartPath,String clientProject, String user,Boolean isolation) {
+		return IlsGatewayScripts.debugChart(chartPath, clientProject, user, isolation);
+	}
 }
