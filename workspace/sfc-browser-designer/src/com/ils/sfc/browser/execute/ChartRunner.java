@@ -16,6 +16,7 @@ import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
 public class ChartRunner implements Runnable {
 	private final static String TAG = "ChartRunner";
 	private final DesignerContext context;
+	private final boolean isolationMode;
 	private final LoggerEx log;
 	private final SfcBrowserRequestHandler requestHandler;
 	private final SFCWorkspace workspace;
@@ -23,8 +24,9 @@ public class ChartRunner implements Runnable {
 	/**
 	 * Constructor
 	 */
-	public ChartRunner(DesignerContext ctx,SFCWorkspace wksp,ChartTreeDataModel data) {
+	public ChartRunner(DesignerContext ctx,SFCWorkspace wksp,ChartTreeDataModel data,boolean isIsolation) {
 		this.context = ctx;
+		this.isolationMode = isIsolation;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.requestHandler = new SfcBrowserRequestHandler();
 		this.workspace = wksp;
@@ -46,7 +48,7 @@ public class ChartRunner implements Runnable {
 				log.infof("%s.initializeMap: Failed to obtain user name (%s)",TAG,ex.getMessage());
 			}
 			try {
-				UUID instanceId = requestHandler.startChart(chartPath,clientProject,username,false);  // Not Isolation
+				UUID instanceId = requestHandler.startChart(chartPath,clientProject,username,isolationMode);  // True for isolation mode
 				tab.startMonitoring(instanceId);
 			}
 			catch(Exception ex) {
