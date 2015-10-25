@@ -272,13 +272,6 @@ public class IlsProperty {
     public static final BasicProperty<Boolean> WRITE_CONFIRM = createProperty(Constants.WRITE_CONFIRM, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<Boolean> WRITE_CONFIRMED = createProperty(Constants.WRITE_CONFIRMED, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> WRITE_OUTPUT_CONFIG = createProperty(Constants.WRITE_OUTPUT_CONFIG, String.class, EMPTY_WRITE_OUTPUT_CONFIG, true, Constants.CONFIG);
-   
- // These are the names of toolkit properties that are to be stored in HSQLdb
- 	public static final String TOOLKIT_PROPERTY_DATABASE            = "Database";           // Production database
- 	public static final String TOOLKIT_PROPERTY_ISOLATION_DATABASE  = "SecondaryDatabase";  // Database when in isolation
- 	public static final String TOOLKIT_PROPERTY_PROVIDER            = "Provider";           // Production tag provider
- 	public static final String TOOLKIT_PROPERTY_ISOLATION_PROVIDER  = "SecondaryProvider";  // Tag provider when in isolation
- 	public static final String TOOLKIT_PROPERTY_ISOLATION_TIME      = "SecondaryTimeFactor";// Time speedup when in isolation
 
 	public static <C> BasicProperty<C> createProperty(String name, Class<C> clazz, C defaultValue) {
 		return createProperty(name, clazz, defaultValue, false, null, null);

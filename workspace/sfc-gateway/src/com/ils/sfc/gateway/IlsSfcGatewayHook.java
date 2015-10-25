@@ -11,11 +11,11 @@ import java.util.Map;
 
 import system.ils.sfc.common.Constants;
 
+import com.ils.common.persistence.ToolkitRecord;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.gateway.monitor.IlsStepMonitor;
-import com.ils.sfc.gateway.persistence.ToolkitRecord;
 import com.ils.sfc.gateway.recipe.IlsScopeLocator;
 import com.ils.sfc.step.CancelStepFactory;
 import com.ils.sfc.step.ClearQueueStepFactory;
@@ -67,7 +67,6 @@ import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 import com.inductiveautomation.ignition.gateway.project.ProjectListener;
 import com.inductiveautomation.ignition.gateway.services.ModuleServiceConsumer;
-import com.inductiveautomation.sfc.ChartManager;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.api.ChartManagerService;
 import com.inductiveautomation.sfc.api.SfcGatewayHook;

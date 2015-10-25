@@ -32,9 +32,11 @@
 	</path>
 	<!-- External jar classpath. This classpath includes all the jars needed to build a module against the SDK. -->
 	<path id="ExternalJar.classpath">
+		<fileset dir="${basedir}/../../external/lib" includes="ils-common.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="commons-math3*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="guava*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="jackson-*.jar" />
+		<fileset dir="${basedir}/../../external/lib" includes="jfreechart-*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="jython-2.5.3.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="log4j*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="lucene-*.jar" />

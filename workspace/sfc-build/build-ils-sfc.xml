@@ -2,14 +2,17 @@
 
 	<import file="${basedir}/sfc-build/build.xml"/>
 
-	<property name="version.build" value="6" />	
+	<property name="version.build" value="7" />	
 	<!-- Change version.beta value to "" for release builds -->
-	<property name="version.beta" value="-development" />		
+	<property name="version.beta" value="-development" />
+	<property name="root.dir" value="${basedir}/../.." />
+	<property name="common.jar.name" value="ils-common.jar" />
+	<property name="common.bin.dir" value="${root.dir}/ils-common/bin" />
+	<property name="common.src.dir" value="${root.dir}/ils-common/ILS_Common/src" />
 	<property name="ils.sfc.version" value="1.1.2.${version.build}" />
 	<property name="ils.sfc.name" value="ILS-SFC" />
 	<property name="ils.sfc.release" value="0.5" />
 	<property name="ils.sfc.description" value="ILS SFC Customizations" />
-	<property name="root.dir" value="${basedir}/../.." />
 	<property name="jar.dir" value="${root.dir}/external/lib" />
 	<property name="sdk.dir" value="${root.dir}/ignition-78/lib" />
 	<property name="ant.build.javac.source" value="1.7"/>
@@ -60,10 +63,26 @@
 		<delete file="${basedir}/sfc-build/modules/${ils.sfc.name}-module-unsigned.modl" />
 		<delete dir="${basedir}/sfc-build/release" />
 		<delete dir="${basedir}/sfc-build/temp_modl" />   
-	</target>	
-		
+	</target>
+	
+	<!-- Compile the Common library -->
+	<target name="common.build" description="Compile the source">
+		<echo  message="Using Java version ${ant.java.version}."/>
+		<mkdir dir="${common.bin.dir}/images"/>
+		<javac destdir="${common.bin.dir}" debug="true" target="1.8" includeantruntime="false">
+			<src path="${common.src.dir}"/>
+			<classpath refid="sfc.common.classpath"/>
+		</javac>
+		<copy todir="${common.bin.dir}/images" >
+			<fileset dir="${common.src.dir}/images"/>
+		</copy>
+	</target>
+	<target name ="common.jar" description="Create a jar for the ILS Common library">
+	    <jar destfile="${jar.dir}/${common.jar.name}" includes="**/*.class,**/*.png" basedir="${common.bin.dir}"/>
+	</target>
+	
 	<!-- Builds the toolkit module jars and the final .modl file -->
-	<target name="build"   description="Compile the source">
+	<target name="build" depends="common.build,common.jar" description="Compile the source">
 		<echo message="${ils.sfc.name} ${ils.sfc.version}" />	
 		<delete dir="${basedir}/sfc-build/temp_modl" />	
 		
