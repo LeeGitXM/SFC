@@ -123,20 +123,26 @@ public class ChartStructureCompiler {
 	// Do the IA chart compilation and create corresponding chart/step elements in our structure.
 	private boolean compileCharts() {
 		for(ChartModelInfo modelInfo: modelInfoByResourceId.values() ) {
-			ChartCompiler chartCompiler = new ChartCompiler(modelInfo.uiModel, stepRegistry);
-			ChartCompilationResults ccr = chartCompiler.compile();
-			modelInfo.chartDefinition = ccr.getChartDefinition();
-			ChartStructure newChart = new ChartStructure(modelInfo.resource.getName(),modelInfo.resource.getResourceId());
-			modelInfo.chartStructure = newChart;
-			Set<UUID> seen = new HashSet<UUID>();
-			for(ElementDefinition def: ccr.getRootDefinitions()) {
-				createSteps(newChart, null, def, seen);
+			try {
+				ChartCompiler chartCompiler = new ChartCompiler(modelInfo.uiModel, stepRegistry);
+				ChartCompilationResults ccr = chartCompiler.compile();
+				if(ccr.isSuccessful()) {
+					modelInfo.chartDefinition = ccr.getChartDefinition();
+					ChartStructure newChart = new ChartStructure(modelInfo.resource.getName(),modelInfo.resource.getResourceId());
+					modelInfo.chartStructure = newChart;
+					Set<UUID> seen = new HashSet<UUID>();
+					for(ElementDefinition def: ccr.getRootDefinitions()) {
+						createSteps(newChart, null, def, seen);
+					}
+				}
+				else {
+					for(CompilationError ce:ccr.getErrors()) {
+						log.warnf("%s.compileCharts: Chart %s has compilation error (%s)",TAG,modelInfo.chartPath,ce.getMessage());
+					}				
+				}
 			}
-
-			if(!ccr.isSuccessful()) {
-				for(CompilationError ce:ccr.getErrors()) {
-					log.warnf("%s.compileCharts: Chart %s has compilation error (%s)",TAG,modelInfo.chartPath,ce.getMessage());
-				}				
+			catch(Throwable t) {
+				log.errorf("%s.compileCharts: Unexpected exception compiling chart %s",TAG,modelInfo.chartPath);				
 			}
 		} 
 		return true;
