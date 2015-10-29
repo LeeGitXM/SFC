@@ -7,6 +7,7 @@ package com.ils.sfc.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ils.common.persistence.ToolkitProperties;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -41,8 +42,8 @@ public class IlsSfcRequestHandler {
 	 */
 	public String getDatabaseName(boolean isIsolated) {
 		String dbName = "";
-		if( isIsolated ) dbName = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_ISOLATION_DATABASE);
-		else dbName = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_DATABASE);
+		if( isIsolated ) dbName = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_DATABASE);
+		else dbName = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_DATABASE);
 		return dbName;
 	}
 	
@@ -66,8 +67,8 @@ public class IlsSfcRequestHandler {
 	 */
 	public String getProviderName(boolean isIsolated)  {
 		String providerName = "";
-		if( isIsolated ) providerName = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_ISOLATION_PROVIDER);
-		else providerName = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_PROVIDER);
+		if( isIsolated ) providerName = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_PROVIDER);
+		else providerName = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_PROVIDER);
 		return providerName;
 	}
 	/**
@@ -99,7 +100,7 @@ public class IlsSfcRequestHandler {
 	public double getTimeFactor(boolean isIsolated) {
 		double factor = 1.0;
 		if( isIsolated ) {
-			String value = getToolkitProperty(IlsProperty.TOOLKIT_PROPERTY_ISOLATION_TIME);
+			String value = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME);
 			try {
 				factor = Double.parseDouble(value);
 			}

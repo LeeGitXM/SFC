@@ -204,7 +204,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     private class DialogRunner implements Runnable {
 
         public void run() {
-            SetupDialog setup = new SetupDialog(context);
+            ExternalInterfaceConfigurationDialog setup = new ExternalInterfaceConfigurationDialog(context);
             setup.pack();
             setup.setVisible(true);
         }
