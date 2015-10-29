@@ -15,7 +15,8 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.ScopeContext;
 
 /** An object that can call a particular method in Python. 
- *  Also holds static objects for particular calls. */
+ *  Also holds static singletons for particular calls. Each
+ *  single */
 public class PythonCall {
 	private static final LoggerEx logger = LogUtil.getLogger(PythonCall.class.getName());
 	private static final String RESULT_NAME = "pyCallResult";
@@ -23,7 +24,6 @@ public class PythonCall {
 	private final String[] argNames; // args to the method, if any
 	private final Class<?> returnType;	// is null if no return value
 	private PyCode compiledCode;	// cached compiled code
-	private static PyStringMap localMap;
 
 	private static ScriptManager scriptMgr;
 	private static final String[] stepArgs = new String[]{"scopeContext", "stepProperties"};
@@ -197,6 +197,8 @@ public class PythonCall {
 	
 	/** Execute this method and return the result. */
 	public Object exec(Object...argValues) throws JythonExecException {
+		PyStringMap localMap = scriptMgr.createLocalsMap();
+
 		//System.out.println("python exec: " + methodName);
 		if(compiledCode == null) {
 			//System.out.println("   first call; compiling method");
@@ -272,7 +274,6 @@ public class PythonCall {
 
 	public static void setScriptMgr(ScriptManager scriptManager) {
 		scriptMgr = scriptManager;
-		localMap = scriptMgr.createLocalsMap();
 	}
 	
 	public static String[] toArray(Object o) {

@@ -19,6 +19,7 @@ public interface ReviewDataStepProperties extends ChartStepProperties {
     	BUTTON_KEY_LOCATION,
     	POSITION,
     	SCALE,
+    	AUTO_MODE,
     	REVIEW_DATA_WINDOW,
     	PRIMARY_REVIEW_DATA,
     	PRIMARY_TAB_LABEL,

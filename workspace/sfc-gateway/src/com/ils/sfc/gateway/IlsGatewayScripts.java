@@ -267,6 +267,10 @@ public class IlsGatewayScripts {
 		if(oVal instanceof Number) {
 			doubleVal = ((Number)oVal).doubleValue();
 		}
+		// If toUnits unspecified, just return current value
+		if(IlsSfcCommonUtils.isEmpty(toUnits)) {
+			return doubleVal;
+		}
 		// else error!
 		String unitsKey = changeValueKey(valueKey,  "units");
 		String fromUnits = (String)RecipeDataAccess.s88Get(chartScope, stepScope, unitsKey, recipeScope);

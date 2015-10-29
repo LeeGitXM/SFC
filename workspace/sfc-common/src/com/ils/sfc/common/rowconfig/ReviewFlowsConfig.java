@@ -29,7 +29,7 @@ public class ReviewFlowsConfig  extends RowConfig {
 		
 		@JsonIgnore
 		public boolean isBlank() {
-			return IlsSfcCommonUtils.isEmpty(configKey); 
+			return IlsSfcCommonUtils.isEmpty(flow1Key); 
 		}
 	}
 
