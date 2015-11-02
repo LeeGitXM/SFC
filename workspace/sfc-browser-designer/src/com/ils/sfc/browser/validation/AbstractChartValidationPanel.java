@@ -104,7 +104,7 @@ public abstract class AbstractChartValidationPanel extends JPanel {
 
 		TableColumnModel tcm = table.getColumnModel();
 		int[] columnWidths = getColumnWidths();
-		int ncols = columnWidths.length;
+		int ncols = tcm.getColumnCount();
 		int col = 0;
 		while( col<ncols ) {
 			tcm.getColumn(col).setPreferredWidth(columnWidths[col]);
