@@ -68,7 +68,7 @@ public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder
 		else if(selectedPropertyValue.getProperty().getType() == String.class) {
 			editor.stopCellEditing();
 			controller.getTextEditor().setValue(selectedPropertyValue.getValue());
-			controller.getTextEditor().activate(myIndex);
+			controller.getTextEditor().activate(this);
 		}
 		// else do nothing
 	}

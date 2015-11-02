@@ -16,6 +16,8 @@ public class StringEditorPanel extends ValueHoldingEditorPanel {
 	
 	public StringEditorPanel(PanelController controller, int index) {
 		super(controller, index);
+		textField.setLineWrap(true);
+		textField.setWrapStyleWord(true);
 		add(textField, BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.NORTH);
 		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {

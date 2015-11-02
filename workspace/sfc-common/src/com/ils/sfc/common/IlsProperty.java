@@ -469,6 +469,7 @@ public class IlsProperty {
 		setReadOnly(DOWNLOAD_STATUS);
 		setReadOnly(ERROR_CODE);
 		setReadOnly(ERROR_TEXT);
+		setReadOnly(G2_XML);
 		setReadOnly(PV_MONITOR_ACTIVE);
 		setReadOnly(PV_MONITOR_STATUS);
 		setReadOnly(SETPOINT_STATUS);
