@@ -10,6 +10,8 @@ import java.util.UUID;
 import org.json.JSONObject;
 import org.python.core.PyDictionary;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
@@ -30,14 +32,10 @@ import com.inductiveautomation.sfc.elements.AbstractStepElement;
  *  so that the ControlPanel status display (e.g.) can stay up to date. */
 public class IlsChartObserver implements ChartObserver {
 	private static LoggerEx logger = LogUtil.getLogger(IlsChartObserver.class.getName());
-	private Set<String> sfcProjectNames = new HashSet<String>();
+	private Map<String,String> projectNamesByRunId = new HashMap<String,String>();
 	private Map<String, ChartStateEnum> chartStatesByRunId = new HashMap<String, ChartStateEnum>();
 	private Set<String> cancelRequests = new HashSet<String>();
 	private Set<String> pauseRequests = new HashSet<String>();
-	
-	public synchronized void registerSfcProject(String projectName) {
-		sfcProjectNames.add(projectName);
-	}
 
 	/** ILS code has initiated a cancel (even if IA hasn't processed it yet)  */
 	public synchronized void setCancelRequested(String chartRunId) {
@@ -68,19 +66,18 @@ public class IlsChartObserver implements ChartObserver {
 	public synchronized void onChartStateChange(UUID chartId, ChartStateEnum oldChartState,
 			ChartStateEnum newChartState) {
 		String runIdAsString = chartId.toString();
-		chartStatesByRunId.put(runIdAsString, newChartState);
-		
+		String projectName = projectNamesByRunId.get(runIdAsString);
+		// project name will only be non-null for ILS charts
 		// message the clients about the chart status:
-		if(sfcProjectNames.size() > 0) {
-			for(String projectName: sfcProjectNames) {
-				PyDictionary payload = new PyDictionary();
-				payload.put("instanceId", runIdAsString);
-				payload.put("status", newChartState.toString());
-				try {
-					PythonCall.SEND_CHART_STATUS.exec(projectName, payload);
-				} catch (JythonExecException e) {
-					logger.error("error sending chart status", e);
-				}
+		if(projectName != null) {
+			chartStatesByRunId.put(runIdAsString, newChartState);
+			PyDictionary payload = new PyDictionary();
+			payload.put("instanceId", runIdAsString);
+			payload.put("status", newChartState.toString());
+			try {
+				PythonCall.SEND_CHART_STATUS.exec(projectName, payload);
+			} catch (JythonExecException e) {
+				logger.error("error sending chart status", e);
 			}
 			
 			// prevent a memory leak by clearing the map after the chart finishes
@@ -88,12 +85,9 @@ public class IlsChartObserver implements ChartObserver {
 				chartStatesByRunId.remove(runIdAsString);
 				cancelRequests.remove(runIdAsString);
 				pauseRequests.remove(runIdAsString);
+				projectNamesByRunId.remove(runIdAsString);
 			}
 		}
-		else {
-			//logger.error("Error sending chart status msg: no sfc project names");
-		}
-		//System.out.println("chart " + chartId.toString() + " " + newChartState.toString());
 	}
 
 	@Override
@@ -104,9 +98,12 @@ public class IlsChartObserver implements ChartObserver {
 	@Override
 	public synchronized void onBeforeChartStart(ChartContext chartContext) {
 		createTags(chartContext);
+		PyDictionary chartScope = chartContext.getChartScope();
+		String chartRunId = (String)chartScope.get(Constants.INSTANCE_ID);
+		String projectName = (String)chartScope.get(Constants.PROJECT);
+		projectNamesByRunId.put(chartRunId, projectName);
 		//String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
 		//controller.setElement(stepComponent.getElement(), chartPath);
-
 	}
 
 	private synchronized void createTags(ChartContext chartContext) {

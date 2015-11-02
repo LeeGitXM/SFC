@@ -154,7 +154,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	ElementStateEnum stepState = stepElementStatus.getElementState();
     	boolean wasActivated = stepElementStatus.getLastActivation() != null;
     	Color background = null;
-    	Color ranColor = Color.lightGray.brighter();
+    	Color ranColor = Color.lightGray;
     	if(chartNotStarted) {
     		background = Color.white;
     	}

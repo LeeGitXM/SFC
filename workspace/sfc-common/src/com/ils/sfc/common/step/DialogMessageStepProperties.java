@@ -13,6 +13,17 @@ public interface DialogMessageStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.dialogMessageStep";
 	
     public static final BasicProperty<?>[] properties = { 
-    	RECIPE_STATIC_STRATEGY, RECIPE_LOCATION, KEY, WINDOW, METHOD, MESSAGE, ACK_REQUIRED, TIMEOUT, TIMEOUT_UNIT, POSITION, SCALE
+    	RECIPE_STATIC_STRATEGY, 
+    	RECIPE_LOCATION, 
+    	KEY, 
+    	WINDOW,
+    	METHOD, 
+    	WINDOW_TITLE,
+    	MESSAGE, 
+    	ACK_REQUIRED, 
+    	TIMEOUT, 
+    	TIMEOUT_UNIT, 
+    	POSITION, 
+    	SCALE
     };
 }

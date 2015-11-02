@@ -217,7 +217,7 @@ public class ChartStructureCompiler {
 
 	//Create the relationships for chart inclusion.
 	private void linkParents() {
-		log.infof("%s.linkParents: .....",TAG);
+		log.tracef("%s.linkParents: .....",TAG);
 
 		for(ChartModelInfo modelInfo: modelInfoByResourceId.values() ) {
 			ChartStructure chartStruct = modelInfo.chartStructure;  // Null if compile failed
@@ -233,11 +233,11 @@ public class ChartStructureCompiler {
 								enclosedChart.addParent(step);
 								if( log.isInfoEnabled()) {
 									ChartModelInfo stepInfo = modelInfoByResourceId.get(new Long(enclosedChart.getResourceId()));
-									log.infof("%s.linkParents: %s is a parent of %s",TAG,modelInfo.chartPath,stepInfo.chartPath);
+									log.tracef("%s.linkParents: %s is a parent of %s",TAG,modelInfo.chartPath,stepInfo.chartPath);
 								}
 							}
 							else {
-								log.infof("%s.linkParents: Enclosed chart %s not found for step %s in chart %s",
+								log.tracef("%s.linkParents: Enclosed chart %s not found for step %s in chart %s",
 										TAG,step.getEnclosedChartName(),step.getName(),modelInfo.chartStructure.getName() );
 							}
 						}

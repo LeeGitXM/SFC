@@ -8,12 +8,14 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import com.ils.sfc.common.IlsProperty;
+import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.StepRegistry;
+import com.inductiveautomation.sfc.api.XMLParseException;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 import com.inductiveautomation.sfc.uimodel.ChartUIModel;
@@ -27,6 +29,10 @@ public class SimpleHierarchyAnalyzer {
 	private Project globalProject;
 	private StepRegistry stepRegistry;
 	private Map<String, List<EnclosureInfo>> parentsByChildChartPath = new HashMap<String, List<EnclosureInfo>>();
+	private Property<String> stepNameProperty = EnclosingStepProperties.Name;
+	private Property<String> factoryIdProperty = EnclosingStepProperties.FactoryId;
+	private Property<String> chartPathProperty = EnclosingStepProperties.CHART_PATH;
+	private Property<ChartUIModel> parallelChildrenProperty = new BasicProperty<ChartUIModel>("parallel-children", ChartUIModel.class);
 	
 	/** Info about enclosing steps in other charts that enclose a given chart. */
 	public static class EnclosureInfo {
@@ -38,7 +44,7 @@ public class SimpleHierarchyAnalyzer {
 		
 		public EnclosureInfo(String childChartPath, String parentChartPath, 
 			String parentStepName, String parentStepFactoryId, String messageQueue) {
-			super();
+			this.childChartPath = childChartPath;
 			this.parentChartPath = parentChartPath;
 			this.parentStepName = parentStepName;
 			this.parentStepFactoryId = parentStepFactoryId;
@@ -53,9 +59,6 @@ public class SimpleHierarchyAnalyzer {
 	
 	/** Create the hierarchy info for all SFCs. */
 	public void analyze() {
-		Property<String> chartPathProperty = EnclosingStepProperties.CHART_PATH;
-		Property<String> stepNameProperty = EnclosingStepProperties.Name;
-		Property<String> factoryIdProperty = EnclosingStepProperties.FactoryId;
 		List<ProjectResource> resources = globalProject.getResources();
 		for(ProjectResource res:resources) {
 			if( res.getResourceType().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE)) {
@@ -64,26 +67,33 @@ public class SimpleHierarchyAnalyzer {
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 					ChartUIModel uiModel = ChartUIModel.fromXML(xmlInput, stepRegistry );					
 					String parentChartPath = globalProject.getFolderPath(res.getResourceId());
-					for(ChartUIElement element: uiModel.getChartElements()) {
-						if(element.getProperties().contains(chartPathProperty)) {
-							String parentStepPath = element.get(stepNameProperty);
-							String parentStepFactoryId = element.get(factoryIdProperty);
-							String childChartPath = element.get(chartPathProperty);
-							String messageQueue = element.get(IlsProperty.MESSAGE_QUEUE);
-							List<EnclosureInfo> parentEnclosures = parentsByChildChartPath.get(childChartPath);
-							if(parentEnclosures == null) {
-								parentEnclosures = new ArrayList<EnclosureInfo>();
-								parentsByChildChartPath.put(childChartPath, parentEnclosures);
-							}
-							parentEnclosures.add(new EnclosureInfo(childChartPath, 
-								parentChartPath, parentStepPath, parentStepFactoryId, messageQueue));
-						}
-					}
-					
+					analyzeModel(uiModel, parentChartPath);					
 				}
 				catch(Exception e) {
 					log.errorf("IO exception deserializing char)", e);
 				}
+			}
+		}
+	}
+
+	private void analyzeModel(ChartUIModel uiModel, String parentChartPath) throws XMLParseException {
+		for(ChartUIElement element: uiModel.getChartElements()) {
+			if(element.getProperties().contains(chartPathProperty)) {
+				String parentStepPath = element.get(stepNameProperty);
+				String parentStepFactoryId = element.get(factoryIdProperty);
+				String childChartPath = element.get(chartPathProperty);
+				String messageQueue = element.get(IlsProperty.MESSAGE_QUEUE);
+				List<EnclosureInfo> parentEnclosures = parentsByChildChartPath.get(childChartPath);
+				if(parentEnclosures == null) {
+					parentEnclosures = new ArrayList<EnclosureInfo>();
+					parentsByChildChartPath.put(childChartPath, parentEnclosures);
+				}
+				parentEnclosures.add(new EnclosureInfo(childChartPath, 
+					parentChartPath, parentStepPath, parentStepFactoryId, messageQueue));
+			}
+			else if(element.getProperties().contains(parallelChildrenProperty)) {
+				ChartUIModel parallelChildrenModel = element.get(parallelChildrenProperty);
+				analyzeModel(parallelChildrenModel, parentChartPath);
 			}
 		}
 	}

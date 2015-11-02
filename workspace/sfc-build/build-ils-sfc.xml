@@ -147,6 +147,7 @@
 		<pack200 src="${root.dir}/external/lib/jackson-core-2.2.3.jar" destfile="${basedir}/sfc-build/temp_modl/jackson-core-2.2.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		<pack200 src="${root.dir}/external/lib/jackson-databind-2.2.3.jar" destfile="${basedir}/sfc-build/temp_modl/jackson-databind-2.2.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 		<pack200 src="${root.dir}/external/lib/jackson-annotations-2.2.3.jar" destfile="${basedir}/sfc-build/temp_modl/jackson-annotations-2.2.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
+		<pack200 src="${jar.dir}/${common.jar.name}" destfile="${basedir}/sfc-build/temp_modl/ils-common.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
 
 		
 		<!-- Copy gateway jar -->
@@ -158,6 +159,7 @@
 		<copy file="${basedir}/../../external/lib/jackson-databind-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
 		<copy file="${basedir}/../../external/lib/jackson-core-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
 		<copy file="${basedir}/../../external/lib/jackson-annotations-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${jar.dir}/${common.jar.name}" todir="${basedir}/sfc-build/temp_modl/" />
 
 		<!-- Copy license file and javadoc into the bundle -->
 		<mkdir dir="${basedir}/sfc-build/doc" />

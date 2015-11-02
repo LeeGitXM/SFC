@@ -406,10 +406,6 @@ public class IlsGatewayScripts {
 		ilsSfcGatewayHook.getStepMonitor().watch(id,name);
 	}
 		
-	public static void registerSfcProject(String projectName) {
-		ilsSfcGatewayHook.getChartObserver().registerSfcProject(projectName);
-	}
-
 	public static String getJSONForScope(PyChartScope scope) throws JSONException {
 		JSONObject jsonObject = Data.fromStepScope(scope);
 		return jsonObject.toString();
