@@ -1,6 +1,9 @@
 package com.ils.sfc.designer.propertyEditor;
 
 import java.text.ParseException;
+import java.util.Date;
+
+import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
@@ -16,6 +19,7 @@ public class PropertyRow {
 	private static final LoggerEx logger = LogUtil.getLogger(PropertyValue.class.getName());
 	private PropertyValue<?> propertyValue;
 	private String displayLabel;
+	private String valueType; // for Object-valued properties, a hint as to the value type
 	
 	public PropertyRow(PropertyValue<?> propertyValue) {
 		this.propertyValue = propertyValue;
@@ -54,6 +58,18 @@ public class PropertyRow {
 			return null;
 		}
 	}
+		
+	public String getValueType() {
+		return valueType;
+	}
+
+	public void setValueType(String valueType) {
+		this.valueType = valueType;
+	}
+
+	public boolean isDateType() {
+		return Constants.DATE_TIME.equals(valueType);
+	}
 	
 	public Object getDefaultValue() {
 		return getProperty() instanceof BasicProperty ? ((BasicProperty<?>)getProperty()).getDefaultValue() : null;
@@ -82,11 +98,26 @@ public class PropertyRow {
 	/** Regardless of underlying type, set the value from a string representation. 
 	 *  throws NumberFormatException for bad numbers 
 	 * @throws ParseException */
-	public void setValueFormatted(String stringValue) throws ParseException {
-		Object value = IlsProperty.parsePropertyValue(getProperty(), stringValue);
+	public void setValueFormatted(String stringValue) throws ParseException {		
+		Object value = IlsProperty.parsePropertyValue(getProperty(), stringValue, valueType);
 		setValue(value);
 	}
 
+	public String getValueFormatted() {
+		Object value = getValue();
+		if(value != null) {
+			if(value instanceof Date) {
+				return Constants.DATE_FORMAT.format((Date)value);
+			}
+			else {
+				return value.toString();
+			}
+		}
+		else {
+			return "";
+		}
+	}
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setValue(Object value) {
 		propertyValue = new PropertyValue(getProperty(), value);		

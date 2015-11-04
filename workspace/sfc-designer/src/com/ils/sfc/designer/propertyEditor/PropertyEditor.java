@@ -6,6 +6,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import com.ils.sfc.common.IlsProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
@@ -37,6 +39,13 @@ public class PropertyEditor extends JPanel {
 		return selectionIndex >= 0 ? tableModel.getRowObject(selectionIndex) : null;
 	}
 	
+	public boolean selectionIsEditable() {
+		int selectedRow = table.getSelectedRow();
+		int selectedCol = table.getSelectedColumn();
+		return selectedRow != -1 && selectedCol != -1 && 
+			tableModel.isCellEditable(selectedRow, selectedCol);
+	}
+	
 	/** Get the row that external string editing was last invoked on. */
 	public Object getSelectedValue() {
 		PropertyRow selectedRow = getSelectedRow();
@@ -49,6 +58,10 @@ public class PropertyEditor extends JPanel {
 		if(selectionIndex >= 0) {
 			tableModel.setValueAt(value, selectionIndex, PropertyTableModel.VALUE_COLUMN);
 		}
+	}
+	
+	public ListSelectionModel getSelectionModel() {
+		return table.getSelectionModel();
 	}
 	
 	public PropertyTableModel getTableModel() {

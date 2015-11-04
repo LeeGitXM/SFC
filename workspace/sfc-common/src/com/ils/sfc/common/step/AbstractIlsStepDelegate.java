@@ -82,7 +82,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 			Object value = null;
 			if(stringValue!=null) {
 				try {
-					value = IlsProperty.parsePropertyValue(property, stringValue);
+					value = IlsProperty.parsePropertyValue(property, stringValue, null);
 					checkValueChoices(property, stepName, value);
 				}
 				catch(ParseException e) {

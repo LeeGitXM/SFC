@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -265,6 +266,7 @@ public class IlsProperty {
     public static final BasicProperty<String> UNITS = createProperty(Constants.UNITS, String.class, "");
     public static final BasicProperty<Double> UPDATE_FREQUENCY = createProperty(Constants.UPDATE_FREQUENCY, Double.class, 10.);
     public static final BasicProperty<Object> VALUE = createProperty(Constants.VALUE, Object.class, null);
+    public static final BasicProperty<String> VALUE_TYPE = createProperty(Constants.VALUE_TYPE, String.class, null);
     public static final BasicProperty<Boolean> VERBOSE = createProperty(Constants.VERBOSE, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<Boolean> VIEW_FILE = createProperty(Constants.VIEW_FILE, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> WINDOW = createProperty(Constants.WINDOW, String.class, "");
@@ -314,7 +316,8 @@ public class IlsProperty {
 		return allPropertyNames;
 	}
 		
-	public static Object parsePropertyValue(Property<?> property, String stringValue) throws ParseException {
+	public static Object parsePropertyValue(Property<?> property, 
+		String stringValue, String objectValueType) throws ParseException {
 		if( IlsSfcCommonUtils.isEmpty(stringValue)) {
 			return property.getDefaultValue();
 		}
@@ -364,7 +367,12 @@ public class IlsProperty {
 			return stringValue;
 		}
 		else if(property.getType() == Object.class) {
-			return parseObjectValue(stringValue, null);
+			if(Constants.DATE_TIME.equals(objectValueType)) {
+				return parseDate(stringValue);
+			}
+			else {
+				return parseObjectValue(stringValue, null);								
+			}
 		}
 		else {
 			return stringValue;
@@ -405,18 +413,37 @@ public class IlsProperty {
 	 *  with a best guess as to type
 	 */
 	public static Object parseObjectValue(String strValue, Class<?> hintClass) {
+		// try as integer
 		if(hintClass != Double.class) {
 			try { return Integer.parseInt(strValue); }
 			catch(NumberFormatException e) { /* didn't work */ }
 		}
+		
+		// try as double
 		try { return Double.parseDouble(strValue); }
 		catch(NumberFormatException e) { /* didn't work */ }
+
+		// try as Boolean
 		if(strValue.equalsIgnoreCase("true") || strValue.equalsIgnoreCase("false")) {
 			return Boolean.parseBoolean(strValue); 		
 		}
+		
+		// else just a string...
 		return strValue;  // nothing else worked, just make it a string
 	}
 
+	/** Try to parse a string as a date according to our strict format. If the parse
+	 *  fails, return null. Caution: a null or empty string will return null...
+	 */
+	public static Date parseDate(String string) throws ParseException {
+		if(IlsSfcCommonUtils.isEmpty(string)) {
+			return null;
+		}
+		else {
+			return Constants.DATE_FORMAT.parse(string);
+		}
+	}
+	
 	public static String[] getChoices(Property<?> property) {
 		PropertyInfo info = infoById.get(getPropertyId(property));
 		return info != null ? info.choices : null;
@@ -467,9 +494,11 @@ public class IlsProperty {
 	// define read-only properties:
 	static {
 		setReadOnly(DOWNLOAD_STATUS);
+		setReadOnly(DATA_ID);
 		setReadOnly(ERROR_CODE);
 		setReadOnly(ERROR_TEXT);
 		setReadOnly(G2_XML);
+		setReadOnly(KEY);
 		setReadOnly(PV_MONITOR_ACTIVE);
 		setReadOnly(PV_MONITOR_STATUS);
 		setReadOnly(SETPOINT_STATUS);
@@ -477,6 +506,7 @@ public class IlsProperty {
 		setReadOnly(STEP_TIME);
 		setReadOnly(STEP_TIMESTAMP);
 		setReadOnly(TARGET_VALUE);
+		setReadOnly(VALUE_TYPE);
 		setReadOnly(WRITE_CONFIRMED);
 	}
 	

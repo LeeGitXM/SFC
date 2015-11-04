@@ -1,6 +1,7 @@
 package com.ils.sfc.common.recipe.objects;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 
 import system.ils.sfc.common.Constants;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
@@ -171,6 +173,7 @@ public abstract class Data {
 	/** Convert this object (and any hierarchy) to a JSON object */
 	public JSONObject toJSON() throws JSONException {
 		JSONObject jsonObj = new JSONObject();
+		boolean hasDateValue = hasDateValueType();  // CAUTION: must call OUTSIDE property iteration to avoid concurrent mod
 		for(PropertyValue<?> pvalue: properties) {
 			String propName = pvalue.getProperty().getName();
 			Object value = pvalue.getValue();
@@ -178,6 +181,20 @@ public abstract class Data {
 				// we need to turn the list into a JSONArray first
 				JSONArray jsonArray = value != null ? new JSONArray((String)value) : new JSONArray();
 				value = jsonArray;
+			}
+			else if(value != null && hasDateValue && 
+					pvalue.getProperty().equals(IlsProperty.VALUE)) {
+				// JSON doesn't understand Dates, so if we have a Date value
+				// we need to store it as a String
+				if(value instanceof Date) {
+					if(value != null) {
+						Date dateValue = (Date)value;
+						value = Constants.DATE_FORMAT.format(dateValue);
+					}
+				}
+				else {
+					logger.error("Expecting Date for value); found " + value);
+				}
 			}
 			jsonObj.put(propName, value != null ? value : JSONObject.NULL);
 		}
@@ -250,11 +267,20 @@ public abstract class Data {
 			String key = keyIter.next();
 			dummyProperty.setName(key);
 			Object value = jsonObj.get(key);
-			if(!(value instanceof JSONObject)) {
+			if(!(value instanceof JSONObject)) {				
 				setValue(dummyProperty, value.equals(JSONObject.NULL) ? null : value);
 			}
 			// else if the value is an object, the Group extension of this method will
 			// handle it
+		}
+		// JSON doesn't understand Dates, so if we have a Date value
+		// we need to re-create it
+		if(hasDateValueType()) {
+			String strValue = (String)getValue(IlsProperty.VALUE);
+			if(!IlsSfcCommonUtils.isEmpty(strValue)) {
+				Date dateValue = Constants.DATE_FORMAT.parse(strValue);
+				setValue(IlsProperty.VALUE, dateValue);
+			}
 		}
 	}
 	
@@ -277,17 +303,6 @@ public abstract class Data {
 		}
 	}
 	
-	public static void main(String[] args) {
-		JSONObject obj = new JSONObject();
-		try {
-			obj.put("key", "");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(obj);
-	}
-
 	/** Create an instance of the given class to be used to restore
 	 *  an existing instance. */
 	public static Data createForRestore(Class<?> aClass) {
@@ -346,7 +361,7 @@ public abstract class Data {
 				logger.debugf("Inferred value type %s for tag %s.%s", valueTypeOrNull, stepPath, getKey());
 			}
 		}
-		
+		setValueType(valueTypeOrNull);
 		Object[] args = {provider, stepPath, getKey(), myType, valueTypeOrNull};
 		try {
 			PythonCall.CREATE_RECIPE_DATA.exec(args);
@@ -354,6 +369,21 @@ public abstract class Data {
 			logger.error("Recipe Data tag creation failed", e);
 		}
 		basicWriteToTags();
+	}
+
+	/** Return true if this object has the VALUE property. */
+	public boolean hasValue() {
+		return properties.contains(IlsProperty.VALUE);
+	}
+	
+	public boolean hasDateValueType() {
+		return Constants.DATE_TIME.equals(getValue(IlsProperty.VALUE_TYPE));
+	}
+	
+	private void setValueType(String valueTypeOrNull) {
+		if(hasValue() && !IlsSfcCommonUtils.isEmpty(valueTypeOrNull)) {
+			setValue(IlsProperty.VALUE_TYPE, valueTypeOrNull);
+		}		
 	}
 
 	/** For Value instances, infer the type from the actual value. 
@@ -408,10 +438,10 @@ public abstract class Data {
 		try {
 			for(PropertyValue<?> pval: getProperties()) {
 			String attributePath = getTagAttributePath(pval.getProperty());
-			Object initialValue =  getValue(pval.getProperty());
+			Object value = getValue(pval.getProperty());
 			// note: Ignition will not allow a synchronous tag write from
 			// a UI thread, so writes from Designer UI must be async
-			Object[] setArgs = {provider, attributePath, initialValue, false};
+			Object[] setArgs = {provider, attributePath, value, false};
 			PythonCall.SET_RECIPE_DATA.exec(setArgs);
 			}
 		} catch (JythonExecException e) {
@@ -426,6 +456,9 @@ public abstract class Data {
 		for(PropertyValue<?> pv: properties) {
 			Object pvalue = pv.getValue();
 			Object tagValue = getTagValue(pv.getProperty());
+			if(tagValue instanceof Date) {
+				tagValue = Constants.DATE_FORMAT.format((Date)tagValue);
+			}
 			if(!IlsSfcCommonUtils.equal(pvalue, tagValue)) {
 				setValue(pv.getProperty(), tagValue);
 			}

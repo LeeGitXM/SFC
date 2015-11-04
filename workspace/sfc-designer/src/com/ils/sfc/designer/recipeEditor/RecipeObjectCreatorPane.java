@@ -35,7 +35,8 @@ import com.ils.sfc.designer.panels.EditorPanel;
 public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 	private JComboBox<ComboWrapper> typesCombo = new JComboBox<ComboWrapper>();
 	private JTextField keyTextField = new JTextField();
-	private String[] valueTypeChoices = {Constants.FLOAT, Constants.INT, Constants.BOOLEAN, Constants.STRING};
+	private String[] valueTypeChoices = {Constants.FLOAT, Constants.INT, Constants.BOOLEAN, 
+		Constants.STRING, Constants.DATE_TIME};
 	private JComboBox<String> valueTypeCombo = new JComboBox<String>(valueTypeChoices);
 	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
 	private RecipeEditorController controller;
@@ -119,6 +120,7 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 		try {
 			Class<?> selectedClass = (Class<?>)selectedType.getObject();
 			newObject = Data.createNewInstance(selectedClass);
+			System.out.println("newObject key " + key);
 			newObject.setKey(key);
 			String provider = IlsClientScripts.getProviderName(false);
 			newObject.setProvider(provider);
@@ -128,7 +130,7 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 			keyTextField.setText("");
 			super.accept();
 		}
-		catch(Exception e) {
+		catch(Throwable e) {
 			e.printStackTrace();
 			controller.getMessagePane().setText("Unexpected error creating object: " + e.getMessage());
 			controller.getMessagePane().activate(myIndex);

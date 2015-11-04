@@ -13,6 +13,8 @@ import javax.swing.table.AbstractTableModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.designer.EditorErrorHandler;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
@@ -102,13 +104,17 @@ public class PropertyTableModel extends AbstractTableModel {
 				propertyValues.set(pRow.getPropertyValue());
 			}
 			catch(ParseException e) {
-				if(errorHandler != null) {
-					errorHandler.handleError(e.getMessage());
-				}
+				handleError(e.getMessage());
 			}
 		}
     	hasChanged = true;
         fireTableCellUpdated(row, col);
+    }
+    
+    public void handleError(String message) {
+    	if(errorHandler != null) {
+			errorHandler.handleError(message);
+		}
     }
 
     public BasicPropertySet getPropertyValues() {
@@ -118,7 +124,7 @@ public class PropertyTableModel extends AbstractTableModel {
 	public void setPropertyValues(BasicPropertySet propertyValues, Property<?>[] orderedPropertiesOrNull) {
 		this.propertyValues = propertyValues;		
 		rows.clear();
-				
+		String valueTypeOrNull = propertyValues.get(IlsProperty.VALUE_TYPE);
 		if(orderedPropertiesOrNull != null) {
 			// order the properties in the order they are declared in the array--
 			Map<String, PropertyValue<?>> pvsByName = new HashMap<String, PropertyValue<?>>();
@@ -127,19 +133,19 @@ public class PropertyTableModel extends AbstractTableModel {
 			}
 			for(Property<?> prop: orderedPropertiesOrNull) {
 				PropertyValue<?> pval = pvsByName.get(prop.getName());
-				addPropertyValue(pval);
+				addPropertyValue(pval, valueTypeOrNull);
 			}
 		}
 		else{
 			for(PropertyValue<?> pValue: propertyValues.getValues()) {
-				addPropertyValue(pValue);
+				addPropertyValue(pValue, valueTypeOrNull);
 			}
 			sortRowsAlphabetical();
 		}
 		fireTableStructureChanged();
 	}
 
-	private void addPropertyValue(PropertyValue<?> pValue) {
+	private void addPropertyValue(PropertyValue<?> pValue, String valueTypeOrNull) {
 		if(pValue == null) {
 			logger.error("Null property value!?");
 			return;
@@ -150,6 +156,9 @@ public class PropertyTableModel extends AbstractTableModel {
 		}
 		if(!IlsProperty.isHiddenProperty(name)) {
 			PropertyRow newRow = new PropertyRow(pValue);
+			if(name.equals(Constants.VALUE)) {
+				newRow.setValueType(valueTypeOrNull);
+			}
 			rows.add(newRow);				
 		}
 	}

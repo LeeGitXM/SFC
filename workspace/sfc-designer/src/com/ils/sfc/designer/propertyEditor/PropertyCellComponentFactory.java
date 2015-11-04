@@ -68,10 +68,10 @@ public class PropertyCellComponentFactory {
 	    		sValue = "<Use Editor>";
 	    	}
 	    	else if(rowObj.getProperty().equals(IlsProperty.G2_XML)) {
-	    		sValue = IlsSfcCommonUtils.unescapeXml(getRowStringValue(rowObj));
+	    		sValue = IlsSfcCommonUtils.unescapeXml(rowObj.getValueFormatted());
 	    	}
 	    	else {
-	    		sValue = getRowStringValue(rowObj);	    		
+	    		sValue = rowObj.getValueFormatted();		
 	    	}
 	    	if(Constants.TRANSLATION_ERROR.equals(sValue)) {
 	    		textField.setBackground(Color.red);
@@ -84,8 +84,6 @@ public class PropertyCellComponentFactory {
 		return component;
 	}
 
-	private String getRowStringValue(PropertyRow rowObj) {
-		return rowObj.getValue() != null ? rowObj.getValue().toString() : "";
-	}
+
 
 }

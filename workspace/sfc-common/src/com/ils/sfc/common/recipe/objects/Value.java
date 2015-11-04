@@ -23,6 +23,7 @@ public class Value extends DataWithUnits {
 		addProperty(IlsProperty.TYPE); // , String.class, "Quantity"); // other possibilities: "float", ?
 		addProperty(IlsProperty.CATEGORY); // "Operator Input");  // other possibilities: "Simple Constant"
 		addProperty(IlsProperty.VALUE);
+		addProperty(IlsProperty.VALUE_TYPE);
 		addProperty(IlsProperty.HIGH_LIMIT);
 		addProperty(IlsProperty.LOW_LIMIT);
 	}

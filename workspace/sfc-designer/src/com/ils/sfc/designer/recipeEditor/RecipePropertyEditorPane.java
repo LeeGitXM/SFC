@@ -3,8 +3,13 @@ package com.ils.sfc.designer.recipeEditor;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 
 import javax.swing.JPanel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
@@ -45,6 +50,20 @@ public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder
 		buttonPanel.getEditButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {doEdit();}			
 		});
+		
+		// listen for selection so we can enable/disable buttons e.g.
+		getPropertyEditor().getSelectionModel().addListSelectionListener(
+			new ListSelectionListener(){
+				public void valueChanged(ListSelectionEvent e) {
+					selectionChanged();
+				}
+		});
+		selectionChanged();
+	}
+	
+	private void selectionChanged() {
+		buttonPanel.getEditButton().setEnabled(
+			getPropertyEditor().selectionIsEditable());		
 	}
 	
 	private void doAdd() {

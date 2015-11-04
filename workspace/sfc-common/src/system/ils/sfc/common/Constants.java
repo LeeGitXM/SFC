@@ -1,9 +1,13 @@
 package system.ils.sfc.common;
 
+import java.text.SimpleDateFormat;
+
 
 /** A single place to define names that need to be shared between Java and Jython. */
 public class Constants {
-
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd h:mm:ss aa"); 
+	static {DATE_FORMAT.setLenient(false);}
+	
 	// step properties
 	public static final String ABORT = "abort";
 	public static final String ABS = "Abs";
@@ -223,6 +227,7 @@ public class Constants {
 	public static final String INT = "int";
 	public static final String STRING = "string";
 	public static final String BOOLEAN = "boolean";
+	public static final String DATE_TIME = "date/time";
 	
 	// symbols for a TimeDelayStep unit choice
 	// these have nothing to do with unit conversion, they
