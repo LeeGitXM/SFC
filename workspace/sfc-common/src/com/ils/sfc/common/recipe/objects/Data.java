@@ -372,16 +372,16 @@ public abstract class Data {
 	}
 
 	/** Return true if this object has the VALUE property. */
-	public boolean hasValue() {
-		return properties.contains(IlsProperty.VALUE);
+	public boolean hasValueType() {
+		return properties.contains(IlsProperty.VALUE_TYPE);
 	}
 	
 	public boolean hasDateValueType() {
-		return Constants.DATE_TIME.equals(getValue(IlsProperty.VALUE_TYPE));
+		return hasValueType() && Constants.DATE_TIME.equals(getValue(IlsProperty.VALUE_TYPE));
 	}
 	
 	private void setValueType(String valueTypeOrNull) {
-		if(hasValue() && !IlsSfcCommonUtils.isEmpty(valueTypeOrNull)) {
+		if(hasValueType()) {
 			setValue(IlsProperty.VALUE_TYPE, valueTypeOrNull);
 		}		
 	}

@@ -120,7 +120,6 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 		try {
 			Class<?> selectedClass = (Class<?>)selectedType.getObject();
 			newObject = Data.createNewInstance(selectedClass);
-			System.out.println("newObject key " + key);
 			newObject.setKey(key);
 			String provider = IlsClientScripts.getProviderName(false);
 			newObject.setProvider(provider);

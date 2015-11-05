@@ -43,7 +43,6 @@ public abstract class IO extends DataWithUnits {
 	public IO() {
 		addProperty(IlsProperty.TAG_PATH);
 		addProperty(IlsProperty.VALUE);
-		addProperty(IlsProperty.VALUE_TYPE);
 		addProperty(IlsProperty.ERROR_CODE);
 		addProperty(IlsProperty.ERROR_TEXT);
 		addProperty(IlsProperty.PV_MONITOR_STATUS);
