@@ -30,7 +30,7 @@ import com.ils.sfc.designer.panels.UnitChooserPanel;
 @SuppressWarnings("serial")
 public class RecipeFieldCreatorPane extends EditorPanel {
 	private RecipeEditorController controller;
-	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
+	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false, true, false);
 	private JTextField nameField = new JTextField();
 	private JComboBox<ComboWrapper> typesCombo = new JComboBox<ComboWrapper>();
 	private BasicUnitChooserPanel unitChooserPanel = new BasicUnitChooserPanel();
@@ -43,6 +43,9 @@ public class RecipeFieldCreatorPane extends EditorPanel {
 		initUI();
 		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { doCreate(); }		
+		});
+		buttonPanel.getBackButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { doCancel(); }		
 		});
 	}
 
@@ -85,6 +88,10 @@ public class RecipeFieldCreatorPane extends EditorPanel {
 		this.recipeData = recipeData;
 	}
 
+	private void doCancel() {
+		this.cancel();
+	}
+	
 	private void doCreate() {
 		String name = nameField.getText().trim();
 		if(name.length() == 0) {

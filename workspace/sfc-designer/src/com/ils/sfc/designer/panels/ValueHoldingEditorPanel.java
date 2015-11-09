@@ -26,6 +26,13 @@ public abstract class ValueHoldingEditorPanel extends EditorPanel {
 		super.activate(valueHolder.getIndex());
 		this.valueHolder = valueHolder;		
 	}
+
+	@Override
+	public void cancel() {
+		//valueHolder.setValue(getValue());
+		valueHolder = null;
+		super.cancel();
+	}
 	
 	@Override
 	public void accept() {

@@ -11,7 +11,7 @@ import com.ils.sfc.designer.propertyEditor.ValueHolder;
 @SuppressWarnings("serial")
 public class UnitChooserPanel extends ValueHoldingEditorPanel {
 	private BasicUnitChooserPanel basicPanel = new BasicUnitChooserPanel();
-	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
+	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, true, false, false);
 	private boolean initialized;
 	
 	public UnitChooserPanel(PanelController controller, int index) {
@@ -19,6 +19,9 @@ public class UnitChooserPanel extends ValueHoldingEditorPanel {
 		initUI();
 		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { accept(); }		
+		});
+		buttonPanel.getCancelButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { cancel(); }		
 		});
 	}
 	

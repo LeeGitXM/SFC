@@ -41,6 +41,12 @@ public abstract class EditorPanel extends JPanel {
 		panelController.slideTo(returnIndex);
 		returnIndex = -1;
 	}
+
+	/** Cancel uncommitted changes--at this level, just returns to invoking panel. */
+	public void cancel() {
+		panelController.slideTo(returnIndex);
+		returnIndex = -1;
+	}
 	
 	/** Subclasses can override to handle column selection. */
 	protected void columnSelected(int column) {}

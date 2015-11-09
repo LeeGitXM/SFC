@@ -23,27 +23,35 @@ public class ButtonPanel extends JPanel {
 	private static Icon removeIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/delete.png"));
 	private static Icon editIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/pencil.png"));
 	private static Icon execIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/exclam.png"));
+	private static Icon cancelIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/undo.png"));
+	private static Icon backIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/back.png"));
 	final JButton addButton = new JButton(addIcon);
 	final JButton editButton = new JButton(editIcon);
 	final JButton removeButton = new JButton(removeIcon);
 	final JButton acceptButton = new JButton(checkIcon);
 	final JButton execButton = new JButton(execIcon);
+	final JButton cancelButton = new JButton(cancelIcon);
+	final JButton backButton = new JButton(backIcon);
 	final JLabel comboLabel = new JLabel();
 	final JCheckBox checkBox = new JCheckBox();
 	final Dimension buttonDimension = new Dimension(16,16);
 	public static final  java.awt.Color background = new java.awt.Color(238,238,238);	
 
 	public ButtonPanel(boolean showAccept, boolean showAdd, boolean showRemove, 
-		boolean showEdit, boolean showExec, boolean showCheckBox) {
+		boolean showEdit, boolean showExec, boolean showCancel, boolean showBack, boolean showCheckBox) {
 		setBackground(background);
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		setPreferredSize(new Dimension(100,20));
-		addButton.setToolTipText("Add");
-		editButton.setToolTipText("Edit");
-		removeButton.setToolTipText("Remove");
+		backButton.setToolTipText("Back");		
 		acceptButton.setToolTipText("Accept");
+		cancelButton.setToolTipText("Cancel");		
+		addButton.setToolTipText("Add");
+		removeButton.setToolTipText("Remove");
+		editButton.setToolTipText("Edit");
 		execButton.setToolTipText("Execute");
-		if(showAccept) addButton(acceptButton);		
+		if(showBack) addButton(backButton);
+		if(showAccept) addButton(acceptButton);
+		if(showCancel) addButton(cancelButton);
 		if(showAdd) addButton(addButton);
 		if(showRemove) addButton(removeButton);
 		if(showEdit) addButton(editButton);
@@ -55,7 +63,7 @@ public class ButtonPanel extends JPanel {
 	}
 	
 	public ButtonPanel() {
-		this(true, true, true, true, true, true);
+		this(true, true, true, true, true, true, true, true);
 	}
 
 	private void addButton(JButton button) {
@@ -92,6 +100,14 @@ public class ButtonPanel extends JPanel {
 
 	public JCheckBox getCheckBox() {
 		return checkBox;
+	}
+
+	public JButton getBackButton() {
+		return backButton;
+	}
+
+	public JButton getCancelButton() {
+		return cancelButton;
 	}
 
 }

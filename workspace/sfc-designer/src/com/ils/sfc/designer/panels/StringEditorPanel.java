@@ -12,7 +12,7 @@ import com.ils.sfc.designer.propertyEditor.ValueHolder;
 @SuppressWarnings("serial")
 public class StringEditorPanel extends ValueHoldingEditorPanel {
 	protected JTextArea textField = new JTextArea();
-	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
+	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, true, false, false);
 	
 	public StringEditorPanel(PanelController controller, int index) {
 		super(controller, index);
@@ -22,6 +22,9 @@ public class StringEditorPanel extends ValueHoldingEditorPanel {
 		add(buttonPanel, BorderLayout.NORTH);
 		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {accept();}		
+		});
+		buttonPanel.getCancelButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {cancel();}		
 		});
 	}
 

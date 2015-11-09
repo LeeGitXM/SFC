@@ -12,7 +12,7 @@ import com.ils.sfc.designer.propertyEditor.ValueHolder;
  */
 @SuppressWarnings("serial")
 public class TagBrowserPanel extends ValueHoldingEditorPanel  {
-	private final ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false,  false);
+	private final ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, true, false, false);
 	protected TagBrowser tagBrowser;
 	private boolean initialized;
 	
@@ -21,6 +21,9 @@ public class TagBrowserPanel extends ValueHoldingEditorPanel  {
 		this.myIndex = index;
 		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {accept();}			
+		});
+		buttonPanel.getCancelButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {cancel();}			
 		});
 	}
 
@@ -42,7 +45,7 @@ public class TagBrowserPanel extends ValueHoldingEditorPanel  {
 	public Object getValue() {
 		String tagPath = tagBrowser.getTagPath();
 		// strip off provider:
-		if(tagPath.startsWith("[")) {
+		if(tagPath != null && tagPath.startsWith("[")) {
 			int rbIndex = tagPath.indexOf("]");
 			if(rbIndex != -1) {
 				tagPath = tagPath.substring(rbIndex+1, tagPath.length());

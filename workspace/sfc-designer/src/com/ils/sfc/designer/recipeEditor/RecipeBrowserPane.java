@@ -27,7 +27,7 @@ import com.inductiveautomation.ignition.common.config.PropertyValue;
 /** Provide a tree view of all recipe data. */
 @SuppressWarnings("serial")
 public class RecipeBrowserPane extends EditorPanel implements ValueHolder {
-	private ButtonPanel buttonPanel = new ButtonPanel(false, true, true, true, false, false);
+	private ButtonPanel buttonPanel = new ButtonPanel(false, true, true, true, false, false, false, false);
 	private JTree tree;
 	private JScrollPane treeScroll;
 	private DefaultTreeModel treeModel;

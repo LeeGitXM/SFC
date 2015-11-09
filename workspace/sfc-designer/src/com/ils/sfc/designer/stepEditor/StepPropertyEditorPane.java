@@ -25,7 +25,7 @@ import com.inductiveautomation.ignition.common.script.JythonExecException;
 public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 	private StepEditorController controller;
 	private PropertyEditor editor = new PropertyEditor();
-	private ButtonPanel buttonPanel = new ButtonPanel(false, false, false, true, true,  true);
+	private ButtonPanel buttonPanel = new ButtonPanel(false, false, false, true, true,  false, false, true);
 
 	public StepPropertyEditorPane(StepEditorController controller, int index) {
 		super(controller, index);

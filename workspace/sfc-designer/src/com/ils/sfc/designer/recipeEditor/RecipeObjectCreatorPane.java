@@ -38,7 +38,7 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 	private String[] valueTypeChoices = {Constants.FLOAT, Constants.INT, Constants.BOOLEAN, 
 		Constants.STRING, Constants.DATE_TIME};
 	private JComboBox<String> valueTypeCombo = new JComboBox<String>(valueTypeChoices);
-	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
+	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, true, false, false);
 	private RecipeEditorController controller;
 	private String chartPath;
 	private Data newObject;
@@ -50,6 +50,9 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 		initUI();
 		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { accept(); }		
+		});
+		buttonPanel.getCancelButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { cancel(); }		
 		});
 	}
 

@@ -37,7 +37,7 @@ public abstract class RowEditorPanel extends EditorPanel implements ValueHolder 
 	protected RowTableModel tableModel;
 	protected StepEditorController stepController;
 	protected JPanel upperPanel;
-	protected ButtonPanel buttonPanel = new ButtonPanel(true, true, true, true, false, false);
+	protected ButtonPanel buttonPanel = new ButtonPanel(true, true, true, true, false, true, false, false);
 
 	protected RowEditorPanel(StepEditorController controller, int index, boolean addUpperPanel) {
 		super(controller, index);
@@ -53,6 +53,9 @@ public abstract class RowEditorPanel extends EditorPanel implements ValueHolder 
 		
 		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {doAccept();}
+		});
+		buttonPanel.getCancelButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {doCancel();}
 		});
 		buttonPanel.getAddButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {doAdd();}
@@ -110,7 +113,11 @@ public abstract class RowEditorPanel extends EditorPanel implements ValueHolder 
 		int selectedRow = table.getSelectedRow();
 		tableModel.removeSelectedRow(selectedRow);
 	}
-
+	
+	protected void doCancel() {
+		cancel();
+	}
+	
 	protected void doAccept() {
 		try {
 			String json = getConfig().toJSON();

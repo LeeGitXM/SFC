@@ -9,7 +9,7 @@ import javax.swing.JTextArea;
 /** A sliding pane for displaying a message */
 @SuppressWarnings("serial")
 public class MessagePanel extends EditorPanel {
-	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, false);
+	private ButtonPanel buttonPanel = new ButtonPanel(false, false, false, false, false, false, true, false);
 	protected JTextArea testArea = new JTextArea();
 	protected int returnIndex;
 	
@@ -19,10 +19,10 @@ public class MessagePanel extends EditorPanel {
 		testArea.setLineWrap(true);
 		add(testArea, BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.NORTH);
-		buttonPanel.getAddButton().setVisible(false);
-		buttonPanel.getEditButton().setVisible(false);
-		buttonPanel.getRemoveButton().setVisible(false);
-		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
+		//buttonPanel.getAddButton().setVisible(false);
+		//buttonPanel.getEditButton().setVisible(false);
+		//buttonPanel.getRemoveButton().setVisible(false);
+		buttonPanel.getBackButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {accept();}		
 		});
 	}
