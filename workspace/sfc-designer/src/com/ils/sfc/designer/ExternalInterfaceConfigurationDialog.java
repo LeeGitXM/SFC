@@ -24,7 +24,6 @@ import javax.swing.WindowConstants;
 import net.miginfocom.swing.MigLayout;
 
 import com.ils.common.persistence.ToolkitProperties;
-import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcRequestHandler;
 import com.inductiveautomation.ignition.common.sqltags.model.TagProviderMeta;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
@@ -280,7 +279,7 @@ public class ExternalInterfaceConfigurationDialog extends JDialog {
 			requestHandler.setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_PROVIDER,mainProviderBox.getSelectedItem().toString() );
 		}
 		if(secondaryProviderBox.getSelectedIndex()>=0 && secondaryProviderBox.getSelectedIndex()!= secondaryProviderInitialSelection) {
-			requestHandler.setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME,secondaryTimeFactorField.getText());
+			requestHandler.setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME,secondaryProviderBox.getSelectedItem().toString());
 		}
 
 		// This causes an immediate active update.
