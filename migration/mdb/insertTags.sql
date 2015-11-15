@@ -30,8 +30,8 @@ insert into TagMap values ('C9-SPEC-LIMIT-IN-FEED','[]LabData/C9-SPEC-LIMIT-IN-F
 insert into TagMap values ('CA-LAB-DATA','[]LabData/RLA3/CA-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('CA-SQC-TO-CRX-GDA','[]DiagnosticToolkit/Connections/CaSqcToCrx','STRING');
 insert into TagMap values ('CATEFF_HIGH_LIMIT','[]Site/CRx/CATEFF-HIGH-LIMIT','DOUBLE');
-insert into TagMap values ('CATIN-GDA-COUNTER','[]Site/CSTR/CATIN-GDA-COUNTER','INTEGER');
-insert into TagMap values ('CATIN-GDA-PROD-ML-ACTIVE','[]Site/CSTR/CATIN-GDA-PROD-ML-ACTIVE','BOOLEAN');
+insert into TagMap values ('CATIN-GDA-COUNTER','[]Site/CSTR/CATIN-COUNTER','INTEGER');
+insert into TagMap values ('CATIN-GDA-PROD-ML-ACTIVE','[]Site/CSTR/CATIN-PROD-ML-ACTIVE','BOOLEAN');
 insert into TagMap values ('CAT_EFFICIENCY','[]DiagnosticToolkit/CRx/VRG531Z-1/value','DOUBLE');
 insert into TagMap values ('CAT_EFF_HIGH_LIMIT','[]Site/CRX/CATEFF-HIGH-LIMIT','DOUBLE');
 insert into TagMap values ('CAT_IS_IN','[]DiagnosticToolkit/Connections/CatIsIn-a','STRING');
