@@ -512,5 +512,16 @@ public abstract class Data {
 			return false;
 		}				
 	}
+
+	public void readTreeFromTags() {
+		if(isGroup()) {
+			for(Data data: ((Group)this).getChildren()) {
+				data.readTreeFromTags();
+			}
+		}
+		else {
+			readFromTags();
+		}
+	}
 	
 }

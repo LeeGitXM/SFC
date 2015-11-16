@@ -31,9 +31,24 @@ import com.inductiveautomation.sfc.elements.AbstractStepElement;
 /** An observer that listens to SFC chart status changes and messages the client
  *  so that the ControlPanel status display (e.g.) can stay up to date. */
 public class IlsChartObserver implements ChartObserver {
+	private static class ChartRunInfo {
+		ChartStateEnum chartState;
+		String chartRunId;
+		String chartPath;
+		String parentRunId;
+		String projectName;
+		Map<String,ElementStateEnum> elementStateById = new HashMap<String,ElementStateEnum>();
+		
+		public ChartRunInfo(String chartRunId, String chartPath, String parentRunId, String projectName) {
+			this.chartRunId = chartRunId;
+			this.chartPath = chartPath;
+			this.parentRunId = parentRunId;
+			this.projectName = projectName;
+		} 
+	}
+	
 	private static LoggerEx logger = LogUtil.getLogger(IlsChartObserver.class.getName());
-	private Map<String,String> projectNamesByRunId = new HashMap<String,String>();
-	private Map<String, ChartStateEnum> chartStatesByRunId = new HashMap<String, ChartStateEnum>();
+	private static Map<String,ChartRunInfo> runInfoById = new HashMap<String,ChartRunInfo>();
 	private Set<String> cancelRequests = new HashSet<String>();
 	private Set<String> pauseRequests = new HashSet<String>();
 
@@ -66,45 +81,61 @@ public class IlsChartObserver implements ChartObserver {
 	public synchronized void onChartStateChange(UUID chartId, ChartStateEnum oldChartState,
 			ChartStateEnum newChartState) {
 		String runIdAsString = chartId.toString();
-		String projectName = projectNamesByRunId.get(runIdAsString);
-		// project name will only be non-null for ILS charts
-		// message the clients about the chart status:
-		if(projectName != null) {
-			chartStatesByRunId.put(runIdAsString, newChartState);
-			PyDictionary payload = new PyDictionary();
-			payload.put("instanceId", runIdAsString);
-			payload.put("status", newChartState.toString());
-			try {
-				PythonCall.SEND_CHART_STATUS.exec(projectName, payload);
-			} catch (JythonExecException e) {
-				logger.error("error sending chart status", e);
-			}
-			
-			// prevent a memory leak by clearing the map after the chart finishes
-			if(newChartState.isTerminal()) {
-				chartStatesByRunId.remove(runIdAsString);
-				cancelRequests.remove(runIdAsString);
-				pauseRequests.remove(runIdAsString);
-				projectNamesByRunId.remove(runIdAsString);
-			}
+		ChartRunInfo info = runInfoById.get(runIdAsString);
+		if(info == null) {
+			return;  // not an ILS chart
+		}
+		info.chartState = newChartState;
+		
+		sendStatusToClient(newChartState, runIdAsString, info.projectName);
+		
+		// prevent a memory leak by clearing the map after the chart finishes
+		if(newChartState.isTerminal()) {
+			runInfoById.remove(runIdAsString);
+			cancelRequests.remove(runIdAsString);
+			pauseRequests.remove(runIdAsString);
+		}
+	}
+
+	private void sendStatusToClient(ChartStateEnum newChartState,
+			String runIdAsString, String projectName) {
+		PyDictionary payload = new PyDictionary();
+		payload.put("instanceId", runIdAsString);
+		payload.put("status", newChartState.toString());
+		try {
+			PythonCall.SEND_CHART_STATUS.exec(projectName, payload);
+		} catch (JythonExecException e) {
+			logger.error("error sending chart status", e);
 		}
 	}
 
 	@Override
-	public synchronized void onElementStateChange(UUID elementId, UUID chartId, ElementStateEnum oldElementState,
-			ElementStateEnum newElementState) {
+	public synchronized void onElementStateChange(UUID chartId, UUID elementId, ElementStateEnum oldElementState,
+		ElementStateEnum newElementState) {
+		ChartRunInfo info = runInfoById.get(chartId.toString());
+		if(info == null) {
+			return;  // not an ILS chart
+		}
+		info.elementStateById.put(elementId.toString(), newElementState);
+		System.out.println(chartId.toString() + " " + elementId.toString() + " " + newElementState);
+
 	}
 
 	@Override
 	public synchronized void onBeforeChartStart(ChartContext chartContext) {
-		createTags(chartContext);
 		PyDictionary chartScope = chartContext.getChartScope();
-		String chartRunId = (String)chartScope.get(Constants.INSTANCE_ID);
 		String projectName = (String)chartScope.get(Constants.PROJECT);
-		projectNamesByRunId.put(chartRunId, projectName);
-		//String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
-		//controller.setElement(stepComponent.getElement(), chartPath);
-	}
+		// TODO: look up hierarchy for project name. If not seen, ignore--not our chart
+		
+		String chartPath = (String)chartScope.get(Constants.CHART_PATH);
+		String chartRunId = (String)chartScope.get(Constants.INSTANCE_ID);
+		String parentRunId = chartScope.get(Constants.PARENT) != null ?
+			(String)((PyDictionary)chartScope.get(Constants.PARENT)).get(Constants.INSTANCE_ID) : 
+			null;		
+		ChartRunInfo info = new ChartRunInfo(chartRunId, chartPath, parentRunId, projectName);
+		runInfoById.put(chartRunId,  info);
+		createTags(chartContext);
+}
 
 	private synchronized void createTags(ChartContext chartContext) {
 		String chartPath = (String)chartContext.getChartScope().get("chartPath");

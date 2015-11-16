@@ -1,5 +1,7 @@
 package com.ils.sfc.gateway.recipe;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.gateway.IlsSfcGatewayHook;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -22,12 +24,17 @@ public class IlsScopeLocator implements ScopeLocator {
 	 */
 	@Override
 	public synchronized PyChartScope locate(ScopeContext scopeContext, String identifier) {
-		// check this step first, then walk up the hierarchy:
 		PyChartScope stepScope = scopeContext.getStepOrPrevious();
 		PyChartScope chartScope = scopeContext.getChartScope();
-		String tagPath = RecipeDataAccess.getRecipeDataTagPath(chartScope, stepScope, identifier);
 		String providerName = RecipeDataAccess.getProviderName(RecipeDataAccess.getIsolationMode(chartScope));
-		return new RecipeDataChartScope(tagPath, providerName, hook.getContext());			
+		if(identifier.equals(Constants.TAG)) {
+			return new RecipeDataChartScope("", providerName, hook.getContext(), false);				
+		}
+		else {
+			// check this step first, then walk up the hierarchy:
+			String tagPath = RecipeDataAccess.getRecipeDataTagPath(chartScope, stepScope, identifier);
+			return new RecipeDataChartScope(tagPath, providerName, hook.getContext(), true);	
+		}
 	}
 
 }

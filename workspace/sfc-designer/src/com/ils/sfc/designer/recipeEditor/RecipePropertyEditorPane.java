@@ -29,7 +29,7 @@ import com.inductiveautomation.ignition.common.config.PropertyValue;
 public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder {
 	private RecipeEditorController controller;
 	private PropertyEditor editor = new PropertyEditor();
-	private ButtonPanel buttonPanel = new ButtonPanel(false, true, true, true, false,  false, true, false);
+	private ButtonPanel buttonPanel = new ButtonPanel(true, true, true, true, false,  false, false, false);
 
 	private Data recipeData;
 	
@@ -40,9 +40,6 @@ public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder
 		add(buttonPanel, BorderLayout.NORTH);
 		buttonPanel.getAcceptButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {doOK();}			
-		});
-		buttonPanel.getBackButton().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {doCancel();}			
 		});
 		buttonPanel.getAddButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {doAdd();}			

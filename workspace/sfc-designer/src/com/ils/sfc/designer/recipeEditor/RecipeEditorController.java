@@ -15,12 +15,15 @@ import com.ils.sfc.designer.panels.PanelController;
 import com.ils.sfc.designer.panels.StringEditorPanel;
 import com.ils.sfc.designer.panels.TagBrowserPanel;
 import com.ils.sfc.designer.panels.UnitChooserPanel;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** A controller for all the sliding panes that are involved in editing recipe data. */
 public class RecipeEditorController extends PanelController implements EditorErrorHandler {
+	private static LoggerEx logger = LogUtil.getLogger(RecipeEditorController.class.getName());
 			
 	static final int BROWSER = 0;
 	static final int OBJECT_CREATOR = 1;
@@ -149,6 +152,15 @@ public class RecipeEditorController extends PanelController implements EditorErr
 	@Override
 	public void handleError(String msg) {
 		showMessage(msg, OBJECT_EDITOR);		
+	}
+
+	public void readRecipeDataFromTags() {
+		long startMillis = System.currentTimeMillis();
+		for(Data data: recipeData) {
+			data.readTreeFromTags();
+		}
+		long endMillis = System.currentTimeMillis() - startMillis;
+		logger.infof("tag values for recipe data read in %d seconds ", endMillis/1000);
 	}
 
 }
