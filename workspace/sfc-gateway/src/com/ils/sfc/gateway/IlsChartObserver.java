@@ -117,7 +117,7 @@ public class IlsChartObserver implements ChartObserver {
 			return;  // not an ILS chart
 		}
 		info.elementStateById.put(elementId.toString(), newElementState);
-		System.out.println(chartId.toString() + " " + elementId.toString() + " " + newElementState);
+		//System.out.println(chartId.toString() + " " + elementId.toString() + " " + newElementState);
 
 	}
 
