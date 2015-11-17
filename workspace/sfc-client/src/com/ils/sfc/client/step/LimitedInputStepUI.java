@@ -40,7 +40,7 @@ public class LimitedInputStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Get Input with Limit Checking";
+            return "Get w/ Limits";
         }
 
         @Override

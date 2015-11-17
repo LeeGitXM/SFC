@@ -39,7 +39,7 @@ public class ControlPanelMessageStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Post Message to Control Panel";
+            return "Post Message";
         }
 
         @Override

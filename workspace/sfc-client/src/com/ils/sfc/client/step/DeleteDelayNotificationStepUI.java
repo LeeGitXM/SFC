@@ -39,7 +39,7 @@ public class DeleteDelayNotificationStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Delete Delay Notification Dialog";
+            return "Delete Notice";
         }
 
         @Override

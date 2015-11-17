@@ -39,7 +39,7 @@ public class ManualDataEntryStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Manual Data Entry";
+            return "Data Entry";
         }
 
         @Override

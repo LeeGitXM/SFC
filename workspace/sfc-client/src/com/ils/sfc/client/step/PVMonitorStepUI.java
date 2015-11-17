@@ -39,7 +39,7 @@ public class PVMonitorStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Monitor Process Values";
+            return "PV Monitor";
         }
 
         @Override

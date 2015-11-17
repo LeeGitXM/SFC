@@ -39,7 +39,7 @@ public class YesNoStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Yes/No Dialog";
+            return "Yes/No";
         }
 
         @Override

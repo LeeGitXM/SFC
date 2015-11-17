@@ -39,7 +39,7 @@ public class ReviewDataWithAdviceStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Review Data With Advice";
+            return "Review w/ Advice";
         }
 
         @Override

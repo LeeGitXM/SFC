@@ -39,7 +39,7 @@ public class ConfirmControllersStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Check Controller Mode";
+            return "Check Mode";
         }
 
         @Override

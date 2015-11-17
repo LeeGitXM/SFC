@@ -39,7 +39,7 @@ public class MonitorDownloadStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Download Status User Interface";
+            return "Download GUI";
         }
 
         @Override

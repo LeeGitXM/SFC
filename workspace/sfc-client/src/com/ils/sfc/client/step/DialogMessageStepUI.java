@@ -39,7 +39,7 @@ public class DialogMessageStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Post Message to Dialog";
+            return "Post Dialog";
         }
 
         @Override

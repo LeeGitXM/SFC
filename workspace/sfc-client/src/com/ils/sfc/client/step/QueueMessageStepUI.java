@@ -39,7 +39,7 @@ public class QueueMessageStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Post  Message to Queue";
+            return "Post Message";
         }
 
         @Override

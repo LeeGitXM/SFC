@@ -39,7 +39,7 @@ public class SaveQueueStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Save Queue to File";
+            return "Save Queue";
         }
 
         @Override
