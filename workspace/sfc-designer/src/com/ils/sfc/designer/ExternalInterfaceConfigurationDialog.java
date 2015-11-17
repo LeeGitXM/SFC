@@ -279,9 +279,11 @@ public class ExternalInterfaceConfigurationDialog extends JDialog {
 			requestHandler.setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_PROVIDER,mainProviderBox.getSelectedItem().toString() );
 		}
 		if(secondaryProviderBox.getSelectedIndex()>=0 && secondaryProviderBox.getSelectedIndex()!= secondaryProviderInitialSelection) {
-			requestHandler.setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME,secondaryProviderBox.getSelectedItem().toString());
+			requestHandler.setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_PROVIDER,secondaryProviderBox.getSelectedItem().toString());
 		}
-
+		if( !secondaryTimeFactorField.getText().isEmpty() ) {
+			requestHandler.setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME,secondaryTimeFactorField.getText());
+		}
 		// This causes an immediate active update.
 		double speedup = Double.parseDouble(secondaryTimeFactorField.getText());  // We've already validated the field ...
 		requestHandler.setTimeFactor(speedup);
