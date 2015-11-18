@@ -57,13 +57,16 @@ public class BasicUnitChooserPanel extends JPanel {
 	public void initTypes() {
 		try {
 			String[] unitTypes = PythonCall.toArray(PythonCall.GET_UNIT_TYPES.exec());
-			for(String unitType: unitTypes) {
-				typesCombo.addItem(unitType);
+			if(unitTypes.length > 0) {
+				for(String unitType: unitTypes) {
+					typesCombo.addItem(unitType);
+				}
+				typesCombo.setSelectedIndex(0);
 			}
+
 		} catch (JythonExecException e) {
 			logger.error("Error initializing unit types", e);
 		}
-		typesCombo.setSelectedIndex(0);
 	}
 
 	public String getSelectedType() {
