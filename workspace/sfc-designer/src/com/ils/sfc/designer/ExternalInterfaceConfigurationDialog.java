@@ -281,7 +281,6 @@ public class ExternalInterfaceConfigurationDialog extends JDialog {
 		if(secondaryProviderBox.getSelectedIndex()>=0 && secondaryProviderBox.getSelectedIndex()!= secondaryProviderInitialSelection) {
 			requestHandler.setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_PROVIDER,secondaryProviderBox.getSelectedItem().toString());
 		}
-
 		// This causes an immediate active update.
 		double speedup = Double.parseDouble(secondaryTimeFactorField.getText());  // We've already validated the field ...
 		requestHandler.setTimeFactor(speedup);
