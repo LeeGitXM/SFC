@@ -2,8 +2,12 @@ package com.ils.sfc.designer;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.util.Enumeration;
 
+import javax.swing.JTree;
 import javax.swing.border.EmptyBorder;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
@@ -34,5 +38,31 @@ public class DesignerUtil {
 		con.weighty = weighty;
 	}
 
+	/** Collapse all nodes in a tree. */
+	public static void collapseTree(JTree tree) {
+		TreeNode root = (TreeNode) tree.getModel().getRoot();
+		collapseAll(tree, new TreePath(root));
+	}
+
+	private static void collapseAll(JTree tree, TreePath parentPath) {
+		TreeNode node = (TreeNode) parentPath.getLastPathComponent();
+	    if (node.getChildCount() > 0) {
+	    	for (Enumeration<?> e = node.children(); e.hasMoreElements();) {
+	    		TreeNode n = (TreeNode) e.nextElement();
+	    		TreePath path = parentPath.pathByAddingChild(n);
+	    		collapseAll(tree, path);
+	    	}
+	    }
+	    tree.collapsePath(parentPath);
+	 }
+
+	/** Set the selected tree path and make (only) it visible */
+	public static void setSelectedTreePath(JTree tree, TreePath treePath) {
+		tree.clearSelection();
+		DesignerUtil.collapseTree(tree);
+		tree.expandPath(treePath);
+		tree.scrollPathToVisible(treePath);
+		tree.getSelectionModel().setSelectionPath(treePath);
+	}
 
 }

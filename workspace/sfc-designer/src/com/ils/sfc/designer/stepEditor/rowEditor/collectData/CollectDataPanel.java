@@ -42,10 +42,11 @@ public class CollectDataPanel extends RowEditorPanel {
 			}			
 		});
 	}
-	
+		
 	@Override
 	protected void doEdit() {
 		super.doEdit();
+		stepController.getTagBrowser().setValue(getSelectedValue());
 		stepController.getTagBrowser().activate(this);
 	}
 	

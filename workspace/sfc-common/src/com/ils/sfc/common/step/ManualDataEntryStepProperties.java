@@ -15,10 +15,10 @@ public interface ManualDataEntryStepProperties extends ChartStepProperties {
     public static final BasicProperty<?>[] properties = {
     	POSITION,
     	SCALE,
+    	BUTTON_LABEL,
     	WINDOW_TITLE,
     	MANUAL_DATA_WINDOW,
     	MANUAL_DATA_POSTING_METHOD,
-    	BUTTON_LABEL,
     	TIMEOUT,
     	AUTO_MODE,
     	REQUIRE_ALL_INPUTS,

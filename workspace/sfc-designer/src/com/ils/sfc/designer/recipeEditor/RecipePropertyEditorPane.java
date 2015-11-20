@@ -76,6 +76,7 @@ public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder
 		if(selectedPropertyValue == null) return;
 		if(selectedPropertyValue.getProperty().equals(IlsProperty.TAG_PATH)) {
 			editor.stopCellEditing();
+			controller.getTagBrowser().setValue(editor.getSelectedValue());
 			controller.getTagBrowser().activate(this);
 		}
 		else if(selectedPropertyValue.getProperty().equals(IlsProperty.UNITS)) {

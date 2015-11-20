@@ -3,9 +3,12 @@ package com.ils.sfc.designer.panels;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
+import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.designer.TagBrowser;
 import com.ils.sfc.designer.propertyEditor.ValueHolder;
+import com.inductiveautomation.ignition.common.sqltags.parser.BasicTagPath;
 
 /** A wrapper for an Ignition tag browser so the user can browse tags instead
  *  of manually typing in the tag path. 
@@ -15,6 +18,7 @@ public class TagBrowserPanel extends ValueHoldingEditorPanel  {
 	private final ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, true, false, false);
 	protected TagBrowser tagBrowser;
 	private boolean initialized;
+	private String currentValue;
 	
 	public TagBrowserPanel(PanelController controller, int index) {
 		super(controller, index);
@@ -38,6 +42,11 @@ public class TagBrowserPanel extends ValueHoldingEditorPanel  {
 			validate();
 			initialized = true;
 		}
+		if(currentValue != null) {
+			tagBrowser.setSelectedTagPath(currentValue);
+		}
+		currentValue = null;
+		
 		super.activate(valueHolder);
 	}
 
@@ -56,8 +65,7 @@ public class TagBrowserPanel extends ValueHoldingEditorPanel  {
 
 	@Override
 	public void setValue(Object value) {
-		// in theory we could set the tag browser to select the current value,
-		// but at the moment we do nothing...
+		currentValue = (String) value;
 	}
 }
 

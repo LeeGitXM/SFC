@@ -129,7 +129,18 @@ public abstract class RowEditorPanel extends EditorPanel implements ValueHolder 
 			logger.error("Error serializing data config");
 		}
 	}
-	
+
+	public Object getSelectedValue() {
+		int row = table.getSelectedRow();
+		int col = table.getSelectedColumn();
+		if(row != -1 && col != -1) {
+		return tableModel.getValueAt(row, col);
+		}
+		else {
+			return null;
+		}
+	}
+
 	protected abstract RowConfig getConfig();
 	
 	@Override
