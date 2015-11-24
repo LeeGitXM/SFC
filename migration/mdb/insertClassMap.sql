@@ -1,6 +1,6 @@
 insert into ClassMap values ('EM-GDA-ABSOLUTE-COMPARE','com.ils.block.CompareAbsolute');
 insert into ClassMap values ('EM-GDA-BAD-DATA-HANDLER','com.ils.block.DataConditioner');
-insert into ClassMap values ('EM-GDA-CLOCK-TIMER','com.ils.block.Clock');
+insert into ClassMap values ('EM-GDA-CLOCK-TIMER','com.ils.block.TruthValuePulse');
 insert into ClassMap values ('EM-GDA-COMPARE','com.ils.block.Compare');
 insert into ClassMap values ('EM-GDA-DEADBAND-COMPARE','com.ils.block.CompareDeadband');
 insert into ClassMap values ('EM-GDA-ELAPSED-TIME-VARIABLE','com.ils.block.Inhibitor');
@@ -45,7 +45,7 @@ insert into ClassMap values ('GDL-NUMERIC-ENTRY-POINT','com.ils.block.Input');
 insert into ClassMap values ('GDL-OR-GATE','com.ils.block.Or');
 insert into ClassMap values ('GDL-PERSISTENCE-GATE','com.ils.block.PersistenceGate');
 insert into ClassMap values ('GDL-SYMBOLIC-ENTRY-POINT','com.ils.block.Input');
-insert into ClassMap values ('GDL-TIMER','com.ils.block.Clock');
+insert into ClassMap values ('GDL-TIMER','com.ils.block.Timer');
 insert into ClassMap values ('INTEGER-PARAMETER','com.ils.block.Parameter');
 insert into ClassMap values ('LOGICAL-PARAMETER','com.ils.block.Parameter');
 insert into ClassMap values ('LOGICAL-VARIABLE','com.ils.block.Parameter');

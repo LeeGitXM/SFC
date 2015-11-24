@@ -126,10 +126,10 @@ insert into BltPropertyMap values ('GDL-OR-GATE','maximumUnknownInputs','','INTE
 insert into BltPropertyMap values ('GDL-OR-GATE','outputUncertainty','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-OR-GATE','useExpiredInputs','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-SYMBOLIC-ENTRY-POINT','nameOfSensor','TagPath','STRING',1,'TAG_READ');
-insert into BltPropertyMap values ('GDL-TIMER','countBy','','STRING',1,'NONE');
+insert into BltPropertyMap values ('GDL-TIMER','countBy','Interval','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-TIMER','displayUnits','','STRING',1,'NONE');
-insert into BltPropertyMap values ('GDL-TIMER','stopwhen','','STRING',1,'NONE');
-insert into BltPropertyMap values ('GDL-TIMER','triggeron','','STRING',1,'NONE');
+insert into BltPropertyMap values ('GDL-TIMER','stopwhen','StopOn','BOOLEAN',1,'NONE');
+insert into BltPropertyMap values ('GDL-TIMER','triggeron','Trigger','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('INTEGER-PARAMETER','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('LOGICAL-PARAMETER','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('LOGICAL-VARIABLE','label','','STRING',1,'NONE');
