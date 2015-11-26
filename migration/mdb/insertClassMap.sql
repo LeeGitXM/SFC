@@ -1,7 +1,7 @@
 insert into ClassMap values ('EM-GDA-ABSOLUTE-COMPARE','com.ils.block.CompareAbsolute');
 insert into ClassMap values ('EM-GDA-BAD-DATA-HANDLER','com.ils.block.DataConditioner');
 insert into ClassMap values ('EM-GDA-CLOCK-TIMER','com.ils.block.TruthValuePulse');
-insert intClassMap values ('EM-GDA-COMPARE','com.ils.block.Compare');
+insert into ClassMap values ('EM-GDA-COMPARE','com.ils.block.Compare');
 insert into ClassMap values ('EM-GDA-DEADBAND-COMPARE','com.ils.block.CompareDeadband');
 insert into ClassMap values ('EM-GDA-ELAPSED-TIME-VARIABLE','com.ils.block.Inhibitor');
 insert into ClassMap values ('EM-GDA-EXPIRATION-FILTER','com.ils.block.Junction');
