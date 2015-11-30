@@ -38,6 +38,7 @@
 		<fileset dir="${basedir}/../../external/lib" includes="guava*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="jackson-*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="jfreechart-*.jar" />
+		<fileset dir="${basedir}/../../external/lib" includes="jide-*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="jython-2.5.3.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="log4j*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="lucene-*.jar" />
