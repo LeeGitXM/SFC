@@ -9,6 +9,8 @@ import java.util.zip.GZIPInputStream;
 
 import javax.xml.stream.XMLStreamWriter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -17,14 +19,12 @@ import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
-import com.inductiveautomation.ignition.common.util.LogUtil;
-import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** Misc. utilities that don't fit into any ILS class or superclass. */
 public class IlsSfcCommonUtils {
-	private static final LoggerEx logger = LogUtil.getLogger(IlsSfcCommonUtils.class.getPackage().getName());
+	private static final Logger logger = LoggerFactory.getLogger(IlsSfcCommonUtils.class);
 
 	/** Get the value of a string property from XML, using the default if necessary. */
 	public static String getStringProperty(Property<String> property, Element dom) {
