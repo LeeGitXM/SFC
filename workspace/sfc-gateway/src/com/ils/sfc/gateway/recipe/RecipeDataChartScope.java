@@ -2,10 +2,8 @@ package com.ils.sfc.gateway.recipe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.python.core.PyObject;
 import org.python.core.PyString;
@@ -13,9 +11,7 @@ import org.python.core.PyString;
 import system.ils.sfc.common.Constants;
 
 import com.inductiveautomation.ignition.common.expressions.TagListener;
-import com.inductiveautomation.ignition.common.model.values.QualifiedValue;
 import com.inductiveautomation.ignition.common.sqltags.model.Tag;
-import com.inductiveautomation.ignition.common.sqltags.model.TagCollection;
 import com.inductiveautomation.ignition.common.sqltags.model.TagPath;
 import com.inductiveautomation.ignition.common.sqltags.model.TagProp;
 import com.inductiveautomation.ignition.common.sqltags.model.event.TagChangeEvent;
@@ -68,9 +64,11 @@ public class RecipeDataChartScope extends PyChartScope {
 	@Override 
 	public Object get(Object key) {		
 		// Build the tag path as far as the name of the UDT
-		PyChartScope result = new PyChartScope();
 		BasicTagPath igTagPath = null;
+		Object result = null;
 		if(isRecipeDataTag) {
+			PyChartScope resultScope = new PyChartScope();
+			result = resultScope;
 			String tagPath = Constants.RECIPE_DATA_FOLDER + "/" + stepPath + "/" + key;
 			List<String> pathComponents = getPathComponents(tagPath);
 			
@@ -80,7 +78,7 @@ public class RecipeDataChartScope extends PyChartScope {
 			
 			// Read the values of all the UDT members and put them in a PyChartScope, which is the return result
 			for(Tag tag: tags) {
-				result.put(tag.getName(), tag.getValue().getValue());
+				resultScope.put(tag.getName(), tag.getValue().getValue());
 			}
 		}
 		else {  // is a non-recipe tag
@@ -88,23 +86,10 @@ public class RecipeDataChartScope extends PyChartScope {
 			igTagPath = new BasicTagPath(providerName, pathComponents);
 			Tag tag = gatewayContext.getTagManager().getTag(igTagPath);
 			if(tag!= null) {
-				Object tagValue = tag.getValue().getValue();
-				// Limitation: we are not filling in any other tag properties
-				// like AlarmActiveAckCount. We could if needed.
-				// Hack: Experiment shows that transition expressions a) require one to add
-				// ".value" or ".Value" but b) are case sensitive so since we
-				// are not passed the final attributem we work around that by putting
-				// both cases:
-				result.put("value", tagValue);
-				result.put("Value", tagValue);
+				tag.getValue().getValue();
+				result = tag.getValue().getValue();
 			}
 		}
-		/*
-		List<TagPath> paths = new ArrayList<TagPath>();
-		paths.add(igTagPath);
-		List<QualifiedValue> values = gatewayContext.getTagManager().read(paths);
-		Object currentValue = values.get(0).getValue();
-		*/
 		if(!listenersByKey.containsKey(key)) {
 			addTagChangeListener((String)key, igTagPath);
 		}

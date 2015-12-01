@@ -95,6 +95,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
 	private TestMgr testMgr = new TestMgr();
 	private IlsDropBox dropBox = new IlsDropBox();
+	private IlsSfcSessionMgr sessionMgr = new IlsSfcSessionMgr();
 	private ChartDebugger chartDebugger = null;
 	
 	private static StepFactory[] stepFactories = {
@@ -167,6 +168,10 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 	public IlsDropBox getDropBox() {
 		return dropBox;
+	}
+
+	public IlsSfcSessionMgr getSessionMgr() {
+		return sessionMgr;
 	}
 
 	public IlsStepMonitor getStepMonitor() {
@@ -268,7 +273,8 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
     		}            
         	chartManager.registerScopeLocator(scopeLocator);
         	chartManager.addChartObserver(chartObserver);
-        }
+        	chartManager.addChartObserver(sessionMgr);
+       }
 		System.out.println("serviceReady end");
 	}
 
@@ -279,6 +285,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 			chartManager.unregister(stepFactory);
 		}
 		chartManager.removeChartObserver(chartObserver);
+		chartManager.removeChartObserver(sessionMgr);
 		chartManager = null;
 		stepMonitor.shutdown();
 	}

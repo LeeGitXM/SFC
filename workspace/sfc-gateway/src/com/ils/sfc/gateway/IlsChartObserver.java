@@ -126,7 +126,7 @@ public class IlsChartObserver implements ChartObserver {
 		PyDictionary chartScope = chartContext.getChartScope();
 		String projectName = (String)chartScope.get(Constants.PROJECT);
 		// TODO: look up hierarchy for project name. If not seen, ignore--not our chart
-		
+		if(projectName == null) return; // not a top-level ILS SFC
 		String chartPath = (String)chartScope.get(Constants.CHART_PATH);
 		String chartRunId = (String)chartScope.get(Constants.INSTANCE_ID);
 		String parentRunId = chartScope.get(Constants.PARENT) != null ?
