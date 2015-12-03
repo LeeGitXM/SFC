@@ -3,6 +3,7 @@ package com.ils.sfc.common;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import system.ils.sfc.common.Constants;
 
@@ -45,7 +46,8 @@ public class MockEnclosingScopeFactory {
 		for(EnclosureInfo parentInfo: enclosureHierarchyBottomUp) {
 			parentScope = new PyChartScope();
 			childScope.put("parent", parentScope);
-			parentScope.put(Constants.INSTANCE_ID, "de305d54-75b4-431b-adb2-eb6b9e546014");
+			String runId = UUID.randomUUID().toString();
+			parentScope.put(Constants.INSTANCE_ID, runId);
 			parentScope.put("chartPath", parentInfo.parentChartPath);
 			parentScope.put("startTime", "mock");
 			PyChartScope enclosingStepScope = new PyChartScope();

@@ -467,16 +467,24 @@ public class IlsGatewayScripts {
 		return RecipeDataAccess. getRecipeDataTagPath(chartScope, stepScope, scope);
 	}
 	
-	public static void addSession(PyObject obj) {
-		ilsSfcGatewayHook.getSessionMgr().addSession(obj);
+	public static void addSession(PyObject obj, String clientId) {
+		ilsSfcGatewayHook.getSessionMgr().addSession(obj, clientId);
 	}
-	
+
 	public static PyObject getSession(String id) {
 		return ilsSfcGatewayHook.getSessionMgr().getSession(id);
 	}
 	
 	public static void removeSession(String id) {
 		ilsSfcGatewayHook.getSessionMgr().removeSession(id);
+	}
+
+	public static PyObject addClient(String sessionId, String clientId) {
+		return ilsSfcGatewayHook.getSessionMgr().addClientForChart(sessionId, clientId);
+	}
+
+	public static Dataset getSessionData() {
+		return ilsSfcGatewayHook.getSessionMgr().getSessionData();
 	}
 	
 	public static Object parseValue(String strValue) {

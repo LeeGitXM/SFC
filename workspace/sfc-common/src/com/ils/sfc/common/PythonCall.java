@@ -149,9 +149,6 @@ public class PythonCall {
 	public static final PythonCall HANDLE_STEP_ERROR = new PythonCall("ils.sfc.gateway.util." + "handleUnexpectedGatewayError", 
 			PyList.class,  new String[]{"chartProps", "msg"} );
 
-	public static final PythonCall UPDATE_SESSION = new PythonCall("ils.sfc.gateway.util." + "updateClientSessions", 
-			PyList.class,  new String[]{"sessionId"} );
-	
 	public static final PythonCall SEND_CHART_STATUS = new PythonCall("ils.sfc.gateway.util." + "sendChartStatus", 
 			PyList.class,  new String[]{"projectName", "payload"} );
 
@@ -187,6 +184,11 @@ public class PythonCall {
 
 	public static final PythonCall DO_NOTHING = new PythonCall("ils.sfc.common.util." + "doNothing", 
 			null,  new String[0] );
+
+	// New session stuff:
+	public static final PythonCall UPDATE_SESSION = new PythonCall("ils.sfc.gateway.util." + "updateClientSessions", 
+			PyList.class,  new String[]{"session", "clientIds"} );
+	
 
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
