@@ -46,7 +46,7 @@ public class ChartTreeDataModel {
 	private final Map<Integer,Integer> lineage;            // Find parent given child
 	private final Map<String,Integer>  rowLookup;          // Find node row by path
 	private final Map<Integer,List<String>> stepMap;       // For checking step for parent
-	private final Map<String,FolderHolder> folderHierarchy;
+	private final Map<UUID,FolderHolder> folderHierarchy;  // 
 	private final List<EnclosingStep> enclosingSteps;
 	
 	private final DesignerContext context;
@@ -95,11 +95,11 @@ public class ChartTreeDataModel {
 		lineage.clear();
 		rowLookup.clear();
 		rootHolder.setPath("");
-		folderHierarchy.put(root.toString(), rootHolder);
+		folderHierarchy.put(root, rootHolder);
 		
 		for(ProjectResource res:resources) {
 			if( res.getResourceType().equals(BrowserConstants.CHART_RESOURCE_TYPE)) {
-				log.tracef("%s.initialize: found chart %s, parent = %s", TAG,res.getName(),res.getParentUuid().toString());
+				log.tracef("%s.initialize: chart %s, parent = %s", TAG,res.getName(),res.getParentUuid().toString());
 
 				try {
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(res.getData()));
@@ -136,8 +136,8 @@ public class ChartTreeDataModel {
 			else if( res.getResourceType().equals(BrowserConstants.FOLDER_RESOURCE_TYPE)) {
 				UUID self = res.getDataAsUUID();
 				FolderHolder holder = new FolderHolder(res.getDataAsUUID(),res.getParentUuid(),res.getName());
-				folderHierarchy.put(self.toString(),holder);
-				log.tracef("%s.initialize: folder resource %s (%s) (%s, parent %s)", TAG,res.getName(),res.getResourceType(),
+				folderHierarchy.put(self,holder);
+				log.debugf("%s.initialize: folder %s (%s, parent %s)", TAG,res.getName(),
 						self.toString(),res.getParentUuid().toString());
 				resolvePath(holder);  // High likelihood of success if we're traversing down the tree
 			}
@@ -148,6 +148,7 @@ public class ChartTreeDataModel {
 		}
 		else {
 			// Resolve any folder paths
+			log.debugf("%s.initialize ...resolve folder paths", TAG);
 			resolveFolderHierarchy();  // For folders compute complete parentage
 			resolveFolderPaths();      // Set the folder path for each node
 			linkEnclosingNodes();      // Replicate enclosing node descendants
@@ -253,7 +254,7 @@ public class ChartTreeDataModel {
 	// @param parentRow the row in the nodes table corresponding to the enclosing block. Guaranteed 
 	//                  to be non-null
 	private void handleEnclosingSteps(Integer parentRow,String stepName,List<ElementDefinition> steps) {;
-		log.debugf("%s.handleEnclosingStep: for parent %d (%s), %d steps", TAG,parentRow,stepName,steps.size());
+		log.infof("%s.handleEnclosingStep: for parent %d (%s), %d steps", TAG,parentRow,stepName,steps.size());
 		List<String> stepNames = stepMap.get(parentRow);
 		if( stepNames==null) {
 			stepNames = new ArrayList<>();
@@ -267,12 +268,13 @@ public class ChartTreeDataModel {
 		for( ElementDefinition step:steps) {
 			if( step instanceof StepDefinition ) {
 				StepDefinition stepDef = (StepDefinition)step;
+				String name = stepDef.getProperties().get(EnclosingStepProperties.Name);
 				// Custom enclosures don't inherit from Enclosing step, but they all must have a path.
 				if( stepDef.getFactoryId().equals(EnclosingStepProperties.FACTORY_ID) ||
 					stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH)!=null ) {
-					String name = stepDef.getProperties().get(EnclosingStepProperties.Name);
+					
 					String path = stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH);
-					// log.infof("%s.handleEnclosingStep: enclosing step %d.%s = %s", TAG,parentRow,name,path);
+					log.infof("%s.handleEnclosingStep: enclosing step %d.%s = %s", TAG,parentRow,name,path);
 					// Create the step-that-is-an-enclosure node (if it doesn't already exist)
 					int newRow = addNodeTableRow(name,BrowserConstants.NO_RESOURCE);
 					addEdgeTableRow(parentRow.intValue(),newRow);
@@ -282,13 +284,14 @@ public class ChartTreeDataModel {
 					enclosingSteps.add(es);
 				}
 				// Careful here -- it is perfectly legal for the chart itself to loop
-				handleEnclosingSteps(parentRow,stepName,step.getNextElements());
+				handleEnclosingSteps(parentRow,name,step.getNextElements());
 			}
 			else if( step instanceof ParallelDefinition ) {
 				ParallelDefinition parallelDef = (ParallelDefinition)step;
 				List<ElementDefinition> starters = parallelDef.getStartElements();
 				for(ElementDefinition ed:starters) {
-					handleEnclosingSteps(parentRow,stepName,ed.getNextElements());
+					// Custom enclosures don't inherit from Enclosing step, but they all must 
+					handleEnclosingSteps(parentRow,null,ed.getNextElements());
 				}
 			}
 			// Do nothing - a transition can't enclose
@@ -405,20 +408,21 @@ public class ChartTreeDataModel {
 	
 	private boolean resolvePath(FolderHolder holder) {
 		boolean success = false;
-		UUID parent = holder.getParent();
-		FolderHolder parentHolder = folderHierarchy.get(parent.toString());
+		UUID parentId = holder.getParentId();
+		FolderHolder parentHolder = folderHierarchy.get(parentId);
 		if( parentHolder!=null ) {
 			String path = parentHolder.getPath();
 			if( path!=null) {
 				if( path.length()==0) path = holder.getName();
 				else path = String.format("%s/%s", path,holder.getName());
 				holder.setPath(path);
+				log.debugf("%s.resolvePath. Resolved parent %s for folder %s", TAG,parentHolder.getPath(),holder.getName());
 				success = true;
 			}
 		}
 		else {
 			// We expect all to be resolved immediately, but are not assured of this.
-			log.tracef("%s.resolvePath. Unresolved parent %s for folder %s", TAG,holder.getParent().toString(),holder.getId().toString());
+			log.infof("%s.resolvePath. Unresolved parent %s for folder %s", TAG,holder.getParentId().toString(),holder.getName());
 		}
 		return success;
 	}
@@ -434,7 +438,8 @@ public class ChartTreeDataModel {
 			if( resourceId>=0) {
 				String parent = nodes.getString(row, BrowserConstants.PARENT);
 				if( parent !=null ) {
-					FolderHolder fh = folderHierarchy.get(parent);
+					UUID parentId = UUID.fromString(parent);
+					FolderHolder fh = folderHierarchy.get(parentId);
 					if( fh !=null ) {
 						String path = fh.getPath();   // Parent path
 						if( path!=null) {
@@ -442,7 +447,7 @@ public class ChartTreeDataModel {
 							if( path.length()==0) path = name;
 							else path = String.format("%s/%s",path,name);
 							nodes.setString(row, BrowserConstants.PATH, path);
-							log.tracef("%s.resolveFolderPaths ... %d is %s", TAG,row,path);
+							log.infof("%s.resolveFolderPaths ... %d is %s", TAG,row,path);
 							rowLookup.put(path,new Integer(row));   // So we can find this for links 
 						}
 						else {
@@ -491,7 +496,7 @@ public class ChartTreeDataModel {
 		public UUID getId() { return id; }
 		public String getName() { return name;}
 		public String getPath() { return path; }
-		public UUID getParent() { return parentId; }
+		public UUID getParentId() { return parentId; }
 		public void setPath(String p) { this.path = p; }
 	}
 	/**

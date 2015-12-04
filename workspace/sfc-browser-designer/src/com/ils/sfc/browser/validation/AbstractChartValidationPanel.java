@@ -128,7 +128,8 @@ public abstract class AbstractChartValidationPanel extends JPanel {
                 // On a click we get the chart path and display it.
             	SFCDesignerHook hook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
             	int baseRow = table.convertRowIndexToModel(table.getSelectedRow());
-            	long resId = ((Long)tableModel.getValueAt(baseRow,0)).longValue();
+            	String val0 = tableModel.getValueAt(baseRow,0).toString();
+            	long resId = Long.parseLong(val0);
 				hook.getWorkspace().openChart(resId);
             }
         });
