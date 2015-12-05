@@ -467,22 +467,38 @@ public class IlsGatewayScripts {
 		return RecipeDataAccess. getRecipeDataTagPath(chartScope, stepScope, scope);
 	}
 	
-	public static void addSession(PyObject obj, String clientId) {
-		ilsSfcGatewayHook.getSessionMgr().addSession(obj, clientId);
+	public static void addClient(String name, String project, String clientId) {
+		ilsSfcGatewayHook.getSessionMgr().addClient(new IlsSfcSessionMgr.ClientInfo(name, project, clientId));
 	}
 
-	public static PyObject getSession(String id) {
-		return ilsSfcGatewayHook.getSessionMgr().getSession(id);
+	public static void removeClient(String clientId) {
+		ilsSfcGatewayHook.getSessionMgr().removeClient(clientId);
+	}
+
+	public static void addSessionListener(String sessionId, String clientId) {
+		ilsSfcGatewayHook.getSessionMgr().addSessionListener(sessionId, clientId);
+	}
+
+	public static void removeSessionListener(String sessionId, String clientId) {
+		ilsSfcGatewayHook.getSessionMgr().removeSessionListener(sessionId, clientId);
+	}
+
+	public static void addSession(PyObject session) {
+		ilsSfcGatewayHook.getSessionMgr().addSession(session);
+	}
+
+	public static PyObject getSession(String sessionId) {
+		return ilsSfcGatewayHook.getSessionMgr().getSession(sessionId);
 	}
 	
-	public static void removeSession(String id) {
-		ilsSfcGatewayHook.getSessionMgr().removeSession(id);
+	public static void updateSession(PyObject session) {
+		ilsSfcGatewayHook.getSessionMgr().updateSession(session);
 	}
 
-	public static PyObject addClient(String sessionId, String clientId) {
-		return ilsSfcGatewayHook.getSessionMgr().addClientForChart(sessionId, clientId);
+	public static void removeSession(String sessionId) {
+		ilsSfcGatewayHook.getSessionMgr().removeSession(sessionId);
 	}
-
+	
 	public static Dataset getSessionData() {
 		return ilsSfcGatewayHook.getSessionMgr().getSessionData();
 	}

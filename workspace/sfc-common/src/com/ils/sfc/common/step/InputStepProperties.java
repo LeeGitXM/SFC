@@ -13,6 +13,10 @@ public interface InputStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.inputStep";
 
     public static final BasicProperty<?>[] properties = { 
-    	PROMPT, RECIPE_LOCATION, KEY
+    	PROMPT, 
+    	RECIPE_LOCATION, 
+    	KEY,
+    	TIMEOUT,
+    	TIMEOUT_UNIT,
     };
 }

@@ -1,13 +1,14 @@
 package com.ils.sfc.gateway;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Set;
 
 import static java.util.Collections.synchronizedMap;
+import static java.util.Collections.synchronizedSet;
 
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.UUID;
 
 import org.python.core.PyDictionary;
@@ -19,6 +20,7 @@ import system.ils.sfc.common.Constants;
 import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
+import com.inductiveautomation.ignition.common.script.message.MessageDispatchManager;
 import com.inductiveautomation.ignition.common.util.DatasetBuilder;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -41,22 +43,78 @@ public class IlsSfcSessionMgr implements ChartObserver {
 	private static LoggerEx logger = LogUtil.getLogger(IlsSfcSessionMgr.class.getName());
 	private Map<String, PyObject> sessionsById = synchronizedMap(new HashMap<String, PyObject>());
 	private Map<String, PyObject> sessionsByRunId = synchronizedMap(new HashMap<String, PyObject>());
-	private Map<String,List<String>> clientsBySessionId = synchronizedMap(new HashMap<String,List<String>>());
+	private Set<ClientInfo> clients = synchronizedSet(new HashSet<ClientInfo>());
+	private MessageDispatchManager msgMgr;
+	public static final String CLIENT_MSG_DISPATCHER = "sfcMessage";
+	public static final String SESSION_UPDATE_HANDLER = "sfcSessionChanged";
+	public static final String SESSIONS_UPDATE_HANDLER = "sfcSessionsChanged";
 	
-	/** Add a new session. */
-	public void addSession(PyObject session, String clientId) {
-		String sessionId = getSessionId(session);
-		logger.infof("adding session for id %s", sessionId);
-		sessionsById.put(sessionId, session);
-		String chartName = getChartName(session);;
-		List<String> clientIds = new ArrayList<String>();
-		clientsBySessionId.put(sessionId, clientIds);
-		addClient(sessionId, clientId);
+	public static class ClientInfo {
+		String name;
+		String project;
+		String clientId;
+		Set<String> sessions = new HashSet<String>();
+		
+		public ClientInfo(String name, String project, String clientId) {
+			super();
+			this.name = name;
+			this.clientId = clientId;
+		}
+		
+		@Override
+		public boolean equals(Object o) {
+			if(o == null || !(o instanceof ClientInfo)) return false;
+			return clientId.equals(((ClientInfo)o).clientId);
+		}
+		
+		@Override
+		public int hashCode() {
+			return clientId.hashCode();
+		}
+	}
+	
+	public IlsSfcSessionMgr(MessageDispatchManager msgMgr) {
+		this.msgMgr = msgMgr;
+	}
+	
+	public void addClient(ClientInfo client) {
+		clients.add(client);
+	}
+
+	public void removeClient(String clientId) {
+		ClientInfo client = getClient(clientId);
+		clients.remove(client);
+	}
+		
+	public void addSessionListener(String sessionId, String clientId) {
+		ClientInfo client = getClient(clientId);
+		client.sessions.add(sessionId);
+		notifySessionUpdated(sessionId, client);
+	}
+
+	public void removeSessionListener(String sessionId, String clientId) {
+		ClientInfo client = getClient(clientId);
+		client.sessions.remove(sessionId);
 	}
 
 	/** Get the session by its unique id. */
 	public PyObject getSession(String sessionId) {
 		return (PyObject) sessionsById.get(sessionId);
+	}
+
+	/**Add a session. */
+	public void addSession(PyObject session) {
+		String sessionId = getSessionId(session);
+		logger.infof("adding session for id %s", sessionId);
+		sessionsById.put(sessionId, session);
+		notifySessionsUpdated();
+	}
+
+	/** Update an existing session. */
+	public void updateSession(PyObject session) {
+		String sessionId = getSessionId(session);
+		logger.infof("updating session for id %s", sessionId);
+		notifySessionUpdated(sessionId);
 	}
 
 	/** Delete a session. */
@@ -65,11 +123,13 @@ public class IlsSfcSessionMgr implements ChartObserver {
 		sessionsById.remove(sessionId);
 		String runId = getRunId(session);
 		sessionsByRunId.remove(runId);
-		clientsBySessionId.remove(sessionId);
+		for(ClientInfo client: clients) {
+			client.sessions.remove(sessionId);
+		}
+		notifySessionsUpdated();
 	}
 	
-	/** Get the names and ids of the (top level) charts associated with the sessions. */
-	
+	/** Get the names and ids of the (top level) charts associated with the sessions. */	
 	public Dataset getSessionData() {
 		DatasetBuilder builder = new DatasetBuilder();
 		builder.colNames("Chart Name", "Id");
@@ -81,17 +141,38 @@ public class IlsSfcSessionMgr implements ChartObserver {
 		}
 		return builder.build();
 	}
-	
-	/** Add the given client as a listener for the session associated with the
-	 *  given chart name. CAUTION: nothing prevents there being multiple sessions
-	 *  for the same chart; if that is the case the choice is arbitrary.
-	 */
-	public PyObject addClientForChart(String sessionId, String clientId) {
-		PyObject session = getSession(sessionId);
-		addClient(sessionId, clientId);
-		return session;
+
+	private ClientInfo getClient(String clientId) {
+		for(ClientInfo client: clients) {
+			if(client.clientId.equals(clientId)) {
+				return client;
+			}
+		}
+		return null;
 	}
-	
+
+	/** Notify listeners that a session has changed */
+	private void notifySessionUpdated(String sessionId) {
+		for(ClientInfo client: clients) {
+			if(client.sessions.contains(sessionId)) {
+				notifySessionUpdated(sessionId, client);
+			}
+		}
+	}
+
+	/** Notify a single client that a session has changed */
+	private void notifySessionUpdated(String sessionId, ClientInfo client) {
+		PyObject session = getSession(sessionId);
+		sendMessageToClient(client.project, SESSION_UPDATE_HANDLER, client.clientId, Constants.SESSION, session);
+	}
+
+	/** Notify that the list of sessions has changed */
+	private void notifySessionsUpdated() {
+		for(ClientInfo client: clients) {
+			sendMessageToClient(client.project, SESSIONS_UPDATE_HANDLER, client.clientId, null, null);
+		}
+	}
+
 	/** Associate a (top-level) SFC chart run with a session. */
 	private void associateChartRun(String sessionId, String runId) {
 		logger.infof("associating runId %s with sessionId %s", runId,  sessionId);
@@ -104,21 +185,19 @@ public class IlsSfcSessionMgr implements ChartObserver {
 		return sessionsByRunId.get(runId);
 	}
 
-	/** Add a client (as a change listener). */
-	private void addClient(String sessionId, String clientId) {
-		clientsBySessionId.get(sessionId).add(clientId);		
-	}
-
-	/** Notify all registered clients of a change to the session. */
-	private void updateClientSessions(String sessionId) {
-		List<String> clientIds = clientsBySessionId.get(sessionId);
-		PyObject session = getSession(sessionId);
-		try {
-			PythonCall.UPDATE_SESSION.exec(session, clientIds);
-		} catch (JythonExecException e) {
-			logger.error("error updating client sessions", e);
+	/** Send a message to the given client with a single payload object. */
+	private void sendMessageToClient(String project, String handler, String clientId, String key, Object value) {
+		Properties properties = new Properties();
+		properties.put(Constants.METHOD, handler);
+		properties.put(MessageDispatchManager.KEY_CLIENT_SESSION_ID, clientId);
+		properties.put(MessageDispatchManager.KEY_SCOPE, MessageDispatchManager.SCOPE_CLIENT_ONLY);
+		if(key != null) {
+			properties.put(key, value);
 		}
+		msgMgr.dispatch(project, CLIENT_MSG_DISPATCHER, properties);
 	}
+		
+	// Accessors for the Python session object:
 
 	/** Get the unique id of the given session. */
 	private String getSessionId(PyObject session) {
@@ -134,6 +213,8 @@ public class IlsSfcSessionMgr implements ChartObserver {
 	private String getRunId(PyObject session) {
 		return session.__getattr__("chartRunId").toString();
 	}
+
+	// Chart Listener methods:
 	
 	@Override
 	public void onBeforeChartStart(ChartContext chartContext) {
@@ -163,7 +244,7 @@ public class IlsSfcSessionMgr implements ChartObserver {
 		String chartStateString = newChartState.toString();
 		logger.infof("setting chart state %s", chartStateString);
 		session.__setattr__("chartStatus", new PyString(chartStateString));	
-		updateClientSessions(sessionId);
+		notifySessionUpdated(sessionId);
 	}
 
 	@Override

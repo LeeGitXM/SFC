@@ -185,11 +185,6 @@ public class PythonCall {
 	public static final PythonCall DO_NOTHING = new PythonCall("ils.sfc.common.util." + "doNothing", 
 			null,  new String[0] );
 
-	// New session stuff:
-	public static final PythonCall UPDATE_SESSION = new PythonCall("ils.sfc.gateway.util." + "updateClientSessions", 
-			PyList.class,  new String[]{"session", "clientIds"} );
-	
-
 	public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;

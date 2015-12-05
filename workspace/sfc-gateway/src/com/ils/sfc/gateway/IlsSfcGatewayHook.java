@@ -95,7 +95,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
 	private TestMgr testMgr = new TestMgr();
 	private IlsDropBox dropBox = new IlsDropBox();
-	private IlsSfcSessionMgr sessionMgr = new IlsSfcSessionMgr();
+	private IlsSfcSessionMgr sessionMgr;
 	private ChartDebugger chartDebugger = null;
 	
 	private static StepFactory[] stepFactories = {
@@ -211,6 +211,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		IlsGatewayScripts.setHook(this);
 		GatewayRequestHandler.getInstance().setContext(context);
 		dispatcher = new GatewayRpcDispatcher(context);
+		sessionMgr = new IlsSfcSessionMgr(context.getMessageDispatchManager());
 		// Register the ToolkitRecord to make sure that the table exists
 		try {
 			context.getSchemaUpdater().updatePersistentRecords(ToolkitRecord.META);
