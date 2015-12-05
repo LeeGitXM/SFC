@@ -53,6 +53,7 @@ public class WhereUsedPanel extends AbstractChartValidationPanel {;
 			Long resId = nodes.getLong(parent, BrowserConstants.RESOURCE);
 			String path   = nodes.getString(parent, BrowserConstants.PATH);
 			tableRow[0] = resId;
+			if( resId.longValue()<0 ) tableRow[0]="";
 			tableRow[1] = enclosure.getChartPath();
 			tableRow[2] = path+"/"+enclosure.getStepName();
 			tableModel.addRow(tableRow);

@@ -129,9 +129,9 @@ public class SfcBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 			+ "</ul>"
 			+ "<h3>Legend</h3>"
 			+ "<ul>"
-			+ "<li><span style=\"background-color:#00dd00;\">light-green</span> - chart that has focus.</li>"
-			+ "<li><span style=\"background-color:#ff0000;\">red </span> - step or chart with an error. The browser detects logical loops and unresolved references to enclosures.</li>"
-			+ "<li><span style=\"background-color:#ffff00;opacity:0.9;\">yellow</span> - encapsulation step</li>"
+			+ "<li><span style=\"background-color:#699690;opacity:0.8;\">light-green</span> - most recent selection and ancestors.</li>"
+			+ "<li><span style=\"background-color:#8a2c31;opacity:0.8;\">red </span> - step or chart with an error. The browser detects logical loops and unresolved references to enclosures.</li>"
+			+ "<li><span style=\"background-color:#ffeb6f;opacity:0.8;\">yellow</span> - encapsulation step</li>"
 			+ "</ul>"
 			+ "</div>"
 			+ "</body></html>";
