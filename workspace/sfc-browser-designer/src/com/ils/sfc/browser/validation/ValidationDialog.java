@@ -53,7 +53,7 @@ public class ValidationDialog extends JDialog implements ChangeListener{
 		this.setTitle("SFC Chart Validity Analysis");
 		this.rb = ResourceBundle.getBundle("com.ils.sfc.browser.browser");  // browser.properties
 		setModal(false);
-		setAlwaysOnTop(true);
+		setAlwaysOnTop(false);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.setPreferredSize(new Dimension(DIALOG_WIDTH,DIALOG_HEIGHT));
 		chartErrorsPanel = new ChartErrorsPanel(ctx,chartDataModel);

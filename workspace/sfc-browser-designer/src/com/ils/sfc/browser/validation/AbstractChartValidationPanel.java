@@ -21,8 +21,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-import prefuse.data.Table;
 import net.miginfocom.swing.MigLayout;
+import prefuse.data.Table;
 
 import com.ils.sfc.browser.BrowserConstants;
 import com.ils.sfc.browser.ChartTreeDataModel;
@@ -129,8 +129,16 @@ public abstract class AbstractChartValidationPanel extends JPanel {
             	SFCDesignerHook hook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
             	int baseRow = table.convertRowIndexToModel(table.getSelectedRow());
             	String val0 = tableModel.getValueAt(baseRow,0).toString();
-            	long resId = Long.parseLong(val0);
-				hook.getWorkspace().openChart(resId);
+            	if( val0!=null) {
+            		try {
+            			long resId = Long.parseLong(val0);
+            			if( resId>=0) hook.getWorkspace().openChart(resId);
+            		}
+            		catch(NumberFormatException nfe) {}   // A blank, presumably
+            	}
+            	else {
+            		log.warnf("%s.valueChanged: tableModel returned a null in column 0", TAG);
+            	}
             }
         });
 
