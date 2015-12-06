@@ -17,7 +17,6 @@ public interface BrowserConstants   {
 	public static final String CXNS    = "Cxns";          // Incoming connection count
 	public static final String KEY      = "Key";
 	public static final String NAME     = "Name";
-	public static final String PARENT   = "Parent";
 	public static final String PATH    = "Path";       // Chart identifier
 	public static final String RESOURCE = "Resource"; // ResourceId
 	public static final String STATUS   = "Status";   // Health of the node
