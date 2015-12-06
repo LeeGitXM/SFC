@@ -50,14 +50,14 @@ public class IlsSfcSessionMgr implements ChartObserver {
 	public static final String SESSIONS_UPDATE_HANDLER = "sfcSessionsChanged";
 	
 	public static class ClientInfo {
-		String name;
+		String userName;
 		String project;
 		String clientId;
 		Set<String> sessions = new HashSet<String>();
 		
-		public ClientInfo(String name, String project, String clientId) {
-			super();
-			this.name = name;
+		public ClientInfo(String userName, String project, String clientId) {
+			this.userName = userName;
+			this.project = project;
 			this.clientId = clientId;
 		}
 		
@@ -78,22 +78,27 @@ public class IlsSfcSessionMgr implements ChartObserver {
 	}
 	
 	public void addClient(ClientInfo client) {
+		logger.infof("adding client %s", client.clientId);
 		clients.add(client);
+		notifySessionsChanged(client);
 	}
 
 	public void removeClient(String clientId) {
+		logger.infof("removing client %s", clientId);
 		ClientInfo client = getClient(clientId);
 		clients.remove(client);
 	}
 		
 	public void addSessionListener(String sessionId, String clientId) {
 		ClientInfo client = getClient(clientId);
+		logger.infof("adding listener %s for session %s", clientId, sessionId);
 		client.sessions.add(sessionId);
-		notifySessionUpdated(sessionId, client);
+		notifySessionChanged(sessionId, client);
 	}
 
 	public void removeSessionListener(String sessionId, String clientId) {
 		ClientInfo client = getClient(clientId);
+		logger.infof("removing listener %s for session %s", clientId, sessionId);
 		client.sessions.remove(sessionId);
 	}
 
@@ -102,23 +107,24 @@ public class IlsSfcSessionMgr implements ChartObserver {
 		return (PyObject) sessionsById.get(sessionId);
 	}
 
-	/**Add a session. */
-	public void addSession(PyObject session) {
+	/**Add a session, and make the creator a listener. */
+	public void addSession(PyObject session, String clientId) {
 		String sessionId = getSessionId(session);
-		logger.infof("adding session for id %s", sessionId);
+		logger.infof("adding session %s", sessionId);
 		sessionsById.put(sessionId, session);
-		notifySessionsUpdated();
+		addSessionListener(sessionId, clientId);  // this will send notification
 	}
 
 	/** Update an existing session. */
 	public void updateSession(PyObject session) {
 		String sessionId = getSessionId(session);
-		logger.infof("updating session for id %s", sessionId);
-		notifySessionUpdated(sessionId);
+		logger.infof("updating session %s", sessionId);
+		notifySessionChanged(sessionId);
 	}
 
 	/** Delete a session. */
 	public void removeSession(String sessionId) {
+		logger.infof("removing session %s", sessionId);
 		PyObject session = getSession(sessionId);
 		sessionsById.remove(sessionId);
 		String runId = getRunId(session);
@@ -126,11 +132,11 @@ public class IlsSfcSessionMgr implements ChartObserver {
 		for(ClientInfo client: clients) {
 			client.sessions.remove(sessionId);
 		}
-		notifySessionsUpdated();
+		notifySessionsChanged();
 	}
 	
 	/** Get the names and ids of the (top level) charts associated with the sessions. */	
-	public Dataset getSessionData() {
+	private Dataset getSessionData() {
 		DatasetBuilder builder = new DatasetBuilder();
 		builder.colNames("Chart Name", "Id");
 		builder.colTypes(String.class, String.class);
@@ -151,26 +157,36 @@ public class IlsSfcSessionMgr implements ChartObserver {
 		return null;
 	}
 
-	/** Notify listeners that a session has changed */
-	private void notifySessionUpdated(String sessionId) {
+	/** Notify all clients that a session has changed */
+	private void notifySessionChanged(String sessionId) {
 		for(ClientInfo client: clients) {
 			if(client.sessions.contains(sessionId)) {
-				notifySessionUpdated(sessionId, client);
+				notifySessionChanged(sessionId, client);
 			}
 		}
 	}
 
 	/** Notify a single client that a session has changed */
-	private void notifySessionUpdated(String sessionId, ClientInfo client) {
+	private void notifySessionChanged(String sessionId, ClientInfo client) {
 		PyObject session = getSession(sessionId);
-		sendMessageToClient(client.project, SESSION_UPDATE_HANDLER, client.clientId, Constants.SESSION, session);
+		PyDictionary payload = new PyDictionary();
+		payload.put(Constants.SESSION, session);
+		sendMessageToClient(client.project, SESSION_UPDATE_HANDLER, client.clientId, payload);
 	}
 
-	/** Notify that the list of sessions has changed */
-	private void notifySessionsUpdated() {
+	/** Notify a all clients that the list of sessions has changed */
+	private void notifySessionsChanged() {
 		for(ClientInfo client: clients) {
-			sendMessageToClient(client.project, SESSIONS_UPDATE_HANDLER, client.clientId, null, null);
+			notifySessionsChanged(client);
 		}
+	}
+
+	/** Notify a single client that the list of sessions has changed */
+	private void notifySessionsChanged(ClientInfo client) {
+		Dataset sessionData = getSessionData();
+		PyDictionary payload = new PyDictionary();
+		payload.put(Constants.SESSIONS, sessionData);
+		sendMessageToClient(client.project, SESSIONS_UPDATE_HANDLER, client.clientId, payload);
 	}
 
 	/** Associate a (top-level) SFC chart run with a session. */
@@ -185,16 +201,14 @@ public class IlsSfcSessionMgr implements ChartObserver {
 		return sessionsByRunId.get(runId);
 	}
 
-	/** Send a message to the given client with a single payload object. */
-	private void sendMessageToClient(String project, String handler, String clientId, String key, Object value) {
+	/** Send a message to the given client. */
+	private void sendMessageToClient(String project, String handler, String clientId, PyDictionary payload) {
+		payload.put(Constants.MESSAGE_ID, UUID.randomUUID().toString());
+		payload.put(Constants.MESSAGE, handler);
 		Properties properties = new Properties();
-		properties.put(Constants.METHOD, handler);
 		properties.put(MessageDispatchManager.KEY_CLIENT_SESSION_ID, clientId);
 		properties.put(MessageDispatchManager.KEY_SCOPE, MessageDispatchManager.SCOPE_CLIENT_ONLY);
-		if(key != null) {
-			properties.put(key, value);
-		}
-		msgMgr.dispatch(project, CLIENT_MSG_DISPATCHER, properties);
+		msgMgr.dispatch(project, CLIENT_MSG_DISPATCHER, payload, properties);
 	}
 		
 	// Accessors for the Python session object:
@@ -244,7 +258,13 @@ public class IlsSfcSessionMgr implements ChartObserver {
 		String chartStateString = newChartState.toString();
 		logger.infof("setting chart state %s", chartStateString);
 		session.__setattr__("chartStatus", new PyString(chartStateString));	
-		notifySessionUpdated(sessionId);
+		notifySessionChanged(sessionId);
+		
+		// If the chart ended, remove the session
+		if(newChartState.isTerminal()) {
+			removeSession(sessionId);
+		}
+		notifySessionsChanged();
 	}
 
 	@Override
