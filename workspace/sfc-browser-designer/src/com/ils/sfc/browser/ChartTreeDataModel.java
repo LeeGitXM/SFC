@@ -44,7 +44,8 @@ import com.inductiveautomation.sfc.uimodel.ChartUIModel;
  */
 public class ChartTreeDataModel {
 	private static final String TAG = "ChartTreeDataModel";
-	public static int ROOT_ROW = 0;           // Number of the root row
+	public static int ROOT_ROW = 0;                // Number of the root row
+	private final boolean DEBUG_STRUCTURE = false; // Development convenience
 	private final Project project;
 	private final Map<Long,ChartDefinition> definitions;   // Chart definition by resourceId
 	private final Map<Integer,Integer> lineage;            // Find parent row given child row
@@ -70,7 +71,6 @@ public class ChartTreeDataModel {
 		nodes.addColumn(BrowserConstants.NAME, String.class);
 		nodes.addColumn(BrowserConstants.KEY, int.class);         // Table row - key
 		nodes.addColumn(BrowserConstants.PATH, String.class);
-		nodes.addColumn(BrowserConstants.PARENT, String.class);
 		nodes.addColumn(BrowserConstants.RESOURCE, long.class);
 		
 		edges = new Table();
@@ -92,14 +92,14 @@ public class ChartTreeDataModel {
 		ClientStepRegistry registry = ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
 		// Initialize the folder hierarchy
 		UUID root = ChartUIModel.ROOT_FOLDER;
-		log.tracef("%s.initialize: ROOT_FOLDER = %s",TAG,root.toString());
+		if( log.isTraceEnabled() || DEBUG_STRUCTURE ) log.infof("%s.initialize: ROOT_FOLDER = %s",TAG,root.toString());
 		configureRootNode();
 		lineage.clear();
 		rowLookup.clear();
 		
 		for(ProjectResource res:resources) {
 			if( res.getResourceType().equals(BrowserConstants.CHART_RESOURCE_TYPE)) {
-				log.tracef("%s.initialize: chart %s, parent = %s", TAG,res.getName(),res.getParentUuid().toString());
+				if( log.isTraceEnabled() || DEBUG_STRUCTURE ) log.infof("%s.initialize: chart %s, parent = %s", TAG,res.getName(),res.getParentUuid().toString());
 
 				try {
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(res.getData()));
@@ -111,7 +111,6 @@ public class ChartTreeDataModel {
 						definitions.put(new Long(res.getResourceId()), definition);
 						int row = addNodeTableRow(res.getName(),res.getResourceId());
 						lineage.put(new Integer(row), new Integer(ROOT_ROW));
-						nodes.setString(row, BrowserConstants.PARENT, res.getParentUuid().toString());
 						// Check steps in chart for being enclosures
 						analyzeChartSteps(row,definition,res.getName());
 					}
@@ -192,7 +191,7 @@ public class ChartTreeDataModel {
 		int count = nodes.getInt(destinationRow,BrowserConstants.CXNS);
 		nodes.setInt(destinationRow, BrowserConstants.CXNS, count+1);
 		int row = edges.getRowCount();
-		log.debugf("%s.addEdgeTableRow: %d -> %d", TAG,sourceRow,destinationRow);
+		if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof("%s.addEdgeTableRow: %d -> %d", TAG,sourceRow,destinationRow);
 		edges.addRow();
 		edges.setInt(row,Graph.DEFAULT_SOURCE_KEY,sourceRow);
 		edges.setInt(row,Graph.DEFAULT_TARGET_KEY,destinationRow);
@@ -200,7 +199,7 @@ public class ChartTreeDataModel {
 	}
 	
 	// We've found a chart resource. Add it to the table
-    // @param resourceId if negative, then this row corresponds to
+    // @param resourceId if negative, then this row corresponds to an enclosing step
 	// @return the row corresponding to the newly discovered chart.
 	private int addNodeTableRow(String name,long resourceId) {
 		int row = nodes.getRowCount();
@@ -241,7 +240,7 @@ public class ChartTreeDataModel {
 	}
 	// Iterate through the step in a chart looking for enclosures
 	private void analyzeChartSteps(int row,ChartDefinition definition,String name) {
-		log.debugf( "%s.analyzeChartSteps: chart %d (%s)", TAG,row,name);
+		if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof( "%s.analyzeChartSteps: chart %d (%s)", TAG,row,name);
 		for( ElementDefinition def:definition.getBeginElement().getNextElements() ) {
 			if( def instanceof StepDefinition )  {
 				StepDefinition stepDef = (StepDefinition)def;
@@ -259,7 +258,7 @@ public class ChartTreeDataModel {
 	}
 	// Iterate through the steps in a parallel section looking for enclosures
 	private void analyzeParallelSteps(Integer row,ParallelDefinition parallelDef) {
-		log.debugf( "%s.handleParallelSteps: chart %d", TAG,row);
+		if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof( "%s.handleParallelSteps: chart %d", TAG,row);
 		// Internal to the parallel section
 		List<ElementDefinition> starters = parallelDef.getStartElements();
 		for(ElementDefinition def:starters) {
@@ -301,7 +300,7 @@ public class ChartTreeDataModel {
 	// @param parentRow the row in the nodes table corresponding to the enclosing block. Guaranteed 
 	//                  to be non-null
 	private void analyzeStep(int row,StepDefinition stepDef,String stepName) {
-		log.debugf( "%s.analyzeStep: chart %d (%s)", TAG,row,stepName);
+		if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof( "%s.analyzeStep: chart %d (%s)", TAG,row,stepName);
 
 		Integer parentRow = new Integer(row);
 		List<String> stepNames = stepMap.get(parentRow);
@@ -317,15 +316,14 @@ public class ChartTreeDataModel {
 				stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH)!=null ) {
 
 			String path = stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH);
-			log.infof("%s.handleEnclosingStep:   enclosure %d.%s, references %s", TAG,parentRow,stepName,path);
+			if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof("%s.handleEnclosingStep:   enclosure %d.%s, references %s", TAG,parentRow,stepName,path);
 			// Create the step-that-is-an-enclosure node (if it doesn't already exist)
 			int newRow = addNodeTableRow(stepName,BrowserConstants.NO_RESOURCE);
 			addEdgeTableRow(parentRow.intValue(),newRow);
 			lineage.put(new Integer(newRow), new Integer(parentRow));
-			// Link it to the base and create an EnclosingStep reference.
+			// Link it to the base and create an EnclosingStep reference
 			EnclosingStep es = new EnclosingStep(parentRow,newRow,stepName,path);
 			enclosingSteps.add(es);
-			row = newRow;
 		}
 		
 		for(ElementDefinition def:stepDef.getNextElements()) {
@@ -452,7 +450,7 @@ public class ChartTreeDataModel {
 	}
 	// Loop through all of the nodes. Set the full paths based on resourceId.
 	private void resolvePaths() {
-		log.debugf("%s.resolvePaths ...", TAG);
+		if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof("%s.resolvePaths ...", TAG);
 		int maxRow = nodes.getRowCount();
 		int row = 0;
 		while(row<maxRow) {
@@ -460,13 +458,13 @@ public class ChartTreeDataModel {
 			if( resid>=0 ) {
 				String path = project.getFolderPath(resid);
 				nodes.setString(row,BrowserConstants.PATH,path);
-				log.debugf("%s.resolvePaths: %d.%d = %s", TAG,row,resid,path);
+				if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof("%s.resolvePaths: %d.%d = %s", TAG,row,resid,path);
 				rowLookup.put(path, new Integer(row));  // So that we can find this for links
 			}
 			else {
 				String path = nodes.getString(row,BrowserConstants.NAME);
 				nodes.setString(row,BrowserConstants.PATH,path);
-				log.debugf("%s.resolvePaths: %d.%d = %s", TAG,row,resid,path);
+				if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof("%s.resolvePaths: %d.%d = %s", TAG,row,resid,path);
 				rowLookup.put(path, new Integer(row));  // So that we can find this for links
 			}
 			row++;
