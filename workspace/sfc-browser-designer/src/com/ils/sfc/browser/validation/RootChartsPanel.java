@@ -19,7 +19,7 @@ import com.inductiveautomation.ignition.designer.model.DesignerContext;
 public class RootChartsPanel extends AbstractChartValidationPanel {
 	private static final long serialVersionUID = 5295796590362824609L;
 	private static final String[] columnNames = {BrowserConstants.RESID_COL,BrowserConstants.CHART_PATH_COL};
-	private static final int[]   columnWidths = {BrowserConstants.RESID_WIDTH,BrowserConstants.REMAINDER_WIDTH};
+	private static final int[]   columnWidths = {BrowserConstants.RESID_WIDTH,BrowserConstants.STEP_PATH_WIDTH};
 
 	public RootChartsPanel(DesignerContext ctx,ChartTreeDataModel model) {
 		super(ctx,model);

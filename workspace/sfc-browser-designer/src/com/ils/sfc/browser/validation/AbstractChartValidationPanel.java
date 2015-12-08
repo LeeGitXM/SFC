@@ -59,7 +59,7 @@ public abstract class AbstractChartValidationPanel extends JPanel {
 		this.rb = ResourceBundle.getBundle("com.ils.sfc.browser.browser");  // browser.properties
 		this.setPreferredSize(new Dimension(PANEL_WIDTH,PANEL_HEIGHT));
 		initialize();
-		updateTable();  
+		//updateTable();  
 	}
 	
 	private void initialize() {
@@ -95,18 +95,21 @@ public abstract class AbstractChartValidationPanel extends JPanel {
 		outerPanel.add(label,"wrap");
 		
 		
+		/*
+		
 		table = new JTable();
 		updateTable();  // Fills with data, sets columns
 		
 		// This doesn't really work to set initial column sizes -- I've tried dozens of combinations
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-		table.setPreferredScrollableViewportSize(new Dimension(TABLE_WIDTH, TABLE_HEIGHT));
+		//table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+		//table.setPreferredScrollableViewportSize(new Dimension(TABLE_WIDTH, TABLE_HEIGHT));
 
 		TableColumnModel tcm = table.getColumnModel();
 		int[] columnWidths = getColumnWidths();
 		int ncols = tcm.getColumnCount();
 		int col = 0;
 		while( col<ncols ) {
+			log.infof("COLWIDTH = %d=%d",col,columnWidths[col]);
 			tcm.getColumn(col).setPreferredWidth(columnWidths[col]);
 			col++;
 		}
@@ -141,6 +144,26 @@ public abstract class AbstractChartValidationPanel extends JPanel {
             	}
             }
         });
+        
+        ================================================================
+        String[] columnNames = {"A", "B"};
+     */
+		
+        
+		DefaultTableModel model = new DefaultTableModel(getColumnNames(), 0);
+		model.addRow(new Object[] {5, "Billy"});
+		model.addRow(new Object[] {53, "Bob"});
+
+		JTable table = new JTable();
+		table.setModel(model);
+
+
+		table.getColumnModel().getColumn(0).setPreferredWidth(50);
+		table.getColumnModel().getColumn(1).setPreferredWidth(300);
+
+		table.setAutoCreateRowSorter(true);
+		table.setFillsViewportHeight(true);
+
 
         table.setAutoCreateRowSorter(true);
         JScrollPane tablePane = new JScrollPane(table);
@@ -148,7 +171,14 @@ public abstract class AbstractChartValidationPanel extends JPanel {
         tablePane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         table.setFillsViewportHeight(true);
-        outerPanel.add(tablePane, "span,wrap");
+        outerPanel.add(tablePane, "span 2,push, grow");
+        
+        /*
+         outerPanel.setLayout(new BorderLayout());
+		 outerPanel.add(new JScrollPane(table), BorderLayout.CENTER);
+         */
+
+        
 		return outerPanel;
 	}
 	

@@ -36,5 +36,5 @@ public interface BrowserConstants   {
 	public static final int   CHART_PATH_WIDTH = 250;
 	public static final int   REMAINDER_WIDTH = 2000;
 	public static final int   RESID_WIDTH = 20;
-	public static final int   STEP_PATH_WIDTH = 300;
+	public static final int   STEP_PATH_WIDTH = 2000;
 }
