@@ -97,8 +97,7 @@ public abstract class AbstractChartValidationPanel extends JPanel {
 		
 		/*
 		
-		table = new JTable();
-		updateTable();  // Fills with data, sets columns
+		
 		
 		// This doesn't really work to set initial column sizes -- I've tried dozens of combinations
 		//table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
@@ -144,18 +143,19 @@ public abstract class AbstractChartValidationPanel extends JPanel {
             	}
             }
         });
-        
+        JTable table = new JTable();
         ================================================================
         String[] columnNames = {"A", "B"};
+        DefaultTableModel model = new DefaultTableModel(getColumnNames(), 0);
+        model.addRow(new Object[] {5, "Billy"});
+		model.addRow(new Object[] {53, "Bob"});
+		table.setModel(model);
      */
 		
-        
-		DefaultTableModel model = new DefaultTableModel(getColumnNames(), 0);
-		model.addRow(new Object[] {5, "Billy"});
-		model.addRow(new Object[] {53, "Bob"});
+		table = new JTable();
+		updateTable();  // Fills with data, sets columns, sets model
+		
 
-		JTable table = new JTable();
-		table.setModel(model);
 
 
 		table.getColumnModel().getColumn(0).setPreferredWidth(50);
