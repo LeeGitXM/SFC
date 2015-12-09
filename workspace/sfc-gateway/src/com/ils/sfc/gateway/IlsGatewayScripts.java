@@ -483,8 +483,8 @@ public class IlsGatewayScripts {
 		ilsSfcGatewayHook.getSessionMgr().removeSessionListener(sessionId, clientId);
 	}
 
-	public static void addSession(PyObject session) {
-		ilsSfcGatewayHook.getSessionMgr().addSession(session);
+	public static void addSession(PyObject session, String clientId) {
+		ilsSfcGatewayHook.getSessionMgr().addSession(session, clientId);
 	}
 
 	public static PyObject getSession(String sessionId) {
@@ -497,10 +497,6 @@ public class IlsGatewayScripts {
 
 	public static void removeSession(String sessionId) {
 		ilsSfcGatewayHook.getSessionMgr().removeSession(sessionId);
-	}
-	
-	public static Dataset getSessionData() {
-		return ilsSfcGatewayHook.getSessionMgr().getSessionData();
 	}
 	
 	public static Object parseValue(String strValue) {
