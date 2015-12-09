@@ -1,7 +1,7 @@
 /**
  *   (c) 2015  ILS Automation. All rights reserved.
  */
-package com.ils.sfc.browser.validation;
+package com.ils.sfc.designer.browser.validation;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,8 +24,8 @@ import javax.swing.table.TableColumnModel;
 import net.miginfocom.swing.MigLayout;
 import prefuse.data.Table;
 
-import com.ils.sfc.browser.BrowserConstants;
-import com.ils.sfc.browser.ChartTreeDataModel;
+import com.ils.sfc.designer.browser.BrowserConstants;
+import com.ils.sfc.designer.browser.ChartTreeDataModel;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -42,7 +42,7 @@ public abstract class AbstractChartValidationPanel extends JPanel {
 	protected static String TAG = "AbstractChartValidationPanel";
 	protected final LoggerEx log;
 	protected final int PANEL_HEIGHT = 300;
-	protected final int PANEL_WIDTH = 600;
+	protected final int PANEL_WIDTH = 1000;
 	protected final int TABLE_HEIGHT = 500;
 	protected final int TABLE_WIDTH = 2000;
 	protected final ResourceBundle rb;
@@ -56,10 +56,9 @@ public abstract class AbstractChartValidationPanel extends JPanel {
 		this.context = ctx;
 		this.dataModel = model;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
-		this.rb = ResourceBundle.getBundle("com.ils.sfc.browser.browser");  // browser.properties
+		this.rb = ResourceBundle.getBundle("com.ils.sfc.designer.browser.browser");  // browser.properties
 		this.setPreferredSize(new Dimension(PANEL_WIDTH,PANEL_HEIGHT));
-		initialize();
-		//updateTable();  
+		initialize(); 
 	}
 	
 	private void initialize() {
@@ -79,7 +78,6 @@ public abstract class AbstractChartValidationPanel extends JPanel {
 	abstract public void updateTable();
 	
 	
-	
 	/**
 	 * A list add panel is a panel appending a string element in the list. It contains:-
 	 *        Scroll pane with the table, label at the top.
@@ -94,28 +92,20 @@ public abstract class AbstractChartValidationPanel extends JPanel {
 		label.setForeground(Color.BLUE);
 		outerPanel.add(label,"wrap");
 		
-		
-		/*
-		
-		
-		
-		// This doesn't really work to set initial column sizes -- I've tried dozens of combinations
-		//table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-		//table.setPreferredScrollableViewportSize(new Dimension(TABLE_WIDTH, TABLE_HEIGHT));
 
-		TableColumnModel tcm = table.getColumnModel();
-		int[] columnWidths = getColumnWidths();
-		int ncols = tcm.getColumnCount();
-		int col = 0;
-		while( col<ncols ) {
-			log.infof("COLWIDTH = %d=%d",col,columnWidths[col]);
-			tcm.getColumn(col).setPreferredWidth(columnWidths[col]);
-			col++;
-		}
+		table = new JTable();
+		updateTable();  // Fills with data, sets columns, sets model
+
+		table.getColumnModel().getColumn(0).setPreferredWidth(50);
+		table.getColumnModel().getColumn(1).setPreferredWidth(300);
+
+		table.setAutoCreateRowSorter(true);
+		table.setFillsViewportHeight(true);
 		
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setRowSelectionAllowed(true);
         table.setColumnSelectionAllowed(false);
+
         // This trick makes the whole row selectable
         table.getColumnModel().setSelectionModel( new DefaultListSelectionModel() {
 			@Override
@@ -123,7 +113,6 @@ public abstract class AbstractChartValidationPanel extends JPanel {
                 return -1;
             }
         });
-       
         // This assumes that the first column is the resourceId. 
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent event) {
@@ -143,27 +132,6 @@ public abstract class AbstractChartValidationPanel extends JPanel {
             	}
             }
         });
-        JTable table = new JTable();
-        ================================================================
-        String[] columnNames = {"A", "B"};
-        DefaultTableModel model = new DefaultTableModel(getColumnNames(), 0);
-        model.addRow(new Object[] {5, "Billy"});
-		model.addRow(new Object[] {53, "Bob"});
-		table.setModel(model);
-     */
-		
-		table = new JTable();
-		updateTable();  // Fills with data, sets columns, sets model
-		
-
-
-
-		table.getColumnModel().getColumn(0).setPreferredWidth(50);
-		table.getColumnModel().getColumn(1).setPreferredWidth(300);
-
-		table.setAutoCreateRowSorter(true);
-		table.setFillsViewportHeight(true);
-
 
         table.setAutoCreateRowSorter(true);
         JScrollPane tablePane = new JScrollPane(table);
@@ -171,14 +139,9 @@ public abstract class AbstractChartValidationPanel extends JPanel {
         tablePane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         table.setFillsViewportHeight(true);
+        tablePane.setPreferredSize(new Dimension(TABLE_WIDTH,TABLE_HEIGHT));
         outerPanel.add(tablePane, "span 2,push, grow");
-        
-        /*
-         outerPanel.setLayout(new BorderLayout());
-		 outerPanel.add(new JScrollPane(table), BorderLayout.CENTER);
-         */
 
-        
 		return outerPanel;
 	}
 	

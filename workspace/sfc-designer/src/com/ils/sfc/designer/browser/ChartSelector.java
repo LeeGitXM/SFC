@@ -1,4 +1,4 @@
-package com.ils.sfc.browser;
+package com.ils.sfc.designer.browser;
 
 import java.awt.event.MouseEvent;
 import java.util.Timer;

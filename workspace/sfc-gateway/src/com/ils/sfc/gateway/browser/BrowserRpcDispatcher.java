@@ -1,7 +1,7 @@
 /**
  *   (c) 2015  ILS Automation. All rights reserved.
  */
-package com.ils.sfc.browser.gateway;
+package com.ils.sfc.gateway.browser;
 
 import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;

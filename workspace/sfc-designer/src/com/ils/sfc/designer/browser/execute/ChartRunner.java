@@ -1,10 +1,10 @@
-package com.ils.sfc.browser.execute;
+package com.ils.sfc.designer.browser.execute;
 
 import java.io.Serializable;
 import java.util.UUID;
 
-import com.ils.sfc.browser.ChartTreeDataModel;
-import com.ils.sfc.browser.SfcBrowserRequestHandler;
+import com.ils.sfc.designer.browser.ChartTreeDataModel;
+import com.ils.sfc.designer.browser.SfcBrowserRequestHandler;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
 import com.inductiveautomation.ignition.common.user.AuthenticatedUser;
 import com.inductiveautomation.ignition.common.util.LogUtil;

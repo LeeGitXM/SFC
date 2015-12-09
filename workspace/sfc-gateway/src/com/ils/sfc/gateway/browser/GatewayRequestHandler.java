@@ -2,7 +2,7 @@
  *   (c) 2015  ILS Automation. All rights reserved.
  *  
  */
-package com.ils.sfc.browser.gateway;
+package com.ils.sfc.gateway.browser;
 
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;

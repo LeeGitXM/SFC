@@ -1,7 +1,7 @@
 /**
  *   (c) 2015  ILS Automation. All rights reserved.
  */
-package com.ils.sfc.browser.validation;
+package com.ils.sfc.designer.browser.validation;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -18,7 +18,7 @@ import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.ils.sfc.browser.ChartTreeDataModel;
+import com.ils.sfc.designer.browser.ChartTreeDataModel;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
@@ -37,7 +37,7 @@ public class ValidationDialog extends JDialog implements ChangeListener{
 	private final LoggerEx log;
 	private static final long serialVersionUID = 2002388376824434427L;
 	private final int DIALOG_HEIGHT = 300;
-	private final int DIALOG_WIDTH = 600;
+	private final int DIALOG_WIDTH = 800;
 	private final ResourceBundle rb;
 	private final ChartTreeDataModel chartDataModel;
 	private JTabbedPane tabbedPane = null;
@@ -51,7 +51,7 @@ public class ValidationDialog extends JDialog implements ChangeListener{
 		this.chartDataModel = model;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.setTitle("SFC Chart Validity Analysis");
-		this.rb = ResourceBundle.getBundle("com.ils.sfc.browser.browser");  // browser.properties
+		this.rb = ResourceBundle.getBundle("com.ils.sfc.designer.browser.browser");  // browser.properties
 		setModal(false);
 		setAlwaysOnTop(false);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

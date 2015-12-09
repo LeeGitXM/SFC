@@ -1,7 +1,7 @@
 /**
  *   (c) 2015  ILS Automation. All rights reserved.
  */
-package com.ils.sfc.browser.validation;
+package com.ils.sfc.designer.browser.validation;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
@@ -12,8 +12,8 @@ import javax.swing.table.DefaultTableModel;
 
 import prefuse.data.Table;
 
-import com.ils.sfc.browser.BrowserConstants;
-import com.ils.sfc.browser.ChartTreeDataModel;
+import com.ils.sfc.designer.browser.BrowserConstants;
+import com.ils.sfc.designer.browser.ChartTreeDataModel;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.SFCModule;

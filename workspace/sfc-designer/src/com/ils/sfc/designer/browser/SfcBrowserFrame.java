@@ -1,7 +1,7 @@
 /**
  * Copyright 2014. ILS Automation. All rights reserved.
  */
-package com.ils.sfc.browser;
+package com.ils.sfc.designer.browser;
 import java.awt.BorderLayout;
 import java.util.ResourceBundle;
 
@@ -49,7 +49,7 @@ public class SfcBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 		this.changeEvent = new ChangeEvent(this);
 		contentPanel = new JPanel(new BorderLayout());
 		legendPanel  = createLegendPanel();
-		rb = ResourceBundle.getBundle("com.ils.sfc.browser.browser");
+		rb = ResourceBundle.getBundle("com.ils.sfc.designer.browser.browser");
 		JTabbedPane mainPanel = createTabPane(contentPanel,legendPanel);
 		init(mainPanel);
 		EDTUtil.invokeAfterJoin(new Runnable() {

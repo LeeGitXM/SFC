@@ -26,11 +26,16 @@ import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.step.AllSteps;
+import com.ils.sfc.designer.browser.SfcBrowserFrame;
+import com.ils.sfc.designer.browser.execute.ChartRunner;
+import com.ils.sfc.designer.browser.validation.ValidationDialog;
 import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame;
 import com.ils.sfc.designer.search.IlsSfcSearchProvider;
 import com.ils.sfc.designer.stepEditor.IlsStepEditor;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
+import com.inductiveautomation.ignition.common.modules.ModuleInfo;
+import com.inductiveautomation.ignition.common.modules.ModuleInfo.ModuleDependency;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
@@ -50,15 +55,22 @@ import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistryProvider;
 import com.inductiveautomation.sfc.designer.SFCDesignerHook;
 import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
+import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
 
 public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectChangeListener {
+	private final static String TAG = "IlsSfcDesignerHook";
 	private static final String INTERFACE_MENU_TITLE  = "External Interface Configuration";
+	private static final String START_MENU_PRODUCTION_TITLE      = "Start Chart (production)";
+	private static final String START_MENU_ISOLATION_TITLE       = "Start Chart (isolation)";
+	private static final String VALIDATION_MENU_TITLE = "Validate Charts";
 	private DesignerContext context = null;
 	private final LoggerEx log;
 	//private SFCWorkspace sfcWorkspace;
 	//private JPopupMenu stepPopup;
 	private SFCDesignerHook iaSfcHook;
+	private SfcBrowserFrame browser = null;
+	private final List<DockableFrame> frames;
 	private ChartStructureManager structureManager = null;
 	private IlsSfcSearchProvider searchProvider = null;
 	private RecipeEditorFrame recipeEditorFrame;
@@ -66,14 +78,11 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	
 	public IlsSfcDesignerHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
+		this.frames = new ArrayList<>();
 	}
 		
 	@Override
-	public List<DockableFrame> getFrames() {
-      	List<DockableFrame> frames = new ArrayList<>();
-       	frames.add(recipeEditorFrame);       	
-       	return frames;
-	}
+	public List<DockableFrame> getFrames() { return frames; }
 	
 	@Override
 	public void initializeScriptManager(ScriptManager mgr) {
@@ -95,21 +104,56 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     @Override
     public MenuBarMerge getModuleMenu() {
     	
-    	if( menuExists(context.getFrame(),INTERFACE_MENU_TITLE) ) return super.getModuleMenu();
-    	
         MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  
-        merge.addSeparator();
-
-        Action interfaceAction = new AbstractAction(INTERFACE_MENU_TITLE) {
+ 
+        JMenuMerge viewMenu = new JMenuMerge(WellKnownMenuConstants.VIEW_MENU_NAME);
+        viewMenu.addSeparator();
+        viewMenu.addSeparator();
+        
+        if( !menuExists(context.getFrame(),INTERFACE_MENU_TITLE) ) {
+        	Action interfaceAction = new AbstractAction(INTERFACE_MENU_TITLE) {
+        		private static final long serialVersionUID = 5374667367733312464L;
+        		public void actionPerformed(ActionEvent ae) {
+        			SwingUtilities.invokeLater(new DialogRunner());
+        		}
+        	};
+            viewMenu.add(interfaceAction);
+        }
+        // ----------------------- Menu to launch chart validator -----------------------------
+        Action validateAction = new AbstractAction(VALIDATION_MENU_TITLE) {
             private static final long serialVersionUID = 5374667367733312464L;
             public void actionPerformed(ActionEvent ae) {
-                SwingUtilities.invokeLater(new DialogRunner());
+                SwingUtilities.invokeLater(new ValidationDialogRunner());
             }
         };
 
-        JMenuMerge controlMenu = new JMenuMerge(WellKnownMenuConstants.VIEW_MENU_NAME);
-        controlMenu.add(interfaceAction);
-        merge.add(WellKnownMenuConstants.VIEW_MENU_LOCATION, controlMenu);
+        viewMenu.add(validateAction);
+        viewMenu.addSeparator();
+        viewMenu.addSeparator();
+        merge.add(WellKnownMenuConstants.VIEW_MENU_LOCATION, viewMenu);
+        
+        // ----------------------- Menus to start current chart -----------------------------
+        Action executeIsolationAction = new AbstractAction(START_MENU_ISOLATION_TITLE) {
+            private static final long serialVersionUID = 5374887367733312464L;
+            public void actionPerformed(ActionEvent ae) {
+            	SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
+                Thread runner = new Thread(new ChartRunner(context,iaSfcHook.getWorkspace(),browser.getModel(),true));
+                runner.start();
+            }
+        };
+        Action executeProductionAction = new AbstractAction(START_MENU_PRODUCTION_TITLE) {
+            private static final long serialVersionUID = 5374667367733312464L;
+            public void actionPerformed(ActionEvent ae) {
+            	SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
+                Thread runner = new Thread(new ChartRunner(context,iaSfcHook.getWorkspace(),browser.getModel(),false));
+                runner.start();
+            }
+        };
+        JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
+        toolsMenu.addSeparator();
+        toolsMenu.add(executeIsolationAction);
+        toolsMenu.add(executeProductionAction);
+        merge.add(WellKnownMenuConstants.TOOLS_MENU_LOCATION, toolsMenu);
         return merge;
     }
     
@@ -122,6 +166,13 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		recipeEditorFrame = new RecipeEditorFrame(ctx, iaSfcHook.getWorkspace());
       	iaSfcHook.getWorkspace().getInnerWorkspace().addDesignableWorkspaceListener(recipeEditorFrame);
 		
+      	frames.add(recipeEditorFrame); 
+       	browser = new SfcBrowserFrame(context);
+       	browser.setInitMode(DockContext.STATE_AUTOHIDE);
+       	browser.setInitSide(DockContext.DOCK_SIDE_WEST);
+       	browser.setInitIndex(1);
+       	frames.add(browser);
+       	
 		// Register steps
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
 		for(ClientStepFactory clientStepFactory: AbstractIlsStepUI.clientStepFactories) {
@@ -143,12 +194,16 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	searchProvider = new IlsSfcSearchProvider(context);
 		context.registerSearchProvider(searchProvider);
 		context.addProjectChangeListener(this);
+		
+		new Thread(new ModuleWatcher(context)).start();             // Watch for modules to start
  	}
 	
 	@Override
 	public void shutdown() {	
 		context.removeProjectChangeListener(this);
 		context.removeProjectChangeListener(recipeDataCleaner);
+		frames.remove(browser);
+		frames.remove(recipeEditorFrame);
 	}
 	
 	public ChartStructureManager getChartStructureManager() {return structureManager;}
@@ -209,10 +264,55 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
             setup.setVisible(true);
         }
     }
-    
+	/**
+	 * We are dependent on the Ignition SFC module, but don't know about other modules that
+	 * also may be dependent on "com.inductiveautomation.sfc". In order for any custom chart
+	 * classes to be registered, we need to wait on those modules also
+	 */
+	private class ModuleWatcher implements Runnable {
+		private final DesignerContext ctx;
+		public ModuleWatcher(DesignerContext dc) {
+			this.ctx = dc;
+		}
+		public void run() {
+			boolean ready = false;
+			while( !ready ) {
+				List<ModuleInfo> moduleInfos = ctx.getModules();
+				for( ModuleInfo minfo:moduleInfos ) {
+					Collection<ModuleDependency> dependencies = minfo.getDependencies().values();
+					for(ModuleDependency dep:dependencies) {
+						if( dep.getModuleId().equals(SFCModule.MODULE_ID) ) {
+							log.infof("%s.MainMenuWatcher ...%s depends on %s",TAG,minfo.getName(),SFCModule.MODULE_ID);
+						}
+					}
+					// Don't really know how to wait until module is ready. We just assume it
+					// works by letting whatever calls startup() finish.
+					try { Thread.sleep( 2000 ); }
+					catch (InterruptedException ignore) {}
+				}
+				ready = true;
+			}
+			ctx.addProjectChangeListener(browser);
+		}
+	}
+	/**
+     * Display a popup dialog for configuration of dialog execution parameters.
+     * Run in a separate thread, as a modal dialog in-line here will freeze the UI.
+     */
+    private class ValidationDialogRunner implements Runnable {
+
+        public void run() {
+            log.debugf("%s.Launching setup dialog...",TAG);
+            ValidationDialog validator = new ValidationDialog(context,browser.getModel());
+            validator.pack();
+            validator.setVisible(true);
+            browser.addChangeListener(validator);
+        }
+    }
+	// ===================================== Main ===================================
     public static void main(String[] args) {
     	try {
-    	for(Class clazz: AllSteps.propertyClasses) {
+    	for(Class<?> clazz: AllSteps.propertyClasses) {
     		String className = clazz.getSimpleName();
     		for(Field field: clazz.getDeclaredFields()) {
         		if(field.getName().equals("properties")) {

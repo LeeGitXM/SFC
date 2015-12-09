@@ -26,6 +26,7 @@
 		<format property="build.date" pattern="MM/dd/yyyy hh:mm aa" />
 	</tstamp>
 
+
 	<!-- SDK jar classpath. This classpath includes all the jars needed to build a module against the SDK. -->
 	<path id="Ignition_SDK.classpath">
 		<fileset dir="${basedir}/../../ignition-78/lib" includes="*.jar" />

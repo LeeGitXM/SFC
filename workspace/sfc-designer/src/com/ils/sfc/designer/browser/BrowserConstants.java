@@ -1,7 +1,7 @@
 /**
  *   (c) 2014  ILS Automation. All rights reserved.
  */
-package com.ils.sfc.browser;
+package com.ils.sfc.designer.browser;
 
 
 
@@ -33,7 +33,7 @@ public interface BrowserConstants   {
 	public static final String ERROR_COL          = "Error Description";     
 	public static final String RESID_COL          = "ResID";  
 	public static final String STEP_PATH_COL      = "Chart Step Path";
-	public static final int   CHART_PATH_WIDTH = 250;
+	public static final int   CHART_PATH_WIDTH = 500;
 	public static final int   REMAINDER_WIDTH = 2000;
 	public static final int   RESID_WIDTH = 20;
 	public static final int   STEP_PATH_WIDTH = 2000;

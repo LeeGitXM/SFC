@@ -6,7 +6,7 @@
  * 
  * @author <a href="http://jheer.org">jeffrey heer</a>
  */
-package com.ils.sfc.browser;
+package com.ils.sfc.designer.browser;
 
 import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;

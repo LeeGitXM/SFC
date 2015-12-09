@@ -1,7 +1,7 @@
 /**
  *   (c) 2015  ILS Automation. All rights reserved.
  */
-package com.ils.sfc.browser.validation;
+package com.ils.sfc.designer.browser.validation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +14,9 @@ import javax.swing.table.TableRowSorter;
 
 import prefuse.data.Table;
 
-import com.ils.sfc.browser.BrowserConstants;
-import com.ils.sfc.browser.ChartTreeDataModel;
-import com.ils.sfc.browser.ChartTreeDataModel.EnclosingStep;
+import com.ils.sfc.designer.browser.BrowserConstants;
+import com.ils.sfc.designer.browser.ChartTreeDataModel;
+import com.ils.sfc.designer.browser.ChartTreeDataModel.EnclosingStep;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 
 /**
