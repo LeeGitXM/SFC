@@ -95,7 +95,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
 	private TestMgr testMgr = new TestMgr();
 	private IlsDropBox dropBox = new IlsDropBox();
-	private IlsSfcSessionMgr sessionMgr;
+	//private IlsSfcSessionMgr sessionMgr;
 	private ChartDebugger chartDebugger = null;
 	
 	private static StepFactory[] stepFactories = {
@@ -170,10 +170,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		return dropBox;
 	}
 
-	public IlsSfcSessionMgr getSessionMgr() {
-		return sessionMgr;
-	}
-
 	public IlsStepMonitor getStepMonitor() {
 		return stepMonitor;
 	}
@@ -211,7 +207,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		IlsGatewayScripts.setHook(this);
 		GatewayRequestHandler.getInstance().setContext(context);
 		dispatcher = new GatewayRpcDispatcher(context);
-		sessionMgr = new IlsSfcSessionMgr(context.getMessageDispatchManager());
+		//sessionMgr = new IlsSfcSessionMgr(context.getMessageDispatchManager());
 		// Register the ToolkitRecord to make sure that the table exists
 		try {
 			context.getSchemaUpdater().updatePersistentRecords(ToolkitRecord.META);
@@ -274,7 +270,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
     		}            
         	chartManager.registerScopeLocator(scopeLocator);
         	chartManager.addChartObserver(chartObserver);
-        	chartManager.addChartObserver(sessionMgr);
+        	//chartManager.addChartObserver(sessionMgr);
        }
 		System.out.println("serviceReady end");
 	}
@@ -286,7 +282,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 			chartManager.unregister(stepFactory);
 		}
 		chartManager.removeChartObserver(chartObserver);
-		chartManager.removeChartObserver(sessionMgr);
+		//chartManager.removeChartObserver(sessionMgr);
 		chartManager = null;
 		stepMonitor.shutdown();
 	}

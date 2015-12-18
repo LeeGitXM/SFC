@@ -87,7 +87,7 @@ public class IlsChartObserver implements ChartObserver {
 		}
 		info.chartState = newChartState;
 		
-		sendStatusToClient(newChartState, runIdAsString, info.projectName);
+		//sendStatusToClient(newChartState, runIdAsString, info.projectName);
 		
 		// prevent a memory leak by clearing the map after the chart finishes
 		if(newChartState.isTerminal()) {
@@ -97,6 +97,7 @@ public class IlsChartObserver implements ChartObserver {
 		}
 	}
 
+/*
 	private void sendStatusToClient(ChartStateEnum newChartState,
 			String runIdAsString, String projectName) {
 		PyDictionary payload = new PyDictionary();
@@ -108,7 +109,7 @@ public class IlsChartObserver implements ChartObserver {
 			logger.error("error sending chart status", e);
 		}
 	}
-
+*/
 	@Override
 	public synchronized void onElementStateChange(UUID chartId, UUID elementId, ElementStateEnum oldElementState,
 		ElementStateEnum newElementState) {

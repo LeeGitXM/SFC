@@ -29,48 +29,107 @@ public class PythonCall {
 	private static final String[] stepArgs = new String[]{"scopeContext", "stepProperties"};
 	private static final String STEPS_PKG = "ils.sfc.gateway.steps.";
 
-	public static final PythonCall MONITOR_PV = new PythonCall(STEPS_PKG + "monitorPV", 
+	// steps:
+	public static final PythonCall OPERATION = new PythonCall(STEPS_PKG + "operation.activate", 
+			null, stepArgs);
+	
+	public static final PythonCall MONITOR_PV = new PythonCall(STEPS_PKG + "monitorPV.activate", 
 			null, stepArgs);
 
-	public static final PythonCall MANUAL_DATA_ENTRY = new PythonCall(STEPS_PKG + "manualDataEntry", 
+	public static final PythonCall MANUAL_DATA_ENTRY = new PythonCall(STEPS_PKG + "manualDataEntry.activate", 
 			null, stepArgs);
 
-	public static final PythonCall MONITOR_DOWNLOAD = new PythonCall(STEPS_PKG + "monitorDownload", 
+	public static final PythonCall MONITOR_DOWNLOAD = new PythonCall(STEPS_PKG + "monitorDownload.activate", 
 			null, stepArgs);
 
-	public static final PythonCall QUEUE_INSERT = new PythonCall(STEPS_PKG + "queueInsert", 
+	public static final PythonCall QUEUE_INSERT = new PythonCall(STEPS_PKG + "queueInsert.activate", 
 		null, stepArgs);
 
-	public static final PythonCall CLEAR_QUEUE = new PythonCall(STEPS_PKG + "clearQueue", 
+	public static final PythonCall CLEAR_QUEUE = new PythonCall(STEPS_PKG + "clearQueue.activate", 
 		null, stepArgs);
 
-	public static final PythonCall SET_QUEUE = new PythonCall(STEPS_PKG + "setQueue", 
+	public static final PythonCall SET_QUEUE = new PythonCall(STEPS_PKG + "setQueue.activate", 
 		null, stepArgs);
 
-	public static final PythonCall SHOW_QUEUE = new PythonCall(STEPS_PKG + "showQueue", 
+	public static final PythonCall SHOW_QUEUE = new PythonCall(STEPS_PKG + "showQueue.activate", 
 		null, stepArgs);
 
-	public static final PythonCall GET_QUEUE_NAMES = new PythonCall("ils.queue.commons.getQueueNames", 
-			PyList.class, new String[]{"db"});
-
-	public static final PythonCall SAVE_QUEUE = new PythonCall(STEPS_PKG + "saveQueue", 
+	public static final PythonCall SAVE_QUEUE = new PythonCall(STEPS_PKG + "saveQueue.activate", 
 			PyList.class, stepArgs );
 
-	public static final PythonCall YES_NO = new PythonCall(STEPS_PKG + "yesNo", 
+	public static final PythonCall YES_NO = new PythonCall(STEPS_PKG + "yesNo.activate", 
 			null, stepArgs);
 
-	public static final PythonCall CANCEL = new PythonCall(STEPS_PKG + "cancel", 
+	public static final PythonCall CANCEL = new PythonCall(STEPS_PKG + "cancel.activate", 
 			null, stepArgs);
 
-	public static final PythonCall PAUSE = new PythonCall(STEPS_PKG + "pause", 
+	public static final PythonCall PAUSE = new PythonCall(STEPS_PKG + "pause.activate", 
 			null, stepArgs);
 
-	public static final PythonCall CONTROL_PANEL_MESSAGE = new PythonCall(STEPS_PKG + "controlPanelMessage", 
+	public static final PythonCall CONTROL_PANEL_MESSAGE = new PythonCall(STEPS_PKG + "controlPanelMsg.activate", 
 			null, stepArgs);
 
-	public static final PythonCall TIMED_DELAY = new PythonCall(STEPS_PKG + "timedDelay", 
+	public static final PythonCall TIMED_DELAY = new PythonCall(STEPS_PKG + "timedDelay.activate", 
 			null, stepArgs);
 
+	public static final PythonCall DELETE_DELAY_NOTIFICATION = new PythonCall(STEPS_PKG + "deleteDelay.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall POST_DELAY_NOTIFICATION = new PythonCall(STEPS_PKG + "postDelay.activate", 
+			PyList.class,  stepArgs );
+
+	public static final PythonCall ENABLE_DISABLE = new PythonCall(STEPS_PKG + "enableDisable.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall SELECT_INPUT = new PythonCall(STEPS_PKG + "selectInput.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall GET_LIMITED_INPUT = new PythonCall(STEPS_PKG + "limitedInput.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall DIALOG_MESSAGE = new PythonCall(STEPS_PKG + "dialogMsg.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall COLLECT_DATA = new PythonCall(STEPS_PKG + "collectData.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall GET_INPUT = new PythonCall(STEPS_PKG + "getInput.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall RAW_QUERY = new PythonCall(STEPS_PKG + "rawQuery.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall SIMPLE_QUERY = new PythonCall(STEPS_PKG + "simpleQuery.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall SAVE_DATA = new PythonCall(STEPS_PKG + "saveData.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall PRINT_FILE = new PythonCall(STEPS_PKG + "printFile.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall PRINT_WINDOW = new PythonCall(STEPS_PKG + "printWindow.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall SHOW_WINDOW = new PythonCall(STEPS_PKG + "showWindow.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall CLOSE_WINDOW = new PythonCall(STEPS_PKG + "closeWindow.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall REVIEW_DATA = new PythonCall(STEPS_PKG + "reviewData.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall REVIEW_FLOWS = new PythonCall(STEPS_PKG + "reviewFlows.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall CONFIRM_CONTROLLERS = new PythonCall(STEPS_PKG + "confirmControllers.activate", 
+			PyList.class, stepArgs );
+
+	public static final PythonCall WRITE_OUTPUT = new PythonCall(STEPS_PKG + "writeOutput.activate", 
+			PyList.class, stepArgs );
+
+	// units
 	public static final PythonCall INITIALIZE_UNITS = new PythonCall("ils.common.units.lazyInitialize", 
 			null,  new String[]{"database"} );
 	
@@ -88,78 +147,8 @@ public class PythonCall {
 
 	public static final PythonCall CONVERT_UNITS = new PythonCall("ils.common.units.convert", 
 			Double.class,  new String[]{"fromUnit", "toUnit", "value"} );
-
-	public static final PythonCall DELETE_DELAY_NOTIFICATION = new PythonCall(STEPS_PKG + "deleteDelayNotifications", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall POST_DELAY_NOTIFICATION = new PythonCall(STEPS_PKG + "postDelayNotification", 
-			PyList.class,  stepArgs );
-
-	public static final PythonCall ENABLE_DISABLE = new PythonCall(STEPS_PKG + "enableDisable", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall SELECT_INPUT = new PythonCall(STEPS_PKG + "selectInput", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall GET_LIMITED_INPUT = new PythonCall(STEPS_PKG + "getLimitedInput", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall DIALOG_MESSAGE = new PythonCall(STEPS_PKG + "dialogMessage", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall COLLECT_DATA = new PythonCall(STEPS_PKG + "collectData", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall GET_INPUT = new PythonCall(STEPS_PKG + "getInput", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall RAW_QUERY = new PythonCall(STEPS_PKG + "rawQuery", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall SIMPLE_QUERY = new PythonCall(STEPS_PKG + "simpleQuery", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall SAVE_DATA = new PythonCall(STEPS_PKG + "saveData", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall PRINT_FILE = new PythonCall(STEPS_PKG + "printFile", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall PRINT_WINDOW = new PythonCall(STEPS_PKG + "printWindow", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall SHOW_WINDOW = new PythonCall(STEPS_PKG + "showWindow", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall CLOSE_WINDOW = new PythonCall(STEPS_PKG + "closeWindow", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall REVIEW_DATA = new PythonCall(STEPS_PKG + "reviewData", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall REVIEW_FLOWS = new PythonCall(STEPS_PKG + "reviewFlows", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall CONFIRM_CONTROLLERS = new PythonCall(STEPS_PKG + "confirmControllers", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall WRITE_OUTPUT = new PythonCall(STEPS_PKG + "writeOutput", 
-			PyList.class, stepArgs );
-
-	public static final PythonCall HANDLE_STEP_ERROR = new PythonCall("ils.sfc.gateway.util." + "handleUnexpectedGatewayError", 
-			PyList.class,  new String[]{"chartProps", "msg"} );
-
-	public static final PythonCall SEND_CHART_STATUS = new PythonCall("ils.sfc.gateway.util." + "sendChartStatus", 
-			PyList.class,  new String[]{"projectName", "payload"} );
-
-	public static final PythonCall SEND_CURRENT_OPERATION = new PythonCall("ils.sfc.gateway.util." + "sendCurrentOperation", 
-			PyList.class,  new String[]{"projectName", "payload"} );
-
-	public static final PythonCall INVOKE_STEP = new PythonCall("ils.sfc.gateway.steps." + "invokeStep", 
-		PyList.class,  new String[]{"chartProperties", "stepProperties", "methodName"} );
-
-	public static final PythonCall TEST_QUERY = new PythonCall("ils.sfc.client.util." + "testQuery", 
-			PyList.class,  new String[]{"query", "database"} );
+	
+	// recipe data:
 
 	public static final PythonCall RECIPE_DATA_EXISTS = new PythonCall("ils.sfc.common.recipe." + "recipeDataTagExists", 
 			Object.class,  new String[]{"provider", "path"} );
@@ -182,10 +171,23 @@ public class PythonCall {
 	public static final PythonCall DELETE_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "deleteRecipeDataTag", 
 			null,  new String[]{"provider", "fullPath"} );
 
+	// misc:
 	public static final PythonCall DO_NOTHING = new PythonCall("ils.sfc.common.util." + "doNothing", 
 			null,  new String[0] );
 
-	public PythonCall(String methodName, Class<?> returnType, String...args) {
+	public static final PythonCall GET_QUEUE_NAMES = new PythonCall("ils.queue.commons.getQueueNames", 
+			PyList.class, new String[]{"db"});
+
+	public static final PythonCall HANDLE_STEP_ERROR = new PythonCall("ils.sfc.gateway.util." + "handleUnexpectedGatewayError", 
+			PyList.class,  new String[]{"chartProps", "msg"} );
+
+	//public static final PythonCall INVOKE_STEP = new PythonCall("ils.sfc.gateway.steps." + "invokeStep", 
+	//		PyList.class,  new String[]{"chartProperties", "stepProperties", "methodName"} );
+
+	public static final PythonCall TEST_QUERY = new PythonCall("ils.sfc.client.util." + "testQuery", 
+			PyList.class,  new String[]{"query", "database"} );
+
+		public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;
 		this.argNames = args;
 		this.returnType = returnType;

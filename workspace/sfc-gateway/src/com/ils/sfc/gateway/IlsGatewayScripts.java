@@ -466,7 +466,8 @@ public class IlsGatewayScripts {
 	public static String getRecipeDataTagPath(PyChartScope chartScope, PyChartScope stepScope, String scope) {
 		return RecipeDataAccess. getRecipeDataTagPath(chartScope, stepScope, scope);
 	}
-	
+
+	/*
 	public static void addClient(String name, String project, String clientId) {
 		ilsSfcGatewayHook.getSessionMgr().addClient(new IlsSfcSessionMgr.ClientInfo(name, project, clientId));
 	}
@@ -498,7 +499,7 @@ public class IlsGatewayScripts {
 	public static void removeSession(String sessionId) {
 		ilsSfcGatewayHook.getSessionMgr().removeSession(sessionId);
 	}
-	
+*/	
 	public static Object parseValue(String strValue) {
 		return IlsProperty.parseObjectValue(strValue, null);
 	}
