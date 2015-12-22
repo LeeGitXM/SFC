@@ -64,6 +64,7 @@ public class IlsStepNameMapper {
 		for(ProjectResource res:resources) {
 			if( res==null) continue;
 			if( res.getResourceType().equals(FOLDER_RESOURCE_TYPE)) {
+				if(res.getApplicationScope()==ApplicationScope.ALL) continue;  // It doesn't appear like we want these.
 				UUID self = res.getDataAsUUID();
 				UUID parent = res.getParentUuid();
 				if( self==null) continue;

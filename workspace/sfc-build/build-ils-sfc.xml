@@ -3,7 +3,7 @@
 	<import file="${basedir}/sfc-build/build.xml"/>
 
 
-	<property name="version.build" value="0" />	
+	<property name="version.build" value="1" />	
 	<!-- Change version.beta value to "" for release builds -->
 	<property name="version.beta" value="-development" />
 	<property name="root.dir" value="${basedir}/../.." />
@@ -16,8 +16,8 @@
 	<property name="ils.sfc.description" value="ILS SFC Customizations" />
 	<property name="jar.dir" value="${root.dir}/external/lib" />
 	<property name="sdk.dir" value="${root.dir}/ignition-78/lib" />
-	<property name="ant.build.javac.source" value="1.7"/>
-	<property name="ant.build.javac.target" value="1.7"/>
+	<property name="ant.build.javac.source" value="1.8"/>
+	<property name="ant.build.javac.target" value="1.8"/>
 		
 	
 	<!-- For the steps -->
