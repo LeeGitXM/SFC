@@ -13,6 +13,10 @@ public interface SelectInputStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.selectInputStep";
 	     
     public static final BasicProperty<?>[] properties = { 
+    	POSITION,
+    	SCALE,
+    	BUTTON_LABEL,
+    	WINDOW_TITLE,
     	PROMPT, 
     	CHOICES_RECIPE_LOCATION, 
     	CHOICES_KEY, 
