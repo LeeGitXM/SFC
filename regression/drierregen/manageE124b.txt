@@ -1,0 +1,55 @@
+#
+# Test of the SFC chart ManageE124B. This is part of
+# the Drier Regen SFC Application.
+#
+CHART = "ngManageE124b"
+OPERATION  = "SFC/DrierRegenProcedure/DrierRegen/DrierRegen/RegenOperation"
+CPATH      = "DrierRegenProcedure/DrierRegen/DrierRegenOperation/MoistureRemoval/ManageE124b"
+Show: chart $CHART
+
+# Define tags used in this test
+tag: DRVMT124 "SFC IO/Drier Regeneration/DR-VMT124/value"
+tag: HITEMPLIMIT $OPERATION/Drier-Sel-Hi-Temp-Lim/value
+tag: LOWTEMPLIMIT $OPERATION/Drier-Sel-Low-Temp-Lim/value
+tag: TOPTEMPSTATUS $OPERATION/top-temp-monitor-status/value
+
+
+Test: Chart ManageE124b
+Step: Path - left-left-loop
+
+# Drive tags
+DRVMT124 = 545.
+HITEMPLIMIT = 500.
+TOPTEMPSTATUS="LOOP"
+
+chartid = startChart($CPATH,$ISOLATION)
+animate: chart $chartid
+assert: $chartid != "None"  "Started $CHART"
+wait: 5 secs
+assert: getChartState($chartid)="Running" "Chart is running"
+wait: 25 secs
+assert: getStepState($chartid,"Dummy1") = "Inactive" "Dummy1 has been activated"
+assert: getStepCount($chartid,"Dummy2") = 1 "Dummy2 has been executed once"
+assert: getStepState($chartid,"Dummy3") = "NOT_VISITED" "Dummy3 has not been visited"
+TOPTEMPSTATUS="PROCEED"
+wait: 32 secs
+assert: getStepCount($chartid,"Dummy2") = 2 "Dummy2 has been executed twice"
+wait: 10 secs
+assert: getChartState($chartid)="Stopped" "Chart is complete"
+wait: 5 secs
+monitor.clear()
+
+Step: Rightmost Path
+DRVMT124 = 475.
+LOWTEMPLIMIT = 450.
+chartid = startChart($CPATH,$ISOLATION)
+animate: chart $chartid
+assert: $chartid != "None"  "Started $CHART"
+wait: 5 secs
+assert: getChartState($chartid)="Running" "Chart is running"
+assert: getStepState($chartid,"Dummy2") = "NOT_VISITED" "Dummy2 has not been visited"
+assert: getStepState($chartid,"Dummy3") = "Inactive" "Dummy3 has been activated"
+assert: getStepCount($chartid,"FINAL-TRANSITION") = 1 "Final transition has been traversed once"
+wait: 6 secs
+assert: getChartState($chartid)="Stopped" "Chart is complete"
+monitor.clear()

@@ -1,7 +1,8 @@
 package com.ils.sfc.gateway;
 
+import static com.ils.sfc.common.IlsSfcCommonUtils.isEmpty;
+
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -11,15 +12,11 @@ import org.json.JSONObject;
 import org.python.core.PyDictionary;
 import org.python.core.PyObject;
 
-import system.ils.sfc.common.Constants;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
-import com.ils.sfc.common.MockEnclosingScopeFactory;
 import com.ils.sfc.common.PythonCall;
-import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.rowconfig.ManualDataEntryConfig;
 import com.ils.sfc.common.rowconfig.MonitorDownloadsConfig;
@@ -32,33 +29,33 @@ import com.ils.sfc.step.IlsAbstractChartStep;
 import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
-import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.DatasetBuilder;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
-import com.inductiveautomation.sfc.SFCModule;
-import com.inductiveautomation.sfc.SfcGatewayHookImpl.SfcRpcHandler;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ExecutionQueue;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeLocator;
-import com.inductiveautomation.sfc.api.SfcGatewayHook;
 import com.inductiveautomation.sfc.api.elements.ChartElement;
 import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
-
-import static com.ils.sfc.common.IlsSfcCommonUtils.isEmpty;
 
 /** Java utilities exposed to Python. The python module path is: "system.ils.sfc"
  */
 public class IlsGatewayScripts {	
 	private static LoggerEx logger = LogUtil.getLogger(IlsGatewayScripts.class.getName());
 	private static IlsSfcGatewayHook ilsSfcGatewayHook;
-	private static GatewayRequestHandler requestHandler = GatewayRequestHandler.getInstance();
+	private static GatewayRequestHandler requestHandler = null;
 
+	/**
+	 * We need the request handler before wee can do anything
+	 */
+	public static void setRequestHandler(GatewayRequestHandler rh) {
+		requestHandler = rh;
+	}
 	/**
 	 * Find the database associated with the sequential function charts.
 	 * 
@@ -77,7 +74,7 @@ public class IlsGatewayScripts {
 	 * @return name of the tag provider for production or isolation mode, as appropriate.
 	 */
 	public static String getProviderName(boolean isolationMode)  {
-		return RecipeDataAccess.getProviderName(isolationMode);
+		return requestHandler.getProviderName(isolationMode);
 	}
 	
 	public static boolean getIsolationMode(PyChartScope chartScope) {
@@ -360,12 +357,20 @@ public class IlsGatewayScripts {
 	/**
 	 * Set a clock rate factor. This will change timing for isolation mode only.
 	 * This method is provided as a hook for test frameworks.
-	 * @param factor the amount to speed up or slow down the clock.
+	 * @param factor the amount (for values over 1) to speed up the clock
 	 */
 	public static void setTimeFactor(double factor) {
 		requestHandler.setTimeFactor(factor);
 	}
 	
+	/**
+	 * Insert a response to a pending request. Answer the request that has been 
+	 * waiting the longest.
+	 */
+	public static void setResponse(String response) {
+	}
+	
+	// ===================================== Step Monitor =======================
 	/**
 	 * Clear results from the step monitor. Since results are indexed
 	 * by the run-id of the chart, the dictionary entries related to
@@ -375,7 +380,18 @@ public class IlsGatewayScripts {
 	public static void clearStepMonitor() {
 		ilsSfcGatewayHook.getStepMonitor().clear();
 	}
-
+	/**
+	 * @return the most recent state of the named block of a running chart.
+	 */
+	public static String chartState(String chartId) {
+		return ilsSfcGatewayHook.getStepMonitor().chartState(chartId);
+	}
+	/**
+	 * @return a count of the number of activations of the named block of a running chart.
+	 */
+	public static long stepCount(String chartId,String stepName) {
+		return ilsSfcGatewayHook.getStepMonitor().stepCount(chartId,stepName);
+	}
 	/**
 	 * @return the most recent state of the named block of a running chart.
 	 */
@@ -405,7 +421,7 @@ public class IlsGatewayScripts {
 	public static void watchChart(String id,String name) {
 		ilsSfcGatewayHook.getStepMonitor().watch(id,name);
 	}
-		
+	// =====================================  =======================
 	public static String getJSONForScope(PyChartScope scope) throws JSONException {
 		JSONObject jsonObject = Data.fromStepScope(scope);
 		return jsonObject.toString();

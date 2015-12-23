@@ -1,10 +1,5 @@
 package com.ils.sfc.gateway.recipe;
 
-import java.util.List;
-import java.util.Map;
-
-import org.python.core.PyDictionary;
-
 import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.common.PythonCall;
@@ -21,7 +16,15 @@ import com.inductiveautomation.sfc.api.ScopeContext;
  */
 public class RecipeDataAccess {
 	private static LoggerEx logger = LogUtil.getLogger(RecipeDataAccess.class.getName());
-	private static GatewayRequestHandler reqHandler = GatewayRequestHandler.getInstance();
+	private static GatewayRequestHandler reqHandler = null;
+	
+	/**
+	 * @see IlsSfcGatewayHook for initialization.
+	 * @param rh
+	 */
+	public static void setRequestHandler(GatewayRequestHandler rh) {
+		reqHandler = rh;
+	}
 		
 	/** Get the chart/step path for the given recipe data scope (not including provider). */
 	public static String getRecipeDataTagPath(PyChartScope chartScope, PyChartScope stepScope, String scope) {
@@ -182,6 +185,7 @@ public class RecipeDataAccess {
 		}
 		return scope;
 	}
+
 
 	public static String getProviderName(boolean isolationMode) {
 		String providerName = reqHandler.getProviderName(isolationMode);

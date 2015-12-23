@@ -4,13 +4,20 @@ import com.inductiveautomation.ignition.client.model.ClientContext;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 
 /**
- * Provide additional functionality for python scripts
+ * Expose features of the ILS-SFC module to python scripts.
  */
 public class IlsClientScripts {	
 	private static ClientContext context = null;
 	private static IlsSfcRequestHandler requestHandler = new IlsSfcRequestHandler();
 
 	public static void setContext(ClientContext ctx) { context = ctx; }
+	/**
+	 * @return the path of a chart given its resource Id
+	 */
+	public static String getChartPath(long resourceId)  {
+		String path = requestHandler.getChartPath(resourceId);
+		return path;
+	}
 	/**
 	 * Find the database associated with the sequential function charts.
 	 * 
@@ -40,7 +47,8 @@ public class IlsClientScripts {
 	/**
 	 * Set a clock rate factor. This will change timing for isolation mode only.
 	 * This method is provided as a hook for test frameworks.
-	 * @param factor the amount to speed up or slow down the clock.
+	 * @param factor the amount to speed up or slow down the clock. A value greater
+	 *        than one represents a speedup.
 	 */
 	public static void setTimeFactor(double factor) {
 		requestHandler.setTimeFactor(factor);

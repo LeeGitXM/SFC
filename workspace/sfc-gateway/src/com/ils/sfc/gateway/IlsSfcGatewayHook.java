@@ -17,6 +17,7 @@ import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.gateway.monitor.IlsStepMonitor;
 import com.ils.sfc.gateway.recipe.IlsScopeLocator;
+import com.ils.sfc.gateway.recipe.RecipeDataAccess;
 import com.ils.sfc.step.CancelStepFactory;
 import com.ils.sfc.step.ClearQueueStepFactory;
 import com.ils.sfc.step.CloseWindowStepFactory;
@@ -90,8 +91,9 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private ChartManagerService chartManager;
 	private IlsScopeLocator scopeLocator = new IlsScopeLocator(this);
 	private IlsChartObserver chartObserver = new IlsChartObserver();
-	private final IlsStepMonitor stepMonitor = new IlsStepMonitor();
+	private IlsStepMonitor stepMonitor = null;
 	private ChartStructureManager structureManager = null;
+	private GatewayRequestHandler requestHandler = null;
 	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
 	private TestMgr testMgr = new TestMgr();
 	private IlsDropBox dropBox = new IlsDropBox();
@@ -199,14 +201,14 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public Object getRPCHandler(ClientReqSession session, Long projectId) {
 		return dispatcher;
 	}
+	
 
 	@Override
 	public void setup(GatewayContext ctxt) {
 		this.context = ctxt;
 		context.getModuleServicesManager().subscribe(ChartManagerService.class, this);
 		IlsGatewayScripts.setHook(this);
-		GatewayRequestHandler.getInstance().setContext(context);
-		dispatcher = new GatewayRpcDispatcher(context);
+		
 		//sessionMgr = new IlsSfcSessionMgr(context.getMessageDispatchManager());
 		// Register the ToolkitRecord to make sure that the table exists
 		try {
@@ -222,8 +224,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		PythonCall.setScriptMgr(manager);
 		manager.addScriptModule("system.ils.sfc", IlsGatewayScripts.class);	
 		manager.addStaticFields("system.ils.sfc.common.Constants", Constants.class);	
-		initializeUnits();
-		//manager.addStaticFields("system.ils.sfc", IlsSfcNames.class);
 	};
 	
 	private void initializeUnits() {
@@ -233,7 +233,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		// database and the isolation database, but since we only have one PythonCall singleton
 		// we aren't set up to handle that anyway. We choose to use the units from the 
 		// production database.
-		String databaseName =  GatewayRequestHandler.getInstance().getDatabaseName(false);
+		String databaseName =  requestHandler.getDatabaseName(false);
 		Object[] args = {databaseName};
 		try {
 			PythonCall.INITIALIZE_UNITS.exec(args);
@@ -244,14 +244,19 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 	@Override
 	public void startup(LicenseState licenseState) {			
-		iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);
-		stepMonitor.initialize(context,chartManager,iaSfcHook);				
+		iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);				
 		chartManager.addChartObserver(dropBox);
 
  		structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
+ 		requestHandler = new GatewayRequestHandler(context,structureManager);
+		dispatcher = new GatewayRpcDispatcher(context,requestHandler);
 		chartDebugger = new ChartDebugger(
 			context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY), 
 			iaSfcHook.getStepRegistry());
+		initializeUnits();
+		IlsGatewayScripts.setRequestHandler(requestHandler);
+		RecipeDataAccess.setRequestHandler(requestHandler);
+		stepMonitor = new IlsStepMonitor(structureManager,chartManager);
     	context.getProjectManager().addProjectListener(this);
 		log.infof("%s: Startup complete.",TAG);
 	}
@@ -259,6 +264,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	@Override
 	public void shutdown() {
 		context.getProjectManager().removeProjectListener(this);
+		stepMonitor.shutdown();
 	}
 
 	@Override

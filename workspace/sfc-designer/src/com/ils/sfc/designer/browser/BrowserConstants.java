@@ -12,7 +12,7 @@ public interface BrowserConstants   {
 	// Resource types
 	public static final String CHART_RESOURCE_TYPE="sfc-chart-ui-model";
 	public static final String FOLDER_RESOURCE_TYPE="__folder";
-	public static final String MODULE_ID = "sfc-browser";
+	
 	// Table column names
 	public static final String CXNS    = "Cxns";          // Incoming connection count
 	public static final String KEY      = "Key";

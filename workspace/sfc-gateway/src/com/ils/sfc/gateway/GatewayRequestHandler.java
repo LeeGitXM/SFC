@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ils.common.persistence.ToolkitProperties;
-import com.ils.common.persistence.ToolkitRecord;
 import com.ils.common.persistence.ToolkitRecordHandler;
-import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.inductiveautomation.ignition.common.datasource.DatasourceStatus;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -29,31 +28,24 @@ import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 public class GatewayRequestHandler {
 	private final static String TAG = "ControllerRequestHandler";
 	private final LoggerEx log;
-	private GatewayContext context = null;
-	private static GatewayRequestHandler instance = null;
-	private ToolkitRecordHandler recordHandler = null;
+	private final GatewayContext context;
+	private final ChartStructureManager structureManager;
+	private final ToolkitRecordHandler recordHandler;
 
 	/**
-	 * Initialize with instances of the classes to be controlled.
+	 * Constructor: Created in the hook class.
 	 */
-	private GatewayRequestHandler() {
-		log = LogUtil.getLogger(getClass().getPackage().getName());
-	}
-	/**
-	 * Static method to create and/or fetch the single instance.
-	 */
-	public static GatewayRequestHandler getInstance() {
-		if( instance==null) {
-			synchronized(GatewayRequestHandler.class) {
-				instance = new GatewayRequestHandler();
-			}
-		}
-		return instance;
-	}
-
-	public void setContext(GatewayContext ctx) { 
+	public GatewayRequestHandler(GatewayContext ctx,ChartStructureManager structMgr) {
 		this.context = ctx;
 		this.recordHandler = new ToolkitRecordHandler(context);
+		this.structureManager = structMgr;
+		this.log = LogUtil.getLogger(getClass().getPackage().getName());
+	}
+
+
+	
+	public String getChartPath(long resourceId) {
+		return structureManager.getChartPath(resourceId);
 	}
 	
 	/**
@@ -100,7 +92,8 @@ public class GatewayRequestHandler {
 	 * Get the clock rate factor. For non-isolation mode the value is fixed at 1.0.
 	 * This method is provided as a hook for test frameworks.
 	 * @param isIsolated. True if the system is currently in ISOLATION mode.
-	 * @return the amount to speed up or slow down the clock.
+	 * @return the amount to speed up or slow down the clock. A value greater
+	 *         than one represents a clock speedup. (This is opposite of internal SFC usage).
 	 */
 	public double getTimeFactor(boolean isIsolated) {
 		double factor = 1.0;
@@ -113,7 +106,7 @@ public class GatewayRequestHandler {
 				log.warnf("%s.getTimeFactor: stored value (%s), not a double. Using 1.0",TAG,value);
 			}
 		}
-		return factor;
+		return 1.0/factor;
 	}
 	/**
 	 * On a failure to find the property, an empty string is returned.
@@ -124,10 +117,13 @@ public class GatewayRequestHandler {
 	/**
 	 * Set a clock rate factor. This will change timing for isolation mode only.
 	 * This method is provided as a hook for test frameworks.
-	 * @param factor the amount to speed up or slow down the clock.
+	 * @param factor the amount (for values over 1) to speed up the clock.
+	 *        This is the reciprocal of the internal usage.
 	 */
 	public void setTimeFactor(double factor) {
 		String value = String.valueOf(factor);
+		if( value<=0.0 ) value = 1.0;
+		else value = 1./value;
 		setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME,value);
 	}
 	/**
