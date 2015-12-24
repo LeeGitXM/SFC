@@ -121,9 +121,9 @@ public class GatewayRequestHandler {
 	 *        This is the reciprocal of the internal usage.
 	 */
 	public void setTimeFactor(double factor) {
+		if( factor<=0.0 ) factor = 1.0;
+		else factor = 1./factor;
 		String value = String.valueOf(factor);
-		if( value<=0.0 ) value = 1.0;
-		else value = 1./value;
 		setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME,value);
 	}
 	/**
