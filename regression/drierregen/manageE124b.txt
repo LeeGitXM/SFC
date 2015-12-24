@@ -2,7 +2,7 @@
 # Test of the SFC chart ManageE124B. This is part of
 # the Drier Regen SFC Application.
 #
-CHART = "ngManageE124b"
+CHART = "ManageE124b"
 OPERATION  = "SFC/DrierRegenProcedure/DrierRegen/DrierRegen/RegenOperation"
 CPATH      = "DrierRegenProcedure/DrierRegen/DrierRegenOperation/MoistureRemoval/ManageE124b"
 Show: chart $CHART
@@ -32,9 +32,9 @@ assert: getStepState($chartid,"Dummy1") = "Inactive" "Dummy1 has been activated"
 assert: getStepCount($chartid,"Dummy2") = 1 "Dummy2 has been executed once"
 assert: getStepState($chartid,"Dummy3") = "NOT_VISITED" "Dummy3 has not been visited"
 TOPTEMPSTATUS="PROCEED"
-wait: 32 secs
+wait: 35 secs
 assert: getStepCount($chartid,"Dummy2") = 2 "Dummy2 has been executed twice"
-wait: 10 secs
+wait: 5 secs
 assert: getChartState($chartid)="Stopped" "Chart is complete"
 wait: 5 secs
 monitor.clear()

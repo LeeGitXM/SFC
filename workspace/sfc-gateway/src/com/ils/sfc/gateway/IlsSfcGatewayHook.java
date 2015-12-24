@@ -234,11 +234,16 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		// we aren't set up to handle that anyway. We choose to use the units from the 
 		// production database.
 		String databaseName =  requestHandler.getDatabaseName(false);
+		log.infof("%s:initializeUnits: Database name is %s", TAG,databaseName);
 		Object[] args = {databaseName};
 		try {
 			PythonCall.INITIALIZE_UNITS.exec(args);
-		} catch (JythonExecException e) {
-			log.error("Error initializing units in PythonCall script manager", e);
+		} 
+		catch (JythonExecException jee) {
+			log.error("IlsSfcGatewayHook.initializeUnits: Error in PythonCall script manager", jee);
+		}
+		catch (Exception ex) {
+			log.error("IlsSfcGatewayHook.initializeUnits: Error executing PythonCall script manager", ex);
 		}
 	}
 

@@ -25,7 +25,7 @@ import com.inductiveautomation.sfc.api.ChartManagerService;
 public class IlsStepMonitor implements ChartObserver {
 	private final static String TAG = "IlsStepMonitor";
 	private final static LoggerEx log = LogUtil.getLogger(IlsStepMonitor.class.getPackage().getName());
-	private final static boolean DEBUG_STEP_MONITOR = true;  // Easy way to turn on logging while debugging
+	private final static boolean DEBUG_STEP_MONITOR = false;  // Easy way to turn on logging while debugging
 	private final ChartManagerService chartService;
 	private final ChartStructureManager structureManager;
 	private final Map<String, ChartStateHolder>   chartStateForId;
