@@ -40,7 +40,7 @@ public class StepStructure {
 		this.chart = chart;
 		this.elementType = stepDef.getElementType();
 		this.id = stepDef.getElementId().toString();
-		this.factoryId = stepDef.getFactoryId().towwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwString();
+		this.factoryId = stepDef.getFactoryId().toString();
 		this.previous = previous;
 		this.name = (String)IlsSfcCommonUtils.getStepPropertyValue(stepDef.getProperties(), ChartStructureCompiler.NAME_PROPERTY);
 		this.enclosedChartName =  (String)IlsSfcCommonUtils.getStepPropertyValue(stepDef.getProperties(),ChartStructureCompiler.CHART_PATH_PROPERTY);
