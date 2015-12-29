@@ -14,6 +14,13 @@ public interface TimedDelayStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.timedDelayStep";
 
     public static final BasicProperty<?>[] properties = { 
+    	// properties for notification window:
+    	POSITION,
+    	SCALE,
+    	BUTTON_LABEL,
+    	WINDOW_TITLE,
+    	MESSAGE,
+
     	TIME_DELAY_STRATEGY, 
     	CALLBACK, 
     	KEY, 

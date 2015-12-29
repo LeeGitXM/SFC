@@ -87,7 +87,11 @@ public class IlsGatewayScripts {
 	public static PyDictionary getResponse(String id) {
 		return ilsSfcGatewayHook.getRequestResponseManager().getResponse(id);
 	}
-	
+
+	public static void addRequestId(String requestId, String stepId) {
+		ilsSfcGatewayHook.getRequestResponseManager().addRequestId(requestId, stepId);
+	}
+
 	public static void setResponse(String id, PyDictionary payload) {
 		ilsSfcGatewayHook.getRequestResponseManager().setResponse(id, payload);
 	}

@@ -2,7 +2,9 @@ package com.ils.sfc.gateway;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.python.core.PyDictionary;
 
@@ -10,7 +12,9 @@ import org.python.core.PyDictionary;
 public class IlsRequestResponseManager {
 	private Map<String,PyDictionary> repliesById = Collections.synchronizedMap(
 			new HashMap<String,PyDictionary>());
-
+	private Map<String,String> stepIdsByRequestId = Collections.synchronizedMap(
+			new HashMap<String,String>());
+	
 	public synchronized PyDictionary getResponse(String id) {
 		PyDictionary reply = repliesById.get(id);
 		if(reply != null) {
@@ -21,5 +25,15 @@ public class IlsRequestResponseManager {
 	
 	public synchronized void setResponse(String id, PyDictionary payload) {
 		repliesById.put(id, payload);
+		stepIdsByRequestId.remove(id);
 	}
+	
+	public synchronized void addRequestId(String requestId, String stepId) {
+		stepIdsByRequestId.put(requestId, stepId);
+	}
+
+	public synchronized Map<String, String> getStepIdsByRequestId() {
+		return new HashMap<String, String>(stepIdsByRequestId);
+	}
+
 }
