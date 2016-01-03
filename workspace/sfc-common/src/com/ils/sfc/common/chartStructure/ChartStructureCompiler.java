@@ -52,6 +52,7 @@ public class ChartStructureCompiler {
 	private final Map<Long,ChartModelInfo> modelInfoByResourceId;
 	private final Map<String,ChartModelInfo> modelInfoByChartPath; // Reverse directory
 	private final Map<String,StepStructure> stepsById;
+	private final Map<String,StepStructure> stepsByKey;            // Reverse lookup by chartId,stepname
 
 	public ChartStructureCompiler(Project proj, StepRegistry stepRegistry) {
 		this.project = proj;
@@ -59,6 +60,7 @@ public class ChartStructureCompiler {
 		this.modelInfoByResourceId = new HashMap<>();
 		this.modelInfoByChartPath = new HashMap<>();
 		this.stepsById = new HashMap<>();
+		this.stepsByKey = new HashMap<>();
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
 
@@ -69,6 +71,7 @@ public class ChartStructureCompiler {
 	 */
 	public void compile() {
 		stepsById.clear();
+		stepsByKey.clear();
 		modelInfoByResourceId.clear();
 		modelInfoByChartPath.clear();
 		
@@ -85,6 +88,10 @@ public class ChartStructureCompiler {
 	
 	public ChartModelInfo  getChartInformation(long resourceId) { return modelInfoByResourceId.get(new Long(resourceId)); }
 	public StepStructure   getStepInformation(String stepId) { return stepsById.get(stepId); }
+	public StepStructure   getStepInformation(String chartPath,String stepName) { 
+		String key = makeKey(chartPath,stepName);
+		return stepsByKey.get(key); 
+	}
 	
 	public Collection<StepStructure> getSteps() {
 		return stepsById.values();
@@ -128,9 +135,12 @@ public class ChartStructureCompiler {
 				ChartCompilationResults ccr = chartCompiler.compile();
 				if(ccr.isSuccessful()) {
 					modelInfo.chartDefinition = ccr.getChartDefinition();
-					ChartStructure newChart = new ChartStructure(modelInfo.resource.getName(),modelInfo.resource.getResourceId());
+					long resid = modelInfo.resource.getResourceId();
+					ChartStructure newChart = new ChartStructure(modelInfo.resource.getName(),resid,project.getFolderPath(resid));
 					modelInfo.chartStructure = newChart;
 					Set<UUID> seen = new HashSet<UUID>();
+					StepStructure.parallelCount = 0;
+					StepStructure.transitionCount = 0;
 					for(ElementDefinition def: ccr.getRootDefinitions()) {
 						createSteps(newChart, null, def, seen);
 					}
@@ -185,6 +195,8 @@ public class ChartStructureCompiler {
 			StepStructure newStep = new StepStructure(chart, previousStep, stepDef); 
 			chart.addStep(newStep);
 			stepsById.put(stepId, newStep);
+			String key = makeKey(chart.getPath(),newStep.getName());
+			stepsByKey.put(key, newStep);
 		}
 		return stepsById.get(stepId);			
 	}
@@ -196,6 +208,8 @@ public class ChartStructureCompiler {
 			StepStructure newStep = new StepStructure(chart, previousStep, pDef); 
 			chart.addStep(newStep);
 			stepsById.put(stepId, newStep);
+			String key = makeKey(chart.getPath(),newStep.getName());
+			stepsByKey.put(key, newStep);
 			previousStep = newStep;
 			for(ElementDefinition nextDef: pDef.getNextElements()) {
 				createSteps(chart, previousStep, nextDef, seen);
@@ -211,6 +225,8 @@ public class ChartStructureCompiler {
 			StepStructure newStep = new StepStructure(chart, previousStep, transDef); 
 			chart.addStep(newStep);
 			stepsById.put(stepId, newStep);
+			String key = makeKey(chart.getPath(),newStep.getName());
+			stepsByKey.put(key, newStep);
 		}
 		return stepsById.get(stepId);			
 	}
@@ -250,21 +266,18 @@ public class ChartStructureCompiler {
 							
 		}
 	}
-/*
-	// Holder for parent structures so that we walk the tree
-	// The step, the enclosure, is the parent of the chart.
-	public static class Parent {
-		private final ChartStructure enclosedChart;
-		private final StepStructure parent;
-		
-		public Parent(StepStructure step,ChartStructure chart) {
-			this.enclosedChart = chart;
-			this.parent = step;
-		}
-
-		public ChartStructure getEnclosedChart() {return enclosedChart;}
-		public StepStructure getParent() { return parent;}
-		
+	
+	/**
+	 * The is the key to lookup a step structure
+	 * @param chartId
+	 * @param stepName
+	 * @return a map key
+	 */
+	private String makeKey(String chartPath,String stepName) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(chartPath);
+		sb.append(":");
+		sb.append(stepName);
+		return sb.toString();
 	}
-*/
 }

@@ -3,13 +3,13 @@
 # for viewing in Eclipse. Clean out irrelevant directories.
 #
 SVNUC=${SVN_REPO}/EMChemicals/G2Artifacts/Sequential\ Control/UnitTests
-SVNVIST=${SVN_REPO}/EMChemicals/Migration/Vistalon/Exports/SequentialControl
+SVNVIST="${SVN_REPO}/EMChemicals/Migration/Vistalon/Exports From G2/SequentialControl"
 XML=${GIT_REPO}/sfc/migration/xml
 mkdir -p $XML/g2/usecase
 mkdir -p $XML/g2/vistalon
 mkdir -p $XML/ignition
 cp -a "${SVNUC}"/* $XML/g2/usecase
-cd ${SVNVIST}
+cd "${SVNVIST}"
 for dir in *
 do
    if [ -d $dir ]
@@ -19,7 +19,7 @@ do
       echo `pwd`
       mkdir -p $XML/g2/vistalon/$dir
       cp -a * $XML/g2/vistalon/$dir
-      cd ${SVNVIST}
+      cd "${SVNVIST}"
    fi
 done
 # Clean up the non-xml

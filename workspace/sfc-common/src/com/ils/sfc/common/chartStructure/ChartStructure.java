@@ -3,6 +3,8 @@ package com.ils.sfc.common.chartStructure;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
 
 /** 
@@ -10,17 +12,23 @@ import com.inductiveautomation.sfc.definitions.ElementDefinition;
  *  convenient for our purposes. 
  */
 public class ChartStructure {
-
+	private static String TAG = "ChartStructure";
+	private final LoggerEx log;
+	private final static boolean DEBUG_CHART = false;
 	// Enclosing Steps in another chart that contain this chart:
 	private final List<StepStructure> parents = new ArrayList<StepStructure>();
 	private final List<StepStructure> steps; 	// the steps in this chart
-	private final String name;                  // the name (path) of this chart
+	private final String name;                  // the name (last path element) of this chart
 	private final long resourceId;
+	private final String path;                  // the path of this chart
 	
-	public ChartStructure(String name,long resid) {
+	public ChartStructure(String name,long resid,String path) {
+		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.name = name;
 		this.resourceId = resid;
+		this.path = path;
 		this.steps= new ArrayList<StepStructure>();
+		if(log.isTraceEnabled()||DEBUG_CHART) log.infof("%s: Created %s (%d)", TAG,name,resid);
 	}
 	
 	
@@ -31,6 +39,7 @@ public class ChartStructure {
 	
 	public String getName() {return this.name;}
 	public long getResourceId() { return this.resourceId; }
+	public String getPath() { return this.path; }
 
 	//Get all chart steps that enclose this chart.
 	public List<StepStructure> getParents() {return parents;}

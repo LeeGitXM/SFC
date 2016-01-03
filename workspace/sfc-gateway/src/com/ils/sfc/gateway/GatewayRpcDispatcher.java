@@ -4,14 +4,8 @@
 package com.ils.sfc.gateway;
 
 import java.util.List;
-import java.util.Properties;
 import java.util.UUID;
 
-import org.python.core.PyDictionary;
-
-import system.ils.sfc.common.Constants;
-
-import com.inductiveautomation.ignition.common.script.message.MessageDispatchManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
@@ -32,10 +26,14 @@ public class GatewayRpcDispatcher   {
 	/**
 	 * Constructor. There is a separate dispatcher for each project.
 	 */
-	public GatewayRpcDispatcher(GatewayContext ctx) {
+	public GatewayRpcDispatcher(GatewayContext ctx,GatewayRequestHandler rh) {
 		this.context = ctx;
+		this.requestHandler = rh;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
-		this.requestHandler = GatewayRequestHandler.getInstance();
+	}
+	
+	public String getChartPath(Long resid) {
+		return requestHandler.getChartPath(resid.longValue());
 	}
 	
 	public List<String> getDatasourceNames() {
@@ -48,7 +46,7 @@ public class GatewayRpcDispatcher   {
 	/**
 	 * Set a clock rate factor. This will change timing for isolation mode only.
 	 * This method is provided as a hook for test frameworks.
-	 * @param factor the amount to speed up or slow down the clock.
+	 * @param factor the amount to speed up or slow down the all times.
 	 */
 	public void setTimeFactor(Double factor) {
 		requestHandler.setTimeFactor(factor.doubleValue());

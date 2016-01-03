@@ -64,6 +64,7 @@ public class ChartStructureManager   {
 		if( stepStruct!=null ) name = stepStruct.getName();
 		return name;
 	}
+	
 	public ElementDefinition.ElementType getStepType(String stepId) {
 		ElementDefinition.ElementType type = null;
 		StepStructure stepStruct = compiler.getStepInformation(stepId);

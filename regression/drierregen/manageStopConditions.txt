@@ -1,0 +1,33 @@
+#
+# Test of the SFC chart StopConditions. This is part of
+# the Drier Regen SFC Application.
+#
+CHART = "ManageStopConditions"
+OPERATION  = "DrierRegenProcedure/DrierRegen/DrierRegen/RegenOperation"
+CPATH      = "DrierRegenProcedure/DrierRegen/DrierRegenOperation/MoistureRemoval/ManageStopConditions/ManageStopConditions"
+Show: chart $CHART
+
+# Define tags used in this test
+tag: DRVMT124 "SFC IO/Drier Regeneration/DR-VMT124/value"
+tag: HITEMPLIMIT $OPERATION/Drier-Sel-Hi-Temp-Lim/value
+
+
+Test: Chart ManageStopConditions
+Step: Path - left-left-loop
+
+# Drive tags
+DRVMT124 = 12.
+HITEMPLIMIT = 6.
+
+chartid = startChart($CPATH,$ISOLATION)
+animate: chart $chartid
+assert: $chartid != "None"  "$CHART started $CHART"
+wait: 30 secs
+assert: getState($chartid,"Dummy1") = "ACTIVE" "Dummy1 is active"
+assert: getState($chartid,"Dummy2") = "ACTIVE" "Dummy2 is active"
+assert: getState($chartid,"S88ManualDataEntryTas_2693") = "S88ManualDataEntry" "Path is active"
+wait: 10 secs
+monitor.clear()
+
+Step: Center Path
+01:01 assert: getState($chartid,"Dummy1") = "INACTIVE" "Operation is complete"
