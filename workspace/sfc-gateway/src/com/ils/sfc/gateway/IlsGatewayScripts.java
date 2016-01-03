@@ -364,10 +364,13 @@ public class IlsGatewayScripts {
 	}
 	
 	/**
-	 * Insert a response to a pending request. Answer the request that has been 
-	 * waiting the longest.
+	 * If there is an outstanding request from the specified step,
+	 * then post a response.
+	 * @param diagramId UUID of the parent diagram as a String.
+	 * @param stepName
 	 */
-	public static void setResponse(String response) {
+	public static boolean postResponse(String diagramId, String stepName, String response) {
+		return requestHandler.postResponse(diagramId, stepName, response);
 	}
 	
 	// ===================================== Step Monitor =======================

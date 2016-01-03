@@ -130,14 +130,12 @@ public class IlsSfcRequestHandler {
 	/**
 	 * Set a clock rate factor for isolation mode only. We set in the BLT module
 	 * as well. If that module is not present, then we simply ignore the exception.
-	 * @param factor the amount to speed up or slow down the clock. A value greater
-	 *        than one represents a speedup of the test. This is the reciprocal of 
-	 *        the value used internally in the SFC package.
+	 * @param factor the amount to speed up or slow down time values. A value less
+	 *        than one represents a speedup of the test.
 	 */
 	public void setTimeFactor(double factor) {
 		log.infof("%s.setTimeFactor ... %s",TAG,String.valueOf(factor));
 		if( factor<=0.0 ) factor = 1.0;
-		else factor = 1/factor;
 		
 		try {
 			GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(

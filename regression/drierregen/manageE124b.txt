@@ -34,9 +34,8 @@ assert: getStepState($chartid,"Dummy3") = "NOT_VISITED" "Dummy3 has not been vis
 TOPTEMPSTATUS="PROCEED"
 wait: 35 secs
 assert: getStepCount($chartid,"Dummy2") = 2 "Dummy2 has been executed twice"
-wait: 5 secs
+wait: 10 secs
 assert: getChartState($chartid)="Stopped" "Chart is complete"
-wait: 5 secs
 monitor.clear()
 
 Step: Rightmost Path

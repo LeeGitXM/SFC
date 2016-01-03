@@ -46,7 +46,7 @@ public class GatewayRpcDispatcher   {
 	/**
 	 * Set a clock rate factor. This will change timing for isolation mode only.
 	 * This method is provided as a hook for test frameworks.
-	 * @param factor the amount to speed up or slow down the clock.
+	 * @param factor the amount to speed up or slow down the all times.
 	 */
 	public void setTimeFactor(Double factor) {
 		requestHandler.setTimeFactor(factor.doubleValue());

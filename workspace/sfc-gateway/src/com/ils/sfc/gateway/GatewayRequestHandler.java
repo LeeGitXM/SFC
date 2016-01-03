@@ -92,8 +92,8 @@ public class GatewayRequestHandler {
 	 * Get the clock rate factor. For non-isolation mode the value is fixed at 1.0.
 	 * This method is provided as a hook for test frameworks.
 	 * @param isIsolated. True if the system is currently in ISOLATION mode.
-	 * @return the amount to speed up or slow down the clock. A value greater
-	 *         than one represents a clock speedup. (This is opposite of internal SFC usage).
+	 * @return the amount to speed up or slow down the clock. A value less
+	 *         than one represents a clock speedup.
 	 */
 	public double getTimeFactor(boolean isIsolated) {
 		double factor = 1.0;
@@ -106,7 +106,8 @@ public class GatewayRequestHandler {
 				log.warnf("%s.getTimeFactor: stored value (%s), not a double. Using 1.0",TAG,value);
 			}
 		}
-		return 1.0/factor;
+		if( factor<=0.0 ) factor = 1.0;
+		return factor;
 	}
 	/**
 	 * On a failure to find the property, an empty string is returned.
@@ -115,14 +116,21 @@ public class GatewayRequestHandler {
 		return recordHandler.getToolkitProperty(propertyName);
 	}
 	/**
+	 * If there is an outstanding request from the specified step,
+	 * then post a response.
+	 * @param diagramId UUID of the parent diagram as a String.
+	 * @param stepName
+	 */
+	public boolean postResponse(String diagramId, String stepName, String response) {
+		return false;
+	}
+	/**
 	 * Set a clock rate factor. This will change timing for isolation mode only.
 	 * This method is provided as a hook for test frameworks.
-	 * @param factor the amount (for values over 1) to speed up the clock.
-	 *        This is the reciprocal of the internal usage.
+	 * @param factor the amount to factor all times.
 	 */
 	public void setTimeFactor(double factor) {
 		if( factor<=0.0 ) factor = 1.0;
-		else factor = 1./factor;
 		String value = String.valueOf(factor);
 		setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME,value);
 	}

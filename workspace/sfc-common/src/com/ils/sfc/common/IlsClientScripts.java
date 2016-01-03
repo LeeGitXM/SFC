@@ -47,7 +47,7 @@ public class IlsClientScripts {
 	/**
 	 * Set a clock rate factor. This will change timing for isolation mode only.
 	 * This method is provided as a hook for test frameworks.
-	 * @param factor the amount to speed up or slow down the clock. A value greater
+	 * @param factor the amount to speed up or slow down time values. A value less
 	 *        than one represents a speedup.
 	 */
 	public static void setTimeFactor(double factor) {
