@@ -133,9 +133,18 @@ public class IlsGatewayScripts {
 			    		}
 			    		buffer[i++] = advice;
 			    	}
-					Object value = getValueInDisplayUnits(chartScope, stepScope, row.valueKey,
-						row.recipeScope, row.units);
-			    	buffer[i++] = value;
+			    	try {
+			    		Object convertedValue = getValueInDisplayUnits(chartScope, stepScope, row.valueKey,
+			    				row.recipeScope, row.units);
+				    	buffer[i++] = convertedValue;
+			    	}
+			    	catch(IllegalArgumentException e) {
+			    		Object rawValue = RecipeDataAccess.s88Get(chartScope, stepScope, row.valueKey, row.recipeScope);
+				    	buffer[i++] = rawValue;
+				    	String errMsg = "Failed to convert review data " + row.valueKey + " to display units--perhaps recipe data does not have units";
+				    	logger.error(errMsg);
+				    	PythonCall.HANDLE_STEP_ERROR.exec(chartScope, errMsg);
+			    	}
 			    	String units = !isEmpty(scriptedConfig.units) ? scriptedConfig.units : row.units;
 			    	buffer[i++] = units;
 		    	}
