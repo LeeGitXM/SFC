@@ -14,7 +14,7 @@ import com.inductiveautomation.sfc.definitions.ElementDefinition;
 public class ChartStructure {
 	private static String TAG = "ChartStructure";
 	private final LoggerEx log;
-	private final static boolean DEBUG_CHART = false;
+	private final static boolean DEBUG_CHART = true;
 	// Enclosing Steps in another chart that contain this chart:
 	private final List<StepStructure> parents = new ArrayList<StepStructure>();
 	private final List<StepStructure> steps; 	// the steps in this chart

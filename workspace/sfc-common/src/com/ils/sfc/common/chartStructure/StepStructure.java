@@ -8,7 +8,6 @@ import com.inductiveautomation.sfc.definitions.ElementDefinition;
 import com.inductiveautomation.sfc.definitions.ParallelDefinition;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 import com.inductiveautomation.sfc.definitions.TransitionDefinition;
-import com.inductiveautomation.sfc.uimodel.ElementType;
 
 /** 
  * A class to hold an SFC Step's relationships in a way that is handy for us. 
@@ -16,7 +15,7 @@ import com.inductiveautomation.sfc.uimodel.ElementType;
 public class StepStructure {
 	private static String TAG = "StepStructure";
 	private final LoggerEx log;
-	private final static boolean DEBUG_STEP = false;
+	private final static boolean DEBUG_STEP = true;
 	public static int parallelCount = 0;
 	public static int transitionCount = 0;
 	private final String id;        // required, globally unique UUID

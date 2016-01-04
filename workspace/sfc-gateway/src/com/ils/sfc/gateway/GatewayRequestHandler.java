@@ -6,15 +6,22 @@ package com.ils.sfc.gateway;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.python.core.PyDictionary;
 
 import com.ils.common.persistence.ToolkitProperties;
 import com.ils.common.persistence.ToolkitRecordHandler;
+import com.ils.sfc.common.chartStructure.ChartStructureCompiler;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
+import com.ils.sfc.common.chartStructure.StepStructure;
 import com.inductiveautomation.ignition.common.datasource.DatasourceStatus;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.datasource.Datasource;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
+
+import system.ils.sfc.common.Constants;
 
 /**
  *  This handler provides is a common class for handling requests for block properties and control
@@ -31,14 +38,16 @@ public class GatewayRequestHandler {
 	private final GatewayContext context;
 	private final ChartStructureManager structureManager;
 	private final ToolkitRecordHandler recordHandler;
+	private final IlsRequestResponseManager responseManager;
 
 	/**
 	 * Constructor: Created in the hook class.
 	 */
-	public GatewayRequestHandler(GatewayContext ctx,ChartStructureManager structMgr) {
+	public GatewayRequestHandler(GatewayContext ctx,ChartStructureManager structMgr,IlsRequestResponseManager responseMgr) {
 		this.context = ctx;
 		this.recordHandler = new ToolkitRecordHandler(context);
 		this.structureManager = structMgr;
+		this.responseManager = responseMgr;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
 
@@ -121,8 +130,36 @@ public class GatewayRequestHandler {
 	 * @param diagramId UUID of the parent diagram as a String.
 	 * @param stepName
 	 */
-	public boolean postResponse(String diagramId, String stepName, String response) {
-		return false;
+	public boolean postResponse(String chartPath, String stepName, String response) {
+		boolean result = false;
+		Map<String,String> stepMap = responseManager.getStepIdsByRequestId();
+		// Convert step name into id
+		ChartStructureCompiler compiler = structureManager.getCompiler();
+		StepStructure stepInfo = compiler.getStepInformation(chartPath, stepName);
+		if( stepInfo!=null ) {
+			String sid = stepInfo.getId();
+			// Look for the specified step in the list of pending responses.
+			// Arbitrarily choose the first for this step (there should only be one)
+			for( String stepId:stepMap.values()) {
+				if( stepId.equals(sid) ) {
+					String rid = stepMap.get(sid);
+					// Assemble response
+					PyDictionary payload = new PyDictionary();
+					payload.put(Constants.MESSAGE_ID, rid);
+				    payload.put(Constants.RESPONSE,response);
+					responseManager.setResponse(rid,payload);
+					result = true;
+				}
+			}
+			if( !result ) {
+				log.warnf("%s.postResponse: No pending request for %s:%s(%s)",TAG,chartPath,stepName,sid);
+			}
+		}
+		else {
+			log.warnf("%s.postResponse: No stepInfo for %s:%s",TAG,chartPath,stepName);
+		}
+		
+		return result;
 	}
 	/**
 	 * Set a clock rate factor. This will change timing for isolation mode only.
