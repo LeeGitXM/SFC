@@ -6,16 +6,22 @@ package com.ils.sfc.gateway;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import org.python.core.PyDictionary;
 
 import com.ils.common.persistence.ToolkitProperties;
-import com.ils.common.persistence.ToolkitRecord;
 import com.ils.common.persistence.ToolkitRecordHandler;
-import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.chartStructure.ChartStructureCompiler;
+import com.ils.sfc.common.chartStructure.ChartStructureManager;
+import com.ils.sfc.common.chartStructure.StepStructure;
 import com.inductiveautomation.ignition.common.datasource.DatasourceStatus;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.datasource.Datasource;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
+
+import system.ils.sfc.common.Constants;
 
 /**
  *  This handler provides is a common class for handling requests for block properties and control
@@ -29,31 +35,26 @@ import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 public class GatewayRequestHandler {
 	private final static String TAG = "ControllerRequestHandler";
 	private final LoggerEx log;
-	private GatewayContext context = null;
-	private static GatewayRequestHandler instance = null;
-	private ToolkitRecordHandler recordHandler = null;
+	private final GatewayContext context;
+	private final ChartStructureManager structureManager;
+	private final ToolkitRecordHandler recordHandler;
+	private final IlsRequestResponseManager responseManager;
 
 	/**
-	 * Initialize with instances of the classes to be controlled.
+	 * Constructor: Created in the hook class.
 	 */
-	private GatewayRequestHandler() {
-		log = LogUtil.getLogger(getClass().getPackage().getName());
-	}
-	/**
-	 * Static method to create and/or fetch the single instance.
-	 */
-	public static GatewayRequestHandler getInstance() {
-		if( instance==null) {
-			synchronized(GatewayRequestHandler.class) {
-				instance = new GatewayRequestHandler();
-			}
-		}
-		return instance;
-	}
-
-	public void setContext(GatewayContext ctx) { 
+	public GatewayRequestHandler(GatewayContext ctx,ChartStructureManager structMgr,IlsRequestResponseManager responseMgr) {
 		this.context = ctx;
 		this.recordHandler = new ToolkitRecordHandler(context);
+		this.structureManager = structMgr;
+		this.responseManager = responseMgr;
+		this.log = LogUtil.getLogger(getClass().getPackage().getName());
+	}
+
+
+	
+	public String getChartPath(long resourceId) {
+		return structureManager.getChartPath(resourceId);
 	}
 	
 	/**
@@ -100,7 +101,8 @@ public class GatewayRequestHandler {
 	 * Get the clock rate factor. For non-isolation mode the value is fixed at 1.0.
 	 * This method is provided as a hook for test frameworks.
 	 * @param isIsolated. True if the system is currently in ISOLATION mode.
-	 * @return the amount to speed up or slow down the clock.
+	 * @return the amount to speed up or slow down the clock. A value less
+	 *         than one represents a clock speedup.
 	 */
 	public double getTimeFactor(boolean isIsolated) {
 		double factor = 1.0;
@@ -113,6 +115,7 @@ public class GatewayRequestHandler {
 				log.warnf("%s.getTimeFactor: stored value (%s), not a double. Using 1.0",TAG,value);
 			}
 		}
+		if( factor<=0.0 ) factor = 1.0;
 		return factor;
 	}
 	/**
@@ -122,11 +125,49 @@ public class GatewayRequestHandler {
 		return recordHandler.getToolkitProperty(propertyName);
 	}
 	/**
+	 * If there is an outstanding request from the specified step,
+	 * then post a response.
+	 * @param diagramId UUID of the parent diagram as a String.
+	 * @param stepName
+	 */
+	public boolean postResponse(String chartPath, String stepName, String response) {
+		boolean result = false;
+		Map<String,String> stepMap = responseManager.getStepIdsByRequestId();
+		// Convert step name into id
+		ChartStructureCompiler compiler = structureManager.getCompiler();
+		StepStructure stepInfo = compiler.getStepInformation(chartPath, stepName);
+		if( stepInfo!=null ) {
+			String sid = stepInfo.getId();
+			// Look for the specified step in the list of pending responses.
+			// Arbitrarily choose the first for this step (there should only be one)
+			for( String stepId:stepMap.values()) {
+				if( stepId.equals(sid) ) {
+					String rid = stepMap.get(sid);
+					// Assemble response
+					PyDictionary payload = new PyDictionary();
+					payload.put(Constants.MESSAGE_ID, rid);
+				    payload.put(Constants.RESPONSE,response);
+					responseManager.setResponse(rid,payload);
+					result = true;
+				}
+			}
+			if( !result ) {
+				log.warnf("%s.postResponse: No pending request for %s:%s(%s)",TAG,chartPath,stepName,sid);
+			}
+		}
+		else {
+			log.warnf("%s.postResponse: No stepInfo for %s:%s",TAG,chartPath,stepName);
+		}
+		
+		return result;
+	}
+	/**
 	 * Set a clock rate factor. This will change timing for isolation mode only.
 	 * This method is provided as a hook for test frameworks.
-	 * @param factor the amount to speed up or slow down the clock.
+	 * @param factor the amount to factor all times.
 	 */
 	public void setTimeFactor(double factor) {
+		if( factor<=0.0 ) factor = 1.0;
 		String value = String.valueOf(factor);
 		setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME,value);
 	}

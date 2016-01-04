@@ -1,0 +1,22 @@
+#
+# Test of the SFC chart UseCase 1. 
+# There are 3 delays: 30 sec, 30 sec(encapsulated), 5 sec
+#
+CHART = "Test10"
+CPATH      = "TestUnitProcedure10/Test10"
+YESNO = "YES-NO-TASK-XXX-4231"
+Show: chart $CHART
+
+Test: Use Case 10
+Step: Yes Path
+
+chartid = startChart($CPATH,$ISOLATION)
+animate: chart $chartid
+assert: $chartid != "None"  "Started $CHART"
+assert:  getStepState($chartid,"S88Callback_4320") = "NOT_VISITED" "Positive callback has not been visited"
+until:  getStepState($chartid,$YESNO) = "Active" "Wait until yes-no step is active"
+postResponse($CPATH,$YESNO,"yes")
+wait: 5 seconds
+assert:  getStepState($chartid,"S88Callback_4320") = "Inactive" "Positive callback has been visited"
+assert: getChartState($chartid)="Stopped" "Chart is complete"
+monitor.clear()

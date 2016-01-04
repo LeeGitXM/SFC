@@ -242,6 +242,7 @@ public class Constants {
 	public static final String MESSAGE_ID = "messageId";
 	public static final String BY_NAME = "stepsByName";
 	public static final String ENCLOSING_STEP_SCOPE_KEY = "enclosingStep";
+	public static final String RESPONSE = "response";
 
 	// choices:
 	public static final String[] RECIPE_STATIC_STRATEGY_CHOICES = {STATIC, RECIPE};

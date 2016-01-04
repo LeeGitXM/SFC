@@ -1,10 +1,11 @@
 # Copyright 2015 ILS Automation. All rights reserved.
 # 
-# This is a generic cleanup script for testing basic_diagrams 
+# This is a generic cleanup script for SFC testing
 # with the Test Frame utility.
-#setTimeFactor(1.0)
 monitor.clear()
 monitor.stop()
 setTimeFactor(1.0)
+# Revert primary provider to production mode
+tagprovider: $PROVIDER
 status: teardown complete
 log: [DATE] [TIME] test suite complete.

@@ -1,0 +1,5 @@
+log: Drier Regen SFC Regression Suite
+#
+# Run the collection of tests for DrierRegen charts
+#
+run: manageE124b.txt

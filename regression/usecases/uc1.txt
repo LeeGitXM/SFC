@@ -1,12 +1,24 @@
 #
-# Test of SFC use case. This must be run in a client.
-# Total delay in the chart is 60 mins, 5 secs.
+# Test of the SFC chart UseCase 1. 
+# There are 3 delays: 30 sec, 30 sec(encapsulated), 5 sec
 #
-Test: Use Case 1
-Step: Before Timeout
-#Show: chart $uc1
-00:00 chartid = startChart($PROJECT,$USER,$ISOLATION,$uc1)
-00:10:00 assert: getState($chartid,"TestUnit1") = "ACTIVE" "Operation is active"
+CHART = "Test1"
+CPATH      = "TestUnitProcedure1/Test1/Test1"
+Show: chart $CHART
 
-Step: After Timeout
-01:01 assert: getState($chartid,"TestUnit1") = "INACTIVE" "Operation is complete"
+Test: Use Case 1
+Step: Delay blocks
+
+chartid = startChart($CPATH,$ISOLATION)
+animate: chart $chartid
+assert: $chartid != "None"  "Started $CHART"
+wait: 15 secs
+assert: getChartState($chartid)="Running" "Chart is running"
+assert: getStepState($chartid,"S88Callback_4179") = "NOT_VISITED" "Callback has not been visited"
+assert: getStepState($chartid,"S88EncapsulationTask_4177") = "NOT_VISITED" "Encapsulation has not been visited"
+wait: 30 secs
+assert: getStepCount($chartid,"S88Callback_4179") = 1 "Callback has been executed once"
+assert: getStepState($chartid,"S88EncapsulationTask_4177") = "Active" "Encapsulation is active"
+wait: 25 secs
+assert: getChartState($chartid)="Stopped" "Chart is complete"
+monitor.clear()

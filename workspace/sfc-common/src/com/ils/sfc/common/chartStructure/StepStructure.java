@@ -2,6 +2,8 @@ package com.ils.sfc.common.chartStructure;
 
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.config.PropertySet;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
 import com.inductiveautomation.sfc.definitions.ParallelDefinition;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
@@ -11,6 +13,11 @@ import com.inductiveautomation.sfc.definitions.TransitionDefinition;
  * A class to hold an SFC Step's relationships in a way that is handy for us. 
  */
 public class StepStructure {
+	private static String TAG = "StepStructure";
+	private final LoggerEx log;
+	private final static boolean DEBUG_STEP = false;
+	public static int parallelCount = 0;
+	public static int transitionCount = 0;
 	private final String id;        // required, globally unique UUID
 	private final String name;              // required; unique within chart
 	private final String factoryId; // required
@@ -28,6 +35,7 @@ public class StepStructure {
 	 * @param stepDef
 	 */
 	public StepStructure(ChartStructure chart, StepStructure previous, StepDefinition stepDef) {
+		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.chart = chart;
 		this.elementType = stepDef.getElementType();
 		this.id = stepDef.getElementId().toString();
@@ -37,6 +45,7 @@ public class StepStructure {
 		this.enclosedChartName =  (String)IlsSfcCommonUtils.getStepPropertyValue(stepDef.getProperties(),ChartStructureCompiler.CHART_PATH_PROPERTY);
 		this.expression   = null;
 		this.properties = stepDef.getProperties();
+		if(log.isTraceEnabled()||DEBUG_STEP) log.infof("%s: Created %s (%s=%s)", TAG,name,stepDef.getElementType().name(),id);
 	}
 	/**
 	 * Constructor for a ParallelDefinition
@@ -44,14 +53,17 @@ public class StepStructure {
 	 * @param stepDef
 	 */
 	public StepStructure(ChartStructure chart, StepStructure previous, ParallelDefinition pDef) {
+		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.chart = chart;
 		this.elementType = pDef.getElementType();
 		this.id = pDef.getElementId().toString();
 		this.factoryId = null;
 		this.previous = previous;
-		this.name = "";
+		parallelCount++;
+		this.name = String.format("PARALLEL-%03d", parallelCount);
 		this.enclosedChartName = null;
 		this.expression   = pDef.getCancelConditionExpression();
+		if(log.isTraceEnabled()||DEBUG_STEP) log.infof("%s: Created %s (%s=%s)", TAG,name,pDef.getElementType().name(),id);
 	}
 	/**
 	 * Constructor for a TransitionDefinition
@@ -59,15 +71,23 @@ public class StepStructure {
 	 * @param stepDef
 	 */
 	public StepStructure(ChartStructure chart, StepStructure previous, TransitionDefinition transDef) {
+		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.chart = chart;
 		this.elementType = transDef.getElementType();
 		this.id = transDef.getElementId().toString();
 		this.factoryId = null;
 		this.previous = previous;
-		this.name = "";
+		transitionCount++;
+		String flag = transDef.getFlag();
+		if( flag==null || flag.isEmpty() ) {
+			flag = String.format("TRANSITION-%03d", transitionCount);
+		}
+		this.name = flag;
 		this.enclosedChartName = null;
 		this.expression   = transDef.getExpression();
+		if(log.isTraceEnabled()||DEBUG_STEP) log.infof("%s: Created %s (%s=%s)", TAG,name,transDef.getElementType().name(),id);
 	}
+	
 	public ChartStructure getChart() {return chart;}
 	public String getFactoryId() {return factoryId;}
 	public String getId() {return id;}

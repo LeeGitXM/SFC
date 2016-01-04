@@ -613,7 +613,7 @@ public class Converter {
 			propelement.appendChild(textNode);
 			step.appendChild(propelement);
 		}
-		/*
+		
 		List<String> properties = propertyMapper.getPropertyList(factoryId);
 		if( properties!=null ) {
 			for( String property:properties ) {
@@ -631,7 +631,6 @@ public class Converter {
 		else {
 			if( factoryId.startsWith("com.ils") ) log.warnf("updateStepFromG2Block: WARNING: No properties found for class %s",factoryId);
 		}
-		*/
 		
 		// Convert the block configurations, if any:
 		Map<String,String> blockPropertyMap = RowConfig.convert(factoryId, g2block);
