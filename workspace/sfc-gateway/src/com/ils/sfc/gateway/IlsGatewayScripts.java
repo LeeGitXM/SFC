@@ -376,7 +376,15 @@ public class IlsGatewayScripts {
 	public static boolean postResponse(String diagramId, String stepName, String response) {
 		return requestHandler.postResponse(diagramId, stepName, response);
 	}
-	
+	/**
+	 * If there is an outstanding request from the specified step,
+	 * then post a response.
+	 * @param diagramId UUID of the parent diagram as a String.
+	 * @param stepName
+	 */
+	public static int requestCount(String chartPath, String stepName) {
+		return requestHandler.requestCount(chartPath, stepName);
+	}
 	// ===================================== Step Monitor =======================
 	/**
 	 * Clear results from the step monitor. Since results are indexed

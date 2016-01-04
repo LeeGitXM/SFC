@@ -300,6 +300,7 @@ public class ChartTreeDataModel {
 	// @param parentRow the row in the nodes table corresponding to the enclosing block. Guaranteed 
 	//                  to be non-null
 	private void analyzeStep(int row,StepDefinition stepDef,String stepName) {
+		if( stepDef==null ) return;  // Compile failure
 		if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof( "%s.analyzeStep: chart %d (%s)", TAG,row,stepName);
 
 		Integer parentRow = new Integer(row);
@@ -312,8 +313,8 @@ public class ChartTreeDataModel {
 		if( stepName!=null ) stepNames.add(stepName);
 
 		// Custom enclosures don't inherit from Enclosing step, but they all must have a path.
-		if( stepDef.getFactoryId().equals(EnclosingStepProperties.FACTORY_ID) ||
-				stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH)!=null ) {
+		if( EnclosingStepProperties.FACTORY_ID.equals(stepDef.getFactoryId()) ||
+			(stepDef.getProperties()!=null && stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH)!=null) ) {
 
 			String path = stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH);
 			if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof("%s.handleEnclosingStep:   enclosure %d.%s, references %s", TAG,parentRow,stepName,path);

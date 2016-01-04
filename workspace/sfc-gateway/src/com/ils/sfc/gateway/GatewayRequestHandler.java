@@ -129,6 +129,32 @@ public class GatewayRequestHandler {
 	 * then post a response.
 	 * @param diagramId UUID of the parent diagram as a String.
 	 * @param stepName
+	 * @return the count of outstanding requests for this step. 
+	 */
+	public int requestCount(String chartPath, String stepName) {
+		Map<String,String> stepMap = responseManager.getStepIdsByRequestId();
+		int count = 0;
+		if( !stepMap.isEmpty() ) {
+			// Convert step name into id
+			ChartStructureCompiler compiler = structureManager.getCompiler();
+			StepStructure stepInfo = compiler.getStepInformation(chartPath, stepName);
+			if( stepInfo!=null ) {
+				String sid = stepInfo.getId();
+				// Look for the specified step in the list of pending responses.
+				for( String stepId:stepMap.values()) {
+					if( stepId.equals(sid) ) {
+						count++;
+					}
+				}
+			}
+		}
+		return count;
+	}
+	/**
+	 * If there is an outstanding request from the specified step,
+	 * then post a response.
+	 * @param diagramId UUID of the parent diagram as a String.
+	 * @param stepName
 	 */
 	public boolean postResponse(String chartPath, String stepName, String response) {
 		boolean result = false;
