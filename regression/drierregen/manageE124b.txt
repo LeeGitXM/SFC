@@ -44,11 +44,11 @@ LOWTEMPLIMIT = 450.
 chartid = startChart($CPATH,$ISOLATION)
 animate: chart $chartid
 assert: $chartid != "None"  "Started $CHART"
-wait: 5 secs
+wait: 9 secs
 assert: getChartState($chartid)="Running" "Chart is running"
 assert: getStepState($chartid,"Dummy2") = "NOT_VISITED" "Dummy2 has not been visited"
 assert: getStepState($chartid,"Dummy3") = "Inactive" "Dummy3 has been activated"
-assert: getStepCount($chartid,"FINAL-TRANSITION") = 1 "Final transition has been traversed once"
 wait: 6 secs
+assert: getStepCount($chartid,"FINAL-TRANSITION") = 1 "Final transition has been traversed once"
 assert: getChartState($chartid)="Stopped" "Chart is complete"
 monitor.clear()

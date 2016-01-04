@@ -15,7 +15,7 @@ import com.inductiveautomation.sfc.definitions.TransitionDefinition;
 public class StepStructure {
 	private static String TAG = "StepStructure";
 	private final LoggerEx log;
-	private final static boolean DEBUG_STEP = true;
+	private final static boolean DEBUG_STEP = false;
 	public static int parallelCount = 0;
 	public static int transitionCount = 0;
 	private final String id;        // required, globally unique UUID
