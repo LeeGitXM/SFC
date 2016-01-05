@@ -1,10 +1,11 @@
 #
-# Define attributes that are generically valid for SFC testing
+# Define properties that are generically valid for SFC testing
 #
 log: [DATE] [TIME] Start Testing ...
 # Script aliases - module is with respect to script directory
 script: getProviderName chartProxy.getProviderName(isIsolation)
-script: getChartState  chartProxy.getChartState(chart)
+script: getChartState   chartProxy.getChartState(chart)
+script: getRequestCount chartProxy.getPendingRequestCount(chart,name)
 script: getStepCount   chartProxy.getStepCount(chart,name)
 script: getStepState   chartProxy.getStepState(chart,name)
 script: postResponse   chartProxy.postResponse(chart,step,text)

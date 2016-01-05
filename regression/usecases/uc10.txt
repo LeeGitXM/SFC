@@ -4,7 +4,7 @@
 #
 CHART = "Test10"
 CPATH      = "TestUnitProcedure10/Test10"
-YESNO = "YES-NO-TASK-XXX-4231"
+YESNO = "S88-YES-NO-TASK-XXX-4321"
 Show: chart $CHART
 
 Test: Use Case 10
@@ -14,7 +14,7 @@ chartid = startChart($CPATH,$ISOLATION)
 animate: chart $chartid
 assert: $chartid != "None"  "Started $CHART"
 assert:  getStepState($chartid,"S88Callback_4320") = "NOT_VISITED" "Positive callback has not been visited"
-until:  getStepState($chartid,$YESNO) = "Active" "Wait until yes-no step is active"
+until:  getRequestCount($CPATH,$YESNO) > 0  "Wait until yes-no step has  pending request"
 postResponse($CPATH,$YESNO,"yes")
 wait: 5 seconds
 assert:  getStepState($chartid,"S88Callback_4320") = "Inactive" "Positive callback has been visited"
