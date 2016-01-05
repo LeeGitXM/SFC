@@ -285,17 +285,26 @@ public class IlsGatewayScripts {
 		String unitsKey = changeValueKey(valueKey,  "units");
 		String fromUnits = (String)RecipeDataAccess.s88Get(chartScope, stepScope, unitsKey, recipeScope);
 		if(IlsSfcCommonUtils.isEmpty(fromUnits) || IlsSfcCommonUtils.isEmpty(toUnits)) {
-			throw new IllegalArgumentException("null units in display conversion " + fromUnits + "->" + toUnits);
-		}
-		Object[] params = {fromUnits, toUnits, Double.valueOf(doubleVal)};
-		Double displayValue;
-		try {
-			displayValue = (Double)PythonCall.CONVERT_UNITS.exec(params);
-		} catch (JythonExecException e) {
-			e.printStackTrace();
+			String errMsg = "units missing in display conversion " + fromUnits + "->" + toUnits;
+	    	logger.error(errMsg);
+	    	try {
+				PythonCall.HANDLE_STEP_ERROR.exec(chartScope, errMsg);
+			} catch (JythonExecException e) {
+				e.printStackTrace();
+			}
 			return doubleVal;
 		}
-		return displayValue;
+		else {
+			Object[] params = {fromUnits, toUnits, Double.valueOf(doubleVal)};
+			Double displayValue;
+			try {
+				displayValue = (Double)PythonCall.CONVERT_UNITS.exec(params);
+				return displayValue;
+			} catch (JythonExecException e) {
+				e.printStackTrace();
+				return doubleVal;
+			}
+		}
 	}
 
 	/** For testing, create an instance of the given step and run the action method on it, 
