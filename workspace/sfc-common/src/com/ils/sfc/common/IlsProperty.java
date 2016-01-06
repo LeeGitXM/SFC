@@ -199,7 +199,6 @@ public class IlsProperty {
     public static final BasicProperty<Double> MAXIMUM_VALUE = createProperty(Constants.MAXIMUM_VALUE, Double.class, 0.);
     public static final BasicProperty<String> MESSAGE = createProperty(Constants.MESSAGE, String.class, "");
     public static final BasicProperty<String> MESSAGE_QUEUE = createProperty(Constants.MESSAGE_QUEUE, String.class, Constants.DEFAULT_MESSAGE_QUEUE);
-    public static final BasicProperty<String> METHOD = createProperty(Constants.METHOD, String.class, "");
     public static final BasicProperty<Double> MINIMUM_VALUE = createProperty(Constants.MINIMUM_VALUE, Double.class, 0.);
     public static final BasicProperty<String> MANUAL_DATA_CONFIG = createProperty(Constants.MANUAL_DATA_CONFIG, String.class, EMPTY_MONITOR_DOWNLOAD_CONFIG, true, Constants.CONFIG);
     public static final BasicProperty<String> MANUAL_DATA_POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.manualDataEntry.defaultPostingMethod");

@@ -14,6 +14,7 @@ import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.recipe.objects.Data;
+import com.ils.sfc.gateway.recipe.RecipeDataAccess;
 import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -21,6 +22,7 @@ import com.inductiveautomation.sfc.ChartObserver;
 import com.inductiveautomation.sfc.ChartStateEnum;
 import com.inductiveautomation.sfc.ElementStateEnum;
 import com.inductiveautomation.sfc.api.ChartContext;
+import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.elements.ChartElement;
 import com.inductiveautomation.sfc.api.elements.StepElement;
 
@@ -135,7 +137,10 @@ public class IlsChartObserver implements ChartObserver {
 }
 
 	private synchronized void createTags(ChartContext chartContext) {
-		String chartPath = (String)chartContext.getChartScope().get("chartPath");
+		PyChartScope chartScope = chartContext.getChartScope();
+		String chartPath = (String)chartScope.get("chartPath");
+		boolean isolationMode = RecipeDataAccess.getIsolationMode(chartScope);
+		String tagProvider = RecipeDataAccess.getProviderName(isolationMode);
 		for(ChartElement<?> element: chartContext.getElements()) {
 			if(element instanceof StepElement) {
 				StepElement stepElement = (StepElement)element;
@@ -147,8 +152,7 @@ public class IlsChartObserver implements ChartObserver {
 				try {
 					List<Data> recipeData = Data.fromAssociatedData(assDataJson);
 					for(Data data: recipeData) {
-						String provider = IlsGatewayScripts.getProviderName(false);
-						data.setProvider(provider);
+						data.setProvider(tagProvider);
 						data.setStepPath(stepPath);
 						data.createTag(null);
 					}

@@ -23,7 +23,6 @@ public interface DialogMessageStepProperties extends ChartStepProperties {
     	RECIPE_LOCATION, 
     	KEY, 
     	WINDOW,
-    	METHOD, 
     	ACK_REQUIRED, 
     	TIMEOUT, 
     	TIMEOUT_UNIT, 
