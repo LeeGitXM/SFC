@@ -18,7 +18,7 @@ setTimeFactor(2)
 
 # Set default values for "until" statements
 poll: 5 seconds
-timeout: 1 minute
+timeout: 2 minutes
 
 ISOLATION = True
 PROVIDER = getProviderName($ISOLATION)

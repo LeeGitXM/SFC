@@ -15,8 +15,8 @@ animate: chart $chartid
 assert: $chartid != "None"  "Started $CHART"
 assert:  getStepState($chartid,"S88Callback_4320") = "NOT_VISITED" "Positive callback has not been visited"
 until:  getRequestCount($CPATH,$YESNO) > 0  "Wait until yes-no step has  pending request"
-postResponse($CPATH,$YESNO,"yes")
-wait: 5 seconds
+postResponse($CPATH,$YESNO,"Yes")
+wait: 15 seconds
 assert:  getStepState($chartid,"S88Callback_4320") = "Inactive" "Positive callback has been visited"
 assert: getChartState($chartid)="Stopped" "Chart is complete"
 monitor.clear()
