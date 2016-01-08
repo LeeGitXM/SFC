@@ -13,6 +13,15 @@ public class IlsRequestResponseManager {
 	private Map<String,String> stepIdsByRequestId = Collections.synchronizedMap(
 			new HashMap<String,String>());
 	
+	/**
+	 * Provide a way to clear requests that may have been left over from 
+	 * a prior execution.
+	 */
+	public synchronized void clear() {
+		stepIdsByRequestId.clear();
+		repliesById.clear();
+		
+	}
 	public synchronized PyDictionary getResponse(String id) {
 		PyDictionary reply = repliesById.get(id);
 		if(reply != null) {

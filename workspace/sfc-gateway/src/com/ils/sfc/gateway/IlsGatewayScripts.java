@@ -384,7 +384,12 @@ public class IlsGatewayScripts {
 	public static void setTimeFactor(double factor) {
 		requestHandler.setTimeFactor(factor);
 	}
-	
+	/**
+	 * Clear any pending requests/responses.
+	 */
+	public static void clearRequestResponseMaps() {
+		requestHandler.clearRequestResponseMaps();
+	}
 	/**
 	 * If there is an outstanding request from the specified step,
 	 * then post a response.

@@ -52,6 +52,12 @@ public class GatewayRequestHandler {
 	}
 
 
+	/**
+	 * Clear any pending requests/responses.
+	 */
+	public void clearRequestResponseMaps() {
+		responseManager.clear();
+	}
 	
 	public String getChartPath(long resourceId) {
 		return structureManager.getChartPath(resourceId);
@@ -166,9 +172,8 @@ public class GatewayRequestHandler {
 			String sid = stepInfo.getId();
 			// Look for the specified step in the list of pending responses.
 			// Arbitrarily choose the first for this step (there should only be one)
-			for( String stepId:stepMap.values()) {
-				if( stepId.equals(sid) ) {
-					String rid = stepMap.get(sid);
+			for( String rid:stepMap.keySet()) {
+				if( sid.equals(stepMap.get(rid)) ) {
 					// Assemble response
 					PyDictionary payload = new PyDictionary();
 					payload.put(Constants.MESSAGE_ID, rid);
