@@ -128,7 +128,8 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 			newObject.setProvider(provider);
 			newObject.setStepPath(chartPath);
 			String selectedValueType = (String) valueTypeCombo.getSelectedItem();
-			newObject.createTag(selectedValueType);
+			newObject.setValueType(selectedValueType);
+			newObject.createTag();
 			keyTextField.setText("");
 			super.accept();
 		}

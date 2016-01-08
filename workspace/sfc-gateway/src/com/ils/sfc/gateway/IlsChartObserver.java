@@ -154,7 +154,7 @@ public class IlsChartObserver implements ChartObserver {
 					for(Data data: recipeData) {
 						data.setProvider(tagProvider);
 						data.setStepPath(stepPath);
-						data.createTag(null);
+						data.createTag();
 					}
 				} catch (Exception e) {
 					logger.error("Error creating tags for chart " + chartPath, e);

@@ -350,19 +350,11 @@ public abstract class Data {
 
 	/** Create the UDT tag if it doesn't already exist, 
 	 *  and initialize the tag values with the defaults. */
-	public void createTag(String valueTypeOrNull) {
+	public void createTag() {
 		if(tagExists()) return;
 		String myType = isGroup() ? "Data" : (String) getValue(IlsProperty.CLASS);
 		
-		// if value type not given, use the value as a cue:
-		if(valueTypeOrNull == null) {
-			valueTypeOrNull = inferValueType();
-			if(valueTypeOrNull != null) {
-				logger.debugf("Inferred value type %s for tag %s.%s", valueTypeOrNull, stepPath, getKey());
-			}
-		}
-		setValueType(valueTypeOrNull);
-		Object[] args = {provider, stepPath, getKey(), myType, valueTypeOrNull};
+		Object[] args = {provider, stepPath, getKey(), myType, getValueType()};
 		try {
 			PythonCall.CREATE_RECIPE_DATA.exec(args);
 		} catch (JythonExecException e) {
@@ -380,15 +372,25 @@ public abstract class Data {
 		return hasValueType() && Constants.DATE_TIME.equals(getValue(IlsProperty.VALUE_TYPE));
 	}
 	
-	private void setValueType(String valueTypeOrNull) {
+	public void setValueType(String valueType) {
 		if(hasValueType()) {
-			setValue(IlsProperty.VALUE_TYPE, valueTypeOrNull);
+			setValue(IlsProperty.VALUE_TYPE, valueType);
 		}		
+	}
+
+	private String getValueType() {
+		if(hasValueType()) {
+			return (String)getValue(IlsProperty.VALUE_TYPE);
+		}		
+		else {
+			return null;
+		}
 	}
 
 	/** For Value instances, infer the type from the actual value. 
 	 *  returns null if value can't be inferred
 	 */
+/*
 	private String inferValueType() {
 		if(properties.contains(IlsProperty.TYPE)) {
 			String g2Type = ((String)getValue(IlsProperty.TYPE)).toLowerCase();
@@ -426,10 +428,10 @@ public abstract class Data {
 			return null;
 		}
 	}
-
+*/
 	/** Write to tags, creating them if they don't exist. */
 	public void writeToTags()  {
-		createTag(null);
+		createTag();
 		basicWriteToTags();
 	}
 
