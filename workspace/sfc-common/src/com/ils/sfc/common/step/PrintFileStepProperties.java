@@ -13,6 +13,10 @@ public interface PrintFileStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.printFileStep";
 	
     public static final BasicProperty<?>[] properties = {
+    	POSITION,
+    	SCALE,
+    	BUTTON_LABEL,
+    	WINDOW_TITLE,
     	COMPUTER,
     	FILENAME,
     	PRINT_FILE,
