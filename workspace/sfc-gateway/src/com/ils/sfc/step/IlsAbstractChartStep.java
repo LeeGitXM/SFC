@@ -5,6 +5,7 @@ import org.apache.log4j.LogManager;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.step.annotation.ILSStep;
+import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ScopeContext;
@@ -24,33 +25,54 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
 public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefinition> implements StepElement {
 	private final LoggerEx logger = new LoggerEx(LogManager.getLogger("sfc.steps.IlsAbstractChartStep"));
 	protected ScopeContext scopeContext;
+	private StepController controller;
+	private boolean activated = false;
 	volatile boolean paused = false;
 	volatile boolean cancelled = false;
+	volatile boolean deactivated = false;
 
 	protected IlsAbstractChartStep(ChartContext context,  ScopeContext scopeContext, StepDefinition definition) {
 		super(context, definition);
 		this.scopeContext = scopeContext;
 	}
 
-	protected boolean isRunning(){
+	public boolean isRunning(){
 		return !paused && !cancelled;
 	}
+
+	public boolean isPaused(){
+		return paused;
+	}
+
+	public boolean isCancelled(){
+		return cancelled;
+	}
+
+	public boolean isDeactivated(){
+		return deactivated;
+	}
+
+	public void yieldControl() {
+		controller.yield();
+	}
 	
+	public PropertySet getProperties() {
+		return getDefinition().getProperties();
+	}
+		
 	/** Repeatedly do increments of work. */
 	protected void doWork(StepController controller) {
-		PythonCall pcall = getPythonCall();
-		try {
-			pcall.exec(scopeContext, getDefinition().getProperties());
-			/*
-			while (isRunning()) {
-				pcall.exec(scopeContext, getDefinition().getProperties());
-				// The yield function ensures that all outstanding messages have been delivered through the chart
-				// control queue. We call this so that we know for a fact that the cancelled and paused flags are as accurate as possible.
-				controller.yield();
+		if(!activated) {
+			activated = true;
+			PythonCall pcall = getPythonCall();
+			try {					
+				pcall.exec(scopeContext, this);
+			} catch (Exception e) {
+				logger.error("Error calling " + pcall.getMethodName(), e);
 			}
-			*/
-		} catch (Exception e) {
-			logger.errorf("Error running step python %s", pcall.getMethodName(), e);
+		}
+		else {
+			logger.info("re-activation); not calling Python again");
 		}
 	}
 
@@ -65,6 +87,8 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	
 	@Override
 	public void activateStep(StepController controller) {
+		this.controller = controller;
+		deactivated = false;
 		logger.info("Example step activating");
 		//Executing long running tasks through the controller allows the step to block chart flow (the step won't deactivate until the work finishes),
 		//but still respond to pause/cancel, as we're not blocking the chart execution queue.
@@ -74,6 +98,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	@Override
 	public void deactivateStep() {
 		logger.info("Example step deactivated");
+		deactivated = true;
 		//In this example, we want to block flow until the work has finished. Therefore, we take no special action during deactivate.
 	}
 

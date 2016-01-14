@@ -27,7 +27,7 @@ public class PythonCall {
 	private PyCode compiledCode;	// cached compiled code
 
 	private static ScriptManager scriptMgr;
-	private static final String[] stepArgs = new String[]{"scopeContext", "stepProperties"};
+	private static final String[] stepArgs = new String[]{"scopeContext", "step"};
 	private static final String STEPS_PKG = "ils.sfc.gateway.steps.";
 
 	// steps:
@@ -71,7 +71,7 @@ public class PythonCall {
 			null, stepArgs);
 
 	public static final PythonCall TIMED_DELAY = new PythonCall(STEPS_PKG + "timedDelay.activate", 
-			null, stepArgs);
+			Boolean.class, stepArgs);
 
 	public static final PythonCall DELETE_DELAY_NOTIFICATION = new PythonCall(STEPS_PKG + "deleteDelay.activate", 
 			PyList.class, stepArgs );
