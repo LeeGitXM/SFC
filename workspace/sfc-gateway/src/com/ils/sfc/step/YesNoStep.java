@@ -14,9 +14,6 @@ public class YesNoStep extends IlsAbstractChartStep implements YesNoStepProperti
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.YES_NO);	
-	}
+	protected PythonCall getPythonCall(){return PythonCall.YES_NO;}
 
 }

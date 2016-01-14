@@ -14,9 +14,6 @@ public class MonitorDownloadStep extends IlsAbstractChartStep implements Monitor
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.MONITOR_DOWNLOAD);	
-	}
+	protected PythonCall getPythonCall(){return PythonCall.MONITOR_DOWNLOAD;}
 
 }

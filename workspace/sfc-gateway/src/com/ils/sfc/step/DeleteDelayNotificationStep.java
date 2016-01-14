@@ -14,9 +14,6 @@ public class DeleteDelayNotificationStep extends IlsAbstractChartStep implements
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.DELETE_DELAY_NOTIFICATION);	
-	}
+	protected PythonCall getPythonCall(){return PythonCall.DELETE_DELAY_NOTIFICATION;}
 
 }

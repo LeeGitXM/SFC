@@ -14,9 +14,6 @@ public class PVMonitorStep extends IlsAbstractChartStep implements PVMonitorStep
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.MONITOR_PV);	
-	}
+	protected PythonCall getPythonCall(){return PythonCall.MONITOR_PV;}
 
 }

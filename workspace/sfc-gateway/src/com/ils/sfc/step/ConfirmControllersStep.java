@@ -14,9 +14,6 @@ public class ConfirmControllersStep extends IlsAbstractChartStep implements Conf
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.CONFIRM_CONTROLLERS);	
-	}
+	protected PythonCall getPythonCall(){return PythonCall.CONFIRM_CONTROLLERS;}
 
 }

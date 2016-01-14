@@ -14,9 +14,6 @@ public class ControlPanelMessageStep extends IlsAbstractChartStep implements Con
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.CONTROL_PANEL_MESSAGE);	
-	}
-
+	protected PythonCall getPythonCall(){return PythonCall.CONTROL_PANEL_MESSAGE;}
 }
+

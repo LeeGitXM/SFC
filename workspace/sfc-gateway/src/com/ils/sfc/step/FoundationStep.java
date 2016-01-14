@@ -11,6 +11,7 @@ import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeContext;
+import com.inductiveautomation.sfc.api.elements.StepController;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStep;
 
@@ -24,6 +25,7 @@ public class FoundationStep extends EnclosingStep {
 		this.scopeContext = scopeContext;
 	}
 
+	
 	protected void exec(PythonCall pcall) {
 		try {
 			logger.trace(pcall.getMethodName());
@@ -35,18 +37,13 @@ public class FoundationStep extends EnclosingStep {
 	}
 
 	@Override
-	public void activateStep() {
+	public void activateStep(StepController controller) {
 		String msgQueue = getDefinition().getProperties().get(IlsProperty.MESSAGE_QUEUE);
 		if(!IlsSfcCommonUtils.isEmpty(msgQueue)) {
 			PyChartScope topScope = IlsSfcCommonUtils.getTopScope(scopeContext.getChartScope());
 			topScope.put(Constants.MESSAGE_QUEUE, msgQueue);
 		}
-		super.activateStep();
-	}
-
-	@Override
-	public void deactivateStep() {
-		super.deactivateStep();
+		super.activateStep(controller);
 	}
 
 }

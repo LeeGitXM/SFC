@@ -14,9 +14,6 @@ public class PostDelayNotificationStep extends IlsAbstractChartStep implements P
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.POST_DELAY_NOTIFICATION);	
-	}
+	protected PythonCall getPythonCall(){return PythonCall.POST_DELAY_NOTIFICATION;}
 
 }

@@ -14,9 +14,6 @@ public class EnableDisableStep extends IlsAbstractChartStep implements EnableDis
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.ENABLE_DISABLE);
-	}
+	protected PythonCall getPythonCall(){return PythonCall.ENABLE_DISABLE;}
 
 }

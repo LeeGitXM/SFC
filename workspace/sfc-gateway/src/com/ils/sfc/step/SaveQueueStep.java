@@ -14,9 +14,6 @@ public class SaveQueueStep extends IlsAbstractChartStep implements SaveQueueStep
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.SAVE_QUEUE);	
-	}
+	protected PythonCall getPythonCall(){return PythonCall.SAVE_QUEUE;}
 
 }

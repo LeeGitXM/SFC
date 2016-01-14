@@ -15,11 +15,8 @@ public class CancelStep extends IlsAbstractChartStep implements CancelStepProper
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.CANCEL);
-	}
-
+	protected PythonCall getPythonCall(){return PythonCall.CANCEL;}
+	
 	@Override
 	public void cancelStep() {
 		super.cancelStep();

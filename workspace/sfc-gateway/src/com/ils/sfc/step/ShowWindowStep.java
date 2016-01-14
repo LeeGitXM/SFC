@@ -14,9 +14,7 @@ public class ShowWindowStep extends IlsAbstractChartStep implements ShowWindowSt
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.SHOW_WINDOW);
-	}
+	protected PythonCall getPythonCall(){return PythonCall.SHOW_WINDOW;}
+
 
 }

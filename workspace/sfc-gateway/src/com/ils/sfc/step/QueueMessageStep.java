@@ -14,9 +14,6 @@ public class QueueMessageStep extends IlsAbstractChartStep implements QueueMessa
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.QUEUE_INSERT);
-	}
+	protected PythonCall getPythonCall(){return PythonCall.QUEUE_INSERT;}
 
 }

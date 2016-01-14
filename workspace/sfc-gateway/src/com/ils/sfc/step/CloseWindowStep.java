@@ -14,9 +14,5 @@ public class CloseWindowStep extends IlsAbstractChartStep implements CloseWindow
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.CLOSE_WINDOW);	
-	}
-
+	protected PythonCall getPythonCall(){return PythonCall.CLOSE_WINDOW;}
 }

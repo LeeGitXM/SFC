@@ -12,9 +12,4 @@ public class ProcedureStep extends FoundationStep {
 		super(context, definition, scopeContext);
 	}
 
-	@Override
-	public void activateStep() {
-		super.activateStep();
-	}
-
 }

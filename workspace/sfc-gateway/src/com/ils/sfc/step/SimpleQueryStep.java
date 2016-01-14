@@ -14,9 +14,6 @@ public class SimpleQueryStep extends IlsAbstractChartStep implements SimpleQuery
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.SIMPLE_QUERY);	
-	}
+	protected PythonCall getPythonCall(){return PythonCall.SIMPLE_QUERY;}
 
 }

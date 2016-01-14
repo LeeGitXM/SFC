@@ -15,36 +15,7 @@ public class TimedDelayStep extends IlsAbstractChartStep implements TimedDelaySt
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.TIMED_DELAY);	
-		/*
-		 * TODO: use startMillis and measure actual elapsed time
-		final int delayIncrementSeconds = 10;
-		int totalDelaySeconds = exec(PythonCall.TIMED_DELAY_1)
-		int secondsDelayed = 0;
-		while(!pause && secondsDelayed < totalDelaySeconds) {
-			int secondsToDelay = Math.max(0, totalDelaySeconds - secondsDelayed)
-			Thread.sleep(1000*secondsToDelay);
-		}
-		exec(PythonCall.TIMED_DELAY_2)
-		catch(InterruptedException e) {}
-		 * */
-	}
+	protected PythonCall getPythonCall(){return PythonCall.TIMED_DELAY;}
 
-	@Override
-	public void pauseStep() {
-		super.pauseStep();
-	}
-
-	@Override
-	public void resumeStep() {
-		super.resumeStep();
-	}
-	
-	@Override
-	public void cancelStep() {
-		super.cancelStep();
-	}
 
 }

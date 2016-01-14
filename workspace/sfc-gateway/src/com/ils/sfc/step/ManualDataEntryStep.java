@@ -14,9 +14,5 @@ public class ManualDataEntryStep extends IlsAbstractChartStep implements ManualD
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.MANUAL_DATA_ENTRY);	
-	}
-
+	protected PythonCall getPythonCall(){return PythonCall.MANUAL_DATA_ENTRY;}
 }

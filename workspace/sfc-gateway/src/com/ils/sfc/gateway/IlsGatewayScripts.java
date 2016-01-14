@@ -307,60 +307,6 @@ public class IlsGatewayScripts {
 		}
 	}
 
-	/** For testing, create an instance of the given step and run the action method on it, 
-	 *  returning null if OK else an error message. */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static String activateStep(String stepClassName, Map chartProperties, Map stepProperties) {
-		try {
-			final PyChartScope chartScope = new PyChartScope();
-			chartScope.putAll(chartProperties);
-			ChartContext chartContext = new ChartContext() {
-				public void abort(Throwable arg0) {}
-				public PyChartScope getChartScope() {return chartScope;}
-				public ChartElement getElement(UUID arg0) {return null;}
-				public List<ChartElement> getElements() {return null;}
-				public ExecutionQueue getExecutionQueue() {return null;}
-				public GatewayContext getGatewayContext() {return null;}
-				public ScriptManager getScriptManager() {return null;}
-				public void pause() {}
-				public ScopeLocator getScopeLocator() {return null;}
-				public boolean isRunning() {return false;}
-				@Override
-				public ChartDefinition getChartDefinition() {
-					// TODO Auto-generated method stub
-					return null;
-				}
-				@Override
-				public UUID getInstanceId() {
-					// TODO Auto-generated method stub
-					return null;
-				}
-
-			};
-			BasicPropertySet propertySet = new BasicPropertySet();
-			for(Object key: stepProperties.keySet()) {
-				Object value = stepProperties.get(key);
-				BasicProperty property = new BasicProperty((String)key, value.getClass());
-				propertySet.set(property, value);
-			}
-			StepDefinition stepDefinition = new StepDefinition(UUID.randomUUID(), propertySet);
-			Class stepClass = Class.forName(stepClassName);
-			java.lang.reflect.Constructor ctor = null;
-			for(java.lang.reflect.Constructor dctor: stepClass.getDeclaredConstructors()) {
-				if(dctor.getDeclaringClass() == stepClass) {
-					ctor = dctor;
-				}
-			}
-			IlsAbstractChartStep step = (IlsAbstractChartStep)ctor.newInstance(chartContext, stepDefinition);
-			step.activateStep();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			return e.getMessage();
-		}
-		return null;  // all is well...		
-	}
-
 	
 	public static void setHook(IlsSfcGatewayHook hook) {
 		ilsSfcGatewayHook = hook;		

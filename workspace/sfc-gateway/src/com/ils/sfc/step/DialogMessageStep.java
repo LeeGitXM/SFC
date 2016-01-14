@@ -14,9 +14,5 @@ public class DialogMessageStep extends IlsAbstractChartStep implements DialogMes
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.DIALOG_MESSAGE);	
-	}
-
+	protected PythonCall getPythonCall(){return PythonCall.DIALOG_MESSAGE;}
 }

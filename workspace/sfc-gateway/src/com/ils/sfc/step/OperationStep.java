@@ -7,6 +7,7 @@ import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ScopeContext;
+import com.inductiveautomation.sfc.api.elements.StepController;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class OperationStep extends FoundationStep {
@@ -18,10 +19,10 @@ public class OperationStep extends FoundationStep {
 	}
 
 	@Override
-	public void activateStep() {
+	public void activateStep(StepController controller) {
 		exec(PythonCall.OPERATION);		
 		scopeContext.getStepScope().put(Constants.S88_LEVEL, Constants.OPERATION);
-		super.activateStep();
+		super.activateStep(controller);
 	}
 
 }

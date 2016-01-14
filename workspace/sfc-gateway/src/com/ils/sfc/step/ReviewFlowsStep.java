@@ -14,9 +14,6 @@ public class ReviewFlowsStep extends IlsAbstractChartStep implements ReviewFlows
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.REVIEW_FLOWS);	
-	}
+	protected PythonCall getPythonCall(){return PythonCall.REVIEW_FLOWS;}
 
 }

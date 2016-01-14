@@ -14,9 +14,6 @@ public class ReviewDataStep extends IlsAbstractChartStep implements ReviewDataSt
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.REVIEW_DATA);	
-	}
+	protected PythonCall getPythonCall(){return PythonCall.REVIEW_DATA;}
 
 }

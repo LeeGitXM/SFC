@@ -14,9 +14,6 @@ public class WriteOutputStep extends IlsAbstractChartStep implements WriteOutput
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.WRITE_OUTPUT);	
-	}
+	protected PythonCall getPythonCall(){return PythonCall.WRITE_OUTPUT;}
 
 }

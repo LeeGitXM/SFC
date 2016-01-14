@@ -6,6 +6,7 @@ import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ScopeContext;
+import com.inductiveautomation.sfc.api.elements.StepController;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class PhaseStep extends FoundationStep {
@@ -17,9 +18,9 @@ public class PhaseStep extends FoundationStep {
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
+	public void activateStep(StepController controller) {
 		scopeContext.getStepScope().put(Constants.S88_LEVEL, Constants.PHASE);
+		super.activateStep(controller);
 	}
 
 }

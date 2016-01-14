@@ -14,9 +14,6 @@ public class RawQueryStep extends IlsAbstractChartStep implements RawQueryStepPr
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.RAW_QUERY);	
-	}
+	protected PythonCall getPythonCall(){return PythonCall.RAW_QUERY;}
 
 }

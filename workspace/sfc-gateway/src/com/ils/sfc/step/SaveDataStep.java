@@ -14,9 +14,6 @@ public class SaveDataStep extends IlsAbstractChartStep implements SaveDataStepPr
 	}
 
 	@Override
-	public void activateStep() {
-		super.activateStep();
-		exec(PythonCall.SAVE_DATA);	
-	}
+	protected PythonCall getPythonCall(){return PythonCall.SAVE_DATA;}
 
 }
