@@ -27,108 +27,108 @@ public class PythonCall {
 	private PyCode compiledCode;	// cached compiled code
 
 	private static ScriptManager scriptMgr;
-	private static final String[] stepArgs = new String[]{"scopeContext", "step"};
+	private static final String[] stepArgs = new String[]{"scopeContext", "stepProperties"};
 	private static final String STEPS_PKG = "ils.sfc.gateway.steps.";
 
 	// steps:
 	public static final PythonCall OPERATION = new PythonCall(STEPS_PKG + "operation.activate", 
-			null, stepArgs);
+		Boolean.class, stepArgs);
 	
 	public static final PythonCall MONITOR_PV = new PythonCall(STEPS_PKG + "monitorPV.activate", 
-			null, stepArgs);
+		Boolean.class, stepArgs);
 
 	public static final PythonCall MANUAL_DATA_ENTRY = new PythonCall(STEPS_PKG + "manualDataEntry.activate", 
-			null, stepArgs);
+		Boolean.class, stepArgs);
 
 	public static final PythonCall MONITOR_DOWNLOAD = new PythonCall(STEPS_PKG + "monitorDownload.activate", 
-			null, stepArgs);
+		Boolean.class, stepArgs);
 
 	public static final PythonCall QUEUE_INSERT = new PythonCall(STEPS_PKG + "queueInsert.activate", 
-		null, stepArgs);
+		Boolean.class, stepArgs);
 
 	public static final PythonCall CLEAR_QUEUE = new PythonCall(STEPS_PKG + "clearQueue.activate", 
-		null, stepArgs);
+		Boolean.class, stepArgs);
 
 	public static final PythonCall SET_QUEUE = new PythonCall(STEPS_PKG + "setQueue.activate", 
-		null, stepArgs);
+		Boolean.class, stepArgs);
 
 	public static final PythonCall SHOW_QUEUE = new PythonCall(STEPS_PKG + "showQueue.activate", 
-		null, stepArgs);
+		Boolean.class, stepArgs);
 
 	public static final PythonCall SAVE_QUEUE = new PythonCall(STEPS_PKG + "saveQueue.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall YES_NO = new PythonCall(STEPS_PKG + "yesNo.activate", 
-			null, stepArgs);
+		Boolean.class, stepArgs);
 
 	public static final PythonCall CANCEL = new PythonCall(STEPS_PKG + "cancel.activate", 
-			null, stepArgs);
+		Boolean.class, stepArgs);
 
 	public static final PythonCall PAUSE = new PythonCall(STEPS_PKG + "pause.activate", 
-			null, stepArgs);
+		Boolean.class, stepArgs);
 
 	public static final PythonCall CONTROL_PANEL_MESSAGE = new PythonCall(STEPS_PKG + "controlPanelMsg.activate", 
-			null, stepArgs);
+		Boolean.class, stepArgs);
 
 	public static final PythonCall TIMED_DELAY = new PythonCall(STEPS_PKG + "timedDelay.activate", 
-			Boolean.class, stepArgs);
+		Boolean.class, stepArgs);
 
 	public static final PythonCall DELETE_DELAY_NOTIFICATION = new PythonCall(STEPS_PKG + "deleteDelay.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall POST_DELAY_NOTIFICATION = new PythonCall(STEPS_PKG + "postDelay.activate", 
-			PyList.class,  stepArgs );
+		Boolean.class,  stepArgs );
 
 	public static final PythonCall ENABLE_DISABLE = new PythonCall(STEPS_PKG + "enableDisable.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall SELECT_INPUT = new PythonCall(STEPS_PKG + "selectInput.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall GET_LIMITED_INPUT = new PythonCall(STEPS_PKG + "limitedInput.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall DIALOG_MESSAGE = new PythonCall(STEPS_PKG + "dialogMsg.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall COLLECT_DATA = new PythonCall(STEPS_PKG + "collectData.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall GET_INPUT = new PythonCall(STEPS_PKG + "getInput.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall RAW_QUERY = new PythonCall(STEPS_PKG + "rawQuery.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall SIMPLE_QUERY = new PythonCall(STEPS_PKG + "simpleQuery.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall SAVE_DATA = new PythonCall(STEPS_PKG + "saveData.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall PRINT_FILE = new PythonCall(STEPS_PKG + "printFile.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall PRINT_WINDOW = new PythonCall(STEPS_PKG + "printWindow.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall SHOW_WINDOW = new PythonCall(STEPS_PKG + "showWindow.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall CLOSE_WINDOW = new PythonCall(STEPS_PKG + "closeWindow.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall REVIEW_DATA = new PythonCall(STEPS_PKG + "reviewData.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall REVIEW_FLOWS = new PythonCall(STEPS_PKG + "reviewFlows.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall CONFIRM_CONTROLLERS = new PythonCall(STEPS_PKG + "confirmControllers.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	public static final PythonCall WRITE_OUTPUT = new PythonCall(STEPS_PKG + "writeOutput.activate", 
-			PyList.class, stepArgs );
+		Boolean.class, stepArgs );
 
 	// units
 	public static final PythonCall INITIALIZE_UNITS = new PythonCall("ils.common.units.lazyInitialize", 
