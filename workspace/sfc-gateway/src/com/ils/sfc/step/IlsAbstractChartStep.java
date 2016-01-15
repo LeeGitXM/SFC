@@ -39,27 +39,33 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	/** Repeatedly do increments of work. */
 	protected void doWork(StepController controller) {
 		PythonCall pcall = getPythonCall();
+		try {
 			while (isRunning()) {
+				Object result = pcall.exec(scopeContext, getDefinition().getProperties());
 				boolean workDone = true;
-				try {
-					workDone = (Boolean)pcall.exec(scopeContext, getDefinition().getProperties());
-				} catch (Throwable e) {
-					logger.errorf("Error running step python %s", pcall.getMethodName(), e);
+				if(result != null && result instanceof Boolean) {
+					workDone = ((Boolean)result).booleanValue();
 				}
+				else {
+					logger.errorf("ERROR: non-boolean return for step python %s: %s: ", 
+						pcall.getMethodName(), (result != null ? result.toString() : "null"));
+				}
+				
 				if(workDone) {
 					break;
 				}
 				else {
 					// Some steps are simply waiting for a response...for performance reasons we don't
 					// want get into a tight loop for that sort of thing, so we put in a small sleep:
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException e) {}
+					Thread.sleep(500);
 				}
 				// The yield function ensures that all outstanding messages have been delivered through the chart
 				// control queue. We call this so that we know for a fact that the cancelled and paused flags are as accurate as possible.
 				controller.yield();
 			}
+		} catch (Exception e) {
+			logger.errorf("Error running step python %s", pcall.getMethodName(), e);
+		}
 	}
 
 	public String getName() {
