@@ -442,27 +442,7 @@ public class IlsGatewayScripts {
 	public static Object dropboxGet(String chartRunId, String objectId) {
 		return ilsSfcGatewayHook.getDropBox().get(chartRunId, objectId);
 	}
-	
-	/** Check if ILS code has initiated a cancel (even if IA hasn't processed it yet)  */
-	public static void setCancelRequested(String chartRunId) {
-		ilsSfcGatewayHook.getChartObserver().setCancelRequested(chartRunId);
-	}
-	
-	/** Check if ILS code has initiated a pause (even if IA hasn't processed it yet)  */
-	public static void setPauseRequested(String chartRunId) {
-		ilsSfcGatewayHook.getChartObserver().setPauseRequested(chartRunId);
-	}
-
-	/** Check if ILS code has initiated a cancel (even if IA hasn't processed it yet)  */
-	public static boolean getCancelRequested(String chartRunId) {
-		return ilsSfcGatewayHook.getChartObserver().getCancelRequested(chartRunId);
-	}
-	
-	/** Check if ILS code has initiated a paused (even if IA hasn't processed it yet)  */
-	public static boolean getPauseRequested(String chartRunId) {
-		return ilsSfcGatewayHook.getChartObserver().getPauseRequested(chartRunId);
-	}
-	
+		
 	public static String getRecipeDataTagPath(PyChartScope chartScope, PyChartScope stepScope, String scope) {
 		return RecipeDataAccess. getRecipeDataTagPath(chartScope, stepScope, scope);
 	}
