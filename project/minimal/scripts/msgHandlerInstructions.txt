@@ -1,0 +1,9 @@
+Create a client message handler called "sfcMessage" with the following:
+
+from ils.sfc.client.msgHandlers import dispatchMessage
+dispatchMessage(payload)
+
+Create a gateway message handler with the following:
+
+from ils.sfc.gateway.msgHandlers import dispatchMessage
+dispatchMessage(payload)

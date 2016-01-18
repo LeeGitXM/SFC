@@ -1,5 +1,16 @@
 <Tags>
    <Tag name="SFC" path="_types_" type="Folder"/>
+   <Tag name="Array" path="_types_/SFC" type="UDT_DEF">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Property name="UDTParentType">SFC/DataWithUnits</Property>
+      <Parameters>
+      </Parameters>
+      <Tag name="value" path="" type="DB">
+         <Property name="Value">0</Property>
+         <Property name="DataType">7</Property>
+      </Tag>
+   </Tag>
    <Tag name="Data" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
@@ -18,7 +29,7 @@
          <Property name="DataType">7</Property>
       </Tag>
       <Tag name="dataId" path="" type="DB">
-         <Property name="Value"/>
+         <Property name="Value"></Property>
          <Property name="DataType">7</Property>
       </Tag>
       <Tag name="description" path="" type="DB">
@@ -37,56 +48,19 @@
          <Property name="Value"></Property>
          <Property name="DataType">7</Property>
       </Tag>
-   </Tag>
-   <Tag name="SQC" path="_types_/SFC" type="UDT_DEF">
-      <Property name="Value"/>
-      <Property name="DataType">2</Property>
-      <Property name="UDTParentType">SFC/DataWithUnits</Property>
-      <Parameters>
-      </Parameters>
-      <Tag name="highLimit" path="" type="DB">
-         <Property name="Value">0.0</Property>
-         <Property name="DataType">5</Property>
-      </Tag>
-      <Tag name="lowLimit" path="" type="DB">
-         <Property name="Value">0.0</Property>
-         <Property name="DataType">5</Property>
-      </Tag>
-      <Tag name="targetValue" path="" type="DB">
-         <Property name="Value">0.0</Property>
-         <Property name="DataType">5</Property>
+      <Tag name="valueType" path="" type="DB">
+         <Property name="Value">0</Property>
+         <Property name="DataType">7</Property>
       </Tag>
    </Tag>
-   <Tag name="Recipe Details" path="_types_/SFC" type="UDT_DEF">
+   <Tag name="DataWithUnits" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
+      <Property name="UDTParentType">SFC/Data</Property>
       <Parameters>
       </Parameters>
-      <Tag name="command" path="" type="DB">
-         <Property name="Value">0</Property>
-         <Property name="DataType">7</Property>
-         <EventScripts>
-            <Event id="valueChanged" enabled="true">	
-	#-----------------------
-	def longProcess(tagPath = tagPath, val = currentValue.value):
-		import ils.io.wrapper as wrapper
-		wrapper.writeRecipeDetail(tagPath, val)
-	#-----------------------
-	
-	if currentValue.value != &quot;&quot;:
-		system.util.invokeAsynchronous(longProcess)	</Event>
-         </EventScripts>
-      </Tag>
-      <Tag name="highLimitTagName" path="" type="DB">
-         <Property name="Value">0</Property>
-         <Property name="DataType">7</Property>
-      </Tag>
-      <Tag name="lowLimitTagName" path="" type="DB">
-         <Property name="Value">0</Property>
-         <Property name="DataType">7</Property>
-      </Tag>
-      <Tag name="valueTagName" path="" type="DB">
-         <Property name="Value">0</Property>
+      <Tag name="units" path="" type="DB">
+         <Property name="Value"></Property>
          <Property name="DataType">7</Property>
       </Tag>
    </Tag>
@@ -139,6 +113,13 @@
          <Property name="DataType">7</Property>
       </Tag>
    </Tag>
+   <Tag name="Input" path="_types_/SFC" type="UDT_DEF">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Property name="UDTParentType">SFC/IO</Property>
+      <Parameters>
+      </Parameters>
+   </Tag>
    <Tag name="IO" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
@@ -186,36 +167,10 @@
          <Property name="DataType">5</Property>
       </Tag>
    </Tag>
-   <Tag name="OutputRamp" path="_types_/SFC" type="UDT_DEF">
-      <Property name="Value"/>
-      <Property name="DataType">2</Property>
-      <Property name="UDTParentType">SFC/Output</Property>
-      <Parameters>
-      </Parameters>
-      <Tag name="rampTime" path="" type="DB">
-         <Property name="Value">0.0</Property>
-         <Property name="DataType">5</Property>
-      </Tag>
-      <Tag name="updateFrequency" path="" type="DB">
-         <Property name="Value">0.0</Property>
-         <Property name="DataType">5</Property>
-      </Tag>
-   </Tag>
    <Tag name="Matrix" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
       <Property name="UDTParentType">SFC/DataWithUnits</Property>
-      <Parameters>
-      </Parameters>
-      <Tag name="value" path="" type="DB">
-         <Property name="Value"></Property>
-         <Property name="DataType">7</Property>
-      </Tag>
-   </Tag>
-   <Tag name="Structure" path="_types_/SFC" type="UDT_DEF">
-      <Property name="Value"/>
-      <Property name="DataType">2</Property>
-      <Property name="UDTParentType">SFC/Data</Property>
       <Parameters>
       </Parameters>
       <Tag name="value" path="" type="DB">
@@ -271,32 +226,81 @@
          <Property name="DataType">6</Property>
       </Tag>
    </Tag>
-   <Tag name="Input" path="_types_/SFC" type="UDT_DEF">
+   <Tag name="OutputRamp" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
-      <Property name="UDTParentType">SFC/IO</Property>
+      <Property name="UDTParentType">SFC/Output</Property>
       <Parameters>
       </Parameters>
+      <Tag name="rampTime" path="" type="DB">
+         <Property name="Value">0.0</Property>
+         <Property name="DataType">5</Property>
+      </Tag>
+      <Tag name="updateFrequency" path="" type="DB">
+         <Property name="Value">0.0</Property>
+         <Property name="DataType">5</Property>
+      </Tag>
    </Tag>
-   <Tag name="DataWithUnits" path="_types_/SFC" type="UDT_DEF">
+   <Tag name="Recipe Details" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
-      <Property name="UDTParentType">SFC/Data</Property>
       <Parameters>
       </Parameters>
-      <Tag name="units" path="" type="DB">
-         <Property name="Value"></Property>
+      <Tag name="command" path="" type="DB">
+         <Property name="Value">0</Property>
+         <Property name="DataType">7</Property>
+         <EventScripts>
+            <Event id="valueChanged" enabled="true">	
+	#-----------------------
+	def longProcess(tagPath = tagPath, val = currentValue.value):
+		import ils.io.wrapper as wrapper
+		wrapper.writeRecipeDetail(tagPath, val)
+	#-----------------------
+	
+	if currentValue.value != &quot;&quot;:
+		system.util.invokeAsynchronous(longProcess)	</Event>
+         </EventScripts>
+      </Tag>
+      <Tag name="highLimitTagName" path="" type="DB">
+         <Property name="Value">0</Property>
+         <Property name="DataType">7</Property>
+      </Tag>
+      <Tag name="lowLimitTagName" path="" type="DB">
+         <Property name="Value">0</Property>
+         <Property name="DataType">7</Property>
+      </Tag>
+      <Tag name="valueTagName" path="" type="DB">
+         <Property name="Value">0</Property>
          <Property name="DataType">7</Property>
       </Tag>
    </Tag>
-   <Tag name="Array" path="_types_/SFC" type="UDT_DEF">
+   <Tag name="SQC" path="_types_/SFC" type="UDT_DEF">
       <Property name="Value"/>
       <Property name="DataType">2</Property>
       <Property name="UDTParentType">SFC/DataWithUnits</Property>
       <Parameters>
       </Parameters>
+      <Tag name="highLimit" path="" type="DB">
+         <Property name="Value">0.0</Property>
+         <Property name="DataType">5</Property>
+      </Tag>
+      <Tag name="lowLimit" path="" type="DB">
+         <Property name="Value">0.0</Property>
+         <Property name="DataType">5</Property>
+      </Tag>
+      <Tag name="targetValue" path="" type="DB">
+         <Property name="Value">0.0</Property>
+         <Property name="DataType">5</Property>
+      </Tag>
+   </Tag>
+   <Tag name="Structure" path="_types_/SFC" type="UDT_DEF">
+      <Property name="Value"/>
+      <Property name="DataType">2</Property>
+      <Property name="UDTParentType">SFC/Data</Property>
+      <Parameters>
+      </Parameters>
       <Tag name="value" path="" type="DB">
-         <Property name="Value">0</Property>
+         <Property name="Value"></Property>
          <Property name="DataType">7</Property>
       </Tag>
    </Tag>
