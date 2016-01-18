@@ -18,7 +18,6 @@ public interface MonitorDownloadStepProperties extends ChartStepProperties {
     	BUTTON_LABEL,
     	WINDOW_TITLE, 
     	MONITOR_DOWNLOADS_WINDOW,
-    	MONITOR_DOWNLOADS_POSTING_METHOD,
     	TIMER_LOCATION,
     	TIMER_KEY,
     	TIMER_CLEAR,

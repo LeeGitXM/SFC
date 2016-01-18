@@ -17,7 +17,6 @@ public interface ReviewDataWithAdviceStepProperties extends ChartStepProperties 
     	SCALE,
     	BUTTON_LABEL,
     	WINDOW_TITLE,
-    	REVIEW_DATA_POSTING_METHOD,
     	BUTTON_KEY,
     	BUTTON_KEY_LOCATION,
     	REVIEW_DATA_WINDOW,

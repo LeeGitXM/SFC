@@ -18,7 +18,6 @@ public interface ManualDataEntryStepProperties extends ChartStepProperties {
     	BUTTON_LABEL,
     	WINDOW_TITLE,
     	MANUAL_DATA_WINDOW,
-    	MANUAL_DATA_POSTING_METHOD,
     	TIMEOUT,
     	TIMEOUT_UNIT,
     	AUTO_MODE,

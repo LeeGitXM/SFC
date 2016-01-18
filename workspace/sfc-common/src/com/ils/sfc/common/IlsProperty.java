@@ -201,17 +201,14 @@ public class IlsProperty {
     public static final BasicProperty<String> MESSAGE_QUEUE = createProperty(Constants.MESSAGE_QUEUE, String.class, Constants.DEFAULT_MESSAGE_QUEUE);
     public static final BasicProperty<Double> MINIMUM_VALUE = createProperty(Constants.MINIMUM_VALUE, Double.class, 0.);
     public static final BasicProperty<String> MANUAL_DATA_CONFIG = createProperty(Constants.MANUAL_DATA_CONFIG, String.class, EMPTY_MONITOR_DOWNLOAD_CONFIG, true, Constants.CONFIG);
-    public static final BasicProperty<String> MANUAL_DATA_POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.manualDataEntry.defaultPostingMethod");
     public static final BasicProperty<String> MANUAL_DATA_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_MANUAL_DATA_WINDOW, false);
     public static final BasicProperty<String> MONITOR_DOWNLOADS_CONFIG = createProperty(Constants.MONITOR_DOWNLOADS_CONFIG, String.class, EMPTY_MANUAL_DATA_CONFIG, true, Constants.CONFIG);
-    public static final BasicProperty<String> MONITOR_DOWNLOADS_POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.manualDataEntry.defaultPostingMethod");
     public static final BasicProperty<String> MONITOR_DOWNLOADS_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_MONITOR_DOWNLOADS_WINDOW, false);
 	public static final BasicProperty<String> NAME = new BasicProperty<String>(Constants.NAME, String.class);
     public static final BasicProperty<Object> OUTPUT_VALUE_TYPE = createProperty(Constants.VALUE_TYPE, Object.class, Constants.OUTPUT_VALUE_TYPE_CHOICES[0], Constants.OUTPUT_VALUE_TYPE_CHOICES);
     public static final BasicProperty<String> POSITION = createProperty(Constants.POSITION, String.class, Constants.POSITION_CHOICES[0], Constants.POSITION_CHOICES);
     public static final BasicProperty<Boolean> POST_NOTIFICATION = createProperty(Constants.POST_NOTIFICATION, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<Boolean> POST_TO_QUEUE = createProperty(Constants.POST_TO_QUEUE, Boolean.class, Boolean.FALSE);
-    public static final BasicProperty<String> POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, null);
     public static final BasicProperty<String> PRIMARY_REVIEW_DATA = createProperty(Constants.PRIMARY_REVIEW_DATA, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "primary data");
     public static final BasicProperty<String> PRIMARY_REVIEW_DATA_WITH_ADVICE = createProperty(Constants.PRIMARY_REVIEW_DATA_WITH_ADVICE, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "primary data");
     public static final BasicProperty<String> PRIMARY_TAB_LABEL = createProperty(Constants.PRIMARY_TAB_LABEL, String.class, "Primary");
@@ -227,11 +224,9 @@ public class IlsProperty {
     public static final BasicProperty<String> RECIPE_LOCATION = createProperty(Constants.RECIPE_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
     public static final BasicProperty<Boolean> REQUIRE_ALL_INPUTS = createProperty(Constants.REQUIRE_ALL_INPUTS, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> RESULTS_MODE = createProperty(Constants.RESULTS_MODE, String.class, Constants.RESULTS_MODE_CHOICES[0], Constants.RESULTS_MODE_CHOICES);
-    public static final BasicProperty<String> REVIEW_DATA_POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.reviewData.defaultPostingMethod");
     public static final BasicProperty<String> REVIEW_DATA_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_REVIEW_DATA_WINDOW, false);
     public static final BasicProperty<String> REVIEW_FLOWS = createProperty(Constants.REVIEW_FLOWS, String.class, EMPTY_REVIEW_FLOWS_CONFIG, true);
     public static final BasicProperty<String> REVIEW_FLOWS_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_REVIEW_FLOWS_WINDOW, false);
-    public static final BasicProperty<String> REVIEW_FLOWS_POSTING_METHOD = createProperty(Constants.POSTING_METHOD, String.class, "ils.sfc.client.windows.reviewFlows.defaultPostingMethod");
     public static final BasicProperty<Integer> ROWS = createProperty(Constants.ROWS, Integer.class, 0);
     public static final BasicProperty<String> ROW_KEY = createProperty(Constants.ROW_KEY, String.class, Constants.NONE);
     public static final BasicProperty<Boolean> ROW_KEYED = createProperty(Constants.ROW_KEYED, Boolean.class, Boolean.FALSE);
@@ -544,7 +539,6 @@ public class IlsProperty {
 		g2ToIgProperty.put("monitorStrategy", TIME_LIMIT_STRATEGY);
 		g2ToIgProperty.put("name", NAME);
 		g2ToIgProperty.put("post-notification", POST_NOTIFICATION);		
-		g2ToIgProperty.put("postingMethod", MONITOR_DOWNLOADS_POSTING_METHOD);
 		g2ToIgProperty.put("postMessageToQueue", POST_TO_QUEUE);
 		g2ToIgProperty.put("printFile", PRINT_FILE);
 		g2ToIgProperty.put("priority", PRIORITY);
@@ -554,7 +548,6 @@ public class IlsProperty {
 		g2ToIgProperty.put("requireAllInputs", REQUIRE_ALL_INPUTS);
 		g2ToIgProperty.put("selectedButtonKey", BUTTON_KEY);
 		g2ToIgProperty.put("setTimer", TIMER_SET);		
-		g2ToIgProperty.put("spreadsheetPopulateMethod", POSTING_METHOD); // ?? multiple??		
 		g2ToIgProperty.put("strategy", TIME_DELAY_STRATEGY); // ?? multiple??		
 		g2ToIgProperty.put("timerKey", TIMER_KEY);
 		g2ToIgProperty.put("timerSource", TIMER_LOCATION);
