@@ -114,6 +114,7 @@ public class Constants {
 	public static final String OK = "OK";
 	public static final String OUT_OF_RANGE = "Out of Range";
 	public static final String OUTPUT = "output";
+	public static final String OUTPUT_TYPE = "outputType";
 	public static final String PARENT_GROUP = "parent-group";
 	public static final String PARENT = "parent";
 	public static final String PCT = "Pct";

@@ -30,7 +30,7 @@ public class FoundationStep extends EnclosingStep {
 		try {
 			logger.trace(pcall.getMethodName());
 			//indexElements(getChartContext());
-			pcall.exec(scopeContext, getDefinition().getProperties());
+			pcall.exec(scopeContext, getDefinition().getProperties(), false);
 		} catch (Exception e) {
 			logger.error("Error calling " + pcall.getMethodName(), e);
 		}

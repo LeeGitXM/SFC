@@ -51,7 +51,7 @@ attributes:sequence (structure (
 public class Output extends IO {
 
 	public Output() {
-		addProperty(IlsProperty.OUTPUT_VALUE_TYPE);
+		addProperty(IlsProperty.OUTPUT_TYPE);
 		addProperty(IlsProperty.WRITE_CONFIRM);
 		addProperty(IlsProperty.WRITE_CONFIRMED);	// dynamic
 		addProperty(IlsProperty.DOWNLOAD);

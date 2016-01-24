@@ -484,7 +484,7 @@ public class IlsGatewayScripts {
 		return IlsProperty.parseObjectValue(strValue, null);
 	}
 
-	public static String getTestName(PyChartScope chartScope) {
+	public static String getTopChartPath(PyChartScope chartScope) {
 		PyChartScope topScope = IlsSfcCommonUtils.getTopScope(chartScope);
 		return (String)topScope.get("chartPath");
 	}
@@ -494,31 +494,27 @@ public class IlsGatewayScripts {
 		ilsSfcGatewayHook.getTestMgr().setReportFilePath(reportFilePath);
 	}
 
-	public static void startTest(String testName) {
-		ilsSfcGatewayHook.getTestMgr().startTest(testName);
+	public static void startTest(String chartPath) {
+		ilsSfcGatewayHook.getTestMgr().startTest(chartPath);
 	}
 
-	public static void assertEqual(PyChartScope chartScope, PyChartScope stepScope, 
-		PyObject expected, PyObject actual) {		
-		String testName = getTestName(chartScope);
-		String stepPath = RecipeDataAccess.getFullStepPath(chartScope, stepScope);
-		ilsSfcGatewayHook.getTestMgr().assertEqual(testName, stepPath, expected, actual );
+	public static void assertEqual(PyChartScope chartScope, PyObject expected, PyObject actual) {		
+		String testName = getTopChartPath(chartScope);
+		ilsSfcGatewayHook.getTestMgr().assertEqual(testName, expected, actual );
 	}
 
-	public static void assertTrue(PyChartScope chartScope, PyChartScope stepScope, 
-		boolean condition, String msg) {
-		String testName = getTestName(chartScope);
-		String stepPath = RecipeDataAccess.getFullStepPath(chartScope, stepScope);
-		ilsSfcGatewayHook.getTestMgr().assertTrue(testName, stepPath, condition,  msg);
+	public static void assertTrue(PyChartScope chartScope, boolean condition, String msg) {
+		String testName = getTopChartPath(chartScope);
+		ilsSfcGatewayHook.getTestMgr().assertTrue(testName, condition,  msg);
 	}
 	
 	public static void failTest(PyChartScope chartScope, String message) {
-		String testName = getTestName(chartScope);
+		String testName = getTopChartPath(chartScope);
 		ilsSfcGatewayHook.getTestMgr().fail(testName, message);
 	}
 	
 	public static void passTest(PyChartScope chartScope) {
-		String testName = getTestName(chartScope);
+		String testName = getTopChartPath(chartScope);
 		ilsSfcGatewayHook.getTestMgr().pass(testName);
 	}
 	

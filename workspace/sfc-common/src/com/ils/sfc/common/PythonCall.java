@@ -27,7 +27,7 @@ public class PythonCall {
 	private PyCode compiledCode;	// cached compiled code
 
 	private static ScriptManager scriptMgr;
-	private static final String[] stepArgs = new String[]{"scopeContext", "stepProperties"};
+	private static final String[] stepArgs = new String[]{"scopeContext", "stepProperties", "deactivate"};
 	private static final String STEPS_PKG = "ils.sfc.gateway.steps.";
 
 	// steps:

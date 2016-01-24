@@ -26,7 +26,9 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	protected ScopeContext scopeContext;
 	volatile boolean paused = false;
 	volatile boolean cancelled = false;
-
+	volatile boolean deactivated = false;
+	private static final String WORK_DONE_FLAG = "workDone";
+	
 	protected IlsAbstractChartStep(ChartContext context,  ScopeContext scopeContext, StepDefinition definition) {
 		super(context, definition);
 		this.scopeContext = scopeContext;
@@ -38,34 +40,43 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	
 	/** Repeatedly do increments of work. */
 	protected void doWork(StepController controller) {
-		PythonCall pcall = getPythonCall();
-		try {
-			while (isRunning()) {
-				Object result = pcall.exec(scopeContext, getDefinition().getProperties());
-				boolean workDone = true;
-				if(result != null && result instanceof Boolean) {
-					workDone = ((Boolean)result).booleanValue();
-				}
-				else {
-					logger.errorf("ERROR: non-boolean return for step python %s: %s: ", 
-						pcall.getMethodName(), (result != null ? result.toString() : "null"));
-				}
-				
-				if(workDone) {
-					break;
-				}
-				else {
-					// Some steps are simply waiting for a response...for performance reasons we don't
-					// want get into a tight loop for that sort of thing, so we put in a small sleep:
+		while (isRunning()) {
+			if(callPython()) {
+				break;
+			}
+			else {
+				// Some steps are simply waiting for a response...for performance reasons we don't
+				// want get into a tight loop for that sort of thing, so we put in a small sleep:
+				try {
 					Thread.sleep(500);
-				}
-				// The yield function ensures that all outstanding messages have been delivered through the chart
-				// control queue. We call this so that we know for a fact that the cancelled and paused flags are as accurate as possible.
-				controller.yield();
+				} catch (InterruptedException e) {}
+			}
+			// The yield function ensures that all outstanding messages have been delivered through the chart
+			// control queue. We call this so that we know for a fact that the cancelled and paused flags are as accurate as possible.
+			controller.yield();
+		}
+	}
+
+	private boolean callPython() {
+		boolean workDone = true;
+		String methodName = "??";
+		try {
+			PythonCall pcall = getPythonCall();
+			methodName = pcall.getMethodName();
+			Object result = pcall.exec(scopeContext, getDefinition().getProperties(), deactivated);
+			if(result != null && result instanceof Boolean) {
+				workDone = ((Boolean)result).booleanValue();
+			}
+			else {
+				logger.errorf("ERROR: non-boolean return for step python %s: %s: ", 
+					pcall.getMethodName(), (result != null ? result.toString() : "null"));
 			}
 		} catch (Exception e) {
-			logger.errorf("Error running step python %s", pcall.getMethodName(), e);
+			logger.errorf("Error running step python %s", methodName, e);
 		}
+		// note: just using "put" will not trigger change notification--use setVariable()
+		scopeContext.getStepScope().setVariable(WORK_DONE_FLAG, workDone ? 1 : 0);
+		return workDone;
 	}
 
 	public String getName() {
@@ -79,21 +90,24 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	
 	@Override
 	public void activateStep(StepController controller) {
-		logger.info("Example step activating");
+		logger.info("Step activating");
 		//Executing long running tasks through the controller allows the step to block chart flow (the step won't deactivate until the work finishes),
 		//but still respond to pause/cancel, as we're not blocking the chart execution queue.
-		controller.execute(this::doWork);
+		if(!callPython()) {
+			controller.execute(this::doWork);
+		}
 	}
 
 	@Override
 	public void deactivateStep() {
-		logger.info("Example step deactivated");
+		logger.info("Step deactivated");
+		deactivated = true;
 		//In this example, we want to block flow until the work has finished. Therefore, we take no special action during deactivate.
 	}
 
 	@Override
 	public void cancelStep() {
-		logger.infof("Example step cancelled");
+		logger.infof("Step cancelled");
 		cancelled = true;
 	}
 

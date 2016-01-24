@@ -26,10 +26,14 @@ public class TestMgr {
 		public void start() {
 			startMillis = System.currentTimeMillis();
 		}
+		
+		public long getElapsedMillis() {
+			return isRunning() ? System.currentTimeMillis() - startMillis : endMillis - startMillis;
+		}
 
-		public boolean assertTrue(boolean condition, String stepName, String msg) {
+		public boolean assertTrue(boolean condition, String msg) {
 			if(!condition) {
-				fail("Assertion failed on step " + stepName +": " + msg);
+				fail("Assertion failed: " + msg);
 				return false;
 			}
 			else {
@@ -37,10 +41,10 @@ public class TestMgr {
 			}
 		}
 
-		public boolean assertEqual(PyObject expected, PyObject actual, String stepName) {
+		public boolean assertEqual(PyObject expected, PyObject actual) {
 			if(!expected.equals(actual)) {
 				String msg = expected.toString() + " != " + actual.toString();
-				fail("Assertion failed in step " + stepName +": " + msg);
+				fail("Assertion failed: " + msg);
 				return false;
 			}
 			else {
@@ -49,6 +53,7 @@ public class TestMgr {
 		}
 
 		public void fail(String message) {
+			if(!isRunning()) return;
 			passed = false;
 			endMillis = System.currentTimeMillis();		
 			this.message = message;
@@ -58,22 +63,30 @@ public class TestMgr {
 			// if this test has already failed, ignore any calls to pass()
 			// this can happen if a lower-level chart aborts, because onAbort
 			// will not be called on enclosing charts...
-			if(!passed) return;
+			if(!isRunning()) return;
 			passed = true;
 			endMillis = System.currentTimeMillis();			
 		}
 
-		public boolean passed() {
-			return passed && endMillis > 0;
-			
+		public boolean isRunning() {
+			return endMillis == 0;
 		}
-		public boolean report(BufferedWriter out) throws IOException {
+		
+		public boolean passed() {
+			return passed && !isRunning();			
+		}
+
+		public boolean failed() {
+			return !passed && !isRunning();			
+		}
+
+		public void report(BufferedWriter out) throws IOException {
 			out.write(name);
 			out.write(": ");
-			if(endMillis == 0) {
+			if(isRunning()) {
 				out.write("Running. ");				
 			}
-			else if(passed) {
+			else if(passed()) {
 				out.write("Passed. ");
 			}
 			else {  // failed
@@ -81,22 +94,6 @@ public class TestMgr {
 				out.write(message);				
 			}
 			out.write('\n');
-			/*
-			out.write(" Started ");
-			out.write(dateFormat.format(startMillis));
-			long elapsedMillis = 0;
-			if(endMillis != 0) {
-				out.write(" Ended ");
-				out.write(dateFormat.format(endMillis));
-				elapsedMillis = endMillis - startMillis;
-			}
-			else {
-				elapsedMillis = System.currentTimeMillis() - startMillis;
-			}
-			out.write(" Run time: " + ((int)(elapsedMillis / 1000)) + "s");
-			out.write('\n');
-			*/
-			return passed;
 		}
 	}
 	
@@ -110,7 +107,12 @@ public class TestMgr {
 	}
 
 	public TestInfo getTest(String testName) {
-		return testsByName.get(testName);
+		TestInfo info = testsByName.get(testName);
+		if(info == null) {
+			// test not started ?! create it lazily:
+			info = startTest(testName);
+		}
+		return info;
 	}
 	
 	public void initialize() {
@@ -118,21 +120,22 @@ public class TestMgr {
 		runningTestCount = 0;
 	}
 	
-	public void startTest(String testName) {
+	public TestInfo startTest(String testName) {
 		TestInfo newTest = new TestInfo(testName);
 		testsByName.put(testName, newTest);
 		++runningTestCount;
 		newTest.start();
+		return newTest;
 	}
 
-	public void assertTrue(String testName, String stepName, boolean condition, String msg) {		
-		if(!getTest(testName).assertTrue(condition, stepName, msg)) {
+	public void assertTrue(String testName, boolean condition, String msg) {		
+		if(!getTest(testName).assertTrue(condition, msg)) {
 			decremementRunningTestCount();			
 		}
 	}
 
-	public void assertEqual(String testName, String stepName, PyObject expected, PyObject actual) {
-		if(!getTest(testName).assertEqual(expected, actual, stepName)) {
+	public void assertEqual(String testName, PyObject expected, PyObject actual) {
+		if(!getTest(testName).assertEqual(expected, actual)) {
 			decremementRunningTestCount();						
 		}
 	}
@@ -157,16 +160,24 @@ public class TestMgr {
 	public void report() {		
 		try {
 			int totalCount = 0;
-			int passCount = 0;
+			int passedCount = 0;
+			int failedCount = 0;
+			int runningCount = 0;
 			for(TestInfo test: testsByName.values()) {
 				++totalCount;
 				if(test.passed() ) {
-					++passCount;
+					++passedCount;
+				}
+				else if(test.failed()) {
+					++failedCount;
+				}
+				else if(test.isRunning()) {
+					++runningCount;
 				}
 			}
 			java.io.BufferedWriter out = new java.io.BufferedWriter(new java.io.FileWriter(reportFilePath));
 			out.write("Report written " + dateFormat.format(System.currentTimeMillis()) + "\n");
-			out.write("" + totalCount + " tests ran; " + passCount + " passed, " + (totalCount - passCount) + " failed\n");
+			out.write("" + totalCount + " tests ran; " + passedCount + " passed, " + failedCount + " failed, " + runningCount + " are still running.\n");
 			for(TestInfo test: testsByName.values()) {
 				test.report(out);
 			}
