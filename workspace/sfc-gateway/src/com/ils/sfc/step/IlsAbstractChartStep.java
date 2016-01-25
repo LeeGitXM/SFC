@@ -57,6 +57,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		}
 	}
 
+	/** Call the step python and return true if no more calls are required. */
 	private boolean callPython() {
 		boolean workDone = true;
 		String methodName = "??";
@@ -66,6 +67,10 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 			Object result = pcall.exec(scopeContext, getDefinition().getProperties(), deactivated);
 			if(result != null && result instanceof Boolean) {
 				workDone = ((Boolean)result).booleanValue();
+				// deactivation should have produced a false return, but make sure:
+				if(deactivated) {
+					workDone = false;
+				}
 			}
 			else {
 				logger.errorf("ERROR: non-boolean return for step python %s: %s: ", 
@@ -76,7 +81,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		}
 		// note: just using "put" will not trigger change notification--use setVariable()
 		scopeContext.getStepScope().setVariable(WORK_DONE_FLAG, workDone ? 1 : 0);
-		return workDone;
+		return workDone || deactivated;
 	}
 
 	public String getName() {

@@ -35,9 +35,7 @@ import com.ils.sfc.designer.panels.EditorPanel;
 public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 	private JComboBox<ComboWrapper> typesCombo = new JComboBox<ComboWrapper>();
 	private JTextField keyTextField = new JTextField();
-	private String[] valueTypeChoices = {Constants.FLOAT, Constants.INT, Constants.BOOLEAN, 
-		Constants.STRING, Constants.DATE_TIME};
-	private JComboBox<String> valueTypeCombo = new JComboBox<String>(valueTypeChoices);
+	private JComboBox<String> valueTypeCombo = new JComboBox<String>(Data.valueTypeChoices);
 	private ButtonPanel buttonPanel = new ButtonPanel(true, false, false, false, false, true, false, false);
 	private RecipeEditorController controller;
 	private String chartPath;
@@ -122,14 +120,9 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 		}
 		try {
 			Class<?> selectedClass = (Class<?>)selectedType.getObject();
-			newObject = Data.createNewInstance(selectedClass);
-			newObject.setKey(key);
-			String provider = IlsClientScripts.getProviderName(false);
-			newObject.setProvider(provider);
-			newObject.setStepPath(chartPath);
 			String selectedValueType = (String) valueTypeCombo.getSelectedItem();
-			newObject.setValueType(selectedValueType);
-			newObject.createTag();
+			String provider = IlsClientScripts.getProviderName(false);
+			newObject = Data.createRecipeData(selectedClass, chartPath, key, selectedValueType, provider);
 			keyTextField.setText("");
 			super.accept();
 		}
@@ -140,6 +133,8 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 			return;
 		}
 	}
+
+
 
 	public void setChartPath(String chartPath) {
 		this.chartPath = chartPath;

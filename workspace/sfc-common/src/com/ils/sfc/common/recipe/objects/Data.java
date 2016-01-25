@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import system.ils.sfc.common.Constants;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
@@ -66,7 +67,9 @@ public abstract class Data {
 	protected String parentG2Id;
 	protected String stepPath;
 	protected String provider;
-
+	public static final String[] valueTypeChoices = {Constants.FLOAT, Constants.INT, Constants.BOOLEAN, 
+		Constants.STRING, Constants.DATE_TIME};
+	
 	public Data() {
 		addProperty(IlsProperty.CLASS);
 		addProperty(IlsProperty.KEY);
@@ -317,6 +320,17 @@ public abstract class Data {
 		return newInstance;
 	}
 
+	public static Data createRecipeData(Class<?> selectedClass, String chartPath, String key, 
+		String valueType, String provider) {
+		Data newObject = Data.createNewInstance(selectedClass);
+		newObject.setKey(key);
+		newObject.setProvider(provider);
+		newObject.setStepPath(chartPath);
+		newObject.setValueType(valueType);
+		newObject.createTag();
+		return newObject;
+	}
+	
 	private static void assignUniqueId(Data newInstance) {
 		UUID uniqueId = UUID.randomUUID();
 		newInstance.setValue(IlsProperty.DATA_ID, uniqueId);
