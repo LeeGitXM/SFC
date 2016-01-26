@@ -21,6 +21,7 @@ import system.ils.sfc.common.Constants;
 
 import com.google.common.base.Optional;
 import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.step.AllSteps;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.ChartStateEnum;
@@ -45,6 +46,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	protected static Icon asteriskIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/asterisk.png"));
 	private JLabel label = new JLabel();
 	protected enum PaletteTabs { Foundation, Messages, Input, Control, Notification, IO, Query, File, Window };
+	protected static final Color LONG_RUNNING_COLOR = new Color(255, 255, 153);
 	
 	public static ClientStepFactory[] clientStepFactories = {
 		QueueMessageStepUI.FACTORY,
@@ -156,7 +158,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	Color background = null;
     	Color ranColor = Color.lightGray;
     	if(chartNotStarted) {
-    		background = Color.white;
+    		background = getBackgroundColor(propertyValues);
     	}
     	else {
     		ChartStatus chartStatus = chartStatusContext.getChartStatus().get();
@@ -187,7 +189,17 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	}    	
     }
 
-    /** Initialize the Encapsulation step properties for our step types (e.g. ProcedureStep)
+	private Color getBackgroundColor(ChartUIElement propertyValues) {
+		String factoryId = (String)propertyValues.get(IlsProperty.FACTORY_ID);
+		if(AllSteps.longRunningFactoryIds.contains(factoryId)) {
+			return LONG_RUNNING_COLOR;
+		}
+		else {
+			return Color.WHITE;
+		}
+	}
+
+	/** Initialize the Encapsulation step properties for our step types (e.g. ProcedureStep)
      *  that are really Encapsulation steps
      */
 	protected static void initializeFoundationStepUI(ChartUIElement element, String s88Level) {

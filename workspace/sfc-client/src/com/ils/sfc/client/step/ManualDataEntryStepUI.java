@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -18,7 +20,7 @@ public class ManualDataEntryStepUI extends AbstractIlsStepUI {
 	
 	@Override
 	protected String getText() { return "<html><center><b>Enter Data</html>"; }
-
+	
     public static final class ManualDataEntryStepFactory extends ManualDataEntryStepDelegate implements ClientStepFactory {
     	private ManualDataEntryStepUI UI = new ManualDataEntryStepUI();
 

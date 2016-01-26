@@ -2,6 +2,7 @@ package com.ils.sfc.common.chartStructure;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -280,4 +281,19 @@ public class ChartStructureCompiler {
 		sb.append(stepName);
 		return sb.toString();
 	}
+	
+	public List<String> getMatchingCharts(String regex) {
+		List<String> matchingCharts = new ArrayList<String>();
+		List<ProjectResource> resources = project.getResources();
+		for(ProjectResource res:resources) {
+			if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
+				String path = project.getFolderPath(res.getResourceId());
+				if(path.matches(regex)) {
+					matchingCharts.add(path);
+				}
+			}
+		}
+		return matchingCharts;
+	}
+
 }

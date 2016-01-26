@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -18,7 +20,7 @@ public class ControlPanelMessageStepUI extends AbstractIlsStepUI {
 	
 	@Override
 	protected String getText() { return "<html><b>Control<br>Panel</html>"; }
-
+	
     public static final class ControlPanelMessageStepFactory extends ControlPanelMessageStepDelegate implements ClientStepFactory {
     	private ControlPanelMessageStepUI UI = new ControlPanelMessageStepUI();
 

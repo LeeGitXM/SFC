@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -18,7 +20,7 @@ public class DialogMessageStepUI extends AbstractIlsStepUI {
 	
 	@Override
 	protected String getText() { return "<html><b>Notify<br>Dialog</html>"; }
-
+	
     public static final class DialogMessageStepFactory extends DialogMessageStepDelegate implements ClientStepFactory {
     	private DialogMessageStepUI UI = new DialogMessageStepUI();
 

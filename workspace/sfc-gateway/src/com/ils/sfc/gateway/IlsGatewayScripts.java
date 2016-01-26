@@ -2,10 +2,13 @@ package com.ils.sfc.gateway;
 
 import static com.ils.sfc.common.IlsSfcCommonUtils.isEmpty;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.zip.GZIPInputStream;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +20,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
+import com.ils.sfc.common.chartStructure.ChartModelInfo;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.rowconfig.ManualDataEntryConfig;
 import com.ils.sfc.common.rowconfig.MonitorDownloadsConfig;
@@ -29,6 +33,9 @@ import com.ils.sfc.step.IlsAbstractChartStep;
 import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
+import com.inductiveautomation.ignition.common.model.ApplicationScope;
+import com.inductiveautomation.ignition.common.project.Project;
+import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.DatasetBuilder;
@@ -42,6 +49,7 @@ import com.inductiveautomation.sfc.api.ScopeLocator;
 import com.inductiveautomation.sfc.api.elements.ChartElement;
 import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
+import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
 /** Java utilities exposed to Python. The python module path is: "system.ils.sfc"
  */
@@ -489,47 +497,55 @@ public class IlsGatewayScripts {
 		return (String)topScope.get("chartPath");
 	}
 	
+	
 	public static void initializeTests(String reportFilePath) {
 		ilsSfcGatewayHook.getTestMgr().initialize();
 		ilsSfcGatewayHook.getTestMgr().setReportFilePath(reportFilePath);
 	}
 
-	public static void startTest(String chartPath) {
-		ilsSfcGatewayHook.getTestMgr().startTest(chartPath);
+	public static void startTest(PyChartScope chartScope) {
+		String topChartPath = getTopChartPath(chartScope);
+		ilsSfcGatewayHook.getTestMgr().startTest(topChartPath);
 	}
 
 	public static void assertEqual(PyChartScope chartScope, PyObject expected, PyObject actual) {		
-		String testName = getTopChartPath(chartScope);
-		ilsSfcGatewayHook.getTestMgr().assertEqual(testName, expected, actual );
+		String topChartPath = getTopChartPath(chartScope);
+		ilsSfcGatewayHook.getTestMgr().assertEqual(topChartPath, expected, actual );
 	}
 
 	public static void assertTrue(PyChartScope chartScope, boolean condition, String msg) {
-		String testName = getTopChartPath(chartScope);
-		ilsSfcGatewayHook.getTestMgr().assertTrue(testName, condition,  msg);
+		String topChartPath = getTopChartPath(chartScope);
+		ilsSfcGatewayHook.getTestMgr().assertTrue(topChartPath, condition,  msg);
 	}
 	
 	public static void failTest(PyChartScope chartScope, String message) {
-		String testName = getTopChartPath(chartScope);
-		ilsSfcGatewayHook.getTestMgr().fail(testName, message);
+		String topChartPath = getTopChartPath(chartScope);
+		ilsSfcGatewayHook.getTestMgr().fail(topChartPath, message);
 	}
 	
 	public static void passTest(PyChartScope chartScope) {
-		String testName = getTopChartPath(chartScope);
-		ilsSfcGatewayHook.getTestMgr().pass(testName);
+		String topChartPath = getTopChartPath(chartScope);
+		ilsSfcGatewayHook.getTestMgr().pass(topChartPath);
 	}
 	
 	public static void reportTests() {
 		ilsSfcGatewayHook.getTestMgr().report();
 	}
 	
-	/** Arbitrary content for dev testing */
-	public static void devTest() {
-		try {
+	public static List<String> getMatchingCharts(String regex) {
+		Project globalProject = ilsSfcGatewayHook.getContext().getProjectManager().getGlobalProject(ApplicationScope.GATEWAY);
+		List<String> matchingCharts = new ArrayList<String>();
+		List<ProjectResource> resources = globalProject.getResources();
+		for(ProjectResource res:resources) {
+			if( res.getResourceType().equals("sfc-chart-ui-model")) {
+				String path = globalProject.getFolderPath(res.getResourceId());
+				if(path.matches(regex)) {
+					matchingCharts.add(path);
+				}
+			}
 		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
+		return matchingCharts;
+	}	
 	
 	public static UUID debugChart(String chartPath, String clientProject, String user, boolean isolation) {
 		return ilsSfcGatewayHook.getChartDebugger().debugChart(chartPath, clientProject, user, isolation);

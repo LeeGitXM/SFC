@@ -95,7 +95,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	
 	@Override
 	public void activateStep(StepController controller) {
-		logger.info("Step activating");
+		//logger.info("Step activating");
 		//Executing long running tasks through the controller allows the step to block chart flow (the step won't deactivate until the work finishes),
 		//but still respond to pause/cancel, as we're not blocking the chart execution queue.
 		if(!callPython()) {
@@ -105,26 +105,26 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 
 	@Override
 	public void deactivateStep() {
-		logger.info("Step deactivated");
+		//logger.info("Step deactivated");
 		deactivated = true;
 		//In this example, we want to block flow until the work has finished. Therefore, we take no special action during deactivate.
 	}
 
 	@Override
 	public void cancelStep() {
-		logger.infof("Step cancelled");
+		//logger.infof("Step cancelled");
 		cancelled = true;
 	}
 
 	@Override
 	public void pauseStep() {
-		logger.infof("Example step paused.");
+		//logger.infof("Example step paused.");
 		paused = true;
 	}
 
 	@Override
 	public void resumeStep(StepController controller) {
-		logger.infof("Example step resumed.");
+		//logger.infof("Example step resumed.");
 		paused = false;
 		//On resume, we can just continue the work that we were previously doing.
 		controller.execute(this::doWork);

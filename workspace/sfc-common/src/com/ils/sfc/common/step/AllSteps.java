@@ -1,8 +1,12 @@
 package com.ils.sfc.common.step;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.inductiveautomation.ignition.common.config.Property;
 
@@ -50,6 +54,24 @@ public class AllSteps {
         ManualDataEntryStepProperties.FACTORY_ID,   
 	};
 
+	public static List<String> longRunningFactoryIds = Arrays.asList(new String[]{
+		// steps that may require input or an acknowledgement from the user:
+        InputStepProperties.FACTORY_ID,
+       	SelectInputStepProperties.FACTORY_ID,
+       	LimitedInputStepProperties.FACTORY_ID,
+    	YesNoStepProperties.FACTORY_ID,
+    	ControlPanelMessageStepProperties.FACTORY_ID,
+       	DialogMessageStepProperties.FACTORY_ID,
+        ReviewDataStepProperties.FACTORY_ID,   
+        ReviewDataWithAdviceStepProperties.FACTORY_ID,   
+        ReviewFlowsStepProperties.FACTORY_ID,   
+        ManualDataEntryStepProperties.FACTORY_ID,   
+        // Steps whose own processing runs long:
+    	TimedDelayStepProperties.FACTORY_ID,
+        PVMonitorStepProperties.FACTORY_ID,     
+        WriteOutputStepProperties.FACTORY_ID,     
+	});
+	
 	public static Class<?>[] propertyClasses = {
     	QueueMessageStepProperties.class,
     	SetQueueStepProperties.class,
