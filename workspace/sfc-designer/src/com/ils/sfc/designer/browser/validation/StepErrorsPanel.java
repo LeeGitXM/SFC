@@ -1,5 +1,5 @@
 /**
- *   (c) 2015  ILS Automation. All rights reserved.
+ *   (c) 2015-2106  ILS Automation. All rights reserved.
  */
 package com.ils.sfc.designer.browser.validation;
 
@@ -10,8 +10,7 @@ import java.util.zip.GZIPInputStream;
 
 import javax.swing.table.DefaultTableModel;
 
-import prefuse.data.Table;
-
+import com.ils.sfc.common.step.AllSteps;
 import com.ils.sfc.designer.browser.BrowserConstants;
 import com.ils.sfc.designer.browser.ChartTreeDataModel;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
@@ -22,10 +21,14 @@ import com.inductiveautomation.sfc.client.api.ClientStepRegistryProvider;
 import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
+import com.inductiveautomation.sfc.definitions.TransitionDefinition;
+import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartCompiler;
 import com.inductiveautomation.sfc.uimodel.ChartUIModel;
+
+import prefuse.data.Table;
 
 /**
  * Panel in a tab that displays a list of all charts without parents. 
@@ -50,7 +53,8 @@ public class StepErrorsPanel extends AbstractChartValidationPanel {
 	 * Create a list of all steps with errors or warnings. We skip over any charts
 	 * that might have errors as these are handled in another tab.
 	 * 
-	 * For now we limit ourselves to enclosures with faulty chart paths.
+	 * For now we limit ourselves to enclosures with faulty chart paths, plus any long-running
+	 * steps not followed by a transition
 	 */
 	public void updateTable() {
 		Object iaSfcHook = context.getModule(SFCModule.MODULE_ID);
@@ -96,6 +100,29 @@ public class StepErrorsPanel extends AbstractChartValidationPanel {
 						tableRow[0] = new Long(chartResource.getResourceId());
 						tableRow[1] = chartRow+"/"+name;
 						tableRow[2] = String.format("%s (%s) does not exist",EnclosingStepProperties.CHART_PATH,path);
+						model.addRow(tableRow);
+					}
+				}
+				// Not an enclosure, is it a long-running step?
+				else if( AllSteps.longRunningFactoryIds.contains(stepDef.getFactoryId())) {
+					// If we're a long-running step, we MUST be followed by a transition.
+					// The transition MUST test "workDone"
+					boolean foundTransition = false;
+					List<ElementDefinition> followingSteps = step.getNextElements();
+					for(ElementDefinition element:followingSteps) {
+						if( element instanceof TransitionDefinition ) {
+							TransitionDefinition tdef = (TransitionDefinition)element;
+							if( tdef.getExpression().contains("workDone") ) {
+								foundTransition = true;
+								break;
+							}
+						}
+					}
+					if( !foundTransition ) {
+						String chartRow = getPathForResource(chartResource,nodes);
+						tableRow[0] = new Long(chartResource.getResourceId());
+						tableRow[1] = chartRow+"/"+stepDef.getProperties().get(ChartStepProperties.Name);
+						tableRow[2] = String.format("Long-running step mut be followed by a transition testing \"workDone\"");
 						model.addRow(tableRow);
 					}
 				}

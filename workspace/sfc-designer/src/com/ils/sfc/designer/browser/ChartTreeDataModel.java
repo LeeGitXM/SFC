@@ -29,6 +29,7 @@ import com.inductiveautomation.sfc.definitions.ChartDefinition;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
 import com.inductiveautomation.sfc.definitions.ParallelDefinition;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
+import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartCompiler;
@@ -242,54 +243,57 @@ public class ChartTreeDataModel {
 	private void analyzeChartSteps(int row,ChartDefinition definition,String name) {
 		if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof( "%s.analyzeChartSteps: chart %d (%s)", TAG,row,name);
 		for( ElementDefinition def:definition.getBeginElement().getNextElements() ) {
-			if( def instanceof StepDefinition )  {
+			ElementDefinition.ElementType elementType = def.getElementType();
+			if( elementType == ElementDefinition.ElementType.Step )  {
 				StepDefinition stepDef = (StepDefinition)def;
-				String stepname = stepDef.getProperties().get(EnclosingStepProperties.Name);
+				String stepname = stepDef.getProperties().get(ChartStepProperties.Name);
 				analyzeStep(row,stepDef,stepname);
 			}
-			else if( def instanceof ParallelDefinition ) {
+			else if(elementType == ElementDefinition.ElementType.Parallel) {
 				ParallelDefinition parallelDef = (ParallelDefinition)def;
-				analyzeParallelSteps(row,parallelDef);
+				analyzeParallelSection(row,parallelDef);
 			}
-			else {
+			else if( elementType == ElementDefinition.ElementType.Transition )  { 
 				analyzeTransition(row,def);
 			}
 		}
 	}
 	// Iterate through the steps in a parallel section looking for enclosures
-	private void analyzeParallelSteps(Integer row,ParallelDefinition parallelDef) {
-		if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof( "%s.handleParallelSteps: chart %d", TAG,row);
+	private void analyzeParallelSection(Integer row,ParallelDefinition parallelDef) {
+		if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof( "%s.analyzeParallelSection: chart %d", TAG,row);
 		// Internal to the parallel section
 		List<ElementDefinition> starters = parallelDef.getStartElements();
 		for(ElementDefinition def:starters) {
-			if( def instanceof StepDefinition )  {
+			ElementDefinition.ElementType elementType = def.getElementType();
+			if( elementType == ElementDefinition.ElementType.Step)  {
 				StepDefinition stepDef = (StepDefinition)def;
 				PropertySet ps = stepDef.getProperties();
-				String stepname = ps.get(EnclosingStepProperties.Name);
+				String stepname = ps.get(ChartStepProperties.Name);
 				analyzeStep(row,stepDef,stepname);
 			}
-			else if( def instanceof ParallelDefinition ) {
+			else if( elementType == ElementDefinition.ElementType.Parallel ) {
 				ParallelDefinition pd = (ParallelDefinition)def;
-				analyzeParallelSteps(row,pd);	
+				analyzeParallelSection(row,pd);	
 			}
-			else {
+			else if( elementType == ElementDefinition.ElementType.Transition ) {
 				analyzeTransition(row,def);
 			}
 		}
 		// External to the parallel section
 		List<ElementDefinition> nextElements = parallelDef.getNextElements();
 		for(ElementDefinition def:nextElements) {
-			if( def instanceof StepDefinition )  {
+			ElementDefinition.ElementType elementType = def.getElementType();
+			if( elementType == ElementDefinition.ElementType.Step )  {
 				StepDefinition stepDef = (StepDefinition)def;
 				PropertySet ps = stepDef.getProperties();
-				String stepname = ps.get(EnclosingStepProperties.Name);
+				String stepname = ps.get(ChartStepProperties.Name);
 				analyzeStep(row,stepDef,stepname);
 			}
-			else if( def instanceof ParallelDefinition ) {
+			else if( elementType == ElementDefinition.ElementType.Parallel ) {
 				ParallelDefinition pd = (ParallelDefinition)def;
-				analyzeParallelSteps(row,pd);	
+				analyzeParallelSection(row,pd);	
 			}
-			else {
+			else if( elementType == ElementDefinition.ElementType.Transition ) {
 				analyzeTransition(row,def);
 			}
 		}	
@@ -317,7 +321,7 @@ public class ChartTreeDataModel {
 			(stepDef.getProperties()!=null && stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH)!=null) ) {
 
 			String path = stepDef.getProperties().get(EnclosingStepProperties.CHART_PATH);
-			if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof("%s.handleEnclosingStep:   enclosure %d.%s, references %s", TAG,parentRow,stepName,path);
+			if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof("%s.analyzeStep:   enclosure %d.%s, references %s", TAG,parentRow,stepName,path);
 			// Create the step-that-is-an-enclosure node (if it doesn't already exist)
 			int newRow = addNodeTableRow(stepName,BrowserConstants.NO_RESOURCE);
 			addEdgeTableRow(parentRow.intValue(),newRow);
@@ -328,17 +332,18 @@ public class ChartTreeDataModel {
 		}
 		
 		for(ElementDefinition def:stepDef.getNextElements()) {
-			if( def instanceof StepDefinition )  {
+			ElementDefinition.ElementType elementType = def.getElementType();
+			if( elementType == ElementDefinition.ElementType.Step)  {
 				StepDefinition sd = (StepDefinition)def;
 				PropertySet ps = sd.getProperties();
-				String stepname = ps.get(EnclosingStepProperties.Name);
+				String stepname = ps.get(ChartStepProperties.Name);
 				analyzeStep(row,sd,stepname);
 			}
-			else if( def instanceof ParallelDefinition ) {
+			else if( elementType == ElementDefinition.ElementType.Parallel ) {
 				ParallelDefinition pd = (ParallelDefinition)def;
-				analyzeParallelSteps(row,pd);	
+				analyzeParallelSection(row,pd);	
 			}
-			else {
+			else if( elementType == ElementDefinition.ElementType.Transition ) {
 				analyzeTransition(row,def);
 			}
 		}	
@@ -346,20 +351,21 @@ public class ChartTreeDataModel {
 	
 	// A transition is not a step definition. Simply use this to continue on with the next steps
 	private void analyzeTransition(int row,ElementDefinition elementDef) {
-		log.tracef( "%s.analyzeTransition: chart %d", TAG,row);
+		if( log.isDebugEnabled() || DEBUG_STRUCTURE ) log.infof( "%s.analyzeTransition: chart %d", TAG,row);
 
 		for(ElementDefinition def:elementDef.getNextElements()) {
-			if( def instanceof StepDefinition )  {
+			ElementDefinition.ElementType elementType = def.getElementType();
+			if( elementType == ElementDefinition.ElementType.Step )  {
 				StepDefinition sd = (StepDefinition)def;
 				PropertySet ps = sd.getProperties();
-				String stepname = ps.get(EnclosingStepProperties.Name);
+				String stepname = ps.get(ChartStepProperties.Name);
 				analyzeStep(row,sd,stepname);
 			}
-			else if( def instanceof ParallelDefinition ) {
+			else if( elementType == ElementDefinition.ElementType.Parallel ) {
 				ParallelDefinition pd = (ParallelDefinition)def;
-				analyzeParallelSteps(row,pd);	
+				analyzeParallelSection(row,pd);	
 			}
-			else {
+			else if( elementType == ElementDefinition.ElementType.Transition ) {
 				analyzeTransition(row,def);
 			}
 		}	
