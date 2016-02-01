@@ -19,10 +19,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
-
-import net.miginfocom.swing.MigLayout;
-import prefuse.data.Table;
 
 import com.ils.sfc.designer.browser.BrowserConstants;
 import com.ils.sfc.designer.browser.ChartTreeDataModel;
@@ -32,6 +28,9 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.designer.SFCDesignerHook;
+
+import net.miginfocom.swing.MigLayout;
+import prefuse.data.Table;
 
 /**
  * This represents a panel in a tab that is part of the chart validation dialog.

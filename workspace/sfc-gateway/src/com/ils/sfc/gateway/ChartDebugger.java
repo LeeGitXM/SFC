@@ -43,6 +43,7 @@ public class ChartDebugger {
 			MockEnclosingScopeFactory factory = new MockEnclosingScopeFactory(initialParameters, 
 				analyzer.getEnclosureHierarchyBottomUp(chartPath, false));
 			Map<String,Object> debugParams = factory.getInitialChartParams();
+			debugParams.put("debug", Boolean.TRUE);
 			
 			// get the message queue from the hierarchy
 			String messageQueue = analyzer.getMessageQueue(chartPath);
