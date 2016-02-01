@@ -59,7 +59,11 @@ public class DesignerUtil {
 	/** Set the selected tree path and make (only) it visible */
 	public static void setSelectedTreePath(JTree tree, TreePath treePath) {
 		tree.clearSelection();
-		DesignerUtil.collapseTree(tree);
+		// The current implementation of collapseTree causes big performance
+		// problems on Pete's machine, possibly because he has a lot of tags.
+		// we remove the close-existing-opened-paths functionality until
+		// we can figure out a more efficient way to do it...
+		//DesignerUtil.collapseTree(tree);
 		tree.expandPath(treePath);
 		tree.scrollPathToVisible(treePath);
 		tree.getSelectionModel().setSelectionPath(treePath);

@@ -113,7 +113,7 @@ public class RecipeDataTranslator {
 	}
 	
 	public static Collection<Class<?>> getConcreteClasses() {
-		return  new HashSet<Class<?>>(concreteClassesByG2Name.values());
+		return new HashSet<Class<?>>(concreteClassesByG2Name.values());
 	}
 
 	public static Class<?> getConcreteClassForG2Class(String g2ClassName) {

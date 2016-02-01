@@ -12,6 +12,11 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -96,13 +101,24 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 		ComboWrapper selectedType = (ComboWrapper)typesCombo.getSelectedItem();
 		if(selectedType != null) {
 			String typeName = selectedType.getLabel();
-			boolean allowsTypes = typeName.equals("Value") || typeName.equals("Output") ;
+			boolean allowsTypes = 
+				typeName.equals("Value") || 
+				typeName.equals("Output") ||
+				typeName.equals("Input") ;
 			valueTypeCombo.setEnabled(allowsTypes);
 		}
 	}			
 	
 	private void initTypes() {
-		for(Class<?> type: RecipeDataTranslator.getConcreteClasses()) {
+		Collection<Class<?>> concreteClasses = RecipeDataTranslator.getConcreteClasses();
+		List<Class<?>> sortedClasses = new ArrayList<Class<?>>(concreteClasses); 
+		Collections.sort(sortedClasses, new Comparator<Class<?>>() {
+			@Override
+			public int compare(Class<?> o1, Class<?> o2) {
+				return o1.getSimpleName().compareTo(o2.getSimpleName());
+			}
+		});
+		for(Class<?> type: sortedClasses) {
 			typesCombo.addItem(new ComboWrapper(type.getSimpleName(), type));
 		}
 		typesCombo.setSelectedIndex(0);
