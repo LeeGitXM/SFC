@@ -496,8 +496,7 @@ public class IlsGatewayScripts {
 		PyChartScope topScope = IlsSfcCommonUtils.getTopScope(chartScope);
 		return (String)topScope.get("chartPath");
 	}
-	
-	
+		
 	public static void initializeTests(String reportFilePath) {
 		ilsSfcGatewayHook.getTestMgr().initialize();
 		ilsSfcGatewayHook.getTestMgr().setReportFilePath(reportFilePath);
@@ -522,12 +521,23 @@ public class IlsGatewayScripts {
 		String topChartPath = getTopChartPath(chartScope);
 		ilsSfcGatewayHook.getTestMgr().fail(topChartPath, message);
 	}
-	
+
+	public static void failTestChart(String topChartPath, String message) {
+		ilsSfcGatewayHook.getTestMgr().fail(topChartPath, message);
+	}
+
+	public static boolean testsAreRunning() {
+		return ilsSfcGatewayHook.getTestMgr().testsAreRunning();
+	}
 	public static void passTest(PyChartScope chartScope) {
 		String topChartPath = getTopChartPath(chartScope);
 		ilsSfcGatewayHook.getTestMgr().pass(topChartPath);
 	}
-	
+
+	public static void timeoutRunningTests() {
+		ilsSfcGatewayHook.getTestMgr().timeoutRunningTests();
+	}
+
 	public static void reportTests() {
 		ilsSfcGatewayHook.getTestMgr().report();
 	}
