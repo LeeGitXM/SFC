@@ -86,17 +86,20 @@ public class TagBrowser extends JPanel {
 	public String getTagPath() {
 		TreePath[] selectedPaths = tagTreeSelectionModel.getSelectionPaths();
 		if(selectedPaths.length == 1) {
+			Object lastPathComponent = selectedPaths[0].getLastPathComponent();
 			// It's possible to select something that's not a node.
-			if(selectedPaths[0].getLastPathComponent() instanceof TagTreeNode ) {
-				TagTreeNode node = (TagTreeNode)(selectedPaths[0].getLastPathComponent());
+			if(lastPathComponent instanceof TagPathTreeNode ) {
+				TagTreeNode node = (TagTreeNode)lastPathComponent;
 				selectedPath = node.getTagPath().toString();			
 				return selectedPath;
 			}
-			else if(selectedPaths[0].getLastPathComponent() instanceof TagPropNode ) {
-				TagPropNode node = (TagPropNode)(selectedPaths[0].getLastPathComponent());
+			/*
+			else if(lastPathComponent instanceof TagPropNode ) {
+				TagPropNode node = (TagPropNode)lastPathComponent;
 				selectedPath = node.getTagPath().toString() + "." + node.getName();			
 				return selectedPath;
 			}
+			*/
 			else {
 				return null;
 			}
