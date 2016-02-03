@@ -9,8 +9,6 @@ SVN=${SVN_REPO}/EMChemicals/Release/src
 # Prepare directories
 mkdir -p $SVN/project
 cd ${GIT_REPO}/sfc/project
-cp sfc_*.proj $SVN/project
-cp ils_sfc*.proj $SVN/project
 cp BrowserGlobalDemo.proj $SVN/project
 SVN=${SVN_REPO}/EMChemicals/Ignition
 cp ${GIT_REPO}/sfc/workspace/sfc-build/modules/*.modl $SVN
