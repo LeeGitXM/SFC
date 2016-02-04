@@ -141,6 +141,9 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 			newObject = Data.createRecipeData(selectedClass, chartPath, key, selectedValueType, provider);
 			keyTextField.setText("");
 			super.accept();
+			// pop into the editor:
+			controller.getEditor().setRecipeData(newObject);
+			controller.getEditor().activate(controller.BROWSER);
 		}
 		catch(Throwable e) {
 			e.printStackTrace();

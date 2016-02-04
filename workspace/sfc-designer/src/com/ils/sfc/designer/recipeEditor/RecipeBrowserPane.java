@@ -47,7 +47,7 @@ public class RecipeBrowserPane extends EditorPanel implements ValueHolder {
 		}
 
 		public String toString() {
-			return getRecipeData().getKey();
+			return getRecipeData().getLabel();
 		}
 		
 		@Override

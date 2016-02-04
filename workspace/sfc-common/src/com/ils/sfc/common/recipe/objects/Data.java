@@ -540,4 +540,35 @@ public abstract class Data {
 		}
 	}
 	
+	/** Add a string representation of the value of the given property, if it
+	 *  is part of this data. */
+	private void addLabelValue(BasicProperty<?> property, List<String> labelValues) {
+		if(properties.contains(property)) {
+			Object valueOrNull = getValue(property);
+			String strValue = valueOrNull != null ? valueOrNull.toString() : "<null>";
+			labelValues.add(property.getName() + ": " + strValue);
+		}
+	}
+	
+	/** Get a label for this data, typically its name and some values of interest. */
+	public String getLabel() {
+		List<String> labelValues = new ArrayList<String>();
+		addLabelValue(IlsProperty.TAG_PATH, labelValues);		
+		addLabelValue(IlsProperty.VALUE, labelValues);
+		addLabelValue(IlsProperty.UNITS, labelValues);
+		StringBuffer buf = new StringBuffer();
+		buf.append(getKey());
+		if(labelValues.size() > 0) {
+			buf.append(" (");
+			for(int i = 0; i < labelValues.size(); i++) {
+				if(i > 0) {
+					buf.append(" ");
+				}
+				buf.append(labelValues.get(i));
+			}
+			buf.append(")");
+		}
+		return buf.toString();
+	}
+	
 }
