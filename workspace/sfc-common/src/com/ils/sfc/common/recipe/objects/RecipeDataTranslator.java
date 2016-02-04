@@ -42,7 +42,8 @@ public class RecipeDataTranslator {
 		concreteClassesByG2Name.put("S88-RECIPE-SQC-TXT", SQC.class);
 		concreteClassesByG2Name.put("S88-RECIPE-VALUE-DATA", Value.class);
 		concreteClassesByG2Name.put("S88-RECIPE-STRUCTURE-DATA", Structure.class);
-		concreteClassesByG2Name.put("EM-RECIPE-DATA", EMData.class);
+		// disabling EMData until we implement a UDT for it
+		//concreteClassesByG2Name.put("EM-RECIPE-DATA", EMData.class);
 
 		concreteClassesByG2Name.put("S88-RECIPE-SEQUENCE-DATA", RecipeList.class);
 		concreteClassesByG2Name.put("S88-RECIPE-QUANTITY-LIST-DATA", RecipeList.class);
