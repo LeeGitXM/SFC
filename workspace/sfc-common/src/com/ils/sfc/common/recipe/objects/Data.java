@@ -540,34 +540,29 @@ public abstract class Data {
 		}
 	}
 	
-	/** Add a string representation of the value of the given property, if it
-	 *  is part of this data. */
-	private void addLabelValue(BasicProperty<?> property, List<String> labelValues) {
+	/** Get string representation of the value, using empty string for null. */
+	protected String getStringValue(BasicProperty<?> property) {
+		Object valueOrNull = getValue(property);
+		return valueOrNull != null ? valueOrNull.toString() : "";
+	}
+		
+	/** Append the value of the given property, if it is part of this data. */
+	protected void addLabelValue(BasicProperty<?> property, StringBuffer buf) {
 		if(properties.contains(property)) {
-			Object valueOrNull = getValue(property);
-			String strValue = valueOrNull != null ? valueOrNull.toString() : "<null>";
-			labelValues.add(property.getName() + ": " + strValue);
+			String strValue = getStringValue(property);
+			buf.append(strValue);
+			buf.append(" ");
 		}
 	}
-	
+
 	/** Get a label for this data, typically its name and some values of interest. */
 	public String getLabel() {
-		List<String> labelValues = new ArrayList<String>();
-		addLabelValue(IlsProperty.TAG_PATH, labelValues);		
-		addLabelValue(IlsProperty.VALUE, labelValues);
-		addLabelValue(IlsProperty.UNITS, labelValues);
 		StringBuffer buf = new StringBuffer();
-		buf.append(getKey());
-		if(labelValues.size() > 0) {
-			buf.append(" (");
-			for(int i = 0; i < labelValues.size(); i++) {
-				if(i > 0) {
-					buf.append(" ");
-				}
-				buf.append(labelValues.get(i));
-			}
-			buf.append(")");
-		}
+		addLabelValue(IlsProperty.KEY, buf);		
+		addLabelValue(IlsProperty.CLASS, buf);		
+		addLabelValue(IlsProperty.TAG_PATH, buf);		
+		addLabelValue(IlsProperty.VALUE, buf);
+		addLabelValue(IlsProperty.UNITS, buf);
 		return buf.toString();
 	}
 	

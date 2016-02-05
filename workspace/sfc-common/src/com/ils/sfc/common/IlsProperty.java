@@ -498,7 +498,8 @@ public class IlsProperty {
 		setReadOnly(PV_VALUE);
 		setReadOnly(STEP_TIME);
 		setReadOnly(STEP_TIMESTAMP);
-		setReadOnly(TARGET_VALUE);
+		// ?? used in SQC, IO. Needs to be writable in SQC
+		//setReadOnly(TARGET_VALUE);
 		setReadOnly(VALUE_TYPE);
 		setReadOnly(WRITE_CONFIRMED);
 	}

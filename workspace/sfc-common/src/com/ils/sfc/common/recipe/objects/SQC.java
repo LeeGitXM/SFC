@@ -24,4 +24,20 @@ public class SQC extends DataWithUnits {
 		addProperty(IlsProperty.HIGH_LIMIT);
 		addProperty(IlsProperty.TARGET_VALUE);
 	}
+	
+	@Override
+	public String getLabel() {
+		StringBuffer buf = new StringBuffer();
+		addLabelValue(IlsProperty.KEY, buf);		
+		addLabelValue(IlsProperty.CLASS, buf);	
+		buf.append("Target: ");
+		addLabelValue(IlsProperty.TARGET_VALUE, buf);		
+		addLabelValue(IlsProperty.UNITS, buf);
+		buf.append("(HL: ");
+		addLabelValue(IlsProperty.HIGH_LIMIT, buf);		
+		buf.append("LL: ");
+		addLabelValue(IlsProperty.LOW_LIMIT, buf);		
+		buf.append(")");
+		return buf.toString();
+	}
 }
