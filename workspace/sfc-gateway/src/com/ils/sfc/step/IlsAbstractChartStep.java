@@ -40,8 +40,12 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	
 	/** Repeatedly do increments of work. */
 	protected void doWork(StepController controller) {
-		while (isRunning()) {
-			if(callPython()) {
+		while (!paused) {
+			if(cancelled || deactivated) {
+				callPython(true);
+				break;
+			}
+			if(callPython(false)) {
 				break;
 			}
 			else {
@@ -58,13 +62,13 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	}
 
 	/** Call the step python and return true if no more calls are required. */
-	private boolean callPython() {
+	private boolean callPython(boolean cleanup) {
 		boolean workDone = true;
 		String methodName = "??";
 		try {
 			PythonCall pcall = getPythonCall();
 			methodName = pcall.getMethodName();
-			Object result = pcall.exec(scopeContext, getDefinition().getProperties(), deactivated);
+			Object result = pcall.exec(scopeContext, getDefinition().getProperties(), cleanup);
 			if(result != null && result instanceof Boolean) {
 				workDone = ((Boolean)result).booleanValue();
 				// deactivation should have produced a false return, but make sure:
@@ -98,7 +102,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		//logger.info("Step activating");
 		//Executing long running tasks through the controller allows the step to block chart flow (the step won't deactivate until the work finishes),
 		//but still respond to pause/cancel, as we're not blocking the chart execution queue.
-		if(!callPython()) {
+		if(!callPython(false)) {
 			controller.execute(this::doWork);
 		}
 	}
