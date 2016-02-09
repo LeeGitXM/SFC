@@ -101,7 +101,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	//private IlsSfcSessionMgr sessionMgr;
 	private ChartDebugger chartDebugger = null;
 	private final ExampleStepFactory exampleStepFactory = new ExampleStepFactory();
-	
 	private static StepFactory[] stepFactories = {
 		new QueueMessageStepFactory(),
 		new SaveQueueStepFactory(),
@@ -139,7 +138,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		new WriteOutputStepFactory(),
 		new PVMonitorStepFactory(),
 		new MonitorDownloadStepFactory(),
-		new ManualDataEntryStepFactory(),
+		new ManualDataEntryStepFactory()
 	};
 
 	// an index of step property names by the factory id:
@@ -260,7 +259,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		chartDebugger = new ChartDebugger(
 			context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY), 
 			iaSfcHook.getStepRegistry());
-		initializeUnits();
 		IlsGatewayScripts.setRequestHandler(requestHandler);
 		RecipeDataAccess.setRequestHandler(requestHandler);
 		stepMonitor = new IlsStepMonitor(structureManager,chartManager);
@@ -277,6 +275,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	@Override
 	public void serviceReady(Class<?> serviceClass) {
 		if (serviceClass == ChartManagerService.class) {
+			//initializeUnits();
             chartManager = context.getModuleServicesManager().getService(ChartManagerService.class);
              for(StepFactory stepFactory: stepFactories) {
     			chartManager.register(stepFactory);

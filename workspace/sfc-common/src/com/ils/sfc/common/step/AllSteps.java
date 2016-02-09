@@ -51,7 +51,7 @@ public class AllSteps {
         WriteOutputStepProperties.FACTORY_ID,   
         PVMonitorStepProperties.FACTORY_ID,   
         MonitorDownloadStepProperties.FACTORY_ID,   
-        ManualDataEntryStepProperties.FACTORY_ID,   
+        ManualDataEntryStepProperties.FACTORY_ID,    
 	};
 
 	public static List<String> longRunningFactoryIds = Arrays.asList(new String[]{

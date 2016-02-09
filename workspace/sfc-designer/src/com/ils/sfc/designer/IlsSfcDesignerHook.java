@@ -54,6 +54,7 @@ import com.inductiveautomation.ignition.designer.model.menu.JMenuMerge;
 import com.inductiveautomation.ignition.designer.model.menu.MenuBarMerge;
 import com.inductiveautomation.ignition.designer.model.menu.WellKnownMenuConstants;
 import com.inductiveautomation.sfc.SFCModule;
+import com.inductiveautomation.sfc.api.elements.StepFactory;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistryProvider;
@@ -194,6 +195,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     		configRegistry.register(factoryId, editorFactory);
     	} 
     	configRegistry.register(ExampleStepProperties.FACTORY_ID, new DesignerStepEditorFactory(context));
+    	configRegistry.register("config", new DesignerStepEditorFactory(context));
     	IlsClientScripts.setContext(context);
     	// Provide a central repository for the structure of the charts
     	structureManager = new ChartStructureManager(context.getGlobalProject().getProject(),stepRegistry);
