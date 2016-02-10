@@ -15,6 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.ils.sfc.common.step.TimedDelayStepProperties;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -595,6 +596,13 @@ public class IlsProperty {
 			else {
 				transValue = g2ValueTrans.get(g2Value);
 			}
+			
+			// special cases:
+			if(TimedDelayStepProperties.FACTORY_ID.equals(factoryId) && 
+				"local".equals(g2Value.toLowerCase())) {
+				transValue = Constants.STATIC;
+			}
+			
 			//logger.infof("factoryId %s prop %s g2 value %s -> enum %s", factoryId, property.getName(), g2Value, transValue);
 			if(transValue == null) {
 				transValue = Constants.TRANSLATION_ERROR;
