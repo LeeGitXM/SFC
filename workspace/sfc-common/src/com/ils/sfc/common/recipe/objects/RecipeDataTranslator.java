@@ -89,7 +89,7 @@ public class RecipeDataTranslator {
 		g2ToIgName.put("units", Constants.UNITS);
 		g2ToIgName.put("update-frequency", Constants.UPDATE_FREQUENCY);
 		g2ToIgName.put("val", Constants.VALUE);
-		g2ToIgName.put("val-type", Constants.TYPE);
+		g2ToIgName.put("val-type", Constants.OUTPUT_TYPE);
 		g2ToIgName.put("write-confirm", Constants.WRITE_CONFIRM);
 
 		// for the weird EM-RECIPE-DATA, just translate directly for the moment:

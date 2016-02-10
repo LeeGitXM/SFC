@@ -18,6 +18,7 @@ import javax.swing.table.TableCellRenderer;
 
 import com.ils.sfc.common.rowconfig.RowConfig;
 import com.ils.sfc.designer.ColumnSelectionAdapter;
+import com.ils.sfc.designer.TableTabSelectionListener;
 import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.panels.EditorPanel;
 import com.ils.sfc.designer.propertyEditor.ValueHolder;
@@ -81,7 +82,7 @@ public abstract class RowEditorPanel extends EditorPanel implements ValueHolder 
 	protected JPanel createTablePanel(final JTable table, JPanel tablePanel,
 		TableCellEditor cellEditor, TableCellRenderer cellRenderer) {
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		//table.setCellSelectionEnabled(true);
+		table.setCellSelectionEnabled(true);
 		table.getColumnModel().addColumnModelListener(new ColumnSelectionAdapter() {
 			 public void columnSelectionChanged(ListSelectionEvent e) {
 				columnSelected(table.getSelectedColumn());
@@ -90,6 +91,8 @@ public abstract class RowEditorPanel extends EditorPanel implements ValueHolder 
 		table.setRowHeight(20);
 		table.setRowMargin(3);	
 		table.setShowGrid(true);
+		table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+		//table.getSelectionModel().addListSelectionListener(new TableTabSelectionListener(table));
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setBorder(
 			new CompoundBorder(
