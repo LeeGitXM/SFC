@@ -20,7 +20,6 @@ import javax.swing.table.TableCellRenderer;
 
 import com.ils.sfc.common.rowconfig.RowConfig;
 import com.ils.sfc.designer.ColumnSelectionAdapter;
-import com.ils.sfc.designer.TableTabSelectionListener;
 import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.panels.EditorPanel;
 import com.ils.sfc.designer.propertyEditor.ValueHolder;
@@ -105,7 +104,6 @@ public abstract class RowEditorPanel extends EditorPanel implements ValueHolder 
 			
 		});
 		table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
-		//table.getSelectionModel().addListSelectionListener(new TableTabSelectionListener(table));
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setBorder(
 			new CompoundBorder(
