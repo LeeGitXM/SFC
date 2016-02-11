@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -91,6 +93,17 @@ public abstract class RowEditorPanel extends EditorPanel implements ValueHolder 
 		table.setRowHeight(20);
 		table.setRowMargin(3);	
 		table.setShowGrid(true);
+		table.addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {}
+			public void keyPressed(KeyEvent e) {}
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode() == 9) {
+					table.editCellAt(table.getSelectedRow(), table.getSelectedColumn());
+					table.getEditorComponent().requestFocusInWindow();
+				}
+			}
+			
+		});
 		table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 		//table.getSelectionModel().addListSelectionListener(new TableTabSelectionListener(table));
 		JScrollPane scroll = new JScrollPane(table);
