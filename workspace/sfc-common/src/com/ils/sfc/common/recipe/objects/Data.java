@@ -465,21 +465,6 @@ public abstract class Data {
 		}
 	}
 
-	/** If the UDT tag exists and has a different value from the
-	 *  data, use the value from the tag. */
-	public void readFromTags() {
-		if(isGroup() || !tagExists()) return;
-		for(PropertyValue<?> pv: properties) {
-			Object pvalue = pv.getValue();
-			Object tagValue = getTagValue(pv.getProperty());
-			if(tagValue instanceof Date) {
-				tagValue = Constants.DATE_FORMAT.format((Date)tagValue);
-			}
-			if(!IlsSfcCommonUtils.equal(pvalue, tagValue)) {
-				setValue(pv.getProperty(), tagValue);
-			}
-		}
-	}
 
 	/** Remove the UDT tag corresponding to this object. */
 	public void deleteTag() {
@@ -527,17 +512,6 @@ public abstract class Data {
 			logger.error("Recipe Data tag existence check failed", e);
 			return false;
 		}				
-	}
-
-	public void readTreeFromTags() {
-		if(isGroup()) {
-			for(Data data: ((Group)this).getChildren()) {
-				data.readTreeFromTags();
-			}
-		}
-		else {
-			readFromTags();
-		}
 	}
 	
 	/** Get string representation of the value, using empty string for null. */

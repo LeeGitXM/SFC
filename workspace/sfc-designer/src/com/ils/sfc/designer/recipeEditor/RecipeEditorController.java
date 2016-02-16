@@ -1,12 +1,16 @@
 package com.ils.sfc.designer.recipeEditor;
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 
 import org.json.JSONObject;
 
+import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.designer.EditorErrorHandler;
@@ -34,6 +38,7 @@ public class RecipeEditorController extends PanelController implements EditorErr
 	static final int TAG_BROWSER = 6;
 	static final int UNIT_CHOOSER = 7;
 	static final int EMPTY_PANE = 8;
+	static final int LOADING_PANE = 9;
 	
 	// The sub-panes:
 	private RecipeBrowserPane browser = new RecipeBrowserPane(this, BROWSER);
@@ -62,6 +67,10 @@ public class RecipeEditorController extends PanelController implements EditorErr
 		slidingPane.add(tagBrowser);
 		slidingPane.add(unitChooser);
 		slidingPane.add(new JPanel());  // a blank pane
+		JPanel loadingPane = new JPanel(new BorderLayout());
+		JLabel loadingLabel = new JLabel("Loading Recipe Data Tag Values...");
+		loadingPane.add(loadingLabel);
+		slidingPane.add(loadingPane);  // a blank pane
 		slideTo(EMPTY_PANE);
 	}	
 	
@@ -116,13 +125,16 @@ public class RecipeEditorController extends PanelController implements EditorErr
 		String stepName = element.get(IlsProperty.NAME);
 		String stepPath = chartPath + "/" + stepName;
 		creator.setChartPath(stepPath);
+		
 		if(element.contains(ChartStepProperties.AssociatedData)) {
 			JSONObject associatedData = element.getOrDefault(ChartStepProperties.AssociatedData);
 			try {
 				//System.out.println(associatedData.toString());
 				List<Data> recipeData = Data.fromAssociatedData(associatedData);
+				String provider = IlsClientScripts.getProviderName(false);
 				for(Data data: recipeData) {
 					data.setStepPath(stepPath);
+					data.setProvider(provider);
 				}
 				setRecipeData(recipeData);
 			} catch (Exception e) {
@@ -133,7 +145,11 @@ public class RecipeEditorController extends PanelController implements EditorErr
 		else {
 			setRecipeData(new ArrayList<Data>());			
 		}
+		
+		RecipeDataTagReader.reader.readRecipeDataTagValues(this);	
+
 	}
+
 	
 	public void commit() {
 		if(recipeData == null) return;
@@ -154,13 +170,5 @@ public class RecipeEditorController extends PanelController implements EditorErr
 		showMessage(msg, OBJECT_EDITOR);		
 	}
 
-	public void readRecipeDataFromTags() {
-		long startMillis = System.currentTimeMillis();
-		for(Data data: recipeData) {
-			data.readTreeFromTags();
-		}
-		long endMillis = System.currentTimeMillis() - startMillis;
-		logger.infof("tag values for recipe data read in %d seconds ", endMillis/1000);
-	}
 
 }

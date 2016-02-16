@@ -52,8 +52,6 @@ public class RecipeEditorFrame extends com.jidesoft.docking.DockableFrame implem
 			long resourceId = sfcWorkspace.getSelectedContainer().getResourceId();
 			String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
 			controller.setElement(stepComponent.getElement(), chartPath);
-			controller.readRecipeDataFromTags();
-			controller.getBrowser().activate(-1);
 		}
 		else {
 			// either no step was selected, or it was a multiple selection
