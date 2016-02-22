@@ -10,6 +10,9 @@ import org.w3c.dom.Element;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
+import com.ils.sfc.common.StepPropertyValidator;
+import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer.ChartInfo;
+
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertySet;
@@ -154,5 +157,8 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 		return props;
 	}
 
+	public void validate(ChartInfo chart, ChartUIElement element, StepPropertyValidator validator) {
+	}
+	
 }
 

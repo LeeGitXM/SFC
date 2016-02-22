@@ -211,7 +211,6 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
         	associatedData = new JSONObject();
     		element.set(ChartStepProperties.AssociatedData, associatedData);
         }
-	}	 
-	
+	}	 	
 
 }

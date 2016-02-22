@@ -7,7 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.step.OperationStepProperties;
+import com.ils.sfc.common.step.PhaseStepProperties;
+import com.ils.sfc.common.step.ProcedureStepProperties;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.project.Project;
@@ -29,10 +34,25 @@ public class SimpleHierarchyAnalyzer {
 	private Project globalProject;
 	private StepRegistry stepRegistry;
 	private Map<String, List<EnclosureInfo>> parentsByChildChartPath = new HashMap<String, List<EnclosureInfo>>();
-	private Property<String> stepNameProperty = EnclosingStepProperties.Name;
-	private Property<String> factoryIdProperty = EnclosingStepProperties.FactoryId;
-	private Property<String> chartPathProperty = EnclosingStepProperties.CHART_PATH;
-	private Property<ChartUIModel> parallelChildrenProperty = new BasicProperty<ChartUIModel>("parallel-children", ChartUIModel.class);
+	private Map<String,ChartInfo> chartsByPath = new HashMap<String,ChartInfo>();
+
+	private static final Property<String> stepNameProperty = EnclosingStepProperties.Name;
+	private static final Property<String> factoryIdProperty = EnclosingStepProperties.FactoryId;
+	private static final Property<String> chartPathProperty = EnclosingStepProperties.CHART_PATH;
+	private static final Property<ChartUIModel> parallelChildrenProperty = new BasicProperty<ChartUIModel>("parallel-children", ChartUIModel.class);
+
+	public static class ChartInfo {
+		public ChartUIModel model;
+		public String path;
+		public long resourceId;
+		
+		public ChartInfo(ChartUIModel model, String path, long resourceId) {
+			super();
+			this.model = model;
+			this.path = path;
+			this.resourceId = resourceId;
+		}
+	}
 	
 	/** Info about enclosing steps in other charts that enclose a given chart. */
 	public static class EnclosureInfo {
@@ -40,15 +60,17 @@ public class SimpleHierarchyAnalyzer {
 		public String parentChartPath;
 		public String parentStepName;
 		public String parentStepFactoryId;
+		public ChartUIElement parentElement;
 		public String messageQueue;
 		
 		public EnclosureInfo(String childChartPath, String parentChartPath, 
-			String parentStepName, String parentStepFactoryId, String messageQueue) {
+			String parentStepName, String parentStepFactoryId, String messageQueue,  ChartUIElement parentElement) {
 			this.childChartPath = childChartPath;
 			this.parentChartPath = parentChartPath;
 			this.parentStepName = parentStepName;
 			this.parentStepFactoryId = parentStepFactoryId;
 			this.messageQueue = messageQueue;
+			this.parentElement = parentElement;
 		}
 	}
 	
@@ -66,8 +88,9 @@ public class SimpleHierarchyAnalyzer {
 					byte[] chartResourceData = res.getData();					
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 					ChartUIModel uiModel = ChartUIModel.fromXML(xmlInput, stepRegistry );					
-					String parentChartPath = globalProject.getFolderPath(res.getResourceId());
-					analyzeModel(uiModel, parentChartPath);					
+					String chartPath = globalProject.getFolderPath(res.getResourceId());
+					chartsByPath.put(chartPath, new ChartInfo(uiModel, chartPath, res.getResourceId()));
+					analyzeModel(uiModel, chartPath);					
 				}
 				catch(Exception e) {
 					log.errorf("IO exception deserializing char)", e);
@@ -89,7 +112,7 @@ public class SimpleHierarchyAnalyzer {
 					parentsByChildChartPath.put(childChartPath, parentEnclosures);
 				}
 				parentEnclosures.add(new EnclosureInfo(childChartPath, 
-					parentChartPath, parentStepPath, parentStepFactoryId, messageQueue));
+					parentChartPath, parentStepPath, parentStepFactoryId, messageQueue, element));
 			}
 			else if(element.getProperties().contains(parallelChildrenProperty)) {
 				ChartUIModel parallelChildrenModel = element.get(parallelChildrenProperty);
@@ -128,6 +151,33 @@ public class SimpleHierarchyAnalyzer {
 		return enclosures;
 	}
 
+	/** Get the ChartUIElement for the given recipe data scope, or null if not found. */
+	public ChartUIElement getElementForScope(String scope, String childChartPath, ChartUIElement referencingElement) {
+		if(scope.equals(Constants.LOCAL)) return referencingElement;
+		List<EnclosureInfo> parents = getEnclosureHierarchyBottomUp(childChartPath, true);
+		if(parents.size() == 0) return null;
+		if(scope.equals(Constants.SUPERIOR)) {
+			return parents.get(0).parentElement;
+		}
+		else {
+			for(EnclosureInfo parent: parents) {
+				if(scope.equals(Constants.PHASE) && 
+				    parent.parentStepFactoryId.equals(PhaseStepProperties.FACTORY_ID)) {
+					return parent.parentElement;
+				}
+				else if(scope.equals(Constants.OPERATION) && 
+					parent.parentStepFactoryId.equals(OperationStepProperties.FACTORY_ID)) {
+					return parent.parentElement;
+				}
+				else if(scope.equals(Constants.GLOBAL) && 
+					  parent.parentStepFactoryId.equals(ProcedureStepProperties.FACTORY_ID)) {
+					return parent.parentElement;
+				}
+			}
+		}
+		return null;
+	}
+	
 	/** Get the message queue, as inferred from property settings in enclosing Foundation steps.
 	 *  Returns null if none found.
 	 */
@@ -142,4 +192,9 @@ public class SimpleHierarchyAnalyzer {
 		}
 		return queue;
 	}
+
+	public Map<String, ChartInfo> getChartsByPath() {
+		return chartsByPath;
+	}
+
 }

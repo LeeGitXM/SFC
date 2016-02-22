@@ -22,6 +22,7 @@ import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
+import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -538,6 +539,36 @@ public abstract class Data {
 		addLabelValue(IlsProperty.VALUE, buf);
 		addLabelValue(IlsProperty.UNITS, buf);
 		return buf.toString();
+	}
+
+	public static List<Data> fromStepProperties(PropertySet stepProperties) throws Exception {
+		JSONObject assDataJson = stepProperties.get(IlsProperty.ASSOCIATED_DATA);
+		if(assDataJson != null) {
+			return fromAssociatedData(assDataJson);
+		}
+		else {
+			return null;
+		}
+	}
+	
+	/** Check if the given access path, e.g. "myValue.value", is valid
+	 *  for the given collection of recipe data. */
+	public static boolean hasPath(List<Data> datas, String path) {
+		String[] keys = path.split("\\.");
+		for(Data data: datas) {
+			if(keys.length > 0 && data.getKey().equals(keys[0])) {
+				if(data.isGroup() ) {
+					return hasPath(((Group)data).getChildren(), 
+						path.substring(path.indexOf(".")+1, path.length()));
+				}
+				else {
+					if(data.hasProperty(keys[1])) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 }

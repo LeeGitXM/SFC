@@ -46,13 +46,11 @@ public class IlsChartObserver implements ChartObserver {
 		for(ChartElement<?> element: chartContext.getElements()) {
 			if(element instanceof StepElement) {
 				StepElement stepElement = (StepElement)element;
-				PropertySet stepProperties = stepElement.getDefinition().getProperties();
-				JSONObject assDataJson = stepProperties.get(IlsProperty.ASSOCIATED_DATA);
-				if(assDataJson == null) continue;
-				String stepName = stepProperties.get(IlsProperty.NAME);
-				String stepPath = chartPath + "/" + stepName;
 				try {
-					List<Data> recipeData = Data.fromAssociatedData(assDataJson);
+					PropertySet stepProperties = stepElement.getDefinition().getProperties();
+					List<Data> recipeData = Data.fromStepProperties(stepProperties);
+					String stepName = stepProperties.get(IlsProperty.NAME);
+					String stepPath = chartPath + "/" + stepName;
 					for(Data data: recipeData) {
 						data.setProvider(tagProvider);
 						data.setStepPath(stepPath);

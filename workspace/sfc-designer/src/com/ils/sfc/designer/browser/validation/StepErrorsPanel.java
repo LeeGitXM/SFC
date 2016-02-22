@@ -10,6 +10,8 @@ import java.util.zip.GZIPInputStream;
 
 import javax.swing.table.DefaultTableModel;
 
+import com.ils.sfc.common.StepPropertyValidator;
+import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AllSteps;
 import com.ils.sfc.designer.browser.BrowserConstants;
 import com.ils.sfc.designer.browser.ChartTreeDataModel;
@@ -79,13 +81,18 @@ public class StepErrorsPanel extends AbstractChartValidationPanel {
 			}
 			table.setModel(tableModel);
 		}
+		
+		List<Object[]> errors = StepPropertyValidator.validate(
+			context.getGlobalProject().getProject(), registry);
+		for(Object[] error: errors) {
+			tableModel.addRow(error);
+		}
 	}
 	
 	// Check the steps for any problems with attributes
 	private void traverseSteps(ProjectResource chartResource,Table nodes,Map<String,Integer> lookup,DefaultTableModel model,List<ElementDefinition> steps) {
 		int ncols = columnNames.length;
 		Object[] tableRow = new Object[ncols];
-		
 		for( ElementDefinition step:steps) {
 			if( step instanceof StepDefinition ) {
 				StepDefinition stepDef = (StepDefinition)step;
@@ -130,4 +137,5 @@ public class StepErrorsPanel extends AbstractChartValidationPanel {
 
 		}
 	}
+
 }
