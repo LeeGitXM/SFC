@@ -143,7 +143,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('rx-type','ils.s
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('sequence','');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('set_output-gda','ils.diagToolkit.util.setOutput');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('set-rx-nlc-problem','ils.diagToolkit.util.setRxNlcProblem');
-insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('sf3-rules-set-attribute','ils.diagToolkit.rules.setSf3Attribute');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('sf3-rules-set-attribute','xom.vistalon.diagToolkit.crx.SetTimeForSF3.setTime');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-catout-data-collector-c-reactor-ss','ils.sfc.python.s88CatoutCReactor.collect');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-copy-recipe-data','ils.sfc.gateway.api.s88CopyData');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-delete-recipe-data','ils.sfc.gateway.api.s88DeleteData');
