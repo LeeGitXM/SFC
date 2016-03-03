@@ -356,9 +356,8 @@ insert into TagMap values ('[the target of POLYSPLIT-DATA]','[]LabData/RLA3/POLY
 insert into TagMap values ('[the target of PROD-ML-LAB-DATA]','[]LabData/RLA3/PROD-ML-LAB-DATA-SQC/target','DOUBLE');
 insert into TagMap values ('[the target of STAB-LAB-DATA]','[]LabData/RLA3/STAB-LAB-DATA-SQC/target','DOUBLE');
 insert into TagMap values ('[the target of c9-lab-data]','[]LabData/RLA3/C9-LAB-DATA-SQC/target','DOUBLE');
-
 insert into TagMap values ('[the time-of-most-recent-grade-change of rla3-run-hours]','[]Site/RLA3/Grade/timeOfMostRecentGradeChange','INTEGER');
-insert into TagMap values ('[the time-of-most-recent-recommendation-implementation of frnt-short_use_temp-gda]','[]Tags/FRNT-SHORT-USE-TEMP-GDA/implementationTime','INTEGER');
+insert into TagMap values ('[the time-of-most-recent-recommendation-implementation of frnt_short_use_temp-gda]','[]Site/CRX/FRNT-SHORT-USE-TEMP-IMP-TIME','INTEGER');
 insert into TagMap values ('[the top-message-text of dr-oc-alert-msg]','[]DR/OC-ALERT-MSG','STRING');
 insert into TagMap values ('[the _result of heat-soak-timeout]','[]DR/HEAT-SOAK-TIMEOUT/result','BOOLEAN');
 insert into TagMap values ('[the upper_limit of MOONEY-LAB-DATA]','[]LabData/RLA3/MOONEY-LAB-DATA/upperLimit','DOUBLE');
