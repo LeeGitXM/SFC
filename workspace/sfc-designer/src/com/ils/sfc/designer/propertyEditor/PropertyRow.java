@@ -8,6 +8,7 @@ import system.ils.sfc.common.Constants;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
+import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
@@ -43,13 +44,13 @@ public class PropertyRow {
 	
 	public Object[] getChoices() {
 		if(propertyValue.getProperty().equals(IlsProperty.MESSAGE_QUEUE)) {
-			try {
-    			Object[] args = {null};
-				return PythonCall.toArray(PythonCall.GET_QUEUE_NAMES.exec(args));
-			} catch (JythonExecException e) {
-				logger.error("Error getting message queue names", e);
-				return null;
-			}
+			return getChoicesFromPythonCall(PythonCall.GET_QUEUE_NAMES);
+		}
+		else if(
+			propertyValue.getProperty().equals(IlsProperty.ARRAY_KEY) ||
+			propertyValue.getProperty().equals(IlsProperty.ROW_KEY) ||
+			propertyValue.getProperty().equals(IlsProperty.COLUMN_KEY) ) {
+			return getChoicesFromPythonCall(PythonCall.GET_INDEX_NAMES);
 		}
 		else if(propertyValue.getProperty() instanceof BasicProperty) {
 			return IlsProperty.getChoices((BasicProperty<?>)propertyValue.getProperty());
@@ -59,6 +60,16 @@ public class PropertyRow {
 		}
 	}
 		
+	private Object[] getChoicesFromPythonCall(PythonCall pcall) {
+		try {
+			Object[] args = {null};
+			return PythonCall.toArray(pcall.exec(args));
+		} catch (JythonExecException e) {
+			logger.error("Error getting choices from python call " + pcall.getMethodName(), e);
+			return null;
+		}
+	}
+
 	public String getValueType() {
 		return valueType;
 	}
@@ -76,7 +87,9 @@ public class PropertyRow {
 	}
 	
 	public Object getValue() {
-		return propertyValue.getValue() != null ? propertyValue.getValue() : getDefaultValue();
+		// showing default not a good idea--misrepresents the real value and doesn't set the default
+		//return propertyValue.getValue() != null ? propertyValue.getValue() : getDefaultValue();
+		return propertyValue.getValue();
 	}
 
 	public String getCategory() {

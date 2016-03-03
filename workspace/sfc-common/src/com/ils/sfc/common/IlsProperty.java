@@ -145,7 +145,7 @@ public class IlsProperty {
 
     public static final BasicProperty<Boolean> ACK_REQUIRED = createProperty(Constants.ACK_REQUIRED, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<String> ADVICE = createProperty(Constants.ADVICE, String.class, "");
-    public static final BasicProperty<String> ARRAY_KEY = createProperty(Constants.ARRAY_KEY, String.class, Constants.NONE);
+    public static final BasicProperty<String> ARRAY_KEY = createProperty(Constants.ARRAY_KEY, String.class, null);
     public static final BasicProperty<JSONObject> ASSOCIATED_DATA = new BasicProperty<JSONObject>(Constants.ASSOCIATED_DATA, JSONObject.class, null);
     //public static final BasicProperty<String> AUDIT_LEVEL = createProperty(IlsSfcNames.AUDIT_LEVEL, String.class, IlsSfcNames.AUDIT_LEVEL_CHOICES[0], IlsSfcNames.AUDIT_LEVEL_CHOICES);
     public static final BasicProperty<String> AUTO_MODE = createProperty(Constants.AUTO_MODE, String.class, Constants.AUTO_MODE_CHOICES[0], Constants.AUTO_MODE_CHOICES);
@@ -160,7 +160,7 @@ public class IlsProperty {
     public static final BasicProperty<String> COLLECT_DATA_CONFIG = createProperty(Constants.COLLECT_DATA_CONFIG, String.class, EMPTY_COLLECT_DATA_CONFIG, true, Constants.CONFIG);
     public static final BasicProperty<String> CONFIRM_CONTROLLERS_CONFIG = createProperty(Constants.CONFIRM_CONTROLLERS_CONFIG, String.class, EMPTY_CONFIRM_CONTROLLERS_CONFIG, true, Constants.CONFIG);
     public static final BasicProperty<Integer> COLUMNS = createProperty(Constants.COLUMNS, Integer.class, 0);
-    public static final BasicProperty<String> COLUMN_KEY = createProperty(Constants.COLUMN_KEY, String.class, Constants.NONE);
+    public static final BasicProperty<String> COLUMN_KEY = createProperty(Constants.COLUMN_KEY, String.class, null);
     public static final BasicProperty<Boolean> COLUMN_KEYED = createProperty(Constants.COLUMN_KEYED, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<String> COMPUTER = createProperty(Constants.COMPUTER, String.class, Constants.COMPUTER_CHOICES[0], Constants.COMPUTER_CHOICES);
     public static final BasicProperty<String> DATA_ID = createProperty(Constants.DATA_ID, String.class, "");
@@ -171,7 +171,6 @@ public class IlsProperty {
     public static final BasicProperty<String> DIRECTORY = createProperty(Constants.DIRECTORY, String.class, "");
     public static final BasicProperty<Boolean> DOWNLOAD = createProperty(Constants.DOWNLOAD, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> DOWNLOAD_STATUS = createProperty(Constants.DOWNLOAD_STATUS, String.class, "");
-    public static final BasicProperty<Integer> ELEMENTS = createProperty(Constants.ELEMENTS, Integer.class, 0);
     public static final BasicProperty<Boolean> ENABLE_PAUSE = createProperty(Constants.ENABLE_PAUSE, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<Boolean> ENABLE_RESUME = createProperty(Constants.ENABLE_RESUME, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<Boolean> ENABLE_CANCEL = createProperty(Constants.ENABLE_CANCEL, Boolean.class, Boolean.TRUE);
@@ -185,16 +184,17 @@ public class IlsProperty {
     public static final BasicProperty<String> HEADING1 = createProperty(Constants.HEADING1, String.class, "");
     public static final BasicProperty<String> HEADING2 = createProperty(Constants.HEADING2, String.class, "");
     public static final BasicProperty<String> HEADING3 = createProperty(Constants.HEADING3, String.class, "");
-   public static final BasicProperty<String> HELP = createProperty(Constants.HELP, String.class, "");
+    public static final BasicProperty<String> HELP = createProperty(Constants.HELP, String.class, "");
     public static final BasicProperty<Double> HIGH_LIMIT = createProperty(Constants.HIGH_LIMIT, Double.class, null);
     public static final BasicProperty<String> ID = createProperty(Constants.ID, String.class, null);
     public static final BasicProperty<String> JSON_LIST = createProperty(Constants.VALUE, String.class, "[0., 0.]");
-    public static final BasicProperty<String> JSON_MATRIX = createProperty(Constants.VALUE, String.class, "[0., 0.][0., 0.]");
+    public static final BasicProperty<String> JSON_MATRIX = createProperty(Constants.VALUE, String.class, "[[0., 0.],[0., 0.]]");
     public static final BasicProperty<String> JSON_OBJECT = createProperty(Constants.VALUE, String.class, "{}", true);
     public static final BasicProperty<String> KEY = createProperty(Constants.KEY, String.class, "");
     public static final BasicProperty<Boolean> KEYED = createProperty(Constants.KEYED, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<String> KEY_MODE = createProperty(Constants.KEY_MODE, String.class, "", Constants.KEY_MODE_CHOICES);
     public static final BasicProperty<String> LABEL = createProperty(Constants.LABEL, String.class, "");
+    public static final BasicProperty<Integer> LENGTH = createProperty(Constants.LENGTH, Integer.class, 0);
     public static final BasicProperty<Double> LOW_LIMIT = createProperty(Constants.LOW_LIMIT, Double.class, null);
     public static final BasicProperty<Double> MAX_TIMING = createProperty(Constants.MAX_TIMING, Double.class, 0.);
     public static final BasicProperty<Double> MAXIMUM_VALUE = createProperty(Constants.MAXIMUM_VALUE, Double.class, 0.);
@@ -229,7 +229,7 @@ public class IlsProperty {
     public static final BasicProperty<String> REVIEW_FLOWS = createProperty(Constants.REVIEW_FLOWS, String.class, EMPTY_REVIEW_FLOWS_CONFIG, true);
     public static final BasicProperty<String> REVIEW_FLOWS_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_REVIEW_FLOWS_WINDOW, false);
     public static final BasicProperty<Integer> ROWS = createProperty(Constants.ROWS, Integer.class, 0);
-    public static final BasicProperty<String> ROW_KEY = createProperty(Constants.ROW_KEY, String.class, Constants.NONE);
+    public static final BasicProperty<String> ROW_KEY = createProperty(Constants.ROW_KEY, String.class, null);
     public static final BasicProperty<Boolean> ROW_KEYED = createProperty(Constants.ROW_KEYED, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<String> SECURITY = createProperty(Constants.SECURITY, String.class, Constants.SECURITY_CHOICES[0], Constants.SECURITY_CHOICES);
     public static final BasicProperty<String> SECONDARY_REVIEW_DATA = createProperty(Constants.SECONDARY_REVIEW_DATA, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "secondary data");
@@ -349,8 +349,15 @@ public class IlsProperty {
 			// validate that the string is a valid JSON matrix			
 			try {
 				JSONArray rows = new JSONArray(stringValue);
+				Integer rowLength = null;
 				for(int i = 0; i < rows.length(); i++) {
-					rows.getJSONArray(i); 
+					JSONArray row = rows.getJSONArray(i); 
+					if(rowLength == null) {
+						rowLength = row.length();
+					}
+					else if(rowLength != row.length()) {
+						throw new ParseException("bad matrix format: " + stringValue + "; inconsistent row length", 0);										
+					}
 				}
 			}
 			catch(JSONException e) {

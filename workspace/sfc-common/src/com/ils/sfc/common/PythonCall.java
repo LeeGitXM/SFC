@@ -150,6 +150,8 @@ public class PythonCall {
 			Double.class,  new String[]{"fromUnit", "toUnit", "value"} );
 	
 	// recipe data:
+	public static final PythonCall GET_INDEXED_VALUE = new PythonCall("ils.sfc.gateway.recipe." + "getIndexedValue", 
+			Object.class,  new String[]{"tagPath", "database", "rowIndexStr", "colIndexStr"} );
 
 	public static final PythonCall RECIPE_DATA_EXISTS = new PythonCall("ils.sfc.common.recipe." + "recipeDataTagExists", 
 			Object.class,  new String[]{"provider", "path"} );
@@ -181,6 +183,13 @@ public class PythonCall {
 
 	public static final PythonCall HANDLE_STEP_ERROR = new PythonCall("ils.sfc.gateway.util." + "handleUnexpectedGatewayError", 
 			PyList.class,  new String[]{"chartProps", "msg"} );
+
+	public static final PythonCall GET_INDEX_NAMES = new PythonCall("ils.sfc.client.util." + "getIndexNames", 
+			PyList.class,  new String[]{} );
+
+	public static final PythonCall GET_INDEX_SIZE = new PythonCall("ils.sfc.client.util." + "getIndexNames", 
+			Integer.class,  new String[]{"keyName"} );
+
 
 	//public static final PythonCall INVOKE_STEP = new PythonCall("ils.sfc.gateway.steps." + "invokeStep", 
 	//		PyList.class,  new String[]{"chartProperties", "stepProperties", "methodName"} );

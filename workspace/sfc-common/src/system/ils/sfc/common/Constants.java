@@ -85,12 +85,15 @@ public class Constants {
 	public static final String INSTANCE_ID = "instanceId";
 	public static final String ITEM_ID = "itemid";
 	public static final String ISOLATION_MODE = "isolationMode";
+	public static final String JSON_LIST = "jsonList";
+	public static final String JSON_MATRIX = "jsonMatrix";
 	public static final String LOW_LIMIT = "lowLimit";
 	public static final String LOW = "Low";
 	public static final String KEY = "key";
 	public static final String KEY_MODE = "keyMode";
 	public static final String KEYED = "keyed";
 	public static final String LABEL = "label";
+	public static final String LENGTH = "length";
 	public static final String MANUAL_DATA_CONFIG = "manualDataConfig";
 	public static final String MAX_TIMING = "maxTiming";
 	public static final String MESSAGE = "message";

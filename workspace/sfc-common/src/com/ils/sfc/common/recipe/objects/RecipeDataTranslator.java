@@ -45,11 +45,11 @@ public class RecipeDataTranslator {
 		// disabling EMData until we implement a UDT for it
 		//concreteClassesByG2Name.put("EM-RECIPE-DATA", EMData.class);
 
-		concreteClassesByG2Name.put("S88-RECIPE-SEQUENCE-DATA", RecipeList.class);
-		concreteClassesByG2Name.put("S88-RECIPE-QUANTITY-LIST-DATA", RecipeList.class);
-		concreteClassesByG2Name.put("S88-RECIPE-TEXT-LIST-DATA", RecipeList.class);
-		concreteClassesByG2Name.put("S88-RECIPE-QUANTITY-ARRAY-DATA", RecipeList.class);
-		concreteClassesByG2Name.put("S88-RECIPE-VALUE-ARRAY-DATA", RecipeList.class);
+		concreteClassesByG2Name.put("S88-RECIPE-SEQUENCE-DATA", Array.class);
+		concreteClassesByG2Name.put("S88-RECIPE-QUANTITY-LIST-DATA", Array.class);
+		concreteClassesByG2Name.put("S88-RECIPE-TEXT-LIST-DATA", Array.class);
+		concreteClassesByG2Name.put("S88-RECIPE-QUANTITY-ARRAY-DATA", Array.class);
+		concreteClassesByG2Name.put("S88-RECIPE-VALUE-ARRAY-DATA", Array.class);
 	}
 	public static final String G2_CLASS_NAME = "class-name";
 	public static final String SYMBOL_PREFIX = "the symbol ";
@@ -166,7 +166,7 @@ public class RecipeDataTranslator {
 	public void setProperty(Data data, String name, String strValue) throws JSONException, org.apache.wicket.ajax.json.JSONException {		
 		BasicProperty<?> property = data.getProperty(name);
 		
-		if(data instanceof RecipeList && property.equals(IlsProperty.VALUE)) {
+		if(data instanceof Array && property.equals(IlsProperty.VALUE)) {
 			data.setValue(property, parseListValue(strValue));
 		}
 		else if(data instanceof Matrix && property.equals(IlsProperty.VALUE)) {
@@ -211,7 +211,7 @@ public class RecipeDataTranslator {
 		// make it a List type:
 		boolean listFromValue = false;
 		if(aClass == Value.class && Constants.SEQUENCE.equals(valueType)) {
-			aClass = RecipeList.class;
+			aClass = Array.class;
 			listFromValue = true;
 		}
 		

@@ -90,13 +90,14 @@ public class RecipeDataAccess {
 	}
 
 	public static Object s88Get(PyChartScope chartScope,
-			PyChartScope stepScope, String path, String scopeIdentifier) {
+			PyChartScope stepScope, String s88Path, String scopeIdentifier) {
 		try {
 			String providerName = getProviderName(getIsolationMode(chartScope));
-			String fullPath = getRecipeDataTagPath(chartScope, stepScope, scopeIdentifier) +
-					"/" + path;
-			Object[] args = {providerName, fullPath};
-			Object value = PythonCall.GET_RECIPE_DATA.exec(args);
+			Object value = null;
+			String tagPath = getRecipeDataTagPath(chartScope, stepScope, scopeIdentifier) +
+				"/" + s88Path;
+			Object[] args = {providerName, tagPath};
+			value = PythonCall.GET_RECIPE_DATA.exec(args);
 			return value;
 		} catch (JythonExecException e) {
 			logChartError(chartScope, "Recipe Data tag read failed", e);

@@ -19,12 +19,14 @@ import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
+import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
+import com.inductiveautomation.ignition.common.util.DatasetBuilder;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.PyChartScope;
@@ -454,18 +456,85 @@ public abstract class Data {
 	private void basicWriteToTags() {
 		try {
 			for(PropertyValue<?> pval: getProperties()) {
-			String attributePath = getTagAttributePath(pval.getProperty());
-			Object value = getValue(pval.getProperty());
-			// note: Ignition will not allow a synchronous tag write from
-			// a UI thread, so writes from Designer UI must be async
-			Object[] setArgs = {provider, attributePath, value, false};
-			PythonCall.SET_RECIPE_DATA.exec(setArgs);
+				String attributePath = getTagAttributePath(pval.getProperty());
+				Object value = getValue(pval.getProperty());
+				if(value != null && pval.getProperty() == IlsProperty.JSON_MATRIX) {
+					value = createDataset((String)value);
+				}
+				else if(value != null && pval.getProperty() == IlsProperty.JSON_LIST) {
+					value = createArray((String)value);
+				}
+				// note: Ignition will not allow a synchronous tag write from
+				// a UI thread, so writes from Designer UI must be async
+				Object[] setArgs = {provider, attributePath, value, false};
+				PythonCall.SET_RECIPE_DATA.exec(setArgs);
 			}
 		} catch (JythonExecException e) {
 			logger.error("Recipe Data write to tags failed", e);
 		}
 	}
 
+
+	/** Create a dataset from a JSON array-of-arrays */
+	protected double[] createArray(String value) {
+		try {
+			JSONArray jarray = new JSONArray((String)value);
+			double[] array = new double[jarray.length()];
+			for(int i = 0; i < jarray.length(); i++) {
+				array[i] = jarray.getDouble(i);
+			}
+			return array;
+		}
+		catch(Exception e) {
+			logger.error("Error converting JSON array to dataset", e);
+		}
+		return null;
+	}
+
+	protected int getIndexSize(String keyName) {
+		Object[] args = new Object[] {keyName};
+		try {
+			Integer count = (Integer)PythonCall.GET_INDEX_SIZE.exec(args);
+			return count.intValue();
+		}
+		catch(Exception e) {
+			logger.error("Error getting index count", e);
+			return 0;
+		}
+	}
+	
+	protected Dataset createDataset(String value) {
+		try {
+			JSONArray rows = new JSONArray((String)value);
+			int rowCount = rows.length();
+			if(rowCount > 0) {
+				JSONArray firstRow = rows.getJSONArray(0);
+				int colCount = firstRow.length();
+				Class<?>[] colTypes = new Class<?>[colCount];
+				String[] colNames = new String[colCount];
+				for(int i = 0; i < colCount; i++) {
+					colTypes[i] = Double.class;
+					colNames[i] = "";
+				}
+				DatasetBuilder builder = DatasetBuilder.newBuilder();
+				builder.colTypes(colTypes);
+				builder.colNames(colNames);
+				for(int i = 0; i < rows.length(); i++) {
+					Object[] values = new Object[colCount];
+					JSONArray row = rows.getJSONArray(i); 
+					for(int j = 0; j < colCount; j++) {
+						values[j] = row.getDouble(j);
+					}
+					builder.addRow(values);
+				}
+				return builder.build();
+			}
+		}
+		catch(Exception e) {
+			logger.error("Error converting JSON matrix to dataset", e);
+		}
+		return null;
+	}
 
 	/** Remove the UDT tag corresponding to this object. */
 	public void deleteTag() {
@@ -495,6 +564,9 @@ public abstract class Data {
 		Object[] args = {provider, valuePath};
 		try {
 			Object value = PythonCall.GET_RECIPE_DATA.exec(args);
+			if(value instanceof Dataset) {
+				value = fromDataset((Dataset)value);
+			}
 			return value;
 		} catch (JythonExecException e) {
 			logger.error("Recipe Data tag read failed", e);
@@ -502,6 +574,27 @@ public abstract class Data {
 		}		
 	}
 	
+	/** Convert a dataset to a JSON array-of-arrays */
+	private String fromDataset(Dataset dataset) {
+		try {
+			JSONArray rows = new JSONArray();
+			for(int i = 0; i < dataset.getRowCount(); i++) {
+				JSONArray row = new JSONArray();
+				for(int j = 0; j < dataset.getColumnCount(); j++) {
+					Double value = (Double)dataset.getValueAt(i, j);
+					row.put(value.doubleValue());
+				}
+				rows.put(row);
+			}
+			String json = rows.toString();
+			return json;
+		}
+		catch(Exception e) {
+			logger.error("Error converting dataset to json", e);
+			return null;
+		}
+	}
+
 	/** Check if the UDT tag corresponding to this object exists. */
 	public boolean tagExists() {
 		String tagPath = getTagPath();
@@ -569,6 +662,10 @@ public abstract class Data {
 			}
 		}
 		return false;
+	}
+
+	public String validate() {
+		return null;
 	}
 	
 }

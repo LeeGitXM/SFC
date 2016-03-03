@@ -110,7 +110,11 @@ public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder
 		String provider = IlsClientScripts.getProviderName(false);
 		recipeData.setProvider(provider);
 		recipeData.writeToTags();		
-		if(IlsSfcCommonUtils.isEmpty(recipeData.getKey())) {
+		String validationErrorMsg = recipeData.validate();
+		if(validationErrorMsg != null) {
+			controller.showMessage(validationErrorMsg, RecipeEditorController.OBJECT_EDITOR);
+		}
+		else if(IlsSfcCommonUtils.isEmpty(recipeData.getKey())) {
 			controller.showMessage("A key is required", RecipeEditorController.OBJECT_EDITOR);
 		}
 		else {
