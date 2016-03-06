@@ -118,7 +118,7 @@ insert into BltAnchorMap values ('GDL-OR-GATE','DP-OUT','out','');
 insert into BltAnchorMap values ('GDL-OR-GATE','IP-IN','in','');
 insert into BltAnchorMap values ('GDL-OR-GATE','IP-OUT','out','');
 insert into BltAnchorMap values ('GDL-SYMBOLIC-ENTRY-POINT','DP-OUT','out','');
-insert into BltAnchorMap values ('GDL-TIMER','IP-IN','','');
+insert into BltAnchorMap values ('GDL-TIMER','IP-IN','in','');
 insert into BltAnchorMap values ('GDL-TIMER','DP-OUT','out','');
 insert into BltAnchorMap values ('LOGICAL-VARIABLE','IP-IN','in','');
 insert into BltAnchorMap values ('LOGICAL-VARIABLE','IP-OUT','out','');
