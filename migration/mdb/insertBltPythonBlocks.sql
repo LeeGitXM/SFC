@@ -19,19 +19,22 @@ insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis
 insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','editorClass','com.ils.blt.designer.config.FinalDiagnosisConfiguration');
 insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','transmitEnabled','true');
 insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','viewBackgroundColor','16580350');
-insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','viewLabel','Final Diagnosis');
-insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','viewFontSize','24');
+insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','viewLabel','Final
+Diagnosis');
+insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','viewFontSize','14');
 insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','viewHeight','80');
 insert into BltPythonPrototypes values ('xom.block.finaldiagnosis.FinalDiagnosis','viewWidth','100');
 
 insert into BltPythonPrototypes values ('xom.block.sqcdiagnosis.SQCDiagnosis','blockstyle','SQUARE');
-insert into BltPythonPrototypes values ('xom.block.sqcdiagnosis.SQCDiagnosis','viewLabel','SQC Diagnosis');
-insert into BltPythonPrototypes values ('xom.block.sqcdiagnosis.SQCDiagnosis','viewFontSize','24');
+insert into BltPythonPrototypes values ('xom.block.sqcdiagnosis.SQCDiagnosis','viewLabel','SQC
+Diagnosis');
+insert into BltPythonPrototypes values ('xom.block.sqcdiagnosis.SQCDiagnosis','viewFontSize','14');
 insert into BltPythonPrototypes values ('xom.block.sqcdiagnosis.SQCDiagnosis','viewHeight','80');
 insert into BltPythonPrototypes values ('xom.block.sqcdiagnosis.SQCDiagnosis','viewWidth','100');
 insert into BltPythonPrototypes values ('xom.block.subdiagnosis.SubDiagnosis','blockstyle','SQUARE');
-insert into BltPythonPrototypes values ('xom.block.subdiagnosis.SubDiagnosis','viewLabel','Sub Diagnosis');
-insert into BltPythonPrototypes values ('xom.block.subdiagnosis.SubDiagnosis','viewFontSize','24');
+insert into BltPythonPrototypes values ('xom.block.subdiagnosis.SubDiagnosis','viewLabel','Sub
+Diagnosis');
+insert into BltPythonPrototypes values ('xom.block.subdiagnosis.SubDiagnosis','viewFontSize','14');
 insert into BltPythonPrototypes values ('xom.block.subdiagnosis.SubDiagnosis','viewHeight','80');
 insert into BltPythonPrototypes values ('xom.block.subdiagnosis.SubDiagnosis','viewWidth','100');
 
