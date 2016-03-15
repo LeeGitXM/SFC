@@ -23,6 +23,7 @@ public interface SaveDataStepProperties extends ChartStepProperties {
     	EXTENSION,
     	TIMESTAMP,
     	PRINT_FILE,
+    	SHOW_PRINT_DIALOG,
     	VIEW_FILE
     	};
 }
