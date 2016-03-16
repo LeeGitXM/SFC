@@ -18,9 +18,9 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.api.StepRegistry;
 import com.inductiveautomation.sfc.api.XMLParseException;
-import com.inductiveautomation.sfc.definitions.ElementDefinition.ElementType;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 import com.inductiveautomation.sfc.uimodel.ChartUIModel;
+import com.inductiveautomation.sfc.uimodel.ElementType;
 
 /** This class handles cleaning up orphan recipe data tags resulting from chart step deletion. */
 public class RecipeDataCleaner implements ProjectChangeListener {
@@ -68,7 +68,8 @@ public class RecipeDataCleaner implements ProjectChangeListener {
 		ChartUIModel uiModel = ChartUIModel.fromXML(xmlInput, stepRegistry );
 		Set<String> stepNames = new HashSet<String>();
 		for(ChartUIElement element: uiModel.getChartElements()) {
-			if(element.getType().equals(ElementType.Step)) {
+			ElementType elementType = element.getType();
+			if(elementType.equals(ElementType.Step)) {
 				String name = element.get(nameProperty);
 				stepNames.add(name);
 			}

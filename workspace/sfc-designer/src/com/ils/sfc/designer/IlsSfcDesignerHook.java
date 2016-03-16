@@ -186,7 +186,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		stepRegistry.register(ExampleStepUI.FACTORY);
         SFCDesignerHook.get(context).register(ExampleStepProperties.FACTORY_ID, new DesignerStepEditorFactory(context));				
 		recipeDataCleaner = new RecipeDataCleaner(context, stepRegistry);
-		context.addProjectChangeListener(recipeDataCleaner);
+		context.getGlobalProject().addProjectChangeListener(recipeDataCleaner);
 		    	
 		// register the step config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory(context);

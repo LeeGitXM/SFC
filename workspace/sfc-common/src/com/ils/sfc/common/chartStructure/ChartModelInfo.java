@@ -28,7 +28,7 @@ public class ChartModelInfo {
 	private void initializeLogger(String path) {
 		// Use the chart-specific logger to announce its creation
 		LoggerEx logger = LogUtil.getLogger(path);
-		logger.infof("%s.initilize: Created chart resource and logger  %s",TAG,path);
-		log.infof("%s.initilize: Created chart resource  %s",TAG,path);
+		logger.debugf("%s.initilize: Created chart resource and logger  %s",TAG,path);
+		log.debugf("%s.initilize: Created chart resource  %s",TAG,path);
 	}
 }
