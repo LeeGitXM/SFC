@@ -110,9 +110,18 @@ public class ProjectDebugger {
 								}
 								// If we get an exception, then try without the Gzip
 								catch(IOException ioe) {
+									System.out.println("\n IOException:" + ioe.getLocalizedMessage());
 									ProjectResource pr = new ProjectResource(42L,"com.inductiveautomation.sfc","FolderName",
 											ProjectResource.FOLDER_RESOURCE_TYPE,ApplicationScope.DESIGNER,bytes);
-									System.out.println("\n" + pr.getDataAsUUID().toString());
+									try {
+										System.out.println("\n" + pr.getDataAsUUID().toString());
+									}
+									catch(ClassCastException cce) {
+										System.out.println("\nClassCastException: " + cce.getLocalizedMessage());
+									}
+								}
+								catch(Exception ex) {
+									System.out.println("\nException:" + ex.getLocalizedMessage());
 								}
 							}
 						}
