@@ -77,13 +77,15 @@ public class ProjectDebugger {
 		if( !ok ) return;
 		NodeList resourceList = doc.getElementsByTagName("resource");
 		
-		System.out.println("\n---------------------------------------------------");
+		System.out.println("\n----------------------------------------------------------------------------");
 		for (int res = 0; res < resourceList.getLength(); res++) {
 			Node resourceNode = resourceList.item(res);
 			if (resourceNode.getNodeType() == Node.ELEMENT_NODE) {
 				Element resourceElement = (Element)resourceNode;
 				String name = resourceElement.getAttribute("name");
-				System.out.println("Resource: " + name+" ...");
+				String id = resourceElement.getAttribute("id");
+				String type = resourceElement.getAttribute("type");
+				System.out.println(String.format("Resource(%s): %s (%s) ...",id,name,type));
 				
 				NodeList bytesList = resourceElement.getElementsByTagName("bytes");
 				for (int dataId = 0; dataId < bytesList.getLength(); dataId++) {
@@ -95,7 +97,7 @@ public class ProjectDebugger {
 							CharacterData child = (CharacterData) list.item(indx);
 							data = child.getData();
 							if(data != null && data.trim().length() > 0) {
-								System.out.println("\n" + data);
+								//System.out.println("\n" + data);
 								byte[] bytes = Base64.decode(data);
 								try {
 									GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(bytes));
@@ -110,14 +112,29 @@ public class ProjectDebugger {
 								}
 								// If we get an exception, then try without the Gzip
 								catch(IOException ioe) {
-									System.out.println("\n IOException:" + ioe.getLocalizedMessage());
-									ProjectResource pr = new ProjectResource(42L,"com.inductiveautomation.sfc","FolderName",
-											ProjectResource.FOLDER_RESOURCE_TYPE,ApplicationScope.DESIGNER,bytes);
+									System.out.println("\n" + ioe.getLocalizedMessage());
+									// Is it a folder?
 									try {
-										System.out.println("\n" + pr.getDataAsUUID().toString());
+										ProjectResource pr = new ProjectResource(42L,"com.inductiveautomation.sfc","FolderName",
+												ProjectResource.FOLDER_RESOURCE_TYPE,ApplicationScope.DESIGNER,bytes);
+										System.out.println("\nFolder:" + pr.getDataAsUUID().toString());
 									}
 									catch(ClassCastException cce) {
-										System.out.println("\nClassCastException: " + cce.getLocalizedMessage());
+										// Not a folder
+										try {
+											ByteArrayInputStream xmlInput =new ByteArrayInputStream(bytes);
+											BufferedReader reader = new BufferedReader(new InputStreamReader(xmlInput));
+											StringBuilder xml = new StringBuilder();
+											String line;
+											while( (line=reader.readLine()) !=null ) {
+												xml.append(line);
+												xml.append("\n");
+											}
+											System.out.println("\n" + xml.toString());
+										}
+										catch(IOException otherException) {
+											System.out.println("\nException:" + otherException.getLocalizedMessage());
+										}
 									}
 								}
 								catch(Exception ex) {
