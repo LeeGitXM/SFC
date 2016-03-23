@@ -30,7 +30,7 @@ public class Array extends DataWithUnits {
 	
 	public String validate() {
 		String json = (String)getValue(IlsProperty.JSON_LIST);
-		double[] array = null;
+		Double[] array = null;
 		try {
 			array = createArray(json);
 		}

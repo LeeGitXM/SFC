@@ -476,10 +476,10 @@ public abstract class Data {
 
 
 	/** Create a dataset from a JSON array-of-arrays */
-	protected double[] createArray(String value) {
+	protected Double[] createArray(String value) {
 		try {
 			JSONArray jarray = new JSONArray((String)value);
-			double[] array = new double[jarray.length()];
+			Double[] array = new Double[jarray.length()];
 			for(int i = 0; i < jarray.length(); i++) {
 				array[i] = jarray.getDouble(i);
 			}
