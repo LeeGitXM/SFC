@@ -32,10 +32,6 @@ import com.ils.sfc.designer.browser.validation.ValidationDialog;
 import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame;
 import com.ils.sfc.designer.search.IlsSfcSearchProvider;
 import com.ils.sfc.designer.stepEditor.IlsStepEditor;
-import com.inductiveautomation.examples.sfc.client.ExampleStepUI;
-import com.inductiveautomation.examples.sfc.common.ExampleStepProperties;
-import com.inductiveautomation.examples.sfc.designer.ExampleStepEditor;
-import com.inductiveautomation.examples.sfc.designer.ExampleStepEditor.DesignerStepEditorFactory;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.modules.ModuleInfo;
@@ -183,8 +179,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		for(ClientStepFactory clientStepFactory: AbstractIlsStepUI.clientStepFactories) {
 			stepRegistry.register(clientStepFactory);
 		}
-		stepRegistry.register(ExampleStepUI.FACTORY);
-        SFCDesignerHook.get(context).register(ExampleStepProperties.FACTORY_ID, new DesignerStepEditorFactory(context));				
 		recipeDataCleaner = new RecipeDataCleaner(context, stepRegistry);
 		context.getGlobalProject().addProjectChangeListener(recipeDataCleaner);
 		    	
@@ -194,8 +188,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	for(String factoryId: AllSteps.editorFactoryIds) {
     		configRegistry.register(factoryId, editorFactory);
     	} 
-    	configRegistry.register(ExampleStepProperties.FACTORY_ID, new DesignerStepEditorFactory(context));
-    	configRegistry.register("config", new DesignerStepEditorFactory(context));
     	IlsClientScripts.setContext(context);
     	// Provide a central repository for the structure of the charts
     	structureManager = new ChartStructureManager(context.getGlobalProject().getProject(),stepRegistry);

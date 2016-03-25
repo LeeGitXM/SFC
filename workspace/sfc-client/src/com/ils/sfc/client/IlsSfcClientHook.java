@@ -5,7 +5,6 @@ import system.ils.sfc.common.Constants;
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.PythonCall;
-import com.inductiveautomation.examples.sfc.client.ExampleStepUI;
 import com.inductiveautomation.ignition.client.model.ClientContext;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.project.Project;
@@ -53,7 +52,6 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 		for(ClientStepFactory clientStepFactory: AbstractIlsStepUI.clientStepFactories) {
 			stepRegistry.register(clientStepFactory);
 		}
-		stepRegistry.register(ExampleStepUI.FACTORY);
     }
     
     @Override

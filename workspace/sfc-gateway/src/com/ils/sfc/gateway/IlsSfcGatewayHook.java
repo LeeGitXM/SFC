@@ -54,7 +54,6 @@ import com.ils.sfc.step.SimpleQueryStepFactory;
 import com.ils.sfc.step.TimedDelayStepFactory;
 import com.ils.sfc.step.WriteOutputStepFactory;
 import com.ils.sfc.step.YesNoStepFactory;
-import com.inductiveautomation.examples.sfc.gateway.ExampleStepFactory;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.model.ApplicationScope;
@@ -100,7 +99,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private IlsDropBox dropBox = new IlsDropBox();
 	//private IlsSfcSessionMgr sessionMgr;
 	private ChartDebugger chartDebugger = null;
-	private final ExampleStepFactory exampleStepFactory = new ExampleStepFactory();
 	private static StepFactory[] stepFactories = {
 		new QueueMessageStepFactory(),
 		new SaveQueueStepFactory(),
@@ -280,7 +278,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
              for(StepFactory stepFactory: stepFactories) {
     			chartManager.register(stepFactory);
     		}            
-            chartManager.register(exampleStepFactory);
         	chartManager.registerScopeLocator(scopeLocator);
         	chartManager.addChartObserver(chartObserver);
         	//chartManager.addChartObserver(sessionMgr);
@@ -294,7 +291,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		for(StepFactory stepFactory: stepFactories) {
 			chartManager.unregister(stepFactory);
 		}
-		chartManager.unregister(exampleStepFactory);
 		chartManager.removeChartObserver(chartObserver);
 		//chartManager.removeChartObserver(sessionMgr);
 		chartManager = null;
