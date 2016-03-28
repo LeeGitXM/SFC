@@ -28,6 +28,7 @@ import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.recipe.objects.Data;
+import com.ils.sfc.common.recipe.objects.Group;
 import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.panels.ValueHoldingEditorPanel;
@@ -45,6 +46,7 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 	private RecipeEditorController controller;
 	private String chartPath;
 	private Data newObject;
+	private Group parentGroup;
 	
 	public RecipeObjectCreatorPane(RecipeEditorController controller, int index) {
 		super(controller, index);
@@ -138,7 +140,7 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 			Class<?> selectedClass = (Class<?>)selectedType.getObject();
 			String selectedValueType = (String) valueTypeCombo.getSelectedItem();
 			String provider = IlsClientScripts.getProviderName(false);
-			newObject = Data.createRecipeData(selectedClass, chartPath, key, selectedValueType, provider);
+			newObject = Data.createRecipeData(selectedClass, chartPath, key, selectedValueType, provider, parentGroup);
 			keyTextField.setText("");
 			super.accept();
 			// pop into the editor:
@@ -153,8 +155,6 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 		}
 	}
 
-
-
 	public void setChartPath(String chartPath) {
 		this.chartPath = chartPath;
 	}
@@ -167,6 +167,14 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 	@Override
 	public void setValue(Object value) {
 		// not used in this context		
+	}
+
+	public void activate(RecipeBrowserPane recipeBrowserPane, Data parent) {
+		if(parent instanceof Group) {
+			parentGroup = (Group)parent;
+		}
+		super.activate(recipeBrowserPane);
+		
 	}
 	
 }

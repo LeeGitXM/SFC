@@ -70,6 +70,7 @@ public abstract class Data {
 	protected String parentG2Id;
 	protected String stepPath;
 	protected String provider;
+	private Data parent;
 	public static final String[] valueTypeChoices = {Constants.FLOAT, Constants.INT, Constants.BOOLEAN, 
 		Constants.STRING, Constants.DATE_TIME};
 	
@@ -97,6 +98,10 @@ public abstract class Data {
 		return parentG2Id;
 	}
 	
+	public void setParent(Data parent) {
+		this.parent = parent;
+	}
+
 	public Object getValue(Property<?> property) {
 		return properties.getOrDefault(property);
 	}
@@ -323,13 +328,14 @@ public abstract class Data {
 		return newInstance;
 	}
 
-	public static Data createRecipeData(Class<?> selectedClass, String chartPath, String key, 
-		String valueType, String provider) {
+	public static Data createRecipeData(Class<?> selectedClass, String chartPath, 
+		String key,  String valueType, String provider, Group parentGroup) {
 		Data newObject = Data.createNewInstance(selectedClass);
 		newObject.setKey(key);
 		newObject.setProvider(provider);
 		newObject.setStepPath(chartPath);
 		newObject.setValueType(valueType);
+		newObject.setParent(parentGroup);
 		newObject.createTag();
 		return newObject;
 	}
@@ -369,15 +375,37 @@ public abstract class Data {
 	 *  and initialize the tag values with the defaults. */
 	public void createTag() {
 		if(tagExists()) return;
-		String myType = isGroup() ? "Data" : (String) getValue(IlsProperty.CLASS);
+		String myType = (String) getValue(IlsProperty.CLASS);
 		
-		Object[] args = {provider, stepPath, getKey(), myType, getValueType()};
+		Object[] args = {provider, stepPath + "/" + getParentPath(), getKey(), myType, getValueType()};
 		try {
 			PythonCall.CREATE_RECIPE_DATA.exec(args);
 		} catch (JythonExecException e) {
 			logger.error("Recipe Data tag creation failed", e);
 		}
+
 		basicWriteToTags();
+	}
+
+	private String getParentPath() {
+		StringBuilder buf = new StringBuilder();
+		if(parent != null) {
+			parent.addParentKey(buf);
+		}
+		return buf.toString();
+	}
+
+	/** Recursive method to add parent keys to a key path. */
+	private void addParentKey(StringBuilder buf) {
+		if(parent != null) {
+			parent.addParentKey(buf);
+		}
+		buf.append(getKey());
+		buf.append("/");
+	}
+	
+	private String getKeyPath() {
+		return getParentPath() + getKey();
 	}
 
 	/** Return true if this object has the VALUE property. */
@@ -548,7 +576,7 @@ public abstract class Data {
 	
 	/** Get the tag path of the UDT instance corresponding to this object. */
 	public String getTagPath() {
-		String path = getStepPath() + "/" + getKey();
+		String path = getStepPath() + "/" + getKeyPath();
 		return path;
 	}
 	

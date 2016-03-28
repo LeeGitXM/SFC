@@ -161,7 +161,8 @@ public class RecipeBrowserPane extends EditorPanel implements ValueHolder {
 	}
 
 	private void doAdd() {				
-		controller.getCreator().activate(this);
+		Data parent = selectedNode!= null ? selectedNode.getRecipeData() : null;
+		controller.getCreator().activate(this, parent);
 	}
 	
 	private void doRemove() {
@@ -207,7 +208,7 @@ public class RecipeBrowserPane extends EditorPanel implements ValueHolder {
 		Data newData = (Data) value;
 		Data selectedData = getSelectedData();
 		if(selectedData != null && selectedData.isGroup()) {
-			((Group)selectedData).getChildren().add(newData);
+			((Group)selectedData).addChild(newData);
 		}
 		else {
 			controller.getRecipeData().add(newData);

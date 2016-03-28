@@ -7,6 +7,8 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.inductiveautomation.ignition.common.config.BasicPropertySet;
+
 /**
 superiorClass: sequence (the symbol S88-RECIPE-DATA)
 attributes:sequence (structure (ATTRIBUTE-NAME: the symbol RECIPE-DATA-V2,
@@ -50,7 +52,7 @@ public class Group extends Data {
 			Object value = jsonObj.get(key);
 			if(value instanceof JSONObject) {
 				JSONObject childJSONObj = (JSONObject) value;
-				children.add(Data.fromJson(childJSONObj));
+				addChild(Data.fromJson(childJSONObj));
 			}
 		}
 	}
@@ -60,4 +62,22 @@ public class Group extends Data {
 		return (new Group()).toJSON();
 	}
 
+	public void addChild(Data child) {
+		children.add(child);
+		child.setParent(this);
+	}
+	
+	public void setStepPath(String chartPath) {
+		super.setStepPath(chartPath);
+		for(Data child: children) {
+			child.setStepPath(chartPath);
+		}
+	}
+	
+	public void setProvider(String provider) {
+		super.setProvider(provider);
+		for(Data child: children) {
+			child.setProvider(provider);
+		}
+	}
 }
