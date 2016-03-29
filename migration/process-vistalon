@@ -19,9 +19,9 @@ cd $SFC/migration
 ./copy-xml
 #
 # Translate the procedures
-./translate-vistalon all
-cd $SFC/migration/procs/ignition/vistalon
-cp -a * $PYDIR
+#./translate-vistalon all
+#cd $SFC/migration/procs/ignition/vistalon
+#cp -a * $PYDIR
 cd $SFC/migration
 #
 # Convert the XML (NOTE: procedures from checkin area)
