@@ -19,6 +19,7 @@ import com.ils.sfc.common.recipe.objects.Structure;
 import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.panels.EditorPanel;
 import com.ils.sfc.designer.propertyEditor.PropertyEditor;
+import com.ils.sfc.designer.propertyEditor.PropertyRow;
 import com.ils.sfc.designer.propertyEditor.ValueHolder;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
@@ -62,8 +63,7 @@ public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder
 	}
 	
 	private void selectionChanged() {
-		buttonPanel.getEditButton().setEnabled(
-			getPropertyEditor().selectionIsEditable());		
+		buttonPanel.enableEditButton(getPropertyEditor());
 	}
 	
 	private void doAdd() {

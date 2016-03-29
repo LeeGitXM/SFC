@@ -4,6 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.common.IlsClientScripts;
@@ -13,6 +16,7 @@ import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.panels.EditorPanel;
 import com.ils.sfc.designer.propertyEditor.PropertyEditor;
+import com.ils.sfc.designer.propertyEditor.PropertyRow;
 import com.ils.sfc.designer.propertyEditor.ValueHolder;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
@@ -39,8 +43,20 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 		buttonPanel.getExecButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {doExec();}			
 		});
+		// listen for selection so we can enable/disable buttons e.g.
+		getPropertyEditor().getSelectionModel().addListSelectionListener(
+			new ListSelectionListener(){
+				public void valueChanged(ListSelectionEvent e) {
+					selectionChanged();
+				}
+		});
+		selectionChanged();
 	}
 
+	private void selectionChanged() {
+		buttonPanel.enableEditButton(getPropertyEditor());
+	}
+	
 	private void doExec() {
 		BasicPropertySet propertyValues = editor.getPropertyValues();
 		String sql = propertyValues.getOrDefault(IlsProperty.SQL);
@@ -65,6 +81,8 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 	
 	@SuppressWarnings("unchecked")
 	private void doEdit() {
+		PropertyRow selectedRow = getPropertyEditor().getSelectedRow();
+		boolean hasChoices = selectedRow != null && selectedRow.getChoices() != null;
 		PropertyValue<?> selectedPropertyValue = getPropertyEditor().getSelectedPropertyValue();
 		if(selectedPropertyValue == null) return;
 
@@ -114,7 +132,7 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 			controller.getManualDataEntryPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getManualDataEntryPanel().activate(myIndex);							
 		}
-		else if(selectedPropertyValue.getProperty().getName().endsWith(Constants.UNIT_SUFFIX)) {
+		else if(selectedPropertyValue.getProperty().getName().endsWith(Constants.UNIT_SUFFIX) && !hasChoices) {
 			editor.stopCellEditing();
 			controller.getUnitChooser().activate(myIndex);
 			// as activate may initialize units; we set unit AFTER activation:

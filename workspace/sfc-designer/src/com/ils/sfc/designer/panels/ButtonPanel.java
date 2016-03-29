@@ -13,6 +13,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
+import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.designer.propertyEditor.PropertyEditor;
+import com.ils.sfc.designer.propertyEditor.PropertyRow;
 
 /** This appears to the right of all recipe editor panels to provide
  *  add/remove/edit/accept actions. */
@@ -108,6 +111,16 @@ public class ButtonPanel extends JPanel {
 
 	public JButton getCancelButton() {
 		return cancelButton;
+	}
+
+	/** Enable/disable edit button based on nature of selection */
+	public void enableEditButton(PropertyEditor propertyEditor) {
+		PropertyRow selectedRow = propertyEditor.getSelectedRow();
+		editButton.setEnabled(
+			selectedRow != null && 
+			(propertyEditor.rowIsEditable() || IlsProperty.isSerializedObject(selectedRow.getProperty())) &&
+			selectedRow.getChoices() == null && 
+			selectedRow.getProperty().getType() != Boolean.class);
 	}
 
 }
