@@ -21,6 +21,7 @@ import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.elements.ChartElement;
 import com.inductiveautomation.sfc.api.elements.StepElement;
+import com.inductiveautomation.sfc.elements.StepContainer;
 
 /** An observer that listens to SFC chart status changes and messages the client
  *  so that the ControlPanel status display (e.g.) can stay up to date. */
@@ -31,8 +32,8 @@ public class IlsChartObserver implements ChartObserver {
 	public synchronized void onBeforeChartStart(ChartContext chartContext) {
 		
 		// If this is an ILS chart, create the recipe data tags
-		PyDictionary chartScope = chartContext.getChartScope();
-		String projectName = (String)chartScope.get(Constants.PROJECT);
+		PyDictionary topScope = RecipeDataAccess.getTopScope(chartContext.getChartScope());
+		String projectName = (String)topScope.get(Constants.PROJECT);
 		if(projectName != null) {  // only ILS charts will have this
 			createTags(chartContext);
 		}
@@ -44,17 +45,19 @@ public class IlsChartObserver implements ChartObserver {
 		boolean isolationMode = RecipeDataAccess.getIsolationMode(chartScope);
 		String tagProvider = RecipeDataAccess.getProviderName(isolationMode);
 		for(ChartElement<?> element: chartContext.getElements()) {
-			if(element instanceof StepElement) {
-				StepElement stepElement = (StepElement)element;
+			if(element instanceof StepContainer) {
+				StepContainer stepElement = (StepContainer)element;
 				try {
 					PropertySet stepProperties = stepElement.getDefinition().getProperties();
 					List<Data> recipeData = Data.fromStepProperties(stepProperties);
-					String stepName = stepProperties.get(IlsProperty.NAME);
-					String stepPath = chartPath + "/" + stepName;
-					for(Data data: recipeData) {
-						data.setProvider(tagProvider);
-						data.setStepPath(stepPath);
-						data.createTag();
+					if(recipeData != null) {
+						String stepName = stepProperties.get(IlsProperty.NAME);
+						String stepPath = chartPath + "/" + stepName;
+						for(Data data: recipeData) {
+							data.setProvider(tagProvider);
+							data.setStepPath(stepPath);
+							data.createTag();
+						}
 					}
 				} catch (Exception e) {
 					logger.error("Error creating tags for chart " + chartPath, e);

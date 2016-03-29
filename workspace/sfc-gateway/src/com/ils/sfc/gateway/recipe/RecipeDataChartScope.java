@@ -79,7 +79,7 @@ public class RecipeDataChartScope extends PyChartScope {
 		key = (String)keyObj;
 		String keyPath = getKeyPath();
 		String strTagPath = Constants.RECIPE_DATA_FOLDER + "/" + stepPath + "/" + keyPath;
-		logger.infof("get: key %s keyPath %s strTagPath", key, keyPath, strTagPath);
+		logger.debugf("get: key %s keyPath %s strTagPath", key, keyPath, strTagPath);
 		TagPath igTagPath = new BasicTagPath(providerName, getPathComponents(strTagPath));
 		Tag tag = gatewayContext.getTagManager().getTag(igTagPath);
 		if(tag == null) {
@@ -90,18 +90,16 @@ public class RecipeDataChartScope extends PyChartScope {
 		List<Tag> childTags = gatewayContext.getTagManager().browse(igTagPath);	
 		PyChartScope resultScope = null;
 		if(tag.getType() == TagType.Folder) {
-			logger.info("is folder");
 			// a hierarchy exists, build sub-scope that will handle requests for sub-keys
 			return new RecipeDataChartScope(stepPath, this, providerName, gatewayContext);
 		}
 		else{ 
-			logger.info("is leaf");
 			// Leaf level; read the values of all the UDT members and put them in a PyChartScope, 
 			// which is the return result
 			resultScope = new PyChartScope();
 			for(Tag childTag: childTags) {
 				resultScope.put(childTag.getName(), childTag.getValue().getValue());
-				logger.infof("putting value in scope %s %s", childTag.getName(), childTag.getValue().getValue());
+				logger.debugf("putting value in scope %s %s", childTag.getName(), childTag.getValue().getValue());
 				if(!listenersByKey.containsKey(strTagPath)) {
 					addValueChangeListener(strTagPath, igTagPath);
 				}
@@ -134,7 +132,7 @@ public class RecipeDataChartScope extends PyChartScope {
 	}
 
 	protected void notifyObservers() {
-		logger.infof("notifiying observers for key %s", key);
+		logger.debugf("notifiying observers for key %s", key);
 		RecipeDataChartScope.this.notifyObservers(new PyString(key), (PyObject)null);
 		if(parent != null) {
 			parent.notifyObservers();
@@ -146,14 +144,14 @@ public class RecipeDataChartScope extends PyChartScope {
 			@Override
 			public void tagChanged(TagChangeEvent e) {
 				notifyObservers();
-				logger.infof("tag changed: %s", e.getTagPath());
+				logger.debugf("tag changed: %s", e.getTagPath());
 			}
 			public TagProp getTagProperty() {
 				return TagProp.Value;
 			}
 		};
 		// Note: we only listen for changes in the "value" member of a recipe data tag
-		logger.infof("adding tag listener on %s.value", igTagPath.toString());
+		logger.debugf("adding tag listener on %s.value", igTagPath.toString());
 		igTagPath = (BasicTagPath) BasicTagPath.append(igTagPath, "value");
 		listenersByKey.put(key, new ListenerInfo(igTagPath, tagListener));
 		gatewayContext.getTagManager().subscribe(igTagPath, tagListener);
