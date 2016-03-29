@@ -171,6 +171,9 @@ public class PythonCall {
 	public static final PythonCall CREATE_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "createRecipeDataTag", 
 			null,  new String[]{"provider", "folder", "rdName", "rdType", "valueType"} );
 
+	public static final PythonCall CREATE_GROUP_PROPERTY_TAG = new PythonCall("ils.sfc.common.recipe." + "createGroupPropertyTag", 
+			null,  new String[]{"provider", "folder", "rdName"} );
+
 	public static final PythonCall DELETE_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "deleteRecipeDataTag", 
 			null,  new String[]{"provider", "fullPath"} );
 

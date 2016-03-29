@@ -113,7 +113,7 @@ public class RecipeBrowserPane extends EditorPanel implements ValueHolder {
 		Data selectedData = getSelectedData();
 		buttonPanel.getAddButton().setEnabled(selectedData == null || selectedData.isGroup());
 		buttonPanel.getRemoveButton().setEnabled(selectedData != null);
-		buttonPanel.getEditButton().setEnabled(selectedData != null && !selectedData.isGroup());
+		buttonPanel.getEditButton().setEnabled(selectedData != null);
 	}
 	
 	/** Recursively add a layer of nested recipe data to the tree. */

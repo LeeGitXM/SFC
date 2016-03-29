@@ -371,6 +371,17 @@ public abstract class Data {
 		this.provider = provider;
 	}
 
+	/** Create a string-type tag underneath the group folder */
+	private void createGroupPropertyTag(String name) {
+		String folderPath = stepPath + "/" + getParentPath() + getKey();
+		Object[] args = {provider, folderPath, name};
+		try {
+			PythonCall.CREATE_GROUP_PROPERTY_TAG.exec(args);
+		} catch (JythonExecException e) {
+			logger.error("Recipe Group tag creation failed", e);
+		}		
+	}
+	
 	/** Create the UDT tag if it doesn't already exist, 
 	 *  and initialize the tag values with the defaults. */
 	public void createTag() {
@@ -382,6 +393,15 @@ public abstract class Data {
 			PythonCall.CREATE_RECIPE_DATA.exec(args);
 		} catch (JythonExecException e) {
 			logger.error("Recipe Data tag creation failed", e);
+		}
+		
+		// If this is a group, the basic type is a folder rather than a UDT. As far as I know,
+		// you can't have a UDT folder, so we have to create all the child property tags 
+		// explicitly
+		if(this instanceof Group) {
+			for(PropertyValue<?> prop: getProperties()) {
+				createGroupPropertyTag(prop.getProperty().getName());
+			}
 		}
 
 		basicWriteToTags();
