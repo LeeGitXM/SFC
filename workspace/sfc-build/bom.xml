@@ -137,15 +137,6 @@
 			<location>artifacts/tags/testTags.xml</location>
 		</artifact>
 	</panel>
-	<panel type="scanclass" essential="True" version="1">
-		<title>Create alternative Scan Classes</title>
-		<preamble>Create scanclasses referenced by &lt;b&gt;PRODUCTION&lt;/b&gt; tags. Scanclasses determine tag poll rates.
-		</preamble>
-		<property name="provider" type="production"></property>
-		<artifact name="Production ScanClasses" type="scanclass" subtype="csv">
-			<location>artifacts/scanclasses/scanclasses.csv</location>
-		</artifact>
-	</panel>
 	<panel type="database" essential="true" version="1">
 		<title>Database Create and Alter Scripts for Ignition Applications</title>
 		<preamble>This page provides the opportunity for either creating a new database instance or
@@ -266,7 +257,7 @@
 		<property name="com.ils.family(property-get-script)">xom.extensions.famProperties.getAux</property>
 		<property name="com.ils.family(property-rename-script)">xom.extensions.famProperties.rename</property>
 		<property name="com.ils.family(property-set-script)">xom.extensions.famProperties.setAux</property>
-		<property name="com.ils.diagram(node-create-script)">xom.extensions.diaCreation.create</property>
+		<property name="com.ils.diagram(node-save-script)">xom.extensions.diaSave.save</property>
 		<property
 			name="xom.block.finaldiagnosis.FinalDiagnosis(property-get-script)">xom.extensions.fdProperties.getAux</property>
 		<property
