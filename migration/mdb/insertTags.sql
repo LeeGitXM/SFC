@@ -84,11 +84,8 @@ insert into TagMap values ('E-BALER-VOL-LAB-DATA','[]LabData/VFU/E-BALER-VOL-LAB
 insert into TagMap values ('E-BALER-VOL-LAB-SQC-PATH','[]DiagnosticToolkit/Connections/EBalerVolLab','STRING');
 insert into TagMap values ('EM-COLD-STICK-RX-OUTLET-TEMP-MONITOR-BLOCK-1','[]Site/VFU/COLDSTICK-OUTLET-TEMP-MONITOR','STRING');
 insert into TagMap values ('EM-MONITOR-COLDSTICK-DCS-SETPOINTS-BLOCK','[]Site/VFU/COLDSTICK-DCS-SETPOINT','STRING');
-insert into TagMap values ('EM-GDA-LOGICAL-VARIABLE-XXX-2','[]Site/VFU/VFU-FREEZER-SWITCH-REMINDER','BOOLEAN');
 
-
-
-insert into TagMap values ('EM-GDA-SYMBOLIC-VARIABLE-XXX-429','[]Site/CRx/ML-GRAVITY-TIMER-STATE','BOOLEAN');
+insert into TagMap values ('ML_GRAVITY_TIMER_WAITING_STATE','[]Site/CRx/ML-GRAVITY-TIMER-STATE','BOOLEAN');
 
 -- tag not built
 insert into TagMap values ('EM-MONITOR-COLDSTICK-DCS-SETPOINTS-BLOCK','[]Site/DCS-SETPOINTS/monitorColdstick','STRING');    --- found in s88
@@ -416,5 +413,4 @@ insert into TagMap values ('stab_filtered_value','[]LabData/RLA3/STAB-LAB-DATA/f
 
 -- Miscellaneous Named Objects
 insert into TagMap values ('the em-sqc-plot upon the subworkspace of toolkit-console','[]Site/Plots/SqcPlotName','STRING');
--- New reference for GDL-NUMERIC-ENTRY-POINT-XXX-59
-insert into TagMap values ('the unix-sample-time of mooney-lab-data','[]LabData/RLA3/MOONEY-LAB-DATA/sampleTime','STRING');
+insert into TagMap values ('ML_LAB_DATA_SAMPLE_TIME','[]LabData/RLA3/MOONEY-LAB-DATA/sampleTime','STRING');
