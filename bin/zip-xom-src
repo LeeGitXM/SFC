@@ -17,7 +17,7 @@ rm -rf sfc/workspace/*/temp_modl
 mkdir $TMP
 
 mkdir $TMP/sfc
-cd ${GIT_REPO}/sfc; cp -a workspace $TMP/sfc
+cd ${GIT_REPO}/sfc; cp -a workspace/*/src $TMP/sfc
 
 
 # Now zip and copy to subversion
