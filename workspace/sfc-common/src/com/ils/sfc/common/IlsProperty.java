@@ -228,6 +228,7 @@ public class IlsProperty {
     public static final BasicProperty<String> REVIEW_DATA_CONFIG = createProperty(Constants.REVIEW_DATA_CONFIG, String.class, EMPTY_REVIEW_DATA_CONFIG, true, Constants.CONFIG);
     public static final BasicProperty<String> REVIEW_DATA_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_REVIEW_DATA_WINDOW, false);
     public static final BasicProperty<String> REVIEW_FLOWS = createProperty(Constants.REVIEW_FLOWS, String.class, EMPTY_REVIEW_FLOWS_CONFIG, true);
+    public static final BasicProperty<String> REVIEW_FLOWS_CONFIG = createProperty(Constants.REVIEW_FLOWS_CONFIG, String.class, EMPTY_REVIEW_FLOWS_CONFIG, true, Constants.CONFIG);
     public static final BasicProperty<String> REVIEW_FLOWS_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_REVIEW_FLOWS_WINDOW, false);
     public static final BasicProperty<Integer> ROWS = createProperty(Constants.ROWS, Integer.class, 0);
     public static final BasicProperty<String> ROW_KEY = createProperty(Constants.ROW_KEY, String.class, null);

@@ -27,6 +27,6 @@ public interface ReviewFlowsStepProperties extends ChartStepProperties {
     	HEADING1,
     	HEADING2,
     	HEADING3,
-    	REVIEW_FLOWS
-    };
+    	REVIEW_FLOWS,
+    	REVIEW_FLOWS_CONFIG    };
 }

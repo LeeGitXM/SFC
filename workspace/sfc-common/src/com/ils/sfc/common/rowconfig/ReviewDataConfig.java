@@ -104,5 +104,6 @@ public class ReviewDataConfig  extends RowConfig {
 			logger.error("Error generating json for ReviewDataConfig", e);
 		}
 		result.put(Constants.REVIEW_DATA_CONFIG, json);
-		return result;	}
+		return result;	
+	}
 }
