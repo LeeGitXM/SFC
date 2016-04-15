@@ -100,7 +100,8 @@ public class StepPropertyTranslator {
         					logger.warnf("property %s : %s in step %s %s may require manual migration", g2PropName, g2PropValue, g2StepName, g2Id);        					
         				}
         				else {
-        					logger.errorf("no translation for property %s in %s %s %s", g2PropName, g2Class, g2StepName, g2Id);
+        					//logger.errorf("no translation for property %s in %s %s %s", g2PropName, g2Class, g2StepName, g2Id);
+        					logger.errorf("no translation for property %s in %s", g2PropName, g2Class);
         				}
         			}
         		}
@@ -117,7 +118,8 @@ public class StepPropertyTranslator {
 					continue;
 				}
 				if(!translation.keySet().contains(propName)) {
-					logger.errorf("no g2 info for Ignition step property %s in %s %s %s", propName, factoryId, g2StepName, g2Id);
+					//logger.errorf("no g2 info for Ignition step property %s in %s %s %s", propName, factoryId, g2StepName, g2Id);
+					logger.errorf("no g2 info for Ignition step property %s in %s", propName, factoryId);
 				}
 			}
 		}

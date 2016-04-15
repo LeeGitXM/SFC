@@ -613,7 +613,8 @@ public class IlsProperty {
 			//logger.infof("factoryId %s prop %s g2 value %s -> enum %s", factoryId, property.getName(), g2Value, transValue);
 			if(transValue == null) {
 				transValue = Constants.TRANSLATION_ERROR;
-				logger.errorf("no translation for g2 value %s in property %s. step %s factoryId %s", g2Value, property.getName(), stepName, factoryId);
+				//logger.errorf("no translation for g2 value %s in property %s step %s factoryId %s", g2Value, property.getName(), stepName, factoryId);
+				logger.errorf("no translation for g2 value %s in property %s factoryId %s", g2Value, property.getName(), factoryId);
 			}
 			return transValue;
 		}

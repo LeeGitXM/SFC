@@ -7,7 +7,7 @@ insert into SfcClassMap values ('S88-CALLBACK','action-step','');
 insert into SfcClassMap values ('S88-CLEAR-QUEUE-TASK','com.ils.clearQueueStep','');
 insert into SfcClassMap values ('S88-COLLECT-DATA-TASK','com.ils.collectDataStep','');
 insert into SfcClassMap values ('S88-CONDITIONAL-TRANSITION','transition','transition');
-insert into SfcClassMap values ('S88-CONFIRM-CONTROLLER-MODES','com.ils.confirmControllerModesStep','');
+insert into SfcClassMap values ('S88-CONFIRM-CONTROLLER-MODES-TASK','com.ils.confirmControllersStep','');
 insert into SfcClassMap values ('S88-DATABASE-RAW-QUERY-TASK','com.ils.rawQueryStep','');
 insert into SfcClassMap values ('S88-DATABASE-SIMPLE-QUERY-TASK','com.ils.simpleQueryStep','');
 insert into SfcClassMap values ('S88-ENABLE-OR-DISABLE-COMMAND-TASK','com.ils.enableDisableStep','');
