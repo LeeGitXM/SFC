@@ -26,6 +26,7 @@ public interface ReviewDataStepProperties extends ChartStepProperties {
     	PRIMARY_REVIEW_DATA,
     	PRIMARY_TAB_LABEL,
     	SECONDARY_REVIEW_DATA,
-    	SECONDARY_TAB_LABEL
+    	SECONDARY_TAB_LABEL,
+    	REVIEW_DATA_CONFIG
     };
 }

@@ -225,6 +225,7 @@ public class IlsProperty {
     public static final BasicProperty<String> RECIPE_LOCATION = createProperty(Constants.RECIPE_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
     public static final BasicProperty<Boolean> REQUIRE_ALL_INPUTS = createProperty(Constants.REQUIRE_ALL_INPUTS, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> RESULTS_MODE = createProperty(Constants.RESULTS_MODE, String.class, Constants.RESULTS_MODE_CHOICES[0], Constants.RESULTS_MODE_CHOICES);
+    public static final BasicProperty<String> REVIEW_DATA_CONFIG = createProperty(Constants.REVIEW_DATA_CONFIG, String.class, EMPTY_REVIEW_DATA_CONFIG, true, Constants.CONFIG);
     public static final BasicProperty<String> REVIEW_DATA_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_REVIEW_DATA_WINDOW, false);
     public static final BasicProperty<String> REVIEW_FLOWS = createProperty(Constants.REVIEW_FLOWS, String.class, EMPTY_REVIEW_FLOWS_CONFIG, true);
     public static final BasicProperty<String> REVIEW_FLOWS_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_REVIEW_FLOWS_WINDOW, false);
