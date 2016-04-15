@@ -111,7 +111,7 @@ public class ReviewFlowsConfig  extends RowConfig {
 		} catch(JsonProcessingException e) {
 			logger.error("Error generating json for ReviewDataConfig", e);
 		}
-		result.put(Constants.REVIEW_FLOWS_CONFIG, json);
+		result.put(Constants.REVIEW_FLOWS, json);
 		return result;	
 	}
 }

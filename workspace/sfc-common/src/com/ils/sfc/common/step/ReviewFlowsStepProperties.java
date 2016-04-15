@@ -1,6 +1,5 @@
 package com.ils.sfc.common.step;
 
-import com.ils.sfc.common.IlsProperty;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 
@@ -28,5 +27,5 @@ public interface ReviewFlowsStepProperties extends ChartStepProperties {
     	HEADING2,
     	HEADING3,
     	REVIEW_FLOWS,
-    	REVIEW_FLOWS_CONFIG    };
+   };
 }

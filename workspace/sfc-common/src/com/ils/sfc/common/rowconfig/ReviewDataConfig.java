@@ -68,6 +68,7 @@ public class ReviewDataConfig  extends RowConfig {
 		Map<String, String> result = new HashMap<String, String>();
 		ReviewDataConfig config = new ReviewDataConfig();
 		List<Element> configElements = getBlockConfigurationElements(g2block);
+		boolean hasAdvice = false;
 		for(Element configElement: configElements) {
 			ReviewDataConfig.Row newRow = new ReviewDataConfig.Row();
 			config.getRows().add(newRow);
@@ -90,6 +91,7 @@ public class ReviewDataConfig  extends RowConfig {
 					newRow.prompt = strValue;
 				}
 				else if(name.equals("advice")) {
+					hasAdvice = true;
 					newRow.advice = strValue.toLowerCase();
 				}
 				else if(name.equals("units")) {
@@ -103,7 +105,12 @@ public class ReviewDataConfig  extends RowConfig {
 		} catch(JsonProcessingException e) {
 			logger.error("Error generating json for ReviewDataConfig", e);
 		}
-		result.put(Constants.REVIEW_DATA_CONFIG, json);
+		if(hasAdvice) {
+			result.put(Constants.PRIMARY_REVIEW_DATA_WITH_ADVICE, json);			
+		}
+		else {
+			result.put(Constants.PRIMARY_REVIEW_DATA, json);
+		}
 		return result;	
 	}
 }

@@ -149,10 +149,8 @@ public class Constants {
 	public static final String REGISTER_ONLY = "registerOnly";
 	public static final String RESULTS_MODE = "resultsMode"; 
 	public static final String REQUIRE_ALL_INPUTS = "requireAllInputs";
-	public static final String REVIEW_DATA_CONFIG = "reviewDataConfig";
 	public static final String REVIEW_DATA_WITH_ADVICE = "reviewDataWithAdvice"; 
 	public static final String REVIEW_DATA_WINDOW = "reviewDataWindow";
-	public static final String REVIEW_FLOWS_CONFIG = "reviewFlowsConfig";
 	public static final String REVIEW_FLOWS_WINDOW = "reviewFlowsWindow";
 	public static final String REVIEW_FLOWS = "reviewFlows";
 	public static final String ROW_KEY = "rowKey"; 
