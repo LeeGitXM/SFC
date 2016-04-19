@@ -30,9 +30,12 @@ public class IlsChartObserver implements ChartObserver {
 
 	@Override
 	public synchronized void onBeforeChartStart(ChartContext chartContext) {
-		
-		// If this is an ILS chart, create the recipe data tags
+		// If this is not an ILS EMC chart, return
 		PyDictionary topScope = RecipeDataAccess.getTopScope(chartContext.getChartScope());
+		boolean isEMCSFC = topScope.containsKey(Constants.ISOLATION_MODE);
+		if(!isEMCSFC) return;
+		
+		// create the recipe data tags
 		String projectName = (String)topScope.get(Constants.PROJECT);
 		if(projectName != null) {  // only ILS charts will have this
 			createTags(chartContext);
