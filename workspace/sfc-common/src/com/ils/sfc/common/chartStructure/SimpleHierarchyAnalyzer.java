@@ -96,7 +96,7 @@ public class SimpleHierarchyAnalyzer {
 					analyzeModel(uiModel, chartPath);					
 				}
 				catch(Exception e) {
-					log.errorf("IO exception deserializing char)", e);
+					log.errorf("IO exception deserializing chart)", e);
 				}
 			}
 		}

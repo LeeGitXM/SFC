@@ -86,12 +86,12 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 		PropertyValue<?> selectedPropertyValue = getPropertyEditor().getSelectedPropertyValue();
 		if(selectedPropertyValue == null) return;
 
+		editor.stopCellEditing();
 		if(selectedPropertyValue.getProperty().equals(IlsProperty.TAG_PATH)) {
-			editor.stopCellEditing();
 			controller.getTagBrowser().setValue(selectedPropertyValue.getValue());
 			controller.getTagBrowser().activate(this);
 		}
-		else if(selectedPropertyValue.getProperty().equals(IlsProperty.RECIPE_LOCATION)) {
+		else if(selectedPropertyValue.getProperty().equals(IlsProperty.KEY)) {
 			//controller.getRecipeDataBrowser().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getRecipeDataBrowser().activate(this);										
 		}

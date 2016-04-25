@@ -56,6 +56,7 @@ import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistryProvider;
 import com.inductiveautomation.sfc.designer.SFCDesignerHook;
 import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
+import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
 import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
 
@@ -76,7 +77,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private IlsSfcSearchProvider searchProvider = null;
 	private RecipeEditorFrame recipeEditorFrame;
 	private RecipeDataCleaner recipeDataCleaner;
+	
 	private static ClientStepRegistry stepRegistry;
+	private static SFCWorkspace sfcWorkspace;
 	
 	public IlsSfcDesignerHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
@@ -166,6 +169,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         log.debug("IlsSfcDesignerHook.startup...");
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
 		recipeEditorFrame = new RecipeEditorFrame(ctx, iaSfcHook.getWorkspace());
+		sfcWorkspace = iaSfcHook.getWorkspace();
       	iaSfcHook.getWorkspace().getInnerWorkspace().addDesignableWorkspaceListener(recipeEditorFrame);
 		
       	frames.add(recipeEditorFrame); 
@@ -199,6 +203,10 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		new Thread(new ModuleWatcher(context)).start();             // Watch for modules to start
  	}
 	
+	public static SFCWorkspace getSfcWorkspace() {
+		return sfcWorkspace;
+	}
+
 	public static ClientStepRegistry getStepRegistry() {
 		return stepRegistry;
 	}

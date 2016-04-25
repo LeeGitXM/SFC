@@ -2,6 +2,7 @@ package com.ils.sfc.designer.stepEditor;
 
 import java.awt.BorderLayout;
 
+import com.ils.sfc.designer.IlsSfcDesignerHook;
 import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
@@ -29,7 +30,7 @@ public class IlsStepEditor  extends AbstractStepEditor {
 		public ElementEditor createConfigUI(ChartUIModel model,
 				ChartUIElement element) {
 			if (editor == null || editor.model != model) {
-				editor = new IlsStepEditor(model, element, context);
+				editor = new IlsStepEditor(model, context);
 			}
 			editor.setElement(element);
 			return editor;
@@ -37,10 +38,12 @@ public class IlsStepEditor  extends AbstractStepEditor {
 
 	}
 
-	protected IlsStepEditor(ChartUIModel chartModel, ChartUIElement element, 
-		DesignerContext context) {
+	protected IlsStepEditor(ChartUIModel chartModel, DesignerContext context) {
 		super(new BorderLayout(), chartModel);
-		stepEditorController = new StepEditorController(context);
+		// TODO: this is cryptic--can we encapsulate it in a better place?
+		long resourceId = IlsSfcDesignerHook.getSfcWorkspace().getSelectedContainer().getResourceId();
+		String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
+		stepEditorController = new StepEditorController(context, chartPath);
 		add(stepEditorController.getSlidingPane());
 	}
 

@@ -42,6 +42,7 @@ public class StepEditorController extends PanelController implements EditorError
 	public static final int RECIPE_BROWSER = 13;
 
 	private ChartUIElement element;
+	private String chartPath;
 	
 	// The sub-panes:
 	private StepPropertyEditorPane propertyEditor = new StepPropertyEditorPane(this, PROPERTY_EDITOR);
@@ -59,8 +60,9 @@ public class StepEditorController extends PanelController implements EditorError
 	private ManualDataPanel manualDataEntryPanel = new ManualDataPanel(this, MANUAL_DATA_ENTRY);
 	private RecipeDataBrowserPanel recipeDataBrowser = new RecipeDataBrowserPanel(this, RECIPE_BROWSER);
 	
-	public StepEditorController(DesignerContext context) {
+	public StepEditorController(DesignerContext context, String chartPath) {
 		super(context);
+		this.chartPath = chartPath;
 		slidingPane.add(propertyEditor);
 		slidingPane.add(stringEditor);
 		slidingPane.add(tagBrowser);
@@ -75,14 +77,15 @@ public class StepEditorController extends PanelController implements EditorError
 		slidingPane.add(manualDataEntryPanel);	
 		slidingPane.add(reviewFlowsPanel);	
 		slidingPane.add(recipeDataBrowser);	
-		SimpleHierarchyAnalyzer analyzer = new SimpleHierarchyAnalyzer(
-			context.getGlobalProject().getProject(), IlsSfcDesignerHook.getStepRegistry());
-		recipeDataBrowser.setAnalyzer(analyzer);
 	}
 
 	
 	public ChartUIElement getElement() {
 		return element;
+	}
+
+	public String getChartPath() {
+		return chartPath;
 	}
 
 	public StepPropertyEditorPane getPropertyEditor() {
@@ -157,7 +160,7 @@ public class StepEditorController extends PanelController implements EditorError
 	}
 
 	public void setElement(ChartUIElement element) {
-		this.element = element;
+		this.element = element;		
 		String factoryId = (String)element.get(IlsProperty.FACTORY_ID);
 		AbstractIlsStepDelegate stepDelegate = (AbstractIlsStepDelegate)AbstractIlsStepUI.getFactory(factoryId);
 		getPropertyEditor().getPropertyEditor().setPropertyValues(element, stepDelegate.getOrderedProperties());
