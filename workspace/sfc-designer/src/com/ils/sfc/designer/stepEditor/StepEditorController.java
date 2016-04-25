@@ -4,11 +4,15 @@ import java.awt.Component;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
+import com.ils.sfc.common.recipe.RecipeDataBrowser;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.designer.EditorErrorHandler;
+import com.ils.sfc.designer.IlsSfcDesignerHook;
 import com.ils.sfc.designer.panels.EditorPanel;
 import com.ils.sfc.designer.panels.MessagePanel;
 import com.ils.sfc.designer.panels.PanelController;
+import com.ils.sfc.designer.panels.RecipeDataBrowserPanel;
 import com.ils.sfc.designer.panels.StringEditorPanel;
 import com.ils.sfc.designer.panels.TagBrowserPanel;
 import com.ils.sfc.designer.panels.UnitChooserPanel;
@@ -38,7 +42,10 @@ public class StepEditorController extends PanelController implements EditorError
 	public static final int WRITE_OUTPUT = 10;
 	public static final int MANUAL_DATA_ENTRY = 11;
 	public static final int REVIEW_FLOWS = 12;
+	public static final int RECIPE_BROWSER = 13;
 
+	private ChartUIElement element;
+	
 	// The sub-panes:
 	private StepPropertyEditorPane propertyEditor = new StepPropertyEditorPane(this, PROPERTY_EDITOR);
 	private StringEditorPanel stringEditor = new StringEditorPanel(this, TEXT_EDITOR);
@@ -53,6 +60,7 @@ public class StepEditorController extends PanelController implements EditorError
 	private PVMonitorPanel pvMonitorPanel = new PVMonitorPanel(this, PV_MONITOR);
 	private WriteOutputPanel writeOutputPanel = new WriteOutputPanel(this, WRITE_OUTPUT);
 	private ManualDataPanel manualDataEntryPanel = new ManualDataPanel(this, MANUAL_DATA_ENTRY);
+	private RecipeDataBrowserPanel recipeDataBrowser = new RecipeDataBrowserPanel(this, RECIPE_BROWSER);
 	
 	public StepEditorController(DesignerContext context) {
 		super(context);
@@ -69,9 +77,17 @@ public class StepEditorController extends PanelController implements EditorError
 		slidingPane.add(writeOutputPanel);	
 		slidingPane.add(manualDataEntryPanel);	
 		slidingPane.add(reviewFlowsPanel);	
+		slidingPane.add(recipeDataBrowser);	
+		SimpleHierarchyAnalyzer analyzer = new SimpleHierarchyAnalyzer(
+			context.getGlobalProject().getProject(), IlsSfcDesignerHook.getStepRegistry());
+		recipeDataBrowser.setAnalyzer(analyzer);
 	}
 
 	
+	public ChartUIElement getElement() {
+		return element;
+	}
+
 	public StepPropertyEditorPane getPropertyEditor() {
 		return propertyEditor;
 	}
@@ -124,6 +140,10 @@ public class StepEditorController extends PanelController implements EditorError
 		return manualDataEntryPanel;
 	}
 
+	public RecipeDataBrowserPanel getRecipeDataBrowser() {
+		return recipeDataBrowser;
+	}
+
 	public void showMessage(String message, int returnPanelIndex) {
 		messagePanel.setText(message);
 		messagePanel.activate(returnPanelIndex);
@@ -140,6 +160,7 @@ public class StepEditorController extends PanelController implements EditorError
 	}
 
 	public void setElement(ChartUIElement element) {
+		this.element = element;
 		String factoryId = (String)element.get(IlsProperty.FACTORY_ID);
 		AbstractIlsStepDelegate stepDelegate = (AbstractIlsStepDelegate)AbstractIlsStepUI.getFactory(factoryId);
 		getPropertyEditor().getPropertyEditor().setPropertyValues(element, stepDelegate.getOrderedProperties());

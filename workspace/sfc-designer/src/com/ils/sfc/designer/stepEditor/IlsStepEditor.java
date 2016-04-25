@@ -37,7 +37,8 @@ public class IlsStepEditor  extends AbstractStepEditor {
 
 	}
 
-	protected IlsStepEditor(ChartUIModel chartModel, ChartUIElement element, DesignerContext context) {
+	protected IlsStepEditor(ChartUIModel chartModel, ChartUIElement element, 
+		DesignerContext context) {
 		super(new BorderLayout(), chartModel);
 		stepEditorController = new StepEditorController(context);
 		add(stepEditorController.getSlidingPane());

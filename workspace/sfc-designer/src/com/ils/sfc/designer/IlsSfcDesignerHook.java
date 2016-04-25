@@ -76,6 +76,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private IlsSfcSearchProvider searchProvider = null;
 	private RecipeEditorFrame recipeEditorFrame;
 	private RecipeDataCleaner recipeDataCleaner;
+	private static ClientStepRegistry stepRegistry;
 	
 	public IlsSfcDesignerHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
@@ -175,7 +176,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
        	frames.add(browser);
        	
 		// Register steps
-		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
+		stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
 		for(ClientStepFactory clientStepFactory: AbstractIlsStepUI.clientStepFactories) {
 			stepRegistry.register(clientStepFactory);
 		}
@@ -198,6 +199,10 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		new Thread(new ModuleWatcher(context)).start();             // Watch for modules to start
  	}
 	
+	public static ClientStepRegistry getStepRegistry() {
+		return stepRegistry;
+	}
+
 	@Override
 	public void shutdown() {	
 		context.removeProjectChangeListener(this);

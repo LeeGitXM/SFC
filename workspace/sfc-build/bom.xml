@@ -215,19 +215,19 @@
 		<artifact name="Application Testing Framework" type="documentation" subtype="docx" release="1.0">
 			<location>artifacts/doc/ApplicationTestFramework.docx</location>
 		</artifact>
-		<artifact name="Block Language Toolkit" type="documentation" subtype="docx" release="1.8">
+		<artifact name="Block Language Toolkit" type="documentation" subtype="docx" release="1.9">
 			<location>artifacts/doc/BlockLanguageToolkitDesign.docx</location>
 		</artifact>
-		<artifact name="Lab Data Design Spec" type="documentation" subtype="docx" release="1.5">
+		<artifact name="Lab Data Design Spec" type="documentation" subtype="docx" release="1.7">
 			<location>artifacts/doc/LabDataDesignSpecification.docx</location>
 		</artifact>
-		<artifact name="Migration Manual" type="documentation" subtype="docx" release="0.5">
+		<artifact name="Migration Manual" type="documentation" subtype="docx" release="0.6">
 			<location>artifacts/doc/MigrationManual.docx</location>
 		</artifact>
 		<artifact name="Sequential Control User Manual" type="documentation" subtype="docx" release="0.55">
 			<location>artifacts/doc/SequentialControlUserManual.docx</location>
 		</artifact>
-		<artifact name="Vistalon Design Specification" type="documentation" subtype="docx" release="1.4">
+		<artifact name="Vistalon Design Specification" type="documentation" subtype="docx" release="1.6">
 			<location>artifacts/doc/VistalonDesignSpecification.docx</location>
 		</artifact>
 	</panel>
@@ -238,11 +238,11 @@
 		The source distribution comes complete with Eclipse project files and ant scripts for building. 
         Python source is available directly from its installation in the /user-lib/pylib sub-directory of the Ignition installation.
 		</preamble>
-		<artifact name="Block Language Toolkit Source Code" type="source" subtype="zip" release="0.1r15">
-			<location>artifacts/source/blt-0.1r15.zip</location>
+		<artifact name="Block Language Toolkit Source Code" type="source" subtype="zip" release="0.1r17">
+			<location>artifacts/source/blt-0.1r17.zip</location>
 		</artifact>
-		<artifact name="ILS-SFC Source Code" type="source" subtype="zip" release="0.1r15">
-			<location>artifacts/source/sfc-0.1r15.zip</location>
+		<artifact name="ILS-SFC Source Code" type="source" subtype="zip" release="0.1r17">
+			<location>artifacts/source/sfc-0.1r17.zip</location>
 		</artifact>
 	</panel>
 	<panel type="toolkit" essential="true" version="1">

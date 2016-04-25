@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
+import org.json.JSONObject;
+
 import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.common.IlsProperty;
@@ -36,10 +38,11 @@ public class SimpleHierarchyAnalyzer {
 	private Map<String, List<EnclosureInfo>> parentsByChildChartPath = new HashMap<String, List<EnclosureInfo>>();
 	private Map<String,ChartInfo> chartsByPath = new HashMap<String,ChartInfo>();
 
-	private static final Property<String> stepNameProperty = EnclosingStepProperties.Name;
-	private static final Property<String> factoryIdProperty = EnclosingStepProperties.FactoryId;
-	private static final Property<String> chartPathProperty = EnclosingStepProperties.CHART_PATH;
-	private static final Property<ChartUIModel> parallelChildrenProperty = new BasicProperty<ChartUIModel>("parallel-children", ChartUIModel.class);
+	public static final Property<String> stepNameProperty = EnclosingStepProperties.Name;
+	public static final Property<String> factoryIdProperty = EnclosingStepProperties.FactoryId;
+	public static final Property<String> chartPathProperty = EnclosingStepProperties.CHART_PATH;
+	public static final Property<ChartUIModel> parallelChildrenProperty = new BasicProperty<ChartUIModel>("parallel-children", ChartUIModel.class);
+	public static final Property<JSONObject> associatedDataProperty = new BasicProperty<JSONObject>("associated-data", JSONObject.class);
 
 	public static class ChartInfo {
 		public ChartUIModel model;
@@ -150,7 +153,7 @@ public class SimpleHierarchyAnalyzer {
 		}
 		return enclosures;
 	}
-
+	
 	/** Get the ChartUIElement for the given recipe data scope, or null if not found. */
 	public ChartUIElement getElementForScope(String scope, String childChartPath, ChartUIElement referencingElement) {
 		if(scope.equals(Constants.LOCAL)) return referencingElement;
