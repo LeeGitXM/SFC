@@ -1,11 +1,8 @@
 package com.ils.sfc.designer.stepEditor;
 
-import java.awt.Component;
-
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
-import com.ils.sfc.common.recipe.RecipeDataBrowser;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.designer.EditorErrorHandler;
 import com.ils.sfc.designer.IlsSfcDesignerHook;

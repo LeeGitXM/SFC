@@ -96,7 +96,7 @@ insert into BltPropertyMap values ('GDL-IN-RANGE-OBSERVATION','upperThresholdUnc
 insert into BltPropertyMap values ('GDL-IN-RANGE-OBSERVATION','hysteresisWhen','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-IN-RANGE-OBSERVATION','statusOnInitialization','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-DELAY','countBy','','INTEGER',1,'NONE');
-insert into BltPropertyMap values ('GDL-INFERENCE-DELAY','delay','sampleDelay','INTEGER',1,'NONE');
+insert into BltPropertyMap values ('GDL-INFERENCE-DELAY','delay','SampleDelay','INTEGER',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-DELAY','displayUnits','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','holdFor','HoldInterval','INTEGER',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','hysteresisWhen','','STRING',1,'NONE');
@@ -117,7 +117,7 @@ insert into BltPropertyMap values ('GDL-MOVING-AVERAGE','valueOnInitialization',
 insert into BltPropertyMap values ('GDL-NUMERIC-ENTRY-POINT','nameOfSensor','TagPath','STRING',1,'TAG_READ');
 insert into BltPropertyMap values ('GDL-NOT-GATE','logic','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-NOT-GATE','outputUncertainty','','DOUBLE',1,'NONE');
-insert into BltPropertyMap values ('GDL-PERSISTENCE-GATE','countBy','','INTEGER',1,'NONE');
+insert into BltPropertyMap values ('GDL-PERSISTENCE-GATE','countBy','ScanInterval','INTEGER',1,'NONE');
 insert into BltPropertyMap values ('GDL-PERSISTENCE-GATE','delay','TimeWindow','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-PERSISTENCE-GATE','displayUnits','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-PERSISTENCE-GATE','triggerOn','Trigger','BOOLEAN',1,'NONE');
