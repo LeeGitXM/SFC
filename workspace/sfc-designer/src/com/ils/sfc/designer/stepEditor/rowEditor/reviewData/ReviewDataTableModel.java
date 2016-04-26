@@ -11,7 +11,8 @@ import com.inductiveautomation.ignition.common.script.JythonExecException;
 
 @SuppressWarnings("serial")
 public class ReviewDataTableModel extends RowTableModel {
-	public static final int VALUE_COLUMN = 1;
+	public static final int CONFIG_KEY_COLUMN = 0;
+	public static final int VALUE_KEY_COLUMN = 1;
 	public static final int UNITS_COLUMN = 4;
 	private static final String[] columnNames = {"Config Key", "Value Key", "Destination", "Prompt", "Units"};
 	private static final String[] columnNamesWithAdvice = {"Config Key", "Value Key", "Destination", "Prompt", "Units", "Advice"};
@@ -24,6 +25,11 @@ public class ReviewDataTableModel extends RowTableModel {
 	@Override
 	protected boolean isComboColumn(int col) {
 		return isDestinationColumn(col);
+	}
+
+	@Override
+	protected boolean isRecipeKeyColumn(int col) {
+		return col == CONFIG_KEY_COLUMN || col == VALUE_KEY_COLUMN;
 	}
 
 	@Override

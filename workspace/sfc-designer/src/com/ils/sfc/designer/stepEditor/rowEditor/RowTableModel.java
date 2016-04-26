@@ -66,7 +66,11 @@ public abstract class RowTableModel extends AbstractTableModel {
 	protected boolean isBooleanColumn(int col) {
 		return false;
 	}
-	
+
+	protected boolean isRecipeKeyColumn(int col) {
+		return false;
+	}
+
 	protected boolean isTextColumn(int col) {
 		return true;
 	}

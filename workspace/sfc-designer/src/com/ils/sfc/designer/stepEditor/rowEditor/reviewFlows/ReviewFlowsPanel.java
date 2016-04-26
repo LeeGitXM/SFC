@@ -36,7 +36,9 @@ public class ReviewFlowsPanel extends RowEditorPanel {
 		table.getColumnModel().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				int col = table.getSelectedColumn();
-				buttonPanel.getEditButton().setEnabled(col == ReviewFlowsTableModel.UNITS_COLUMN);
+				buttonPanel.getEditButton().setEnabled(
+					col == ReviewFlowsTableModel.UNITS_COLUMN ||
+					((ReviewFlowsTableModel)table.getModel()).isRecipeKeyColumn(col));
 			}			
 		});	
 	}
@@ -44,7 +46,14 @@ public class ReviewFlowsPanel extends RowEditorPanel {
 	@Override
 	protected void doEdit() {
 		super.doEdit();
-		stepController.getUnitChooser().activate(this);
+		int col = table.getSelectedColumn();
+		if(col == ReviewFlowsTableModel.UNITS_COLUMN) {
+			stepController.getUnitChooser().activate(this);
+		}
+		else if(((ReviewFlowsTableModel)table.getModel()).isRecipeKeyColumn(col)) {
+			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
+			stepController.getRecipeDataBrowser().activate(this);			
+		}
 	}
 
 	@Override

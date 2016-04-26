@@ -18,6 +18,7 @@ import com.ils.sfc.designer.stepEditor.rowEditor.RowTableModel;
 public class CollectDataTableModel extends RowTableModel {
 	private EditorErrorHandler errorHandler;
 
+	public static final int KEY_COLUMN = 0;
 	public static final int LOCATION_COLUMN = 1;
 	public static final int TAG_COLUMN = 2;
 	public static final int VALUE_TYPE_COLUMN = 3;

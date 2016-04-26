@@ -14,6 +14,7 @@ import com.ils.sfc.designer.stepEditor.rowEditor.GenericCellRenderer;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowCellEditor;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowEditorPanel;
 import com.ils.sfc.designer.stepEditor.rowEditor.collectData.CollectDataTableModel;
+import com.ils.sfc.designer.stepEditor.rowEditor.confirmControllers.ConfirmControllersTableModel;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 @SuppressWarnings("serial")
@@ -38,15 +39,12 @@ public class ManualDataPanel extends RowEditorPanel {
 		table.getColumnModel().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				int col = table.getSelectedColumn();
-				buttonPanel.getEditButton().setEnabled(col == ManualDataTableModel.UNITS_COL);
+				buttonPanel.getEditButton().setEnabled(
+					col == ManualDataTableModel.UNITS_COL || 
+					col == ManualDataTableModel.KEY_COL
+					);
 			}			
 		});	
-	}
-	
-	@Override
-	protected void doEdit() {
-		super.doEdit();
-		stepController.getUnitChooser().activate(this);
 	}
 	
 	@Override
@@ -54,4 +52,16 @@ public class ManualDataPanel extends RowEditorPanel {
 		return config;
 	}
 	
+	@Override
+	protected void doEdit() {
+		super.doEdit();
+		int selectedColumn = table.getSelectedColumn();
+		if(selectedColumn == ManualDataTableModel.KEY_COL ) {
+			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
+			stepController.getRecipeDataBrowser().activate(this);
+		}
+		else if(selectedColumn == ManualDataTableModel.UNITS_COL) {
+			stepController.getUnitChooser().activate(this);
+		}
+	}
 }

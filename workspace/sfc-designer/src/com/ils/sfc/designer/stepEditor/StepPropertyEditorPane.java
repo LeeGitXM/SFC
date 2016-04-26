@@ -19,6 +19,7 @@ import com.ils.sfc.designer.propertyEditor.PropertyEditor;
 import com.ils.sfc.designer.propertyEditor.PropertyRow;
 import com.ils.sfc.designer.propertyEditor.ValueHolder;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
+import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 
@@ -85,67 +86,72 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 		boolean hasChoices = selectedRow != null && selectedRow.getChoices() != null;
 		PropertyValue<?> selectedPropertyValue = getPropertyEditor().getSelectedPropertyValue();
 		if(selectedPropertyValue == null) return;
-
+		Property<?>selectedProperty = selectedPropertyValue.getProperty();
 		editor.stopCellEditing();
-		if(selectedPropertyValue.getProperty().equals(IlsProperty.TAG_PATH)) {
+		if(selectedProperty.equals(IlsProperty.TAG_PATH)) {
 			controller.getTagBrowser().setValue(selectedPropertyValue.getValue());
 			controller.getTagBrowser().activate(this);
 		}
-		else if(selectedPropertyValue.getProperty().equals(IlsProperty.KEY)) {
+		else if(selectedProperty.equals(IlsProperty.KEY) ||
+				selectedProperty.equals(IlsProperty.BUTTON_KEY) ||
+				selectedProperty.equals(IlsProperty.TIMER_KEY) ||
+				selectedProperty.equals(IlsProperty.TIME_LIMIT_RECIPE_KEY) ||
+				selectedProperty.equals(IlsProperty.BUTTON_KEY) ||
+				selectedProperty.equals(IlsProperty.CHOICES_KEY)) {
 			//controller.getRecipeDataBrowser().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getRecipeDataBrowser().activate(this);										
 		}
-		else if(selectedPropertyValue.getProperty().equals(IlsProperty.PRIMARY_REVIEW_DATA) ||
-				selectedPropertyValue.getProperty().equals(IlsProperty.PRIMARY_REVIEW_DATA_WITH_ADVICE) ||
-				selectedPropertyValue.getProperty().equals(IlsProperty.SECONDARY_REVIEW_DATA) ||
-				selectedPropertyValue.getProperty().equals(IlsProperty.SECONDARY_REVIEW_DATA_WITH_ADVICE )) {
+		else if(selectedProperty.equals(IlsProperty.PRIMARY_REVIEW_DATA) ||
+				selectedProperty.equals(IlsProperty.PRIMARY_REVIEW_DATA_WITH_ADVICE) ||
+				selectedProperty.equals(IlsProperty.SECONDARY_REVIEW_DATA) ||
+				selectedProperty.equals(IlsProperty.SECONDARY_REVIEW_DATA_WITH_ADVICE )) {
 			// REVIEW_DATA properties hold a complex configuration in a stringified JSON object
 			controller.getReviewDataPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getReviewDataPanel().activate(myIndex);				
 		}
-		else if(selectedPropertyValue.getProperty().equals(IlsProperty.REVIEW_FLOWS)) {
+		else if(selectedProperty.equals(IlsProperty.REVIEW_FLOWS)) {
 			controller.getReviewFlowsPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getReviewFlowsPanel().activate(myIndex);							
 		}
-		else if(selectedPropertyValue.getProperty().equals(IlsProperty.COLLECT_DATA_CONFIG)) {
+		else if(selectedProperty.equals(IlsProperty.COLLECT_DATA_CONFIG)) {
 			// COLLECT_DATA properties hold a complex configuration in a stringified JSON object
 			controller.getCollectDataPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getCollectDataPanel().activate(myIndex);							
 		}
-		else if(selectedPropertyValue.getProperty().equals(IlsProperty.CONFIRM_CONTROLLERS_CONFIG)) {
+		else if(selectedProperty.equals(IlsProperty.CONFIRM_CONTROLLERS_CONFIG)) {
 			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
 			controller.getConfirmControllersPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getConfirmControllersPanel().activate(myIndex);							
 		}
-		else if(selectedPropertyValue.getProperty().equals(IlsProperty.MONITOR_DOWNLOADS_CONFIG)) {
+		else if(selectedProperty.equals(IlsProperty.MONITOR_DOWNLOADS_CONFIG)) {
 			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
 			controller.getMonitorDownloadsPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getMonitorDownloadsPanel().activate(myIndex);							
 		}
-		else if(selectedPropertyValue.getProperty().equals(IlsProperty.PV_MONITOR_CONFIG)) {
+		else if(selectedProperty.equals(IlsProperty.PV_MONITOR_CONFIG)) {
 			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
 			controller.getPvMonitorPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getPvMonitorPanel().activate(myIndex);							
 		}
-		else if(selectedPropertyValue.getProperty().equals(IlsProperty.WRITE_OUTPUT_CONFIG)) {
+		else if(selectedProperty.equals(IlsProperty.WRITE_OUTPUT_CONFIG)) {
 			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
 			controller.getWriteOutputPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getWriteOutputPanel().activate(myIndex);							
 		}
-		else if(selectedPropertyValue.getProperty().equals(IlsProperty.MANUAL_DATA_CONFIG)) {
+		else if(selectedProperty.equals(IlsProperty.MANUAL_DATA_CONFIG)) {
 			controller.getManualDataEntryPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getManualDataEntryPanel().activate(myIndex);							
 		}
-		else if(selectedPropertyValue.getProperty().getName().endsWith(Constants.UNIT_SUFFIX) && !hasChoices) {
+		else if(selectedProperty.getName().endsWith(Constants.UNIT_SUFFIX) && !hasChoices) {
 			editor.stopCellEditing();
 			controller.getUnitChooser().activate(myIndex);
 			// as activate may initialize units; we set unit AFTER activation:
 			controller.getUnitChooser().setValue(editor.getSelectedValue());
 		}
-		else if(selectedPropertyValue.getProperty().getType() == String.class) {
+		else if(selectedProperty.getType() == String.class) {
 			editor.stopCellEditing();
 			Object value = selectedPropertyValue.getValue();
-	    	if(selectedPropertyValue.getProperty().equals(IlsProperty.G2_XML)) {
+	    	if(selectedProperty.equals(IlsProperty.G2_XML)) {
 	    		value = IlsSfcCommonUtils.unescapeXml((String)value);
 	    	}
 			controller.getStringEditor().setValue(value);

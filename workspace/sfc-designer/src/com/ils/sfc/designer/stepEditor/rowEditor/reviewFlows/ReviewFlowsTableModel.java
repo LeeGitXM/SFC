@@ -17,6 +17,11 @@ public class ReviewFlowsTableModel extends RowTableModel {
 	}
 
 	@Override
+	protected boolean isRecipeKeyColumn(int col) {
+		return col < DESTINATION_COLUMN;
+	}
+
+	@Override
 	protected boolean isTextColumn(int col) {
 		return col != DESTINATION_COLUMN;
 	}

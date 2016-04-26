@@ -38,7 +38,9 @@ public class CollectDataPanel extends RowEditorPanel {
 		table.getColumnModel().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				int col = table.getSelectedColumn();
-				buttonPanel.getEditButton().setEnabled(col == CollectDataTableModel.TAG_COLUMN);
+				buttonPanel.getEditButton().setEnabled(
+					col == CollectDataTableModel.TAG_COLUMN || 
+					col == CollectDataTableModel.KEY_COLUMN);
 			}			
 		});
 	}
@@ -46,8 +48,15 @@ public class CollectDataPanel extends RowEditorPanel {
 	@Override
 	protected void doEdit() {
 		super.doEdit();
-		stepController.getTagBrowser().setValue(getSelectedValue());
-		stepController.getTagBrowser().activate(this);
+		int selectedColumn = table.getSelectedColumn();
+		if(selectedColumn == CollectDataTableModel.KEY_COLUMN ) {
+			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
+			stepController.getRecipeDataBrowser().activate(this);
+		}
+		if(selectedColumn == CollectDataTableModel.TAG_COLUMN ) {
+			stepController.getTagBrowser().setValue(getSelectedValue());
+			stepController.getTagBrowser().activate(this);			
+		}
 	}
 	
 	@Override

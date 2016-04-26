@@ -38,7 +38,9 @@ public class ReviewDataPanel extends RowEditorPanel {
 		table.getColumnModel().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				int col = table.getSelectedColumn();
-				boolean isUnitsCol = ((ReviewDataTableModel)tableModel).isUnitsColumn(col);
+				boolean isUnitsCol = 
+					((ReviewDataTableModel)tableModel).isUnitsColumn(col) ||
+					((ReviewDataTableModel)tableModel).isRecipeKeyColumn(col);
 				buttonPanel.getEditButton().setEnabled(isUnitsCol);
 			}			
 		});	
@@ -47,7 +49,14 @@ public class ReviewDataPanel extends RowEditorPanel {
 	@Override
 	protected void doEdit() {
 		super.doEdit();
-		stepController.getUnitChooser().activate(this);
+		int col = table.getSelectedColumn();
+		if(((ReviewDataTableModel)tableModel).isUnitsColumn(col)) {
+			stepController.getUnitChooser().activate(this);
+		}
+		else if(((ReviewDataTableModel)tableModel).isRecipeKeyColumn(col)) {
+			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
+			stepController.getRecipeDataBrowser().activate(this);
+		}		
 	}
 
 	@Override
