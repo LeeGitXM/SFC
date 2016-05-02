@@ -96,7 +96,6 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 				selectedProperty.equals(IlsProperty.BUTTON_KEY) ||
 				selectedProperty.equals(IlsProperty.TIMER_KEY) ||
 				selectedProperty.equals(IlsProperty.TIME_LIMIT_RECIPE_KEY) ||
-				selectedProperty.equals(IlsProperty.BUTTON_KEY) ||
 				selectedProperty.equals(IlsProperty.CHOICES_KEY)) {
 			//controller.getRecipeDataBrowser().setConfig((PropertyValue<String>) selectedPropertyValue);
 			controller.getRecipeDataBrowser().activate(this);										

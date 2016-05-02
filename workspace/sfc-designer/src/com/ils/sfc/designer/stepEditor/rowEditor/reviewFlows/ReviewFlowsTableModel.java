@@ -2,6 +2,7 @@ package com.ils.sfc.designer.stepEditor.rowEditor.reviewFlows;
 
 import system.ils.sfc.common.Constants;
 
+import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.rowconfig.ReviewFlowsConfig;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowTableModel;
 
@@ -62,11 +63,41 @@ public class ReviewFlowsTableModel extends RowTableModel {
     	ReviewFlowsConfig.Row rowObj = getRowObject(row);
     	String sValue = (String)value;
     	switch(col) {
-    		case 0: rowObj.configKey = sValue; break;
-    		case 1: rowObj.flow1Key = sValue; break;
-    		case 2: rowObj.flow2Key = sValue; break;
-    		case 3: rowObj.flow3Key = sValue; break;
-    		case 4: rowObj.destination = sValue; break;
+    		case 0: {
+    			String[] scopeKey = IlsProperty.parseRecipeScopeValue(sValue);
+    			rowObj.configKey = scopeKey[1]; 
+    			if(scopeKey[0] != null) {
+    				rowObj.destination = scopeKey[0];
+    			}
+    			break;
+    		}
+    		case 1: {
+       			String[] scopeKey = IlsProperty.parseRecipeScopeValue(sValue);
+    			rowObj.flow1Key = scopeKey[1]; 
+    			if(scopeKey[0] != null) {
+    				rowObj.destination = scopeKey[0];
+    			}
+    			break;
+    		}
+    		case 2: {
+       			String[] scopeKey = IlsProperty.parseRecipeScopeValue(sValue);
+    			rowObj.flow2Key = scopeKey[1]; 
+    			if(scopeKey[0] != null) {
+    				rowObj.destination = scopeKey[0];
+    			}
+    			break;
+    		}
+    		case 3: {
+       			String[] scopeKey = IlsProperty.parseRecipeScopeValue(sValue);
+    			rowObj.flow3Key = scopeKey[1]; 
+    			if(scopeKey[0] != null) {
+    				rowObj.destination = scopeKey[0];
+    			}
+    			break;
+    		}
+    		case 4: 
+    			rowObj.destination = sValue; 
+    			break;
     		case 5: rowObj.prompt = sValue; break;
     		case 6: rowObj.units = sValue; break;
     		case 7: rowObj.advice = sValue; break;

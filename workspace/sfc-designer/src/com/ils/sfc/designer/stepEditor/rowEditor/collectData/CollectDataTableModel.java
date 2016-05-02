@@ -54,7 +54,13 @@ public class CollectDataTableModel extends RowTableModel {
     	CollectDataConfig.Row rowObj = getRowObject(row);
     	String sValue = (String)value;
     	switch(col) {
-    		case 0: rowObj.recipeKey = sValue; break;
+    		case 0: 
+    			String[] scopeKey = IlsProperty.parseRecipeScopeValue(sValue);
+    			rowObj.recipeKey = scopeKey[1]; 
+    			if(scopeKey[0] != null) {
+    				rowObj.location = scopeKey[0];
+    			}
+    			break;
     		case 1: rowObj.location = sValue; break;
     		case 2: rowObj.tagPath = sValue; break;
     		case 3: rowObj.valueType = sValue; break;

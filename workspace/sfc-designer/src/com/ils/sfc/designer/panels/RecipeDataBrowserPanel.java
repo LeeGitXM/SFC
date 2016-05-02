@@ -27,6 +27,8 @@ import com.ils.sfc.designer.panels.PanelController;
 import com.ils.sfc.designer.panels.ValueHoldingEditorPanel;
 import com.ils.sfc.designer.propertyEditor.ValueHolder;
 import com.ils.sfc.designer.stepEditor.StepEditorController;
+import com.inductiveautomation.ignition.common.config.Property;
+import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** A browser that can be invoked on a given SFC step in the Designer and that will show 
@@ -104,11 +106,16 @@ public class RecipeDataBrowserPanel extends ValueHoldingEditorPanel {
 	 *  (which may in fact be a group with child data). */
 	private void addNodeForData(DefaultMutableTreeNode parentNode, Data data) {
 		DefaultMutableTreeNode dataNode = new DefaultMutableTreeNode(data.getKey());
-		parentNode.add(dataNode);;
+		parentNode.add(dataNode);
 		if(data.isGroup()) {
 			Group group = (Group)data;
 			for(Data child: group.getChildren()) {
 				addNodeForData(dataNode, child);
+			}
+		}
+		else {
+			for(PropertyValue<?> pv: data.getProperties()) {
+				dataNode.add(new DefaultMutableTreeNode(pv.getProperty().getName()));				
 			}
 		}
 	}
@@ -139,10 +146,24 @@ public class RecipeDataBrowserPanel extends ValueHoldingEditorPanel {
 	}
 
 	@Override
+	/** Get the selected recipe scope and key as <scope>.<key>. There is a bit of a hack going
+	 *  on here, as these get split in the property editor into values for
+	 *  the key field--which is the one being edited--and the corresponding
+	 *  scope field, which is inferred. See PropertyTableModel.setValueAt().
+	 */
 	public Object getValue() {
-		TreePath selectedPath = tree.getSelectionPath();
-		if(selectedPath != null) {
-			return selectedPath.getLastPathComponent().toString() + ".value";
+		TreePath tpath = tree.getSelectionPath();
+		// by starting at index 1 we omit the root node
+		if(tpath != null && tpath.getPath().length > 1) {
+			Object[]elements = tpath.getPath();
+			StringBuilder bldr = new StringBuilder();
+			for(int i = 1; i < elements.length; i++) {
+				if(i > 1) {
+					bldr.append(".");
+				}
+				bldr.append(elements[i].toString());
+			}
+			return bldr.toString();
 		}
 		else {
 			return null;

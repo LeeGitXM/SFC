@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.ils.sfc.common.step.TimedDelayStepProperties;
+import com.ils.sfc.designer.propertyEditor.PropertyRow;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -625,6 +626,49 @@ public class IlsProperty {
 			}
 			//logger.infof("factoryId %s prop %s g2 value %s -> free %s", factoryId, property.getName(), g2Value, g2Value);
 			return g2Value;
+		}
+	}
+	
+	/** If the given property is a recipe data key, return the corresponding scope
+	 *  property--otherwise return null.
+	 */
+	public static Property<?> getScopeProperty(Property<?> prop) {
+		if(prop.equals(KEY)) {
+			return RECIPE_LOCATION;
+		}
+		else if(prop.equals(BUTTON_KEY)) {
+			return BUTTON_KEY_LOCATION;
+		}
+		else if(prop.equals(TIMER_KEY)) {
+			return TIMER_LOCATION;
+		}
+		else if(prop.equals(TIME_LIMIT_RECIPE_KEY)) {
+			return TIME_LIMIT_RECIPE_LOCATION;
+		}
+		else if(prop.equals(CHOICES_KEY)) {
+			return CHOICES_RECIPE_LOCATION;
+		}
+		else {
+			return null;
+		}
+	}
+	
+	/** Split apart the scope and key in a <scope>.<key> references. Return
+	 *  the scope and key in an array. If there is no separator, just return
+	 *  the key with a null scope.
+	 */
+	public static String[] parseRecipeScopeValue(String sval) {	
+		if(sval == null) {
+			return new String[] {null, null};
+		}
+		else if(sval.indexOf(".") != -1) {
+			int firstDotIndex = sval.indexOf(".");
+			String scope = sval.substring(0, firstDotIndex);
+			String key = sval.substring(firstDotIndex+1, sval.length());
+			return new String[] {scope, key};
+		}
+		else {
+			return new String[] {null, sval};
 		}
 	}
 }

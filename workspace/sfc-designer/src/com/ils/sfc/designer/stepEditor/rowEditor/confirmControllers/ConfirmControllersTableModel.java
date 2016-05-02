@@ -31,7 +31,8 @@ public class ConfirmControllersTableModel extends RowTableModel {
     public void setValueAt(Object value, int row, int col) {
     	ConfirmControllersConfig.Row rowObj = getRowObject(row);
     	switch(col) {
-    		case 0: rowObj.key = (String)value; break;
+    		case 0: 
+    			rowObj.key = (String)value; break;
     		case 1: rowObj.checkSPFor0 = ((Boolean)value).booleanValue(); break;
     		case 2: rowObj.checkPathToValve = ((Boolean)value).booleanValue(); break;
     	}

@@ -2,6 +2,7 @@ package com.ils.sfc.designer.stepEditor.rowEditor.reviewData;
 
 import system.ils.sfc.common.Constants;
 
+import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.rowconfig.ReviewDataConfig;
@@ -79,8 +80,22 @@ public class ReviewDataTableModel extends RowTableModel {
     	ReviewDataConfig.Row rowObj = getRowObject(row);
     	String sValue = (String)value;
     	switch(col) {
-    		case 0: rowObj.configKey = sValue; break;
-    		case 1: rowObj.valueKey = sValue; break;
+    		case 0: {
+    			String[] scopeKey = IlsProperty.parseRecipeScopeValue(sValue);
+    			rowObj.configKey = scopeKey[1]; 
+    			if(scopeKey[0] != null) {
+    				rowObj.recipeScope = scopeKey[0];
+    			}
+    			break;
+    		}
+    		case 1: {
+    			String[] scopeKey = IlsProperty.parseRecipeScopeValue(sValue);
+    			rowObj.valueKey = scopeKey[1]; 
+    			if(scopeKey[0] != null) {
+    				rowObj.recipeScope = scopeKey[0];
+    			}
+    			break;
+    		}
     		case 2: rowObj.recipeScope = sValue; break;
     		case 3: rowObj.prompt = sValue; break;
     		case 4: rowObj.units = sValue; break;

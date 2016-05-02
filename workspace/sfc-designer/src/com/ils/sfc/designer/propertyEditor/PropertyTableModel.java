@@ -94,14 +94,24 @@ public class PropertyTableModel extends AbstractTableModel {
 
 		if(col == VALUE_COLUMN) {
 			try {
-				// It is a bit strange that the value is set twice
-				// The reason for this is that the "real" value is
-				// in the propertyValues collections, but the 
-				// viewed value is in the pRow. These are two 
-				// different values, basically because PropertyValues
-				// are immutable
-				pRow.setValueFormatted((String)value);
-				propertyValues.set(pRow.getPropertyValue());
+				// HACK: for recipe data we split the value into two linked
+				// properties
+				Property<?> scopeProperty = IlsProperty.getScopeProperty(pRow.getProperty());
+				if(scopeProperty == null || value == null) {
+					setValue(value, pRow);
+				}
+				else {
+					// parse out the scope and key and set separately
+					String sval = (String) value;
+					String[] scopeKey = IlsProperty.parseRecipeScopeValue(sval);
+					String scope = scopeKey[0];
+					String key = scopeKey[1];
+					setValue(key, pRow);
+					if(scope != null) {
+						PropertyRow scopeRow = findRow(scopeProperty);
+						setValue(scope, scopeRow);
+					}
+				}
 			}
 			catch(ParseException e) {
 				handleError(e.getMessage());
@@ -110,6 +120,27 @@ public class PropertyTableModel extends AbstractTableModel {
     	hasChanged = true;
         fireTableCellUpdated(row, col);
     }
+
+    /** Return the row with the given property, else null. */
+	private PropertyRow findRow(Property<?> property) {
+		for(PropertyRow row: rows) {
+			if(row.getProperty().equals(property)) {
+				return row;
+			}
+		}
+		return null;
+	}
+
+	private void setValue(Object value, PropertyRow pRow) throws ParseException {
+		// It is a bit strange that the value is set twice
+		// The reason for this is that the "real" value is
+		// in the propertyValues collections, but the 
+		// viewed value is in the pRow. These are two 
+		// different values, basically because PropertyValues
+		// are immutable
+		pRow.setValueFormatted((String)value);
+		propertyValues.set(pRow.getPropertyValue());
+	}
     
     public void handleError(String message) {
     	if(errorHandler != null) {
