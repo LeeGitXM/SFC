@@ -101,7 +101,7 @@ insert into BltPropertyMap values ('GDL-INFERENCE-DELAY','displayUnits','','STRI
 insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','holdFor','HoldInterval','INTEGER',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','hysteresisWhen','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','outputUncertainty','','STRING',1,'NONE');
-insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','triggerOn','Trigger','STRING',1,'NONE');
+insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','triggerOn','Trigger','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-LOW-VALUE-OBSERVATION','hysteresisWhen','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-LOW-VALUE-OBSERVATION','outputUncertainty','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-LOW-VALUE-OBSERVATION','statusOnInitialization','','STRING',1,'NONE');
