@@ -70,6 +70,7 @@ public class MockEnclosingScopeFactory {
 			parentScope.put(Constants.PROJECT, initialParams.get(Constants.PROJECT));
 			parentScope.put(Constants.USER, initialParams.get(Constants.USER));
 			parentScope.put(Constants.ISOLATION_MODE, initialParams.get(Constants.ISOLATION_MODE));
+			parentScope.put(Constants.MESSAGE_QUEUE, initialParams.get(Constants.DEFAULT_MESSAGE_QUEUE));
 		}
 		
 		// copy lowest child scope info to initial Params
