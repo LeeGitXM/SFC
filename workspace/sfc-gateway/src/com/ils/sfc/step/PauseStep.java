@@ -7,7 +7,6 @@ import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 
 public class PauseStep extends IlsAbstractChartStep implements PauseStepProperties {
-	private boolean paused = false;
 	
 	public PauseStep(ChartContext context, ScopeContext scopeContext, StepDefinition definition) {
 		super(context, scopeContext, definition);
@@ -17,5 +16,4 @@ public class PauseStep extends IlsAbstractChartStep implements PauseStepProperti
 	@Override
 	protected PythonCall getPythonCall(){return PythonCall.PAUSE;}
 	
-
 }
