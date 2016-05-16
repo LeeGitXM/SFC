@@ -55,10 +55,10 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 						Thread.sleep(500);
 					} catch (InterruptedException e) {}
 				}
+				// The yield function ensures that all outstanding messages have been delivered through the chart
+				// control queue. We call this so that we know for a fact that the cancelled and paused flags are as accurate as possible.
+				controller.yield();
 			}
-			// The yield function ensures that all outstanding messages have been delivered through the chart
-			// control queue. We call this so that we know for a fact that the cancelled and paused flags are as accurate as possible.
-			controller.yield();
 		}
 	}
 
@@ -72,10 +72,6 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 			Object result = pcall.exec(scopeContext, getDefinition().getProperties(), cleanup);
 			if(result != null && result instanceof Boolean) {
 				workDone = ((Boolean)result).booleanValue();
-				// deactivation should have produced a false return, but make sure:
-				if(deactivated) {
-					workDone = false;
-				}
 			}
 			else {
 				logger.errorf("ERROR: non-boolean return for step python %s: %s: ", 
@@ -86,7 +82,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		}
 		// note: just using "put" will not trigger change notification--use setVariable()
 		scopeContext.getStepScope().setVariable(WORK_DONE_FLAG, workDone ? 1 : 0);
-		return workDone || deactivated;
+		return workDone;
 	}
 
 	public String getName() {
@@ -100,34 +96,39 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	
 	@Override
 	public void activateStep(StepController controller) {
-		//logger.info("Step activating");
+		logger.info("Step activating");
+		// It is important for the correct function of Cancel steps that callPython be called
+		// once outside of the controller:execute stuff:
+		done = callPython(false);
 		//Executing long running tasks through the controller allows the step to block chart flow (the step won't deactivate until the work finishes),
 		//but still respond to pause/cancel, as we're not blocking the chart execution queue.
-		controller.execute(this::doWork);
+		if(!done) {
+			controller.execute(this::doWork);
+		}
 	}
 
 	@Override
 	public void deactivateStep() {
-		//logger.info("Step deactivated");
+		logger.info("Step deactivated");
 		deactivated = true;
 		//In this example, we want to block flow until the work has finished. Therefore, we take no special action during deactivate.
 	}
 
 	@Override
 	public void cancelStep() {
-		//logger.infof("Step cancelled");
+		logger.infof("Step cancelled");
 		cancelled = true;
 	}
 
 	@Override
 	public void pauseStep() {
-		//logger.infof("Example step paused.");
+		logger.infof("Example step paused.");
 		paused = true;
 	}
 
 	@Override
 	public void resumeStep(StepController controller) {
-		//logger.infof("Example step resumed.");
+		logger.infof("Example step resumed.");
 		paused = false;
 		//On resume, we can just continue the work that we were previously doing.
 		controller.execute(this::doWork);
