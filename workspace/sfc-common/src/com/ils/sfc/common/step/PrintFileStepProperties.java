@@ -20,6 +20,7 @@ public interface PrintFileStepProperties extends ChartStepProperties {
     	COMPUTER,
     	FILENAME,
     	PRINT_FILE,
+    	SHOW_PRINT_DIALOG,
     	VIEW_FILE
     	};
 }

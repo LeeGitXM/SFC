@@ -27,6 +27,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	volatile boolean paused = false;
 	volatile boolean cancelled = false;
 	volatile boolean deactivated = false;
+	volatile boolean done = false;
 	private static final String WORK_DONE_FLAG = "workDone";
 	
 	protected IlsAbstractChartStep(ChartContext context,  ScopeContext scopeContext, StepDefinition definition) {
@@ -40,20 +41,20 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	
 	/** Repeatedly do increments of work. */
 	protected void doWork(StepController controller) {
-		while (!paused) {
-			if(cancelled || deactivated) {
-				callPython(true);
-				break;
-			}
-			if(callPython(false)) {
-				break;
-			}
-			else {
-				// Some steps are simply waiting for a response...for performance reasons we don't
-				// want get into a tight loop for that sort of thing, so we put in a small sleep:
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {}
+		if(cancelled || deactivated) {
+			// do cleanup
+			callPython(true);
+		}
+		else {
+			while (!paused && !done) {
+				done = callPython(false);
+				if(!done) {
+					// Some steps are simply waiting for a response...for performance reasons we don't
+					// want get into a tight loop for that sort of thing, so we put in a small sleep:
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {}
+				}
 			}
 			// The yield function ensures that all outstanding messages have been delivered through the chart
 			// control queue. We call this so that we know for a fact that the cancelled and paused flags are as accurate as possible.
@@ -99,36 +100,34 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	
 	@Override
 	public void activateStep(StepController controller) {
-		//logger.info("Step activating");
+		logger.info("Step activating");
 		//Executing long running tasks through the controller allows the step to block chart flow (the step won't deactivate until the work finishes),
 		//but still respond to pause/cancel, as we're not blocking the chart execution queue.
-		if(!callPython(false)) {
-			controller.execute(this::doWork);
-		}
+		controller.execute(this::doWork);
 	}
 
 	@Override
 	public void deactivateStep() {
-		//logger.info("Step deactivated");
+		logger.info("Step deactivated");
 		deactivated = true;
 		//In this example, we want to block flow until the work has finished. Therefore, we take no special action during deactivate.
 	}
 
 	@Override
 	public void cancelStep() {
-		//logger.infof("Step cancelled");
+		logger.infof("Step cancelled");
 		cancelled = true;
 	}
 
 	@Override
 	public void pauseStep() {
-		//logger.infof("Example step paused.");
+		logger.infof("Example step paused.");
 		paused = true;
 	}
 
 	@Override
 	public void resumeStep(StepController controller) {
-		//logger.infof("Example step resumed.");
+		logger.infof("Example step resumed.");
 		paused = false;
 		//On resume, we can just continue the work that we were previously doing.
 		controller.execute(this::doWork);

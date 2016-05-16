@@ -17,24 +17,5 @@ public class PauseStep extends IlsAbstractChartStep implements PauseStepProperti
 	@Override
 	protected PythonCall getPythonCall(){return PythonCall.PAUSE;}
 	
-	@Override
-	public void pauseStep() {
-		super.pauseStep();
-		paused = true;
-	}
 
-	@Override
-	public void deactivateStep() {
-		super.deactivateStep();
-		/** Prevent execution from passing beyond this step until this 
-		 *  chart has been canceled, as cancellation 
-		 *  may trickle down from the top-level chart
-		 */
-		while(!paused) {
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {}
-		} 
-		paused = false; // probably unnecessary...
-	}
 }
