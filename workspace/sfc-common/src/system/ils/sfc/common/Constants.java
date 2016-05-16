@@ -37,7 +37,7 @@ public class Constants {
 	public static final String CHOICES_RECIPE_LOCATION = "choicesRecipeLocation";
 	public static final String COLUMN_KEY = "columnKey";
 	public static final String COLUMNS = "columns";
-	public static final String COLUMN_KEYED = "columnKeyed";
+	//public static final String COLUMN_KEYED = "columnKeyed";
 	public static final String COMPUTER = "computer";
 	public static final String COLLECT_DATA_CONFIG = "collectDataConfig";
 	public static final String CONFIG = "config";
@@ -91,7 +91,7 @@ public class Constants {
 	public static final String LOW = "Low";
 	public static final String KEY = "key";
 	public static final String KEY_MODE = "keyMode";
-	public static final String KEYED = "keyed";
+	//public static final String KEYED = "keyed";
 	public static final String LABEL = "label";
 	public static final String LENGTH = "length";
 	public static final String MANUAL_DATA_CONFIG = "manualDataConfig";
@@ -154,7 +154,7 @@ public class Constants {
 	public static final String REVIEW_FLOWS_WINDOW = "reviewFlowsWindow";
 	public static final String REVIEW_FLOWS = "reviewFlows";
 	public static final String ROW_KEY = "rowKey"; 
-	public static final String ROW_KEYED = "rowKeyed"; 
+	//public static final String ROW_KEYED = "rowKeyed"; 
 	public static final String ROWS = "rows"; 
 	public static final String S88_LEVEL = "s88Level";
 	public static final String SCALE = "scale";

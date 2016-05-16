@@ -63,17 +63,16 @@ public class RecipeDataTranslator {
 		g2ToIgName.put("category", Constants.CATEGORY);
 		g2ToIgName.put("columns", Constants.COLUMNS);
 		g2ToIgName.put("column-key", Constants.COLUMN_KEY);
-		g2ToIgName.put("column-keyed", Constants.COLUMN_KEYED);
+		g2ToIgName.put("column-keyed", null);
 		g2ToIgName.put("description", Constants.DESCRIPTION);
 		g2ToIgName.put("download", Constants.DOWNLOAD);
-		g2ToIgName.put("elements", Constants.ELEMENTS
-				);
+		g2ToIgName.put("elements", Constants.VALUE);
 		g2ToIgName.put(G2_CLASS_NAME, Constants.CLASS);
 		g2ToIgName.put("help", Constants.HELP);
 		g2ToIgName.put("high-limit", Constants.HIGH_LIMIT);
 		g2ToIgName.put("high_limit", Constants.HIGH_LIMIT);
 		g2ToIgName.put("key", Constants.KEY);
-		g2ToIgName.put("keyed", Constants.KEYED);
+		g2ToIgName.put("keyed", null);
 		g2ToIgName.put("label", Constants.LABEL);
 		g2ToIgName.put("low-limit", Constants.LOW_LIMIT);
 		g2ToIgName.put("low_limit", Constants.LOW_LIMIT);
@@ -81,7 +80,7 @@ public class RecipeDataTranslator {
 		g2ToIgName.put("ramp-time", Constants.RAMP_TIME);
 		g2ToIgName.put("rows", Constants.ROWS);
 		g2ToIgName.put("row-key", Constants.ROW_KEY);
-		g2ToIgName.put("row-keyed", Constants.ROW_KEYED);
+		g2ToIgName.put("row-keyed", null);
 		g2ToIgName.put("tag", Constants.TAG_PATH);
 		g2ToIgName.put("target", Constants.TARGET_VALUE);
 		g2ToIgName.put("timing", Constants.TIMING);
@@ -223,7 +222,10 @@ public class RecipeDataTranslator {
 				if(g2Key.equals(G2_CLASS_NAME)) continue;
 				String igKey = g2ToIgName.get(g2Key);
 				String strValue = attMap.get(g2Key);
-				if(Constants.UUID.equals(g2Key)) {
+				if(igKey == null && g2ToIgName.containsKey(g2Key)) {
+					// ignore this one
+				}
+				else if(Constants.UUID.equals(g2Key)) {
 					data.setG2Id(strValue);
 				}
 				else if(Constants.PARENT_GROUP.equals(g2Key)) {
