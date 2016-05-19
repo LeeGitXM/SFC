@@ -21,7 +21,6 @@ public interface ReviewDataStepProperties extends ChartStepProperties {
     	BUTTON_KEY,
     	TIMEOUT,
     	TIMEOUT_UNIT,
-    	AUTO_MODE,
     	REVIEW_DATA_WINDOW,
     	PRIMARY_REVIEW_DATA,
     	PRIMARY_TAB_LABEL,

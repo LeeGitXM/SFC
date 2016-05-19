@@ -20,7 +20,6 @@ public interface ReviewDataWithAdviceStepProperties extends ChartStepProperties 
     	BUTTON_KEY,
     	BUTTON_KEY_LOCATION,
     	REVIEW_DATA_WINDOW,
-    	AUTO_MODE,
     	PRIMARY_REVIEW_DATA_WITH_ADVICE,
     	PRIMARY_TAB_LABEL,
     	SECONDARY_REVIEW_DATA_WITH_ADVICE,
