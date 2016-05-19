@@ -653,7 +653,7 @@ public class IlsProperty {
 		}
 	}
 	
-	/** Split apart the scope and key in a <scope>.<key> references. Return
+	/** Split apart the scope and key in a <scope>#<key> references. Return
 	 *  the scope and key in an array. If there is no separator, just return
 	 *  the key with a null scope.
 	 */
@@ -661,10 +661,10 @@ public class IlsProperty {
 		if(sval == null) {
 			return new String[] {null, null};
 		}
-		else if(sval.indexOf(".") != -1) {
-			int firstDotIndex = sval.indexOf(".");
-			String scope = sval.substring(0, firstDotIndex);
-			String key = sval.substring(firstDotIndex+1, sval.length());
+		else if(sval.indexOf("#") != -1) {
+			int separatorIndex = sval.indexOf("#");
+			String scope = sval.substring(0, separatorIndex);
+			String key = sval.substring(separatorIndex+1, sval.length());
 			return new String[] {scope, key};
 		}
 		else {
