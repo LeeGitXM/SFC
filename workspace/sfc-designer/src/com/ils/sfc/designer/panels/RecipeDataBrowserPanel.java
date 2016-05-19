@@ -158,7 +158,7 @@ public class RecipeDataBrowserPanel extends ValueHoldingEditorPanel {
 			Object[]elements = tpath.getPath();
 			StringBuilder bldr = new StringBuilder();
 			for(int i = 1; i < elements.length; i++) {
-				if(i == 1) {
+				if(i == 2) {
 					bldr.append("#");  // scope separator
 				}
 				else if(i > 2) {
