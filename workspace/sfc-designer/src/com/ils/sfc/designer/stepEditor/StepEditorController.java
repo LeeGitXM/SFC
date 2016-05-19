@@ -164,7 +164,7 @@ public class StepEditorController extends PanelController implements EditorError
 		String factoryId = (String)element.get(IlsProperty.FACTORY_ID);
 		AbstractIlsStepDelegate stepDelegate = (AbstractIlsStepDelegate)AbstractIlsStepUI.getFactory(factoryId);
 		getPropertyEditor().getPropertyEditor().setPropertyValues(element, stepDelegate.getOrderedProperties());
-		slideTo(PROPERTY_EDITOR);
+		getPropertyEditor().activate(-1);
 	}
 
 	public EditorPanel getSelectedPanel() {

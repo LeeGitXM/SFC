@@ -198,7 +198,7 @@ public class PythonCall {
 	//		PyList.class,  new String[]{"chartProperties", "stepProperties", "methodName"} );
 
 	public static final PythonCall TEST_QUERY = new PythonCall("ils.sfc.client.util." + "testQuery", 
-			PyList.class,  new String[]{"query", "database"} );
+			PyList.class,  new String[]{"query", "isolationMode"} );
 
 		public PythonCall(String methodName, Class<?> returnType, String...args) {
 		this.methodName = methodName;

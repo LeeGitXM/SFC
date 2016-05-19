@@ -62,8 +62,7 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 		BasicPropertySet propertyValues = editor.getPropertyValues();
 		String sql = propertyValues.getOrDefault(IlsProperty.SQL);
 		boolean isolationMode = buttonPanel.getCheckBox().isSelected();
-		String database = IlsClientScripts.getDatabaseName(isolationMode); // propertyValues.getOrDefault(IlsProperty.DATABASE);
-		Object[] args = {sql, database};
+		Object[] args = {sql, isolationMode};
 		try {
 			PythonCall.TEST_QUERY.exec(args);
 		} catch (JythonExecException e) {
@@ -74,9 +73,9 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 	@Override
 	public void activate(int returnIndex) {
 		// HACK!! we recognize "testable" elements by looking for SQL related properties
-		buttonPanel.getExecButton().setVisible(
-			editor.getPropertyValues().contains(IlsProperty.SQL));
-
+		boolean isTestable = editor.getPropertyValues().contains(IlsProperty.SQL);
+		buttonPanel.getExecButton().setVisible(isTestable);
+		buttonPanel.getCheckBox().setVisible(isTestable);
 		super.activate(returnIndex);
 	}
 	
