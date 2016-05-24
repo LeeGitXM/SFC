@@ -224,7 +224,7 @@
 		<artifact name="Migration Manual" type="documentation" subtype="docx" release="0.6">
 			<location>artifacts/doc/MigrationManual.docx</location>
 		</artifact>
-		<artifact name="Sequential Control User Manual" type="documentation" subtype="docx" release="0.55">
+		<artifact name="Sequential Control User Manual" type="documentation" subtype="docx" release="0.57">
 			<location>artifacts/doc/SequentialControlUserManual.docx</location>
 		</artifact>
 		<artifact name="Vistalon Design Specification" type="documentation" subtype="docx" release="1.6">
