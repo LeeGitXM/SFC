@@ -21,8 +21,8 @@ insert into TagMap values ('C2_SQC_TO_C2_CSTR-GDA','[]DiagnosticToolkit/Connecti
 
 
 insert into TagMap values ('C3CONV_LOW_LIMIT','[]Site/CRX/Limits-Targets-and-Gains/Limits/C3CONV-LOW-LIMIT','DOUBLE');
-insert into TagMap values ('C3_CONVERSION','[]DiagnosticToolkit/CRx/VRG521Z/value','DOUBLE');
-insert into TagMap values ('C6_RX_FEED-VNB','[]DiagnosticToolkit/CRx/C6-RX-IN-FEED','DOUBLE');
+insert into TagMap values ('C3_CONVERSION','[]DiagnosticToolkit/CRX/VRG521Z/value','DOUBLE');
+insert into TagMap values ('C6_RX_FEED-VNB','[]DiagnosticToolkit/CRX/C6-RX-IN-FEED','DOUBLE');
 insert into TagMap values ('C9-GRADE-FLAG','[]DiagnosticToolkit/CSTR/C9-Grade-Flag/value','DOUBLE');
 insert into TagMap values ('C9-IN-CRUMB','[]LabData/RLA3/C9-IN-CRUMB/value','DOUBLE');
 insert into TagMap values ('C9-LAB-DATA','[]LabData/RLA3/C9-LAB-DATA/value','DOUBLE');
@@ -32,12 +32,13 @@ insert into TagMap values ('CA-SQC-TO-CRX-GDA','[]DiagnosticToolkit/Connections/
 insert into TagMap values ('CATEFF_HIGH_LIMIT','[]Site/CRX/Limits-Targets-and-Gains/Limits/CATEFF-HIGH-LIMIT','DOUBLE');
 insert into TagMap values ('CATIN-GDA-COUNTER','[]Site/CSTR/CATIN-COUNTER','INTEGER');
 insert into TagMap values ('CATIN-GDA-PROD-ML-ACTIVE','[]Site/CSTR/CATIN-PROD-ML-ACTIVE','BOOLEAN');
-insert into TagMap values ('CAT_EFFICIENCY','[]DiagnosticToolkit/CRx/VRG531Z-1/value','DOUBLE');
+insert into TagMap values ('CAT_EFFICIENCY','[]DiagnosticToolkit/CRX/VRG531Z-1/value','DOUBLE');
 insert into TagMap values ('CAT_EFF_HIGH_LIMIT','[]Site/CRX/Limits-Targets-and-Gains/Limits/CATEFF-HIGH-LIMIT','DOUBLE');
+insert into TagMap values ('CAT-AND-C2-IS-IN-GDA-TIMER','[]Site/CSTR/CatAndC2IsInTimer','STRING');
 insert into TagMap values ('CAT_IS_IN','[]DiagnosticToolkit/Connections/CatIsIn-a','STRING');
 insert into TagMap values ('CAT_IS_IN_PATH-GDA','[]DiagnosticToolkit/Connections/CatIsIn-b','STRING');
 insert into TagMap values ('CAT_IS_OUT_PATH-GDA','[]DiagnosticToolkit/Connections/CatIsOut','STRING');
-insert into TagMap values ('CAT_PREMIX_TEMP','[]DiagnosticToolkit/CRx/VCT205X/value','DOUBLE');
+insert into TagMap values ('CAT_PREMIX_TEMP','[]DiagnosticToolkit/CRX/VCT205X/value','DOUBLE');
 insert into TagMap values ('CD-BALER-TEMP-LAB-DATA','[]LabData/VFU/CD-BALER-TEMP-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('CD-BALER-VOL-FTNIR-DATA','[]LabData/VFU/CD-BALER-VOL-FTNIR-DATA/value','DOUBLE');
 insert into TagMap values ('CD-BALER-VOL-FTNIR-SQC-PATH','[]DiagnosticToolkit/Connections/CDBalerVolFtnir','STRING');
@@ -48,7 +49,7 @@ insert into TagMap values ('CD-BALER-VOL-ftnir-DATA','[]LabData/VFU/CD-BALER-VOL
 insert into TagMap values ('CNTR_AVG_TPR_TIP_HT','[]Site/CRX/Calculated-Variables/CNTR-AVG-TPR-TIP-HT/value','DOUBLE');
 insert into TagMap values ('CNTR_AVG_TPR_TIP_HT_MAX_DEADBAND','[]Site/CRX/Limits-Targets-and-Gains/Structure-Molecule/CNTR-AVG-TPR-TIP-HT-MAX-DEADBAND','DOUBLE');
 insert into TagMap values ('CNTR_AVG_TPR_TIP_HT_TARGET','[]Site/CRX/Limits-Targets-and-Gains/Structure-Molecule/CNTR-AVG-TPR-TIP-HT-TARGET','DOUBLE');
-insert into TagMap values ('CRX-BLOCK-POLYMER-FLAG','[]DiagnosticToolkit/CRx/CRX-BLOCK-POLYMER-FLAG/value','DOUBLE');
+insert into TagMap values ('CRX-BLOCK-POLYMER-FLAG','[]DiagnosticToolkit/CRX/CRX-BLOCK-POLYMER-FLAG/value','DOUBLE');
 
 
 insert into TagMap values ('C_FLYING_SWITCH-GDA-INPUT','[]Site/FlyingSwitch/CRX-FLYING-SWITCH-INPUT','BOOLEAN');
@@ -85,7 +86,6 @@ insert into TagMap values ('E-BALER-VOL-LAB-SQC-PATH','[]DiagnosticToolkit/Conne
 insert into TagMap values ('EM-COLD-STICK-RX-OUTLET-TEMP-MONITOR-BLOCK-1','[]Site/VFU/COLDSTICK-OUTLET-TEMP-MONITOR','STRING');
 insert into TagMap values ('EM-MONITOR-COLDSTICK-DCS-SETPOINTS-BLOCK','[]Site/VFU/COLDSTICK-DCS-SETPOINT','STRING');
 
-insert into TagMap values ('ML_GRAVITY_TIMER_WAITING_STATE','[]Site/CRx/ML-GRAVITY-TIMER-STATE','BOOLEAN');
 
 -- tag not built
 insert into TagMap values ('EM-MONITOR-COLDSTICK-DCS-SETPOINTS-BLOCK','[]Site/DCS-SETPOINTS/monitorColdstick','STRING');    --- found in s88
@@ -108,10 +108,10 @@ insert into TagMap values ('FRNT_SDSTRM_MAX_DIFF','[]Site/CRX/Limits-Targets-and
 insert into TagMap values ('FRNT_TPR_TIP_HT_DIFF','[]Site/CRX/Calculated-Variables/FRNT-TPR-TIP-HT-DIFF/value','DOUBLE');
 insert into TagMap values ('FRNT_TPR_TIP_HT_HIGH_LIMIT','[]Site/CRX/Limits-Targets-and-Gains/Structure-Molecule/FRNT-TPR-TIP-HT-HIGH-LIMIT','DOUBLE');
 insert into TagMap values ('FRNT_TPR_TIP_HT_MAX_DIFF','[]Site/CRX/Limits-Targets-and-Gains/Structure-Molecule/FRNT-TPR-TIP-HT-MAX-DIFF','DOUBLE');
-insert into TagMap values ('FS-C3STRM_C2','[]DiagnosticToolkit/CRx/FS-C3STRM-C2','DOUBLE');    --- found in s88
-insert into TagMap values ('FS-C3STRM_C3','[]DiagnosticToolkit/CRx/FS-C3STRM-C3','DOUBLE');    --- found in s88
-insert into TagMap values ('FS-C3STRM_C2o','[]DiagnosticToolkit/CRx/FS-C3STRM-C2o','DOUBLE');    --- found in s88
-insert into TagMap values ('FS-C3STRM_C3o','[]DiagnosticToolkit/CRx/FS-C3STRM-C3o','DOUBLE');    --- found in s88
+insert into TagMap values ('FS-C3STRM_C2','[]DiagnosticToolkit/CRX/FS-C3STRM-C2','DOUBLE');    --- found in s88
+insert into TagMap values ('FS-C3STRM_C3','[]DiagnosticToolkit/CRX/FS-C3STRM-C3','DOUBLE');    --- found in s88
+insert into TagMap values ('FS-C3STRM_C2o','[]DiagnosticToolkit/CRX/FS-C3STRM-C2o','DOUBLE');    --- found in s88
+insert into TagMap values ('FS-C3STRM_C3o','[]DiagnosticToolkit/CRX/FS-C3STRM-C3o','DOUBLE');    --- found in s88
 insert into TagMap values ('g2-latency-time','[]Site/G2-LATENCY-TIME','DOUBLE');
 insert into TagMap values ('GAIN_AVG-C2_MAIN-C3','[]Site/CRX/Limits-Targets-and-Gains/Gains/GAIN-AVG-C2-MAIN-C3','DOUBLE');
 insert into TagMap values ('GAIN_CAT_C3','[]Site/CRX/Limits-Targets-and-Gains/Gains/GAIN-CAT-C3','DOUBLE');
@@ -122,26 +122,22 @@ insert into TagMap values ('GAIN_FRNT-C2_SDSTRM-FD','[]Site/CRX/Limits-Targets-a
 insert into TagMap values ('GAIN_LNGTH_TEMP','[]Site/CRX/Limits-Targets-and-Gains/Gains/GAIN-LNGTH-TEMP','DOUBLE');
 insert into TagMap values ('GAIN_ML_TEMP','[]Site/CRX/Limits-Targets-and-Gains/Gains/GAIN-ML-TEMP','DOUBLE');
 
-
-
-
-
-
-
-
-insert into TagMap values ('MAIN-C2','[]Site/CRx/MAIN-C2','DOUBLE');
-insert into TagMap values ('MAIN-C3','[]Site/CRx/MAIN-C3','DOUBLE');
+insert into TagMap values ('MAIN-C2','[]Site/CRX/MAIN-C2','DOUBLE');
+insert into TagMap values ('MAIN-C3','[]Site/CRX/MAIN-C3','DOUBLE');
 insert into TagMap values ('MAX_CNTR_TPR_TIP_DELTA_FM_AVG','[]Site/CRX/Calculated-Variables/MAX-CNTR-TPR-TIP-DELTA-FM-AVG/value','DOUBLE');
-insert into TagMap values ('MIXTEE_IN_USE_0_EAST_1_WEST','[]DiagnosticToolkit/CRx/VCT205X-2/value','DOUBLE');
+insert into TagMap values ('MIXTEE_IN_USE_0_EAST_1_WEST','[]DiagnosticToolkit/CRX/VCT205X-2/value','DOUBLE');
 insert into TagMap values ('MLR-GRADE-FLAG','[]Recipe/Local/MLR-GRADE-FLAG','DOUBLE');
 insert into TagMap values ('MLR-LAB-DATA','[]LabData/RLA3/MLR-LAB-DATA/value','DOUBLE');
+insert into TagMap values ('ML_GRAVITY_TIMER_WAITING_STATE','[]Site/CRX/MlGravityTimerWaitingState','STRING');
+insert into TagMap values ('ML_GRAVITY_TIMER_WATITING_STATE','[]Site/CRX/MlGravityTimerWaitingState','STRING');
+insert into TagMap values ('ML_LAB_DATA_SAMPLE_TIME','[]LabData/RLA3/MOONEY-LAB-DATA/sampleTime','STRING');
 insert into TagMap values ('ML_HIGH-GDA','[]DiagnosticToolkit/Connections/MlHigh','STRING');
 insert into TagMap values ('ML_LOW_PATH-GDA','[]DiagnosticToolkit/Connections/MlLow','STRING');
 insert into TagMap values ('MOONEY-LAB-DATA','[]LabData/RLA3/MOONEY-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('MOONEY_RESET_TIME_FOR_SF-3','[]Site/CRX/Calculated-Variables/MOONEY-RESET-TIME-FOR-SF-3/value','DOUBLE');
 insert into TagMap values ('MOONEY_SQC_TO_CSTR_MOONEY-GDA','[]DiagnosticToolkit/Connections/MooneySqcToCstrMooney','STRING');
 insert into TagMap values ('MY-CONNECTION-POST','[]DiagnosticToolkit/Connections/MyConnectionPost','STRING');
-insert into TagMap values ('OK_TO_FETCH_SC-4_DATA-GDA','[]Site/CRx/OK-TO-FETCH-SC4','BOOLEAN');
+insert into TagMap values ('OK_TO_FETCH_SC-4_DATA-GDA','[]Site/CRX/OK-TO-FETCH-SC4','BOOLEAN');
 insert into TagMap values ('OIL-GRADE-FLAG','[]DiagnosticToolkit/CSTR/OIL-GRADE-FLAG/value','DOUBLE');
 insert into TagMap values ('OIL-LAB-DATA','[]LabData/RLA3/OIL-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('POLYSPLIT-DATA','[]LabData/RLA3/POLYSPLIT-DATA-SQC','DOUBLE');
@@ -149,8 +145,8 @@ insert into TagMap values ('POLYSPLIT-DATA','[]LabData/RLA3/POLYSPLIT-DATA/value
 insert into TagMap values ('POLYSPLIT-SQC-FLAG','[]Recipe/Local/POLYSPLIT-SQC-FLAG','DOUBLE');
 insert into TagMap values ('POLY_RATE_CHANGE-GDA-INPUT','[]Site/RateChange/CRX-RATE-CHANGE-INPUT','BOOLEAN');
 insert into TagMap values ('POLY_RATE_CHANGE_OUTPUT','[]DiagnosticToolkit/Connections/PolyRateChangeOutput','STRING');
-insert into TagMap values ('PREMIX_LINE_DATA_OK-GDA','[]Site/CRx/PREMIX-LINE-DATA-OK ','STRING');
-insert into TagMap values ('PREMIX_LINE_FRESH-GDA-PARAMETER','[]Site/CRx/PREMIX-LINE-FRESH-PARAMETER','STRING');
+insert into TagMap values ('PREMIX_LINE_DATA_OK-GDA','[]Site/CRX/PREMIX-LINE-DATA-OK ','STRING');
+insert into TagMap values ('PREMIX_LINE_FRESH-GDA-PARAMETER','[]Site/CRX/PREMIX-LINE-FRESH-PARAMETER','STRING');
 insert into TagMap values ('PREMIX_LINE_FRESH-PATH-GDA','[]DiagnosticToolkit/Connections/PremixLineFresh','STRING');
 insert into TagMap values ('PREMIX_TEMP_AVAIL_PATH-GDA','[]DiagnosticToolkit/Connections/PremixTempAvail','STRING');
 insert into TagMap values ('PREMIX_TEMP_CHG_PERMITTED-PATH-GDA','[]DiagnosticToolkit/Connections/PremixTempChgPermitted','STRING');
@@ -166,14 +162,14 @@ insert into TagMap values ('rla3-run-hours','[]Site/RLA3-RUN-HOURS','DOUBLE');
 insert into TagMap values ('RX-ML-OK-PATH-GDA','[]DiagnosticToolkit/Connections/RxMlOk','STRING');
 insert into TagMap values ('RX_CONFIGURATION','[]DiagnosticToolkit/CSTR/RX-CONFIGURATION/value','DOUBLE');
 insert into TagMap values ('SD-STRM-C2_FLOW','[]DiagnosticToolkit/CRX/VRF202S/value','DOUBLE');
-insert into TagMap values ('SDSTRM-1','[]DiagnosticToolkit/CRx/SDSTRM-1','DOUBLE');
-insert into TagMap values ('SDSTRM-2','[]DiagnosticToolkit/CRx/SDSTRM-2','DOUBLE');
-insert into TagMap values ('SDSTRM-3','[]DiagnosticToolkit/CRx/SDSTRM-3','DOUBLE');
-insert into TagMap values ('SDSTRM-4','[]DiagnosticToolkit/CRx/SDSTRM-4','DOUBLE');
-insert into TagMap values ('SDSTRM-5','[]DiagnosticToolkit/CRx/SDSTRM-5','DOUBLE');
-insert into TagMap values ('SDSTRM-6','[]DiagnosticToolkit/CRx/SDSTRM-6','DOUBLE');
-insert into TagMap values ('SDSTRM-C2','[]DiagnosticToolkit/CRx/SDSTRM-C2','DOUBLE');
-insert into TagMap values ('SDSTRM-C3C2-RATIO','[]DiagnosticToolkit/CRx/VRF503R-2/value','DOUBLE');
+insert into TagMap values ('SDSTRM-1','[]DiagnosticToolkit/CRX/SDSTRM-1','DOUBLE');
+insert into TagMap values ('SDSTRM-2','[]DiagnosticToolkit/CRX/SDSTRM-2','DOUBLE');
+insert into TagMap values ('SDSTRM-3','[]DiagnosticToolkit/CRX/SDSTRM-3','DOUBLE');
+insert into TagMap values ('SDSTRM-4','[]DiagnosticToolkit/CRX/SDSTRM-4','DOUBLE');
+insert into TagMap values ('SDSTRM-5','[]DiagnosticToolkit/CRX/SDSTRM-5','DOUBLE');
+insert into TagMap values ('SDSTRM-6','[]DiagnosticToolkit/CRX/SDSTRM-6','DOUBLE');
+insert into TagMap values ('SDSTRM-C2','[]DiagnosticToolkit/CRX/SDSTRM-C2','DOUBLE');
+insert into TagMap values ('SDSTRM-C3C2-RATIO','[]DiagnosticToolkit/CRX/VRF503R-2/value','DOUBLE');
 insert into TagMap values ('SDSTRM_C3-TO-C2_RATIO_HIGH_LIMIT','[]Site/CRX/Limits-Targets-and-Gains/Limits/SDSTRM-C3-TO-C2-RATIO-HIGH-LIMIT/value','DOUBLE');
 insert into TagMap values ('SDSTRM_C3-TO-C2_RATIO_LOW_LIMIT','[]Site/CRX/Limits-Targets-and-Gains/Limits/SDSTRM-C3-TO-C2-RATIO-LOW-LIMIT/value','DOUBLE');
 insert into TagMap values ('SDSTRM_C3C2_RATIO','[]DiagnosticToolkit/Connections/SdstrmC3C2Ratio','STRING');
@@ -188,7 +184,7 @@ insert into TagMap values ('SINGLE_RATE_CHANGE-GDA-INPUT','[]Site/RateChange/SIN
 insert into TagMap values ('SINGLE_RATE_CHANGE_OUTPUT','[]DiagnosticToolkit/Connections/SingleRateChangeOutput','STRING');
 insert into TagMap values ('SINGLE_RX_GRADE','[]Recipe/Local/SINGLE-RX-GRADE','BOOLEAN');
 insert into TagMap values ('SPLIT_FLYING_SWITCH-GDA-INPUT','[]Site/FlyingSwitch/SPLIT-FLYING-SWITCH-INPUT','BOOLEAN');
-insert into TagMap values ('SPLIT_FLYING_SWITCH_OUTPUT','[]DiagnosticToolkit/Connections/SplitFlyingSwitchOuput','STRING');
+insert into TagMap values ('SPLIT_FLYING_SWITCH_OUTPUT','[]DiagnosticToolkit/Connections/SplitFlyingSwitchOutput','STRING');
 insert into TagMap values ('SPLIT_RATE_CHANGE-GDA-INPUT','[]Site/RateChange/SPLIT-RATE-CHANGE-INPUT','BOOLEAN');
 insert into TagMap values ('SPLIT_RATE_CHANGE_OUTPUT','[]DiagnosticToolkit/Connections/SplitRateChangeOutput','STRING');
 insert into TagMap values ('SS1_TAPER_TIP_HEIGHT','[]Site/CRX/Calculated-Variables/SS1-TAPER-TIP-HEIGHT/value','DOUBLE');
@@ -198,20 +194,20 @@ insert into TagMap values ('STAB_SQC_TO_CRX-GDA','[]DiagnosticToolkit/Connection
 insert into TagMap values ('SWAP_CNTR_FEEDS_TIMER-GDA','[]Site/Parameters/SwapCenterFeedsTimer','STRING');
 insert into TagMap values ('UNIFORM_CNTR_TPR_TIPS_PATH-GDA','[]DiagnosticToolkit/Connections/UniformCntrTprTips','STRING');
 insert into TagMap values ('VFU-BALER-TEMP-CHK','[]Recipe/Local/VFU-BALER-TEMP-CHK','DOUBLE');
-insert into TagMap values ('VFU-CURRENT-GRADE','[]DiagnosticToolkit/CRx/RLA3-Current-Grade','DOUBLE');
+insert into TagMap values ('VFU-CURRENT-GRADE','[]DiagnosticToolkit/CRX/RLA3-Current-Grade','DOUBLE');
 insert into TagMap values ('VFU-FTNIR-GRADE','[]Recipe/Local/VFU-FTNIR-GRADE','DOUBLE');
-insert into TagMap values ('vrc023_sp','[]Site/CRx/VRC023/sp','DOUBLE');
-insert into TagMap values ('VRC062_SP','[]Site/CRx/VRC062/sp','DOUBLE');
-insert into TagMap values ('vrc032_sp','[]Site/CRx/VRC032/sp','DOUBLE');
-insert into TagMap values ('vrc253_sp','[]Site/CRx/VRC253/sp','DOUBLE');
-insert into TagMap values ('vrf214_sp','[]Site/CRx/VRF214/sp','DOUBLE');
-insert into TagMap values ('vrf224_sp','[]Site/CRx/VRF224/sp','DOUBLE');
-insert into TagMap values ('VRC262_SP','[]Site/CRx/VRC262/sp','DOUBLE');
+insert into TagMap values ('vrc023_sp','[]Site/CRX/VRC023/sp','DOUBLE');
+insert into TagMap values ('VRC062_SP','[]Site/CRX/VRC062/sp','DOUBLE');
+insert into TagMap values ('vrc032_sp','[]Site/CRX/VRC032/sp','DOUBLE');
+insert into TagMap values ('vrc253_sp','[]Site/CRX/VRC253/sp','DOUBLE');
+insert into TagMap values ('vrf214_sp','[]Site/CRX/VRF214/sp','DOUBLE');
+insert into TagMap values ('vrf224_sp','[]Site/CRX/VRF224/sp','DOUBLE');
+insert into TagMap values ('VRC262_SP','[]Site/CRX/VRC262/sp','DOUBLE');
 insert into TagMap values ('the action of the action-button upon the subworkspace of dr-oc-alert-msg','[]Site/DR-OC-ALERT-MSG/action','BOOLEAN');
 insert into TagMap values ('the arrow icon-color of the em-setpoint-display-button upon the subworkspace of the item named by console-list [post-index]','[]Site/SETPOINT-DISPLAY-BUTTON/arrowColor','BOOLEAN');
 insert into TagMap values ('the btm-message-text of dr-oc-alert-msg','[]Site/DR-OC-ALERT-MSG/bottomText','BOOLEAN');
 insert into TagMap values ('the dr-top-temp-reached-timer','[]Site/DRYER-REGEN/topTempReachedTimer','STRING');    --- found in s88
-insert into TagMap values ('the message-text of FS-DOWNLOAD-REMINDER-OPERATOR-DISPLAY','[]DiagnosticToolkit/CRx/FS-DOWNLOAD-REMONDER-OPERATOR-DISPLAY','STRING');    --- found in s88
+insert into TagMap values ('the message-text of FS-DOWNLOAD-REMINDER-OPERATOR-DISPLAY','[]DiagnosticToolkit/CRX/FS-DOWNLOAD-REMONDER-OPERATOR-DISPLAY','STRING');    --- found in s88
 insert into TagMap values ('the cast-time-to-closed of CATOUT-RECIPE-STATUS','[]Site/CATOUT-RECIPE-STATUS/castTimeToCLosed','STRING');    --- found in s88
 insert into TagMap values ('the mid-temp of the driers named by drier-to-regen','[]Site/DRYER-REGEN/midTemp','STRING');    --- found in s88
 insert into TagMap values ('the outlet-temp of the driers named by drier-to-regen','[]Site/DRYER-REGEN/outletTemp','STRING');    --- found in s88
@@ -243,18 +239,18 @@ insert into TagMap values ('the uir-unit of UIRdata','[]Site/UIR-DATA/unit','STR
 insert into TagMap values ('the uir-window-name of UIRdata','[]Site/UIR-DATA/windowName','STRING');
 insert into TagMap values ('[the bad-value of ALKYL_FLOW]','[]DiagnosticToolkit/CSTR/VCF262S/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of C2_FLOW]','[]DiagnosticToolkit/CSTR/VRF002S/badValue','BOOLEAN');
-insert into TagMap values ('[the bad-value of C3_CONVERSION]','[]DiagnosticToolkit/CRx/VRG521Z/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of C3_CONVERSION]','[]DiagnosticToolkit/CRX/VRG521Z/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of C9-GRADE-FLAG]','[]DiagnosticToolkit/CSTR/C9-Grade-Flag/badValue','BOOLEAN');
-insert into TagMap values ('[the bad-value of CAT_EFFICIENCY]','[]DiagnosticToolkit/CRx/VRG531Z-1/badValue','BOOLEAN');
-insert into TagMap values ('[the bad-value of CAT_PREMIX_TEMP]','[]DiagnosticToolkit/CRx/VCT205X-2/badValue','BOOLEAN');
-insert into TagMap values ('[the bad-value of CNTR_AVG_TPR_TIP_HT]','[]Site/CRx/Calculated-Variables/CNTR-AVG-TPR-TIP-HT/badValue','BOOLEAN');
-insert into TagMap values ('[the bad-value of CRX-BLOCK-POLYMER-FLAG]','[]DiagnosticToolkit/CRx/CRX-BLOCK-POLYMER-FLAG/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of CAT_EFFICIENCY]','[]DiagnosticToolkit/CRX/VRG531Z-1/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of CAT_PREMIX_TEMP]','[]DiagnosticToolkit/CRX/VCT205X-2/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of CNTR_AVG_TPR_TIP_HT]','[]Site/CRX/Calculated-Variables/CNTR-AVG-TPR-TIP-HT/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of CRX-BLOCK-POLYMER-FLAG]','[]DiagnosticToolkit/CRX/CRX-BLOCK-POLYMER-FLAG/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of FRNT_AVG_C2]','[]Site/CRX/OPC-Input-Variables/Front-of-Molecule/CRX-HB-9/badValue','BOOLEAN'); 
-insert into TagMap values ('[the bad-value of FRNT_FEED_DIFF]','[]Site/CRx/Calculated-Variables/FRNT-FEED-DIFF/badValue','BOOLEAN');
-insert into TagMap values ('[the bad-value of FRNT_LNGTH]','[]Site/CRX/OPC-Input-Variables/Front-of-Molecule/CRX-HB-8/badValue','BOOLAN');
-insert into TagMap values ('[the bad-value of FRNT_TPR_TIP_HT_DIFF]','[]Site/CRx/FRNT-TPR-TIP-HT-DIFF/badValue','BOOLEAN');
-insert into TagMap values ('[the bad-value of MAX_CNTR_TPR_TIP_DELTA_FM_AVG]','[]Site/CRx/Calculated-Variables/MAX-CNTR-TPR-TIP-DELTA-FM-AVG/badValue','BOOLEAN');
-insert into TagMap values ('[the bad-value of MIXTEE_IN_USE_0_EAST_1_WEST]','[]DiagnosticToolkit/CRx/VCT205X-2/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of FRNT_FEED_DIFF]','[]Site/CRX/Calculated-Variables/FRNT-TPR-TIP-HT-DIFF/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of FRNT_LNGTH]','[]Site/CRX/OPC-Input-Variables/Front-of-Molecule/CRX-HB-8/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of FRNT_TPR_TIP_HT_DIFF]','[]Site/CRX/CalculatedVariables/FRNT-TPR-TIP-HT-DIFF/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of MAX_CNTR_TPR_TIP_DELTA_FM_AVG]','[]Site/CRX/Calculated-Variables/MAX-CNTR-TPR-TIP-DELTA-FM-AVG/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of MIXTEE_IN_USE_0_EAST_1_WEST]','[]DiagnosticToolkit/CRX/VCT205X-2/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of MOONEY_RESET_TIME_FOR_SF-3]','[]Site/CRX/Calculated-Variables/MOONEY-RESET-TIME-FOR-SF-3/value','BOOLEAN');
 insert into TagMap values ('[the bad-value of OIL-GRADE-FLAG]','[]DiagnosticToolkit/CSTR/OIL-GRADE-FLAG/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of RLA3-CURRENT-GRADE]','[]DiagnosticToolkit/CSTR/RLA3-CURRENT-GRADE/badValue','BOOLEAN');
@@ -262,46 +258,17 @@ insert into TagMap values ('[the bad-value of RX_CONFIGURATION ]','[]DiagnosticT
 insert into TagMap values ('[the bad-value of RX_CONFIGURATION]','[]DiagnosticToolkit/CSTR/RX-CONFIGURATION/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of SD-STRM-C2_FLOW]','[]DiagnosticToolkit/CRX/VRF202S/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of SDSTRM-C3C2-RATIO]','[]DiagnosticToolkit/CRX/VRF503R-2/badValue','BOOLEAN');
-insert into TagMap values ('[the bad-value of SS1_TAPER_TIP_HEIGHT]','[]Site/CRx/Calculated-Variables/SS1-TAPER-TIP-HEIGHT/badValue','BOOLEAN');
-insert into TagMap values ('[the bad-value of SS2_TAPER_TIP_HEIGHT]','[]Site/CRx/Calculated-Variables/SS2-TAPER-TIP-HEIGHT/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of SS1_TAPER_TIP_HEIGHT]','[]Site/CRX/Calculated-Variables/SS1-TAPER-TIP-HEIGHT/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of SS2_TAPER_TIP_HEIGHT]','[]Site/CRX/Calculated-Variables/SS2-TAPER-TIP-HEIGHT/badValue','BOOLEAN');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-insert into TagMap values ('[the depth-at-outlet of crx-zone-1]','[]Site/CRx/ZONE1/DepthAtOutlet','DOUBLE');
-insert into TagMap values ('[the depth-at-outlet of crx-zone-2]','[]Site/CRx/ZONE2/DepthAtOutlet','DOUBLE');
-insert into TagMap values ('[the height-at-inlet of crx-zone-2]','[]Site/CRx/ZONE2/HeightAtInlet','DOUBLE');
-insert into TagMap values ('[the height-at-inlet of crx-zone-3]','[]Site/CRx/ZONE3/HeightAtInlet','DOUBLE');
-insert into TagMap values ('[the sdstrm-monomer-flow of crx-zone-2]','[]Site/CRx/ZONE2/SdstrmMonomerFlow','DOUBLE');
-insert into TagMap values ('[the sdstrm-monomer-flow of crx-zone-3]','[]Site/CRx/ZONE3/SdstrmMonomerFlow','DOUBLE');
+insert into TagMap values ('[the depth-at-outlet of crx-zone-1]','[]Site/CRX/ZONE1/DepthAtOutlet','DOUBLE');
+insert into TagMap values ('[the depth-at-outlet of crx-zone-2]','[]Site/CRX/ZONE2/DepthAtOutlet','DOUBLE');
+insert into TagMap values ('[the height-at-inlet of crx-zone-2]','[]Site/CRX/ZONE2/HeightAtInlet','DOUBLE');
+insert into TagMap values ('[the height-at-inlet of crx-zone-3]','[]Site/CRX/ZONE3/HeightAtInlet','DOUBLE');
+insert into TagMap values ('[the sdstrm-monomer-flow of crx-zone-2]','[]Site/CRX/ZONE2/SdstrmMonomerFlow','DOUBLE');
+insert into TagMap values ('[the sdstrm-monomer-flow of crx-zone-3]','[]Site/CRX/ZONE3/SdstrmMonomerFlow','DOUBLE');
 insert into TagMap values ('[the lower_limit of MOONEY-LAB-DATA]','[]LabData/RLA3/MOONEY-LAB-DATA/lowerLimit','DOUBLE');
 insert into TagMap values ('[the lower_limit of STAB-LAB-DATA]','[]LabData/RLA3/STAB-LAB-DATA/lowerLimit','DOUBLE');
-
-
-
-
-
-
-
-
-
-
 
 insert into TagMap values ('[the standard-deviation of A-BALER-TEMP-LAB-DATA]','[]LabData/VFU/A-BALER-TEMP-LAB-DATA-SQC/standardDeviation','DOUBLE');
 insert into TagMap values ('[the standard-deviation of AB-BALER-VOL-ftnir-DATA]','[]LabData/VFU/AB-BALER-VOL-FTNIR-DATA-SQC/standardDeviation','DOUBLE');
@@ -357,6 +324,7 @@ insert into TagMap values ('[the time-of-most-recent-grade-change of rla3-run-ho
 insert into TagMap values ('[the time-of-most-recent-recommendation-implementation of frnt_short_use_temp-gda]','[]Site/CRX/FRNT-SHORT-USE-TEMP-IMP-TIME','INTEGER');
 insert into TagMap values ('[the top-message-text of dr-oc-alert-msg]','[]DR/OC-ALERT-MSG','STRING');
 insert into TagMap values ('[the _result of heat-soak-timeout]','[]DR/HEAT-SOAK-TIMEOUT/result','BOOLEAN');
+insert into TagMap values ('[the unix-sample-time of mooney-lab-data]','[]LabData/RLA3/MOONEY-LAB-DATA/sampleTime','STRING');
 insert into TagMap values ('[the upper_limit of MOONEY-LAB-DATA]','[]LabData/RLA3/MOONEY-LAB-DATA/upperLimit','DOUBLE');
 insert into TagMap values ('ca_filtered_value','[]LabData/RLA3/CA-LAB-DATA/filteredValue','DOUBLE');
 insert into TagMap values ('cast-disposition-entry','[]DiagnosticToolkit/CSTR/VFS009ME/value','DOUBLE');
@@ -413,4 +381,3 @@ insert into TagMap values ('stab_filtered_value','[]LabData/RLA3/STAB-LAB-DATA/f
 
 -- Miscellaneous Named Objects
 insert into TagMap values ('the em-sqc-plot upon the subworkspace of toolkit-console','[]Site/Plots/SqcPlotName','STRING');
-insert into TagMap values ('ML_LAB_DATA_SAMPLE_TIME','[]LabData/RLA3/MOONEY-LAB-DATA/sampleTime','STRING');
