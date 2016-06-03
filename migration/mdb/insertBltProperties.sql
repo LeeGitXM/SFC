@@ -5,9 +5,9 @@ insert into BltPropertyMap values ('EM-GDA-ABSOLUTE-COMPARE','label','','STRING'
 insert into BltPropertyMap values ('EM-GDA-BAD-DATA-HANDLER','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-BAD-DATA-HANDLER','propagateExpirationData','','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-CLOCK-TIMER','label','','STRING',1,'NONE');
-insert into BltPropertyMap values ('EM-GDA-COMPARE','bandwidth','','DOUBLE',1,'NONE');
+insert into BltPropertyMap values ('EM-GDA-COMPARE','bandwidth','offset','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-COMPARE','label','','STRING',1,'NONE');
-insert into BltPropertyMap values ('EM-GDA-DEADBAND-COMPARE','bandwidth','','DOUBLE',1,'NONE');
+insert into BltPropertyMap values ('EM-GDA-DEADBAND-COMPARE','bandwidth','offset','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-DEADBAND-COMPARE','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-ELAPSED-TIME-VARIABLE','elapsedTimeMinutes','','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-ELAPSED-TIME-VARIABLE','label','','STRING',1,'NONE');
