@@ -46,7 +46,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 			callPython(true);
 		}
 		else {
-			while (!paused && !done) {
+			while (!cancelled && !paused && !done) {
 				done = callPython(false);
 				if(!done) {
 					// Some steps are simply waiting for a response...for performance reasons we don't
