@@ -46,7 +46,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 			callPython(true);
 		}
 		else {
-			while (!paused && !done) {
+			while (!cancelled && !paused && !done) {
 				done = callPython(false);
 				if(!done) {
 					// Some steps are simply waiting for a response...for performance reasons we don't
@@ -82,7 +82,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		}
 		// note: just using "put" will not trigger change notification--use setVariable()
 		scopeContext.getStepScope().setVariable(WORK_DONE_FLAG, workDone ? 1 : 0);
-		return workDone;
+		return workDone || deactivated;
 	}
 
 	public String getName() {

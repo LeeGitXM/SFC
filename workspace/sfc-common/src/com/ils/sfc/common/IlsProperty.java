@@ -16,7 +16,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.ils.sfc.common.step.TimedDelayStepProperties;
-import com.ils.sfc.designer.propertyEditor.PropertyRow;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
