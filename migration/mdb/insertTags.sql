@@ -34,7 +34,7 @@ insert into TagMap values ('CATIN-GDA-COUNTER','[]Site/CSTR/CATIN-COUNTER','INTE
 insert into TagMap values ('CATIN-GDA-PROD-ML-ACTIVE','[]Site/CSTR/CATIN-PROD-ML-ACTIVE','BOOLEAN');
 insert into TagMap values ('CAT_EFFICIENCY','[]DiagnosticToolkit/CRX/VRG531Z-1/value','DOUBLE');
 insert into TagMap values ('CAT_EFF_HIGH_LIMIT','[]Site/CRX/Limits-Targets-and-Gains/Limits/CATEFF-HIGH-LIMIT','DOUBLE');
-insert into TagMap values ('CAT-AND-C2-IS-IN-GDA-TIMER','[]Site/CSTR/CatAndC2IsInTimer','STRING');
+insert into TagMap values ('CAT-AND-C2-IS-IN-GDA-TIMER','[]Site/CSTR/CAT-AND-C2-IS-IN-TIMER','STRING');
 insert into TagMap values ('CAT_IS_IN','[]DiagnosticToolkit/Connections/CatIsIn-a','STRING');
 insert into TagMap values ('CAT_IS_IN_PATH-GDA','[]DiagnosticToolkit/Connections/CatIsIn-b','STRING');
 insert into TagMap values ('CAT_IS_OUT_PATH-GDA','[]DiagnosticToolkit/Connections/CatIsOut','STRING');
@@ -128,8 +128,8 @@ insert into TagMap values ('MAX_CNTR_TPR_TIP_DELTA_FM_AVG','[]Site/CRX/Calculate
 insert into TagMap values ('MIXTEE_IN_USE_0_EAST_1_WEST','[]DiagnosticToolkit/CRX/VCT205X-2/value','DOUBLE');
 insert into TagMap values ('MLR-GRADE-FLAG','[]Recipe/Local/MLR-GRADE-FLAG','DOUBLE');
 insert into TagMap values ('MLR-LAB-DATA','[]LabData/RLA3/MLR-LAB-DATA/value','DOUBLE');
-insert into TagMap values ('ML_GRAVITY_TIMER_WAITING_STATE','[]Site/CRX/MlGravityTimerWaitingState','STRING');
-insert into TagMap values ('ML_GRAVITY_TIMER_WATITING_STATE','[]Site/CRX/MlGravityTimerWaitingState','STRING');
+insert into TagMap values ('ML_GRAVITY_TIMER_WAITING_STATE','[]Site/CRX/ML-GRAVITY-TIMER-WAITING-STATE','STRING');
+insert into TagMap values ('ML_GRAVITY_TIMER_WATITING_STATE','[]Site/CRX/ML-GRAVITY-TIMER-WAITING-STATE','STRING');
 insert into TagMap values ('ML_LAB_DATA_SAMPLE_TIME','[]LabData/RLA3/MOONEY-LAB-DATA/sampleTime','STRING');
 insert into TagMap values ('ML_HIGH-GDA','[]DiagnosticToolkit/Connections/MlHigh','STRING');
 insert into TagMap values ('ML_LOW_PATH-GDA','[]DiagnosticToolkit/Connections/MlLow','STRING');
@@ -248,7 +248,7 @@ insert into TagMap values ('[the bad-value of CRX-BLOCK-POLYMER-FLAG]','[]Diagno
 insert into TagMap values ('[the bad-value of FRNT_AVG_C2]','[]Site/CRX/OPC-Input-Variables/Front-of-Molecule/CRX-HB-9/badValue','BOOLEAN'); 
 insert into TagMap values ('[the bad-value of FRNT_FEED_DIFF]','[]Site/CRX/Calculated-Variables/FRNT-TPR-TIP-HT-DIFF/badValue','DOUBLE');
 insert into TagMap values ('[the bad-value of FRNT_LNGTH]','[]Site/CRX/OPC-Input-Variables/Front-of-Molecule/CRX-HB-8/badValue','DOUBLE');
-insert into TagMap values ('[the bad-value of FRNT_TPR_TIP_HT_DIFF]','[]Site/CRX/CalculatedVariables/FRNT-TPR-TIP-HT-DIFF/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of FRNT_TPR_TIP_HT_DIFF]','[]Site/CRX/Calculated-Variables/FRNT-TPR-TIP-HT-DIFF/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of MAX_CNTR_TPR_TIP_DELTA_FM_AVG]','[]Site/CRX/Calculated-Variables/MAX-CNTR-TPR-TIP-DELTA-FM-AVG/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of MIXTEE_IN_USE_0_EAST_1_WEST]','[]DiagnosticToolkit/CRX/VCT205X-2/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of MOONEY_RESET_TIME_FOR_SF-3]','[]Site/CRX/Calculated-Variables/MOONEY-RESET-TIME-FOR-SF-3/value','BOOLEAN');
