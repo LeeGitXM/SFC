@@ -1,14 +1,15 @@
 package com.ils.sfc.gateway.recipe;
 
-import system.ils.sfc.common.Constants;
-
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.gateway.GatewayRequestHandler;
+import com.ils.sfc.gateway.IlsSfcGatewayHook;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeContext;
+
+import system.ils.sfc.common.Constants;
 
 /**
  * Fundamental methods for creating and accessing tag-based recipe data from a 
@@ -195,7 +196,13 @@ public class RecipeDataAccess {
 
 	public static boolean getIsolationMode(PyChartScope scope) {
 		PyChartScope topScope = getTopScope(scope);
-		boolean isolationMode = (Boolean)topScope.get(Constants.ISOLATION_MODE);
+		boolean isolationMode = false;
+		if( topScope.get(Constants.ISOLATION_MODE) !=null ) {
+			isolationMode = ((Boolean)topScope.get(Constants.ISOLATION_MODE)).booleanValue();
+		}
+		else {
+			logger.warnf("RecipeDataAccess.getIsolationMode: %s not defined in top scope, assuming production",Constants.ISOLATION_MODE);
+		}
 		return isolationMode;
 	}
 		
