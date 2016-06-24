@@ -1,24 +1,31 @@
 #
 # Test of the SFC chart UseCase 1. 
-# There are 3 delays: 30 sec, 30 sec(encapsulated), 5 sec
+# Note: We've inserted a 10 sec wait after first SET block
+#       and a 10 second wait before quitting
 #
-CHART = "Test1"
-CPATH      = "TestUnitProcedure1/Test1/Test1"
-Show: chart $CHART
+CHART = "Use Case 1"
+CPATH = "Use Cases/Use Case 1 Recipe Data Access/UseCase1"
+Show: chart $CPATH
+Tag: T1 "SFC/Use Cases/Use Case 1 Recipe Data Access/Recipe Data API Tests/Setter1/foo/value"
+Tag: T2 "SFC/Use Cases/Use Case 1 Recipe Data Access/Recipe Data API Tests/Setter2/foo/value"
 
 Test: Use Case 1
-Step: Delay blocks
+Step: RecipeData Access
 
 chartid = startChart($CPATH,$ISOLATION)
 animate: chart $chartid
 assert: $chartid != "None"  "Started $CHART"
-wait: 15 secs
+T1 = -2
+T2 = 0
+wait: 5 secs
 assert: getChartState($chartid)="Running" "Chart is running"
-assert: getStepState($chartid,"S88Callback_4179") = "NOT_VISITED" "Callback has not been visited"
-assert: getStepState($chartid,"S88EncapsulationTask_4177") = "NOT_VISITED" "Encapsulation has not been visited"
-wait: 30 secs
-assert: getStepCount($chartid,"S88Callback_4179") = 1 "Callback has been executed once"
-assert: getStepState($chartid,"S88EncapsulationTask_4177") = "Active" "Encapsulation is active"
-wait: 25 secs
+assert: getStepState($chartid,"S1") = "NOT_VISITED" "S1 has been visited"
+assert: getStepState($chartid,"S2") = "NOT_VISITED" "S2 has been visited"
+assert: T1 = -2  "Setter1 data is initialized"
+assert: T2 = 0   "Setter2 data is initialized"
+assert: getStepState($chartid,"UP") = "Active" "UP is active"
+wait: 10 secs
+assert: T1 = 78  "Setter1 data is 78"
+assert: T2 = 88.19  "Setter2 data is 88.19"
 assert: getChartState($chartid)="Stopped" "Chart is complete"
 monitor.clear()
