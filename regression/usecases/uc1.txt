@@ -6,6 +6,7 @@
 CHART = "Use Case 1"
 CPATH = "Use Cases/Use Case 1 Recipe Data Access/UseCase1"
 Show: chart $CPATH
+
 Tag: T1 "SFC/Use Cases/Use Case 1 Recipe Data Access/Recipe Data API Tests/Setter1/foo/value"
 Tag: T2 "SFC/Use Cases/Use Case 1 Recipe Data Access/Recipe Data API Tests/Setter2/foo/value"
 
@@ -14,6 +15,7 @@ Step: RecipeData Access
 
 chartid = startChart($CPATH,$ISOLATION)
 animate: chart $chartid
+setClientTag("CurrentChartId",$chartid)
 assert: $chartid != "None"  "Started $CHART"
 T1 = -2
 T2 = 0
