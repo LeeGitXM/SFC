@@ -201,7 +201,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		return dispatcher;
 	}
 	
-	@Override
+	// @Override  (Ignition-7.8.3 feature)
 	public boolean isFreeModule() { return true; }
 
 	@Override
