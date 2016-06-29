@@ -58,6 +58,7 @@ public class Constants {
 	public static final String DISPLAY_MODE = "displayMode";
 	public static final String DOWNLOAD = "download";
 	public static final String DOWNLOAD_STATUS = "downloadStatus";		
+	public static final String DRIVER = "driver";
 	public static final String DYNAMIC = "dynamic";
 	public static final String ELEMENTS = "elements";
 	public static final String ENABLE_PAUSE = "enablePause";
@@ -154,8 +155,10 @@ public class Constants {
 	public static final String REVIEW_FLOWS_WINDOW = "reviewFlowsWindow";
 	public static final String REVIEW_FLOWS = "reviewFlows";
 	public static final String ROW_KEY = "rowKey"; 
+	public static final String RUN_TIME = "runTime";
 	//public static final String ROW_KEYED = "rowKeyed"; 
 	public static final String ROWS = "rows"; 
+	public static final String RUNTIME = "runTime";    // Elapsed time
 	public static final String S88_LEVEL = "s88Level";
 	public static final String SCALE = "scale";
 	public static final String SCREEN_HEADER = "screenHeader";
@@ -174,7 +177,9 @@ public class Constants {
 	public static final String SINGLE = "single";
 	public static final String SQL = "sql";
 	public static final String STANDARD_DEVIATION = "stdDeviation";
+	public static final String START_TIME = "startTime";
 	public static final String STATIC = "static";
+	public static final String STATE = "state";
 	public static final String STATUS = "status";
 	public static final String STEP_TIME = "stepTime";
 	public static final String STEP_TIMESTAMP = "stepTimestamp";
@@ -184,6 +189,7 @@ public class Constants {
 	public static final String TAG_PATH = "tagPath";
 	public static final String TARGET_VALUE = "targetValue";
 	public static final String TIME = "time";
+	public static final String TIMER_START = "timerStart";
 	public static final String TIMING = "timing";
 	public static final String TIMEOUT = "timeout";
 	public static final String TIMEOUT_BEHAVIOR = "timeoutBehavior";

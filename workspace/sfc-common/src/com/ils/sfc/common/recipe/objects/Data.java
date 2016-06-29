@@ -12,10 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import system.ils.sfc.common.Constants;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
@@ -30,6 +26,8 @@ import com.inductiveautomation.ignition.common.util.DatasetBuilder;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.PyChartScope;
+
+import system.ils.sfc.common.Constants;
 
 /**
 superiorClass: sequence (the symbol S88-OBJECT)

@@ -4,9 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -14,21 +12,16 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import system.ils.sfc.common.Constants;
-
-import com.google.common.base.Optional;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.step.AllSteps;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
-import com.inductiveautomation.sfc.ChartStateEnum;
 import com.inductiveautomation.sfc.ElementStateEnum;
 import com.inductiveautomation.sfc.client.api.ChartStatusContext;
-import com.inductiveautomation.sfc.client.ui.AbstractStepUI;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
+import com.inductiveautomation.sfc.client.ui.AbstractStepUI;
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 import com.inductiveautomation.sfc.elements.steps.ExpressionParamCollection;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
@@ -38,8 +31,7 @@ import com.inductiveautomation.sfc.rpc.ChartStatus;
 import com.inductiveautomation.sfc.rpc.ChartStatus.StepElementStatus;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-public abstract class AbstractIlsStepUI extends AbstractStepUI {
-	private static LoggerEx logger = LogUtil.getLogger(AbstractIlsStepUI.class.getName());		
+public abstract class AbstractIlsStepUI extends AbstractStepUI {		
 	protected static Icon messageIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/message.png"));
 	protected static Icon questionIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/question.png"));
 	protected static Icon clockIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/clock.png"));

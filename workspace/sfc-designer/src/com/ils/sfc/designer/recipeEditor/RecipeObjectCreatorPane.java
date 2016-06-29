@@ -24,17 +24,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import system.ils.sfc.common.Constants;
-
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Group;
 import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
-import com.ils.sfc.designer.panels.ButtonPanel;
-import com.ils.sfc.designer.panels.ValueHoldingEditorPanel;
 import com.ils.sfc.designer.ComboWrapper;
 import com.ils.sfc.designer.DesignerUtil;
-import com.ils.sfc.designer.panels.EditorPanel;
+import com.ils.sfc.designer.panels.ButtonPanel;
+import com.ils.sfc.designer.panels.ValueHoldingEditorPanel;
 
 /** An editor for creating a Recipe Data object. */
 @SuppressWarnings("serial")
