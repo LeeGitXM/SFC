@@ -201,6 +201,8 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		return dispatcher;
 	}
 	
+	@Override
+	public boolean isFreeModule() { return true; }
 
 	@Override
 	public void setup(GatewayContext ctxt) {
