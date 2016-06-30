@@ -43,6 +43,7 @@ public class Constants {
 	public static final String CONFIG = "config";
 	public static final String CONFIRM_CONTROLLERS_CONFIG = "confirmControllersConfig";
 	public static final String CONTROL_PANEL_ID = "controlPanelId";
+	public static final String CONTROL_PANEL_SCRATCH_ID = "-42";
 	public static final String CURRENT = "current";
 	public static final String DATA = "data";
 	public static final String DATA_ID = "dataId";

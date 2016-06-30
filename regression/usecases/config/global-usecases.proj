@@ -3,97 +3,97 @@
 <version>
   <major>7</major>
   <minor>8</minor>
-  <rev>2</rev>
-  <build>2016030813</build>
+  <rev>3</rev>
+  <build>2016061017</build>
 </version>
-<timestamp>2016-06-24 10:35:06</timestamp>
+<timestamp>2016-06-29 19:29:07</timestamp>
 <id>-1</id>
 <name>[global]</name>
 <source></source>
 <title></title>
 <description></description>
 <enabled>true</enabled>
-<lastModified>1466772878222</lastModified>
+<lastModified>1467250127954</lastModified>
 <lastModifiedBy>chuckc</lastModifiedBy>
-<editCount>16</editCount>
-<uuid>d3b084aa-f436-174e-8a2e-b21e01279d78</uuid>
+<editCount>4</editCount>
+<uuid>6706fcb3-f561-52f0-315e-f0bc4ee3b769</uuid>
 <resources>
-	<resource id='5017' name='Use Cases' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='947a0c86-3b70-45bf-b8f2-829d108ab928' oemlocked='false' scope='1' protected='false'>
+	<resource id='61' name='Use Cases' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='947a0c86-3b70-45bf-b8f2-829d108ab928' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[K/I+13hUhqMYQeKxys0leA==]]></bytes></resource>
-	<resource id='5018' name='Use Case 7c' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[YyaBGFjHuZ53RmfmHlKI6g==]]></bytes></resource>
+	<resource id='62' name='Use Case 7c' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[HN6Qi8odZ7rKT9DD7CMLVw==]]></bytes></resource>
-	<resource id='5019' name='Use Case 5c Transition Basic' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[mNa900ycub/RQr2Zh381RA==]]></bytes></resource>
+	<resource id='63' name='Use Case 5c Transition Basic' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[kB7wGOjbcp4RS+MmokTugA==]]></bytes></resource>
-	<resource id='5020' name='Use Case 5d Transition Loop' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[AuVOn2W0M5C/Rxy6QIP3LQ==]]></bytes></resource>
+	<resource id='64' name='Use Case 5d Transition Loop' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[ZLZBe5PoZpOdQUbTeKmbfw==]]></bytes></resource>
-	<resource id='5021' name='Use Case 1 Recipe Data Access' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[gfruP3bei7vnQtZtCfF6HA==]]></bytes></resource>
+	<resource id='65' name='Use Case 1 Recipe Data Access' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[XwCPikqHqr3sQrqMZ57s1Q==]]></bytes></resource>
-	<resource id='5022' name='Use Case 5e Transition in Series' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[to0qVxZYDYvQT4hRkPpebA==]]></bytes></resource>
+	<resource id='66' name='Use Case 5e Transition in Series' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[Gf8LslEnVJV6SeNQRXD2+A==]]></bytes></resource>
-	<resource id='5023' name='Use Case 5f Transition Simultaneous Activation' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[2ibLCoWtVa9yQyJPvdI8uA==]]></bytes></resource>
+	<resource id='67' name='Use Case 5f Transition Simultaneous Activation' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[LAzdPBoXOb/RSzZ6OEbI0w==]]></bytes></resource>
-	<resource id='5024' name='Use Case 6b Write Output' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[qxv3rA1d1IJHQbq61v/OuQ==]]></bytes></resource>
+	<resource id='68' name='Use Case 6b Write Output' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[X9YCIt8GX4epR6hzzvqRAw==]]></bytes></resource>
-	<resource id='5025' name='Use Case 8f Enhanced Abort Handling' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[NJcOPXoxzLbKTgwYfD+0Cw==]]></bytes></resource>
+	<resource id='69' name='Use Case 8f Enhanced Abort Handling' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[2DzfARfgYqVjQHrqz0r7hg==]]></bytes></resource>
-	<resource id='5026' name='Use Case 6d Download GUI' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[KxPzmGojd7ktSpTQI26SkQ==]]></bytes></resource>
+	<resource id='70' name='Use Case 6d Download GUI' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[XJfVTUkZxqlyT5kXs9zSpQ==]]></bytes></resource>
-	<resource id='5027' name='Use Case 8a Long Running Block' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[jID8pQpJfIPNQ89axtXnAw==]]></bytes></resource>
+	<resource id='71' name='Use Case 8a Long Running Block' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[4dUqtyX3sqn8SOQkFR4ocg==]]></bytes></resource>
-	<resource id='5028' name='Use Case 8b Long Running Block with Termination' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[SS6W2miXD5XUQtK7819Ngg==]]></bytes></resource>
+	<resource id='72' name='Use Case 8b Long Running Block with Termination' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[SbQvTnF58pn3R0l/Vs4t2w==]]></bytes></resource>
-	<resource id='5029' name='Use Case 8c Long Running Block with Selectors' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[/xjHSjeFc6t8SPYEPPKEcw==]]></bytes></resource>
+	<resource id='73' name='Use Case 8c Long Running Block with Selectors' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[KV2xh/57wYQYSzHNibtVdw==]]></bytes></resource>
-	<resource id='5030' name='Use Case 8d Abort Handler' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[qy8aC80+GYM2RzqXai5lSw==]]></bytes></resource>
+	<resource id='74' name='Use Case 8d Abort Handler' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[ozVltRr6/6vlR1vooDOXMQ==]]></bytes></resource>
-	<resource id='5031' name='Use Case 4a Timer Block' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[j7HQ6J2t8ZYGRJYjHvEhxg==]]></bytes></resource>
+	<resource id='75' name='Use Case 4a Timer Block' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[qnn8qn+OmICPRY4Vfs8wpw==]]></bytes></resource>
-	<resource id='5032' name='Use Case 4b Yes No Block' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[p66lrYSn0Zf9S+UEftpUNA==]]></bytes></resource>
+	<resource id='76' name='Use Case 4b Yes No Block' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[irBpmW4CzIiiTYzYtnEODg==]]></bytes></resource>
-	<resource id='5033' name='Use Case 4c Get Input Block' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[hlQWopGQOqE+SR7cQ/Ei6w==]]></bytes></resource>
+	<resource id='77' name='Use Case 4c Get Input Block' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[C1NkPn9l6YQLSvcunJpCig==]]></bytes></resource>
-	<resource id='5034' name='Use Case 4d Queue Blocks' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[Zps3WexDn4DWS1++Q3t96g==]]></bytes></resource>
+	<resource id='78' name='Use Case 4d Queue Blocks' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[/qAkLdfk1pSKR4mvIKaFEA==]]></bytes></resource>
-	<resource id='5035' name='Use Case 5a Transition Timeout' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[lnn7Q3+NyK9YRAMS/gdRqw==]]></bytes></resource>
+	<resource id='79' name='Use Case 5a Transition Timeout' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[lp3nIFKv/Z9pS73hLkFfXg==]]></bytes></resource>
-	<resource id='5036' name='Use Case 5b Transition Timeout Hierarchy' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[w+pySwIySYG/TkpPNCFmVw==]]></bytes></resource>
+	<resource id='80' name='Use Case 5b Transition Timeout Hierarchy' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[lpQXTYI7XZYXTC+Q4p4g3A==]]></bytes></resource>
-	<resource id='5037' name='Use Case 6a Collect Data' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[Bl8b1zEgJ4hTRz1wlQqVGQ==]]></bytes></resource>
+	<resource id='81' name='Use Case 6a Collect Data' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[99p2Bd+U56cPQzsIBTphLg==]]></bytes></resource>
-	<resource id='5038' name='Use Case 6c Download GUI' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[4hEopm/EzKXvTvsR6thKPw==]]></bytes></resource>
+	<resource id='82' name='Use Case 6c Download GUI' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[bacBB8VlB4UkQueW6dcsRA==]]></bytes></resource>
-	<resource id='5039' name='Use Case 6e Write and Monitor' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[rDA2vSHSbLGbQLCETnqggQ==]]></bytes></resource>
+	<resource id='83' name='Use Case 6e Write and Monitor' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[KgBKbX5g1rItQCf6+zf+3g==]]></bytes></resource>
-	<resource id='5040' name='Use Case 7a' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[1anO5d+mgYvyRDED93Gbig==]]></bytes></resource>
+	<resource id='84' name='Use Case 7a' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[QLlxFcX33qnzS5/Zo1s9rQ==]]></bytes></resource>
-	<resource id='5041' name='Use Case 7b' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='6' parent='7825cdca-b1e2-4118-a386-5478d73ef22b' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[DYRIlJoYsa8eRdAHLFknKA==]]></bytes></resource>
+	<resource id='85' name='Use Case 7b' module='com.inductiveautomation.sfc' modver='' type='__folder' ver='0' dirty='false' editcount='1' parent='ea88521e-e667-4677-9eb9-c75818812663' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[Dk6h6PzxrokgRYvl2nB9lg==]]></bytes></resource>
-	<resource id='5042' name='Task7c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='570b23ec-c3d0-4fca-ba67-1dca8b90de1c' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[GoS5u+akGacdRX+vCqNHnw==]]></bytes></resource>
+	<resource id='86' name='Task7c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='44357f87-99bd-42d1-bfb9-9c4cd3bdd698' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1YyW4bORA9S1/B9GUSIJS5NtmGrCBI5jDADBAkBuYYcCnajcjdQnd7SzD/PsWW
 bS3O4iyYQyY+WBKbevVYr4pVpfmzq7MluYCur9vmqOAzVpBni+m8T4G8b9uzm6XgmgvXHxWGcFUQ
@@ -121,7 +121,7 @@ PJof5LNnHyzr5t36B5SkRZJSUyZThVlWcWpLiz2nSlFyIYVxbD/LFvPz1cFiHtvLBl/GAMPXg4y5
 gw2gJLeon2UKM5jn4SFxRqVF5yaRXGRht4u/w87XysbEfejIIXkjFLVG4OUtVMABAcM1hcCD1KnE
 OWqXtn4wbROSrxhWAu000mbI2GGkUYt8va08R3O7tPVDaYfotXDR04qnSFXI70LAKa8UYCrGTShh
 l3a5R/sGc4r5mMJi+i9/iL+vARUAAA==]]></bytes></resource>
-	<resource id='5043' name='Tag Tests' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='80ee44a2-26e3-4b11-9e72-dbe818f01e90' oemlocked='false' scope='1' protected='false'>
+	<resource id='87' name='Tag Tests' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='2df78340-ba1c-47bf-9033-b4659f4ee502' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVa224bRxJ9lr5iwAV2kyAl9f3ipRQ4jhUY2HUCS4vdN6OvMhGKFEgqsRPk3/c0
 dTFnLId0ouRFBiyRw2F1dZ2qOqd6NP7q7cW0+7EslpP57GjED9io++p4f7ysqft5Pr84GrEDP+pS
@@ -177,7 +177,7 @@ FjOuh0wJ2bABbjsLqwRdJjVaRGpyDZOaxYwAtsuyiQEMVDwNSvkDx+/BzUL8VNB7aDJCoV0QyF+g
 A0evErSg9WlgdHtb5ypzqRFYXRolyyiRvRj9tBLRtQr3fPh8Z3cNkS2rMgK/Gq75voUBAytqDdIq
 16CiGIR4g5x/Q1VBYoc23mm/Pu8xhbz1KIsINesV9En/78zkjnZRqSzI0I7um5ZgGikhk8cE5mMS
 XlWtevmmdrQrTAwsIQQstlRDlyTXZCa2r9sf+LaID5Abcv3AePsb5JqO9/8PEH0dGkYwAAA=]]></bytes></resource>
-	<resource id='5044' name='TestPhase5c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='80ee44a2-26e3-4b11-9e72-dbe818f01e90' oemlocked='false' scope='1' protected='false'>
+	<resource id='88' name='TestPhase5c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='2df78340-ba1c-47bf-9033-b4659f4ee502' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVXS4/bNhA+27+C1aFNgtDmUyQ3toMgaZFD0QbYBXpc8DFaC/FKhiRn80D+e4e2
 k7W2KRq029PCgCSOxt8M5xvOjBbP319vyDvo+rptlgWfsYI8X00XfRXJx7a9Poqib975flmUhOMK
@@ -202,7 +202,7 @@ xPs8Y46wbXJCR8Yo9jg8HU4GbHxCYEQlWC4x0JqPg5mxNzgQfRd65D4qy2gqPSaxyeiSK6rQYiqZ
 VkHCOIZfPR+b+Ct0NNqDTjg44ciEjodEfdSJOlcKPCM6anbnWJffHZSUjLT5xAXI47KrOLVWAmUy
 D2dSlWGMLW6xj27/PbaTeZwIksoy4MCnsakFWeGSM2tyCXWuGofkLvY4JPgNhx/Nq+mfXrGu7FIP
 AAA=]]></bytes></resource>
-	<resource id='5045' name='TestPrior5c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='80ee44a2-26e3-4b11-9e72-dbe818f01e90' oemlocked='false' scope='1' protected='false'>
+	<resource id='89' name='TestPrior5c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='2df78340-ba1c-47bf-9033-b4659f4ee502' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVXW28bNxZ+tn4Flw9tApgyr0PSlVUUXSxQoNgWqdF9DHg5tAcZzwgz4zhpkP++
 h5I21rgpaizap0iAhnPmzHc+nhuPNt++u+vIWxinduivqFhzSr7drjZTSeS3Ybg7ilLo34bpihoi
@@ -228,7 +228,7 @@ nMcdW+98VHaZyJpuN/e7i+0mDw89XvbNGK8XFXOBbZIpJRSJccoKT7mEo1ADHlMumKI8tyLZ5U4q
 doeH7XPQs0whcYxTTh7P0AarLyScbmSs2azQUd4vk+IT86WJ30MXGyIv2TBhS2K66II9BzOv8QpM
 8U3RoSydYp/tFKujT9I5FrQNTBtQzNX2xnXE4nNBah6XTrFPaP8xdlFSSOkNAwRC3tgwo03IW2Jv
 SjyGsAym+h32H7rEat8IYwC9XUvQwtHbTiips7GYOE8annvikiMm/rHCf7Lb1X8BbTlJMecOAAA=]]></bytes></resource>
-	<resource id='5046' name='TestSuperior5c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='80ee44a2-26e3-4b11-9e72-dbe818f01e90' oemlocked='false' scope='1' protected='false'>
+	<resource id='90' name='TestSuperior5c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='2df78340-ba1c-47bf-9033-b4659f4ee502' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1WS2/bRhA+S79iwUObAFl539x1JQVBmkOBoikSFz0a+5i1iVKkQVJxHsh/76zs
 xKaSoEGbW3MRheHwm2/m252Z9ePXu5a8gmFs+m5T8RWryOPtcj3mSN72/e7WFH33yo+bqiauIvAa
@@ -250,7 +250,7 @@ mZ8IWW3X+6uT7Tr11x0+Di0OnycFc4YdbHSaG0sBuxNVOWIWKgNOEi5rXMF0ZGouWMFucaB9DTpo
 72R0nEYmdNk6E3VMA8WRBTZnXH3rIyU+Mp+H+BTacxFtWWiDsLyUX1BMJNPEowYOXkl5tNCary6K
 CU7gao7H1gRs21k6pC0DlcKHKK30ek5b3GHf0v4ydgLky2pBQZZjUzPE1th5uNDepNpKvD/zkhxj
 z0uyxEaS43b5N6819FWsDAAA]]></bytes></resource>
-	<resource id='5047' name='Recipe Data Tests' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='80ee44a2-26e3-4b11-9e72-dbe818f01e90' oemlocked='false' scope='1' protected='false'>
+	<resource id='91' name='Recipe Data Tests' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='2df78340-ba1c-47bf-9033-b4659f4ee502' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1YW08cRxZ+hl9R6ofdxHINdb+QYSJiOwmSZSxDdh+tupyCVobp0XTjSyz/9z09
 A8z0gBUS430hRjJNdfV3Lt+pc6nxjx8upuQdLNq6mR1UfMQq8uNkd9yWRP5omouDio2c8v2/iqQw
@@ -289,7 +289,7 @@ bWnUWHsixlGS2dnMtu5Z7L09oyVPgWFR0F5hOkwavS61pDaYqFPkCfRWZbB/1TNSZMYF1vHCLKpv
 vMG0YXv1XcYEJiGFLc98QcRtaOESE3huMOIT1jXtJQ0F8xCa1Hd81sRbnR27t2u4KD4xLBJO9W1j
 VhrbRiQgBgkhCptEEkPXrMHv65tSZFSoLRXJYGDKkKlnCqPTJ2xRPUiu1NA3X5Jxhb2LzUtJk93/
 AYCyFypKHgAA]]></bytes></resource>
-	<resource id='5048' name='Phase' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='80ee44a2-26e3-4b11-9e72-dbe818f01e90' oemlocked='false' scope='1' protected='false'>
+	<resource id='92' name='Phase' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='2df78340-ba1c-47bf-9033-b4659f4ee502' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAJ1STW/bMAw9N79C0GkDKluy5cQOHBdYexmwAcOafdwKWqITYf5CpGTtiv73SUmD
 JsUOxU6myMfHR/OVV/ddS3a4sWboF1REnJKralLaRpE/w9A9pxT0O7ALmpKMErxHtXUez7pB44Je
@@ -302,7 +302,7 @@ YLlKfnatZzh8//VzaTMMdP5I2+H3J9MZR+c84pcU9M4opHNKL+nJ+EPCmxDbQ7jtjbOH0D2Mzw1r
 bMfnVj/jo/ZxneomxRlnyBvvmUSkDHiaMZ01UsEUplJqj99Bu8XlC5FZrU9V+cvhyl/nUFWt38aH
 30PTsZnOZ9MovaS/MKDCck9v9U8hUSeiTliTaMFkoWasnmLC8hqLaZFyoYtX/klffI29Fufu8Zn/
 NfXEB42qJn8BhFxCpDUEAAA=]]></bytes></resource>
-	<resource id='5049' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='80ee44a2-26e3-4b11-9e72-dbe818f01e90' oemlocked='false' scope='1' protected='false'>
+	<resource id='93' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='2df78340-ba1c-47bf-9033-b4659f4ee502' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVV224bNxB91n4FwZcmgCkt977CagPXbYEATZ1E6uXN4JKzEtG9YUnZcYP8e4Yr
 2ZbaFDDSAn3oizSaGZ45nDMaFq8+tA25hdHovltRPvcpeVV6hakl+aPv26NLiu5WmBUNSUYJfAC5
@@ -320,7 +320,7 @@ I+f1pFSh4EAZPWWxOPvVmu27PeyhXP9wxd6AMWILbPIUi8dYsQ1+axs8evx2PMpTGsVichVT79kg
 7+CS3H0/PXfwoihRecY5qxIuWRSjlftZyOI6T5IghVoF2fngRSeDtxHb/3zqDhy+fuTwPHGSm7+M
 3XN687dj91wBcl9B7KfAkjwP3DuRMBGEnKm85okQQQxJdS5A/LiPo//tPn5aw6TWnTY7UP/qPs6C
 LK5T1KIKqxylr9AClJ4LIdNIcBHG4bkqydPrDZ3i58qg52ufbg+NWpbeZ5YNJvsbCQAA]]></bytes></resource>
-	<resource id='5050' name='UseCase5c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='80ee44a2-26e3-4b11-9e72-dbe818f01e90' oemlocked='false' scope='1' protected='false'>
+	<resource id='94' name='UseCase5c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='2df78340-ba1c-47bf-9033-b4659f4ee502' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVVS4/bNhA+W7+C5aUJYNp6UA8asoLNFikKbBAk67S9LShqaAnVCyK9m22Q/96h
 7M3aRQ5B21sv0nD48ZtvZqhR/upT15J7mEwz9FsarHxKXhVebrQifw5Dd3Ip2d9Ls6URSSmBT6AO
@@ -338,7 +338,7 @@ nrgw6C8V2qX2ZRSWHMeHynAGqJhJoXEG6AC0FkqkYYL4e9keYPdM1Ozrc5nYa9hjQ4+7qsX00PzV
 HXo6TDdhtIqX9A9wKJftl++9ccBlinMuYYHSnPGUc5xTMmHar1Lhx4GOsvDyxvGv8yD6386DD7J3
 MPy8xhacgv92DGRh6CseBSwSeHt4qXxWJlHFEg6xH6eJCHh22ZT4+ecBfRVcNgY9//TP4aGhVeH9
 BfrR2LOaBwAA]]></bytes></resource>
-	<resource id='5051' name='UseCase5d' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='9' parent='7f9ba978-d346-419d-9366-e8937b41b664' oemlocked='false' scope='1' protected='false'>
+	<resource id='95' name='UseCase5d' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='1c7af109-6dd6-42e7-bb8b-de763feefa81' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAL1U22rcMBB9br5C6KmFaG35vovWoaQUWpJeyKb0LYyl8a6pvTaWnCYN+feO95Jk
 Qx9SKDXGHo9mzsw58kid3DQ1u8beVu16zuXE5+wkP1K21OxX2zajK4qmdKWcaVhfg53zkMWc4Q3q
@@ -353,7 +353,7 @@ w9pWY2121rad95l+ng1Hq7wnyaoy+Us0Uh4F/mkj+AL6JTo+u+N1+/Osaiqy/Yl/zMFcVxr5jPNj
 LrZAZd2CG9Gq5eppa7TbuKTN3FbQNbEi89uYuUfgs1iOofRz09KO5P0xf6vdAPV/oBuEukijMBZB
 YjTNcuaLDFMpSmlSyNCfxun0X9KVvv/Id8fy/sVjFhdxqEMjMNGBiAAzARGCAARZ6FLrZCoPxyx8
 PHhwbeThfJFnd+r89ezT2UHHd370GzB10L3cBQAA]]></bytes></resource>
-	<resource id='5052' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='7f9ba978-d346-419d-9366-e8937b41b664' oemlocked='false' scope='1' protected='false'>
+	<resource id='96' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='1c7af109-6dd6-42e7-bb8b-de763feefa81' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAM1Wy27bMBA8J19B8NQeaJHUg1JAK4cUPRR9oLUL9BasSMoWalmCKAdJi/57V07s
 WGlRuPWh0UGPJTk7O6MVpS9v6xW5cZ2vmvWUigmn5DI/17405FvT1EMojDI8FCUG1jfgpzQkKSXu
@@ -368,7 +368,7 @@ hDsPPjlTte452PCEyT87cY/zCsX6rSHHaHWyIaWNAQpVMJXIYnC9YJBZzrgDKU2opAjt2JDooClm
 m2Kv6P/ti0Mmp7TGGOeJI8eIdbIjQibCJAWwzCnsQ6VCbMEkZKlTkqcxD3FHGDsSj1vkmZjyK5kT
 G+WP1hyj2snWgImjVKaS2VJw7EgbMQDsSFClK/D7KGUhx9Ykj/upW1sxtgMjD5vpX5PCbRH/TPLz
 n9J6Ymq3CAAA]]></bytes></resource>
-	<resource id='5053' name='TagTest' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='9' parent='7f9ba978-d346-419d-9366-e8937b41b664' oemlocked='false' scope='1' protected='false'>
+	<resource id='97' name='TagTest' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='1c7af109-6dd6-42e7-bb8b-de763feefa81' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVXbY/jthH+bP8KQkDaOyC0RYqkyI3XQXDXfiguyaLeXAMURcCXoVdYWTIk+fa2
 Qf57hrL3duULetteUaAIYEjkiH74cOaZIbn6+v2uJu+g66u2uczYIs/I1+v5qo+e/LNtd8nEMuJt
@@ -398,7 +398,7 @@ eKCuDF78NAda5j4vClSJVGcXP/VsJQBXAbwylAWHG2AROUVx4PXSpJ0xGDxzwlQJ6rkhE6oUKC9D
 pcOcFSYJuLCWctxZuc+94SFMXXFO+2NMFQumXaGp06jZMTMwqyTFmuZAFuin4KaY5ScxS54br/BQ
 KY1jqFrJsSKGnErNlBCsKBlXU0z9SUxZYuWPTtAI6aBq0QGW4dVdlaU3EYusK84SzDw7ZNz7KAAD
 VcQSkzdHR6Dm8BDsRYx4YPEG+JSvOQvZGTbey/vo1/NfAajSH3ktEQAA]]></bytes></resource>
-	<resource id='5054' name='RecipeDataTest' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='7f9ba978-d346-419d-9366-e8937b41b664' oemlocked='false' scope='1' protected='false'>
+	<resource id='98' name='RecipeDataTest' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='1c7af109-6dd6-42e7-bb8b-de763feefa81' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1XXW/jRBe+Tn7FyBLQSjuJPd8uadCyy8tNBYgWwd3qzFdq1bEj293dvoj/zhkn
 3dbZha0ACQnIhWPPx3POPOc5M2dWX7zd1uR16Pqqbc6zYpFn5Iv1fNVHR/7fttuxqRx/GXHQvIb+
@@ -428,7 +428,7 @@ xCRec0QZjXF474lTP9WTlcDAMSNLRllgqISgCuRAeoolJIPIihhtmCpBPTVkxmgugTtqwASkNwaK
 FzGL9BrJUAo25GxKxbHb72OGnFsjvaTaY1oLJJSWeamp9wBQ5tLgvXiKqT+KiaW01ng3pC7xgEU0
 XqUdx0o1QA6gtbcKppjmo5hOlSoEFGkAj8lbWqwnWEQqfA4OgvSKqymt5dOTNw+l5rmj6KTDnRYz
 GBODUa6V9BC4yXkx9bc8CtkRNl7B8Xxez38FyfqtJyYRAAA=]]></bytes></resource>
-	<resource id='5055' name='TagSubscription' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='9' parent='7f9ba978-d346-419d-9366-e8937b41b664' oemlocked='false' scope='1' protected='false'>
+	<resource id='99' name='TagSubscription' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='1c7af109-6dd6-42e7-bb8b-de763feefa81' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAL1WbW/bNhD+bP2KA4FuCVDq/cXKZBVF2n0Y2s2A3KDAMBQUSdlEZUkQ6SRe0f++
 o+w4cbAPwQrMMGTyeHru7nmOpIs399sWbuWoVd8tSOD6BN6UTqEbDn/3/daagji3HwKcdbdML0gE
@@ -448,7 +448,7 @@ AL3Hta2LW9kdJRMX5M/Pf3z8q2KdqPt7r/r1Gj5pCddMS+09jCAR3vKGXLpYyQ4rqJY/AFQtH4GO
 0qAibd8PB23gYnlzBa+wdaql/cV76pW12fklnkFPdPqxoziZN34Uh5wKzuc0jtMAt5GY09qvs6bO
 ct6k4fk2Sh6vJ9mJZ1sJLcd99B+Swt7sDifLlJr0c8kavC+jOspozOuU5iJvaJ02mcj9eRRm8Xlq
 MSm/vVjJ7/DT2vwCL32hWmL2jxmWDt6H+KekdP4BtmZnJ7IIAAA=]]></bytes></resource>
-	<resource id='5056' name='RecipeSubscription' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='9' parent='7f9ba978-d346-419d-9366-e8937b41b664' oemlocked='false' scope='1' protected='false'>
+	<resource id='100' name='RecipeSubscription' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='1c7af109-6dd6-42e7-bb8b-de763feefa81' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAL1VbW/bNhD+bP2KA4FuMRDJenNsZbKKLC0KDNlazB6wbwVFnWyikiiIdBK36H/f
 UbId2+iAYgUWBDJ5PN7L89wd09fPdQWP2GmpmgULPJ/B68xJdSngs1K1FQVxYv8YCN48cr1gEcwY
@@ -469,32 +469,32 @@ cUpnS4gNNk5RugZ21595BARN7Ouzq2NnREys0Xz75qo/+7ebe8qJ0Uqplkin1dUQyO0rKsrBMi3p
 HXwFV9S6+9OxddBdDefjMY28E/p/bPIns6ScIybuDca5G4uodJMgiF3h59PEj6Iw8Ivzrp2+PIjY
 FBedS5J92/6HoGhUNcMgG0ILwiLEHN1pFPo0UCLfzUMUbj7zI16GJQ+n5XloMcu+rCuVE3mnHH6F
 n9bmlwUczk5ZopBe3GYOvalURZnzD0e2hj35CAAA]]></bytes></resource>
-	<resource id='5057' name='UseCase1' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='true' editcount='16' parent='d5ec9e67-8cba-42ec-bdaa-874a8a8f005f' oemlocked='false' scope='1' protected='false'>
+	<resource id='101' name='UseCase1' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='6c5efa90-5188-4fd0-8b0d-5816572a8db6' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[H4sIAAAAAAAAAOVWS28bNxA+S7+C4KUJYEr7XspYbxDYTdHCKdzaLnoL+BhKRFa7wpKyowT57x3u
-yg+5Rmq0RS+9SMPhcGY+Dufbqd58WjfkBnpnu/aExrOIkjf1tHJGkc9dt96rlGhvhDuhSUQSXMIn
-UFuPJ9i603BCT0XTCNkAffBUzvgsIa9kEsVFlEY8Tl9T4u0anBfrzQl911vy07YlSUbi6DjNjpOS
-vD+7IsGeklXnGWjrg9MTakTj0Pcm+HaeoQePWt9vgdbTSeU8bIjVGDOJIzAxZ1IuFizLsoTJiEdM
-lQsRAV9EQhhKmk4JP6IlMSWtWKOzDx8kLG1LiRHKd/2OBX+DigX3tJ5MKuFcpyzG1kwLL+ovdAXN
-hh5TekQd5+dwAw2u2q4F1Ah9YxWMuxqc6u0mRB0VeFuDLYqqQb8o/tB32w2uP8IOVyEA/VrNn8ZE
-uPOQ0AFuFSWpKIuMRQspWZabiC2UKBjPlc6zNM0kjw5xJ3e4L+NDyCiGso6Yp5MQRPR45UP6tQZD
-uvYyqF6pFf4ekWD5+ng6oZROJ1cr68itbRrSY2lvV9ASv4LBhgyO3BGRYLoeiGh300mHuz0ZY86m
-08nbfrldQ+sdOpwMAY7JW9KDgR5aBcR3g79h5ztHnOo2MEPTEOAZS0wm7DyyHLLc9Lb1hA4wbLsc
-XPagLFrMZjTc7yPI0+cK/9LCpJzL0iwSFptC44NUHAsTa5YmKGNxIiH1YWHSu8JcXxwWRnXrmW3c
-bNN3CvS2h8uhRNWjp1VX84PV2i1/2cIW6st3p+w9OCeWwAZNNb/fq5bJ7+sGj+7/Q/T6+qKaD0I1
-XDXbCL+qrx2QU+HAze8kEpNfh3sjZ3gF5K1SGGR+3VpPLu7SrOaPXFRW1y+5k2qOhs923HqHobCr
-vtCmuz23a+vpcTSLXt5uW8zOjaLfbfYHHvo4hPlRo5xiIoWUEZOKC5bJxDC5kJxlSZFjt4EoeIz2
-N6LZwtXgqN02Dbqyy9XjvLC0sMQiHjb7b+HY3fG95dj4e4Bfj6jpuv8CZ57zItIZkxxylqkUmMgL
-zszCqMSYBCDShzipaTrh6d+EmjxADQC/vriVpMwzmUcsMyZlmeCc8VIWLDK6MAVoXsj0sJWye45L
-/rccd3VPbQQNdfgy/Zv8FpdRkhdZwYThBctKU2JR8BnxJF1knIsojuPDouR3RYmfp7cwIegzaMRu
-z2+bzvmfO2+NHZ3UwzBQzf+kr0ac5/tgdYjaVPMn2sqL5cVARfN76RsU6tAH1NEsR/CDWN3aVne3
-V9aHxfxgtR4pFtX30hNylVvvu/Y8dCkqD1Y6YK5jbKSQQpBHKo7vmRhnLCnURzz4ICJNvqQGA5+G
-q7QDLIXPD/rhDu0ep+9D8+7qMFtZFUq9V1TYqxhy+B3yCvReX35/uk9zWP6TN8TLuMyyImYAJQ4v
-JXLswuD4xssk11otUuBP3lD5MLRBq588JNR8Y2L7i6QQdDteyThPprnCqREHKZkj8+uiZEKVSJBJ
-IbmOY6Se/DC1gtZfNj3c2G7rZrdd//EMWw6DPjgOYdrOw9g/qSlULjjTECP5piJnIpL4LRSJkcAT
-KczBfJCGgdXZz4g9wRmuHrhIW7HsxZo0YtuqFbhAH9NA/+R+VpjhI8KY9XSKWI2qp38AOqLhpPcL
+		<bytes><![CDATA[H4sIAAAAAAAAAOVWS28bNxA+S7+C4KUJYEr7Xq6x3iCw26KFU7i13fYW8DGUiKx2hSVlRwny3ztc
+yQ+5Rmq0RS+9SMPhcGY+Dufbqd98XLXkBgZn++6ExrOIkjfNtHZGkU99v9qrlOhuhDuhSUQSXMJH
+UBuPJ9iq13BCT0XbCtkCffBUzvgsJa9kEsVFVMRRXL6mxNsVOC9W6xP6G2jy46YjSUXi6jjhx1lO
+3p1dkWBPybL3DLT1wekJNaJ16HsdfDvP0INHrR82QJvppHYe1sRqjJnEEZiYMymrimVZljAZ8Yip
+shIR8CoSwlDS9kr4HVoSU9KJFTp7/17CwnaUGKF8P2xZ8DeqWHBPm8mkFs71ymJszbTwovlMl9Cu
+6TGlR9Rxfg430OKq6ztAjdA3VsFuV4NTg12HqDsF3tZoi6Jq0S+K3w/9Zo3rD7DFVQhAv9TzpzER
+7jwkdIBbRUkqyiJjUSUly3ITsUqJgvFc6TxL00zy6BB3cof7Mj6EjGIo6w7zdBKCiAGvfEy/0WBI
+310G1Su1xN8jEixfH08nlNLp5GppHbm1bUsGLO3tEjrilzDakNGROyISTD8AEd12OulxdyC7mLPp
+dPJ2WGxW0HmHDidjgGPylgxgYIBOAfH96G/c+cYRp/o1zNA0BHjGEpMJO48sxyzXg+08oSMM2y1G
+lwMoixazGQ33+wjy9LnCv7QwKeeyNFXCYlNofJCKY2FizdIEZSxOJKQ+LEx6V5jri8PCqH41s62b
+rYdegd4McDmWqH70tJp6frBaucXPG9hAc/ndKXsHzokFsFFTz+/36kXy+6rFo/v/EL25vqjno1CP
+V83Wwi+bawfkVDhw8zuJxOSX8d7IGV4BeasUBplfd9aTi7s06/kjF7XVzUvupJ6j4bMdt9piKOyq
+z7Ttb8/tynp6HM2il7fbBrNzO9Fv1/sDD30cwvygUU4xkULKiEnFBctkYpisJGdZUuTYbSAKHqP9
+jWg3cDU66jZti67sYvk4LywtLLCIh83+azh2d3xvuWv8PcAvR9T0/X+BM895EemMSQ45y1QKTOQF
+Z6YyKjEmAYj0IU5q2l54+jehJg9QA8AvL24lKfNM5hHLjElZJjhnvJQFi4wuTAGaFzI9bKXsnuOS
+/y3HXd1TG0FDHb5M/ya/xWWU5EVWMGF4wbLSlFgUfEY8SauMcxHFcXxYlPyuKPHz9BYmBH0Grdju
++W3dO/9T762xOyfNOAzU8z/p6x3O832wJkRt6/kTbe3F4mKkovm99BUKdegDmmiWI/hRrG9tp/vb
+K+vDYn6wWu0oFtX30hNylRvv++48dCkqD1Y6YG5ibKSQQpB3VBzfMzHOWFKoD3jwQUSafEkNRj4N
+V2lHWAqfHwzjHdo9Tj+E5t02YbayKpR6r6ixVzHk+DvmFei9ufz2dJ/muPwnb4iXcZllRcwAShxe
+SuTYyuD4xssk11pVKfAnb6h8GNqg008eEmq+MrH9RVIIuttdyW6eTHOFUyMOUjJH5tdFyYQqkSCT
+QnIdx0g9+WFqBW0+rwe4sf3GzW774cMZthwGfXAcwnS9h13/pKZQueBMQ4zkm4qciUjit1AkRgJP
+pDAH80EaBlZnPyH2BGe4ZuQibcViECvSik2nluACfUwD/ZP7WWGGjwhjNtMpYjWqmf4BdBAY6vcL
 AAA=]]></bytes></resource>
-	<resource id='5058' name='Unit Procedure' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='16' parent='d5ec9e67-8cba-42ec-bdaa-874a8a8f005f' oemlocked='false' scope='1' protected='false'>
+	<resource id='102' name='Unit Procedure' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='6c5efa90-5188-4fd0-8b0d-5816572a8db6' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVVwY7bNhA9W19B8NIEWNoiRVmSIStYbNCiRYKi2W2RW0CRI5uoJAoi7Y0b5N9L
 yutdO83BxwC92DPD4Zt5fINR+eZz16I9jFabfo3pPMboTRWVtpHoH2O6p5AU/V7YNWYxYt6FzyB3
@@ -512,7 +512,7 @@ PF14mY1Q41fl7TplMs+TJanTOicc5JIUQgCh6ZKKvKE05WFy9qLdwcMRqGmNcAFNb7bnrXkpYeNF
 u5yhv8LNEwJeFfPlaZ4Cwa/XzpNcFnkjWUYgKZaEs6wmgivql2qTcxA0TyW/nCf+PE/sf7tNHv6z
 RJC/oMI2uGaZXL3qRVJnOUsIA0kJz4QkRRZTP1MyVTJNap7ml+KkL5846NU3695HftTvW+SNRlbR
 v6+jugyiCAAA]]></bytes></resource>
-	<resource id='5059' name='My Operation' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='9' parent='d5ec9e67-8cba-42ec-bdaa-874a8a8f005f' oemlocked='false' scope='1' protected='false'>
+	<resource id='103' name='My Operation' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='6c5efa90-5188-4fd0-8b0d-5816572a8db6' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVVS4/bNhA+W7+C4KUJsLQlUU9DVrBILi0aoOi6RW8BSQ0tonpBpHezDfLfO5R2
 EzvIIWhzC2DYw+HHb755kK5eve87cg+zNeNwoNE2pORVHVRWK/LPOPZPLiWGe2EPNA5JjEt4D+rs
@@ -529,7 +529,7 @@ Herre5Fy8H8agxOSCFkmTKc8Y0kOKStD3TAtBRRKlmkjs+vG8E+N4deNUWO/NZ3dTq2wcLe0p/LI
 ewUn7MoaQnWYE5p/+qPPFLiOym2e4fpv8ECf5cdvHZqkiZXKk4LhoxKzRAJnRYhFTngYy7gELL26
 Hprk09DEP+xtPl5eYoJYbQZjW2i+64VOVZYJWeQsSpKGJSAkzlDKWRSnIooTGScquu5N+vkfAIbm
 i9cWPf/1+Q/Q0KoO/gWbP0U1YQcAAA==]]></bytes></resource>
-	<resource id='5060' name='My Phase' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='9' parent='d5ec9e67-8cba-42ec-bdaa-874a8a8f005f' oemlocked='false' scope='1' protected='false'>
+	<resource id='104' name='My Phase' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='6c5efa90-5188-4fd0-8b0d-5816572a8db6' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVX32/bNhB+tv8Kgi/rgDImKUoUA9tF0XZDhxYYGnevBUUeY6GyJIhy0rTo/76T
 FSdx4nZ5KFBgNQKbP44f73j33V3mzz5tKnIBXSybekHFCafk2XI6j8GRz02zuV5ytr6wcUElJxKn
@@ -553,40 +553,41 @@ x91vgk6MEswpjRyX0jIjMZVJJ0WKdVLmmf1G53umfj2O3/Dxdf0tyv5ogqqMYzOuMPdmDnt0jtnc
 ijRhhQ8GVTYZ6PSQoLc9uv71PHQ/Yd7Nw39cNwNH8vDRgz/IlVVZfxwLqlXSABjGpeHYNyQFy4XK
 WeYLnds8tZ7DIdk4Xc637Ww5981ljT+zAesQ1Fidcp1JJpDLGB+QMaNDwZSXMkukTyx/8D/ccdD5
 bB/Oy+kU9Q9uOf0X/0Lsm+cPAAA=]]></bytes></resource>
-	<resource id='5061' name='Recipe Data API Tests' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='16' parent='d5ec9e67-8cba-42ec-bdaa-874a8a8f005f' oemlocked='false' scope='1' protected='false'>
+	<resource id='105' name='Recipe Data API Tests' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='6c5efa90-5188-4fd0-8b0d-5816572a8db6' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
-		<bytes><![CDATA[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
-AA==]]></bytes></resource>
-	<resource id='5062' name='UseCase5e' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='f8f67045-50e3-497a-9554-2751b20bff19' oemlocked='false' scope='1' protected='false'>
+		<bytes><![CDATA[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
+p7VLEMACoOqgazJ0Z7WRk+F/Ab/roNwhHAAA]]></bytes></resource>
+	<resource id='106' name='UseCase5e' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='b83cd2bd-4f22-4372-af55-ad850acb26da' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAKWSTY/TMBCGz+2vGPkEBzfOZ5OVkz0UcUOAuoi9VRN70lrKl2J3tYD47zhdym44
 rcAX269nHr/2jLx97Fp4oMmaoS9ZuBEMbqu1tI2C78PQzVJUzGPLQGH/gLZkMaQM6JHU2fks3g2a
@@ -597,7 +598,7 @@ i0jzJE5rjllT88bbFFToOFbN0ld09fVpGhTp80SHlJbm1NBtTGs34zVif/EpNVk1mXEmVTJY7Dp7
 /HymM1X79zv+gazFI/GLIoM/Z/IY3XetT/09zz6qlzZkcJGkOuHk+IjuVH2xBDu0ZIPrClKCuwl7
 a+arwfSwp8n4gI++ipdnWhm8IEijq9d8kwx84P/UItlmjY5yweMtRb5HYs0xzhNeFKREXmdNkSTL
 WsTPPUK9DpdV8Mq/NsjaLxpVrX8Bee5n5IcDAAA=]]></bytes></resource>
-	<resource id='5063' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='f8f67045-50e3-497a-9554-2751b20bff19' oemlocked='false' scope='1' protected='false'>
+	<resource id='107' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='b83cd2bd-4f22-4372-af55-ad850acb26da' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAKWSS2/bMBCEz/avWPDUHiiJeiuglIN778MpmluwIlc2Ab0g0kHaov+9lJvUdU5F
 e9JyMPp2NKK8fRp6eKTFmmmsmQgiBrfNVtpOwbdpGp4lheMj2polkDGgJ1In5/18mDTVbId9j21P
@@ -608,7 +609,7 @@ lcgFp6KodBaLKtLlda74Jdf7D+I6k5qGwPQ2mHwbZ/v+HE9qsmox86o0Mrw6Dfbw8UQnanaf7mX4
 +yQP8f3Qe/Pzc13Y+H0yPE9SHXFxfEZ3bD5bgh1asuHLBBnB3YKjNesOMCPsaTHecBGtDP9ASKOb
 v+lBht74P2XnSZ5q3RH3fz7nqcoVR1FkXHUUpW2bpZSp67KTyyWgUb/q2yv/egO2fuhUs/0JmEgp
 6GIDAAA=]]></bytes></resource>
-	<resource id='5064' name='Transitions' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='f8f67045-50e3-497a-9554-2751b20bff19' oemlocked='false' scope='1' protected='false'>
+	<resource id='108' name='Transitions' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='b83cd2bd-4f22-4372-af55-ad850acb26da' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVY224byRF9Fr9iMAESG3BLfb84khaGd/MWZAE5SIAgWFR3V0tEKFIgR2tvFvvv
 OUPZEYdWIirRPumBFwx7qop1qk6dmtNvPl0vuh95vZmvlme9OpZ998357HTTSvfP1er686VCyx9p
@@ -642,7 +643,7 @@ FAAakmE9RuhOyJmWeFoNj8cJUQoONdCqanxmzWCmKMGoqpYIyWohXPek4uNxSulk1rBU28hxd8TB
 UKMcLeusTVJ7Vfu4TUKp5wzVgrBgk9ETuRZGJ7jqFYaKq2VP9MvD2yxG43UJsAt9ah1KNUXMLGlK
 xjzhUvKeFrg3/ig1K6+9caREwsRAJUCFJmyMQuWQZMHgov1KeIJxLTFGQPfAq47ko0hEE8B0VY9K
 KhOVvdJ9gvFWpM0MZkuU0WsRRYcpQBBqtaWidSOTpjh+ZXyK5wx7Uyvns38BvlITs/UZAAA=]]></bytes></resource>
-	<resource id='5065' name='UseCase5f' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='d3c84638-7a36-4bd1-bf39-171a3cdd0c2c' oemlocked='false' scope='1' protected='false'>
+	<resource id='109' name='UseCase5f' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='b9ceffd6-baba-4147-82d4-5d0dacf71bab' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1X227bRhB9lr5iwQJtAmStvV9SWUGRom9FAzhFCxRFMLs7awuVSIOkc0X+vUO5
 SUwlhdM0fUoNw6KXyzOHc87MrNYPnu937Cn2w7ZrTxt5Ihr2YLNcDzWzl123/2spQ/sUhtNGCabo
@@ -666,7 +667,7 @@ iVxKaQxCKdqIeQrsrZhZeVfpmM9drpkbM52kkwdulRFViGoV+nkK3K2YokYZgxQ8Jz3xVMihUP+V
 AY0C4mmzmL+7vxXTFBEiPcu9pEZpiC0Zl0o1QSZTeONsrHOet2P6iDEV4clIijpwoKuENnJqvjKU
 ULWqR5YKH10MXlrMwgYeiyX9tYlTDigRSOjReRpFcp6DcGStv8eOFbAIRWYSZAGjkApNCEff7wJm
 6VGkkOe5OMaep2RJM6rmzfJPSENrtLsOAAA=]]></bytes></resource>
-	<resource id='5066' name='Write Memory Tag Test Advanced' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='0391face-73a8-47a9-875f-06df2202d65f' oemlocked='false' scope='1' protected='false'>
+	<resource id='110' name='Write Memory Tag Test Advanced' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='0bb43f7c-180c-4eca-b6cc-317a3d0e9734' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVXbW/bNhD+bP8Kjl/WFqEtUtSboajoUhQYtqID7GIFiiKgqKMtVBINic7Lgv73
 nWQnsZJuC9Z+6xdLPD567ngPj0enL6/qilxA25W2OaV85lHyMpumndHkL2vrg0mr5kJ1pzQkHEdw
@@ -690,7 +691,7 @@ nMf5eAf3bvEmdlHaHTY7235+bRt45KYqm8+DA2U08LCImI48vG0KTzKl4oQFnCe44DBKgmS8Lh9b
 5m47x2ZlLxt8tOV64/A57zlH3NrLjRfKiHHfT5hUeJ1VgS+ZUZg+zJgnpBgHf8ddgXH3Lh5TJ1pB
 FOMlGc9lPJgBlUj80GdRoQuT5EHiaX8cdvjksAHJCxPFzDNIK3kCLAdfscLD1hKHSRwVyTjs8F/D
 xisw/g/Jpn8D0AeWTaUMAAA=]]></bytes></resource>
-	<resource id='5067' name='Phase3End' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='86fb4acf-ea7a-4063-a562-e01701df3cd8' oemlocked='false' scope='1' protected='false'>
+	<resource id='111' name='Phase3End' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='91926e23-d094-4a2d-b977-236a98f3132b' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1XS2/jRhI+S7+iwcsmQNru92MgKxgMFtgkhw1g34N+VI+ElUmBpOeRIP891ZRs
 mVobnklmTslFJFvVXz2+qurq1fcfbnfkHfTDtmuvGn7BGvL9erkaSiK/dt3tcSmF9l0YrhpPOH7B
@@ -718,7 +719,7 @@ leDlyXCppE85i3nQX8bEG1hRDA9qvHhxxBRY197ViGiXsO61NnIe5U/BFMVniw0DJJ44RmANB+TQ
 W8x2iznuypnv9pMTD2Oqo5KYC9FpHAatwcRLgnrhJfe6pnaZU/ayvXgVzYJrbDI24VgZkLWgsFqE
 BSM15xqDPI+r/dxMK2gt11jwGQy2NWczXvsi8pdYSNZnDuasyZyreB5bOORPykBFqdgxYkdRXtBY
 8KJZtOMmnWXxM+YfofG2O5S0Xv4BR7qgPrkTAAA=]]></bytes></resource>
-	<resource id='5068' name='Task3_1End' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='86fb4acf-ea7a-4063-a562-e01701df3cd8' oemlocked='false' scope='1' protected='false'>
+	<resource id='112' name='Task3_1End' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='91926e23-d094-4a2d-b977-236a98f3132b' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1XS2/jRhI+S7+iwUsSIG33+zGQFQxmL4s97GF8H/SjekxEJgWSnkeC/PetpmTL
 1NrwTDJzSi4i2ar+6vFVVVdvfvl0uyMfYBjbvrtq+AVryC/b9WYsifzW97fHpRS6D2G8ajzh+AWf
@@ -746,7 +747,7 @@ i2XQX8bEG1hRDA9qvHhxxBRY197ViGiXsO61NnIZ5S/BFMVniw0DJJ44RmANB+TQW8x2iznuypnv
 9osTD2Oqo5KYC9FpHAatwcRLgnrhJfe6pnZZUvayvXgVzYJrbDI24VgZkLWgsFqEBSM15xqDvIyr
 /dpMK2gt11jwGQy2NWczXvsi8pdYSNZnDuasyZyreB5bOORPykBFqdgxYkdRXtBY8KJZtOMmnWXx
 M+YfofG2O5a0Xf8PYxsVoLkTAAA=]]></bytes></resource>
-	<resource id='5069' name='UseCase6d' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='a5d2dcb3-1799-4f72-a9c6-19494dd5975c' oemlocked='false' scope='1' protected='false'>
+	<resource id='113' name='UseCase6d' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='03e7d5c6-5acf-43cd-837c-490aa5fc808c' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVUTW/cNhA9S79iwEtjwFxR1LehVRA4cZFDkBS2gdwCUhztCpDIhciNnRb976G0
 3sQKeiga5NSLRM28efM4T2T98nEc4DNOtjd6S+INI/CyCWvbtfCnMeNTqBX6s7BbkkBBAB+xPTqP
@@ -761,7 +762,7 @@ vl28qhWeNHuqpo5WX6Pd/XHEIza3N9f0HVordkiXSB19y9U7/nEcfOnTexbSrHTU0RKrl/HTg3D7
 5jw6Gz0bIrw2D3owQsHv92+j9/5kLRu0dfSssu5V828GVEce+DMupFK2SdVJWgmZ0TSTFS1TLigv
 koqruMhEwtcupGcX3mj1vz0dN73u7R7VLzsdFa9yroqYsiRPvfmFoCV2BWW5TDMUeZlXP5yO7Pt9
 ilrFa2t85L9epqFfdG0TfgXXXiHmrQYAAA==]]></bytes></resource>
-	<resource id='5070' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='a5d2dcb3-1799-4f72-a9c6-19494dd5975c' oemlocked='false' scope='1' protected='false'>
+	<resource id='114' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='03e7d5c6-5acf-43cd-837c-490aa5fc808c' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAM2XbW/bNhDHXzefgtCrDQhtPogSZTguhrRNAyyoBzvd3gUUSdlC9WBItJOu6Hff
 0bJrO03TuguCBgZCn3TH4//uR5rDl3dlgVa2afO6OgtojwTo5ehk2GYa/VvX5cakVbVS7VnAkQiQ
@@ -786,7 +787,7 @@ pdawg3fM81+d+YSlERVc4UxGKQ5ZJrDUUuJUp1KLULGUq2OZ58/HPN8xT5+Qeeiy1n0D+a3qj1D/
 EHw3z5ufPevHk8v/c9RrqbnJYCe2aeJ5DwVOiIwxoTwSsYmykPGnP+rpA7zH3+A9hlRE8ijv8Ve8
 8/2DnsDf8zMfh0czz49l/kfvmyklJosiCa+EIQ5FlsE9GM5buAVHxBhKIs0P75t8dw+2laGHd02w
 /Owl+AQGmR6d/Af3eFxOZRAAAA==]]></bytes></resource>
-	<resource id='5071' name='Write Gui Monitor Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='a5d2dcb3-1799-4f72-a9c6-19494dd5975c' oemlocked='false' scope='1' protected='false'>
+	<resource id='115' name='Write Gui Monitor Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='03e7d5c6-5acf-43cd-837c-490aa5fc808c' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAANVYW4/bthJ+tn8FwZcmgGlT1N3Qqgg27TlB0ybAOukBiqKgyJFXWFkyJHq37iL/
 /QwleX2J9+yezUPRF5kaDefOb4ZOvv9zVZJbaNqiri6oM+WUfJ+OkzZX5K+6Xg0kJatb2V7QiDgO
@@ -820,7 +821,7 @@ UG0sYi3iMPNkmB3rcZ+npyyqm16DAO2D0ExwF0c+cHIWu0qxPFcZz10uvDg6jpjAbrhZz7DX4PHF
 n5mVdSzUC0BxiDwWdEcEZMhi7aIXrutHgRZhFp0IdR8Rigd1uOrYl6o20P/LpPNY4pDCQgB7P/YD
 FvE4ZNz1cswIHkdHHyoQ9l+m/srTLa0gZkehZVNvqq7tl3XzSvj+xPH4hE9w9ZqmZAGtIcFbPP24
 IR2PsfJylY7/C881S29JFAAA]]></bytes></resource>
-	<resource id='5072' name='UseCase8a' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='72281e15-24e4-48fc-a9b2-f725b72ad5e1' oemlocked='false' scope='1' protected='false'>
+	<resource id='116' name='UseCase8a' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='824d5ff3-bbd2-42d4-950f-9768da962e49' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAM1Vy47bNhRdz3wFwVULmLZIvQ3ZQeM2QIqZZhp7iu4Cig9biCQKEuXxNMi/99Ly
 c1C0k66yEnXJe+7jnEtmb3ZVibaq7QpTzzAdexi9md9mnRboL2Oqg0nwesu7GfZRiJHaKdFbOE8q
@@ -839,7 +840,7 @@ O3CyB59/ldFF5UfB3L//7Uoz5xpOylCeVmmQcBIrPwVlyJAkMufEF2EcU7iQdCBe8K8hbcfKplhv
 LrODW0GtYfyHCEcSh16dODywnXhxwljq2B74HEqG2g/Esu9hbBIqZRj5HhHa5yRgMSfc3dg0zhk0
 J2Z5rl89NsfIrxicdOp9w+DEwX8NTpKMozR+MTrsYnSYQ/4uR4d+0+i89qFL4DLnvqBExBHch2kq
 SM60TxIdqMDPhRYsvX7o/PMDrGpJr986sPzf1/cWFlrMb/8GXCp9yd4IAAA=]]></bytes></resource>
-	<resource id='5073' name='UseCase8b' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='db2dce56-7f49-47f7-99f2-79714e2fb449' oemlocked='false' scope='1' protected='false'>
+	<resource id='117' name='UseCase8b' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='7384f23c-04f6-487c-ab73-85374ac718ff' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAM1VXW/bNhR9Tn4FwacNMG1SoiTKkF2s3ga0SNa0cba9FRR5ZQvVFyTKSVbkv5e0
 LMcOhi3bywY/mLzkPffrHDF581AWaAdtl9fVArMpxejN8jLpMoX+qOvyYFKy2slugX0UYAQPoHpj
@@ -859,7 +860,7 @@ ZBC8IEBm83Zj2eab7Vl69ssAG/sJGEKMYxy6dZziOO84YHEYu3kPEx2KttUfRuv9BzrhKqVe5gfE
 F1ITzpkgAtKM6IyFcRAIKnz2ap2MkV+hFD7n/0ApQvydUoSYhnH0QiveiVY8h/y/1Ap7jVZGg7vy
 9Nr3TQrmB7HQRERcES4EI7GinGSe9iOrACpSdv6++c/vLlSanT9x1vJvH91Lu8jU8vIbtiz17tkI
 AAA=]]></bytes></resource>
-	<resource id='5074' name='UseCase8c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='7755bb89-cd31-4b18-84c1-7bfe87b15d29' oemlocked='false' scope='1' protected='false'>
+	<resource id='118' name='UseCase8c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='4b652e6a-973a-4736-8319-3ecd0b1a2fab' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAMVVW4vjNhR+nvkVQk8tRInlS2wHJ0sbKGzZ6U6bTOnbIkvHiVnbMpacyeyy/73H
 sZ3LUMpQCvtk6+hcvnO+T1Ly7lgW5ACNyXW1pHzqUPJudZ+YTJIvWpeDSYrqIMySeiSgBI4gW4v+
@@ -877,7 +878,7 @@ x8GoUhy3Z6DOhYJLyW+nVqDpaC/08wf0xtpVWxSTf5fBVc+jAh7e/3Yjggv6M9XIZXelpUjwHIXq
 +j5LhR+xzHe9LPSlH8XRK1YzBNzxsc93+xt4eOJhh6e6LzHy14/pTF/v2tPXN4odDzy630PrHGLl
 i4AJhXctHtKYxX53XIP5HAQXnojTt2h9LPo/qz2KpvM4fKV390rvbhf9HfX+NlG/+XGJRZBKlbHQ
 xfvG55FisXAy5vJ5JrMslC4Xt4+Ld3n0oMJr6eZpQct/ffHu8SeTq/u/Aal96zFWCAAA]]></bytes></resource>
-	<resource id='5075' name='writer' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='72281e15-24e4-48fc-a9b2-f725b72ad5e1' oemlocked='false' scope='1' protected='false'>
+	<resource id='119' name='writer' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='824d5ff3-bbd2-42d4-950f-9768da962e49' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1UXY/TOBR9Tn6F5ZcFadzGbpqPKg1CI3hgVwJpBrHSCo38cdNaJHFlu/OxI/77
 2mkHpgMPCHjcl8Q+9/jce31sNy9uhx5dg3XajGtMZxlGL9q0cZ1E/xozHCHJx2vu1phliIUp3ILc
@@ -893,7 +894,7 @@ GdTEM2//hLt2Gsyueb+HZv4FPcT/OmZrN70RvD/Gv6CNBal38A3rCXzQugDfxrtxFInTRsFh5ybW
 +CxsU6DY4UNchFcxx+ezJzT2fdrHYO+3uRqt2h/xs5kH4q8cGqpUVVMeXhVGwxWuQjpO6wVZVlRx
 CnmdC356aPKHQ/NqVP9f4N95gZXKWM2AkQpYMEQpRkTFOkIzQVWZLXmWiVMvll+feRgVPbUjID/7
 xqdh0Mk2/Q8YstzkRgcAAA==]]></bytes></resource>
-	<resource id='5076' name='writer8b' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='db2dce56-7f49-47f7-99f2-79714e2fb449' oemlocked='false' scope='1' protected='false'>
+	<resource id='120' name='writer8b' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='7384f23c-04f6-487c-ab73-85374ac718ff' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVUy27jNhRdW1/B4aYzQCiT1NtQNJgJMIvpACngBFOgKAI+rhyhsmiIdB4N8u8l
 Zedhp4ui0103knh5dM659/Ky/ni37tENjLYzwylmMcXoYxPVtlXoT2PW+5ASw42wpzhDJUZwB2rr
@@ -911,7 +912,7 @@ ilWH5yN7nlb+v51WP6XaDPDuPx1VxXhS5Tolusp8K1glSZnkmnBeAXCaFKLND1uRv1zoMOijefWR
 f3+bu1EMtgs6k7Usr2hOi5Kwwp+NtKJAyirlpExFkVWyLHJZHlpLcfPgxCpeikFLczdffjlDlxbQ
 mbBg55+N6a+Y9/CiE1QH42CnVwDjhUyIb4okKaWpP5VSEs0lbZWoIE/oaz0e9D6fn3+7CgPsWZoo
 8sm0qon+Amx+y0PyBwAA]]></bytes></resource>
-	<resource id='5077' name='writer8c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='7755bb89-cd31-4b18-84c1-7bfe87b15d29' oemlocked='false' scope='1' protected='false'>
+	<resource id='121' name='writer8c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='4b652e6a-973a-4736-8319-3ecd0b1a2fab' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1YbW/jxhH+bP2KBT+0CeCV9o1crioruDg9oG2CBLGuLVAUh32ZtYmjSIGkZDvG
 /fcMKdkWdXeI0ySfrl9I7e7sM7PzzAxntfjqbl2SHTRtUVcXCZ+yhHy1nCza6MlPdb0+THlb7WyL
@@ -943,7 +944,7 @@ n1iiqcQKLXxwngs+ToQn7BK/4i9Roa0NTDvfB7PEsNYY1jGgn9LgjMcLhfdyTFmv4qXolnuZg4+U
 a8vR7VZjQKQ51QZ7AZdLHT0bx+cnDvAhNPYNwkYsDSZGjUUCabU8y6jXmU6DDzGc/suhX+x3k4sM
 vIvYLvJIlZQOs15xLEDKSIGkWnNSgPSv9juWES6Dpxg9mL7Y/6DfU8CiLx3Sa1zqT8rJqYpPY/M0
 w6sfSGx0AUuVSg01jjmaplLlKggIkY+9/gnzD9AT/D5Ev5z8DI31TSy+EwAA]]></bytes></resource>
-	<resource id='5078' name='Phase3' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='319733a0-e85b-47e5-abff-fa1ab56535a3' oemlocked='false' scope='1' protected='false'>
+	<resource id='122' name='Phase3' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='c621f11e-2396-4406-96f1-ad9de8d0b18f' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVVwW7jNhA9S1/B5aUJsJRNSlbkQNYiMFAUPRVN9hxQ5DAWKpGCSO9mW/TfO5Qd
 O97uoijSWy+Ghxy+mTfveVx/eB568gkm3zm7oTxbUvKhSWtvFPndueF4pKT9JD0GS8IxhGdQ+4Av
@@ -959,7 +960,7 @@ d5Gcxsm+IvsmSYyuQOVrzqqbAi2pCsNargWTJbSrvIRiuYRLScSLJA/S/5Y/8ktdkFTvPHZ7kOYw
 AjbKsNvQj9j9Fin4xcs3Umly18af20/S6h6mxQn06232695+tKHrt24Ye4gXtHkLcVmZohWiZFyv
 DCsKAaxdVTnja1NBAUV+k6tL4vnJi/x/68XXm++87P5DO4LWuhKK6TW0uCHUilXrXLBVWVZ5Kwu5
 EvpSleK8IcHqv7lRH2X5103h2sO/2yb9C54CSe2MBwAA]]></bytes></resource>
-	<resource id='5079' name='UseCase8d' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='319733a0-e85b-47e5-abff-fa1ab56535a3' oemlocked='false' scope='1' protected='false'>
+	<resource id='123' name='UseCase8d' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='c621f11e-2396-4406-96f1-ad9de8d0b18f' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAK1Uy27bMBA8S1+x5aXJgbL1sPyA7SAwUBS9tGiSc0CJy5iARAoi7aYt+u9dSk0C
 p+mhTS8CuZwdzs4utb64bxs4Yu+0NRuWJlMGF9t47VQN36xth9CMQS3MUbgNy4E2eI/1wVMCb63E
@@ -973,7 +974,7 @@ ova2/8oD3xDigZ5to2gtnLO1pvmWXAovtt9/rCfPYyRnEhJOdIlpvpyqueJ1LitepEvFlwUKXpZ1
 Xi5nab4slqe6sgddN59OJVErGuvI41HW2A7eCb8nrEMIBrnJwwoWEkb/3gsjG+wnH+mhDre43/8U
 nw/mxnjd7GzbNRgOXld2qTKBuUCuqpraMc8yvpinFZ+XRTWbFnIpZuq07PypHWhk+rx0+a+9iGmh
 6m38EyHPtIlRBQAA]]></bytes></resource>
-	<resource id='5080' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='319733a0-e85b-47e5-abff-fa1ab56535a3' oemlocked='false' scope='1' protected='false'>
+	<resource id='124' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='c621f11e-2396-4406-96f1-ad9de8d0b18f' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAKVUy27bMBA8S1+x5aXJgbJelWXDdhAYKIpeWjTJOaDIZUyAIgWRdl/ov5eUEwdO
 0UObi0AtZ2dnZ1daXX3rNRxwdMqaNSmynMDVJl05yeGHtf1jiDNzYG5NKnhHAL8h3/uAp70VuCZb
@@ -986,7 +987,7 @@ PseulRVtsWloPc8lZXkjaSF4UzHJEWVFQFs+WRXWGQoChvVhhe7vO3xQhoBk3NvxO418U4hGerJJ
 khVzznIVNk5QwTzb/Py1mr2MBTmzmHCmq6t4lddC0kqymtb1vKILnnPa5II1LSsLlufnusonXafB
 nisL/mjrwkod1R09ogPzuzW5cwhb5tDNnk7QCpjGDh+YERrH2eddBPz5+X7Zmzvjld7aftA41X1V
 56HDBW/nSJtuntO6YoJ2ZVdQzhayw7bMUYjzzqvniaARxcu2xf+OI6xM+I9t0t/RcI/95QQAAA==]]></bytes></resource>
-	<resource id='5081' name='Phases' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='319733a0-e85b-47e5-abff-fa1ab56535a3' oemlocked='false' scope='1' protected='false'>
+	<resource id='125' name='Phases' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='c621f11e-2396-4406-96f1-ad9de8d0b18f' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVWW2/bNhR+tn4Fx5c1QGmTFEWJge0iCzYMexqW9rng5TAWJkuCJDdth/33Hdpx
 EnsNNqxIX/ZiW+Thx/NdSGv55uO2IR9gGOuuXVEx55S8WWfLMXryueu290Peth/suKIFEfgEH8Hv
@@ -1006,7 +1007,7 @@ a4UWpzqeUpcvQF1+G+oFMo65AKarCiMUpWGV95yBkjm+PHjHY3hKXZ5Rz1+Aev6i1Ju6/X1PPeoC
 /UXqXhqJpwfLnfGS8QLAWghGOH0aeEHXy12/WC9Dd9fi1yJhnYKW0UTppWehCAVGSQVmRRTMAMgS
 pLaFi+cvAP8IqgOXlvuKSWdypgTXzLiQMxd5kctK59aoU5OeA10ujhfIOstQlOjX2V80kdbjiwoA
 AA==]]></bytes></resource>
-	<resource id='5082' name='Phase1' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='319733a0-e85b-47e5-abff-fa1ab56535a3' oemlocked='false' scope='1' protected='false'>
+	<resource id='126' name='Phase1' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='c621f11e-2396-4406-96f1-ad9de8d0b18f' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVVTY/TMBA9J79i8IVdCWeT5qPpqi1CK3HghMTekWOPtxZJHMXufoD474yTbpfy
 IRBIXOghqsfjN89vnu31y/uuhVscnbH9hmVJyuDlNl47LeGjtd0hJEV/K9yG1VAzwHuUe0/5vLMK
@@ -1022,7 +1023,7 @@ Km2ypZAVF3mR82K1XPI6T0u+rApZ6CYv66ph0Fop/Nx4yBj0oiNl379v8Mb0DLSQ3o4PPOBNIR7g
 KVGfmrR4NKm03dCix//Wpm8PfTkK8Z1N/6IxWJZFJouMay0KXpRK0P3WaJ6WK7pFtFC1zk8bUz7d
 atirb24Pivz5leZH0TsT6kzUUtmodKVzMklZ8aKql3SxYcVpJCRWKi8knlLL5xfR7umx68NTpw6v
 2jGssBUPG1al8+9pQrfihpLnEdtOLyQdgCOjbRwTUS238Rf4Q+JI4AcAAA==]]></bytes></resource>
-	<resource id='5083' name='Phase2' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='319733a0-e85b-47e5-abff-fa1ab56535a3' oemlocked='false' scope='1' protected='false'>
+	<resource id='127' name='Phase2' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='c621f11e-2396-4406-96f1-ad9de8d0b18f' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVVTY/bNhQ8S7/ilZfuAqFWpGRLWtgOgr31FCB7DyjyaU1UFgWR3o8W/e99lLze
 OE3RIgF6qQ+GRA7nDecNxc3750MPjzh564YtE1nO4P0u3fhOw2/OHU5DWg2Pym9ZDTUDfEZ9DITn
@@ -1038,7 +1039,7 @@ cUdpsvTTz1484n/uBZ2Kkwvw5KZf42na3Hy5+zkL3x3SXJbGlG3DMW81L2sheNOImndNJaVRshK6
 vQxp+RpS7Q5jjwH/tzH9eOrL2Yi/xPQHGtOIpmxk0fEGTU2NqSretvEJhVZrkatSycvGrN6+ajgY
 cdkWGvn+T1qY1OBtrDNLkwViXlYrLvMWealVzuumMrxG1clCFKtVWVxKK5b70B3pqhviRWdOd9p5
 2GCvXrZsnS+/t4muVw8EXt7Ybr4f6QCcFe3SlIR2epf+CWuucbXeBwAA]]></bytes></resource>
-	<resource id='5084' name='Task3_1' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='319733a0-e85b-47e5-abff-fa1ab56535a3' oemlocked='false' scope='1' protected='false'>
+	<resource id='128' name='Task3_1' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='c621f11e-2396-4406-96f1-ad9de8d0b18f' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVWTW/bOBA9S7+C5WUTILQt6iNyIKsoAhToXuN7MCKHMVFZEkQ6H130v3cou3bc
 bYHFBuilPhgecvg4894j6er987Zljzg623crnswWnL2v48oZxb70/fYwpKB7BLfiS5ZQhM+odp4W
@@ -1055,7 +1056,7 @@ FkNjcbSX1E2UPOJvp4TaPxARinjqx8/EzXSCq/lrEt5mV23SRqZ0SI1MFnRc9UIsS5mJBEFj05hF
 1hTndk2PdpV/rF3XJ2HoEWK67/Ddv736BlkMaq1LqYReYkOyqFyUy1SKvCjKtIEMcqnPZclOtyh2
 +oebhEYOuvyPovwInbNhn6m0MlHQ6FSJ8rohx+RgBN13SuT0lclimTewPC9N7t9gupkFduFx1Yd3
 9DissYWXFS8W+89pwrTwQMn7iNfTm0z2P1ZUx3Qa6F9DHX8DTSUOPVMIAAA=]]></bytes></resource>
-	<resource id='5085' name='UseCase4a' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='16' parent='a730cf7e-158e-458f-8098-8e7faafc79aa' oemlocked='false' scope='1' protected='false'>
+	<resource id='129' name='UseCase4a' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='3454da7e-04e5-4bfd-97d1-a784ada5aea7' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAJ2T32/aMBDHn8tfYflpk2ri/CIJMqk0ukqb1ocJNm1PlWNfwKpDothhZVX/99lA
 V6j2UO2J45u7z319PrOrh0ajLfRGtZsZDscUo6tyxEwt0O+2bY6S4JstNzMcoxQjeAAxWJdPmlbC
@@ -1069,7 +1070,7 @@ dEwvMZdbJQBPMb7EJwM4CG5vQbvwaMs5dOKwUdY4cfFx7v7ZXXesXoPujhzX8pN0MY2yLC9SSvK0
 kiRJaEqqqA4JFDxOaUSrmnvilusBlgdQrVtuPU2t1qc+3fXDyl30oYPQ7oQu/O4rnwl4Gkbj9BLf
 g886HPjprWuYpxHPipiSasJjktTURf6hZInI0yIpKg7p+RrGL88DNvLVKjrlf9/GyAW1KEd/ACzf
 czp8BAAA]]></bytes></resource>
-	<resource id='5086' name='Time Delay Tests' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='16' parent='a730cf7e-158e-458f-8098-8e7faafc79aa' oemlocked='false' scope='1' protected='false'>
+	<resource id='130' name='Time Delay Tests' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='3454da7e-04e5-4bfd-97d1-a784ada5aea7' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1YbWvcRhD+fPcrtuqHOuDVaV8lGflCcFpKSUvBCfRb2JfRWUQnuZIuLy39753V
 vdi6BHKkSUpIDNatRquZ2Xlmnp1V8fD1uiYvoeurtrmMWJxE5OFyXvSlI3+17TqImMzDX0ScaV6a
@@ -1097,7 +1098,7 @@ L3SKExYtfzbIuNtPNIr04Np9v4a1hjYmtmSWWS1wU5MGe3qptKW5BUFFZm0CMtW5zKe21MRWAPbu
 CIi4vcNG6qy2miuaex0MYSnk0mmK/9ymMhWp8VMb6d6G2Nq4vz80BF5jeTemJnuiiOP5SR1KPH+H
 dzlAKnKlaQkywRrF84AxPKfclFYozIGUi6l3+d47OX7AREU0aF917aYZt4e67c64UufIW+dMZOc4
 fhCWgexziNN8LMgO/txUHfS47ZV1awayhjUmU5h5Mf8A2t+uDpeJsVjO/wUMAIz7ZBYAAA==]]></bytes></resource>
-	<resource id='5087' name='UseCase4b' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='0e0e71b6-d88c-4da2-88cc-026e9969b08a' oemlocked='false' scope='1' protected='false'>
+	<resource id='131' name='UseCase4b' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='eb22f143-dc1e-493e-a13a-9091a2165486' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAKWSwY7TMBCGz+1TjHyCg5s4cVJn5WQlivYGEuoisaeVY4/biKSOYne1gHh3nNJl
 t3tCcPL498znf8aW149DDw84+c4dasJWKYHrZim91fDdueEsaXV4UL4mORQE8BH1McR8OjiDNdmo
@@ -1108,7 +1109,7 @@ oVwoTtu1YFRorQpRlrasxKWv7MnXll9a0m5Ydb1fjZPTaI4Tbk/upEGvp26c6xvrnExeCnLwu09H
 PGKzvdnQD+i92iE9KTL5cyZ32Zehb2RyXmcDzZbL5BRIvVdToKMK++azR9gojz55ioC3cIcePjp4
 F/v4mpw3t/G5vUxe1MrONH8zD5nExP8ZOramErYy1JpMU24LTqu0FFTzXFWmsnlRZpdDz58/Ax4M
 uxx8VP71JyxjYHWz/AXJnW2vagMAAA==]]></bytes></resource>
-	<resource id='5088' name='Yes No Tests' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='16' parent='0e0e71b6-d88c-4da2-88cc-026e9969b08a' oemlocked='false' scope='1' protected='false'>
+	<resource id='132' name='Yes No Tests' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='eb22f143-dc1e-493e-a13a-9091a2165486' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1XW2/cNhZ+nvkVrF7WAcwZ3iUasoLUuwW6SL0PdhctFkXAqy1UIw0kTRxvkP++
 hxrbGU2TTXabPqXzMBIp8juX7xyew/L5m02DXod+qLv2PKMrkqHn1bIcokP/7rrNeUZWWmbImfa1
@@ -1138,7 +1139,7 @@ TtH/bICF3k/nkmIDTSkWulBYM+dwoTklRpDACJmT8hERv4XWzkDiKokJNyFdasH9lECTKXVuGLFS
 mqNLbf4I/Um1pTEyKKmgDYI6KxyR2FJHcE4oNUWAo8C5ud/zI7X/i0uCYsYJho22kBhgAnhDgyhI
 D+NBa+7l3OvH2J8OGxspXJAUllCP4JqgoBAxSEVKLTU2MpZrN3dNceSa32JyKYhVDBLYQ7coCg/X
 LTAFR0Gho2eMuBjmTH5E7QfoJRyI0VXL/wAtnFxZARIAAA==]]></bytes></resource>
-	<resource id='5089' name='UseCase4c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='8a429a9c-2ef7-4a0b-84e9-657f3e64530b' oemlocked='false' scope='1' protected='false'>
+	<resource id='133' name='UseCase4c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='ea7d7b43-be5f-4bd6-809f-43ec59379b66' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAJ1T227bMAx9br5C0NMGTLFlO74UigsswIYO28OQ7vJWyBKdCJUvsOSsXdF/H52k
 a1PsoRhgwCTFc3hIUeLitrFkB4MzXbukfB5SclHOhKsV+d11zTGkZLuTbkmjkETowi2o0SOCNZ2G
@@ -1151,7 +1152,7 @@ ctn2oyfvsY+b4Mm/whsXwTMCYXT5momIABP/NXY6OhjYAK7vWtyL83tqu1+fTWM8PW9Ha99RqXdG
 4Qml7+izWRwCuK1gD+bYGu8Opr/rj4At2P4IxXKXGu2CF2qhYs0WKo1YkhTAKhmlTBdZqJI4r8O6
 wvydtCNc7YkOOrZmsz0RhjcMG7zLA7+y2Bua3yfcIx79LEXnBqas01YfXrtxURjruK5zttAhCo7y
 DOfLFyzMUwUZqIWu+enGxU8vAVr9Yusw8r/PYIZGrcrZHx9rMF1tBAAA]]></bytes></resource>
-	<resource id='5090' name='Get Input Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='8a429a9c-2ef7-4a0b-84e9-657f3e64530b' oemlocked='false' scope='1' protected='false'>
+	<resource id='134' name='Get Input Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='ea7d7b43-be5f-4bd6-809f-43ec59379b66' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAKVUTW/bOBA9W79iwMs2QChLsmzJgazAGwRtF8GmqF10bwFNjWxiJVEQqbjeov99
 h8qXbfSw2AKGTM68eTMcvmF2/a2u4BE7o3SzYKEfMLjOvcyUEv7Ruh5MUwZSNI/CLFgMMwb4DWVv
@@ -1168,7 +1169,7 @@ vpfgkBdX3ogx5o3WOzr5XlUVdH0D+x02YHc4YGAgMpewwVJ3CKI5eCNNXurSkNP3vNGy2/Y1ddYQ
 5DRdoTtampKuz/A0MjUVK+n+rKBKX4Le393/vrx7WN3cf7q9BPp8Xq4/3v/5Yvj0Ybm6fdmsvpD7
 4/3nV+fbhppAolg8pT7u8SWwn2iHnZNdeKO2U40Ftt49T+OgVCyugMAU5PRzdKXerwhPzOfxLJhO
 SWkh8niDE54WArmkSQsSTDdTjE+FF789kdgUZ88RWf7v++jRopS59y+JgbSkhQYAAA==]]></bytes></resource>
-	<resource id='5091' name='UseCase4d' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='1085a620-af89-478a-94d6-e4d72d24a0fe' oemlocked='false' scope='1' protected='false'>
+	<resource id='135' name='UseCase4d' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='ab5107fe-1203-4458-afc8-8d7f43fb7996' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAKWSTW/UMBCGz7u/YuQTHJzEH9kklZNKLOLGAW0ruFWOPdmNyJdib1VA/HectKVs
 TwhOHr+eeeb12Or6oe/gHmfXjkNJWJQQuK62yjUGvo9j/yQZPdxrVxIBKQF8QHP2IZ/2o8WS7HXX
@@ -1179,7 +1180,7 @@ unOBPS1s52kg+KD6+Yyk2m6U8zhBa0uSZMYKXkvKbZJTKQtO87qoaaa1EBZFIzNJoBuN9o93BUZg
 YU8/onP6iHRVVPz7TB35l74LpU/r0r06MBWvgTInPXs6aX+qbh3CXjt08XME0sJKgXfhDl9d/Li5
 CU/tVPxHqWpt9TezUHFI/J+B17uaMSYzWghtA1rktGaSU5NkLPTBhqXp5cDFy0fAwb4aelD+9Rds
 Q9CYavsL9lyr22YDAAA=]]></bytes></resource>
-	<resource id='5092' name='Queue Tests' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='1085a620-af89-478a-94d6-e4d72d24a0fe' oemlocked='false' scope='1' protected='false'>
+	<resource id='136' name='Queue Tests' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='ab5107fe-1203-4458-afc8-8d7f43fb7996' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1ZXW8bxxV9Fn/FZPvQGMhI8/1hUAwMF0X9kCKGDLQPBYL5uEMtTHLZ3ZUVp+h/
 z92lTGkpuaIbpn0xIIjk7PDO2TPn3ntmOf/+5/WKfIC2q5vNZcXPWUW+X8zmXUnkl6ZZ3w2lsPkQ
@@ -1218,7 +1219,7 @@ HOulxFKmNVCnYkIvwbjVDGngfvq8wRytrozbPuwcHmTc8KSMJeoiprHxeIY2wmY+faQv7mMfS3NB
 eo2InjopsT4wrMSBC0NtLlYxx7LwZkrJ8zRj0+CYrQYdnsUkjpGhMLykwUdUGg5mdZBwh5Q8UXMA
 W1TCI7IDFIFCjFick6VgPWc6qmJjnNYce0DF5zkIoLEoREOLF2pwpBHZyKhrr10WUjumxBTvM7Fn
 2F1KWsx+BT3eTkIbHQAA]]></bytes></resource>
-	<resource id='5093' name='UseCase5a' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='5e5f412e-e1bd-4b69-9ffd-af5220e79d96' oemlocked='false' scope='1' protected='false'>
+	<resource id='137' name='UseCase5a' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='57662134-4f4a-4ebf-8149-32024b72eac3' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAKVSwY7TMBQ8t19h+QQHJ7bjhHTlZA9F3DigFsFt9WK/tJGSOIqd1QLi33HKLkuX
 C4KT/cbvzYw91rcPQ0/ucfadGysqEk7Jbb3VvjXkq3PDI2RgvAdfUcmJjCU+oFlCnGCDs1jRPfQ9
@@ -1229,7 +1230,7 @@ WVRspzLLWstFWXDgWSmvfcknX+LakXFD0vU+mWZn0C4zHi7mtEVv5m5ax2udXlWDP31YcMH68G7P
 3qP3cEJ2QXT660yf5Oehj6OP6ypeC51eVm3OMAc2QTjXHz2SPXj06dOO5ECOM4y+W/XIMUbslpD+
 CZFjzF6nv5HpztZ/8zY6jY3/EwAiSFWYnMlsVzCFUaQsZBnlFDRFPFMorgPInj8GjvZFChH511+x
 jZvW1NsfvkNww3gDAAA=]]></bytes></resource>
-	<resource id='5094' name='Transition Timeout Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='5e5f412e-e1bd-4b69-9ffd-af5220e79d96' oemlocked='false' scope='1' protected='false'>
+	<resource id='138' name='Transition Timeout Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='57662134-4f4a-4ebf-8149-32024b72eac3' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1XW2/bNhR+jn8FoYetBUKbV5HMHBdFtwJ9GBosGTZgGApeY2G2ZEhym7Tof9+h
 7cRWmq5Zl7fOD7JEHn4853w8F06fXS0X6G1su6qpTws6JgV6NhtNu+TR+6ZZ7oa8rd/a7rRQiNIC
@@ -1257,7 +1258,7 @@ EF08TGmrmDPJBkwt3KdEhN7R6BJiywtDEudceD8Mpls/DzX/FJqXnmnHwK9cQVuqQVnQvcRMgpNi
 vssZMqSwfDCFgkCoSy8w8UaAr3XANtCIrQneKsW8HhZytsH+ojeUFJSUiWKboJ0WcD2HTkFCkgnJ
 8mDKpKIeUlje743Pb2FANbivGsi+JTyUtNgqayAjB5E8l14SNuTxQZp7JstgFHjAJSifEQ6KAfIw
 mGCjTYJwbYY8fkbzHTTc27vkZ6O/Aae+WV+PEQAA]]></bytes></resource>
-	<resource id='5095' name='UseCase5b' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='dc209ee2-902f-4c17-965d-3b824d179496' oemlocked='false' scope='1' protected='false'>
+	<resource id='139' name='UseCase5b' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='19950a95-703d-4753-8827-2031d71b5f06' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVUTY/UOBA9J7+i5MuCNO44bqfTGaWDUK8QFwSoB+3ekGOXuyMlcWS7gQHtf18n
 w8D0iMNqEScuiV0fr15V6bl+9mno4QM639lxR/IVI/CsSWtvFHy2dvhqUnL8IP2OcAY8XvETqnOI
@@ -1272,7 +1273,7 @@ dzxjelNnF7fBH9+e8YzN4cWevkLv5RHpYqmzb776yP8e+pj69T8Xb/I6W/71Mmk6yXBq3nmEvfTo
 s/sTFC3cODn6bq4HN1F89hzgZYdOOnW6zV5HRS2N1dkDoLrTzX+ZS53FwJ8ZPqIRrc6LiKpyKspy
 S6NCKyqk0JUpC4X5I7mKb7Lgv60s9naYeoyTXTB/oTa4LGUlKkYVZ1sqsDB0K3lJWVtpuREo8nxz
 uZ7i+2uKo34kkGj5v09pGg9GNem/SE4Guq0GAAA=]]></bytes></resource>
-	<resource id='5096' name='Transition Timeout Without Handler Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='dc209ee2-902f-4c17-965d-3b824d179496' oemlocked='false' scope='1' protected='false'>
+	<resource id='140' name='Transition Timeout Without Handler Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='19950a95-703d-4753-8827-2031d71b5f06' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1WXW/bNhR9tn8FoT2sAUqbpEiRDGQXRYYCfRhWIBk2YBgKflzGwmzJkJQmWdH/
 vkvHaew0GIK2b9uLJF5dHR6eo3vJ+tXNZk0+QD80Xbso+IwV5NVyWg8pkL+7brMPBdd+cMOiEIwI
@@ -1293,7 +1294,7 @@ Ee/zjHmErTTogHZRVwFDbGXxfAKWlsLqSmLMgTvEFjvsNaTxX2FLLkIyGdYqpFxpR40PqDo3qpJJ
 R2bcscyfKe+x98y/hGbBO+NsRQNwSWVynDoRS1qpygcQtvKKH6tRPVsNG2TF8URBRRJ4WhNYbT6q
 SL3yJcNFRODsWI3qOWpIo6MRJafa+1wuVlKX1dDIWbMyIWd9rEb1XDWcZaXmCksPWwJeIpKtsF2Y
 aCApUAHko0rUj9TYY+IpDQ/Yy+k/wjl16n4LAAA=]]></bytes></resource>
-	<resource id='5097' name='Operation' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='dc209ee2-902f-4c17-965d-3b824d179496' oemlocked='false' scope='1' protected='false'>
+	<resource id='141' name='Operation' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='19950a95-703d-4753-8827-2031d71b5f06' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAKVTTY+bMBA9w68Y+dKttA6YQAIRYbXaquqlhzaptreVsYdgCUyEzX606n+vIfuR
 rPZQdS/Ynhm/9zyPyS/u2wZusTeq02vCZiGBi8LPTSXgV9e1jyHB9S03axKFELkj3qMYrLtB207i
@@ -1307,7 +1308,7 @@ Z3iSLVjoTEkjjGi8SELKOVvSDMPItT0Wyfi7Hzszf3LmlTGia2eqMbNnpZvJolziQaeLFHlwcmrN
 7tuAAxabz1f0KxrDd0inSB485/Jd9LNt3NXHdSQvWB5Maz51mu65rYsfBuGKGzTB0w6SErY910aN
 fLB1w9cNFr4op7AX9UPwRvJa2Xoq4lo2zvutm9c8OKLJlSz+pWt54ArfY81cxDEuBKMcQ0FjjOc0
 RTfWVcYXpZyzJZZ4ak38Msyo5St/XOR/J9l3m0oU/l+Yvms3LAUAAA==]]></bytes></resource>
-	<resource id='5098' name='UseCase6b' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='0391face-73a8-47a9-875f-06df2202d65f' oemlocked='false' scope='1' protected='false'>
+	<resource id='142' name='UseCase6b' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='0bb43f7c-180c-4eca-b6cc-317a3d0e9734' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAKWTUW+bMBDHn5tPcfLT9uCAISRQOVRapL5N7ZRG21t1to8EDQLCpmo37bvP0CYp
 e9o0Hg58vvvf3U+HvHmuK3iizpbNcc3EPGRwk8+kLTT8aJp6dGXjw0Dj8QntmsWQMKBn0r3zWbxu
@@ -1319,7 +1320,7 @@ OOVKeFNQaOJsIVAU8RRHdMKxu5+S0E09Lys7b7tGk+k72o5QpCGru7J1r1NMTrXdf+mpp3x7u+Gf
 /aS4Jz56ZHC+k/voW1351Lf3CG13f6KnD9g53qI75Cd4NrhgVPC1Kx3BXe/a3gV3fkHGUawM3mXK
 0uR/g0IGPvB/eIvES2UrwyO9iPgCjeFqmSJHjWaZJiHGajnlHV/Wj45GTJl7z9vu/XNTfon8T5zP
 fgMSEQF44gMAAA==]]></bytes></resource>
-	<resource id='5099' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='0391face-73a8-47a9-875f-06df2202d65f' oemlocked='false' scope='1' protected='false'>
+	<resource id='143' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='0bb43f7c-180c-4eca-b6cc-317a3d0e9734' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1a227jRhJ9znwFwacs4Jb6fhFkBwNvBlhkDXthTZK3QV89QiRREGmPvUH+fYui
 aF0i21Q8nvHsrh9kssWurq4+p+o0W8MfbqeT7CYuynExO85JD+fZDydvhmXy2b+LYlo3UW7gT+eZ
@@ -1356,7 +1357,7 @@ APFkPFPIEWKxNo4obzpz6qGquE0sNcCs+7sDSdlTxKKkR9VnPtv70i+fDiTWXzvaezn1nZyiBDuo
 Lgb2KpJbuNIJsaBM4LCB8d5+bRQx8TiIVI/uZuc/He99Ayn6Wz/eM8pgEOMWCR5hs6shK7mYQJME
 yi3DKfnAOkPpwd1cp1L/0Kvwp0t97ux6r/f/Y761njeEMeqlQsRqUr+f80hjKDdR+mgp01wRt63n
 5frniHEWyLaGh5bVbxEP/lXgG7hI/uTNfwDsw8ii8ikAAA==]]></bytes></resource>
-	<resource id='5100' name='Write Memory Tag Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='0391face-73a8-47a9-875f-06df2202d65f' oemlocked='false' scope='1' protected='false'>
+	<resource id='144' name='Write Memory Tag Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='0bb43f7c-180c-4eca-b6cc-317a3d0e9734' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVW247bNhB9tr+C5UsTYClL1NWGrCDYoi9tkQJ20AJFsaCokS1EEgWS3ksX+fcO
 5cvabgIsmr71RSaHh2eGczhD5+8eu5bcgzaN6pc08HxK3hXT3NSS/KVUdzBJ0d8Ls6QxySiBR5A7
@@ -1374,7 +1375,7 @@ Vy8HHjfNK9jnb18EF7MN/71r0Xj4xQ5TKgMHhuNsX3nnSThW4Nmxb1VfN5vimWr1YOjij2eKtUsX
 Z6KKBItSGbF5ncUsy7CT+Dysw1pcXsb41DT4/7ZpYEvAghta7NrV1xvHd/9p25jHQRrUccnqLCxZ
 xGvOyhgEC8OSx6mfZijkpVLJy7sHfXXV4tFykOpfBGW16E3j/IyhlVnF4zkkLJnHKYvCrGZZGgK+
 y3OexbxKonl2GVpEi2d8D+8btcOepfSnH1QP6PSFuJji04h/T4rp33OBzh68CAAA]]></bytes></resource>
-	<resource id='5101' name='UseCase6a' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='2e613a05-083b-430f-a7e7-94df0576daf7' oemlocked='false' scope='1' protected='false'>
+	<resource id='145' name='UseCase6a' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='3f4ad8ea-11fb-4eef-a5cc-c46fa62811e2' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAKVSwW7bMAw9N19B6LQdFEu2E9uF7B5S7DasQxpgt4KW6MSAHRmWXHQb9u+T03ad
 dxq2k6gn8vHxiermqe/gkUbX2nPJ5FowuKlWyjUavlnbv0Aaz4/oSpbAhgE9kZ58yOe9NVSyHXYd
@@ -1385,7 +1386,7 @@ nQvcw8ztPA8MPqB+nIhVqyvlPA3QmpKlQmCRZhlPjEGeilzzutkaLogybSjPc5Ey6KxG/zwrSAZn
 jn8k5/BI/IKo6NebOsZf+i6Uvpxz9+pwp6JLoPQJR88H9Kfq4Ah26MhFrxFsEXa260h7uA0mRJ/C
 T11GcSr6rVK1pvobK1QUEv/L78ZQ0qDhW9zEPG1iDHugU45JoakusqZuiqXfydse0NnIpecB+dcl
 WIWg0dXqJy2qfUBlAwAA]]></bytes></resource>
-	<resource id='5102' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='2e613a05-083b-430f-a7e7-94df0576daf7' oemlocked='false' scope='1' protected='false'>
+	<resource id='146' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='3f4ad8ea-11fb-4eef-a5cc-c46fa62811e2' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAALVUy27bMBA8x19B8NQCoUW9JUNWUDgIEKDpA3GL3IIlubKJUpZh0m7SIP9eynYa
 O+ghDdCTlqPh7M4uyersrjVkgyuru8WYhkNOyVk9qGwjya+ua/eQhMUG7JjGJKUE71CuneeztlM4
@@ -1399,7 +1400,7 @@ MJ0jafVCt+uWbMCskXQNcR50MPNkf3jR7PatF9rZXejul3uxOZrlXtbnv1Q+LmOQSchzlimRsoRH
 BSsgTplQTegdiKiMU8/fJpvuhBrTgevV9Gx+WLYfO878fHcZpPF2ffi93/mksGf+wJ7Um388pVcf
 bv69B3D33IO3Gec8T6USnKXN1jiXDEI/mSgu41yhzEQj/5dx7/jxtZdOCRn2h4xJiARLcp4xgDxj
 pZSIUJZFql5cuvj5McCFenHvPPLWl2Dgg0bWg989a3d/agUAAA==]]></bytes></resource>
-	<resource id='5103' name='Collect Data Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='2e613a05-083b-430f-a7e7-94df0576daf7' oemlocked='false' scope='1' protected='false'>
+	<resource id='147' name='Collect Data Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='3f4ad8ea-11fb-4eef-a5cc-c46fa62811e2' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAALWTX2vbMBTFn5tPIfS0QRVLtmPHwXFh6crKWBkk+wNjFFm6SgW2FWwlbVf63Xed
 NOuSvYyVPen6cHX00/VRfnZXV2QDbWddM6ViyCk5KwZ5ZxT54Vz9JCnZbGQ3pRFJKYE7UGuP/ax2
@@ -1413,7 +1414,7 @@ sit4D/fY8+Hyarh5atjPA2WHedzVp9TL5Ufpb1Cdo3fp7oL5xYx86oDMZAddsK9IIoPF2/mCXV4x
 gfu2tov7FeDO2ja2XteormTnv9hGu1uUBcfnd3oIOqG9+Pgd//Wfl8yX4de6wgnv1pdkRAHXmQkl
 MyPMbCwSYJkGzsQIVRWKNE7MYUbiX8EN/1dwjUkMKNNnBFHiUESsTCPOFMJAFqbJSB9BjZ5fOTT6
 KL2o/OsTH2BhVDH4CaIE9G5DBQAA]]></bytes></resource>
-	<resource id='5104' name='Transitions' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='16' parent='a730cf7e-158e-458f-8098-8e7faafc79aa' oemlocked='false' scope='1' protected='false'>
+	<resource id='148' name='Transitions' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='3454da7e-04e5-4bfd-97d1-a784ada5aea7' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1WTW/bRhA9i79isYc2AbLS7pJc7rqSgsBFDgWCHuwAAYoi2I9ZiTBFCiRlOwny
 3ztLu7ZlB4WRor20F5IaDt9782awo+Xr611DLqEf6q5dUTHnlLxeZ8shevK563a3IW/bSzusqCGG
@@ -1432,7 +1433,7 @@ G0pjUZgv4VhaQddffvvw67vfz2wbXHe9OHt7St4PQE7tAMPiXHwlPzTjT4QJjkfOHds3uJ0rRFXh
 cE7Xy8N+sV6G7qrF2zQmeF8kzCNsw8F7UQWWV+lY5HjRSgALHs1VldayelTQHXY6Eu4pnkIrbVTh
 jWa6SiPkgmMahGLCClPm3EsNj/qkni1biaBNsCibq8gKGRGbK8WMUOl/j1ZVXh7LVn8pO8Npi36d
 /QEf187AIAoAAA==]]></bytes></resource>
-	<resource id='5105' name='UseCase6c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='442cd7e9-96e7-4224-8507-65c50701a76d' oemlocked='false' scope='1' protected='false'>
+	<resource id='149' name='UseCase6c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='81a07a4e-84b0-409b-b16c-d221bd3630ac' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVUy47cNhA8S1/R4CU2YI4o6r3QyDA22SAHwwl2F8jN4KM1I0AiByLHayfIv4fS
 eOKVkUMQI6dcJKq7urrYJbJ9/XEa4QPObrBmT9IdI/C6i1vXK/jN2ulzSAnzQbg9yaAigB9RnX3A
@@ -1447,7 +1448,7 @@ A3624fhbnOFFKbSsKlqwRoY/RiKVVcpozjPGS4Y9y9jWmezqzKMZ/M+zVajPM24dUnbaDaPbna7p
 dx2dS54NEb63T2a0QsOPjz8l78LJWjfo2uRZZTvo7p8MqE0C8FtcyKVUWdNL2ghZ0LyQDa1zLiiv
 sobrtCpExrcu5FcXfjD6f3s67gYzuCPq/+x0NLwpua5SyrIyD+ZXgtbYV5SVMi9QlHXZfHU6ii/3
 KRqdbq0JkX97mcZh0asu/hPVjsfrrQYAAA==]]></bytes></resource>
-	<resource id='5106' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='442cd7e9-96e7-4224-8507-65c50701a76d' oemlocked='false' scope='1' protected='false'>
+	<resource id='150' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='81a07a4e-84b0-409b-b16c-d221bd3630ac' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAJ1V227bOBB9Tr6C4NMuEFqkqKshuyjSJgiwQbOw0u5bQFEjW4guhkQ56Rb59x1a
 dmy3wW67T6KGnOGZc2aGybvnuiIb6PqybWZUTDgl7+bnSV9o8nfb1juTVs1G9TMqiU8JPIMeDJ5n
@@ -1467,7 +1468,7 @@ EPPUEmupCILGmVlVpAZSNsSsgGATNWWz/EGTFPeKsusNaQcz3jwudoD3rL+h3V6wDx+vr04K9wel
 umMJn+jgyklw8KRTMfF8z4t4ELjcDz8K96DSpz1Zm2PXUae9QBe2NSznSFfon9T6kx1Kl22DzNd7
 Po5tgLw0Q1W91Qr1+D+K+d8NMIb5xYpe3GGIWj2nrwnwg4CvSPpBaxzl9OVn36JM8LwIggiPeB7z
 /KLANzKKsBvjgOe54IGWp2+RPLyR0OTi9B1Cy/99IM9xUej5+T/E6NNwgQgAAA==]]></bytes></resource>
-	<resource id='5107' name='Write Gui Monitor Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='442cd7e9-96e7-4224-8507-65c50701a76d' oemlocked='false' scope='1' protected='false'>
+	<resource id='151' name='Write Gui Monitor Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='81a07a4e-84b0-409b-b16c-d221bd3630ac' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAMVX64/bNhL/bP8VBL9cCyxt6i0ZWhXB5noXNG0C7CYpcDgUfIy8wsqSIdG7dRf5
 329IyetHnNtt86FfbHI4nBnO4zej/IffVzW5h66v2uaSejNOyQ/FNO9LRf5o29VIUqK5F/0lTYnn
@@ -1500,7 +1501,7 @@ VaVE0OUZgm5WMvyM4BxnK4gDOP3C/Ct6slBpLy1xavMC/MKWYcqyFNVmfqb9LJGhSOSxnuBleuqq
 uRs0+KAj8DXzeYCjAnglywKlWFkqycuA+2GWHnvMRxTdrOeIUVjo+De3so6FhjEoDmnIYldMIBKW
 6QBfEQRRGms/kemJ0OArQrGkx6HWbprWwPCF7yehzrhiGWhU4NvhlkOAU46dev0gEcHRl5Bvv/CH
 4dYuixvoDYnVFAEARRZTXPSlKqb/AwFvs9yeEQAA]]></bytes></resource>
-	<resource id='5108' name='Write PKS Controller Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='0391face-73a8-47a9-875f-06df2202d65f' oemlocked='false' scope='1' protected='false'>
+	<resource id='152' name='Write PKS Controller Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='0bb43f7c-180c-4eca-b6cc-317a3d0e9734' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVWW2/bNhR+tn8Fx5e1QChL1N2QVRTp+tINKeAAGzAMAUUexUJl0SDpXBr0v+9Q
 dpwoy0Ox7m1+sMnDT985/M5Frt7dbXtyA8Z2eljRKAgpeVfPK9tK8lXrrTdFSek/lEgx3Ai7oikp
@@ -1519,7 +1520,7 @@ TgeVAdnt4DXgi5MD4xpc7RvoyOO3lYKDkIeOmOyu+R/bHo3HXxw5jbZwZHjcHVrxVTUee/PZ/bEh
 SPz0n44I0cQNjxLpSwDHeShb1oBMcZXnMsuzME3LabKyp3cdDOrFSEfLMVv/IihnxGA772cMLUtk
 k6ZYp2VRYkAxFlMDSrKmySBWPC9CkU5DS2j9gO+/m07vcSxp8+WDHgCdPhHXc3wV4h+Tev431Pf7
 8LYIAAA=]]></bytes></resource>
-	<resource id='5109' name='UseCase6e' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='defe37fb-fa27-402d-b2d6-607e6d4a002a' oemlocked='false' scope='1' protected='false'>
+	<resource id='153' name='UseCase6e' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='8a9b71f7-0331-44f2-8b81-a6dfe5cea9d5' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVUTW/UMBA9J79i5Asg4Y3jfFfZIFTRGwLUIrhVdjzZtZTEq9jLp/jvOFmWNogD
 ouLEJXFm3rx5nhe7fvZp6OEDTlabcUviDSPwrAlr27XwxZjhR6gV4wdhtySBggB+wvboPJ4ORuGW
@@ -1534,7 +1535,7 @@ pcEFPIcJO5xwbBGcWfiWzCMLtjUH3Hjo3OA3SC9mztxDLioPkx4dnHavxx28tQiXwj9yReYB39tw
 bogI7ybtZocVvDSewEzRK3+8ll3aOrpXXmvV/MmU6sgDH2JFKmWbVJ2klZAZTTNZ0TLlgvIiqbiK
 i0wkfG1Ferbixaj+2yNypUdt96j+2RGpeJVzVcSUJXnqzS8ELbErKMtlmqHIy7z65Yhkd5cqjipe
 W+Mjf3ujhn7RtU34HeOG7PqyBgAA]]></bytes></resource>
-	<resource id='5110' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='defe37fb-fa27-402d-b2d6-607e6d4a002a' oemlocked='false' scope='1' protected='false'>
+	<resource id='154' name='Operations' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='8a9b71f7-0331-44f2-8b81-a6dfe5cea9d5' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAANVWbW/bNhD+3PwKjp82ILRI6t1QXAzGPBRb0A5x1n0raL7YQvQGiXbSFf3vO0p+
 kbsMDdIMwwADpk53x7vnHj5i9vqhLNBOt11eV1eYTShGr2cXWWck+rOuy71JimonuivsoxAj/aDl
@@ -1557,7 +1558,7 @@ hOkgNlpRpYR4WaqeJOGMqmHg2nqEqfxrTB0ix0RlZ0SlJ6IunsHT/l7wnxB18VSiGpEXIH0nkvr/
 vq6y55H1l28ha5DImPnCEBk5ceX+iqQm0IT7ITVG+JEK6Uvrahg8QlbGQ/oPdE2Dr9D1EDsmrD8i
 LJvwsbJ+R9n/SlnZUwjb6Er1qvrUyy1cV5SJogRcgoAEoTEgWElC4ModgUYxGkn//HLrny7dsBk7
 v9uC5bk37gtYGDm7+AuERadB0gwAAA==]]></bytes></resource>
-	<resource id='5111' name='Write Gui Monitor Controller Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='defe37fb-fa27-402d-b2d6-607e6d4a002a' oemlocked='false' scope='1' protected='false'>
+	<resource id='155' name='Write Gui Monitor Controller Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='8a9b71f7-0331-44f2-8b81-a6dfe5cea9d5' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVY32/jNhJ+tv8KQg+9dhHapCTqR6qoWGTbu0X3dheIcz3gcChIcegIkSVDkpOm
 i/3fbyjLjqW4m1yyhz7ci0yNyJlvODMfh05++G1VkBuom7wqzxw+Yw75IZ0mjcnI71W16kWZLG9k
@@ -1592,7 +1593,7 @@ PEwJrQK04/l4MxOANzNhQjcUKB1eptxn2pEQ+hGSFg20NJa1XNvQB1RrDcrVgksz6rP9o3bIN3K1
 i5QUNOJS04AjAbMsVB6eugOl3uNKIVCB5FrRSEcZJk3IMF+UpG4kfR4B12Egh8EcK63x4G2PK3cj
 xuIMT44AtVPfB4/KGBhF96OMM4+FEA4R+48jtn97Ylpz6jJ8IMiISiYZIhaeiO0fEnrEfHvEBZj2
 i7q9KDSMZ4AXFg/PYryx4mYznyrXxzNaRzIycghY/AFgbAT6f03S6RS5wWTp9D+MVqkwixYAAA==]]></bytes></resource>
-	<resource id='5112' name='UseCase7a' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='ad3d5ba3-d99f-4bf3-a9de-f7c51571b940' oemlocked='false' scope='1' protected='false'>
+	<resource id='156' name='UseCase7a' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='2827592c-07d0-451e-afb1-189a9448840d' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAO1XbW/bNhD+bP0KQl/WAqVNUpQoBraLLH3ZihYDmgwdMAwBX46xUFkyJOWlL/nv
 PSnxbKfZ0KzdPqzxB8OijseHz909d54+vliW5AyatqirWczHLCaP59G0DY68r+tlvyR0/1ExcaY6
@@ -1613,7 +1614,7 @@ lGqmAaXWJVTrXFCW8iwLgCnM0s9ayUZqv9+MParrt4O7QWZtgz1zcfsw+HUB0inOf9qnVAStcSDk
 jFqv+zFdWqlN7hhTu7oidnTlPkLXmvLNQ9Shw3YYkIZACZsrG3JJLc9xck88Tos5PgaeKunyROBI
 c/Ov1PxugxUW/59n3gbBKcdznkmaaccRQj+rMu4pk5nPRKK053I3V+4IQdyEMJ2sB9N5FCE3wc2j
 T8Y4ITG+DwAA]]></bytes></resource>
-	<resource id='5113' name='Write OPC Output Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='0391face-73a8-47a9-875f-06df2202d65f' oemlocked='false' scope='1' protected='false'>
+	<resource id='157' name='Write OPC Output Test' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='0bb43f7c-180c-4eca-b6cc-317a3d0e9734' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVWW6vjNhB+Tn6FqpfuwpEjX2MHx8tySl9a2EICLZSySPIoMetLkJRz6WH/e0fO
 5STpLpRu3+oHW5r58s1oPo2U8t1T15IHMLYZ+iUNA07Ju2paWq3In8PQjaZifChRon8QdklTklMC
@@ -1631,7 +1632,7 @@ g27Tjd1IF570890ZEn4N8gfK+PcYZVNX/0S3cobAb9kcWkVqnqcZy2WhWQI6ZHmcA9NacJmGIk2S
 +npzpOcOjv63HYwtqpu+sVuov9LE3/2nLZypJOe1VKyus5olSSSZiHnOsiJKlYBEJ7fnbPZ6AUFf
 3/QxWo4y/YuknBG9bXycMbU8LRRexCme+YliiY4KJjLMlEMCKk3SbM7hOrWEVi94MT00wx6PksF8
 +mHoAYO+EldTvKPw30I1/QuoIfvlSwgAAA==]]></bytes></resource>
-	<resource id='5114' name='Test7b' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='967d70da-e58b-4520-89ae-f1fce8a14e0e' oemlocked='false' scope='1' protected='false'>
+	<resource id='158' name='Test7b' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='9f47a30a-af7f-451d-a719-a4e6bbb9841a' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAOVW62/bNhD/bP8VhL6sBUpJlGQ9CllFlrZDhzYJZhfrMAwBRR0dobIoiEzTtOj/
 viPtPOw+lq79MKyGLR9Px+M9fry78tHbdUfewKhb1c895oceeVRNSy0FeafU2rKiwn4yjwjev+F6
@@ -1655,7 +1656,7 @@ WGJGR30Mjq9CgoWqOjc38bjN+BJOtnIVZdd7vgYpDg7RFSwwsXeJ3j8iYMC2ilX1pAN74U9GRDD5
 AzRRIzlSKLh57dBw3TU3sPjW5ItEyFrWjBaQSARwkdO8ljGNCmwTUd3k2SzdLSLX49RyE70v98b/
 c3PEIWr57MWT45fLzTj1nxmmtlbdaab6NvhEcSYgxWlcJilH+GSC8lrUNHcTlQgLkcBnpvGDXl9g
 rJsfFz9L1LSph3jP8c4POBhgPL5LjrBobCebajpFrhTV9G/JOdC0qA4AAA==]]></bytes></resource>
-	<resource id='5115' name='UseCase7b' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='967d70da-e58b-4520-89ae-f1fce8a14e0e' oemlocked='false' scope='1' protected='false'>
+	<resource id='159' name='UseCase7b' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='9f47a30a-af7f-451d-a719-a4e6bbb9841a' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAKVRTY/TMBA9b3+F5RMcpokTp0mQmz1U4oCEECoIbquxPW4j5Uuxu1pA/HeciLJ0
 T0iMLH88z7x5M6Pun/qOPdLs23HYc7FNObtvNso7w76PY79AuayjlZwZHB7R73nGJGf0ROYSYhT0
@@ -1666,7 +1667,7 @@ srAllHUlQGZ5CjqXBrAgo01dFE6nt7rEVZe4VWTGftt2fjvNoyF7mem4ilOWvJnbaQlvVHLz6v3p
 44Uu1BzfHuA9eY8nghVRyZ8/dcq+9l0M/X0uyRuhkvVU5oxzgAnDufnsiR3Qk0+uN1bq5EMczapd
 JX/5qtY2/1K6SqLj//SX4oCdy2vA0mmQzgiocmkh1zvtqIx5sL7tb/Y8dxrsiyZH5Dr0a7JNvDjT
 bH4BLwGnQTcDAAA=]]></bytes></resource>
-	<resource id='5116' name='Operation' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='967d70da-e58b-4520-89ae-f1fce8a14e0e' oemlocked='false' scope='1' protected='false'>
+	<resource id='160' name='Operation' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='9f47a30a-af7f-451d-a719-a4e6bbb9841a' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAJ1Sy27bMBA8x19B8NQCoSVS1MuQlYPbAgEaBEWctreAIle2UEoyTNqNG+Tfu7Lj
 xi56CKqLlsOd4Sw5xdVja8kW1q7puynl45CSq3JUuFqTX33fDlAkc/xSSrTqtspNqSCSEngEvfHI
@@ -1679,7 +1680,7 @@ K5JWwRxfOq2K4KSxaEz5lrsoAmz814VT1Tk6eaK2//m5aRtPJ+E4vKTKbBsNdELpJT2Z+ABgMMEe
 yk3XeHco/W71QliCXb1Q8YxrgzWkWtahMSyNDXpMhWFKx8CUAFEnOsKUJdi/VXYD871Qt7EWpZrF
 8tQXvics8MEO8triPFh+HWhHOq7n1zcfb+/niPyAoXWY8fmt0ZJ5phMTC2aSTDIJdYYuRcySiMeZ
 4FGV1XAeLfEaeegMP08VIv+b9xEWtS5HvwHH9RJAVgQAAA==]]></bytes></resource>
-	<resource id='5117' name='UseCase7c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='570b23ec-c3d0-4fca-ba67-1dca8b90de1c' oemlocked='false' scope='1' protected='false'>
+	<resource id='161' name='UseCase7c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='44357f87-99bd-42d1-bfb9-9c4cd3bdd698' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAKWRTW/UMBCGz7u/wvIJDk5sbz4rJz0s4lYhtCBxqyb2ZDdSEkexUxUQ/x1naSnp
 CcHJ49czz7yeUbePQ08ecHadHSsqIk7Jbb1XrtXkm7XDk6RhfABX0QNJKcFH1IsP+WywBit6hL6H
@@ -1690,7 +1691,7 @@ OQPZcFaWJjVJUzYib7a+5LMvsXWk7RB1vYum2Wo0y4ynqzll0Om5m9byWsWb2+DOHxdcsD69P7I7
 dA7OyK6Kin+/qbP8MvSh9Olcm9dCxddT6QvMnk3gL/Vnh+QIDl38HJFcxx/Caq7ec63iP7JVZ+q/
 +byKQ+L/TDgTeaYhy8LSSwhNwDCAFBjnkIoQmUMithM+vGweR/NqzEH517XvQ9Dqev8TfF7Qg1cD
 AAA=]]></bytes></resource>
-	<resource id='5118' name='Operation7c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='6' parent='570b23ec-c3d0-4fca-ba67-1dca8b90de1c' oemlocked='false' scope='1' protected='false'>
+	<resource id='162' name='Operation7c' module='com.inductiveautomation.sfc' modver='' type='sfc-chart-ui-model' ver='0' dirty='false' editcount='1' parent='44357f87-99bd-42d1-bfb9-9c4cd3bdd698' oemlocked='false' scope='1' protected='false'>
 		<doc></doc>
 		<bytes><![CDATA[H4sIAAAAAAAAAJ1SXW/bIBR9bn4F4mmTSgz+dkTch0yTJq2apnTT3ioM1wkqNlYgWbuq/304H2sy
 7aHai305nHs4Fw6/eewM2sHGadvPMZtSjG7qCXetRL+s7Y6QFP1OuDlOUIYRPILc+sAnnVUwxwth
