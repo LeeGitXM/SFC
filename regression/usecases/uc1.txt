@@ -16,8 +16,6 @@ Tag: OPERATION "SFC/Use Cases/Use Case 1 Recipe Data Access/Unit Procedure/S3/fo
 Tag: SUPERIOR "SFC/Use Cases/Use Case 1 Recipe Data Access/My Phase/E1/foo/value"
 Tag: LOCAL1 "SFC/Use Cases/Use Case 1 Recipe Data Access/Recipe Data API Tests/Setter1/foo/value"
 Tag: LOCAL2 "SFC/Use Cases/Use Case 1 Recipe Data Access/Recipe Data API Tests/Setter2/foo/value"
-Tag: PRIOR1 "SFC/Use Cases/Use Case 1 Recipe Data Access/Recipe Data API Tests/Setter1/foo/value"
-Tag: PRIOR2 "SFC/Use Cases/Use Case 1 Recipe Data Access/Recipe Data API Tests/Setter2/foo/value"
 
 Test: Use Case 1
 Step: RecipeData Access
@@ -52,7 +50,5 @@ assert: PHASE = 19.76  "PHASE value is 19.76"
 assert: SUPERIOR = "Goodnight Moon"  "SUPERIOR value is Goodnight Moon"
 assert: LOCAL1 = 78  "Setter1 value is 78"
 assert: LOCAL2 = 88.19  "Setter2 value is 88.19"
-assert: PRIOR1 = 0  "Prior to setter1 value is 78"
-assert: PRIOR2 = 0  "Prior to Setter2 value is 88.19"
 assert: getChartState($chartid)="Stopped" "Chart is complete"
 monitor.clear()
