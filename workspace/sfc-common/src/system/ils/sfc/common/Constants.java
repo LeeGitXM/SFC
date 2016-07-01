@@ -8,6 +8,12 @@ public class Constants {
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd h:mm:ss aa"); 
 	static {DATE_FORMAT.setLenient(false);}
 	
+	// states
+	public static final String DEACTIVATED = "deactivated";
+	public static final String ACTIVATED = "activated";
+	public static final String PAUSED = "paused";
+	public static final String CANCELLED = "cancelled";
+	
 	// step properties
 	public static final String ABORT = "abort";
 	public static final String ABS = "Abs";

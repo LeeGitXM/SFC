@@ -36,6 +36,7 @@
 		<fileset dir="${basedir}/../../external/lib" includes="ils-common.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="jcommon-1.0.23.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="commons-math3*.jar" />
+		<fileset dir="${basedir}/../../external/lib" includes="commons-lang3*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="guava*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="jackson-*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="jfreechart-*.jar" />
