@@ -2,6 +2,8 @@ package com.ils.sfc.step;
 
 import org.apache.log4j.LogManager;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.step.annotation.ILSStep;
@@ -69,7 +71,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		try {
 			PythonCall pcall = getPythonCall();
 			methodName = pcall.getMethodName();
-			Object result = pcall.exec(scopeContext, getDefinition().getProperties(), cleanup);
+			Object result = pcall.exec(scopeContext, getDefinition().getProperties(), cleanup, getState());
 			if(result != null && result instanceof Boolean) {
 				workDone = ((Boolean)result).booleanValue();
 			}
@@ -85,6 +87,22 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		return workDone || deactivated;
 	}
 
+	private String getState(){
+		if(paused){
+			return Constants.PAUSED;
+		}
+		else if(cancelled){
+			return Constants.CANCELLED;
+		}
+		else if(deactivated){
+			return Constants.DEACTIVATED;
+		}
+		else{
+			return Constants.ACTIVATED;
+		}
+			
+	}
+	
 	public String getName() {
 		return getName(getDefinition());
 	}
