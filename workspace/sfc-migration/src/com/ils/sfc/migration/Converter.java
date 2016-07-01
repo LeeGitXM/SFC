@@ -49,12 +49,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import system.ils.sfc.common.Constants;
-
-import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.recipe.objects.StepPropertyTranslator;
 import com.ils.sfc.common.rowconfig.RowConfig;
-import com.ils.sfc.common.step.AllSteps;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
@@ -68,8 +64,6 @@ import com.ils.sfc.migration.translation.StepLayoutManager;
 import com.ils.sfc.migration.translation.StepTranslator;
 import com.ils.sfc.migration.visitor.CopyWalker;
 import com.ils.sfc.migration.visitor.PathWalker;
-import com.inductiveautomation.ignition.common.config.BasicProperty;
-import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 /**

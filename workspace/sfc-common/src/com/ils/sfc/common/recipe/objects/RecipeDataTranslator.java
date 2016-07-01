@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,15 +16,12 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import system.ils.sfc.common.Constants;
-
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.step.OperationStepDelegate;
-import com.ils.sfc.common.step.PhaseStepDelegate;
-import com.ils.sfc.common.step.ProcedureStepDelegate;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
+
+import system.ils.sfc.common.Constants;
 
 /** Translator to take G2 export XML to an "Associated Data" xml element for an Ignition SFC Step.
  *  If null is returned, errors occurred. Call getErrors() to see them. */ 
@@ -40,6 +36,7 @@ public class RecipeDataTranslator {
 		concreteClassesByG2Name.put("S88-RECIPE-MATRIX-DATA", Matrix.class);
 		concreteClassesByG2Name.put("S88-RECIPE-SQC-DATA", SQC.class);
 		concreteClassesByG2Name.put("S88-RECIPE-SQC-TXT", SQC.class);
+		concreteClassesByG2Name.put("S88-RECIPE-TIMER", Timer.class);
 		concreteClassesByG2Name.put("S88-RECIPE-VALUE-DATA", Value.class);
 		concreteClassesByG2Name.put("S88-RECIPE-STRUCTURE-DATA", Structure.class);
 		// disabling EMData until we implement a UDT for it

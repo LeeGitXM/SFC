@@ -1,0 +1,3 @@
+These tests assume a minimal database created with createSfcTables.mysql.sql.
+Identical instances are named: sfc, sfc_isolation.
+Likewise tag providers are   : sfc, sfc_isolation

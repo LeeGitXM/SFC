@@ -3,7 +3,7 @@
 	<import file="${basedir}/sfc-build/build.xml"/>
 
 
-	<property name="version.build" value="10" />	
+	<property name="version.build" value="12" />	
 	<!-- Change version.beta value to "" for release builds -->
 	<property name="version.beta" value="-development" />
 	<property name="root.dir" value="${basedir}/../.." />
@@ -178,12 +178,19 @@
 		
 		<!-- Zip it all up -->
 		<zip zipfile="${basedir}/sfc-build/modules/${ils.sfc.name}-module-unsigned.modl" basedir="${basedir}/sfc-build/temp_modl" />
+		
+		<!-- Sign the module jar -->
+		<antcall target="SignModule">
+			<param name="moduleName" value="${ils.sfc.name}-${ils.sfc.version}" />
+			<param name="modulein"   value="${basedir}/sfc-build/modules/${ils.sfc.name}-module-unsigned.modl" />
+			<param name="moduleout"  value="${basedir}/sfc-build/modules/${ils.sfc.name}-module-signed.modl"/>
+		</antcall>
 	</target>
 
 	<!-- Installs ILS-SFC module in local Ignition gateway. Note that the gateway must be running in developer mode for this to succeed. -->
 	<target name="deploy" depends="build,python.jars" >
 		<echo message="Installing ${ils.sfc.name} on Ignition Gateway." />
-		<postmodule posturl="${local.gateway.url}" modulefile="${basedir}/sfc-build/modules/${ils.sfc.name}-module-unsigned.modl" />
+		<postmodule posturl="${local.gateway.url}" modulefile="${basedir}/sfc-build/modules/${ils.sfc.name}-module-signed.modl" />
 	</target>
 	
 	<!-- Install jar files that are necessary for the Python scripts -->

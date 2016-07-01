@@ -169,6 +169,7 @@ public class IlsProperty {
     public static final BasicProperty<String> DELAY_UNIT = createProperty(Constants.DELAY_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);  
     public static final BasicProperty<String> DESCRIPTION = createProperty(Constants.DESCRIPTION, String.class, "");
     public static final BasicProperty<String> DIRECTORY = createProperty(Constants.DIRECTORY, String.class, "");
+    public static final BasicProperty<Date> DRIVER = createProperty(Constants.DRIVER, Date.class, new Date());
     public static final BasicProperty<Boolean> DOWNLOAD = createProperty(Constants.DOWNLOAD, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> DOWNLOAD_STATUS = createProperty(Constants.DOWNLOAD_STATUS, String.class, "");
     public static final BasicProperty<Boolean> ENABLE_PAUSE = createProperty(Constants.ENABLE_PAUSE, Boolean.class, Boolean.TRUE);
@@ -230,6 +231,7 @@ public class IlsProperty {
     public static final BasicProperty<String> REVIEW_FLOWS_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_REVIEW_FLOWS_WINDOW, false);
     public static final BasicProperty<Integer> ROWS = createProperty(Constants.ROWS, Integer.class, 0);
     public static final BasicProperty<String> ROW_KEY = createProperty(Constants.ROW_KEY, String.class, null);
+    public static final BasicProperty<Double> RUNTIME = createProperty(Constants.RUNTIME, Double.class, 0.);
     //public static final BasicProperty<Boolean> ROW_KEYED = createProperty(Constants.ROW_KEYED, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<String> SECURITY = createProperty(Constants.SECURITY, String.class, Constants.SECURITY_CHOICES[0], Constants.SECURITY_CHOICES);
     public static final BasicProperty<String> SECONDARY_REVIEW_DATA = createProperty(Constants.SECONDARY_REVIEW_DATA, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "secondary data");
@@ -238,6 +240,8 @@ public class IlsProperty {
     public static final BasicProperty<String> SETPOINT_STATUS = createProperty(Constants.SETPOINT_STATUS, String.class, "");
     public static final BasicProperty<Boolean> SHOW_PRINT_DIALOG = createProperty(Constants.SHOW_PRINT_DIALOG, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> SQL = createProperty(Constants.SQL, String.class, "");
+    public static final BasicProperty<Date> START_TIME = createProperty(Constants.START_TIME, Date.class, new Date());
+    public static final BasicProperty<String> STATE = createProperty(Constants.STATE, String.class, "");
     public static final BasicProperty<Double> STEP_TIME = createProperty(Constants.STEP_TIME, Double.class, 0.);
     public static final BasicProperty<String> STEP_TIMESTAMP = createProperty(Constants.STEP_TIMESTAMP, String.class, "");
     public static final BasicProperty<String> TAG_PATH = createProperty(Constants.TAG_PATH, String.class, "");

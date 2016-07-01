@@ -34,7 +34,8 @@ public class ChartDebugger {
 			Map<String,Object> initialParameters = new HashMap<String,Object>();
 			initialParameters.put(Constants.PROJECT, clientProject);
 			initialParameters.put(Constants.ISOLATION_MODE, isolation);
-			initialParameters.put(Constants.USER, user); 	
+			initialParameters.put(Constants.CONTROL_PANEL_ID, Constants.CONTROL_PANEL_SCRATCH_ID);    // For the "scratch" panel
+			initialParameters.put(Constants.USER, user);
 			initialParameters.put("startTime", new java.util.Date());
 			
 			// build a dummy hierarchy for any enclosing parent steps

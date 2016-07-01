@@ -105,7 +105,7 @@ public class StepTranslator {
 		return step;
 	}
 	
-	// Escape XML so it can be imbedded in xml as text
+	// Escape XML so it can be embedded in xml as text
 	private String escapeXml(String xml) {
 		xml = xml.replace("&", "&amp;");
 		xml = xml.replace("&amp;amp;", "&amp;");

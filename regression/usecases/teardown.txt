@@ -1,0 +1,12 @@
+# Copyright 2015 ILS Automation. All rights reserved.
+# 
+# This is a generic cleanup script for SFC testing
+# with the Test Frame utility.
+monitor.clear()
+monitor.stop()
+setTimeFactor(1.0)
+# Revert primary provider to production mode
+setClientTag("Isolation Mode",False)
+tagprovider: $PROVIDER
+status: teardown complete
+log: [DATE] [TIME] test suite complete.
