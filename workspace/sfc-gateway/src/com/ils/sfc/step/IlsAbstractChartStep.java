@@ -43,12 +43,16 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	
 	/** Repeatedly do increments of work. */
 	protected void doWork(StepController controller) {
+		logger.infof("Entering doWork");
 		if(cancelled || deactivated) {
+			logger.infof("In the if branch, the step has been cancelled or deactivated");
 			// do cleanup
 			callPython(true);
 		}
 		else {
+			logger.infof("Entering the else branch");
 			while (!cancelled && !paused && !done) {
+				logger.infof("...looping...");
 				done = callPython(false);
 				if(!done) {
 					// Some steps are simply waiting for a response...for performance reasons we don't
@@ -71,7 +75,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		try {
 			PythonCall pcall = getPythonCall();
 			methodName = pcall.getMethodName();
-			Object result = pcall.exec(scopeContext, getDefinition().getProperties(), cleanup, getState());
+			Object result = pcall.exec(scopeContext, getDefinition().getProperties(), getState());
 			if(result != null && result instanceof Boolean) {
 				workDone = ((Boolean)result).booleanValue();
 			}
