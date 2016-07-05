@@ -13,6 +13,7 @@ public class Constants {
 	public static final String ACTIVATED = "activated";
 	public static final String PAUSED = "paused";
 	public static final String CANCELLED = "cancelled";
+	public static final String RESUMED = "resumed";
 	
 	// step properties
 	public static final String ABORT = "abort";
@@ -232,7 +233,18 @@ public class Constants {
 	public static final String WRITE_OUTPUT_CONFIG = "writeOutputConfig";
 	public static final String YES = "Yes";
 
-
+	// Timer (Write output/PV Monitoring/Download GUI) things
+	// These are the states and the commands for the timer UDT
+	public static final String TIMER_STATE = "state";
+	public static final String TIMER_STATE_CANCEL = "cancel";
+	public static final String TIMER_STATE_CLEAR = "clear";
+	public static final String TIMER_STATE_PAUSE = "pause";
+	public static final String TIMER_STATE_RESUME = "resume";
+	public static final String TIMER_STATE_RUN = "run";
+	public static final String TIMER_STATE_STOP = "stop";
+	public static final String TIMER_RUN_MINUTES = "runTime";
+	public static final String TIMER_START_TIME = "startTime";
+	
 	// scopes for recipe data:
 	public static final String LOCAL = "local";
 	public static final String PRIOR = "prior";
