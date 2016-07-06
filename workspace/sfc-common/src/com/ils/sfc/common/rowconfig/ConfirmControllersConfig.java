@@ -26,6 +26,7 @@ public class ConfirmControllersConfig extends RowConfig {
 	
 	public static class Row {
 		public String key;
+		public String location;
 		public boolean checkSPFor0;
 		public boolean checkPathToValve;
 	}
