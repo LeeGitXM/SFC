@@ -22,6 +22,7 @@ import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartModelInfo;
 import com.ils.sfc.common.recipe.objects.Data;
+import com.ils.sfc.common.rowconfig.ConfirmControllersConfig;
 import com.ils.sfc.common.rowconfig.ManualDataEntryConfig;
 import com.ils.sfc.common.rowconfig.MonitorDownloadsConfig;
 import com.ils.sfc.common.rowconfig.PVMonitorConfig;
@@ -421,6 +422,10 @@ public class IlsGatewayScripts {
 
 	public static MonitorDownloadsConfig getMonitorDownloadsConfig(String json) throws JsonParseException, JsonMappingException, IOException {
 		return MonitorDownloadsConfig.fromJSON(json);
+	}
+
+	public static ConfirmControllersConfig getConfirmControllersConfig(String json) throws JsonParseException, JsonMappingException, IOException {
+		return ConfirmControllersConfig.fromJSON(json);
 	}
 
 	public static PVMonitorConfig getPVMonitorConfig(String json) throws JsonParseException, JsonMappingException, IOException {
