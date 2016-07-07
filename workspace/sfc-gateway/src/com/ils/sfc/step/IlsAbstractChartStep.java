@@ -2,6 +2,8 @@ package com.ils.sfc.step;
 
 import org.apache.log4j.LogManager;
 
+import system.ils.sfc.common.Constants;
+
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.step.annotation.ILSStep;
@@ -27,12 +29,14 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	volatile boolean paused = false;
 	volatile boolean cancelled = false;
 	volatile boolean deactivated = false;
+	volatile boolean resumed = false;
 	volatile boolean done = false;
 	private static final String WORK_DONE_FLAG = "workDone";
 	
 	protected IlsAbstractChartStep(ChartContext context,  ScopeContext scopeContext, StepDefinition definition) {
 		super(context, definition);
 		this.scopeContext = scopeContext;
+		logger.trace("Constructing...");
 	}
 
 	protected boolean isRunning(){
@@ -41,13 +45,17 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	
 	/** Repeatedly do increments of work. */
 	protected void doWork(StepController controller) {
+		logger.trace("Entering doWork");
 		if(cancelled || deactivated) {
+			logger.infof("In the if branch, the step has been cancelled or deactivated");
 			// do cleanup
-			callPython(true);
+			callPython(getState());
 		}
 		else {
+			logger.trace("Starting the work loop...");
 			while (!cancelled && !paused && !done) {
-				done = callPython(false);
+				logger.trace("...doing work...");
+				done = callPython(getState());
 				if(!done) {
 					// Some steps are simply waiting for a response...for performance reasons we don't
 					// want get into a tight loop for that sort of thing, so we put in a small sleep:
@@ -55,21 +63,40 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 						Thread.sleep(500);
 					} catch (InterruptedException e) {}
 				}
+				
+				// The state can only be resumed for one iteration
+				if (getState() == Constants.RESUMED){
+					logger.trace("...clearing the resumed flag...");
+					resumed = false;
+				}
 				// The yield function ensures that all outstanding messages have been delivered through the chart
 				// control queue. We call this so that we know for a fact that the cancelled and paused flags are as accurate as possible.
 				controller.yield();
 			}
+			if (paused){
+				logger.trace("...doing PAUSED work...");
+				callPython(Constants.PAUSED);
+			}
+			if (cancelled){
+				logger.trace("...doing CANCELLED work...");
+				callPython(Constants.CANCELLED);
+			}
+			if (deactivated){
+				logger.trace("...doing DEACTIVATED work...");
+				callPython(Constants.DEACTIVATED);
+			}
+			logger.trace("Done working!");
 		}
 	}
 
 	/** Call the step python and return true if no more calls are required. */
-	private boolean callPython(boolean cleanup) {
+	private boolean callPython(String state) {
 		boolean workDone = true;
 		String methodName = "??";
 		try {
 			PythonCall pcall = getPythonCall();
 			methodName = pcall.getMethodName();
-			Object result = pcall.exec(scopeContext, getDefinition().getProperties(), cleanup);
+			Object result = pcall.exec(scopeContext, getDefinition().getProperties(), state);
 			if(result != null && result instanceof Boolean) {
 				workDone = ((Boolean)result).booleanValue();
 			}
@@ -85,6 +112,31 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		return workDone || deactivated;
 	}
 
+	private String getState(){
+//		logger.info("In getState()");
+//		logger.infof("  Paused:      %b", paused);
+//		logger.infof("  Deactivated: %b", deactivated);
+//		logger.infof("  Canelled:    %b", cancelled);
+//		logger.infof("  Resumed:     %b", resumed);
+		
+		if(paused){
+			return Constants.PAUSED;
+		}
+		else if(cancelled){
+			return Constants.CANCELLED;
+		}
+		else if(deactivated){
+			return Constants.DEACTIVATED;
+		}
+		else if(resumed){
+			return Constants.RESUMED;
+		}
+		else{
+			return Constants.ACTIVATED;
+		}
+			
+	}
+	
 	public String getName() {
 		return getName(getDefinition());
 	}
@@ -96,10 +148,10 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	
 	@Override
 	public void activateStep(StepController controller) {
-		//logger.info("Step activating");
+		logger.trace("Step activating");
 		// It is important for the correct function of Cancel steps that callPython be called
 		// once outside of the controller:execute stuff:
-		done = callPython(false);
+		done = callPython(getState());
 		//Executing long running tasks through the controller allows the step to block chart flow (the step won't deactivate until the work finishes),
 		//but still respond to pause/cancel, as we're not blocking the chart execution queue.
 		if(!done) {
@@ -109,27 +161,28 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 
 	@Override
 	public void deactivateStep() {
-		//logger.info("Step deactivated");
+		logger.trace("Step deactivated");
 		deactivated = true;
 		//In this example, we want to block flow until the work has finished. Therefore, we take no special action during deactivate.
 	}
 
 	@Override
 	public void cancelStep() {
-		//logger.infof("Step cancelled");
+		logger.trace("Step cancelled");
 		cancelled = true;
 	}
 
 	@Override
 	public void pauseStep() {
-		//logger.infof("Example step paused.");
+		logger.trace("Step paused.");
 		paused = true;
 	}
 
 	@Override
 	public void resumeStep(StepController controller) {
-		//logger.infof("Example step resumed.");
+		logger.trace("Step resumed.");
 		paused = false;
+		resumed = true;
 		//On resume, we can just continue the work that we were previously doing.
 		controller.execute(this::doWork);
 	}
