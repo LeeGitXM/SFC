@@ -9,7 +9,7 @@ insert into BltPropertyMap values ('EM-GDA-COMPARE','bandwidth','offset','DOUBLE
 insert into BltPropertyMap values ('EM-GDA-COMPARE','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-DEADBAND-COMPARE','bandwidth','offset','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-DEADBAND-COMPARE','label','','STRING',1,'NONE');
-insert into BltPropertyMap values ('EM-GDA-ELAPSED-TIME-VARIABLE','elapsedTimeMinutes','','STRING',1,'NONE');
+insert into BltPropertyMap values ('EM-GDA-ELAPSED-TIME-VARIABLE','elapsedTimeMinutes','InhibitInterval','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-ELAPSED-TIME-VARIABLE','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-EXPIRATION-FILTER','label','','STRING',1,'NONE');
 
