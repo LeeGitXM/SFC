@@ -6,7 +6,6 @@ package com.ils.sfc.designer;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,20 +18,19 @@ import javax.swing.JMenuItem;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 
-import system.ils.sfc.common.Constants;
-
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
+import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AllSteps;
+import com.ils.sfc.designer.browser.BrowserConstants;
 import com.ils.sfc.designer.browser.SfcBrowserFrame;
 import com.ils.sfc.designer.browser.execute.ChartRunner;
 import com.ils.sfc.designer.browser.validation.ValidationDialog;
 import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame;
 import com.ils.sfc.designer.search.IlsSfcSearchProvider;
 import com.ils.sfc.designer.stepEditor.IlsStepEditor;
-import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.modules.ModuleInfo;
 import com.inductiveautomation.ignition.common.modules.ModuleInfo.ModuleDependency;
@@ -50,19 +48,26 @@ import com.inductiveautomation.ignition.designer.model.menu.JMenuMerge;
 import com.inductiveautomation.ignition.designer.model.menu.MenuBarMerge;
 import com.inductiveautomation.ignition.designer.model.menu.WellKnownMenuConstants;
 import com.inductiveautomation.sfc.SFCModule;
-import com.inductiveautomation.sfc.api.elements.StepFactory;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistryProvider;
 import com.inductiveautomation.sfc.designer.SFCDesignerHook;
 import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
+import com.inductiveautomation.sfc.designer.workspace.SFCDesignableContainer;
 import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
 import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
 
+import system.ils.sfc.common.Constants;
+
 public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectChangeListener {
 	private final static String TAG = "IlsSfcDesignerHook";
 	private static final String INTERFACE_MENU_TITLE  = "External Interface Configuration";
+	private static final String SHOW_MENU_TITLE                  = "Show Ancestor";
+	private static final String SHOW_OPERATION_TITLE             = "Operation";
+	private static final String SHOW_PHASE_TITLE                 = "Phase";
+	private static final String SHOW_PROCEDURE_TITLE             = "Procedure";
+	private static final String SHOW_SUPERIOR_TITLE              = "Superior";
 	private static final String START_MENU_PRODUCTION_TITLE      = "Start Chart (production)";
 	private static final String START_MENU_ISOLATION_TITLE       = "Start Chart (isolation)";
 	private static final String VALIDATION_MENU_TITLE = "Validate Charts";
@@ -154,10 +159,49 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
                 runner.start();
             }
         };
+        Action executeShowOperation = new AbstractAction(SHOW_OPERATION_TITLE) {
+			private static final long serialVersionUID = 4029901359528539761L;
+
+			public void actionPerformed(ActionEvent ae) {
+            	// Show operation for currently displayed chart
+				SwingUtilities.invokeLater(new ShowAncestor(Constants.OPERATION));
+            }
+        };
+        Action executeShowPhase = new AbstractAction(SHOW_PHASE_TITLE) {
+			private static final long serialVersionUID = 4029901359528539762L;
+
+			public void actionPerformed(ActionEvent ae) {
+				// Show phase for currently displayed chart
+				SwingUtilities.invokeLater(new ShowAncestor(Constants.PHASE));
+            }
+        };
+        Action executeShowProcedure = new AbstractAction(SHOW_PROCEDURE_TITLE) {
+			private static final long serialVersionUID = 4029901359528539762L;
+
+			public void actionPerformed(ActionEvent ae) {
+				// Show phase for currently displayed chart
+				SwingUtilities.invokeLater(new ShowAncestor(Constants.GLOBAL));
+            }
+        };
+        Action executeShowSuperior = new AbstractAction(SHOW_SUPERIOR_TITLE) {
+			private static final long serialVersionUID = 4029901359528539763L;
+
+			public void actionPerformed(ActionEvent ae) {
+            	// Show superior for currently displayed chart
+				SwingUtilities.invokeLater(new ShowAncestor(Constants.SUPERIOR));
+				
+            }
+        };
         JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
         toolsMenu.addSeparator();
         toolsMenu.add(executeIsolationAction);
         toolsMenu.add(executeProductionAction);
+        JMenu showMenu = new JMenu(SHOW_MENU_TITLE);
+        toolsMenu.add(showMenu);
+        showMenu.add(executeShowOperation);
+        showMenu.add(executeShowPhase);
+        showMenu.add(executeShowProcedure);
+        showMenu.add(executeShowSuperior);
         merge.add(WellKnownMenuConstants.TOOLS_MENU_LOCATION, toolsMenu);
         return merge;
     }
@@ -309,38 +353,50 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		}
 	}
 	/**
+     * Show a chart superior to the one currently selected. Run in a separate thread.
+     */
+    private class ShowAncestor implements Runnable {
+    	private String level = Constants.GLOBAL;
+    	
+    	public ShowAncestor(String lvl) {
+    		this.level = lvl;
+    	}
+
+        public void run() {
+            log.infof("%s.run: ShowAncestor %s...",TAG,level);
+            // We get the path to the open chart via the workspace.
+            SFCWorkspace workspace = iaSfcHook.getWorkspace();
+            SFCDesignableContainer tab = workspace.getSelectedContainer();
+    		if( tab!=null ) {
+    			long resourceId = workspace.getSelectedContainer().getResourceId();
+    			String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
+    			SimpleHierarchyAnalyzer hierarchyAnalyzer = new SimpleHierarchyAnalyzer(context.getGlobalProject().getProject(),stepRegistry);
+    			hierarchyAnalyzer.analyze();
+    			List<String> paths = hierarchyAnalyzer.getParentPathsForEnclosingScope(chartPath,level);
+    			// Now that we have the paths, display them
+    			for(String path:paths) {
+    				Long resid = hierarchyAnalyzer.getChartResourceForPath(path);
+    				if( resid!=null ) workspace.openChart(resid.longValue());
+    			}
+    		}
+    		else {
+    			// No chart is open.
+    		}
+            
+        }
+    }
+	/**
      * Display a popup dialog for configuration of dialog execution parameters.
      * Run in a separate thread, as a modal dialog in-line here will freeze the UI.
      */
     private class ValidationDialogRunner implements Runnable {
 
         public void run() {
-            log.debugf("%s.Launching setup dialog...",TAG);
+            log.debugf("%s.run: starting ValidationDialogRunner ...",TAG);
             ValidationDialog validator = new ValidationDialog(context,browser.getModel());
             validator.pack();
             validator.setVisible(true);
             browser.addChangeListener(validator);
         }
-    }
-	// ===================================== Main ===================================
-    public static void main(String[] args) {
-    	try {
-    	for(Class<?> clazz: AllSteps.propertyClasses) {
-    		String className = clazz.getSimpleName();
-    		for(Field field: clazz.getDeclaredFields()) {
-        		if(field.getName().equals("properties")) {
-        			Collection properties = (Collection)field.get(null);
-        			for(Object o: properties) {
-        				Property property = (Property) o;
-        				System.out.println(property.getName());
-        			}
-        		}
-    			
-    		}
-    	}
-    	}
-    	catch(Exception e) {
-    		e.printStackTrace();
-    	}
     }
 }

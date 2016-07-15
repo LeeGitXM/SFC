@@ -32,7 +32,8 @@ import com.inductiveautomation.sfc.uimodel.ChartUIModel;
  *  instead depends on design-time information.
  */
 public class SimpleHierarchyAnalyzer {
-	private static LoggerEx log = LogUtil.getLogger(SimpleHierarchyAnalyzer.class.getName());
+	private static final String CLSS = "SimpleHierarchyAnalyzer";
+	private final LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
 	private Project globalProject;
 	private StepRegistry stepRegistry;
 	private Map<String, List<EnclosureInfo>> parentsByChildChartPath = new HashMap<String, List<EnclosureInfo>>();
@@ -59,7 +60,7 @@ public class SimpleHierarchyAnalyzer {
 	
 	/** Info about enclosing steps in other charts that enclose a given chart. */
 	public static class EnclosureInfo {
-		public String childChartPath;
+		public String chartPath;
 		public String parentChartPath;
 		public String parentStepName;
 		public String parentStepFactoryId;
@@ -68,7 +69,7 @@ public class SimpleHierarchyAnalyzer {
 		
 		public EnclosureInfo(String childChartPath, String parentChartPath, 
 			String parentStepName, String parentStepFactoryId, String messageQueue,  ChartUIElement parentElement) {
-			this.childChartPath = childChartPath;
+			this.chartPath = childChartPath;
 			this.parentChartPath = parentChartPath;
 			this.parentStepName = parentStepName;
 			this.parentStepFactoryId = parentStepFactoryId;
@@ -107,14 +108,14 @@ public class SimpleHierarchyAnalyzer {
 			if(element.getProperties().contains(chartPathProperty)) {
 				String parentStepPath = element.get(stepNameProperty);
 				String parentStepFactoryId = element.get(factoryIdProperty);
-				String childChartPath = element.get(chartPathProperty);
+				String chartPath = element.get(chartPathProperty);
 				String messageQueue = element.get(IlsProperty.MESSAGE_QUEUE);
-				List<EnclosureInfo> parentEnclosures = parentsByChildChartPath.get(childChartPath);
+				List<EnclosureInfo> parentEnclosures = parentsByChildChartPath.get(chartPath);
 				if(parentEnclosures == null) {
 					parentEnclosures = new ArrayList<EnclosureInfo>();
-					parentsByChildChartPath.put(childChartPath, parentEnclosures);
+					parentsByChildChartPath.put(chartPath, parentEnclosures);
 				}
-				parentEnclosures.add(new EnclosureInfo(childChartPath, 
+				parentEnclosures.add(new EnclosureInfo(chartPath, 
 					parentChartPath, parentStepPath, parentStepFactoryId, messageQueue, element));
 			}
 			else if(element.getProperties().contains(parallelChildrenProperty)) {
@@ -123,12 +124,80 @@ public class SimpleHierarchyAnalyzer {
 			}
 		}
 	}
+	public Long getChartResourceForPath(String path) {
+		Long result = null;
+		ChartInfo info = chartsByPath.get(path);
+		if( info!=null ) {
+			result = new Long(info.resourceId);
+		}
+		else {
+			log.warnf("%s.getChartResourceForPath: WARNING: Path %s not found while searching for chart",CLSS,path);
+		}
+		return result;
+	}
+	/** 
+	 * Get info for all steps that enclose this chart and are at a given level in the hierarchy.
+	 * Returns an empty list if none found. The list should not contain duplicates. This method is called recursively.
+	 * @param enclosures passed between levels in the recursion. Initially empty or null.
+	 */
+	public List<String> getParentPathsForEnclosingScope(String chartPath,String scope) {
+		List<String> parentPaths = new ArrayList<>();
+		List<EnclosureInfo> parents =  parentsByChildChartPath.get(chartPath);
+		if( parents!=null ) {
+			if( scope.equalsIgnoreCase(Constants.SUPERIOR) ) {
+				parents = getParentEnclosures(chartPath);
+				for( EnclosureInfo info: parents) {
+					parentPaths.add(info.parentChartPath);
+				}
+			}
+			else {
+				// For each chart with an enclosing step that encloses this, trace its lineage.
+				for( EnclosureInfo info: parents) {
+					recursivelyAddToList(info.parentChartPath,info.parentElement,scope,parentPaths);
+				}
+				
+			}	
+		}
+		return parentPaths;
+	}
+	/** 
+	 * Check the current path to see if it satisfies the requirements. If not check the parent(s).
+	 * @param chartPath the chart to be tested.
+	 * @param element the enclosing element 
+	 * @param scope the desired scope
+	 * @param ancestorPaths the current list of matches 
+	 */
+	public void recursivelyAddToList(String chartPath,ChartUIElement element,String scope,List<String> ancestorPaths) {
+		if(chartPath!=null && !chartPath.isEmpty() ) {
+			// Does the current path satisfy the criterion
+			String stepFactoryId = element.get(factoryIdProperty);
+			if( (scope.equalsIgnoreCase(Constants.GLOBAL) && stepFactoryId.equalsIgnoreCase(ProcedureStepProperties.FACTORY_ID))   ||
+				(scope.equalsIgnoreCase(Constants.OPERATION) && stepFactoryId.equalsIgnoreCase(OperationStepProperties.FACTORY_ID))||
+				(scope.equalsIgnoreCase(Constants.PHASE) && stepFactoryId.equalsIgnoreCase(PhaseStepProperties.FACTORY_ID))           ) {
+				
+				if( !ancestorPaths.contains(chartPath) ) ancestorPaths.add(chartPath);
+			}
+			else {
+				// Continue the search
+				List<EnclosureInfo> parents =  parentsByChildChartPath.get(chartPath);
+				if( parents!=null && !parents.isEmpty() ) {
+					for( EnclosureInfo info: parents) {
+						recursivelyAddToList(info.parentChartPath,info.parentElement,scope,ancestorPaths);
+					}
+				}
+				else {
+					log.warnf("%s.recursivelyAddToList: WARNING: Path %s not found while searching for ancestor",CLSS,chartPath);
+					return;
+				}
+			}
+		}
+	}
 	
 	/** Get info for all steps that enclose this chart. Returns null if none found. If more
 	 *  than one step directly encloses the given chart, info for all of those will be 
 	 *  returned. This does NOT recurse up the hierarchy. */
-	public List<EnclosureInfo> getParentEnclosures(String childChartPath) {
-		return parentsByChildChartPath.get(childChartPath);
+	public List<EnclosureInfo> getParentEnclosures(String chartPath) {
+		return parentsByChildChartPath.get(chartPath);
 	}
 	
 	/** Get the enclosure hierarchy for a child chart. If the "strict" flag is set, if

@@ -51,7 +51,7 @@
 		<fileset dir="${basedir}/../../external/lib" includes="prefuse*.jar" />
 	</path>
 	
-	<!-- Generic Buildfile: Reference Via Antcalls -->
+	<!-- Generic Buildfile (reference via Antcalls) -->
 	<target name="MakeProject">
 		<echo message="Compiling ${modName}" />
 		<mkdir dir="${basedir}/sfc-build/bin/${modName}/bin" />
@@ -98,7 +98,7 @@
 			<fileset dir="${basedir}/sfc-build/bin/${modName}/bin" />
 		</jar>
 	</target>
-	<!-- Generic SignModule: Reference Via Antcalls -->
+	<!-- Generic SignModule (reference via Antcalls) -->
 	<target name="SignModule">
 		<echo message="Signing ${moduleName}" />
 		<java jar="${basedir}/../../external/lib/module-signer.jar"  fork="true">
