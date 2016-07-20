@@ -24,7 +24,6 @@ import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AllSteps;
-import com.ils.sfc.designer.browser.BrowserConstants;
 import com.ils.sfc.designer.browser.SfcBrowserFrame;
 import com.ils.sfc.designer.browser.execute.ChartRunner;
 import com.ils.sfc.designer.browser.validation.ValidationDialog;
@@ -63,7 +62,7 @@ import system.ils.sfc.common.Constants;
 public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectChangeListener {
 	private final static String TAG = "IlsSfcDesignerHook";
 	private static final String INTERFACE_MENU_TITLE  = "External Interface Configuration";
-	private static final String SHOW_MENU_TITLE                  = "Show Ancestor";
+	private static final String SHOW_MENU_TITLE                  = "Show Chart Ancestor";
 	private static final String SHOW_OPERATION_TITLE             = "Operation";
 	private static final String SHOW_PHASE_TITLE                 = "Phase";
 	private static final String SHOW_PROCEDURE_TITLE             = "Procedure";

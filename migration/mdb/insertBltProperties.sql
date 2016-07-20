@@ -77,7 +77,10 @@ insert into BltPropertyMap values ('GDL-AND-GATE','maximumUnknownInputs','','INT
 insert into BltPropertyMap values ('GDL-AND-GATE','outputUncertainty','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-AND-GATE','useExpiredInputs','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-ARITHMETIC-FUNCTION','arithmeticFunction','Function','BOOLEAN',1,'NONE');
-insert into BltPropertyMap values ('GDL-CONCLUSION','statusOnInitialization','','BOOLEAN',1,'NONE');
+insert into BltPropertyMap values ('GDL-CONCLUSION','descriptionWhenFalse','ExplanationWhenFalse','STRING',1,'NONE');
+insert into BltPropertyMap values ('GDL-CONCLUSION','descriptionWhenTrue','ExplanationWhenTrue','STRING',1,'NONE');
+insert into BltPropertyMap values ('GDL-CONCLUSION','descriptionWhenUnknown','','STRING',1,'NONE');
+insert into BltPropertyMap values ('GDL-CONCLUSION','statusOnInitialization','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-EQUALITY-OBSERVATION','equivalenceBand','Deadband','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-EQUALITY-OBSERVATION','hysteresisWhen','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-EQUALITY-OBSERVATION','referenceValue','Nominal','DOUBLE',1,'NONE');

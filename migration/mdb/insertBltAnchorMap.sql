@@ -120,6 +120,8 @@ insert into BltAnchorMap values ('GDL-OR-GATE','IP-OUT','out','');
 insert into BltAnchorMap values ('GDL-SYMBOLIC-ENTRY-POINT','DP-OUT','out','');
 insert into BltAnchorMap values ('GDL-TIMER','IP-IN','in','');
 insert into BltAnchorMap values ('GDL-TIMER','DP-OUT','out','');
+insert into BltAnchorMap values ('LOGICAL-PARAMETER','IP-IN','in','');
+insert into BltAnchorMap values ('LOGICAL-PARAMETER','IP-OUT','out','');
 insert into BltAnchorMap values ('LOGICAL-VARIABLE','IP-IN','in','');
 insert into BltAnchorMap values ('LOGICAL-VARIABLE','IP-OUT','out','');
 insert into BltAnchorMap values ('SYMBOLIC-PARAMETER','IP-IN','in','');
