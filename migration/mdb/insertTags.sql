@@ -85,12 +85,8 @@ insert into TagMap values ('E-BALER-VOL-LAB-DATA','[]LabData/VFU/E-BALER-VOL-LAB
 insert into TagMap values ('E-BALER-VOL-LAB-SQC-PATH','[]DiagnosticToolkit/Connections/EBalerVolLab','STRING');
 insert into TagMap values ('EM-COLD-STICK-RX-OUTLET-TEMP-MONITOR-BLOCK-1','[]Site/VFU/COLDSTICK-OUTLET-TEMP-MONITOR','STRING');
 insert into TagMap values ('EM-MONITOR-COLDSTICK-DCS-SETPOINTS-BLOCK','[]Site/VFU/COLDSTICK-DCS-SETPOINT','STRING');
-
-
--- tag not built
 insert into TagMap values ('EM-MONITOR-COLDSTICK-DCS-SETPOINTS-BLOCK','[]Site/DCS-SETPOINTS/monitorColdstick','STRING');    --- found in s88
-
-
+insert into TagMap values ('FLYING_SWITCH_OUTPUT','[]Site/FlyingSwitch/FLYING-SWITCH-OUTPUT','STRING');
 insert into TagMap values ('FREEZER-SAMPLE-SWITCH','[]Site/VFU/FREEZER-SAMPLE-SWITCH','BOOLEAN');
 insert into TagMap values ('FRNT_AVG_C2','[]Site/CRX/OPC-Input-Variables/Front-of-Molecule/CRX-HB-9/value','DOUBLE');
 insert into TagMap values ('FRNT_AVG_C2_HIGH_LIMIT','[]Site/CRX/Limits-Targets-and-Gains/Physical-Properties/FRNT-AVG-C2-HIGH-LIMIT','DOUBLE');
