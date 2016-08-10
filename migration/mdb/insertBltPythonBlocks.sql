@@ -46,12 +46,10 @@ insert into BltPythonAnchorMap values('xom.block.arithmetic.Arithmetic','in','DA
 insert into BltPythonAnchorMap values('xom.block.arithmetic.Arithmetic','out','DATA','OUTGOING','');
 insert into BltPythonAnchorMap values('xom.block.finaldiagnosis.FinalDiagnosis','in','TRUTHVALUE','INCOMING','');
 insert into BltPythonAnchorMap values('xom.block.finaldiagnosis.FinalDiagnosis','out','TRUTHVALUE','OUTGOING','');
-insert into BltPythonAnchorMap values('xom.block.finaldiagnosis.FinalDiagnosis','diagnosis','TEXT','OUTGOING','');
 insert into BltPythonAnchorMap values('xom.block.sqcdagnosis.SQCDiagnosis','in','TRUTHVALUE','INCOMING','');
 insert into BltPythonAnchorMap values('xom.block.sqcdiagnosis.SQCDiagnosis','out','TRUTHVALUE','OUTGOING','');
-insert into BltPythonAnchorMap values('xom.block.sqcdiagnosis.SQCDiagnosis','diagnosis','TEXT','OUTGOING','');
 insert into BltPythonAnchorMap values('xom.block.subdagnosis.SubDiagnosis','in','TRUTHVALUE','INCOMING','');
-insert into BltPythonAnchorMap values('xom.block.subdiagnosis.SubDiagnosis','out','SIGNAL','OUTGOING','');
+insert into BltPythonAnchorMap values('xom.block.subdiagnosis.SubDiagnosis','out','TRUTHVALUE','OUTGOING','');
 
 -- Columns are:  className, propertyName, propertyType, editable
 insert into BltPythonBlockProperties values ('xom.block.action.Action','Script','SCRIPTREF',1);

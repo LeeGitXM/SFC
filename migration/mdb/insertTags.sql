@@ -1,4 +1,5 @@
 -- NOTE: Tag names must be unique, folder placement is immaterial.
+
 -- Columns are GSI name, tag path
 --
 insert into TagMap values ('A-BALER-TEMP-LAB-DATA','[]LabData/VFU/A-BALER-TEMP-LAB-DATA/value','DOUBLE');
