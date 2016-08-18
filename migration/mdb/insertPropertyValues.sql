@@ -177,6 +177,8 @@ insert into PropertyValueMap values ('callback','test-8-timeout-callback','test8
 
 -- Convert values found in G2 blocks to proper Ignition equivalents.
 -- Fields are: Ignition property, G2value, desired value
+insert into PropertyValueMap values ('stopOn','.TRUE','TRUE');
+insert into PropertyValueMap values ('stopOn','.FALSE','FALSE');
 insert into PropertyValueMap values ('trigger','.TRUE','TRUE');
 insert into PropertyValueMap values ('trigger','.FALSE','FALSE');
 
