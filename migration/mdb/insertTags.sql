@@ -378,3 +378,11 @@ insert into TagMap values ('stab_filtered_value','[]LabData/RLA3/STAB-LAB-DATA/f
 
 -- Miscellaneous Named Objects
 insert into TagMap values ('the em-sqc-plot upon the subworkspace of toolkit-console','[]Site/Plots/SqcPlotName','STRING');
+
+-- Tags missing during Vistalon-complete migration
+insert into TagMap values ('CAT-AND-C2-IS-IN-GDA.STATE','[]Site/CSTR/CAT-AND-C2-IS-IN-STATE','STRING');
+insert into TagMap values ('CS-VRC212','[]Site/CRX/VRC212/sp','DOUBLE');
+insert into TagMap values ('EM-SEQUENTIAL-COMMAND','[]Site/VFU/SEQUENTIAL-COMMAND','BOOLEAN');
+insert into TagMap values ('EM-USE-DATA-PUMPS','[]Site/VFU/USE-DATA-PUMPS','BOOLEAN');
+insert into TagMap values ('S88-TRUE','[]Site/S88-TRUE','BOOLEAN');
+

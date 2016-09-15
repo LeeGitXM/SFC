@@ -1,4 +1,4 @@
-package com.ils.sfc.common.recipe.objects;
+package com.ils.sfc.migration.translation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,6 +17,17 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.recipe.objects.Array;
+import com.ils.sfc.common.recipe.objects.Data;
+import com.ils.sfc.common.recipe.objects.Group;
+import com.ils.sfc.common.recipe.objects.Input;
+import com.ils.sfc.common.recipe.objects.Matrix;
+import com.ils.sfc.common.recipe.objects.Output;
+import com.ils.sfc.common.recipe.objects.OutputRamp;
+import com.ils.sfc.common.recipe.objects.SQC;
+import com.ils.sfc.common.recipe.objects.Structure;
+import com.ils.sfc.common.recipe.objects.Timer;
+import com.ils.sfc.common.recipe.objects.Value;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -26,6 +37,7 @@ import system.ils.sfc.common.Constants;
 /** Translator to take G2 export XML to an "Associated Data" xml element for an Ignition SFC Step.
  *  If null is returned, errors occurred. Call getErrors() to see them. */ 
 public class RecipeDataTranslator {
+	private static final String CLSS = "RecipeDataTranslator";
 	private static LoggerEx log = LogUtil.getLogger(RecipeDataTranslator.class.getName());
 	private static Map<String, Class<?>> concreteClassesByG2Name = new HashMap<String, Class<?>>();
 	static {
@@ -190,64 +202,65 @@ public class RecipeDataTranslator {
 		}
 	}
 
-	private void createObject(
-			final java.util.List<Data> recipeObjects,
-			Map<String, String> attMap) {
+	private void createObject(final java.util.List<Data> recipeObjects,
+							  Map<String, String> attMap) {
 		// Find the Recipe Data class we want to instantiate
 		String g2ClassName = attMap.get(G2_CLASS_NAME);
 		String valueType = attMap.get(Constants.TYPE);
-		//System.out.println();
-		//System.out.println(g2ClassName);
 		Class<?> aClass = getConcreteClassForG2Class(g2ClassName);
-		if(aClass == null) {
-			errors.add("No concrete class found for G2 class " + g2ClassName);
-		}
-		
-		// a special case: if it is a simple value with a sequence value,
-		// make it a List type:
-		boolean listFromValue = false;
-		if(aClass == Value.class && Constants.SEQUENCE.equals(valueType)) {
-			aClass = Array.class;
-			listFromValue = true;
-		}
-		
-		// Create the instance and populate the properties
-		try {
-			Data data = Data.createNewInstance(aClass);
-			recipeObjects.add(data);
-			for(String g2Key: attMap.keySet()) {
-				if(g2Key.equals(G2_CLASS_NAME)) continue;
-				String igKey = g2ToIgName.get(g2Key);
-				String strValue = attMap.get(g2Key);
-				if(igKey == null && g2ToIgName.containsKey(g2Key)) {
-					// ignore this one
-				}
-				else if(Constants.UUID.equals(g2Key)) {
-					data.setG2Id(strValue);
-				}
-				else if(Constants.PARENT_GROUP.equals(g2Key)) {
-					data.setParentG2Id(strValue);
-				}
-				else if(igKey == null) {
-					errors.add("no translation for attribute " + g2Key + " in " + g2ClassName);
-				}
-				else {
-					if(data.hasProperty(igKey)) {
-						setProperty(data, igKey, strValue.trim());
-					}
-					else if(!listFromValue){
-						// expected property not found
-						// if the list is from a Value, we suppress this as
-						// the list will not have several Value properties
-						errors.add("no property named " + igKey + " in " + data.getClass().getSimpleName());
-					}
-					//System.out.println(igKey + ": " + strValue);
-				}
+		if(aClass != null) {
+
+			// a special case: if it is a simple value with a sequence value,
+			// make it a List type:
+			boolean listFromValue = false;
+			if(aClass == Value.class && Constants.SEQUENCE.equals(valueType)) {
+				aClass = Array.class;
+				listFromValue = true;
 			}
-			//System.out.println(data.toJSON());
-		} catch (Exception e) {
-			errors.add("Unexpected error creating " + g2ClassName + " recipe object: " + e.getMessage());
-			e.printStackTrace();
+
+			// Create the instance and populate the properties
+			try {
+				Data data = Data.createNewInstance(aClass.getCanonicalName());
+				recipeObjects.add(data);
+				for(String g2Key: attMap.keySet()) {
+					if(g2Key.equals(G2_CLASS_NAME)) continue;
+					String igKey = g2ToIgName.get(g2Key);
+					String strValue = attMap.get(g2Key);
+					if(igKey == null && g2ToIgName.containsKey(g2Key)) {
+						// ignore this one
+					}
+					else if(Constants.UUID.equals(g2Key)) {
+						data.setG2Id(strValue);
+					}
+					else if(Constants.PARENT_GROUP.equals(g2Key)) {
+						data.setParentG2Id(strValue);
+					}
+					else if(igKey == null) {
+						errors.add("no translation for attribute " + g2Key + " in " + g2ClassName);
+					}
+					else {
+						if(data.hasProperty(igKey)) {
+							setProperty(data, igKey, strValue.trim());
+						}
+						else if(!listFromValue){
+							// expected property not found
+							// if the list is from a Value, we suppress this as
+							// the list will not have several Value properties
+							errors.add("no property named " + igKey + " in " + data.getClass().getSimpleName());
+						}
+						//System.out.println(igKey + ": " + strValue);
+					}
+				}
+				//System.out.println(data.toJSON());
+			} 
+			catch (Exception e) {
+				errors.add("Unexpected error creating " + g2ClassName + " recipe object: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		else {
+			errors.add("No concrete class found for G2 class " + g2ClassName);
+			log.errorf("%s.createObject: ERROR no concrete class found for G2 recipe class %s", CLSS,g2ClassName);
 		}
 	}
 

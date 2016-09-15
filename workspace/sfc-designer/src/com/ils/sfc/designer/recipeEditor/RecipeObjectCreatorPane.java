@@ -27,7 +27,7 @@ import javax.swing.SwingConstants;
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.recipe.objects.Group;
-import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
+import com.ils.sfc.common.IlsRecipeData;
 import com.ils.sfc.designer.ComboWrapper;
 import com.ils.sfc.designer.DesignerUtil;
 import com.ils.sfc.designer.panels.ButtonPanel;
@@ -109,7 +109,7 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 	}			
 	
 	private void initTypes() {
-		Collection<Class<?>> concreteClasses = RecipeDataTranslator.getConcreteClasses();
+		Collection<Class<?>> concreteClasses = IlsRecipeData.getRecipeClasses();
 		List<Class<?>> sortedClasses = new ArrayList<Class<?>>(concreteClasses); 
 		Collections.sort(sortedClasses, new Comparator<Class<?>>() {
 			@Override
@@ -137,7 +137,7 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 			Class<?> selectedClass = (Class<?>)selectedType.getObject();
 			String selectedValueType = (String) valueTypeCombo.getSelectedItem();
 			String provider = IlsClientScripts.getProviderName(false);
-			newObject = Data.createRecipeData(selectedClass, chartPath, key, selectedValueType, provider, parentGroup);
+			newObject = Data.createRecipeData(selectedClass.getCanonicalName(), chartPath, key, selectedValueType, provider, parentGroup);
 			keyTextField.setText("");
 			super.accept();
 			// pop into the editor:

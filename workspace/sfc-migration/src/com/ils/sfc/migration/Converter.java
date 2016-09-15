@@ -49,7 +49,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.ils.sfc.common.recipe.objects.StepPropertyTranslator;
 import com.ils.sfc.common.rowconfig.RowConfig;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
@@ -61,6 +60,7 @@ import com.ils.sfc.migration.translation.ConnectionHub;
 import com.ils.sfc.migration.translation.ConnectionRouter;
 import com.ils.sfc.migration.translation.GridPoint;
 import com.ils.sfc.migration.translation.StepLayoutManager;
+import com.ils.sfc.migration.translation.StepPropertyTranslator;
 import com.ils.sfc.migration.translation.StepTranslator;
 import com.ils.sfc.migration.visitor.CopyWalker;
 import com.ils.sfc.migration.visitor.PathWalker;

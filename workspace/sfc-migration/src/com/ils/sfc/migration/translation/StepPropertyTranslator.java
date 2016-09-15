@@ -1,4 +1,4 @@
-package com.ils.sfc.common.recipe.objects;
+package com.ils.sfc.migration.translation;
 
 import java.util.HashMap;
 import java.util.HashSet;

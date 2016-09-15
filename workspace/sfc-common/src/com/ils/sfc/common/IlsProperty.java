@@ -121,6 +121,7 @@ public class IlsProperty {
 
 	public static final Set<String> unmappedIgnitionProperties = new HashSet<String>();
 	static {
+		unmappedIgnitionProperties.add("buttonLabel");
 		unmappedIgnitionProperties.add("chart-path");
 		unmappedIgnitionProperties.add(Constants.G2_XML);
 		unmappedIgnitionProperties.add(Constants.NAME);

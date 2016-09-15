@@ -7,7 +7,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.migration.Converter;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.inductiveautomation.ignition.common.util.LogUtil;

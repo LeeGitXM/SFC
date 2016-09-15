@@ -52,11 +52,11 @@ insert into BltPythonAnchorMap values('xom.block.subdagnosis.SubDiagnosis','in',
 insert into BltPythonAnchorMap values('xom.block.subdiagnosis.SubDiagnosis','out','TRUTHVALUE','OUTGOING','');
 
 -- Columns are:  className, propertyName, propertyType, editable
-insert into BltPythonBlockProperties values ('xom.block.action.Action','Script','SCRIPTREF',1);
-insert into BltPythonBlockProperties values ('xom.block.action.Action','Trigger','BOOLEAN',1);
-insert into BltPythonBlockProperties values ('xom.block.arithmetic.Arithmetic','Function','STRING',1);
+insert into BltPythonBlockProperties values ('xom.block.action.Action','Script','SCRIPTREF',1,'');
+insert into BltPythonBlockProperties values ('xom.block.action.Action','Trigger','BOOLEAN',1,'TRUE');
+insert into BltPythonBlockProperties values ('xom.block.arithmetic.Arithmetic','Function','STRING',1,'');
 --- NOTE: For FinalDiagnosis, only the Label is a block property. Many others are aux (database) resident.
-insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Label','STRING',1);
+insert into BltPythonBlockProperties values ('xom.block.finaldiagnosis.FinalDiagnosis','Label','STRING',1,'');
 
-insert into BltPythonBlockProperties values ('xom.block.sqcdiagnosis.SQCDiagnosis','Label','STRING',1);
-insert into BltPythonBlockProperties values ('xom.block.subdiagnosis.SubDiagnosis','Label','STRING',1);
+insert into BltPythonBlockProperties values ('xom.block.sqcdiagnosis.SQCDiagnosis','Label','STRING',1,'');
+insert into BltPythonBlockProperties values ('xom.block.subdiagnosis.SubDiagnosis','Label','STRING',1,'');

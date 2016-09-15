@@ -11,7 +11,6 @@ import com.inductiveautomation.sfc.designer.api.ElementEditor;
 import com.inductiveautomation.sfc.designer.api.StepConfigFactory;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 import com.inductiveautomation.sfc.uimodel.ChartUIModel;
-import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 
 /** A "bridge" class that allows us to plug our own SFC Step property editor into Ignition. */
 @SuppressWarnings("serial")

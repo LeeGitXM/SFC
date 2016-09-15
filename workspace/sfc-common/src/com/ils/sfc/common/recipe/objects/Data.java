@@ -1,5 +1,6 @@
 package com.ils.sfc.common.recipe.objects;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -60,7 +61,8 @@ attributes:sequence (structure (
        4b. From a list of PropertyRow objects from the PropertyEditor, produce a map that can be added to the map "model" for RecipeDataBrowser
  */
 public abstract class Data {
-	private static LoggerEx logger = LogUtil.getLogger(Data.class.getName());
+	private static final String CLSS = "Data";
+	private static LoggerEx log = LogUtil.getLogger(Data.class.getName());
 	protected BasicPropertySet properties = new BasicPropertySet();
 	private Map<String, BasicProperty<?>> propertiesByName = new HashMap<String, BasicProperty<?>>();
 	// id and parentId come from the G2 export and are used to re-compose a hierarchy:
@@ -84,29 +86,146 @@ public abstract class Data {
 		properties.set(IlsProperty.CLASS, getClass().getSimpleName());
 	}
 
-	public String getG2Id() {
-		return g2Id;
-	}
-
-	public void setG2Id(String id) {
-		this.g2Id = id;
-	}
-
-	public String getParentG2Id() {
-		return parentG2Id;
+	// ======================================== Static Initializers ==============================
+	
+	/** Create a brand new instance of the given class. This includes
+	 *  recipe data converted from G2. */
+	public static Data createNewInstance(String className) {
+		Data data = null;
+		try {
+			Class<?> clazz = Class.forName(className);
+			if( clazz==null) throw new IllegalArgumentException(String.format("the class %s is not loaded", className));
+			data = Data.createNewInstance(clazz);
+		} 
+		catch (Exception e) {
+			log.error(String.format("%s.createNewInstance:ERROR creating class instance (%s)",CLSS,className), e);   // Prints stack trace
+			return null;
+		}
+		
+		return data;
 	}
 	
-	public void setParent(Data parent) {
-		this.parent = parent;
+	/** Create a brand new instance of the given class. This includes
+	 *  recipe data converted from G2. */
+	public static Data createNewInstance(Class<?> clss) {
+		Data data = null;
+		try {
+			Constructor<?> ctor = clss.getConstructor();
+			data = (Data)ctor.newInstance();
+			data.assignUniqueId();
+		} 
+		catch (Exception e) {
+			log.error(String.format("%s.createNewInstance:ERROR creating recipe data (%s)",CLSS,clss.getCanonicalName()), e);   // Prints stack trace
+			return null;
+		}
+		
+		return data;
 	}
 
-	public Object getValue(Property<?> property) {
-		return properties.getOrDefault(property);
+	public static Data createRecipeData(String className, String chartPath, 
+		String key,  String valueType, String provider, Group parentGroup) {
+		Data newObject = Data.createNewInstance(className);
+		newObject.setKey(key);
+		newObject.setProvider(provider);
+		newObject.setStepPath(chartPath);
+		newObject.setValueType(valueType);
+		newObject.setParent(parentGroup);
+		newObject.createTag();
+		return newObject;
+	}
+	
+	
+	public static JSONObject fromStepScope(PyChartScope stepScope) throws JSONException {
+		return Data.fromStepScopeRecursive(stepScope, 0);
+	}
+	
+	private static JSONObject fromStepScopeRecursive(PyChartScope stepScope, int level) throws JSONException {
+		JSONObject jsonObject = new JSONObject();
+		for(Object key: stepScope.keys()) {
+			if(!(key instanceof String)) continue;
+			// ignore the id and name step properties, and assume everything else
+			// is recipe data
+			if(level == 0 && (Constants.ID.equals(key) || Constants.NAME.equals(key))) continue;
+			Object value = stepScope.get(key);
+			if(value instanceof PyChartScope) {
+				jsonObject.put((String)key, fromStepScope((PyChartScope)value));
+			}
+			else {
+				// null values show up in step scope as JSONObject.NULL, which is 
+				// what we want to put in the JSON object, so no special logic:
+				jsonObject.put((String)key, value);	
+			}
+		}
+		return jsonObject;	
+	}
+	/** Create an associated data object containing only the recipe data 
+	 * @throws JSONException */
+	public static JSONObject toAssociatedData(List<Data> recipeData) throws JSONException {
+		JSONObject associatedDataJson = new JSONObject();
+		setAssociatedData(associatedDataJson, recipeData);
+		return associatedDataJson;
+	}
+	
+	/** Set recipe data in the given associated data object */
+	public static void setAssociatedData(JSONObject associatedDataJson, List<Data> recipeData) throws JSONException {
+		for(Data data: recipeData) {
+			associatedDataJson.put(data.getKey(), data.toJSON());
+		}
+	}
+	
+	/** Create a recipe data hierarchy from a JSON Object that was
+	 *  originally created from a recipe hierarchy (i.e. not
+	 *  just some random JSONbject. */
+	public static List<Data> fromAssociatedData(JSONObject associatedDataJson) throws Exception {
+		List<Data> recipeData = new ArrayList<Data>();
+		Iterator<String> keyIter = associatedDataJson.keys();
+		while(keyIter.hasNext()) {
+			String key = keyIter.next();
+			if(key.equals(Constants.S88_LEVEL) || key.equals("runningTime")) {
+				continue;
+			}
+			try {
+				JSONObject jsonData = associatedDataJson.getJSONObject(key);
+				Data data = fromJson(jsonData);
+				recipeData.add(data);
+			}
+			catch(Exception e) {
+				// ?? what to do...we are blindly assuming that everything in the associated
+				// data object is recipe data, which isn't necessarily true...
+				log.debug("Error creating recipe data", e);
+			}
+		}		
+		return recipeData;
 	}
 
-	public boolean hasProperty(String propName) {
-		return getProperty(propName) != null;
+	/** Restore an object from JSON */
+	public static Data fromJson(JSONObject jsonObject) throws Exception {
+		String simpleClassName = jsonObject.getString(Constants.CLASS);
+		String packageName = Data.class.getPackage().getName();
+		String fullClassName = packageName + "." + simpleClassName;
+		Data data = Data.createNewInstance(fullClassName);
+		if( data!=null ) {
+			data.setFromJson(jsonObject);
+
+			// if we're restoring an old instance from before we assigned UUIDs, give it one:
+			if(IlsSfcCommonUtils.isEmpty((String)data.getValue(IlsProperty.DATA_ID))) {
+				data.assignUniqueId();
+			}
+		}
+		return data;
 	}
+	
+	
+	
+	
+	public String getG2Id() {return g2Id;}
+	public String getParentG2Id() {return parentG2Id;}
+	public Object getValue(Property<?> property) {return properties.getOrDefault(property);	}
+
+	public boolean hasProperty(String propName) {return getProperty(propName) != null;}
+	
+	public void setG2Id(String id) {this.g2Id = id;}
+	public void setParent(Data parent) {this.parent = parent;}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setValue(Property<?> property, Object value) {
@@ -115,7 +234,7 @@ public abstract class Data {
 			properties.set(myProperty, value);
 		}
 		else {
-			logger.error("Property " + property.getName() + " not found in " + this.getClass().getSimpleName());
+			log.error("Property " + property.getName() + " not found in " + this.getClass().getSimpleName());
 		}
 	}
 	
@@ -151,33 +270,11 @@ public abstract class Data {
 	}	
 
 	/** Get the property with the given name, or null if none. */
-	BasicProperty<?> getProperty(String propertyName) {
+	public BasicProperty<?> getProperty(String propertyName) {
 		return propertiesByName.get(propertyName);
 	}
 	
-	public static JSONObject fromStepScope(PyChartScope stepScope) throws JSONException {
-		return fromStepScopeRecursive(stepScope, 0);
-	}
-	
-	private static JSONObject fromStepScopeRecursive(PyChartScope stepScope, int level) throws JSONException {
-		JSONObject jsonObject = new JSONObject();
-		for(Object key: stepScope.keys()) {
-			if(!(key instanceof String)) continue;
-			// ignore the id and name step properties, and assume everything else
-			// is recipe data
-			if(level == 0 && (Constants.ID.equals(key) || Constants.NAME.equals(key))) continue;
-			Object value = stepScope.get(key);
-			if(value instanceof PyChartScope) {
-				jsonObject.put((String)key, fromStepScope((PyChartScope)value));
-			}
-			else {
-				// null values show up in step scope as JSONObject.NULL, which is 
-				// what we want to put in the JSON object, so no special logic:
-				jsonObject.put((String)key, value);	
-			}
-		}
-		return jsonObject;	
-	}
+
 
 	/** Convert this object (and any hierarchy) to a JSON object */
 	public JSONObject toJSON() throws JSONException {
@@ -202,7 +299,7 @@ public abstract class Data {
 					}
 				}
 				else {
-					logger.error("Expecting Date for value); found " + value);
+					log.error("Expecting Date for value); found " + value);
 				}
 			}
 			jsonObj.put(propName, value != null ? value : JSONObject.NULL);
@@ -210,61 +307,7 @@ public abstract class Data {
 		return jsonObj;
 	}
 
-	/** Create an associated data object containing only the recipe data 
-	 * @throws JSONException */
-	public static JSONObject toAssociatedData(List<Data> recipeData) throws JSONException {
-		JSONObject associatedDataJson = new JSONObject();
-		setAssociatedData(associatedDataJson, recipeData);
-		return associatedDataJson;
-	}
 	
-	/** Set recipe data in the given associated data object */
-	public static void setAssociatedData(JSONObject associatedDataJson, List<Data> recipeData) throws JSONException {
-		for(Data data: recipeData) {
-			associatedDataJson.put(data.getKey(), data.toJSON());
-		}
-	}
-	
-	/** Create a recipe data hierarchy from a JSON Object that was
-	 *  originally created from a recipe hierarchy (i.e. not
-	 *  just some random JSONbject. */
-	public static List<Data> fromAssociatedData(JSONObject associatedDataJson) throws Exception {
-		List<Data> recipeData = new ArrayList<Data>();
-		Iterator<String> keyIter = associatedDataJson.keys();
-		while(keyIter.hasNext()) {
-			String key = keyIter.next();
-			if(key.equals(Constants.S88_LEVEL) || key.equals("runningTime")) {
-				continue;
-			}
-			try {
-				JSONObject jsonData = associatedDataJson.getJSONObject(key);
-				Data data = fromJson(jsonData);
-				recipeData.add(data);
-			}
-			catch(Exception e) {
-				// ?? what to do...we are blindly assuming that everything in the associated
-				// data object is recipe data, which isn't necessarily true...
-				logger.debug("Error creating recipe data", e);
-			}
-		}		
-		return recipeData;
-	}
-
-	/** Restore an object from JSON */
-	public static Data fromJson(JSONObject jsonObject) throws Exception {
-		String simpleClassName = jsonObject.getString(Constants.CLASS);
-		String packageName = Data.class.getPackage().getName();
-		String fullClassName = packageName + "." + simpleClassName;
-		Data data = createForRestore(Class.forName(fullClassName));
-		data.setFromJson(jsonObject);
-		
-		// if we're restoring an old instance from before we assigned UUIDs, give it one:
-		if(IlsSfcCommonUtils.isEmpty((String)data.getValue(IlsProperty.DATA_ID))) {
-			assignUniqueId(data);
-		}
-			 		
-		return data;
-	}
 	
 	/** The recursive part of fromJSON() */
 	protected void setFromJson(JSONObject jsonObj) throws Exception {
@@ -311,48 +354,13 @@ public abstract class Data {
 			System.out.println(pvalue.getProperty().getName() + ": " + pvalue.getValue());
 		}
 	}
-	
-	/** Create an instance of the given class to be used to restore
-	 *  an existing instance. */
-	public static Data createForRestore(Class<?> aClass) {
-		return basicCreate(aClass);
-	}
-	
-	/** Create a brand new instance of the given class. This includes
-	 *  recipe data converted from G2. */
-	public static Data createNewInstance(Class<?> aClass) {
-		Data newInstance = basicCreate(aClass);
-		assignUniqueId(newInstance);
-		return newInstance;
-	}
 
-	public static Data createRecipeData(Class<?> selectedClass, String chartPath, 
-		String key,  String valueType, String provider, Group parentGroup) {
-		Data newObject = Data.createNewInstance(selectedClass);
-		newObject.setKey(key);
-		newObject.setProvider(provider);
-		newObject.setStepPath(chartPath);
-		newObject.setValueType(valueType);
-		newObject.setParent(parentGroup);
-		newObject.createTag();
-		return newObject;
-	}
-	
-	private static void assignUniqueId(Data newInstance) {
+
+	private void assignUniqueId() {
 		UUID uniqueId = UUID.randomUUID();
-		newInstance.setValue(IlsProperty.DATA_ID, uniqueId);
+		setValue(IlsProperty.DATA_ID, uniqueId);
 	}
 	
-	/** Instantiate the given Data subclass. */
-	private static Data basicCreate(Class<?> aClass) {
-		try {
-			return (Data)aClass.newInstance();
-		} catch (Exception e) {
-			logger.error("error creating recipe data", e);
-			return null;
-		}
-	}
-
 	public String getStepPath() {
 		return stepPath;
 	}
@@ -376,7 +384,7 @@ public abstract class Data {
 		try {
 			PythonCall.CREATE_GROUP_PROPERTY_TAG.exec(args);
 		} catch (JythonExecException e) {
-			logger.error("Recipe Group tag creation failed", e);
+			log.error("Recipe Group tag creation failed", e);
 		}		
 	}
 	
@@ -390,7 +398,7 @@ public abstract class Data {
 		try {
 			PythonCall.CREATE_RECIPE_DATA.exec(args);
 		} catch (JythonExecException e) {
-			logger.error("Recipe Data tag creation failed", e);
+			log.error("Recipe Data tag creation failed", e);
 		}
 		
 		// If this is a group, the basic type is a folder rather than a UDT. As far as I know,
@@ -516,7 +524,7 @@ public abstract class Data {
 				PythonCall.SET_RECIPE_DATA.exec(setArgs);
 			}
 		} catch (JythonExecException e) {
-			logger.error("Recipe Data write to tags failed", e);
+			log.error("Recipe Data write to tags failed", e);
 		}
 	}
 
@@ -532,7 +540,7 @@ public abstract class Data {
 			return array;
 		}
 		catch(Exception e) {
-			logger.error("Error converting JSON array to dataset", e);
+			log.error("Error converting JSON array to dataset", e);
 		}
 		return null;
 	}
@@ -544,7 +552,7 @@ public abstract class Data {
 			return count.intValue();
 		}
 		catch(Exception e) {
-			logger.error("Error getting index count", e);
+			log.error("Error getting index count", e);
 			return 0;
 		}
 	}
@@ -577,7 +585,7 @@ public abstract class Data {
 			}
 		}
 		catch(Exception e) {
-			logger.error("Error converting JSON matrix to dataset", e);
+			log.error("Error converting JSON matrix to dataset", e);
 		}
 		return null;
 	}
@@ -588,7 +596,7 @@ public abstract class Data {
 		try {
 			PythonCall.DELETE_RECIPE_DATA.exec(args);
 		} catch (JythonExecException e) {
-			logger.error("Recipe Data tag deletion failed", e);
+			log.error("Recipe Data tag deletion failed", e);
 		}		
 	}
 	
@@ -615,7 +623,7 @@ public abstract class Data {
 			}
 			return value;
 		} catch (JythonExecException e) {
-			logger.error("Recipe Data tag read failed", e);
+			log.error("Recipe Data tag read failed", e);
 			return null;
 		}		
 	}
@@ -636,7 +644,7 @@ public abstract class Data {
 			return json;
 		}
 		catch(Exception e) {
-			logger.error("Error converting dataset to json", e);
+			log.error("Error converting dataset to json", e);
 			return null;
 		}
 	}
@@ -649,7 +657,7 @@ public abstract class Data {
 			Boolean value = (Boolean)PythonCall.RECIPE_DATA_EXISTS.exec(args);
 			return value;
 		} catch (JythonExecException e) {
-			logger.error("Recipe Data tag existence check failed", e);
+			log.error("Recipe Data tag existence check failed", e);
 			return false;
 		}				
 	}

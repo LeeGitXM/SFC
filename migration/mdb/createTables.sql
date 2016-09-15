@@ -88,11 +88,13 @@ CREATE TABLE BltPythonPrototypes(
 
 -- These are properties of blocks that are fixed
 -- no matter what. Applicable to python blocks.
+-- The value is an initial value
 CREATE TABLE BltPythonBlockProperties(
     BlockClass text NOT NULL,
     PropertyName text NOT NULL,
 	PropertyType text NOT NULL,
-	Editable integer
+	Editable integer,
+	Value text DEFAULT 'NONE'
 );
 -- ======================= G2-Python Tables ================
 -- Change the name of string arguments to procedures when

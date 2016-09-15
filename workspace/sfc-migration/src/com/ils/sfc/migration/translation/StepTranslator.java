@@ -11,7 +11,6 @@ import org.w3c.dom.Element;
 
 import system.ils.sfc.common.Constants;
 
-import com.ils.sfc.common.recipe.objects.RecipeDataTranslator;
 import com.ils.sfc.migration.Converter;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;

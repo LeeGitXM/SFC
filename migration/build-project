@@ -15,4 +15,4 @@ LIB=$REPO/external/lib
 JAR=${LIB}/sfc-migration.jar
 OUTFIL=$2
 OUTFIL=${OUTFIL}.proj
-java -cp ${JAR} -Dlog.level=INFO com.ils.sfc.migration.ProjectBuilder $1 ${OUTFIL}
+java -cp ${JAR} -Dlog.level=WARN com.ils.sfc.migration.ProjectBuilder $1 ${OUTFIL}
