@@ -43,6 +43,9 @@ public class TransitionTranslator {
 		if( strategy.equalsIgnoreCase("RECIPE-DATA") && targetStrategy.equalsIgnoreCase("CONSTANT-VALUE")) {
 			expression = handleRecipeValue(recipeLocation,item,constant,operator);
 		}
+		else if( strategy.equalsIgnoreCase("RECIPE-BLOCK") && targetStrategy.equalsIgnoreCase("CONSTANT-VALUE")) {
+			expression = handleRecipeBlockValue(recipeLocation,item,constant,operator);
+		}
 		else if( strategy.equalsIgnoreCase("NAMED-PARAM-OR-VAL") && targetStrategy.equalsIgnoreCase("CONSTANT-VALUE")) {
 			expression = handleTagValue(item,constant,operator);
 		}
@@ -113,7 +116,32 @@ public class TransitionTranslator {
 		}
 		
 	}
-	
+	// QUESTION: How does a recipe block differ from a simple value.
+	private String handleRecipeBlockValue(String recipeLocation,String item,String constant,String operator) {
+		String ans = "true";
+		if(recipeLocation!=null && item!=null && constant!=null ) {
+			int pos = item.lastIndexOf(".");
+			String baseLoc = "";
+			String element = item;
+			if( pos > 0 && pos < item.length()-1 ) {
+				baseLoc = item.substring(0, pos+1);
+				element = item.substring(pos+1);
+				String modified = RecipeDataTranslator.g2ToIgName.get(element.toLowerCase());
+				if( modified!=null) element = modified;
+				else {
+					log.warnf("%s.handleRecipeBlockValue: Unrecognized recipe item (%s)",TAG,element);
+				}
+			}
+			ans = String.format("{%s.%s%s} %s \"%s\"", 
+					 recipeLocation.toLowerCase(),
+					 baseLoc.toLowerCase(),
+					 element,
+					 convertOperator(operator),
+					 constant
+					 );
+		}
+		return ans;
+	}
 	private String handleRecipeValue(String recipeLocation,String item,String constant,String operator) {
 		String ans = "true";
 		if(recipeLocation!=null && item!=null && constant!=null ) {
