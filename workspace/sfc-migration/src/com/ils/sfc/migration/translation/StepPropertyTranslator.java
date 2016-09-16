@@ -18,12 +18,7 @@ public class StepPropertyTranslator {
 	// G2 properties that have no direct translation to Ignition step properties:
 	static Set<String> ignoredG2Properties = new HashSet<String>();
 	static Set<String> migratedG2Properties = new HashSet<String>();
-	static Set<String> ignoredG2Classes = new HashSet<String>();
 	static {
-		ignoredG2Classes.add("S88-PARALLEL-TRANSITION");
-		ignoredG2Classes.add("S88-CONDITIONAL-TRANSITION");
-		ignoredG2Classes.add("S88-ENCAPSULATION-TASK");
-		
 		migratedG2Properties.add("classToCreate");  // class type for SimpleQuery
 		migratedG2Properties.add("interfaceName");  // data source for Simple Query
 		migratedG2Properties.add("printer");  // SaveData
@@ -76,47 +71,44 @@ public class StepPropertyTranslator {
     	String g2Id = g2Properties.get("uuid");
     	String g2Class = g2Properties.get("class");
     	String g2StepName = g2Properties.get("name");
-    	if(ignoredG2Classes.contains(g2Class)) {
-    		logger.debugf("ignoring %s %s", g2Class, g2StepName);
-    	}
-    	else {
-    		logger.debugf("translating %s %s %s", g2Class, g2StepName, g2Id);
-            for(String g2PropName: g2Properties.keySet()) {
-        		String g2PropValue = g2Properties.get(g2PropName);
-        		if(ignoredG2Properties.contains(g2PropName)) {
-            		logger.debugf("ignoring property %s", g2PropName);
-        		}
-        		else {
-        			BasicProperty<?> mappedProperty = IlsProperty.getTranslationForG2Property(factoryId, g2PropName);
-        			if(mappedProperty != null) {
-        				String mappedValueStr = IlsProperty.getTranslationForG2Value(factoryId, g2StepName,
-        					mappedProperty, g2PropValue, logger);
-        				// TODO: check enum translation
-                   		logger.debugf("mapped property %s : %s to %s : %s", g2PropName, g2PropValue, mappedProperty.getName(), mappedValueStr);
-         				translation.put(mappedProperty.getName(), mappedValueStr);
-        			}
-        			else {
-        				if(migratedG2Properties.contains(g2PropName)) {
-        					logger.warnf("property %s : %s in step %s %s may require manual migration", g2PropName, g2PropValue, g2StepName, g2Id);        					
-        				}
-        				else {
-        					//logger.errorf("no translation for property %s in %s %s %s", g2PropName, g2Class, g2StepName, g2Id);
-        					logger.errorf("no translation for property %s in %s", g2PropName, g2Class);
-        				}
-        			}
-        		}
-        	}
+
+    	logger.debugf("translating %s %s %s", g2Class, g2StepName, g2Id);
+    	for(String g2PropName: g2Properties.keySet()) {
+    		String g2PropValue = g2Properties.get(g2PropName);
+    		if(ignoredG2Properties.contains(g2PropName)) {
+    			logger.debugf("ignoring property %s", g2PropName);
+    		}
+    		else {
+    			BasicProperty<?> mappedProperty = IlsProperty.getTranslationForG2Property(factoryId, g2PropName);
+    			if(mappedProperty != null) {
+    				String mappedValueStr = IlsProperty.getTranslationForG2Value(factoryId, g2StepName,
+    						mappedProperty, g2PropValue, logger);
+    				// TODO: check enum translation
+    				logger.debugf("mapped property %s : %s to %s : %s", g2PropName, g2PropValue, mappedProperty.getName(), mappedValueStr);
+    				translation.put(mappedProperty.getName(), mappedValueStr);
+    			}
+    			else {
+    				if(migratedG2Properties.contains(g2PropName)) {
+    					logger.warnf("property %s : %s in step %s %s may require manual migration", g2PropName, g2PropValue, g2StepName, g2Id);        					
+    				}
+    				else {
+    					//logger.errorf("no translation for property %s in %s %s %s", g2PropName, g2Class, g2StepName, g2Id);
+    					logger.errorf("no translation for property %s in %s", g2PropName, g2Class);
+    				}
+    			}
+    		}
     	}
 
-		// cross-check with all step properties we expect to be translated:
+
+		// Cross-check with all step properties we expect to be translated:
 		if(factoryId.startsWith("com.ils")) {
 			Property<?>[] ilsSfcProperties = AllSteps.getIlsProperties(factoryId);
 			for(Property<?> prop: ilsSfcProperties) {
 				String propName = prop.getName();
 				// some properties are not translated, or are treated differently:
-				if(IlsProperty.isUnMappedProperty(propName)) {
-					continue;
-				}
+				//if(IlsProperty.isUnMappedProperty(propName)) {
+				//	continue;
+				//}
 				if(!translation.keySet().contains(propName)) {
 					//logger.errorf("no g2 info for Ignition step property %s in %s %s %s", propName, factoryId, g2StepName, g2Id);
 					logger.errorf("no g2 info for Ignition step property %s in %s", propName, factoryId);

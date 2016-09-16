@@ -1,5 +1,10 @@
 -- Convert values found in G2 blocks or charts into proper Ignition equivalents.
 -- Fields are: Ignition property, G2value, desired value
+
+-- GENERIC DEFAULTS
+insert into PropertyValueMap values ('timeoutUnits','','SEC');
+
+
 insert into PropertyValueMap values ('recipeLocation','LOCAL','local');
 insert into PropertyValueMap values ('recipeLocation','PREVIOUS','prior');
 insert into PropertyValueMap values ('recipeLocation','SUPERIOR','superior');

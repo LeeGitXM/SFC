@@ -70,18 +70,31 @@ public class PropertyMapper {
 	public String g2Property(String factoryId,String propertyName) {
 		String key = makePropertyMapKey(factoryId,propertyName);
 		String result = propertyMap.get(key);
-		//System.err.println(TAG+".g2Property for "+factoryId+":"+propertyName+"="+result);
+		// If the class-specific version fails, then try the generic.
+		if( result==null ) {
+			key = makePropertyMapKey("generic",propertyName);
+			result = propertyMap.get(key);
+		}
 		return result;
 	}
 	
 	/**
-	 * 
+	 * Append the generic list to the class-specific list.
+	 * Cull out duplicates.
 	 * @param factoryId
 	 * @return a list of properties appropriate for a class
 	 */
 	public List<String> getPropertyList(String factoryId) {
-		return propertiesMap.get(factoryId);
-	}
+		List<String> generic = propertiesMap.get("generic");
+		List<String> specific = propertiesMap.get("factoryId");
+		if( specific==null) specific = new ArrayList<>();
+		if( generic!=null) {
+			for(String prop:generic) {
+				if( !specific.contains(prop)) specific.add(prop);
+			}
+		}
+		return specific;
+ 	}
 	
 	/**
 	 * Create the key for lookup in the property map. Simply

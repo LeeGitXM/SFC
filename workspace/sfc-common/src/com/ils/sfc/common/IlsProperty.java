@@ -119,30 +119,6 @@ public class IlsProperty {
 	}
 	public static boolean isHiddenProperty(String name) { return ignitionPropertiesToHide.contains(name); }
 
-	public static final Set<String> unmappedIgnitionProperties = new HashSet<String>();
-	static {
-		unmappedIgnitionProperties.add("buttonLabel");
-		unmappedIgnitionProperties.add("chart-path");
-		unmappedIgnitionProperties.add(Constants.G2_XML);
-		unmappedIgnitionProperties.add(Constants.NAME);
-		unmappedIgnitionProperties.add(Constants.ID);
-		unmappedIgnitionProperties.add(Constants.PV_MONITOR_CONFIG);
-		unmappedIgnitionProperties.add(Constants.COLLECT_DATA_CONFIG);
-		unmappedIgnitionProperties.add(Constants.CONFIRM_CONTROLLERS_CONFIG);
-		unmappedIgnitionProperties.add(Constants.MONITOR_DOWNLOADS_CONFIG);
-		unmappedIgnitionProperties.add(Constants.MANUAL_DATA_CONFIG);
-		//unmappedIgnitionProperties.add(Constants.REVIEW_DATA_CONFIG);
-		unmappedIgnitionProperties.add(Constants.VERBOSE);  // ? Shows in WriteOutput fn spec, but don't see in G2 XML
-		unmappedIgnitionProperties.add(Constants.WRITE_OUTPUT_CONFIG);
-	}
-	
-	/** Return if the (Ignition) property is not present in the translation map. This doesn't
-	 *  necessarily mean it is untranslated; some translations like id and name are done
-	 *  in a different way than mapping...
-	 */
-	public static boolean isUnMappedProperty(String name) { 
-		return isHiddenProperty(name) || unmappedIgnitionProperties.contains(name);		
-	}
 
     public static final BasicProperty<Boolean> ACK_REQUIRED = createProperty(Constants.ACK_REQUIRED, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<String> ADVICE = createProperty(Constants.ADVICE, String.class, "");

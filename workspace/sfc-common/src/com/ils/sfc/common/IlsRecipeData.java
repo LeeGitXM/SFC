@@ -1,3 +1,6 @@
+/**
+ *   (c) 2016  ILS Automation. All rights reserved.
+ */
 package com.ils.sfc.common;
 
 import java.util.Collection;

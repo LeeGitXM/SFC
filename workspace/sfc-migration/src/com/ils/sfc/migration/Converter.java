@@ -1,5 +1,5 @@
 /**
- *   (c) 2015  ILS Automation. All rights reserved.
+ *   (c) 2015-2016  ILS Automation. All rights reserved.
  */
 package com.ils.sfc.migration;
 
@@ -50,6 +50,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.ils.sfc.common.rowconfig.RowConfig;
+import com.ils.sfc.common.step.AllSteps;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
@@ -64,6 +65,7 @@ import com.ils.sfc.migration.translation.StepPropertyTranslator;
 import com.ils.sfc.migration.translation.StepTranslator;
 import com.ils.sfc.migration.visitor.CopyWalker;
 import com.ils.sfc.migration.visitor.PathWalker;
+import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 /**
@@ -73,7 +75,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
  * embedded spaces in the names.
  */
 public class Converter {
-	private final static String TAG = "Converter";
+	private final static String CLSS = "Converter";
 	private static final String USAGE = "Usage: converter [-x] <database> <from> <to> <start>";
 	private final static String NOLABEL = "nolabel";
 	public static boolean haltOnError = false;
@@ -110,7 +112,7 @@ public class Converter {
 	 */
 	public void processDatabase(Path path) {
 		String connectPath = "jdbc:sqlite:"+path.toString();
-		log.debugf("%s.processDatabase: database path = %s",TAG,path.toString());
+		log.debugf("%s.processDatabase: database path = %s",CLSS,path.toString());
 		// Read database to generate conversion maps
 		Connection connection = null;
 		try {
@@ -124,7 +126,7 @@ public class Converter {
 		catch(SQLException e) {
 			// if the error message is "out of memory", 
 			// it probably means no database file is found
-			log.errorf("%s.processDatabase: Database error (%s)",TAG,e.getMessage());
+			log.errorf("%s.processDatabase: Database error (%s)",CLSS,e.getMessage());
 			ok = false;
 		}
 		finally {
@@ -134,7 +136,7 @@ public class Converter {
 			} 
 			catch(SQLException e) {
 				// connection close failed.
-				log.errorf("%s.processDatabase: Error closing database (%s)",TAG,e.getMessage());
+				log.errorf("%s.processDatabase: Error closing database (%s)",CLSS,e.getMessage());
 			}
 		}
 	}
@@ -145,23 +147,23 @@ public class Converter {
 	public void prepareOutput(Path dir) {
 		if( !ok ) return;
 		// Attempt to create
-		log.infof("%s.prepareOutput: Output root is: %s",TAG,dir.toString());
+		log.infof("%s.prepareOutput: Output root is: %s",CLSS,dir.toString());
 		if( !Files.exists(dir) ) {
 			Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwxr-xr-x");
 			FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
 			try {
-				log.debugf("%s.prepareOutput: Creating %s",TAG,dir.toString()); 
+				log.debugf("%s.prepareOutput: Creating %s",CLSS,dir.toString()); 
 				Files.createDirectories(dir,attr);
 			}
 			catch(IOException ioe) {
 				ok = false;
-				log.errorf("%s: Failed to create output directory %s (%s)",TAG,dir.toString(),ioe.getMessage());
+				log.errorf("%s: Failed to create output directory %s (%s)",CLSS,dir.toString(),ioe.getMessage());
 			}
 		}
 		// Check for directory
 		else if (!Files.isDirectory(dir)) {
 			ok = false;
-			log.errorf("%s: Target output exists, but is not a directory (%s)",TAG,dir.toString());
+			log.errorf("%s: Target output exists, but is not a directory (%s)",CLSS,dir.toString());
 		}
 
 	}
@@ -180,11 +182,11 @@ public class Converter {
 		PathWalker walker = new PathWalker(indir,this);
 		try {
 			Path startpath = Paths.get(indir.toString(), start);
-			log.infof("%s.createPathMap: Walking %s",TAG,startpath.toString());
+			log.infof("%s.createPathMap: Walking %s",CLSS,startpath.toString());
 			Files.walkFileTree(startpath, walker);
 		}
 		catch(IOException ioe) {
-			log.warnf("%s.createPathMap: Walk failed (%s)",TAG,ioe.getMessage());
+			log.warnf("%s.createPathMap: Walk failed (%s)",CLSS,ioe.getMessage());
 		}
 	}
 	/**
@@ -196,12 +198,12 @@ public class Converter {
 		for( String partpath:pathMap.values() ) {
 			int pos = partpath.lastIndexOf("/");
 			Path dir = Paths.get(outdir.toString(),outRoot,partpath.substring(0, pos));
-			log.debugf("%s.createOutputDirectories: Creating %s",TAG,dir.toString());
+			log.debugf("%s.createOutputDirectories: Creating %s",CLSS,dir.toString());
 			try {
 				Files.createDirectories(dir);
 			}
 			catch(IOException ioe) {
-				log.warnf("%s.createOutputDirectories: Failed to create %s",TAG,ioe.getMessage());
+				log.warnf("%s.createOutputDirectories: Failed to create %s",CLSS,ioe.getMessage());
 			}
 		}
 	}
@@ -218,10 +220,8 @@ public class Converter {
 			Path dir = Paths.get(outdir.toString(),outRoot,path);
 			if( Files.isDirectory(dir, LinkOption.NOFOLLOW_LINKS)) {
 				Path fname = dir.getFileName();
-				System.out.println("pathMap: " + pathMap.get(key) + " fname: " + fname.toString());
-				//Path extended = Paths.get(pathMap.get(key),fname.toString());
+				log.debugf("%s.revisePaths: Generating %s/%s",CLSS,path,fname.toString());
 				String extended = pathMap.get(key) + "/" + fname.toString();
-				log.debugf("%s.revisePaths: Revised %s",TAG,extended.toString());
 				pathMap.put(key,extended);
 			}
 		}
@@ -241,11 +241,11 @@ public class Converter {
 		try {
 			
 			Path startpath = Paths.get(indir.toString(), start);
-			log.infof("%s.processInput: %s",TAG,startpath.toString());
+			log.infof("%s.processInput: %s",CLSS,startpath.toString());
 			Files.walkFileTree(startpath, walker);
 		}
 		catch(IOException ioe) {
-			log.warnf("%s.processInput: Walk failed (%s)",TAG,ioe.getMessage());
+			log.warnf("%s.processInput: Walk failed (%s)",CLSS,ioe.getMessage());
 		}
 	}
 	/**
@@ -282,18 +282,18 @@ public class Converter {
 			int pos = path.lastIndexOf(".");
 			if( pos>0 ) path = path.substring(0, pos); 
 			String prettyPath = prettyPath(path);
-			log.infof("%s.analyzePath: path map of %s becomes %s",TAG,inpath,prettyPath);
+			log.infof("%s.analyzePath: path map of %s becomes %s",CLSS,inpath,prettyPath);
 			pathMap.put(inpath, prettyPath);
 			
 		}
 		catch (ParserConfigurationException pce) {
-			log.errorf("%s.analyzePath: Error parsing %s (%s)",TAG,inpath,pce.getMessage());
+			log.errorf("%s.analyzePath: Error parsing %s (%s)",CLSS,inpath,pce.getMessage());
 		}
 		catch (SAXException sax) {
-			log.errorf("%s.analyzePath: Error analyzing %s (%s)",TAG,inpath,sax.getMessage());
+			log.errorf("%s.analyzePath: Error analyzing %s (%s)",CLSS,inpath,sax.getMessage());
 		}
 		catch (IOException ioe) {
-			log.errorf("%s.analyzePath: Failure to read %s (%s)",TAG,inpath,ioe.getMessage());
+			log.errorf("%s.analyzePath: Failure to read %s (%s)",CLSS,inpath,ioe.getMessage());
 		}
 		
 	}
@@ -340,20 +340,20 @@ public class Converter {
 			
 			// Write the chart to the output
 			xml = docToString(chartdoc);
-			log.debugf("%s.convertFile: Creating directory %s ...",TAG,outfile.getParent().toString());
+			log.debugf("%s.convertFile: Creating directory %s ...",CLSS,outfile.getParent().toString());
 			log.trace(xml);
 			Files.createDirectories(outfile.getParent());
-			log.debugf("%s.convertFile: Writing to %s ...",TAG,outfile.toString());
+			log.debugf("%s.convertFile: Writing to %s ...",CLSS,outfile.toString());
 			Files.write(outfile, xml.getBytes());  // CREATE_NEW,TRUNCATE_EXISTING.WRITE
 		}
 		catch (ParserConfigurationException pce) {
-			log.errorf("%s.convertFile: Error parsing %s (%s)",TAG,infile.toString(),pce.getMessage());
+			log.errorf("%s.convertFile: Error parsing %s (%s)",CLSS,infile.toString(),pce.getMessage());
 		}
 		catch (SAXException sax) {
-			log.errorf("%s.convertFile: Error analyzing %s (%s)",TAG,infile.toString(),sax.getMessage());
+			log.errorf("%s.convertFile: Error analyzing %s (%s)",CLSS,infile.toString(),sax.getMessage());
 		}
 		catch (IOException ioe) {
-			log.errorf("%s.convertFile: Failure to write %s (%s)",TAG,outfile.toString(),ioe.getMessage());
+			log.errorf("%s.convertFile: Failure to write %s (%s)",CLSS,outfile.toString(),ioe.getMessage());
 		}
 		
 	}
@@ -441,11 +441,11 @@ public class Converter {
 		    result = writer.getBuffer().toString().replaceAll("\r", "");
 		}
 		catch(TransformerConfigurationException tce) {
-			log.errorf("%s.docToString: Error creating transformer for string conversion (%s)",TAG,tce.getMessage());
+			log.errorf("%s.docToString: Error creating transformer for string conversion (%s)",CLSS,tce.getMessage());
 		}
 		catch(TransformerException te) {
 			te.printStackTrace();
-			log.errorf("%s.docToString: Error transforming document (%s)",TAG,te.getMessage());
+			log.errorf("%s.docToString: Error transforming document (%s)",CLSS,te.getMessage());
 		}
 		return result;
 	}
@@ -464,7 +464,7 @@ public class Converter {
 			String script = propertyValueMapper.modifyPropertyValueForIgnition("callback",g2attribute);
 			// As returned the script contains the module - strip it off.
 			script = pathNameForModule(script);
-			log.tracef("%s.insertOnStartFromG2Block: callback (%s) = %s",TAG,g2attribute,script);
+			log.tracef("%s.insertOnStartFromG2Block: callback (%s) = %s",CLSS,g2attribute,script);
 			if( script!=null  ) {
 				Path scriptPath = Paths.get(pythonRoot.toString()+"/onstart",script);
 				try {
@@ -476,12 +476,12 @@ public class Converter {
 						step.appendChild(startelement);
 					}
 					else {
-						log.errorf("%s.insertOnStartFromG2Block: Empty file %s",TAG,scriptPath.toString());
+						log.errorf("%s.insertOnStartFromG2Block: Empty file %s",CLSS,scriptPath.toString());
 					}
 					
 				}
 				catch(IOException ioe) {
-					log.errorf("%s.insertOnStartFromG2Block: Error reading script %s (%s)",TAG,scriptPath.toString(),ioe.getMessage());
+					log.errorf("%s.insertOnStartFromG2Block: Error reading script %s (%s)",CLSS,scriptPath.toString(),ioe.getMessage());
 				}
 			}
 		}
@@ -518,13 +518,13 @@ public class Converter {
 		StringBuilder pathBuilder = new StringBuilder();
 		String filepath =  pathMap.get(filename);
 		if( filepath==null ) {
-			log.warnf("%s.partialPathFromInfile: No path recorded for file %s",TAG,filename);
+			log.warnf("%s.partialPathFromInfile: No path recorded for file %s",CLSS,filename);
 		}
 		else {
 			
 			pathBuilder.append(outRoot);
 			pathBuilder.append(filepath);
-			log.tracef("%s.partialPathFromInfile: Path for file %s = %s",TAG,filename,pathBuilder.toString());
+			log.tracef("%s.partialPathFromInfile: Path for file %s = %s",CLSS,filename,pathBuilder.toString());
 		}
 		return pathBuilder.toString();
 	}
@@ -594,36 +594,42 @@ public class Converter {
 	 * @param step
 	 * @param g2block
 	 */
-	public void updateStepFromG2Block(Document chart,Element step,Element g2block,String igStepName) {
+	public void updateStepFromG2Block(Document chart,Element step,Element g2block) {
 		String factoryId = step.getAttribute("factory-id");
-		log.debugf("%s.updateStepFromG2Block: step class = %s",TAG,factoryId);
-		Map<String,String> translation = StepPropertyTranslator.getStepTranslation(factoryId, 
-			igStepName, g2block, log);
-				
-		for(String propName: translation.keySet()) {
-			Element propelement = chart.createElement(propName);
-			String propValue = translation.get(propName);
-			Node textNode = chart.createTextNode(propValue);
-			propelement.appendChild(textNode);
-			step.appendChild(propelement);
-		}
+		log.debugf("%s.updateStepFromG2Block: step class = %s",CLSS,factoryId);
 		
-		List<String> properties = propertyMapper.getPropertyList(factoryId);
-		if( properties!=null ) {
-			for( String property:properties ) {
-				String g2attribute = propertyMapper.g2Property(factoryId,property);
-				String value = g2block.getAttribute(g2attribute);
-				// Alter the value, if so specified
-				value = propertyValueMapper.modifyPropertyValueForIgnition(property, value);
-				log.tracef("%s.updateStepFromG2Block: %s(g2=%s) = %s",TAG,property,g2attribute,value);
-				Element propelement = chart.createElement(property);
-				Node textNode = chart.createTextNode(value);
-				propelement.appendChild(textNode);
-				step.appendChild(propelement);
+		// These are the properties which we expect from this step
+		Property<?>[] properties = AllSteps.getIlsProperties(factoryId);
+		if( properties!=null && properties.length>0 ) {
+			for( Property<?> property:properties ) {
+				String propertyName = property.getName();
+				String g2attribute = propertyMapper.g2Property(factoryId,propertyName);
+				if( g2attribute!=null ) {
+					String g2value = g2block.getAttribute(g2attribute);
+					String value = propertyValueMapper.modifyPropertyValueForIgnition(propertyName,g2value);
+					if( value==null ) {
+						value = propertyValueMapper.getDefaultValueForIgnition(propertyName);
+					}
+
+					// Create the property
+					if( value!=null) {
+						Element propelement = chart.createElement(propertyName);
+						Node textNode = chart.createTextNode(value);
+						propelement.appendChild(textNode);
+						step.appendChild(propelement);
+					}
+					else {
+						log.warnf("%s.updateStepFromG2Block: %s block has no attribute corresponding to %s",CLSS,factoryId,propertyName);
+					}
+				}
+				else {
+					log.warnf("%s.updateStepFromG2Block: property mapper for %s has no G2 attribute for %s",CLSS,factoryId,propertyName);
+				}
 			}
+
 		}
-		else {
-			if( factoryId.startsWith("com.ils") ) log.warnf("updateStepFromG2Block: WARNING: No properties found for class %s",factoryId);
+		else if(factoryId.startsWith("com.ils")) {
+			log.warnf("%s.updateStepFromG2Block: class %s has no defined properties",CLSS,factoryId);
 		}
 		
 		// Convert the block configurations, if any:
@@ -730,12 +736,12 @@ public class Converter {
 			m.processDatabase(pathFromString(args[argi++]));
 			m.setPythonRoot(pathFromString(args[argi++]));
 			Path indir = pathFromString(args[argi++]);
-			log.tracef("%s.main: indir = %s",TAG,indir.toString());
+			log.tracef("%s.main: indir = %s",CLSS,indir.toString());
 			// The output directory is the root holder for the new tree that will be created.
 			Path outdir = pathFromString(args[argi++]);
 			String rootFile = args[argi];
-			log.infof("%s.main: root = %s",TAG,rootFile);
-			log.infof("%s.main: outdir = %s",TAG,outdir.toString());
+			log.infof("%s.main: root = %s",CLSS,rootFile);
+			log.infof("%s.main: outdir = %s",CLSS,outdir.toString());
 			m.prepareOutput(outdir);
 			m.createPathMap(indir,rootFile);
 			m.createOutputDirectories(outdir);
@@ -743,9 +749,10 @@ public class Converter {
 			m.processInput(indir,outdir,rootFile);
 		}
 		catch(Exception ex) {
-			System.err.println(String.format("%s.main: UncaughtException (%s)",TAG,ex.getMessage()));
+			System.err.println(String.format("%s.main: UncaughtException (%s)",CLSS,ex.getMessage()));
+			ex.printStackTrace(System.err);
 		}
-		log.infof("%s.main: COMPLETE",TAG);
+		log.infof("%s.main: COMPLETE",CLSS);
 	}
 
 	

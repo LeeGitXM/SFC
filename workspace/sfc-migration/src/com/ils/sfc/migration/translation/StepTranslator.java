@@ -86,7 +86,7 @@ public class StepTranslator {
 				delegate.insertOnStartFromG2Block(chart,step,block);
 			}
 			else {
-				delegate.updateStepFromG2Block(chart,step,block,name);
+				delegate.updateStepFromG2Block(chart,step,block);
 				step.setAttribute(Constants.G2_XML, escapeXml(xml));
 			}
 			// We may have created stop methods based on a downstream transition

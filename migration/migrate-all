@@ -6,7 +6,7 @@
 #
 SFC=${GIT_REPO}/sfc
 MIGRATION=${SFC}/migration
-LOG=${MIGRATION}/migration.log
+LOG=${MIGRATION}/m.log
 rm -f $LOG
 
 ${MIGRATION}/process-vistalon all > ${LOG} 2>&1

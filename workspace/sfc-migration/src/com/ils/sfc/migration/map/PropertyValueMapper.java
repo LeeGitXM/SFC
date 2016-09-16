@@ -57,7 +57,16 @@ public class PropertyValueMapper {
 			}
 		}
 	}
-
+	/**
+	 * The default value is keyed by an empty string in the property values table.
+	 * @param propertyName
+	 * @return a default value for the named property
+	 */
+	public String getDefaultValueForIgnition(String propertyName) {
+		String key = makePropertyMapKey(propertyName,"");
+		String result = propertyValueMap.get(key);
+		return result;
+	}
 	/**
 	 * Munge a G2 property value into an ignition equivalent. If there is
 	 * no modification found, simply pass through the g2Value.
@@ -67,12 +76,14 @@ public class PropertyValueMapper {
 	 */
 	public String modifyPropertyValueForIgnition(String propertyName,String g2Value) {
 		String result = g2Value;
-		String key = makePropertyMapKey(propertyName,g2Value);
-		String modified = propertyValueMap.get(key);
-		if( modified!=null ) result = modified;
-		// Now some special munging ...
-		if( propertyName.equalsIgnoreCase("key")) result = result.toLowerCase();
-		if( result.endsWith(".val" )) result = result+"ue";
+		if( g2Value!=null) {
+			String key = makePropertyMapKey(propertyName,g2Value);
+			String modified = propertyValueMap.get(key);
+			if( modified!=null ) result = modified;
+			// Now some special munging ...
+			if( propertyName.equalsIgnoreCase("key")) result = result.toLowerCase();
+			if( result.endsWith(".val" )) result = result+"ue";
+		}
 		return result;
 	}
 	
