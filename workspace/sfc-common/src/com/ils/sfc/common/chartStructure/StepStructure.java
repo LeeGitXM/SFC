@@ -30,7 +30,7 @@ public class StepStructure {
 	private PropertySet properties;
 	
 	/**
-	 * Constructor for a StepDefinition. We are an enclosing step if we have a chart-path property
+	 * Constructor for a StepDefinition. We are an enclosing step if we have a chart-path element
 	 * @param chart
 	 * @param stepDef
 	 */

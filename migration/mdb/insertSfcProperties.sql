@@ -9,6 +9,7 @@ insert into SfcPropertyMap values ('generic','message','messageText');
 insert into SfcPropertyMap values ('generic','name','name');
 insert into SfcPropertyMap values ('generic','priority','priority');
 insert into SfcPropertyMap values ('generic','recipeLocation','recipeLocation');
+
 -- UNMAPPED PROPERTIES --- these are not class-specific. If g2Property is empty, we just ignore.
 insert into SfcPropertyMap values ('generic','buttonLabel','');
 insert into SfcPropertyMap values ('generic','chart-path','');
@@ -24,6 +25,10 @@ insert into SfcPropertyMap values ('generic','writeOutputConfig','');
 
 -- ABORT
 insert into SfcPropertyMap values ('com.ils.abortStep','ackRequired','ackRequired');
+
+-- CLOSE WINDOW
+insert into SfcPropertyMap values ('com.ils.closeWindowStep','targetType','targetType');
+insert into SfcPropertyMap values ('com.ils.closeWindowStep','window','window');
 
 -- CONTROL PANEL MESSAGE
 insert into SfcPropertyMap values ('com.ils.controlPanelMessageStep','ackRequired','ackRequired');
@@ -206,6 +211,14 @@ insert into SfcPropertyMap values ('com.ils.selectInputStep','timeout','');
 insert into SfcPropertyMap values ('com.ils.selectInputStep','timeoutUnit','');
 insert into SfcPropertyMap values ('com.ils.selectInputStep','windowTitle','');
 
+-- SHOW WINDOW
+insert into SfcPropertyMap values ('com.ils.showWindowStep','position','');
+insert into SfcPropertyMap values ('com.ils.showWindowStep','scale','');
+insert into SfcPropertyMap values ('com.ils.showWindowStep','security','security');
+insert into SfcPropertyMap values ('com.ils.showWindowStep','targetType','targetType');
+insert into SfcPropertyMap values ('com.ils.showWindowStep','window','window');
+insert into SfcPropertyMap values ('com.ils.showWindowStep','windowTitle','');
+
 -- SIMPLE QUERY
 insert into SfcPropertyMap values ('com.ils.simpleQueryStep','fetchMode','fetchMode');
 insert into SfcPropertyMap values ('com.ils.simpleQueryStep','key','key');
@@ -214,14 +227,6 @@ insert into SfcPropertyMap values ('com.ils.simpleQueryStep','resultsMode','resu
 insert into SfcPropertyMap values ('com.ils.simpleQueryStep','sql','sql');
 insert into SfcPropertyMap values ('com.ils.simpleQueryStep','updateMode','updateMode');
 
-
--- WRITE OUTPUT
-insert into SfcPropertyMap values ('com.ils.writeOutputStep','recipeLocation','recipeLocation');
-insert into SfcPropertyMap values ('com.ils.writeOutputStep','timerKey','timerKey');
-insert into SfcPropertyMap values ('com.ils.writeOutputStep','timerLocation','timerSource');
-insert into SfcPropertyMap values ('com.ils.writeOutputStep','timerSet','setTimer');
-insert into SfcPropertyMap values ('com.ils.writeOutputStep','description','writeOutputConfig');
-
 -- S88-UNIT-PROCEDURE
 insert into SfcPropertyMap values ('com.ils.procedureStep','conditionalBlockRecheckIntervalSeconds','conditional-block-recheck-interval-seconds');
 insert into SfcPropertyMap values ('com.ils.procedureStep','execution-mode','');
@@ -229,6 +234,14 @@ insert into SfcPropertyMap values ('com.ils.procedureStep','msgQueue','message-q
 insert into SfcPropertyMap values ('com.ils.procedureStep','passed-parameters','');
 insert into SfcPropertyMap values ('com.ils.procedureStep','showControlPanel','show-control-panel');
 insert into SfcPropertyMap values ('com.ils.procedureStep','return-parameters','');
+
+
+-- WRITE OUTPUT
+insert into SfcPropertyMap values ('com.ils.writeOutputStep','recipeLocation','recipeLocation');
+insert into SfcPropertyMap values ('com.ils.writeOutputStep','timerKey','timerKey');
+insert into SfcPropertyMap values ('com.ils.writeOutputStep','timerLocation','timerSource');
+insert into SfcPropertyMap values ('com.ils.writeOutputStep','timerSet','setTimer');
+insert into SfcPropertyMap values ('com.ils.writeOutputStep','description','writeOutputConfig');
 
 -- YES NO
 insert into SfcPropertyMap values ('com.ils.yesNoStep','key','key');

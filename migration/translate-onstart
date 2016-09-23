@@ -15,4 +15,4 @@ JAR=${LIB}/g2-translation.jar
 DB=${SFC}/migration/mdb/conversion.db
 OUTDIR=$2
 mkdir -p ${OUTDIR}
-java -cp ${JAR} -Dg2.name= -Dprocedure.variant=sfc.onstart -Dlog.level=INFO com.ils.python.translation.G2ProcedureTranslator $1 ${OUTDIR} ${DB} 
+java -cp ${JAR} -Dg2.name= -Dprocedure.variant=sfc.onstart -Dlog.level=WARN com.ils.python.translation.G2ProcedureTranslator $1 ${OUTDIR} ${DB} 

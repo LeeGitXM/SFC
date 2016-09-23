@@ -12,6 +12,7 @@ import org.w3c.dom.Element;
 import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.migration.Converter;
+import com.ils.sfc.migration.DOMUtil;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 /**
@@ -78,7 +79,8 @@ public class StepTranslator {
 				String reference = block.getAttribute("full-path");
 				if( reference.length()==0) reference = block.getAttribute("label");
 				String chartPath = delegate.partialPathFromInfile(reference);
-				step.setAttribute("chart-path", chartPath);
+				
+				step.appendChild(DOMUtil.createChildElement(chart,"chart-path", chartPath));
 				log.tracef("%s.translate: Encapsulation: %s translates to %s",TAG,reference,chartPath);
 				step.setAttribute("execution-mode", "RunUntilCompletion");   // versus RunUntilStopped
 			}
@@ -87,11 +89,11 @@ public class StepTranslator {
 			}
 			else {
 				delegate.updateStepFromG2Block(chart,step,block);
-				step.setAttribute(Constants.G2_XML, escapeXml(xml));
+				step.appendChild(DOMUtil.createChildElement(chart,Constants.G2_XML, escapeXml(xml)));
 			}
 			// We may have created stop methods based on a downstream transition
 			if( block.hasAttribute("stop-script")) {
-				step.setAttribute("stop-script",block.getAttribute("stop-script"));
+				step.appendChild(DOMUtil.createChildElement(chart,"stop-script", block.getAttribute("stop-script")));
 			}
 			// Now add recipe data - feed the translator the entire "data" element
 			Element recipe = makeRecipeDataElement(chart,step,block);

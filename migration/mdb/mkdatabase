@@ -19,8 +19,6 @@ sqlite3 $DB < ${BIN}/insertClassMap.sql
 sqlite3 $DB < ${BIN}/insertEnumerations.sql
 sqlite3 $DB < ${BIN}/insertPreferences.sql
 sqlite3 $DB < ${BIN}/insertProperties.sql
-# Must follow insertPropertyValues...
-sqlite3 $DB < ${BIN}/insertProcedures.sql
 sqlite3 $DB < ${BIN}/insertTags.sql
 
 # BLT Tables
@@ -33,3 +31,6 @@ sqlite3 $DB < ${BIN}/insertG2PyArguments.sql
 sqlite3 $DB < ${BIN}/insertSfcClassMap.sql
 sqlite3 $DB < ${BIN}/insertSfcProperties.sql
 sqlite3 $DB < ${BIN}/insertSfcPropertyValues.sql
+
+# Must follow insertPropertyValues...
+sqlite3 $DB < ${BIN}/insertProcedures.sql

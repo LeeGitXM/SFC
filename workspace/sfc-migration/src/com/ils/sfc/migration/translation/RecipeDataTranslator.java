@@ -19,6 +19,7 @@ import org.w3c.dom.NodeList;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.recipe.objects.Array;
 import com.ils.sfc.common.recipe.objects.Data;
+import com.ils.sfc.common.recipe.objects.EMData;
 import com.ils.sfc.common.recipe.objects.Group;
 import com.ils.sfc.common.recipe.objects.Input;
 import com.ils.sfc.common.recipe.objects.Matrix;
@@ -51,8 +52,8 @@ public class RecipeDataTranslator {
 		concreteClassesByG2Name.put("S88-RECIPE-TIMER", Timer.class);
 		concreteClassesByG2Name.put("S88-RECIPE-VALUE-DATA", Value.class);
 		concreteClassesByG2Name.put("S88-RECIPE-STRUCTURE-DATA", Structure.class);
-		// disabling EMData until we implement a UDT for it
-		//concreteClassesByG2Name.put("EM-RECIPE-DATA", EMData.class);
+		// we need a UDT for EM-RECIPE-DATA (??)
+		concreteClassesByG2Name.put("EM-RECIPE-DATA", EMData.class);
 
 		concreteClassesByG2Name.put("S88-RECIPE-SEQUENCE-DATA", Array.class);
 		concreteClassesByG2Name.put("S88-RECIPE-QUANTITY-LIST-DATA", Array.class);

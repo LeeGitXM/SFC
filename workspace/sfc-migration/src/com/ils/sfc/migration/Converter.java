@@ -246,7 +246,9 @@ public class Converter {
 			log.warnf("%s.processInput: Walk failed (%s)",CLSS,ioe.getMessage());
 		}
 	}
+	
 	/**
+	 * Called by the path-walker as it visits each file.
 	 * Convert the file into an XML document, find the S88-Begin block. Extract the 
 	 * "pretty" chart path, add to lookup by ugly name. The "ugly" name is a partial path,
 	 * less the .xml.
@@ -296,21 +298,11 @@ public class Converter {
 		
 	}
 	
-	public String chartNameFromPath(Path path) {
-		String name = path.toString();
-		int index = name.lastIndexOf(File.separator);
-		if( index>0) name = name.substring(index+1);
-		// Strip off extension
-		index = name.lastIndexOf(".");
-		if( index>0 ) name = name.substring(0,index);
-		name = toCamelCase(name);
-		return name;
-	}
 	/**
 	 * This is where the real conversion takes place. This method gets called
 	 * as we walk the tree. Create an XML document out of the G2 input file. 
-	 * Create an XML document that represents the Ignition equivalent, then 
-	 * write it to the output. Each output file represents a SFC chart.
+	 * Then create a corresponding XML document that represents the Ignition 
+	 * equivalent. Finally write it to the output. Each output file represents a SFC chart.
 	 * 
 	 * @param infile
 	 * @param outfile file location in which to write the output. 
@@ -357,12 +349,25 @@ public class Converter {
 	}
 	
 
+	
+	public String chartNameFromPath(Path path) {
+		String name = path.toString();
+		int index = name.lastIndexOf(File.separator);
+		if( index>0) name = name.substring(index+1);
+		// Strip off extension
+		index = name.lastIndexOf(".");
+		if( index>0 ) name = name.substring(0,index);
+		name = toCamelCase(name);
+		return name;
+	}
+
 	public ClassNameMapper getClassMapper()       { return classMapper; }
 	public ProcedureMapper getProcedureMapper()   { return procedureMapper; }
 	public TagMapper       getTagMapper()         { return tagMapper; }
 	
 	public Path getPythonRoot() { return this.pythonRoot; }
 	public void setPythonRoot(Path root) { this.pythonRoot = root; }
+	
 	/**
 	 * Update the contents of an Ignition chart document based on a corresponding G2 version.
 	 * @param chart the result
@@ -449,7 +454,7 @@ public class Converter {
 	}
 	
 	/**
-	 * If the G2 block contains a "callback", then read its converted value from the 
+	 * If the G2 block maps to action-step, then look for a "callback" then read its converted value from the 
 	 * file system and insert as a step property.
 	 * 
 	 * @param step
@@ -460,10 +465,11 @@ public class Converter {
 		String g2attribute = g2block.getAttribute("callback");
 		if( g2attribute.length()>0) {
 			String script = propertyValueMapper.modifyPropertyValueForIgnition("callback",g2attribute);
-			// As returned the script contains the module - strip it off.
-			script = pathNameForModule(script);
-			log.tracef("%s.insertOnStartFromG2Block: callback (%s) = %s",CLSS,g2attribute,script);
-			if( script!=null  ) {
+			if( script!=null && !script.isEmpty() ) {
+				// As returned the script contains the module - strip it off.
+				script = pathNameForModule(script);
+				log.tracef("%s.insertOnStartFromG2Block: callback (%s) = %s",CLSS,g2attribute,script);
+
 				Path scriptPath = Paths.get(pythonRoot.toString()+"/onstart",script);
 				try {
 					byte[] bytes = Files.readAllBytes(scriptPath);
@@ -474,13 +480,48 @@ public class Converter {
 						step.appendChild(startelement);
 					}
 					else {
-						log.errorf("%s.insertOnStartFromG2Block: Empty file %s",CLSS,scriptPath.toString());
+						log.errorf("%s.insertOnStartFromG2Block: Empty callback script %s",CLSS,scriptPath.toString());
 					}
-					
 				}
 				catch(IOException ioe) {
-					log.errorf("%s.insertOnStartFromG2Block: Error reading script %s (%s)",CLSS,scriptPath.toString(),ioe.getMessage());
+					log.errorf("%s.insertOnStartFromG2Block: Error reading callback script %s (%s)",CLSS,scriptPath.toString(),g2attribute);
 				}
+			}
+			else {
+				log.errorf("%s.insertOnStartFromG2Block: No corresponding translated callback script for %s",CLSS,g2attribute);
+			}
+		}
+		// See if there is an on-start method based on the G2 block class
+		// We have seen TransitionCallbackAction steps 
+		else {
+			g2attribute = g2block.getAttribute("class").trim();
+			String script = propertyValueMapper.modifyPropertyValueForIgnition("class",g2attribute);
+			if( script!=null && !script.isEmpty()  ) {
+				// As returned the script contains the module - strip it off.
+				script = pathNameForModule(script);
+				log.tracef("%s.insertOnStartFromG2Block: class (%s) = %s",CLSS,g2attribute,script);
+
+				Path scriptPath = Paths.get(pythonRoot.toString()+"/onstart",script);
+				try {
+					byte[] bytes = Files.readAllBytes(scriptPath);
+					if( bytes!=null && bytes.length>0) {
+						Element startelement = chart.createElement("start-script");
+						Node textNode = chart.createTextNode(new String(bytes));
+						startelement.appendChild(textNode);
+						step.appendChild(startelement);
+					}
+					else {
+						log.errorf("%s.insertOnStartFromG2Block: Empty %s class script at %s",CLSS,g2attribute,scriptPath.toString());
+					}
+
+				}
+				catch(IOException ioe) {
+					log.errorf("%s.insertOnStartFromG2Block: Error reading class %s script %s",CLSS,g2attribute,scriptPath.toString());
+				}
+			}
+			// TranslationCallbacks are artificially inserted by ChartStructureTranslator.addCallbackToUpstreamStep() and do not have class attributes
+			else if( !g2block.getAttribute("name").equalsIgnoreCase("TRANSITION-CALLBACK-ACTION")) {
+				log.errorf("%s.insertOnStartFromG2Block: No corresponding callback script for block class %s",CLSS,g2attribute);
 			}
 		}
 	}
@@ -499,7 +540,7 @@ public class Converter {
 	
 	/**
 	 * Create a file path from a module name. Strip off the entry point
-	 * and add a ".py"
+	 * and add a ".py". Force the first character to be lower case.
 	 * @param inpath
 	 * @return
 	 */
@@ -519,7 +560,6 @@ public class Converter {
 			log.warnf("%s.partialPathFromInfile: No path recorded for file %s",CLSS,filename);
 		}
 		else {
-			
 			pathBuilder.append(outRoot);
 			pathBuilder.append(filepath);
 			log.tracef("%s.partialPathFromInfile: Path for file %s = %s",CLSS,filename,pathBuilder.toString());
@@ -626,7 +666,7 @@ public class Converter {
 			}
 
 		}
-		else if(factoryId.startsWith("com.ils")) {
+		else if(factoryId.startsWith("com.ils") && properties==null) {
 			log.warnf("%s.updateStepFromG2Block: class %s has no defined properties",CLSS,factoryId);
 		}
 		

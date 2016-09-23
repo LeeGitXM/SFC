@@ -4,7 +4,6 @@
 -- GENERIC DEFAULTS
 insert into PropertyValueMap values ('timeoutUnits','','SEC');
 
-
 insert into PropertyValueMap values ('recipeLocation','LOCAL','local');
 insert into PropertyValueMap values ('recipeLocation','PREVIOUS','prior');
 insert into PropertyValueMap values ('recipeLocation','SUPERIOR','superior');
@@ -179,9 +178,16 @@ insert into PropertyValueMap values ('callback','test-8-path-1','test8Path1.onSt
 insert into PropertyValueMap values ('callback','test-8-path-2','test8Path2.onStart');
 insert into PropertyValueMap values ('callback','test-8-timeout-callback','test8TimeoutCallback.onStart');
 
+-- Convert onStart methods that are class-specific
+insert into PropertyValueMap values ('class','EM-S88-INITIALIZE-CONTAINER-DATA','emS88InitializeContainerData.onStart');
+insert into PropertyValueMap values ('class','EM-S88-REFRESH-OPC-INTERFACE','emGenericTask.onStart');
+insert into PropertyValueMap values ('class','S88-START-DATA-PUMP','emGenericTask.onStart');
+insert into PropertyValueMap values ('class','S88-STOP-DATA-PUMPS','emGenericTask.onStart');
+insert into PropertyValueMap values ('class','S88-RESET-TASK','emGenericTask.onStart');
 
 -- Convert values found in G2 blocks to proper Ignition equivalents.
 -- Fields are: Ignition property, G2value, desired value
+insert into PropertyValueMap values ('msgQueue','DRIER-REGEN-MESSAGES','DRIERREGEN');
 insert into PropertyValueMap values ('stopOn','.TRUE','TRUE');
 insert into PropertyValueMap values ('stopOn','.FALSE','FALSE');
 insert into PropertyValueMap values ('trigger','.TRUE','TRUE');

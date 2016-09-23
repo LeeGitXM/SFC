@@ -55,7 +55,7 @@ public class AllSteps {
 	};
 
 	public static List<String> longRunningFactoryIds = Arrays.asList(new String[]{
-		// steps that may require input or an acknowledgement from the user:
+		// Steps that may require input or an acknowledgement from the user:
         InputStepProperties.FACTORY_ID,
        	SelectInputStepProperties.FACTORY_ID,
        	LimitedInputStepProperties.FACTORY_ID,

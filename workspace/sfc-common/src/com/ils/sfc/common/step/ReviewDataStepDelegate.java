@@ -3,13 +3,10 @@ package com.ils.sfc.common.step;
 import java.util.ArrayList;
 import java.util.List;
 
-import system.ils.sfc.common.Constants;
-
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.StepPropertyValidator;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer.ChartInfo;
-import com.ils.sfc.common.rowconfig.PVMonitorConfig;
 import com.ils.sfc.common.rowconfig.ReviewDataConfig;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
