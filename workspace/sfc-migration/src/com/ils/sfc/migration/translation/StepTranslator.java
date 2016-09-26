@@ -80,7 +80,7 @@ public class StepTranslator {
 				if( reference.length()==0) reference = block.getAttribute("label");
 				String chartPath = delegate.partialPathFromInfile(reference);
 				
-				step.appendChild(DOMUtil.createChildElement(chart,"chart-path", chartPath));
+				step.appendChild(DOMUtil.createChildElement(chart,step,"chart-path", chartPath));
 				log.tracef("%s.translate: Encapsulation: %s translates to %s",TAG,reference,chartPath);
 				step.setAttribute("execution-mode", "RunUntilCompletion");   // versus RunUntilStopped
 			}
@@ -89,11 +89,11 @@ public class StepTranslator {
 			}
 			else {
 				delegate.updateStepFromG2Block(chart,step,block);
-				step.appendChild(DOMUtil.createChildElement(chart,Constants.G2_XML, escapeXml(xml)));
+				step.appendChild(DOMUtil.createChildElement(chart,step,Constants.G2_XML, escapeXml(xml)));
 			}
 			// We may have created stop methods based on a downstream transition
 			if( block.hasAttribute("stop-script")) {
-				step.appendChild(DOMUtil.createChildElement(chart,"stop-script", block.getAttribute("stop-script")));
+				step.appendChild(DOMUtil.createChildElement(chart,step,"stop-script", block.getAttribute("stop-script")));
 			}
 			// Now add recipe data - feed the translator the entire "data" element
 			Element recipe = makeRecipeDataElement(chart,step,block);

@@ -641,6 +641,7 @@ public class Converter {
 		if( properties!=null && properties.length>0 ) {
 			for( Property<?> property:properties ) {
 				String propertyName = property.getName();
+				if( propertyName.equals("chart-path")) continue;    // Handled separately
 				String g2attribute = propertyMapper.g2Property(factoryId,propertyName);
 				if( g2attribute!=null ) {
 					String g2value = g2block.getAttribute(g2attribute);

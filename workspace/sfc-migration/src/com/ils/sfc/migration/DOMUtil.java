@@ -49,17 +49,4 @@ public class DOMUtil  {
 		parent.appendChild(element);
 		return element;
 	}
-	
-	public static Element createChildElement(Document doc,Element parent,String tagName,String value) {
-		NodeList nodes = parent.getElementsByTagName(tagName);
-		int count = nodes.getLength();
-		if( count>0) throw new IllegalArgumentException(
-				String.format("DOMUtil.createChildElement: an element %s already exists",tagName));
-		
-		Element element = doc.createElement(tagName);
-		Node textNode = doc.createTextNode(value);
-		element.appendChild(textNode);
-		parent.appendChild(element);
-		return element;
-	}
 }
