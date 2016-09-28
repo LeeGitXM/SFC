@@ -9,6 +9,8 @@ import com.inductiveautomation.sfc.definitions.ParallelDefinition;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
 import com.inductiveautomation.sfc.definitions.TransitionDefinition;
 
+import system.ils.sfc.common.Constants;
+
 /** 
  * A class to hold an SFC Step's relationships in a way that is handy for us. 
  */
@@ -30,7 +32,7 @@ public class StepStructure {
 	private PropertySet properties;
 	
 	/**
-	 * Constructor for a StepDefinition. We are an enclosing step if we have a chart-path element
+	 * Constructor for a StepDefinition. We are an enclosing step if we have a chart-path attribute
 	 * @param chart
 	 * @param stepDef
 	 */
@@ -42,7 +44,7 @@ public class StepStructure {
 		this.factoryId = stepDef.getFactoryId().toString();
 		this.previous = previous;
 		this.name = (String)IlsSfcCommonUtils.getStepPropertyValue(stepDef.getProperties(), ChartStructureCompiler.NAME_PROPERTY);
-		this.enclosedChartName =  (String)IlsSfcCommonUtils.getStepPropertyValue(stepDef.getProperties(),ChartStructureCompiler.CHART_PATH_PROPERTY);
+		this.enclosedChartName =  (String)IlsSfcCommonUtils.getStepPropertyValue(stepDef.getProperties(),Constants.CHART_PATH);
 		this.expression   = null;
 		this.properties = stepDef.getProperties();
 		if(log.isTraceEnabled()||DEBUG_STEP) log.infof("%s: Created %s (%s=%s)", TAG,name,stepDef.getElementType().name(),id);

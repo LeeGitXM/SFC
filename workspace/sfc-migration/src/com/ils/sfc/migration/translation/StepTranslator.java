@@ -72,7 +72,7 @@ public class StepTranslator {
 		else {
 			step = chart.createElement("step");
 			step.setAttribute("name", name);
-			step.setAttribute("factory-id", factoryId);
+			step.setAttribute(Constants.FACTORY_ID, factoryId);
 			// Encapsulation have several additional properties. The encapsulation reference
 			// is to a chart name only. Ignition requires a path.
 			if( isEncapsulation ) {
@@ -80,7 +80,7 @@ public class StepTranslator {
 				if( reference.length()==0) reference = block.getAttribute("label");
 				String chartPath = delegate.partialPathFromInfile(reference);
 				
-				step.appendChild(DOMUtil.createChildElement(chart,step,"chart-path", chartPath));
+				step.setAttribute(Constants.CHART_PATH, chartPath);
 				log.tracef("%s.translate: Encapsulation: %s translates to %s",TAG,reference,chartPath);
 				step.setAttribute("execution-mode", "RunUntilCompletion");   // versus RunUntilStopped
 			}

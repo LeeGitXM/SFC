@@ -39,8 +39,6 @@ public class ChartStructureCompiler {
 	private static String TAG = "ChartStructureCompiler";
 	private final LoggerEx log;
 	// constants:
-	public static final String FACTORY_ID_PROPERTY = "factory-id";
-	public static final String CHART_PATH_PROPERTY = "chart-path";
 	public static final String NAME_PROPERTY = "name";
 	public static final String CHART_RESOURCE_TYPE="sfc-chart-ui-model";
 	public static final String FOLDER_RESOURCE_TYPE="__folder";

@@ -66,6 +66,8 @@ import com.ils.sfc.migration.visitor.PathWalker;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
+
+import system.ils.sfc.common.Constants;
 /**
  * Copy charts from the G2 chart tree, convert them to Ignition SFC-compliant
  * XML. Store the results in a directory tree ready for subsequent conversion
@@ -641,7 +643,7 @@ public class Converter {
 		if( properties!=null && properties.length>0 ) {
 			for( Property<?> property:properties ) {
 				String propertyName = property.getName();
-				if( propertyName.equals("chart-path")) continue;    // Handled separately
+				if( propertyName.equals(Constants.CHART_PATH)) continue;    // Handled separately
 				String g2attribute = propertyMapper.g2Property(factoryId,propertyName);
 				if( g2attribute!=null ) {
 					String g2value = g2block.getAttribute(g2attribute);
@@ -709,7 +711,7 @@ public class Converter {
 		chart.setAttribute("hot-editable", "false");
 		chart.setAttribute("persist-state", "true");
 		chart.setAttribute("timestamp", new Date().toString());
-		chart.setAttribute("version", "7.7.5-beta22 (b2015061613)");
+		chart.setAttribute("version", "7.8.0 (b2015101414)");
 		chart.setAttribute("zoom", "1.0");
 		doc.appendChild(chart);
 	}

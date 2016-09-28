@@ -13,6 +13,7 @@ insert into PropertyValueMap values ('recipeLocation','PROCEDURE','global');
 insert into PropertyValueMap values ('recipeLocation','GLOBAL','global');
 insert into PropertyValueMap values ('recipeLocation','NAMED','named');
 
+insert into PropertyValueMap values ('strategy','local','static');   -- there is no local strategy
 insert into PropertyValueMap values ('strategy','LOCAL','static');   -- there is no local strategy
 insert into PropertyValueMap values ('strategy','STATIC','static');
 insert into PropertyValueMap values ('strategy','RECIPE-DATA','recipe');

@@ -15,6 +15,10 @@ public class Constants {
 	public static final String CANCELLED = "cancelled";
 	public static final String RESUMED = "resumed";
 	
+	// step attributes
+	public static final String FACTORY_ID = "factory-id";
+	public static final String CHART_PATH = "chart-path";
+	
 	// step properties
 	public static final String ABORT = "abort";
 	public static final String ABS = "Abs";
@@ -35,7 +39,6 @@ public class Constants {
 	public static final String CALLBACK = "callback";
 	public static final String CATEGORY = "category";
 	public static final String CENTER = "center";
-	public static final String CHART_PATH = "chartPath";
 	public static final String CHILDREN = "children";
 	public static final String CLASS = "class";
 	public static final String COMMAND = "callback";
