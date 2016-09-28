@@ -31,6 +31,9 @@ public class PythonCall {
 	private static final String STEPS_PKG = "ils.sfc.gateway.steps.";
 
 	// steps:
+	public static final PythonCall PROCEDURE = new PythonCall(STEPS_PKG + "procedure.activate", 
+			Boolean.class, stepArgs);
+	
 	public static final PythonCall OPERATION = new PythonCall(STEPS_PKG + "operation.activate", 
 		Boolean.class, stepArgs);
 	
