@@ -7,19 +7,26 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+import system.ils.sfc.common.Constants;
+
 /**
  * Convert a G2 classname into a SFC classname
  */
 public class ClassNameMapper {
-	private final Map<String,String> classMap;     // Lookup by G2 classname
+	private final Map<String,String> classMap;        // Lookup by G2 classname
+	private final Map<String,Boolean> transitionMap;  // Lookup by Ignition factory id
 	// Legal types are: enclosure, transition, ""
-	private final Map<String,String> typeMap;      // Lookup by G2 classname
+	private final Map<String,String> typeMap;         // Lookup by G2 classname
+	
 	/** 
 	 * Constructor: 
 	 */
 	public ClassNameMapper() {
-		classMap = new HashMap<String,String>();
-		typeMap = new HashMap<String,String>();
+		classMap = new HashMap<>();
+		// Holds true if an explicit transition is required
+		transitionMap = new HashMap<>();
+		// Legal types are: enclosure, transition, 
+		typeMap = new HashMap<>();
 	}
 	
 	
@@ -40,6 +47,8 @@ public class ClassNameMapper {
 				String g2 = rs.getString("G2Class");
 				String ignition = rs.getString("FactoryId");
 				classMap.put(g2, ignition);
+				Boolean requiresTransition = new Boolean((rs.getInt("RequiresTransition")>0));
+				transitionMap.put(g2, requiresTransition);
 				String type = rs.getString("Type");
 				typeMap.put(g2, type);
 			}
@@ -66,6 +75,19 @@ public class ClassNameMapper {
 	public String factoryIdForClass(String className) {
 		String factId = classMap.get(className);
 		return factId;
+	}
+	
+	/**
+	 * 
+	 * @param className the G2 class name
+	 * @return whether or not the ignition block requires a transition
+	 */
+	public boolean classRequiresTransition(String claz) {
+		boolean required = false;
+		if( transitionMap.get(claz)!=null ) {
+			required = transitionMap.get(claz).booleanValue();
+		}
+		return required;
 	}
 	
 	/**

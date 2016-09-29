@@ -15,7 +15,6 @@ import com.inductiveautomation.ignition.designer.findreplace.SearchObjectAggrega
 import com.inductiveautomation.ignition.designer.findreplace.SearchProvider;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.SFCModule;
-import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
 
 public class IlsSfcSearchProvider implements SearchProvider {
 	private final String TAG = "IlsSfcSearchProvider";

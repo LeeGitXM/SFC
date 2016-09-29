@@ -334,7 +334,6 @@ public class ChartTreeView extends Display {
         }
         
     }
- 
     
 } // end of class TreeMap
 

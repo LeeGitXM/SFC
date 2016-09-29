@@ -289,13 +289,13 @@ public class Converter {
 			
 		}
 		catch (ParserConfigurationException pce) {
-			log.errorf("%s.analyzePath: Error parsing %s (%s)",CLSS,inpath,pce.getMessage());
+			log.error(String.format("%s.analyzePath: Error parsing %s (%s)",CLSS,inpath,pce.getMessage()),pce);
 		}
 		catch (SAXException sax) {
-			log.errorf("%s.analyzePath: Error analyzing %s (%s)",CLSS,inpath,sax.getMessage());
+			log.error(String.format("%s.analyzePath: Error analyzing %s (%s)",CLSS,inpath,sax.getMessage()),sax);
 		}
 		catch (IOException ioe) {
-			log.errorf("%s.analyzePath: Failure to read %s (%s)",CLSS,inpath,ioe.getMessage());
+			log.error(String.format("%s.analyzePath: Failure to read %s (%s)",CLSS,inpath,ioe.getMessage()),ioe);
 		}
 		
 	}
@@ -383,7 +383,7 @@ public class Converter {
 			updateChartForSingletonStep(chart,block,xml);
 		}
 		else {
-			// There are potential some structural inconsistencies between
+			// There are potentially some structural inconsistencies between
 			// G2 and Ignition. Attempt to handle these before performing a layout.
 			ChartStructureTranslator cts = new ChartStructureTranslator(g2doc,this);
 			cts.refactor();
@@ -691,7 +691,7 @@ public class Converter {
 		step.setAttribute("id", uuid.toString());
 		step.setAttribute("location", String.format("%d %d", x,y));
 		step.setAttribute("name", "__begin");
-		step.setAttribute("factory-id", "begin-step");
+		step.setAttribute(Constants.FACTORY_ID, "begin-step");
 		return step;
 	}
 	// Add a single chart element to the document
@@ -700,7 +700,7 @@ public class Converter {
 		step.setAttribute("id", uuid.toString());
 		step.setAttribute("location", String.format("%d %d", x,y));
 		step.setAttribute("name", "__end");
-		step.setAttribute("factory-id", "end-step");
+		step.setAttribute(Constants.FACTORY_ID, "end-step");
 		return step;
 	}
 	// Add a single chart element to the document
@@ -795,6 +795,4 @@ public class Converter {
 		}
 		log.infof("%s.main: COMPLETE",CLSS);
 	}
-
-	
 }

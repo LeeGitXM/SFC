@@ -109,7 +109,8 @@ CREATE TABLE G2PyArgumentMap(
 CREATE TABLE SfcClassMap(
     G2Class text PRIMARY KEY ,
     FactoryId text NOT NULL,
-	Type text DEFAULT ''
+	Type text DEFAULT '',
+    RequiresTransition int DEFAULT 0 
 );
 -- Map values of properties found in G2 S88 blocks to
 -- Ignition blocks

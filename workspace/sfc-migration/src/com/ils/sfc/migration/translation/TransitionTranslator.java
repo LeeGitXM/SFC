@@ -1,5 +1,5 @@
 /**
- *   (c) 2015  ILS Automation. All rights reserved.
+ *   (c) 2015-2016  ILS Automation. All rights reserved.
  */
 package com.ils.sfc.migration.translation;
 
@@ -8,7 +8,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.ils.sfc.migration.Converter;
-import com.ils.sfc.migration.map.ProcedureMapper;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 /**
@@ -33,6 +32,7 @@ public class TransitionTranslator {
 	public void updateTransition(Document doc, Element transition) {
 		String expression = "true";
 		// Get the attributes - complain about unhandled combinations
+		String clss    = g2Block.getAttribute("class");
 		String strategy    = g2Block.getAttribute("strategy");
 		String targetStrategy = g2Block.getAttribute("target-strategy");
 		String recipeLocation = g2Block.getAttribute("recipe-location");
@@ -40,7 +40,10 @@ public class TransitionTranslator {
 		String item        = g2Block.getAttribute("identifier-or-name");
 		String constant    = g2Block.getAttribute("target-value");
 		String operator    = g2Block.getAttribute("operator");
-		if( strategy.equalsIgnoreCase("RECIPE-DATA") && targetStrategy.equalsIgnoreCase("CONSTANT-VALUE")) {
+		if( clss.equalsIgnoreCase("LONG-RUNNING-STEP-TRANSITION")) {
+			expression = "{previous.isWorkDone}";
+		}
+		else if( strategy.equalsIgnoreCase("RECIPE-DATA") && targetStrategy.equalsIgnoreCase("CONSTANT-VALUE")) {
 			expression = handleRecipeValue(recipeLocation,item,constant,operator);
 		}
 		else if( strategy.equalsIgnoreCase("RECIPE-BLOCK") && targetStrategy.equalsIgnoreCase("CONSTANT-VALUE")) {
