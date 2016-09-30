@@ -41,7 +41,7 @@ public class TransitionTranslator {
 		String constant    = g2Block.getAttribute("target-value");
 		String operator    = g2Block.getAttribute("operator");
 		if( clss.equalsIgnoreCase("LONG-RUNNING-STEP-TRANSITION")) {
-			expression = "{previous.isWorkDone}";
+			expression = "{previous.workDone}";
 		}
 		else if( strategy.equalsIgnoreCase("RECIPE-DATA") && targetStrategy.equalsIgnoreCase("CONSTANT-VALUE")) {
 			expression = handleRecipeValue(recipeLocation,item,constant,operator);

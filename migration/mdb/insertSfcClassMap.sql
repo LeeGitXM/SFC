@@ -56,7 +56,7 @@ insert into SfcClassMap values ('S88-STOP-DATA-PUMPS','action-step','',0);      
 insert into SfcClassMap values ('S88-STOP-TASK','com.ils.abortStep','',0);
 insert into SfcClassMap values ('S88-TERMINATION-TRANSITION','transition','transition',0);
 insert into SfcClassMap values ('S88-TIME-DELAY','com.ils.timedDelayStep','',1);
-insert into SfcClassMap values ('S88-TIMEOUT-BLOCK','transition','transition',1);
+insert into SfcClassMap values ('S88-TIMEOUT-BLOCK','transition','transition',0);
 insert into SfcClassMap values ('S88-UNIT-PROCEDURE','com.ils.procedureStep','enclosure',0);
 insert into SfcClassMap values ('S88-WRITE-FILE-TASK','com.ils.writeFileStep','',0);
 insert into SfcClassMap values ('S88-WRITE-OUTPUTS-TASK','com.ils.writeOutputStep','',1);

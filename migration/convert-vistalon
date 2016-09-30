@@ -14,10 +14,11 @@ then
 fi
 SFC=$GIT_REPO/sfc
 # Expect ostart/onstop sub-directories
-PYDIR=$GIT_REPO/xom-python/XOM_Python/src/scripts/vistalon
+PYDIR=${SFC}/migration/procs/ignition/vistalon
 APP=$SFC/migration/convert
 INDIR=$SFC/migration/xml/g2/vistalon
 OUTDIR=$SFC/migration/xml/ignition/vistalon
+
 mkdir -p $INDIR
 mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
@@ -37,3 +38,9 @@ do
 		OPT="one"
 	fi
 done
+
+# Finally - overwrite auto-generated charts
+#           with any that have been hand-crafted
+VETTED=${SFC}/migration/xml/vetted/
+cd $VETTED
+cp -af * ../ignition

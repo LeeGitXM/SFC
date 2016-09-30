@@ -15,7 +15,6 @@ insert into SfcPropertyMap values ('generic','buttonLabel','');
 insert into SfcPropertyMap values ('generic','chart-path','');
 insert into SfcPropertyMap values ('generic','collectDataConfig','');
 insert into SfcPropertyMap values ('generic','confirmControllersConfig','');
-insert into SfcPropertyMap values ('generic','g2Xml','');
 insert into SfcPropertyMap values ('generic','id','');
 insert into SfcPropertyMap values ('generic','manualDataConfig','');
 insert into SfcPropertyMap values ('generic','monitorDownloadsConfig','');

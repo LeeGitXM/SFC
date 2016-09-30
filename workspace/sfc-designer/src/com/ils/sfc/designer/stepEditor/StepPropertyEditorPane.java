@@ -149,9 +149,6 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 		else if(selectedProperty.getType() == String.class) {
 			editor.stopCellEditing();
 			Object value = selectedPropertyValue.getValue();
-	    	if(selectedProperty.equals(IlsProperty.G2_XML)) {
-	    		value = IlsSfcCommonUtils.unescapeXml((String)value);
-	    	}
 			controller.getStringEditor().setValue(value);
 			controller.getStringEditor().activate(this);
 		}

@@ -37,3 +37,6 @@ for fil in DR-GAS-CIRCULATING-TEST.txt DR-MANAGE-HT-SOAK-CYCLES.txt DR-TERMINATI
 do
 	cat "$fil"  > "${PROCS}/g2/vistalon/onstop/$fil"
 done
+# Copy the generic procedures into the application areas
+cd ${PROCS}
+cp generic/onstart/* ignition/vistalon/onstart

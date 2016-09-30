@@ -12,7 +12,9 @@ out/
 modules/
 temp_modl/
 migration/projects/
-migration/procs/
+migration/procs/g2
+migration/procs/ignition
 migration/tags/
-migration/xml/
+migration/xml/g2
+migration/xml/ignition
 regression/logs

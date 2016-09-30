@@ -89,7 +89,6 @@ public class StepTranslator {
 			}
 			else {
 				delegate.updateStepFromG2Block(chart,step,block);
-				step.appendChild(DOMUtil.createChildElement(chart,step,Constants.G2_XML, escapeXml(xml)));
 			}
 			// We may have created stop methods based on a downstream transition
 			if( block.hasAttribute("stop-script")) {
@@ -158,7 +157,7 @@ public class StepTranslator {
 	        }
 	        camelCase.append(c);
 	    }
-	    log.tracef("toCamelCase: result %s",camelCase.toString());
+	    //log.tracef("StepTranslator.toCamelCase: %s -> %s",input,camelCase.toString());
 	    return camelCase.toString();
 	}
 	/** 

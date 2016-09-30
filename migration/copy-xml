@@ -28,3 +28,6 @@ rm -r `find ${XML}/g2 -type d -name Diagrams`  2&>/dev/null
 rm -r `find ${XML}/g2 -type d -name diagrams`  2&>/dev/null
 rm -r `find ${XML}/g2 -type d -name callbacks`  2&>/dev/null
 rm `find ${XML}/g2 -type f -name "*.csv"`  2&>/dev/null
+# Clean up unwanted charts
+cd ${XML}
+rm -rf g2/vistalon/VISTALON-UNIT-PROCEDURE/*OFFLINE-OPERATION

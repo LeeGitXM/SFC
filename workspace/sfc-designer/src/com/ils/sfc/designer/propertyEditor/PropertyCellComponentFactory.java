@@ -67,9 +67,6 @@ public class PropertyCellComponentFactory {
 	    	if(IlsProperty.isSerializedObject(rowObj.getProperty())) {
 	    		sValue = "<Use Editor>";
 	    	}
-	    	else if(rowObj.getProperty().equals(IlsProperty.G2_XML)) {
-	    		sValue = IlsSfcCommonUtils.unescapeXml(rowObj.getValueFormatted());
-	    	}
 	    	else {
 	    		sValue = rowObj.getValueFormatted();		
 	    	}

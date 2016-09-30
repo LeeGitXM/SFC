@@ -14,7 +14,7 @@ then
 fi
 SFC=$GIT_REPO/sfc
 # Expect ostart/onstop sub-directories
-PYDIR=$GIT_REPO/xom-python/XOM_Python/src/scripts/usecase
+PYDIR=${SFC}/procs/ignition/usecase
 APP=$SFC/migration/convert
 INDIR=$SFC/migration/xml/g2/usecase
 OUTDIR=$SFC/migration/xml/ignition/usecase

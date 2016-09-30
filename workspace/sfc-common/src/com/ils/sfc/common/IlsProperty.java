@@ -158,7 +158,6 @@ public class IlsProperty {
     public static final BasicProperty<String> FACTORY_ID = createProperty("factory-id", String.class, "");
     public static final BasicProperty<String> FETCH_MODE = createProperty(Constants.FETCH_MODE, String.class, Constants.FETCH_MODE_CHOICES[0], Constants.FETCH_MODE_CHOICES);
     public static final BasicProperty<String> FILENAME = createProperty(Constants.FILENAME, String.class, "");
-    public static final BasicProperty<String> G2_XML = createProperty(Constants.G2_XML, String.class, "");
     public static final BasicProperty<String> HEADING1 = createProperty(Constants.HEADING1, String.class, "");
     public static final BasicProperty<String> HEADING2 = createProperty(Constants.HEADING2, String.class, "");
     public static final BasicProperty<String> HEADING3 = createProperty(Constants.HEADING3, String.class, "");
@@ -481,7 +480,6 @@ public class IlsProperty {
 		setReadOnly(DATA_ID);
 		setReadOnly(ERROR_CODE);
 		setReadOnly(ERROR_TEXT);
-		setReadOnly(G2_XML);
 		setReadOnly(PV_MONITOR_ACTIVE);
 		setReadOnly(PV_MONITOR_STATUS);
 		setReadOnly(SETPOINT_STATUS);

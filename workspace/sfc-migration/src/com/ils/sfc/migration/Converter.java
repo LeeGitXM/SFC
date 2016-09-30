@@ -333,7 +333,7 @@ public class Converter {
 			// Write the chart to the output
 			xml = docToString(chartdoc);
 			log.debugf("%s.convertFile: Creating directory %s ...",CLSS,outfile.getParent().toString());
-			log.trace(xml);
+			//log.trace(xml);
 			Files.createDirectories(outfile.getParent());
 			log.debugf("%s.convertFile: Writing to %s ...",CLSS,outfile.toString());
 			Files.write(outfile, xml.getBytes());  // CREATE_NEW,TRUNCATE_EXISTING.WRITE
@@ -470,7 +470,7 @@ public class Converter {
 			if( script!=null && !script.isEmpty() ) {
 				// As returned the script contains the module - strip it off.
 				script = pathNameForModule(script);
-				log.tracef("%s.insertOnStartFromG2Block: callback (%s) = %s",CLSS,g2attribute,script);
+				//log.tracef("%s.insertOnStartFromG2Block: callback (%s) %s",CLSS,g2attribute,script);
 
 				Path scriptPath = Paths.get(pythonRoot.toString()+"/onstart",script);
 				try {
@@ -501,7 +501,7 @@ public class Converter {
 			if( script!=null && !script.isEmpty()  ) {
 				// As returned the script contains the module - strip it off.
 				script = pathNameForModule(script);
-				log.tracef("%s.insertOnStartFromG2Block: class (%s) = %s",CLSS,g2attribute,script);
+				//log.tracef("%s.insertOnStartFromG2Block: class (%s) = %s",CLSS,g2attribute,script);
 
 				Path scriptPath = Paths.get(pythonRoot.toString()+"/onstart",script);
 				try {
@@ -636,7 +636,7 @@ public class Converter {
 	 */
 	public void updateStepFromG2Block(Document chart,Element step,Element g2block) {
 		String factoryId = step.getAttribute("factory-id");
-		log.debugf("%s.updateStepFromG2Block: step class = %s",CLSS,factoryId);
+		log.debugf("%s.updateStepFromG2Block: %s (%s)",CLSS,step.getAttribute("name"),factoryId);
 		
 		// These are the properties which we expect from this step
 		Property<?>[] properties = AllSteps.getIlsProperties(factoryId);

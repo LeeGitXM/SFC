@@ -6,14 +6,14 @@
 #   -- create project files from the converted XML and translated procedures
 #
 SFC=$GIT_REPO/sfc
-PYDIR=$GIT_REPO/xom-python/XOM_Python/src/scripts/vistalon
+PYDIR=${SFC}/migration/procs/ignition/vistalon
 INDIR="$SFC/migration/xml/ignition/vistalon"
 OUTDIR=$SFC/migration/projects/Vistalon
 mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
 
 cd $SFC/migration
-./clear-procs vistalon
+#./clear-procs vistalon
 ./clear-xml vistalon
 ./copy-procs
 ./copy-xml
