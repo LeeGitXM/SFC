@@ -20,15 +20,13 @@ import com.ils.sfc.migration.Converter;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
-import system.ils.sfc.common.Constants;
-
 /**
  * Given a G2 transition step, create the Ignition expression
  */
 public class ChartStructureTranslator {
 	private final static String TAG = "ChartStructureTranslator";
 	private  final LoggerEx log = LogUtil.getLogger(StepTranslator.class.getPackage().getName());
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	private final Document g2chart;
 	private final Converter delegate;
 

@@ -16,7 +16,6 @@ public interface ShowWindowStepProperties extends ChartStepProperties {
     	POSITION,
     	SCALE,
     	BUTTON_LABEL,
-    	TARGET_TYPE,
     	WINDOW_TITLE,
     	WINDOW,
     	SECURITY,

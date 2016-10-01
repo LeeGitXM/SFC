@@ -403,6 +403,9 @@ public class Converter {
 					// Parallel blocks are created by the layout manager and will be null here.
 					if( child!=null ) hub.getChartElement().appendChild(child);
 				}
+				else {
+					log.errorf("%s.updateChartForG2: Error, no block or hub defined for %s",CLSS,uuid);
+				}
 			}
 
 			// The layout does NOT create connections. Create them here.

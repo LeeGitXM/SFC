@@ -19,8 +19,9 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
  * Given a G2 step document, create the corresponding Ignition version.
  */
 public class StepTranslator {
-	private final static String TAG = "StepTranslator";
+	private final static String CLSS = "StepTranslator";
 	private  final LoggerEx log = LogUtil.getLogger(StepTranslator.class.getPackage().getName());
+	private final static boolean DEBUG = false;
 	private final Converter delegate;
 
 	public StepTranslator(Converter converter) {
@@ -55,7 +56,7 @@ public class StepTranslator {
 				factoryId = fid;
 			}
 			else {
-				log.errorf("%s.translate: Error no SFC factoryID found for G2 class (%s)",TAG,claz);
+				log.errorf("%s.translate: Error no SFC factoryID found for G2 class (%s)",CLSS,claz);
 			}
 		}
 		if( isTransition ) {
@@ -81,7 +82,7 @@ public class StepTranslator {
 				String chartPath = delegate.partialPathFromInfile(reference);
 				
 				step.setAttribute(Constants.CHART_PATH, chartPath);
-				log.tracef("%s.translate: Encapsulation: %s translates to %s",TAG,reference,chartPath);
+				log.tracef("%s.translate: Encapsulation: %s translates to %s",CLSS,reference,chartPath);
 				step.setAttribute("execution-mode", "RunUntilCompletion");   // versus RunUntilStopped
 			}
 			if( factoryId.equalsIgnoreCase("action-step") ) {
@@ -102,6 +103,7 @@ public class StepTranslator {
 		// Common to both steps and transitions
 		step.setAttribute("id", uuid);
 		step.setAttribute("location", String.format("%d %d", x,y));
+		if( DEBUG || log.isTraceEnabled()) log.infof("%s.translate %s to %d,%d", CLSS,step.getAttribute("name"),x,y);
 		return step;
 	}
 	
@@ -176,11 +178,11 @@ public class StepTranslator {
 
 			// Some debug stuff for errors--might want to log it...
 			for(String errMsg: rdTranslator.getErrors()) {
-				log.errorf("%s.makeRecipeDataElement: Parse error in (%s)",TAG,errMsg);
+				log.errorf("%s.makeRecipeDataElement: Parse error in (%s)",CLSS,errMsg);
 			}
 		} 
 		catch (JSONException je) {
-			log.errorf("%s.makeRecipeDataElement: Exception creating JSON data (%s)",TAG,je.getMessage());
+			log.errorf("%s.makeRecipeDataElement: Exception creating JSON data (%s)",CLSS,je.getMessage());
 		} 
 		return recipe;
 	}

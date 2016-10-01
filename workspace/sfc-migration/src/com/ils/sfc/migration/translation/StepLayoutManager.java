@@ -83,12 +83,16 @@ public class StepLayoutManager {
 			ParallelArea pa  = parallelMap.get(key);
 			Element parallel = pa.getElement();
 			NodeList stepList = parallel.getChildNodes();
-			int index = 0;
+			int childCount = stepList.getLength();
+			// The ending parallel block will have no children, we ignore.
+			if( childCount==0 ) continue;
+			
 			int minx = Integer.MAX_VALUE;
 			int miny = Integer.MAX_VALUE;
 			int maxx = Integer.MIN_VALUE;
 			int maxy = Integer.MIN_VALUE;
-			int childCount = stepList.getLength();
+			
+			int index = 0;
 			while( index<childCount ) {
 				Element step = (Element)stepList.item(index);
 				String loc = step.getAttribute("location");   // "x y"
@@ -109,16 +113,15 @@ public class StepLayoutManager {
 				index++;
 			}
 			
-			// The ending parallel block will have no children, we ignore.
-			if( childCount>0) {
-				pa.x1 = minx;
-				pa.x2 = maxx;
-				pa.y1 = miny - 1;  // Make room for top bar
-				pa.y2 = maxy + 1;  // Make room for bottom bar
-				pa.getElement().setAttribute("location", String.format("%d %d", pa.x1,pa.y1));
-				pa.getElement().setAttribute("size", String.format("%d %d", pa.x2- pa.x1+1,pa.y2-pa.y1+1));
-				chart.getDocumentElement().appendChild(pa.getElement());   // Add it directly to the chart.
-			}
+			pa.x1 = minx;
+			pa.x2 = maxx;
+			pa.y1 = miny - 1;  // Make room for top bar
+			pa.y2 = maxy + 1;  // Make room for bottom bar
+			pa.getElement().setAttribute("location", String.format("%d %d", pa.x1,pa.y1));
+			pa.getElement().setAttribute("size", String.format("%d %d", pa.x2- pa.x1+1,pa.y2-pa.y1+1));
+			chart.getDocumentElement().appendChild(pa.getElement());   // Add it directly to the chart.
+			if(DEBUG || log.isDebugEnabled()) log.infof("%s.sizeParallelAreas: pa %d,%d x %d,%d",TAG,pa.x1,pa.y1,pa.x2,pa.y2);
+			
 			// Now make child locations relative to the parallel zone
 			index = 0;
 			while( index<childCount ) {
@@ -482,15 +485,21 @@ public class StepLayoutManager {
 	 * keep it centered.
 	 *
 	 * This depends on the fact that we have not yet placed
-	 * the blocks to our right. Stop when we pass through a parallel
-	 * boundary. 
+	 * the blocks to our right.
+	 * 
+	 * When entering a parallel section, simply move all the internal
+	 * steps. When exiting recursively move the connecting blocks.
 	 * 
 	 * @param uuid the id of the source block. It has already been moved by dx.
-	 * @param dx nunber of position to move right 
+	 * @param dx number of position to move right 
 	 */
 	private void moveAncestryRight(String uuid,int dx) {
 		if( dx==0 ) return;                   // Nothing to do
 		if( uuid.equals(beginuuid)) return;   // Hit the top
+		if(DEBUG || log.isDebugEnabled()) {
+			Element blk = blockMap.get(uuid);
+			log.infof("%s.moveAncestryRight: at %s by %d",TAG,blk.getAttribute("name"),dx);
+		}
 		ConnectionHub hub = connectionMap.get(uuid);
 		if( hub!=null && !hub.getConnectionsFrom().isEmpty()) {
 			int maxchildren = 1;
@@ -510,7 +519,18 @@ public class StepLayoutManager {
 			// Now move all ancestors the same amount
 			for(String parent:hub.getConnectionsFrom() ) {
 				ConnectionHub parentHub = connectionMap.get(parent);
-				if( parentHub.isParallel != hub.isParallel ) continue;  // Coming out of a parallel section
+				if( parentHub.isParallel && !hub.isParallel ) {  
+					// Entering an ancestral parallel section
+					// Move all blocks within the section
+					log.infof("%s.moveAncestryRight: Entering a parallel section ....",TAG);
+					// Continue on with ancestors of the section
+				}
+				else if( !parentHub.isParallel && hub.isParallel ) {  
+					// Coming out of a parallel section
+					// Move all blocks within the section
+					log.infof("%s.moveAncestryRight: Exiting  a parallel section ....",TAG);
+					// Continue on with ancestors of the section
+				}
 				
 				GridPoint gp = gridMap.get(parent);
 				if( !gp.isConnected()) continue;

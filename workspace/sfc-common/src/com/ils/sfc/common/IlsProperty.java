@@ -221,7 +221,6 @@ public class IlsProperty {
     public static final BasicProperty<Double> STEP_TIME = createProperty(Constants.STEP_TIME, Double.class, 0.);
     public static final BasicProperty<String> STEP_TIMESTAMP = createProperty(Constants.STEP_TIMESTAMP, String.class, "");
     public static final BasicProperty<String> TAG_PATH = createProperty(Constants.TAG_PATH, String.class, "");
-    public static final BasicProperty<String> TARGET_TYPE = createProperty(Constants.TARGET_TYPE, String.class, "WINDOW");
     public static final BasicProperty<String> TIME_LIMIT_RECIPE_KEY = createProperty(Constants.KEY, String.class, "", false, "time limit recipe key");
     public static final BasicProperty<String> TIME_DELAY_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.TIME_DELAY_STRATEGY_CHOICES[0], Constants.TIME_DELAY_STRATEGY_CHOICES);
     public static final BasicProperty<String> TIME_LIMIT_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.TIME_LIMIT_STRATEGY_CHOICES[0], false, Constants.TIME_LIMIT_STRATEGY_CHOICES, "time limit strategy");
@@ -230,7 +229,7 @@ public class IlsProperty {
     public static final BasicProperty<Double> SCALE = createProperty(Constants.SCALE, Double.class, .5);
     public static final BasicProperty<Double> TARGET_VALUE = createProperty(Constants.TARGET_VALUE, Double.class, 0.);
     public static final BasicProperty<Object> TIME_LIMIT_STATIC_VALUE = createProperty(Constants.VALUE, Object.class, null, false, "time limit static value");
-    public static final BasicProperty<Integer> TIMEOUT = createProperty(Constants.TIMEOUT, Integer.class, -1);
+    public static final BasicProperty<Double> TIMEOUT = createProperty(Constants.TIMEOUT, Double.class, -1.);
     public static final BasicProperty<String> TIMEOUT_BEHAVIOR = createProperty(Constants.TIMEOUT_BEHAVIOR, String.class, Constants.TIMEOUT_BEHAVIOR_CHOICES[0], Constants.TIMEOUT_BEHAVIOR_CHOICES);
     public static final BasicProperty<String> TIMEOUT_UNIT = createProperty(Constants.TIMEOUT_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);
     public static final BasicProperty<Boolean> TIMER_CLEAR = createProperty(Constants.TIMER_CLEAR, Boolean.class, Boolean.TRUE);

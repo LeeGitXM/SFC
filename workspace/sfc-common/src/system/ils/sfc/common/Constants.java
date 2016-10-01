@@ -197,7 +197,6 @@ public class Constants {
 	public static final String STRATEGY = "strategy";
 	public static final String TAG = "tag";
 	public static final String TAG_PATH = "tagPath";
-	public static final String TARGET_TYPE = "targetType";
 	public static final String TARGET_VALUE = "targetValue";
 	public static final String TIME = "time";
 	public static final String TIMER_START = "timerStart";
