@@ -70,6 +70,13 @@ public class StepLayoutManager {
 		if(height<10) height = 10;
 		return String.format("%d %d",width,height);
 	}
+	public Element getJumpElement(String id) {
+		for(Element element:anchors) {
+			String uuid = element.getAttribute("id");
+			if( uuid.equalsIgnoreCase(id)) return element;
+		}
+		return null;
+	}
 	
 	/**
 	 * Iterate through the parallel zones and make sure that the areas cover their children.
@@ -143,6 +150,7 @@ public class StepLayoutManager {
 		}
 	}
 	// ========================================= This is where the work gets done ================================
+	// Analyze a list of G2 blocks
 	// Note: the blocklist contains transitions
 	private void analyze(NodeList blocklist) {
 		int index = 0;
@@ -295,22 +303,25 @@ public class StepLayoutManager {
 		}
 		
 		
-		// In positioning the blocks, disregard the parallel zone.
-		// Later on we will size it to cover all its children.
+		// In positioning the blocks, disregard the parallel boundaries.
+		// Later on we will size the parallel zone to cover all its children.
 		// If we conflict on the left, move everything right
 		int rightmost = getRightmost(y);
 		if( rightmost > x-2 ) {
 			int dx = rightmost - x + 2;
 			x = x + dx;
 			gp.x = x;    // Move self first, then ancestors
-			moveAncestryRight(stepId,dx);
+			moveAncestryRight(stepId,dx,new ArrayList<String>());
 		}
 		
 		// By default position one step down. From here on x,y are for next blocks ...
 		y = y+1;
 		if(DEBUG || log.isDebugEnabled()) {
 			Element blk = blockMap.get(stepId);
-			log.infof("%s.positionNode: at %d,%d %s(%s) ", TAG,gp.x,gp.y,blk.getAttribute("name"),y,stepId);
+			if( blk!=null )
+				log.infof("%s.positionNode: at %d,%d %s(%s) ", TAG,gp.x,gp.y,blk.getAttribute("name"),stepId);
+			else
+				log.infof("%s.positionNode: at %d,%d NULL (%s) ", TAG,gp.x,gp.y,stepId);
 		}
 		setRightmost(gp.x,gp.y);
 		if(pa!=null) pa.rightmost = gp.x;
@@ -320,7 +331,7 @@ public class StepLayoutManager {
 		int dx = nextBlocks.size()-1;
 		if( dx>0 ) {
 			gp.x = gp.x+dx;    // Move self first, then ancestors
-			moveAncestryRight(stepId,dx);
+			moveAncestryRight(stepId,dx,new ArrayList<String>());
 		}
 		 	
 		int index = 0;
@@ -399,7 +410,7 @@ public class StepLayoutManager {
 		}
 		// Now create the anchor
 		// Move all descendants of parent down one to make room for anchor connection
-		moveDescendantsDown(parent);
+		moveDescendantsDown(parent,new ArrayList<String>());
 		List<String> targetFrom = targetHub.getConnectionsFrom();
 		targetFrom.clear();
 
@@ -492,13 +503,32 @@ public class StepLayoutManager {
 	 * 
 	 * @param uuid the id of the source block. It has already been moved by dx.
 	 * @param dx number of position to move right 
+	 * @param a list of ids of elements that have already been moved.
+	 *        This prevents multiple moves when exiting a parallel section.
 	 */
-	private void moveAncestryRight(String uuid,int dx) {
+	private void moveAncestryRight(String uuid,int dx,List<String>moved) {
 		if( dx==0 ) return;                   // Nothing to do
 		if( uuid.equals(beginuuid)) return;   // Hit the top
 		if(DEBUG || log.isDebugEnabled()) {
 			Element blk = blockMap.get(uuid);
-			log.infof("%s.moveAncestryRight: at %s by %d",TAG,blk.getAttribute("name"),dx);
+			if( blk!=null) {
+				log.infof("%s.moveAncestryRight: at %s by %d",TAG,blk.getAttribute("name"),dx);
+			}
+			else if(getJumpElement(uuid)!=null ) {
+				// An anchor will not be in the block list
+				GridPoint anchorPoint = gridMap.get(uuid);
+				if( anchorPoint!=null ) {
+					anchorPoint.x = anchorPoint.x + dx;
+					return;
+				}
+				else {
+					log.errorf("%s.moveAncestryRight: No grid point defined for UUID %s",TAG,uuid);
+				}
+			}
+			else {
+				log.errorf("%s.moveAncestryRight: No block defined for UUID %s",TAG,uuid);
+				return;
+			}
 		}
 		ConnectionHub hub = connectionMap.get(uuid);
 		if( hub!=null && !hub.getConnectionsFrom().isEmpty()) {
@@ -519,32 +549,22 @@ public class StepLayoutManager {
 			// Now move all ancestors the same amount
 			for(String parent:hub.getConnectionsFrom() ) {
 				ConnectionHub parentHub = connectionMap.get(parent);
-				if( parentHub.isParallel && !hub.isParallel ) {  
-					// Entering an ancestral parallel section
-					// Move all blocks within the section
-					log.infof("%s.moveAncestryRight: Entering a parallel section ....",TAG);
-					// Continue on with ancestors of the section
-				}
-				else if( !parentHub.isParallel && hub.isParallel ) {  
-					// Coming out of a parallel section
-					// Move all blocks within the section
-					log.infof("%s.moveAncestryRight: Exiting  a parallel section ....",TAG);
-					// Continue on with ancestors of the section
-				}
 				
 				GridPoint gp = gridMap.get(parent);
 				if( !gp.isConnected()) continue;
+				
 				ParallelArea pa = parallelMap.get(parent);
 				if( pa!=null ) {
 					pa.x1 = pa.x1+dx;
 					pa.x2 = pa.x2+dx;
 				}
+
 				if( gp!=null && gp.isConnected() ) {
 					gp.x = gp.x + dx;
 					if( gp.x> getRightmost(gp.y) ) setRightmost(gp.x,gp.y);
-					// Terminate if we're not going up any more
+					// Terminate if we're not going up any more, ignore steps we've seen.
 					GridPoint currentPoint = gridMap.get(uuid);
-					if( gp.y<currentPoint.y)  moveAncestryRight(parent,dx);
+					if( gp.y<currentPoint.y) moveAncestryRight(parent,dx,moved);
 				}
 				else {
 					log.warnf("%s.moveAncestryRight: Parent %s of %s has no location.", TAG,parent,uuid);
@@ -559,14 +579,17 @@ public class StepLayoutManager {
 	 * legal, we just do this until either our blocks have not been
 	 * positioned, or we 
 	 * 
-	 * @param uuid the id of the source block.  
+	 * @param uuid the id of the source block. 
+	 * @param a list of ids of elements that have already been moved.
+	 *        This prevents multiple moves when exiting a parallel section. 
 	 */
-	private void moveDescendantsDown(String uuid) {
+	private void moveDescendantsDown(String uuid,List<String>moved) {
 		ConnectionHub hub = connectionMap.get(uuid);
 		if( hub!=null && !hub.getConnectionsTo().isEmpty()) {
 			GridPoint ploc = gridMap.get(uuid);
-			// Now move all children down
+			// Now move all children down. Ignore any repeats.
 			for(String child:hub.getConnectionsTo() ) {
+				if( moved.contains(child)) continue;
 				GridPoint gp = gridMap.get(child);
 				if( !gp.isConnected() ) continue;
 				if( gp.y<ploc.y-2 ) continue;
@@ -589,7 +612,8 @@ public class StepLayoutManager {
 							}
 						}
 					}
-					moveDescendantsDown(child);
+					moved.add(child);
+					moveDescendantsDown(child,moved);
 				}
 				else {
 					log.warnf("%s.moveDescendantsDown: Child %s of %s has no location.", TAG,child,uuid);

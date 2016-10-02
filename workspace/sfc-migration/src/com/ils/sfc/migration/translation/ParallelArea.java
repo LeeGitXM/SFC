@@ -28,6 +28,7 @@ public class ParallelArea  {
 		this.element = e;
 	}
 	public Element getElement() { return this.element; }
+	
 	/**
 	 * This is a debugging aid.
 	 */

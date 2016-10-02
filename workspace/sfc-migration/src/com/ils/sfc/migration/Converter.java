@@ -403,8 +403,12 @@ public class Converter {
 					// Parallel blocks are created by the layout manager and will be null here.
 					if( child!=null ) hub.getChartElement().appendChild(child);
 				}
+				// Jump steps do not have G2 block equivalents.
+				else if(layout.getJumpElement(uuid)!=null) {
+					hub.getChartElement().appendChild(layout.getJumpElement(uuid));
+				}
 				else {
-					log.errorf("%s.updateChartForG2: Error, no block or hub defined for %s",CLSS,uuid);
+					log.errorf("%s.updateChartForG2: Error, no block defined for %s",CLSS,uuid);
 				}
 			}
 
