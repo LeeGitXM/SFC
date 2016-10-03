@@ -1,5 +1,5 @@
 /**
- *   (c) 2015  ILS Automation. All rights reserved.
+ *   (c) 2015-2016  ILS Automation. All rights reserved.
  */
 package com.ils.sfc.migration.visitor;
 
@@ -18,13 +18,10 @@ import com.ils.sfc.migration.Converter;
  */
 public class PathWalker extends AbstractPathWalker implements FileVisitor<Path>  {
 	private final Converter delegate;
-	private final String root;
 	 /**
-	  * @param g2Root
 	  * @param converter
 	  */
-	public PathWalker(Path g2Root, Converter converter) {
-		this.root = g2Root.toString();
+	public PathWalker(Converter converter) {
 		this.delegate = converter;
 	}
 
@@ -35,6 +32,8 @@ public class PathWalker extends AbstractPathWalker implements FileVisitor<Path> 
 	 */
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+		// Ignore directories
+		if(file.toFile().isDirectory())           return FileVisitResult.CONTINUE;
 		//Ignore the OSX resource marker
 		if(file.toString().endsWith(".DS_Store")) return FileVisitResult.CONTINUE;
 		String fname = fileName(file);

@@ -178,8 +178,8 @@ public class Converter {
 		
 		outRoot = toCamelCase(start);
 		
-		// Create a path walker with the root
-		PathWalker walker = new PathWalker(indir,this);
+		// Create a path walker
+		PathWalker walker = new PathWalker(this);
 		try {
 			Path startpath = Paths.get(indir.toString(), start);
 			log.infof("%s.createPathMap: Walking %s",CLSS,startpath.toString());
@@ -655,12 +655,12 @@ public class Converter {
 				if( g2attribute!=null ) {
 					String g2value = g2block.getAttribute(g2attribute);
 					String value = propertyValueMapper.modifyPropertyValueForIgnition(propertyName,g2value);
-					if( value==null ) {
+					if( value==null || value.isEmpty()) {
 						value = propertyValueMapper.getDefaultValueForIgnition(propertyName);
 					}
 
 					// Create the property
-					if( value!=null) {
+					if( value!=null && !value.isEmpty()) {
 						Element propelement = chart.createElement(propertyName);
 						Node textNode = chart.createTextNode(value);
 						propelement.appendChild(textNode);

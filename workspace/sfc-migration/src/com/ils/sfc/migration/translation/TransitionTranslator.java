@@ -136,7 +136,7 @@ public class TransitionTranslator {
 				}
 			}
 			ans = String.format("{%s.%s%s} %s \"%s\"", 
-					 recipeLocation.toLowerCase(),
+					recipeLocation.toLowerCase(),
 					 baseLoc.toLowerCase(),
 					 element,
 					 convertOperator(operator),
@@ -161,7 +161,7 @@ public class TransitionTranslator {
 				}
 			}
 			ans = String.format("{%s.%s%s} %s \"%s\"", 
-					 recipeLocation.toLowerCase(),
+					recipeLocation.toLowerCase(),
 					 baseLoc.toLowerCase(),
 					 element,
 					 convertOperator(operator),
@@ -197,7 +197,7 @@ public class TransitionTranslator {
 				}
 			}
 			ans = String.format("{%s} %s {%s.%s%s}", 
-				tagPath,
+				locatorPath(tagPath),
 				convertOperator(operator),
 				recipeLocation.toLowerCase(),
 				baseLoc.toLowerCase(),
@@ -211,13 +211,20 @@ public class TransitionTranslator {
 		if(name!=null && constant!=null ) {
 			String tagPath = delegate.getTagMapper().getTagPath(name.toLowerCase());
 			if( tagPath!=null ) {
-				ans = String.format("{%s} %s \"%s\"", tagPath,convertOperator(operator),constant);
+				ans = String.format("{%s} %s \"%s\"", locatorPath(tagPath),convertOperator(operator),constant);
 			}
 			else {
 				log.warnf("%s.handleTagValue: No tag path defined for %s",TAG,name);
 			}
 		}
 		return ans;
+	}
+	
+	// Convert a tag path into a tag locator path.
+	private String locatorPath(String path) {
+		int pos = path.indexOf("]");
+		if( pos>0 ) path = path.substring(pos+1);
+		return "tag."+path;
 	}
 	
 	/**

@@ -26,7 +26,7 @@ insert into SfcPropertyMap values ('generic','writeOutputConfig','');
 insert into SfcPropertyMap values ('com.ils.abortStep','ackRequired','ackRequired');
 
 -- CLOSE WINDOW
-insert into SfcPropertyMap values ('com.ils.closeWindowStep','window','window');
+insert into SfcPropertyMap values ('com.ils.closeWindowStep','window','targeet');
 
 -- CONTROL PANEL MESSAGE
 insert into SfcPropertyMap values ('com.ils.controlPanelMessageStep','ackRequired','ackRequired');
@@ -213,7 +213,7 @@ insert into SfcPropertyMap values ('com.ils.selectInputStep','windowTitle','');
 insert into SfcPropertyMap values ('com.ils.showWindowStep','position','');
 insert into SfcPropertyMap values ('com.ils.showWindowStep','scale','');
 insert into SfcPropertyMap values ('com.ils.showWindowStep','security','security');
-insert into SfcPropertyMap values ('com.ils.showWindowStep','target','window');
+insert into SfcPropertyMap values ('com.ils.showWindowStep','window','target');
 insert into SfcPropertyMap values ('com.ils.showWindowStep','windowTitle','');
 
 -- SIMPLE QUERY

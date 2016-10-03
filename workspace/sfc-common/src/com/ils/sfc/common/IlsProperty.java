@@ -54,6 +54,7 @@ public class IlsProperty {
 		addValueTranslation("PROCEDURE", Constants.GLOBAL);
 		addValueTranslation("PREVIOUS", Constants.PREVIOUS);
 		addValueTranslation("LOCAL", Constants.LOCAL);
+		addValueTranslation("TAG", Constants.TAG);
 		
 		// Constants.POSITION_CHOICES
 		addValueTranslation("CENTER", Constants.CENTER);
