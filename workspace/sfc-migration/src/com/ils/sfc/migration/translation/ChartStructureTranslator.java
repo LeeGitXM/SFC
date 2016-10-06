@@ -116,7 +116,16 @@ public class ChartStructureTranslator {
 			Element block = (Element)blocks.item(index);
 			String claz = block.getAttribute("class");
 			if( delegate.getClassMapper().classRequiresTransition(claz)) {
-				longRunningBlocks.add(block);
+				// Handle special logic for ManualDataEntry which is variable
+				if( claz.equals("S88-MANUAL-DATA-ENTRY-TASK")) {
+					String mode = block.getAttribute("mode");
+					if( mode==null|| !mode.equalsIgnoreCase("AUTOMATIC")) {
+						longRunningBlocks.add(block);
+					}
+				}
+				else {
+					longRunningBlocks.add(block);
+				}
 			}
 			index++;
 		}

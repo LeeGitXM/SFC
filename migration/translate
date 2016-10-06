@@ -1,6 +1,7 @@
 #!/bin/sh
 #  Procedure migration script. File is in the local directory
 # -- options for log.level:  INFO,DEBUG,TRACE
+# Variant is diagnostic toolkit calculations.
 #
 if [ $# -lt 2 ]
 then
@@ -16,4 +17,4 @@ DB=${SFC}/migration/mdb/conversion.db
 OUTDIR=$2
 mkdir -p ${OUTDIR}
 #java -cp ${JAR} -Dlog.level=TRACE com.ils.python.translation.G2ProcedureTranslator $1 ${OUTDIR} ${DB} 
-java -cp ${JAR} -Dlog.level=WARN com.ils.python.translation.G2ProcedureTranslator $1 ${OUTDIR} ${DB} 
+java -cp ${JAR} -Dprocedure.variant=diag.calculation -Dlog.level=WARN com.ils.python.translation.G2ProcedureTranslator $1 ${OUTDIR} ${DB} 

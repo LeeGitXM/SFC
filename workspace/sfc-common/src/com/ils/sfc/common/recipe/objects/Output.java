@@ -57,7 +57,7 @@ public class Output extends IO {
 		addProperty(IlsProperty.DOWNLOAD);
 		addProperty(IlsProperty.DOWNLOAD_STATUS);   // dynamic
 		addProperty(IlsProperty.TIMING);
-		addProperty(IlsProperty.TYPE);
+		addProperty(IlsProperty.TYPE);              // clc - VALUE_TYPE?
 		addProperty(IlsProperty.STEP_TIME);			// dynamic
 		addProperty(IlsProperty.STEP_TIMESTAMP);    // dynamic
 		addProperty(IlsProperty.MAX_TIMING);

@@ -16,5 +16,7 @@ MIGRATION=${GIT_REPO}/sfc/migration
 FIL=TEST-8-PATH-1.txt
 #FIL=TEST-8-PATH-2.txt
 #FIL=TEST-8-TIMEOUT-CALLBACK.txt
-DIR=${MIGRATION}/procs/g2/onstart
-${MIGRATION}/translate-onstart $DIR/$FIL
+INDIR=${MIGRATION}/procs/g2/usecase/onstart
+cd $INDIR
+OUTDIR=${MIGRATION}/procs/ignition/usecase/onstart
+${MIGRATION}/translate-onstart $INDIR/$FIL $OUTDIR

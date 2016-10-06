@@ -1,0 +1,73 @@
+<?xml version="1.0" ?>
+<sfc zoom="0.7692308" canvas="12 16" execution-mode="Callable" version="7.8.3 (b2016061017)" timestamp="Mon Oct 03 17:57:24 MDT 2016" hot-editable="false" persist-state="true">
+	<step id="dd99e11a-f764-4cc7-b341-ef96de30361f" location="5 1" name="S88Begin_0000" factory-id="begin-step">		<associated-data>{}</associated-data>
+	</step>
+	<step id="bc2b4586-85af-11d9-a871-006008c66680" location="7 4" name="S88HideWorkspace_13920" factory-id="com.ils.closeWindowStep"><name>S88HideWorkspace_13920</name><description></description><id>bc2b4586-85af-11d9-a871-006008c66680</id><window></window>		<associated-data>{}</associated-data>
+	</step>
+	<step id="fdd5a200-89c1-11d9-a9b8-000bcd538076" location="1 9" name="S88StopDataPumps_13918" factory-id="action-step">
+		<start-script># Copyright 2016 ILS Automation. All rights reserved.
+# emGenericTask.py
+from com.inductiveautomation.ignition.common.util import LogUtil
+from ils.sfc.gateway.util import getFullChartPath
+from ils.vistalon import util
+from ils.diagToolkit import finalDiagnosis
+from com.ils.queue import post
+from com.inductiveautomation.ignition.common.util import LoggerEx
+from com.ils.sfc.python import UnitProcedure
+from com.ils.sfc.python import S88State
+from time import sleep
+from ils.sfc.gateway import api
+from ils.constants.enumerations import S88Scope
+def onStart(chart,block):
+   log = LogUtil.getLogger(getFullChartPath(chart))
+   log.tracef("In %s with %s, a %s. . .",chart.get("name",""),block.get("name",""),"step")
+
+   block["state"]=str(S88State.RUNNING)
+
+  
+
+   block["state"]=str(S88State.COMPLETE)
+   log.tracef("%s has completed!",block.get("name",""))
+</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="244054c0-89c2-11d9-a9b8-000bcd538076" location="1 10" name="S88TimeDelay_13917" factory-id="com.ils.timedDelayStep"><postNotification>false</postNotification><recipeLocation>superior</recipeLocation><tagPath></tagPath><description></description><scale>0.5</scale><windowTitle></windowTitle><message></message><buttonLabel></buttonLabel><delay>5.0</delay><name>S88TimeDelay_13917</name><callback>G2</callback><id>244054c0-89c2-11d9-a9b8-000bcd538076</id><position>center</position><strategy>static</strategy><key>g2</key><delayUnit>SEC</delayUnit>		<associated-data>{}</associated-data>
+	</step>
+	<step id="56d51ce6-85f7-11d9-a871-006008c66680" location="1 13" name="S88DeactivateWorkspace_6107" factory-id="com.ils.closeWindowStep"><name>S88DeactivateWorkspace_6107</name><description></description><id>56d51ce6-85f7-11d9-a871-006008c66680</id><window></window>		<associated-data>{}</associated-data>
+	</step>
+	<step id="b5449706-85af-11d9-a871-006008c66680" location="1 14" name="S88End_13923" factory-id="end-step">		<associated-data>{}</associated-data>
+	</step>
+	<transition id="b544970b-85af-11d9-a871-006008c66680" location="2 3">{terminationState} = "success"</transition>
+	<transition id="b5449710-85af-11d9-a871-006008c66680" location="3 3">{terminationState} = "stop"</transition>
+	<transition id="b5449718-85af-11d9-a871-006008c66680" location="5 3">{terminationState} = "timeout"</transition>
+	<transition id="b5449714-85af-11d9-a871-006008c66680" location="7 3">{terminationState} = "abort"</transition>
+	<transition id="6ebd6dc2-85fc-11d9-a871-006008c66680" location="1 8" timeout-enabled="true" timeout-delay="108000000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13919">{tag.Site/VFU/USE-DATA-PUMPS} = "true"</transition>
+	<transition id="6ebd6dc8-85fc-11d9-a871-006008c66680" location="3 8" timeout-enabled="true" timeout-delay="3000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-6106">true</transition>
+	<transition id="1bde2516-7c2d-41ef-9fb3-3d585ff80a57" location="1 11">{previous.workDone}</transition>
+	<link id="2f3b2b02-263b-444a-9ecb-1fc451acee13" location="2 2"><down/><right/></link>
+	<link id="23556ce8-aeef-448e-b03c-75c3acbc89af" location="3 2"><up/><left/><down/><right/></link>
+	<link id="832d3848-419b-4768-b658-88e1a2d2ca45" location="4 2"><left/><right/></link>
+	<link id="42338197-632b-4a52-96e9-55b05b833335" location="2 4"><up/><down/></link>
+	<link id="9cb89d2c-8c93-4a54-b34c-8d8966d49e33" location="3 4"><up/><down/></link>
+	<link id="43f88e6a-6515-4ebd-955a-8e63db510fd1" location="5 2"><up/><left/><down/><right/></link>
+	<link id="e230f325-f7b3-4fb9-a4d0-fa02216eacbf" location="2 5"><up/><left/><down/><right/></link>
+	<link id="d2a6a980-90fc-4713-89e2-cfc441b47c8a" location="3 5"><up/><left/><right/></link>
+	<link id="b9d44e68-6f94-43ee-979c-2dc586038151" location="6 2"><left/><right/></link>
+	<link id="593d099c-d527-4e2f-9756-2c066473cc66" location="2 6"><up/><down/></link>
+	<link id="90a9edef-ee90-42b0-bbd4-356cd5898e68" location="4 5"><left/><right/></link>
+	<link id="825ca52e-5331-498b-b20c-3df1077f4768" location="5 4"><up/><down/></link>
+	<link id="68a32776-847d-4b74-9f78-c2d2e548f7f9" location="5 5"><up/><left/><down/><right/></link>
+	<link id="e4ae78c4-c2e5-4664-814d-5828cf27d74a" location="1 7"><left/><down/><right/></link>
+	<link id="abf2c2f9-ba5b-43a8-be96-2577d46ae04b" location="7 2"><left/><down/><right/></link>
+	<link id="3d908503-1c77-4e53-b2d8-41957dc461f0" location="2 7"><up/><left/><down/><right/></link>
+	<link id="4d8faad4-502f-4929-abcd-57431602ef7f" location="3 7"><left/><down/><right/></link>
+	<link id="6073cf62-d40a-4a3c-be43-c4c2957b1f39" location="6 5"><up/><left/><right/></link>
+	<link id="a005f4bb-0772-44dc-8025-98c458fc1b74" location="7 5"><up/><left/><right/></link>
+	<link id="6848ae63-63eb-4f25-8569-1a11d99e7b81" location="3 9"><up/><down/></link>
+	<link id="d97bdaea-f19f-4948-affe-9fb8554cac42" location="3 10"><up/><down/></link>
+	<link id="3ce53eb8-c35c-4b7c-852c-373b221fe4f3" location="3 11"><up/><down/></link>
+	<link id="9043d289-d9e0-479c-ad77-f9f68b4ddaa4" location="1 12"><up/><down/><right/></link>
+	<link id="1897cb95-fb68-4a80-9082-c44cfb54f484" location="2 12"><up/><left/><right/></link>
+	<link id="3007da41-7852-4463-bdf1-efa3bcd68c60" location="3 12"><up/><left/><right/></link>
+
+</sfc>

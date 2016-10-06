@@ -58,6 +58,7 @@ public class Constants {
 	public static final String DATA = "data";
 	public static final String DATA_ID = "dataId";
 	public static final String DATA_LOCATION = "dataLocation";
+	public static final String DATA_TYPE = "dataType";
 	public static final String DESCRIPTION = "description";
 	public static final String DEFAULT_MESSAGE_QUEUE = "SFC-Message-Queue";
 	public static final String DEFAULT_VALUE = "defaultValue";

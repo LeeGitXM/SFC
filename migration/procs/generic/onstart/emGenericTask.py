@@ -13,16 +13,9 @@ from ils.sfc.gateway import api
 from ils.constants.enumerations import S88Scope
 def onStart(chart,block):
    log = LogUtil.getLogger(getFullChartPath(chart))
-   debugMode = False
-   if log.isTraceEnabled():
-      debugMode = True
-
-   if debugMode:
-      log.infof("In %s with %s, a %s. . .",chart.get("name",""),block.get("name",""),"step")
+   log.tracef("In %s with %s, a %s. . .",chart.get("name",""),block.get("name",""),"step")
 
    block["state"]=str(S88State.RUNNING)
 
-   if debugMode:
-      log.infof("%s has completed!",block.get("name",""))
-
    block["state"]=str(S88State.COMPLETE)
+   log.tracef("%s has completed!",block.get("name",""))
