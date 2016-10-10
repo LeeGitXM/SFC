@@ -363,9 +363,10 @@ public class Converter {
 		return name;
 	}
 
-	public ClassNameMapper getClassMapper()       { return classMapper; }
-	public ProcedureMapper getProcedureMapper()   { return procedureMapper; }
-	public TagMapper       getTagMapper()         { return tagMapper; }
+	public ClassNameMapper getClassMapper()             { return classMapper; }
+	public ProcedureMapper getProcedureMapper()         { return procedureMapper; }
+	public PropertyValueMapper getPropertyValueMapper() { return propertyValueMapper; }
+	public TagMapper       getTagMapper()               { return tagMapper; }
 	
 	public Path getPythonRoot() { return this.pythonRoot; }
 	public void setPythonRoot(Path root) { this.pythonRoot = root; }
@@ -477,7 +478,7 @@ public class Converter {
 			if( script!=null && !script.isEmpty() ) {
 				// As returned the script contains the module - strip it off.
 				script = pathNameForModule(script);
-				//log.tracef("%s.insertOnStartFromG2Block: callback (%s) %s",CLSS,g2attribute,script);
+				log.infof("%s.insertOnStartFromG2Block: callback (%s) %s",CLSS,g2attribute,script);
 
 				Path scriptPath = Paths.get(pythonRoot.toString()+"/onstart",script);
 				try {
@@ -493,7 +494,7 @@ public class Converter {
 					}
 				}
 				catch(IOException ioe) {
-					log.errorf("%s.insertOnStartFromG2Block: Error reading callback script %s (%s)",CLSS,scriptPath.toString(),g2attribute);
+					log.errorf("%s.insertOnStartFromG2Block: Error reading callback script %s (%s) (%s)",CLSS,scriptPath.toString(),g2attribute,ioe.getLocalizedMessage());
 				}
 			}
 			else {
@@ -525,7 +526,7 @@ public class Converter {
 
 				}
 				catch(IOException ioe) {
-					log.errorf("%s.insertOnStartFromG2Block: Error reading class %s script %s",CLSS,g2attribute,scriptPath.toString());
+					log.errorf("%s.insertOnStartFromG2Block: Error reading class %s script %s (%s)",CLSS,g2attribute,scriptPath.toString(),ioe.getMessage());
 				}
 			}
 			// TranslationCallbacks are artificially inserted by ChartStructureTranslator.addCallbackToUpstreamStep() and do not have class attributes
@@ -655,19 +656,19 @@ public class Converter {
 				if( g2attribute!=null ) {
 					String g2value = g2block.getAttribute(g2attribute);
 					String value = propertyValueMapper.modifyPropertyValueForIgnition(propertyName,g2value);
-					if( value==null || value.isEmpty()) {
+					if( value==null ) {
 						value = propertyValueMapper.getDefaultValueForIgnition(propertyName);
 					}
 
-					// Create the property
-					if( value!=null && !value.isEmpty()) {
+					// Create the property - we allow empty strings
+					if( value!=null ) {
 						Element propelement = chart.createElement(propertyName);
 						Node textNode = chart.createTextNode(value);
 						propelement.appendChild(textNode);
 						step.appendChild(propelement);
 					}
 					else {
-						log.warnf("%s.updateStepFromG2Block: %s block has no attribute corresponding to %s",CLSS,factoryId,propertyName);
+						log.warnf("%s.updateStepFromG2Block: %s block.%s has no match or default for %s",CLSS,factoryId,propertyName,g2value);
 					}
 				}
 				else {

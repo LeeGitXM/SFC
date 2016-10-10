@@ -302,6 +302,7 @@ public class Constants {
 	public static final String[] PV_TYPE_CHOICES = {ABS, PCT};
 	public static final String[] OUTPUT_VALUE_TYPE_CHOICES = {MODE, SETPOINT, OUTPUT, VALUE};
 	public static final String[] MONITOR_DOWNLOADS_LABEL_CHOICES = {NAME, ITEM_ID};
+	public static final String[] VALUE_TYPE_CHOICES = {BOOLEAN, DATE_TIME,FLOAT,INT, STRING};
 	
 	public static final String SFC_DOWNLOAD_KEY_WINDOW = "SFC/DownloadKey";
 	public static final String SFC_INPUT_WINDOW = "SFC/Input";

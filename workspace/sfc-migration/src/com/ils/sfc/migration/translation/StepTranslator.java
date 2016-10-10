@@ -171,14 +171,14 @@ public class StepTranslator {
 		// The recipe data translator uses  a SAX parser, so stream the input
 		Element recipe = null;
 		try {
-			RecipeDataTranslator rdTranslator = new RecipeDataTranslator(g2Block);
+			RecipeDataTranslator rdTranslator = new RecipeDataTranslator(delegate,g2Block);
 			String stepFactoryId = step.getAttribute("factory-id");
 			Element associatedData = rdTranslator.createAssociatedDataElement(chart, stepFactoryId);
 			if( associatedData!=null) step.appendChild(associatedData);
 
 			// Some debug stuff for errors--might want to log it...
 			for(String errMsg: rdTranslator.getErrors()) {
-				log.errorf("%s.makeRecipeDataElement: Parse error in (%s)",CLSS,errMsg);
+				log.errorf("%s.makeRecipeDataElement: Parse error: %s",CLSS,errMsg);
 			}
 		} 
 		catch (JSONException je) {

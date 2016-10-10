@@ -22,17 +22,36 @@ insert into PropertyValueMap values ('priority','INFORMATION','Info');
 insert into PropertyValueMap values ('priority','WARNING','Warning');
 insert into PropertyValueMap values ('priority','ERROR','Error');
 
+insert into PropertyValueMap values ('autoMode','SEMI-AUTOMATIC','semiAutomatic');
+insert into PropertyValueMap values ('autoMode','AUTOMATIC','automatic');
+
 -- Names of callbacks get read from here and inserted into ProcedureMap also
 -- Formal test cases
 insert into PropertyValueMap values ('callback','ph-test-callback-1','test1OnStart1.onStart');
 insert into PropertyValueMap values ('callback','ph-callback-1'     ,'test2OnStart1.onStart');
 insert into PropertyValueMap values ('callback','ph-callback-2'     ,'test2OnStart2.onStart');
+insert into PropertyValueMap values ('callback','ph-callback-3'     ,'test2OnStart3.onStart');
+insert into PropertyValueMap values ('callback','ph-test-callback-1'     ,'test2OnStart3.onStart');
+insert into PropertyValueMap values ('callback','ph-test-moved-on'     ,'phTestMovedOn.onStart');
 insert into PropertyValueMap values ('callback','test-3-recipe-data','test3OnStartrd.onStart');
 insert into PropertyValueMap values ('callback','s88-callback-template','s88OnstartTemplate.onStart');
+insert into PropertyValueMap values ('callback','s88-test-generic-callback','s88TestGenericTemplate.onStart');
+insert into PropertyValueMap values ('callback','s88-test-post-user-response','s88TestPostUserResponse.onStart');
+insert into PropertyValueMap values ('callback','s88-test-set-parameter-false','s88TestSetParameterFalse.onStart');
+insert into PropertyValueMap values ('callback','test-3-recipe-data','test5OnStart1.onStart');
 insert into PropertyValueMap values ('callback','test-5-callback-1','test5OnStart1.onStart');
 insert into PropertyValueMap values ('callback','test-5-callback-2','test5OnStart2.onStart');
 insert into PropertyValueMap values ('callback','test-5-shared-callback','test5OnStart.onStart');
 insert into PropertyValueMap values ('callback','test-6-callback',  'test6OnStart.onStart');
+insert into PropertyValueMap values ('callback','test-8-initialization',  'test8initialization.onStart');
+insert into PropertyValueMap values ('callback','test-8-path-1',  'test8Path1.onStart');
+insert into PropertyValueMap values ('callback','test-8-path-2',  'test8Path2.onStart');
+insert into PropertyValueMap values ('callback','test-8-timeout-callback',  'test8TimeoutCallback.onStart');
+insert into PropertyValueMap values ('callback','test-14-callback',  'test14Callback.onStart');
+insert into PropertyValueMap values ('callback','test-15-initialize',  'test15Initialize.onStart');
+insert into PropertyValueMap values ('callback','test-15-writer',  'test16Writer.onStart');
+insert into PropertyValueMap values ('callback','test-16-initialize',  'test16Inirtialize.onStart');
+insert into PropertyValueMap values ('callback','test-16-writer',  'test16Writer.onStart');
 -- Vistalon
 insert into PropertyValueMap values ('callback','dr-change-service','drChangeService.onStart');
 insert into PropertyValueMap values ('callback','dr-cool-down-time-init','drCoolDownTimeInit.onStart');
@@ -202,6 +221,5 @@ insert into PropertyValueMap values ('position','BOTTOM-LEFT','bottomLeft');
 insert into PropertyValueMap values ('position','BOTTOM-CENTER','bottomCenter');
 insert into PropertyValueMap values ('position','BOTTOM-RIGHT','bottomRight');
 
-insert into PropertyValueMap values ('autoMode','SEMI-AUTOMATIC','semiAutomatic');
-insert into PropertyValueMap values ('autoMode','AUTOMATIC','automatic');
-
+insert into PropertyValueMap values ('valueType','quantity','float');
+insert into PropertyValueMap values ('valueType','text','string');

@@ -29,6 +29,8 @@ import com.ils.sfc.common.recipe.objects.SQC;
 import com.ils.sfc.common.recipe.objects.Structure;
 import com.ils.sfc.common.recipe.objects.Timer;
 import com.ils.sfc.common.recipe.objects.Value;
+import com.ils.sfc.migration.Converter;
+import com.ils.sfc.migration.map.PropertyValueMapper;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -98,7 +100,8 @@ public class RecipeDataTranslator {
 		g2ToIgName.put("units", Constants.UNITS);
 		g2ToIgName.put("update-frequency", Constants.UPDATE_FREQUENCY);
 		g2ToIgName.put("val", Constants.VALUE);
-		g2ToIgName.put("val-type", Constants.OUTPUT_TYPE);
+		g2ToIgName.put("val-type", Constants.OUTPUT_TYPE);   // Is this legitimate?
+		g2ToIgName.put("valueType", Constants.VALUE_TYPE);   // Synthesized
 		g2ToIgName.put("write-confirm", Constants.WRITE_CONFIRM);
 
 		// for the weird EM-RECIPE-DATA, just translate directly for the moment:
@@ -116,10 +119,12 @@ public class RecipeDataTranslator {
 
 	//private List<Data> recipeData = new ArrayList<Data>();
 	private final java.util.List<String> errors = new ArrayList<String>();
-	private Element blockElement;
+	private final Element blockElement;
+	private final Converter delegate;
 	
-	public RecipeDataTranslator(Element blockElement) {
+	public RecipeDataTranslator(Converter converter,Element blockElement) {
 		this.blockElement = blockElement;
+		this.delegate = converter;
 	}
 	
 	public static Collection<Class<?>> getConcreteClasses() {
@@ -156,6 +161,7 @@ public class RecipeDataTranslator {
 				Element recipeElement = (Element) nNode;
 				NamedNodeMap attributes = recipeElement.getAttributes();
 				Map<String,String> attMap = new HashMap<String,String>();
+				
 				for(int i = 0; i < attributes.getLength(); i++) {
 					Node item = attributes.item(i);
 					String name = item.getNodeName();
@@ -163,6 +169,7 @@ public class RecipeDataTranslator {
 					//System.out.println(name + " " + value);
 					attMap.put(name, value);					
 				}
+				customizeRecipeAttributeMap(attMap);
 				createObject(flatRecipeObjects, attMap);
 			}
 		}
@@ -262,6 +269,20 @@ public class RecipeDataTranslator {
 		else {
 			errors.add("No concrete class found for G2 class " + g2ClassName);
 			log.errorf("%s.createObject: ERROR no concrete class found for G2 recipe class %s", CLSS,g2ClassName);
+		}
+	}
+	/**
+	 * Fudge the mappings from G2 to what we need for specific classes
+	 * @param map the attribute map of the recipe data element
+	 */
+	private void customizeRecipeAttributeMap(Map<String,String>map) {
+		PropertyValueMapper mapper = delegate.getPropertyValueMapper();
+		String claz = map.get("class-name");
+		if( claz!=null && claz.equalsIgnoreCase("S88-RECIPE-VALUE-DATA")) {
+			// "type" is really "value-type"
+			String type = map.get(Constants.TYPE);         // G2 type - text, quantity
+			String ignitionType = mapper.modifyPropertyValueForIgnition(Constants.VALUE_TYPE, type);
+			map.put(Constants.VALUE_TYPE, ignitionType);   // Ignition type - string, float
 		}
 	}
 
