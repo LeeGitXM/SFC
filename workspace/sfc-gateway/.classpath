@@ -5,7 +5,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/sfc-common"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/External"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Ignition-78"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/ILS_Common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Ignition-79"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
