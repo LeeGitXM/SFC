@@ -242,7 +242,7 @@ public class IlsProperty {
     public static final BasicProperty<String> UNITS = createProperty(Constants.UNITS, String.class, "");
     public static final BasicProperty<Double> UPDATE_FREQUENCY = createProperty(Constants.UPDATE_FREQUENCY, Double.class, 10.);
     public static final BasicProperty<Object> VALUE = createProperty(Constants.VALUE, Object.class, null);
-    public static final BasicProperty<String> VALUE_TYPE = createProperty(Constants.VALUE_TYPE, String.class, null);
+    public static final BasicProperty<String> VALUE_TYPE = createProperty(Constants.VALUE_TYPE, String.class, Constants.VALUE_TYPE_CHOICES[2],Constants.VALUE_TYPE_CHOICES);
     public static final BasicProperty<Boolean> VERBOSE = createProperty(Constants.VERBOSE, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<Boolean> VIEW_FILE = createProperty(Constants.VIEW_FILE, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> WINDOW = createProperty(Constants.WINDOW, String.class, "");
@@ -488,7 +488,7 @@ public class IlsProperty {
 		setReadOnly(STEP_TIMESTAMP);
 		// ?? used in SQC, IO. Needs to be writable in SQC
 		//setReadOnly(TARGET_VALUE);
-		setReadOnly(VALUE_TYPE);
+		//setReadOnly(VALUE_TYPE);
 		setReadOnly(WRITE_CONFIRMED);
 	}
 	

@@ -25,7 +25,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 public class StepLayoutManager {
 	private final static String TAG = "StepLayoutManager";
 	private final LoggerEx log = LogUtil.getLogger(StepLayoutManager.class.getPackage().getName());
-	private final static boolean DEBUG = true;
+	private final static boolean DEBUG = false;
 	private final Map<String,Element> blockMap;             // block by UUID
 	private final Map<String,ConnectionHub> connectionMap;  // Incoming/outgoing connections by UUID
 	private final Map<String,GridPoint> gridMap;            // Grid by step UUID
