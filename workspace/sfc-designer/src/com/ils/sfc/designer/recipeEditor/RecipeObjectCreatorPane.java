@@ -103,7 +103,8 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 			boolean allowsTypes = 
 				typeName.equals("Value") || 
 				typeName.equals("Output") ||
-				typeName.equals("Input") ;
+				typeName.equals("Input") ||
+				typeName.equals("Array") ;
 			valueTypeCombo.setEnabled(allowsTypes);
 		}
 	}			

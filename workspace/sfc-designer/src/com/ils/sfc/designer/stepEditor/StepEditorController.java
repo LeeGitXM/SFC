@@ -2,10 +2,8 @@ package com.ils.sfc.designer.stepEditor;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.designer.EditorErrorHandler;
-import com.ils.sfc.designer.IlsSfcDesignerHook;
 import com.ils.sfc.designer.panels.EditorPanel;
 import com.ils.sfc.designer.panels.MessagePanel;
 import com.ils.sfc.designer.panels.PanelController;
