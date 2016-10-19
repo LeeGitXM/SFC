@@ -18,8 +18,10 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -43,6 +45,7 @@ import org.apache.log4j.PatternLayout;
 import org.sqlite.JDBC;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -50,6 +53,7 @@ import org.xml.sax.SAXException;
 
 import com.ils.sfc.common.rowconfig.RowConfig;
 import com.ils.sfc.common.step.AllSteps;
+import com.ils.sfc.common.step.EnableDisableStepProperties;
 import com.ils.sfc.migration.map.ClassNameMapper;
 import com.ils.sfc.migration.map.ProcedureMapper;
 import com.ils.sfc.migration.map.PropertyMapper;
@@ -681,15 +685,29 @@ public class Converter {
 			log.warnf("%s.updateStepFromG2Block: class %s has no defined properties",CLSS,factoryId);
 		}
 		
-		// Convert the block configurations, if any:
+		// Convert the block configurations, if any.
+		// First delete any existing elements of the same name (they will be empty).
 		Map<String,String> blockPropertyMap = RowConfig.convert(factoryId, g2block);
 		if(blockPropertyMap != null) {
+			for(String key: blockPropertyMap.keySet()) {
+				NodeList keyelements = step.getElementsByTagName(key);
+				int index = 0;
+				while( index<keyelements.getLength()) {
+					Node keynode = keyelements.item(index);
+					step.removeChild(keynode);
+					index++;
+				}
+			}
 			for(String key: blockPropertyMap.keySet()) {
 				Element propelement = chart.createElement(key);
 				Node textNode = chart.createTextNode(blockPropertyMap.get(key));
 				propelement.appendChild(textNode);
 				step.appendChild(propelement);
 			}
+		}
+		// Look for commandAction elements
+		if( factoryId.equalsIgnoreCase(EnableDisableStepProperties.FACTORY_ID)) {
+			applyCommandActionElements(chart,step,g2block);
 		}
 	}
 	
@@ -722,6 +740,40 @@ public class Converter {
 		chart.setAttribute("version", "7.8.0 (b2015101414)");
 		chart.setAttribute("zoom", "1.0");
 		doc.appendChild(chart);
+	}
+	
+	/**
+	 * For the time being this only applies to Enable/Disable blocks.
+	 * The mappings aren't 1:1, so for now we turn the flags either all
+	 * on or all off.
+	 * 
+	 * @param step
+	 * @param blockElement
+	 */
+	private void applyCommandActionElements(Document chart,Element step, Element blockElement) {
+		NodeList actionNodes = blockElement.getElementsByTagName("commandAction");
+		for (int index = 0; index < actionNodes.getLength(); index++) {			 
+			Node actionNode = actionNodes.item(index);	 
+			if( actionNode.hasAttributes() ) {
+				NamedNodeMap attributes = actionNode.getAttributes();
+				if( attributes.getNamedItem("action")!=null ) {
+					String action = attributes.getNamedItem("action").getNodeValue();
+					boolean enable = action.equalsIgnoreCase("ENABLE");
+					NodeList children = step.getChildNodes();
+					for(int childIndex=0; childIndex<children.getLength();childIndex++) {
+						String name = children.item(childIndex).getNodeName();
+						if( name.equalsIgnoreCase(Constants.ENABLE_CANCEL) ||
+							name.equalsIgnoreCase(Constants.ENABLE_PAUSE) ||
+							name.equalsIgnoreCase(Constants.ENABLE_RESUME) ) {
+							Element e = (Element)children.item(childIndex);
+							Node textNode = chart.createTextNode((enable?"true":"false"));
+							e.appendChild(textNode);
+						}	
+					}
+					break;
+				}
+			}
+		}
 	}
 	
 	/**

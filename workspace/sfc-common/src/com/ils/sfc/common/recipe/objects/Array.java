@@ -3,7 +3,6 @@ package com.ils.sfc.common.recipe.objects;
 import static com.ils.sfc.common.IlsSfcCommonUtils.isEmpty;
 
 import com.ils.sfc.common.IlsProperty;
-import com.inductiveautomation.ignition.common.Dataset;
 
 /**
 A class that lumps together all the sequence/list types in G2
@@ -12,7 +11,6 @@ public class Array extends DataWithUnits {
 	
 	public Array() {
 		//addProperty(IlsProperty.KEYED);
-		//addProperty(IlsProperty.JSON_LIST);
 		addProperty(IlsProperty.LENGTH);
 		addProperty(IlsProperty.ARRAY_KEY);
 		addProperty(IlsProperty.JSON_LIST);

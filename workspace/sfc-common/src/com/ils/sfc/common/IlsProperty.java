@@ -227,7 +227,7 @@ public class IlsProperty {
     public static final BasicProperty<String> TIME_LIMIT_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.TIME_LIMIT_STRATEGY_CHOICES[0], false, Constants.TIME_LIMIT_STRATEGY_CHOICES, "time limit strategy");
     public static final BasicProperty<Double> TIMING = createProperty(Constants.TIMING, Double.class, 0.);
     public static final BasicProperty<String> RECIPE_STATIC_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.RECIPE_STATIC_STRATEGY_CHOICES[0], Constants.RECIPE_STATIC_STRATEGY_CHOICES);
-    public static final BasicProperty<Double> SCALE = createProperty(Constants.SCALE, Double.class, .5);
+    public static final BasicProperty<Double> SCALE = createProperty(Constants.SCALE, Double.class, 1.0);
     public static final BasicProperty<Double> TARGET_VALUE = createProperty(Constants.TARGET_VALUE, Double.class, 0.);
     public static final BasicProperty<Object> TIME_LIMIT_STATIC_VALUE = createProperty(Constants.VALUE, Object.class, null, false, "time limit static value");
     public static final BasicProperty<Double> TIMEOUT = createProperty(Constants.TIMEOUT, Double.class, -1.);
