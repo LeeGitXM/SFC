@@ -1,6 +1,5 @@
 package com.ils.sfc.designer.search;
 
-import java.awt.Dimension;
 import java.util.ResourceBundle;
 
 import javax.swing.Icon;
@@ -10,7 +9,6 @@ import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.inductiveautomation.ignition.client.util.gui.ErrorUtil;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
-import com.inductiveautomation.sfc.definitions.ElementDefinition;
 /**
  * The property iteration is trivial. On first call
  * return the property name, on the second call return its value.
