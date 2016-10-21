@@ -655,8 +655,10 @@ public abstract class Data {
 		Object[] args = {provider, tagPath};
 		try {
 			Boolean value = (Boolean)PythonCall.RECIPE_DATA_EXISTS.exec(args);
-			return value;
-		} catch (JythonExecException e) {
+			if(value==null) return false;
+			return value.booleanValue();
+		} 
+		catch (JythonExecException e) {
 			log.error("Recipe Data tag existence check failed", e);
 			return false;
 		}				

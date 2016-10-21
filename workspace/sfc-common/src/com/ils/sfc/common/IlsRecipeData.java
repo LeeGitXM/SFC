@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import com.ils.sfc.common.recipe.objects.Array;
+import com.ils.sfc.common.recipe.objects.EMData;
 import com.ils.sfc.common.recipe.objects.Group;
 import com.ils.sfc.common.recipe.objects.Input;
 import com.ils.sfc.common.recipe.objects.Matrix;
@@ -30,6 +31,7 @@ public class IlsRecipeData {
 		recipeDataClasses.add(Value.class);
 		recipeDataClasses.add(Structure.class);
 		recipeDataClasses.add(Array.class);
+		recipeDataClasses.add(EMData.class);
 	}
 	
 	public static Collection<Class<?>> getRecipeClasses() { return recipeDataClasses; }
