@@ -10,6 +10,8 @@ import org.w3c.dom.Node;
 import com.ils.sfc.migration.Converter;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
+
+import system.ils.sfc.common.Constants;
 /**
  * Given a G2 transition step, create the Ignition expression
  */
@@ -224,7 +226,7 @@ public class TransitionTranslator {
 	private String locatorPath(String path) {
 		int pos = path.indexOf("]");
 		if( pos>0 ) path = path.substring(pos+1);
-		return "tag."+path;
+		return Constants.TAG+"."+path;
 	}
 	
 	/**

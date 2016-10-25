@@ -1,20 +1,22 @@
 package com.ils.sfc.common.recipe.objects;
 
+import com.ils.sfc.common.IlsProperty;
+
 /**
-??
+ * ExxonMobil-specific data type
  */
 public class EMData extends Data {
 	
 	public EMData() {
-		addDynamicProperty("pres", 0.);
-		addDynamicProperty("hilim", 0.);
-		addDynamicProperty("recc", 0.);
-		addDynamicProperty("modattr_val", "");
-		addDynamicProperty("lolim", 0.);
-		addDynamicProperty("dscr", "");
-		addDynamicProperty("stag", "");
-		addDynamicProperty("modattr", "");
-		addDynamicProperty("ctag", "");
-		addDynamicProperty("chg_lev",  "");
+		addProperty(IlsProperty.PRES);
+		addProperty(IlsProperty.HILIM);
+		addProperty(IlsProperty.RECC);
+		addProperty(IlsProperty.MODATTR_VAL);
+		addProperty(IlsProperty.LOLIM);
+		addProperty(IlsProperty.DSCR);
+		addProperty(IlsProperty.STAG);
+		addProperty(IlsProperty.MODATTR);
+		addProperty(IlsProperty.CTAG);
+		addProperty(IlsProperty.CHG_LEV);
 	}
 }

@@ -2,13 +2,10 @@ package com.ils.sfc.gateway;
 
 import static com.ils.sfc.common.IlsSfcCommonUtils.isEmpty;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.zip.GZIPInputStream;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +17,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
-import com.ils.sfc.common.chartStructure.ChartModelInfo;
 import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.rowconfig.ConfirmControllersConfig;
 import com.ils.sfc.common.rowconfig.ManualDataEntryConfig;
@@ -30,27 +26,15 @@ import com.ils.sfc.common.rowconfig.ReviewDataConfig;
 import com.ils.sfc.common.rowconfig.ReviewFlowsConfig;
 import com.ils.sfc.common.rowconfig.WriteOutputConfig;
 import com.ils.sfc.gateway.recipe.RecipeDataAccess;
-import com.ils.sfc.step.IlsAbstractChartStep;
 import com.inductiveautomation.ignition.common.Dataset;
-import com.inductiveautomation.ignition.common.config.BasicProperty;
-import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
-import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.DatasetBuilder;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
-import com.inductiveautomation.ignition.gateway.model.GatewayContext;
-import com.inductiveautomation.sfc.api.ChartContext;
-import com.inductiveautomation.sfc.api.ExecutionQueue;
 import com.inductiveautomation.sfc.api.PyChartScope;
-import com.inductiveautomation.sfc.api.ScopeLocator;
-import com.inductiveautomation.sfc.api.elements.ChartElement;
-import com.inductiveautomation.sfc.definitions.ChartDefinition;
-import com.inductiveautomation.sfc.definitions.StepDefinition;
-import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
 /** Java utilities exposed to Python. The python module path is: "system.ils.sfc"
  */

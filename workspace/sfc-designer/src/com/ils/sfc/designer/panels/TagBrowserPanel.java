@@ -3,12 +3,9 @@ package com.ils.sfc.designer.panels;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 
-import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.designer.TagBrowser;
 import com.ils.sfc.designer.propertyEditor.ValueHolder;
-import com.inductiveautomation.ignition.common.sqltags.parser.BasicTagPath;
 
 /** A wrapper for an Ignition tag browser so the user can browse tags instead
  *  of manually typing in the tag path. 

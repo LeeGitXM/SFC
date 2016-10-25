@@ -105,16 +105,16 @@ public class RecipeDataTranslator {
 		g2ToIgName.put("write-confirm", Constants.WRITE_CONFIRM);
 
 		// for the weird EM-RECIPE-DATA, just translate directly for the moment:
-		g2ToIgName.put("pres", "pres");
-		g2ToIgName.put("hilim", "hilim");
-		g2ToIgName.put("recc", "recc");
-		g2ToIgName.put("modattr_val", "modattr_val");
-		g2ToIgName.put("lolim", "lolim");
-		g2ToIgName.put("dscr", "dscr");
-		g2ToIgName.put("stag", "stag");
-		g2ToIgName.put("modattr", "modattr");
-		g2ToIgName.put("ctag", "ctag");
-		g2ToIgName.put("chg_lev", "chg_lev");
+		g2ToIgName.put("pres", Constants.PRES);
+		g2ToIgName.put("hilim", Constants.HILIM);
+		g2ToIgName.put("recc", Constants.RECC);
+		g2ToIgName.put("modattr_val", Constants.MODATTR_VAL);
+		g2ToIgName.put("lolim", Constants.LOLIM);
+		g2ToIgName.put("dscr", Constants.DSCR);
+		g2ToIgName.put("stag", Constants.STAG);
+		g2ToIgName.put("modattr",Constants.MODATTR);
+		g2ToIgName.put("ctag", Constants.CTAG);
+		g2ToIgName.put("chg_lev", Constants.CHG_LEV);
 	}
 
 	//private List<Data> recipeData = new ArrayList<Data>();

@@ -1,13 +1,21 @@
-package com.ils.sfc.gateway.recipe;
+package com.ils.sfc.gateway.locator;
 
 import com.ils.sfc.gateway.IlsSfcGatewayHook;
+import com.ils.sfc.gateway.recipe.RecipeDataAccess;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.api.ScopeLocator;
 
+import system.ils.sfc.common.Constants;
 
+/**
+ * Handle locating the special ILS recipe data sources as well as tag sources.
+ * 
+ *
+ */
 public class IlsScopeLocator implements ScopeLocator {
 	private final IlsSfcGatewayHook hook;
+	
 	
 	public IlsScopeLocator(IlsSfcGatewayHook hook) {
 		this.hook = hook;
@@ -19,12 +27,18 @@ public class IlsScopeLocator implements ScopeLocator {
 	 */
 	@Override
 	public synchronized PyChartScope locate(ScopeContext scopeContext, String identifier) {
-		PyChartScope stepScope = scopeContext.getStepOrPrevious();
 		PyChartScope chartScope = scopeContext.getChartScope();
 		String providerName = RecipeDataAccess.getProviderName(RecipeDataAccess.getIsolationMode(chartScope));
-		// check this step first, then walk up the hierarchy:
-		String tagPath = RecipeDataAccess.getRecipeDataTagPath(chartScope, stepScope, identifier);
-		return new RecipeDataChartScope(tagPath, null, providerName, hook.getContext());	
+		String tagPath = "";
+		if( !identifier.equalsIgnoreCase(Constants.TAG)) {
+			// check this step first, then walk up the hierarchy:
+			PyChartScope stepScope = scopeContext.getStepOrPrevious();
+			tagPath = RecipeDataAccess.getRecipeDataTagPath(chartScope, stepScope, identifier);
+			return new RecipeDataChartScope(tagPath, null, providerName, hook.getContext());
+		}
+		else {
+			return new TagChartScope(providerName, hook.getContext());	
+		}
 	}
 
 }

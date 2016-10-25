@@ -4,7 +4,7 @@ insert into EnumerationMap values ('em-warning','EMCConstants','warning');
 insert into EnumerationMap values ('em-information','EMCConstants','information');
 insert into EnumerationMap values ('s88-abort-command','S88Command','abort');
 insert into EnumerationMap values ('s88-aborted-state','S88State','aborted');
-insert into EnumerationMap values ('s88-superior-operation','S88Scope','superior');
+insert into EnumerationMap values ('s88-superior-operation','S88Scope','operation');
 insert into EnumerationMap values ('s88-complete-state','S88State','complete');
 insert into EnumerationMap values ('s88-error-state','S88State','error');
 insert into EnumerationMap values ('s88-global','S88Scope','global');

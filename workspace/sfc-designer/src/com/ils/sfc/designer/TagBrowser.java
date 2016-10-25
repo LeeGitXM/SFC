@@ -7,23 +7,19 @@ package com.ils.sfc.designer;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.ils.sfc.common.IlsClientScripts;
 import com.inductiveautomation.ignition.client.sqltags.tree.AbstractTagPathTreeNode;
 import com.inductiveautomation.ignition.client.sqltags.tree.TagPathTreeNode;
-import com.inductiveautomation.ignition.client.sqltags.tree.TagPropNode;
 import com.inductiveautomation.ignition.client.sqltags.tree.TagRenderer;
 import com.inductiveautomation.ignition.client.sqltags.tree.TagTreeNode;
-import com.inductiveautomation.ignition.common.sqltags.parser.BasicTagPath;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;

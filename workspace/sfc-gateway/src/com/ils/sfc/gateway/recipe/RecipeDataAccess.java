@@ -2,7 +2,6 @@ package com.ils.sfc.gateway.recipe;
 
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.gateway.GatewayRequestHandler;
-import com.ils.sfc.gateway.IlsSfcGatewayHook;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
