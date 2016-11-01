@@ -1,0 +1,283 @@
+<?xml version="1.0" ?>
+<sfc zoom="1.0" canvas="11 11" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Tue Nov 01 12:28:53 CDT 2016" hot-editable="false" persist-state="true">
+	<step id="eb2791f6-6e1d-11d9-a86e-006008c66680" location="4 0" name="S88Begin_13845" factory-id="begin-step">		<associated-data>{}</associated-data>
+	</step>
+	<step id="41f25729-68f4-4e91-95e8-4fa898688171" location="4 1" name="S1" factory-id="action-step" breakpoint="true">
+		<start-script>def onStart(chart, step):
+	"""
+	This will run when the step starts, before any
+	other action.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+		step: A reference to this step's scope.
+	"""
+	print "Hello"</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="46396970-6b64-11d9-a9ad-00022dc3c8fd" location="1 5" name="SingleRx" factory-id="action-step">
+		<start-script>'''
+ Calculate the R1 &amp; R2 Setpoint Clamp Low and High Limits. 
+'''
+
+import system
+from ils.sfc.gateway.api import s88Set, s88Get, getDatabaseName, getProviderName, fetchRecipeDataValue
+from ils.sfc.common.constants import LOCAL_SCOPE, SUPERIOR_SCOPE, PHASE_SCOPE, OPERATION_SCOPE, GLOBAL_SCOPE
+from ils.sfc.gateway.api import postToQueue
+from ils.common.error import catch
+
+def onStart(chart,block):
+	provider = getProviderName(chart)
+	database = getDatabaseName(chart)
+	log = system.util.getLogger(chart.chartPath)
+	log.tracef("In %s...", block.get("name",""))
+
+	rxConfig = "single-rx"
+	try:
+		r1C3Conv = fetchRecipeDataValue(rxConfig,"r1-c3-conversion","value",database)
+		mainC2Rate = fetchRecipeDataValue(rxConfig,"main-c2-rate","value",database)
+		mainC3ToC2Ratio = fetchRecipeDataValue(rxConfig,"main-c3-to-c2-ratio","value",database)
+		log.infof("Fetched current configuration data: r1C3Conv=%f, mainC2Rate=%f, mainC3ToC2Ratio=%f", r1C3Conv, mainC2Rate, mainC3ToC2Ratio)
+	except:
+		txt = catch(__name__)
+		print txt
+		log.errorf(txt)
+		postToQueue(chart, "warning", "Timeout while collecting current r1-c3-conversion, main-c2-rate, and main-c3-to-c2-ratio for a single reactor configuration.") 
+		s88Set(chart,block,"r1-c3-flow-spcl.value",0.0,OPERATION_SCOPE)
+		s88Set(chart,block,"r2-c3-flow-spcl.value",0.0,OPERATION_SCOPE)
+		return
+
+	r1C3Rate = mainC2Rate * mainC3ToC2Ratio
+	r1C3Spcl = (100.0 - r1C3Conv) * r1C3Rate / 100.0
+	r2C3Spcl = 0.0
+
+	# Clamp the SPCL value at "0.0" if negative to prevent store issues. 
+	if (r1C3Spcl &lt; 0.0):
+		r1C3Spcl = 0.0
+
+	s88Set(chart, block, "r1-c3-flow-spcl.value", r1C3Spcl, OPERATION_SCOPE)
+	s88Set(chart, block, "r2-c3-flow-spcl.value", r2C3Spcl, OPERATION_SCOPE)
+	log.tracef("%s has completed!",block.get("name",""))</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="4515c45a-6e1f-11d9-a86e-006008c66680" location="3 5" name="SeriesRx" factory-id="action-step">
+		<start-script>'''
+ Calculate the R1 &amp; R2 Setpoint Clamp Low and High Limits. 
+'''
+
+import system
+from ils.sfc.gateway.api import s88Set, s88Get, getDatabaseName, getProviderName, fetchRecipeDataValue
+from ils.sfc.common.constants import LOCAL_SCOPE, SUPERIOR_SCOPE, PHASE_SCOPE, OPERATION_SCOPE, GLOBAL_SCOPE
+from ils.sfc.gateway.api import postToQueue
+from ils.common.error import catch
+
+def onStart(chart,block):
+	print "Starting..."
+	provider = getProviderName(chart)
+	database = getDatabaseName(chart)
+	log = system.util.getLogger(chart.chartPath)
+	log.tracef("In %s...", block.get("name",""))
+
+	rxConfig = "series-rx"
+	try:
+		r1C3Conv = fetchRecipeDataValue(rxConfig,"r1-c3-conversion","value",database)
+		mainC2Rate = fetchRecipeDataValue(rxConfig,"main-c2-rate","value",database)
+		mainC3ToC2Ratio = fetchRecipeDataValue(rxConfig,"main-c3-to-c2-ratio","value",database)
+		tC3Conv = fetchRecipeDataValue(rxConfig,"total-c3-conversion","value",database)
+		r2C2Rate = fetchRecipeDataValue(rxConfig,"r2-c2-rate","value",database)
+		r2C3ToC2Ratio = fetchRecipeDataValue(rxConfig,"r2-c3-to-c2-ratio","value",database)
+		log.infof("Fetched current configuration data: r1C3Conv=%f, mainC2Rate=%f, mainC3ToC2Ratio=%f, tC3Conv=%f, r2C2Rate=%f, r2C3ToC2Ratio=%f", r1C3Conv, mainC2Rate, mainC3ToC2Ratio, tC3Conv, r2C2Rate, r2C3ToC2Ratio)
+	except:	
+		txt = catch(__name__)
+		print txt
+		log.errorf(txt)
+		postToQueue(chart, "warning", "Timeout while collecting current r1-c3-conversion, main-c2-rate, and main-c3-to-c2-ratio for a single reactor configuration.") 
+		s88Set(chart,block,"r1-c3-flow-spcl.value",0.0,OPERATION_SCOPE)
+		s88Set(chart,block,"r2-c3-flow-spcl.value",0.0,OPERATION_SCOPE)
+		return
+
+	print "Done Fetching"
+	r1C3Rate = mainC2Rate * mainC3ToC2Ratio
+	r2C3Rate = r2C2Rate * r2C3ToC2Ratio
+	r1C3Spcl = (100.0 - r1C3Conv) * r1C3Rate / 100.0
+	r2C3Spcl = (100.0 - tC3Conv) * ((r2C3Rate + r1C3Rate) / 100.0) - r1C3Spcl
+
+	# Clamp the SPCL values at "0.0" if negative to prevent store issues. 
+	if (r1C3Spcl &lt; 0.0):
+		r1C3Spcl = 0.0
+
+	if (r2C3Spcl &lt; 0.0):
+		r2C3Spcl = 0.0
+
+	s88Set(chart, block, "r1-c3-flow-spcl.value", r1C3Spcl, OPERATION_SCOPE)
+	s88Set(chart, block, "r2-c3-flow-spcl.value", r2C3Spcl, OPERATION_SCOPE)
+	log.tracef("%s has completed!",block.get("name",""))
+	print "Done!"</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="4515c45f-6e1f-11d9-a86e-006008c66680" location="5 5" name="SplitRx" factory-id="action-step">
+		<start-script>'''
+ Calculate the R1 &amp; R2 Setpoint Clamp Low and High Limits. 
+'''
+
+import system
+from ils.sfc.gateway.api import s88Set, s88Get, getDatabaseName, getProviderName, fetchRecipeDataValue
+from ils.sfc.common.constants import LOCAL_SCOPE, SUPERIOR_SCOPE, PHASE_SCOPE, OPERATION_SCOPE, GLOBAL_SCOPE
+from ils.sfc.gateway.api import postToQueue
+from ils.common.error import catch
+
+def onStart(chart,block):
+	provider = getProviderName(chart)
+	database = getDatabaseName(chart)
+	log = system.util.getLogger(chart.chartPath)
+	log.tracef("In %s...", block.get("name",""))
+
+	# Not sure if this should just be "split-rx"
+	rxConfig = "split-fd-rx"
+	try:
+		mainC2Rate = fetchRecipeDataValue(rxConfig,"main-c2-rate","value",database)
+		mainC3ToC2Ratio = fetchRecipeDataValue(rxConfig,"main-c3-to-c2-ratio","value",database)
+		mainToR2Split = fetchRecipeDataValue(rxConfig,"r1-to-total-split","value",database)
+		tC3Conv = fetchRecipeDataValue(rxConfig,"r1-c3-conversion","value",database)
+		r2C2Rate = fetchRecipeDataValue(rxConfig,"r2-c2-rate","value",database)
+		r2C3ToC2Ratio = fetchRecipeDataValue(rxConfig,"r2-c3-to-c2-ratio","value",database)
+		log.infof("Fetched current configuration data: mainC2Rate=%f, mainC3ToC2Ratio=%f, mainToR2Split=%f, tC3Conv=%f, r2C2Rate=%f, r2C3ToC2Ratio=%f", mainC2Rate, mainC3ToC2Ratio, mainToR2Split, tC3Conv, r2C2Rate, r2C3ToC2Ratio)
+	except:	
+		txt = catch(__name__)
+		print txt
+		log.errorf(txt)
+		postToQueue(chart, "warning", "Timeout while collecting current r1-c3-conversion, main-c2-rate, and main-c3-to-c2-ratio for a single reactor configuration.") 
+		s88Set(chart, block, "r1-c3-flow-spcl.value", 0.0, OPERATION_SCOPE)
+		s88Set(chart, block, "r2-c3-flow-spcl.value", 0.0, OPERATION_SCOPE)
+		return
+      
+	r1C3Rate = mainC2Rate * mainC3ToC2Ratio
+	r2C3Rate = r2C2Rate * r2C3ToC2Ratio
+	targetC3Flow = (100.0 - tC3Conv) * (r1C3Rate + r2C3Rate) / 100.0
+	r1C3Spcl = targetC3Flow * mainToR2Split
+	r2C3Spcl = targetC3Flow - r1C3Spcl
+
+	# Clamp the SPCL values at "0.0" if negative to prevent store issues. 
+	if (r1C3Spcl &lt; 0.0):
+		r1C3Spcl = 0.0
+
+	if (r2C3Spcl &lt; 0.0):
+		r2C3Spcl = 0.0
+
+	s88Set(chart, block, "r1-c3-flow-spcl.value", r1C3Spcl, OPERATION_SCOPE)
+	s88Set(chart, block, "r2-c3-flow-spcl.value", r2C3Spcl, OPERATION_SCOPE)
+	log.tracef("%s has completed!",block.get("name",""))</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="501e4e7e-6e3f-11d9-a86e-006008c66680" location="1 7" name="C3_RampFlags" factory-id="action-step">
+		<start-script>'''
+ Determine if there is a C3 ramp based on the R1 &amp; R2 C3 setpoint clamp 
+ low limits and the minimum C3 rate. 
+'''
+
+import system
+from ils.sfc.gateway.api import s88Set, s88Get, getDatabaseName, getProviderName
+from ils.sfc.common.constants import LOCAL_SCOPE, SUPERIOR_SCOPE, PHASE_SCOPE, OPERATION_SCOPE, GLOBAL_SCOPE
+
+def onStart(chart,block):
+	print "Determining C3 ramp..."
+	provider = getProviderName(chart)
+	log = system.util.getLogger(chart.chartPath)
+	log.tracef("In %s...", block.get("name",""))
+  
+  	print "...getting flows..."
+	r1C3Spcl = s88Get(chart, block, "r1-c3-flow-spcl.value", OPERATION_SCOPE)
+	r2C3Spcl = s88Get(chart, block, "r2-c3-flow-spcl.value", OPERATION_SCOPE)
+	minimumC3Rate = s88Get(chart, block, "minimum-c3-rate.value", OPERATION_SCOPE)
+
+	print "...determining if there is a ramp..."
+	c3Ramp = (r1C3Spcl &gt; minimumC3Rate) or (r2C3Spcl &gt; minimumC3Rate)
+	print "There is a C3 ramp: ", c3Ramp
+
+	s88Set(chart, block, "c3-ramp.val", c3Ramp, OPERATION_SCOPE)
+	log.tracef("%s has completed!",block.get("name",""))
+	print "Done"</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="eb2791f1-6e1d-11d9-a86e-006008c66680" location="1 8" name="S88End_13844" factory-id="end-step">		<associated-data>{}</associated-data>
+	</step>
+	<step id="b6c910d8-c754-11e4-9591-00142223a71b" location="7 4" name="S88ShowWorkspace_13834" factory-id="com.ils.showWindowStep"><description></description><scale>1.0</scale><windowTitle>Divert Reminder</windowTitle><buttonLabel>Divert</buttonLabel><security>private</security><name>S88ShowWorkspace_13834</name><id>b6c910d8-c754-11e4-9591-00142223a71b</id><position>center</position><window>Vistalon/SFC/Catout CRx Divert Reminder</window>		<associated-data>{}</associated-data>
+	</step>
+	<step id="4515c464-6e1f-11d9-a86e-006008c66680" location="7 5" name="C_Rx" factory-id="action-step">
+		<start-script>'''
+ Calculate the R1 &amp; R2 Setpoint Clamp Low and High Limits. 
+'''
+
+import system
+from ils.sfc.gateway.api import s88Set, s88Get, getDatabaseName, getProviderName, fetchRecipeDataValue
+from ils.sfc.common.constants import LOCAL_SCOPE, SUPERIOR_SCOPE, PHASE_SCOPE, OPERATION_SCOPE, GLOBAL_SCOPE
+from ils.sfc.gateway.api import postToQueue
+from ils.common.error import catch
+
+def onStart(chart,block):
+	provider = getProviderName(chart)
+	database = getDatabaseName(chart)
+	log = system.util.getLogger(chart.chartPath)
+	log.tracef("In %s...", block.get("name",""))
+
+	rxConfig = "c-rx"
+	try:
+		tC3Conv = fetchRecipeDataValue(rxConfig,"c3-conv","value",database)
+		r1C3Rate = fetchRecipeDataValue(rxConfig,"main-c3-rate","value",database)
+		r2C3Rate = fetchRecipeDataValue(rxConfig,"ss-c3-rate","value",database)
+	except:	
+		txt = catch(__name__)
+		print txt
+		log.errorf(txt)
+		postToQueue(chart, "warning", "Timeout while collecting current r1-c3-conversion, main-c2-rate, and main-c3-to-c2-ratio for a single reactor configuration.") 
+		s88Set(chart, block, "r1-c3-flow-spcl.value", 0.0, OPERATION_SCOPE)
+		s88Set(chart, block, "r2-c3-flow-spcl.value", 0.0, OPERATION_SCOPE)
+		return
+
+	r1C3Spcl = (100.0 - tC3Conv) * r1C3Rate / 100.0
+	r2C3Spcl = (100.0 - tC3Conv) * r2C3Rate / 100.0
+
+	# Clamp the SPCL values at "0.0" if negative to prevent store issues. 
+	if (r1C3Spcl &lt; 0.0):
+		r1C3Spcl = 0.0
+
+	if (r2C3Spcl &lt; 0.0):
+		r2C3Spcl = 0.0
+
+	s88Set(chart, block, "r1-c3-flow-spcl.value", r1C3Spcl, OPERATION_SCOPE)
+	s88Set(chart, block, "r2-c3-flow-spcl.value", r2C3Spcl, OPERATION_SCOPE)
+	s88Set(chart, block, "r1-c3-flow-sp.value", r1C3Spcl, OPERATION_SCOPE)
+	s88Set(chart, block, "r2-c3-flow-sp.value", r2C3Spcl, OPERATION_SCOPE)
+
+	# Calculate the sidestream monomer setpoint reduction due to spcl of R2 on C3=. 
+#	sleep(system.tag.read("[]Site/G2-LATENCY-TIME").getValue())
+#	s88CatoutCReactor.collect(chart,block,currentDataBlock)
+	log.tracef("%s has completed!",block.get("name",""))</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<transition id="248889f6-6e1e-11d9-a86e-006008c66680" location="1 3" timeout-delay="5000" timeout-flag="foo">{[XOM]Recipe/Local/SINGLE-RX-GRADE} = true</transition>
+	<transition id="248889ea-6e1e-11d9-a86e-006008c66680" location="3 3" timeout-delay="5000" timeout-flag="foo">{[XOM]Recipe/Local/SERIES-RX-GRADE} = true</transition>
+	<transition id="248889f0-6e1e-11d9-a86e-006008c66680" location="5 3" timeout-delay="30000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13841">{[XOM]Recipe/Local/SPLIT-FEED-GRADE} = true</transition>
+	<transition id="248889e4-6e1e-11d9-a86e-006008c66680" location="7 3" timeout-delay="30000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13839">{[XOM]Recipe/Local/C-RX-GRADE} = "true"</transition>
+	<note id="55d3126e-9eaa-4af5-86aa-44e78e043d70" location="0 1" size="2 1">Configuration Specific Data 
+Collection Tasks </note>
+	<note id="2cc73015-8718-47bd-862c-87aab03e0029" location="8 3" size="2 1">Tag Locator</note>
+	<link id="e8129260-2295-4e4b-8be9-19aa551eb761" location="1 2"><down/><right/></link>
+	<link id="c58bca69-18c3-4163-88b4-e2634b7a4df6" location="2 2"><left/><right/></link>
+	<link id="b0345306-94bc-4cd2-99f1-b48410f74e7f" location="3 2"><left/><down/><right/></link>
+	<link id="ed070392-8536-447d-b83c-5679f7a8d530" location="1 4"><up/><down/></link>
+	<link id="31c054f7-37d8-4f23-86d7-27bdaaa9df68" location="4 2"><up/><left/><right/></link>
+	<link id="f90f991c-a946-4552-8d39-ed9621780ab5" location="3 4"><up/><down/></link>
+	<link id="cce198ac-a8be-4078-ac80-f6ba6f0a1ae0" location="5 2"><left/><down/><right/></link>
+	<link id="6730c9a2-3161-494b-8ae9-aca2ea716292" location="1 6"><up/><down/><right/></link>
+	<link id="a674a61a-697d-4763-8342-aba6b94402d6" location="6 2"><left/><right/></link>
+	<link id="a8731226-1896-4345-bc2b-594bd98cddaa" location="2 6"><left/><right/></link>
+	<link id="f8563b4c-5ccd-4386-a5cd-3db750cd1c9d" location="5 4"><up/><down/><right/></link>
+	<link id="aa6a2417-e837-4852-8708-07475acd0f81" location="3 6"><up/><left/><right/></link>
+	<link id="96b34f49-6182-4b9f-aa6f-deab5ac4b7fb" location="4 6"><left/><right/></link>
+	<link id="334c5892-ce41-4710-97c8-e5da84330f09" location="7 2"><left/><down/></link>
+	<link id="099460f0-107d-4462-bdd6-a8142b849080" location="5 6"><up/><left/><right/></link>
+	<link id="949159b3-2c71-4301-b1cd-f442a7eea91f" location="6 6"><left/><right/></link>
+	<link id="977616d7-f6f8-44a5-8933-a9da2b415e07" location="7 6"><up/><left/><down/></link>
+
+</sfc>
