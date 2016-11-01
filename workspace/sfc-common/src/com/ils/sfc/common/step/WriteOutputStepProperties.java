@@ -14,6 +14,8 @@ public interface WriteOutputStepProperties extends ChartStepProperties {
 	
     public static final BasicProperty<?>[] properties = {
     	VERBOSE,
+    	GLOBAL_ERROR_COUNT_LOCATION,
+    	GLOBAL_ERROR_COUNT_KEY,
     	RECIPE_LOCATION,
     	TIMER_LOCATION,
     	TIMER_KEY,

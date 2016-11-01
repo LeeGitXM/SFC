@@ -33,10 +33,15 @@ WriteOutputStepProperties {
 	public void validate(ChartInfo chart, ChartUIElement element, StepPropertyValidator validator) {
 		
 		// validate recipe data keys:
+		String globalErrorCountLocation = element.get(IlsProperty.GLOBAL_ERROR_COUNT_LOCATION);
+		String globalErrorCountKey = element.get(IlsProperty.GLOBAL_ERROR_COUNT_KEY);
 		String timerLocation = element.get(IlsProperty.TIMER_LOCATION);
 		String timerKey = element.get(IlsProperty.TIMER_KEY);
 		if(!IlsSfcCommonUtils.isEmpty(timerKey)) {
 			validator.validateRecipeKey(timerLocation, timerKey, chart, element);			
+		}
+		if(!IlsSfcCommonUtils.isEmpty(globalErrorCountKey)) {
+			validator.validateRecipeKey(globalErrorCountLocation, globalErrorCountKey, chart, element);			
 		}
 				
 		String recipeLocation = element.get(IlsProperty.RECIPE_LOCATION);

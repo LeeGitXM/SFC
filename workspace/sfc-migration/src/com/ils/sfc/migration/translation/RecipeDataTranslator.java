@@ -31,6 +31,7 @@ import com.ils.sfc.common.recipe.objects.Timer;
 import com.ils.sfc.common.recipe.objects.Value;
 import com.ils.sfc.migration.Converter;
 import com.ils.sfc.migration.map.PropertyValueMapper;
+import com.ils.sfc.migration.map.TagMapper;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -276,13 +277,21 @@ public class RecipeDataTranslator {
 	 * @param map the attribute map of the recipe data element
 	 */
 	private void customizeRecipeAttributeMap(Map<String,String>map) {
-		PropertyValueMapper mapper = delegate.getPropertyValueMapper();
+		
 		String claz = map.get("class-name");
 		if( claz!=null && claz.equalsIgnoreCase("S88-RECIPE-VALUE-DATA")) {
 			// "type" is really "value-type"
+			PropertyValueMapper mapper = delegate.getPropertyValueMapper();
 			String type = map.get(Constants.TYPE);         // G2 type - text, quantity
 			String ignitionType = mapper.modifyPropertyValueForIgnition(Constants.VALUE_TYPE, type);
 			map.put(Constants.VALUE_TYPE, ignitionType);   // Ignition type - string, float
+		}
+		else if(claz!=null && claz.equalsIgnoreCase("S88-RECIPE-VALUE-DATA")) {
+			// for tag path, use the SQLite mapping tables
+			TagMapper mapper = delegate.getTagMapper();
+			String gsiName = map.get(Constants.TAG_PATH);         // G2 type - text, quantity
+			String tagPath = mapper.getTagPath(gsiName);
+			map.put(Constants.TAG_PATH, tagPath);   // Ignition type - string, float
 		}
 	}
 

@@ -84,6 +84,8 @@ public class Constants {
 	public static final String FETCH_MODE = "fetchMode";
 	public static final String FILENAME = "filename";
 	public static final String FILEPATH = "filepath";
+	public static final String GLOBAL_ERROR_COUNT_KEY = "globalErrorCountKey";
+	public static final String GLOBAL_ERROR_COUNT_LOCATION = "globalErrorCountLocation";
 	public static final String HEADING1 = "heading1";
 	public static final String HEADING2 = "heading2";
 	public static final String HEADING3 = "heading3";

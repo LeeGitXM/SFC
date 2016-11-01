@@ -159,6 +159,8 @@ public class IlsProperty {
     public static final BasicProperty<String> FACTORY_ID = createProperty("factory-id", String.class, "");
     public static final BasicProperty<String> FETCH_MODE = createProperty(Constants.FETCH_MODE, String.class, Constants.FETCH_MODE_CHOICES[0], Constants.FETCH_MODE_CHOICES);
     public static final BasicProperty<String> FILENAME = createProperty(Constants.FILENAME, String.class, "");
+    public static final BasicProperty<String> GLOBAL_ERROR_COUNT_KEY = createProperty(Constants.GLOBAL_ERROR_COUNT_KEY, String.class, "");
+    public static final BasicProperty<String> GLOBAL_ERROR_COUNT_LOCATION = createProperty(Constants.GLOBAL_ERROR_COUNT_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
     public static final BasicProperty<String> HEADING1 = createProperty(Constants.HEADING1, String.class, "");
     public static final BasicProperty<String> HEADING2 = createProperty(Constants.HEADING2, String.class, "");
     public static final BasicProperty<String> HEADING3 = createProperty(Constants.HEADING3, String.class, "");
