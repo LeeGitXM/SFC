@@ -1,4 +1,4 @@
-package com.ils.sfc.gateway.recipe;
+package com.ils.sfc.gateway.locator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +27,8 @@ import com.inductiveautomation.sfc.api.PyChartScope;
 
 @SuppressWarnings("serial")
 public class RecipeDataChartScope extends PyChartScope {
-	private static LoggerEx logger = LogUtil.getLogger(RecipeDataChartScope.class.getName());
+	private static LoggerEx log = LogUtil.getLogger(RecipeDataChartScope.class.getName());
+	private final static boolean DEBUG = false;
 	private String stepPath;
 	private String providerName;
 	private GatewayContext gatewayContext;
@@ -46,7 +47,7 @@ public class RecipeDataChartScope extends PyChartScope {
 		}
 	};
 	
-	RecipeDataChartScope(String stepPath, RecipeDataChartScope parent, String providerName, GatewayContext gatewayContext) {
+	public RecipeDataChartScope(String stepPath, RecipeDataChartScope parent, String providerName, GatewayContext gatewayContext) {
 		this.stepPath = stepPath;
 		this.parent = parent;
 		this.providerName = providerName;
@@ -63,6 +64,7 @@ public class RecipeDataChartScope extends PyChartScope {
 	
 	@Override
 	public boolean containsKey(Object key) {
+		if( DEBUG ) log.infof("containsKey: key %s", key.toString());
 		return true;
 	}
 		
@@ -79,11 +81,11 @@ public class RecipeDataChartScope extends PyChartScope {
 		key = (String)keyObj;
 		String keyPath = getKeyPath();
 		String strTagPath = Constants.RECIPE_DATA_FOLDER + "/" + stepPath + "/" + keyPath;
-		logger.debugf("get: key %s keyPath %s strTagPath", key, keyPath, strTagPath);
+		if( DEBUG ) log.infof("get: key %s keyPath %s strTagPath", key.toString(), keyPath, strTagPath);
 		TagPath igTagPath = new BasicTagPath(providerName, getPathComponents(strTagPath));
 		Tag tag = gatewayContext.getTagManager().getTag(igTagPath);
 		if(tag == null) {
-			logger.errorf("tag %s not found", strTagPath);
+			log.errorf("tag %s not found", strTagPath);
 			return new PyChartScope();
 		}
 		// get the child tags
@@ -99,7 +101,7 @@ public class RecipeDataChartScope extends PyChartScope {
 			resultScope = new PyChartScope();
 			for(Tag childTag: childTags) {
 				resultScope.put(childTag.getName(), childTag.getValue().getValue());
-				logger.debugf("putting value in scope %s %s", childTag.getName(), childTag.getValue().getValue());
+				if( DEBUG ) log.infof("get: adding to scope %s = %s", childTag.getName(), childTag.getValue().getValue());
 				if(!listenersByKey.containsKey(strTagPath)) {
 					addValueChangeListener(strTagPath, igTagPath);
 				}
@@ -132,7 +134,7 @@ public class RecipeDataChartScope extends PyChartScope {
 	}
 
 	protected void notifyObservers() {
-		logger.debugf("notifiying observers for key %s", key);
+		if( DEBUG ) log.infof("notifying observers for key %s", key);
 		RecipeDataChartScope.this.notifyObservers(new PyString(key), (PyObject)null);
 		if(parent != null) {
 			parent.notifyObservers();
@@ -144,14 +146,14 @@ public class RecipeDataChartScope extends PyChartScope {
 			@Override
 			public void tagChanged(TagChangeEvent e) {
 				notifyObservers();
-				logger.debugf("tag changed: %s", e.getTagPath());
+				if( DEBUG ) log.infof("tag changed: %s", e.getTagPath());
 			}
 			public TagProp getTagProperty() {
 				return TagProp.Value;
 			}
 		};
 		// Note: we only listen for changes in the "value" member of a recipe data tag
-		logger.debugf("adding tag listener on %s.value", igTagPath.toString());
+		if( DEBUG ) log.infof("addValueChangeListener: on %s.value", igTagPath.toString());
 		igTagPath = (BasicTagPath) BasicTagPath.append(igTagPath, "value");
 		listenersByKey.put(key, new ListenerInfo(igTagPath, tagListener));
 		gatewayContext.getTagManager().subscribe(igTagPath, tagListener);

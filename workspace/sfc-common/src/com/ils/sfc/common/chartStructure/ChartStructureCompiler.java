@@ -100,30 +100,32 @@ public class ChartStructureCompiler {
 	// Deserialize all SFC charts from the global project.
 	private boolean loadModels() {
 		List<ProjectResource> resources = project.getResources();
+		boolean success = true;
 		for(ProjectResource res:resources) {
 			if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
+				String path = project.getFolderPath(res.getResourceId());
 				try {
 					byte[] chartResourceData = res.getData();					
 					//IlsSfcCommonUtils.printResource(data);					
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 					ChartUIModel uiModel = ChartUIModel.fromXML(xmlInput, stepRegistry );
-					String path = project.getFolderPath(res.getResourceId());
+					
 					ChartModelInfo info = new ChartModelInfo(uiModel,res,path);
 					modelInfoByResourceId.put(new Long(res.getResourceId()),info);
 					modelInfoByChartPath.put(path,info);
-					log.debugf("%s.loadModels: found resource %s (%d)",TAG,path,res.getResourceId());
+					log.debugf("loadModels: found resource %s (%d)",path,res.getResourceId());
 				}
 				catch(IOException ioe) {
-					log.errorf("%s.loadModels: IO exception deserializing chart (%s)",TAG,ioe.getLocalizedMessage());
-					return false;
+					log.errorf("loadModels: Exception deserializing %s (%s)",path,ioe.getLocalizedMessage());
+					success = false;
 				}
 				catch(XMLParseException xpe) {
-					log.errorf("%s.loadModels: XML error deserializing chart (%s)",TAG,xpe.getLocalizedMessage());
-					return false;
+					log.errorf("loadModels: Error deserializing %s (%s)",path,xpe.getLocalizedMessage());
+					success = false;
 				}
 			}
 		}
-		return true;
+		return success;
 	}
 
 	// Do the IA chart compilation and create corresponding chart/step elements in our structure.

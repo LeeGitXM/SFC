@@ -235,6 +235,20 @@ public class Constants {
 	public static final String WRITE_CONFIRMED = "writeConfirmed";
 	public static final String WRITE_OUTPUT_CONFIG = "writeOutputConfig";
 	public static final String YES = "Yes";
+	
+	// Constants for EM-RECIPE-DATA
+	public static final String CHG_LEV = "chg_lev";
+	public static final String CTAG = "ctag";
+	public static final String DSCR = "dscr";
+	public static final String HILIM = "hilim";
+	public static final String LOLIM = "lolim";
+	public static final String MODATTR = "modattr";
+	public static final String MODATTR_VAL = "modattr_val";
+	public static final String PRES = "pres";
+	public static final String RECC = "recc";
+	public static final String STAG = "stag";
+	
+	
 
 	// Timer (Write output/PV Monitoring/Download GUI) things
 	// These are the states and the commands for the timer UDT

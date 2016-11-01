@@ -9,14 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import system.ils.sfc.common.Constants;
-
 import com.ils.common.persistence.ToolkitRecord;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
+import com.ils.sfc.gateway.locator.IlsScopeLocator;
 import com.ils.sfc.gateway.monitor.IlsStepMonitor;
-import com.ils.sfc.gateway.recipe.IlsScopeLocator;
 import com.ils.sfc.gateway.recipe.RecipeDataAccess;
 import com.ils.sfc.step.CancelStepFactory;
 import com.ils.sfc.step.ClearQueueStepFactory;
@@ -72,6 +70,8 @@ import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.api.ChartManagerService;
 import com.inductiveautomation.sfc.api.SfcGatewayHook;
 import com.inductiveautomation.sfc.api.elements.StepFactory;
+
+import system.ils.sfc.common.Constants;
 
 //import com.inductiveautomation.sfc.ChartManager;
 
@@ -170,6 +170,8 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public IlsDropBox getDropBox() {
 		return dropBox;
 	}
+	
+	public LoggerEx getLogger() { return log; }
 
 	public IlsStepMonitor getStepMonitor() {
 		return stepMonitor;
@@ -262,6 +264,8 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		IlsGatewayScripts.setRequestHandler(requestHandler);
 		RecipeDataAccess.setRequestHandler(requestHandler);
 		stepMonitor = new IlsStepMonitor(structureManager,chartManager);
+		Thread delayThread = new Thread(new StructureCompilerRunner());
+		delayThread.start();
     	context.getProjectManager().addProjectListener(this);
 		log.infof("%s: Startup complete.",TAG);
 	}
@@ -305,6 +309,8 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	// =================================== Project Listener ========================
 	@Override
 	public void projectAdded(Project proj1, Project proj2) {
+		structureManager.getCompiler().compile();
+		log.infof("%s.projectAdded: re-analyzing charts.",TAG);
 	}
 
 	@Override
@@ -314,5 +320,20 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	@Override
 	public void projectUpdated(Project proj, ProjectVersion vers) {
 		structureManager.getCompiler().compile();
+		log.infof("%s.projectUpdated: re-analyzing charts.",TAG);
+	}
+	// =================================== Initial Chart Structure ========================
+	/**
+	 * Wait for the initial startup flurry to pass, then compile chart structure.
+	 */
+	private class StructureCompilerRunner implements Runnable {
+		public void run() {
+			try {
+				Thread.sleep(5000l);    // 5 seconds
+			}
+			catch(InterruptedException ignore) {}
+			structureManager.getCompiler().compile();
+			log.infof("%s.StructureCompilerRunner: analyze charts.",TAG);
+		}
 	}
 }

@@ -251,6 +251,18 @@ public class IlsProperty {
     public static final BasicProperty<Boolean> WRITE_CONFIRMED = createProperty(Constants.WRITE_CONFIRMED, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> WRITE_OUTPUT_CONFIG = createProperty(Constants.WRITE_OUTPUT_CONFIG, String.class, EMPTY_WRITE_OUTPUT_CONFIG, true, Constants.CONFIG);
 
+    // Properties for EM-RECIPE-DATA
+    public static final BasicProperty<String> CHG_LEV = createProperty(Constants.CHG_LEV, String.class, "");
+    public static final BasicProperty<String> CTAG = createProperty(Constants.CTAG, String.class, "");
+    public static final BasicProperty<String> DSCR = createProperty(Constants.DSCR, String.class, "");
+    public static final BasicProperty<Double> HILIM = createProperty(Constants.HILIM, Double.class, 0.);
+    public static final BasicProperty<Double> LOLIM = createProperty(Constants.LOLIM, Double.class, 0.);
+    public static final BasicProperty<String> MODATTR =    createProperty(Constants.MODATTR, String.class, "");;
+    public static final BasicProperty<String> MODATTR_VAL =createProperty(Constants.MODATTR_VAL, String.class, "");
+    public static final BasicProperty<Double> PRES = createProperty(Constants.PRES, Double.class, 0.);
+    public static final BasicProperty<Double> RECC = createProperty(Constants.RECC, Double.class, 0.);
+    public static final BasicProperty<String> STAG = createProperty(Constants.STAG, String.class, "");
+    
 	public static <C> BasicProperty<C> createProperty(String name, Class<C> clazz, C defaultValue) {
 		return createProperty(name, clazz, defaultValue, false, null, null);
 	}
