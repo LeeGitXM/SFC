@@ -1,6 +1,10 @@
 <?xml version="1.0" ?>
-<sfc zoom="1.0" canvas="8 8" execution-mode="Callable" version="7.8.4 (b2016082217)" timestamp="Fri Oct 21 08:54:40 CDT 2016" hot-editable="false" persist-state="true">
-	<step id="88fbe0bc-6c1f-11d9-a9ae-000bcd538076" location="1 1" name="S88Begin_13916" factory-id="begin-step">		<associated-data>{}</associated-data>
+<sfc zoom="1.0" canvas="8 8" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Tue Nov 01 12:35:24 CDT 2016" hot-editable="false" persist-state="true">
+	<step id="88fbe0bc-6c1f-11d9-a9ae-000bcd538076" location="1 1" name="S88Begin_13916" factory-id="begin-step">
+<parameters>
+	<parameter key="true"><name>Name</name><expression>"Abort Cleanup"</expression></parameter>
+</parameters>
+		<associated-data>{}</associated-data>
 	</step>
 	<step id="1ab029c8-78bd-11d9-a870-006008c66680" location="1 2" name="S88MessageQueueTask_13914" factory-id="com.ils.queueMessageStep"><name>S88MessageQueueTask_13914</name><description></description><id>1ab029c8-78bd-11d9-a870-006008c66680</id><message>The Catout for {global.grade.value} was ABORTED by the OC.</message><priority>Info</priority>		<associated-data>{}</associated-data>
 	</step>
