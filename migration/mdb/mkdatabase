@@ -20,6 +20,7 @@ sqlite3 $DB < ${BIN}/insertEnumerations.sql
 sqlite3 $DB < ${BIN}/insertPreferences.sql
 sqlite3 $DB < ${BIN}/insertProperties.sql
 sqlite3 $DB < ${BIN}/insertTags.sql
+sqlite3 $DB < ${BIN}/insertOutputTags.sql
 
 # BLT Tables
 sqlite3 $DB < ${BIN}/insertBltAnchorMap.sql
