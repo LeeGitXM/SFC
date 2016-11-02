@@ -57,8 +57,13 @@ public class TagMapper {
 		
 	}
 	
+	/**
+	 * Lookup is case insensitive.
+	 * @param g2Name
+	 * @return
+	 */
 	public String getTagPath(String g2Name) {
-		return tagMap.get(g2Name);
+		return tagMap.get(g2Name.toLowerCase());
 	}
 
 }

@@ -286,12 +286,17 @@ public class RecipeDataTranslator {
 			String ignitionType = mapper.modifyPropertyValueForIgnition(Constants.VALUE_TYPE, type);
 			map.put(Constants.VALUE_TYPE, ignitionType);   // Ignition type - string, float
 		}
-		else if(claz!=null && claz.equalsIgnoreCase("S88-RECIPE-VALUE-DATA")) {
+		else if(claz!=null && claz.equalsIgnoreCase("S88-RECIPE-OUTPUT-DATA")) {
 			// for tag path, use the SQLite mapping tables
 			TagMapper mapper = delegate.getTagMapper();
-			String gsiName = map.get(Constants.TAG_PATH);         // G2 type - text, quantity
+			String gsiName = map.get(Constants.TAG);         // G2 type - text, quantity
 			String tagPath = mapper.getTagPath(gsiName);
-			map.put(Constants.TAG_PATH, tagPath);   // Ignition type - string, float
+			if( tagPath!=null) {
+				map.put(Constants.TAG, tagPath);   // Ignition type - string, float
+			}
+			else {
+				errors.add("S88-RECIPE-OUTPUT-DATA: Tag lookup failed for: " + gsiName);
+			}
 		}
 	}
 

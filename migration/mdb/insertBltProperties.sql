@@ -81,7 +81,9 @@ insert into BltPropertyMap values ('GDL-CONCLUSION','descriptionWhenFalse','Expl
 insert into BltPropertyMap values ('GDL-CONCLUSION','descriptionWhenTrue','ExplanationWhenTrue','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-CONCLUSION','descriptionWhenUnknown','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-CONCLUSION','statusOnInitialization','','STRING',1,'NONE');
+insert into BltPropertyMap values ('GDL-DATA-SHIFT','requireFullHistory','','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-DATA-SHIFT','sampleSize','SampleSize','INTEGER',1,'NONE');
+insert into BltPropertyMap values ('GDL-DATA-SHIFT','sampleType','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-EQUALITY-OBSERVATION','equivalenceBand','Deadband','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-EQUALITY-OBSERVATION','hysteresisWhen','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-EQUALITY-OBSERVATION','referenceValue','Nominal','DOUBLE',1,'NONE');

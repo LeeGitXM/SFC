@@ -234,6 +234,8 @@ insert into SfcPropertyMap values ('com.ils.procedureStep','return-parameters','
 
 
 -- WRITE OUTPUT
+insert into SfcPropertyMap values ('com.ils.writeOutputStep','globalErrorCountKey','');
+insert into SfcPropertyMap values ('com.ils.writeOutputStep','globalErrorCountLocation','');
 insert into SfcPropertyMap values ('com.ils.writeOutputStep','recipeLocation','recipeLocation');
 insert into SfcPropertyMap values ('com.ils.writeOutputStep','timerKey','timerKey');
 insert into SfcPropertyMap values ('com.ils.writeOutputStep','timerLocation','timerSource');
