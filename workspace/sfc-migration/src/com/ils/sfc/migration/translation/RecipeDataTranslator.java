@@ -145,7 +145,7 @@ public class RecipeDataTranslator {
 	 * element to a chart step. 
 	 */
 	public Element createAssociatedDataElement(Document chartDocument, String factoryId) throws JSONException {	
-		List<Data> recipeData = DOMToData();
+		List<Data> recipeData = DOMToData(factoryId);
 		JSONObject assocDataJsonObj = Data.toAssociatedData(recipeData);
 		Element assocdata = chartDocument.createElement(Constants.ASSOCIATED_DATA);
 		Node textNode = chartDocument.createTextNode(assocDataJsonObj.toString());
@@ -153,9 +153,10 @@ public class RecipeDataTranslator {
 		return assocdata;
 	}
 	
-	public List<Data> DOMToData() {
+	public List<Data> DOMToData(String factoryId) {
 		final java.util.List<Data> flatRecipeObjects = new ArrayList<Data>();
 		NodeList recipeNodes = blockElement.getElementsByTagName("recipe");
+		log.infof("RecipeDataTranslator:DOMTOData: block has %d recipe nodes", recipeNodes.getLength());
 		for (int temp = 0; temp < recipeNodes.getLength(); temp++) {			 
 			Node nNode = recipeNodes.item(temp);	 
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {	 
@@ -167,11 +168,11 @@ public class RecipeDataTranslator {
 					Node item = attributes.item(i);
 					String name = item.getNodeName();
 					String value = item.getTextContent();
-					//System.out.println(name + " " + value);
+					log.infof("RecipeDataTranslator:DOMTOData: %s = %s", name,value);
 					attMap.put(name, value);					
 				}
 				customizeRecipeAttributeMap(attMap);
-				createObject(flatRecipeObjects, attMap);
+				createObject(factoryId,flatRecipeObjects, attMap);
 			}
 		}
 		return restoreHierarchy(flatRecipeObjects);
@@ -180,7 +181,7 @@ public class RecipeDataTranslator {
 	/** Set a property by name. Will throw IllegalArgumentException if the property is not present,
 	 *  unless this is a Structure in which case it will be created.  
 	 * @throws org.apache.wicket.ajax.json.JSONException */
-	public void setProperty(Data data, String name, String strValue) throws JSONException, org.apache.wicket.ajax.json.JSONException {		
+	public void setProperty(String factoryId,Data data, String name, String strValue) throws JSONException, org.apache.wicket.ajax.json.JSONException {		
 		BasicProperty<?> property = data.getProperty(name);
 		
 		if(data instanceof Array && property.equals(IlsProperty.VALUE)) {
@@ -194,14 +195,18 @@ public class RecipeDataTranslator {
 		}
 		else {
 			Object objValue = null;
-			if(property != null && property.getType() == String.class) {
-				objValue = strValue;
+			if(property.getType() == String.class) {
+				objValue = IlsProperty.getTranslationForG2Value(factoryId, property,strValue, log);
 			}
 			else if(strValue.length() > 0 ) { 
 				objValue = IlsProperty.parseObjectValue(strValue, property.getType());
 			}
-			if(objValue == null ||property.getType().isAssignableFrom(objValue.getClass())) {
+			if(objValue != null && property.getType().isAssignableFrom(objValue.getClass())) {
+				log.infof("RecipeDataTranslator:setProperty: %s = %s (from %s)",property.getName(),objValue.toString(),strValue);
 				data.getProperties().setDirect(property, objValue);
+			}
+			else if(objValue==null) {
+				log.infof("RecipeDataTranslator:setProperty: %s = null (from %s)",property.getName(),strValue);
 			}
 			else {
 				errors.add(objValue + "(" + objValue.getClass().getSimpleName() + 
@@ -211,7 +216,7 @@ public class RecipeDataTranslator {
 		}
 	}
 
-	private void createObject(final java.util.List<Data> recipeObjects,
+	private void createObject(String factoryId,final java.util.List<Data> recipeObjects,
 							  Map<String, String> attMap) {
 		// Find the Recipe Data class we want to instantiate
 		String g2ClassName = attMap.get(G2_CLASS_NAME);
@@ -249,7 +254,7 @@ public class RecipeDataTranslator {
 					}
 					else {
 						if(data.hasProperty(igKey)) {
-							setProperty(data, igKey, strValue.trim());
+							setProperty(factoryId,data, igKey, strValue.trim());
 						}
 						else if(!listFromValue){
 							// expected property not found

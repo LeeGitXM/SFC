@@ -27,7 +27,6 @@ import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public abstract class AbstractIlsStepDelegate implements StepDelegate {
-	private static final String CLSS = "AbstractIlsStepDelegate";
 	private static LoggerEx log = LogUtil.getLogger(AbstractIlsStepDelegate.class.getName());
 	private static final BasicProperty<?>[] commonProperties = {
 		IlsProperty.NAME, 
@@ -88,7 +87,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 					checkValueChoices(property, stepName, value);
 				}
 				catch(ParseException e) {
-					log.warn(CLSS+".fromXML: Error deserializing step property "+property+" from "+stringValue, e);
+					log.warn("fromXML: Error deserializing step property "+property+" from "+stringValue, e);
 					value = stringValue;
 				}
 			}
@@ -106,14 +105,14 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 					value = property.getDefaultValue();
 				}
 				if(value == null) {
-					log.warn(CLSS+".fromXML:Step property "+property+" missing in supplied DOM for " + ui.getType() + "; will use default");
+					log.warn("fromXML:Step property "+property+" missing in supplied DOM for " + ui.getType() + "; will use default");
 				}
 			}
 			if(value != null) {
 				ui.setDirect(property, value);
 			}
 			else {
-				log.warn(CLSS+".fromXML: Unable to get value for Step property " + property + "; will be missing");				
+				log.warn("fromXML: Unable to get value for Step property " + property + "; will be missing");				
 			}
 		}
 	}
@@ -134,7 +133,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 					}
 				}
 				if(!valueIsChoice) {
-					log.error("AbstractIlsStepDelegate.checkValueChoices: Bad value for " + stepName + "." + property.getName() + ": " + value);
+					log.error("checkValueChoices: Bad value for " + stepName + "." + property.getName() + ": " + value);
 				}
 			}
 		}

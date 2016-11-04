@@ -43,6 +43,8 @@ public class IlsProperty {
 			g2ValueTrans.put(key, value);
 		}
 	}
+	
+	// /These are generic, non-step specific translations
 	static {
 		addValueTranslation("description", Constants.DESCRIPTION);
 		
@@ -84,7 +86,13 @@ public class IlsProperty {
 		addValueTranslation("SEC", Constants.DELAY_UNIT_SECOND);
 		addValueTranslation("MIN", Constants.DELAY_UNIT_MINUTE);
 		addValueTranslation("HR", Constants.DELAY_UNIT_HOUR);
-
+		
+		// VALUE_TYPE_CHOICES = {BOOLEAN, DATE_TIME,FLOAT,INT, STRING};
+		addValueTranslation("FLOAT", Constants.FLOAT);
+		addValueTranslation("INTEGER", Constants.INT);
+		addValueTranslation("STRING", Constants.STRING);
+		addValueTranslation("SYMBOL", Constants.STRING);
+		addValueTranslation("TRUTH-VALUE", Constants.BOOLEAN);
 }
 	
 	public static class PropertyInfo {
@@ -94,8 +102,7 @@ public class IlsProperty {
 		String label;
 		Map<String,String> g2ValueTranslation;
 		
-		public PropertyInfo(boolean isSerializedObject, String[] choices,
-				String label) {
+		public PropertyInfo(boolean isSerializedObject, String[] choices,String label) {
 			super();
 			this.isSerializedObject = isSerializedObject;
 			this.choices = choices;
@@ -115,8 +122,8 @@ public class IlsProperty {
 		// ILS recipe data type:
 		ignitionPropertiesToHide.add("class");
 		ignitionPropertiesToHide.add("execution-mode");  // hide this for ILS encapsulations like Procedure
-		ignitionPropertiesToHide.add("passed-parameters");  // hide this for ILS encapsulations like Procedure
-		ignitionPropertiesToHide.add("return-parameters");  // hide this for ILS encapsulations like Procedure
+		ignitionPropertiesToHide.add("passed-parameters");
+		ignitionPropertiesToHide.add("return-parameters"); 
 	}
 	public static boolean isHiddenProperty(String name) { return ignitionPropertiesToHide.contains(name); }
 
@@ -585,17 +592,16 @@ public class IlsProperty {
 		}
 	}
 
-	public static String getTranslationForG2Value(String factoryId, String stepName, BasicProperty<?> property, 
-		String g2Value, LoggerEx logger) {
+	public static String getTranslationForG2Value(String factoryId,BasicProperty<?> property, String g2Value, LoggerEx logger) {
 		PropertyInfo info = infoById.get(getPropertyId(property));
 		if(info != null && info.choices != null) {
 			String transValue = null;
 			// values are constrained
 			if(info.g2ValueTranslation != null && info.g2ValueTranslation.get(g2Value) != null)  {
-				transValue = info.g2ValueTranslation.get(g2Value);
+				transValue = info.g2ValueTranslation.get(g2Value.toUpperCase());
 			}
 			else {
-				transValue = g2ValueTrans.get(g2Value);
+				transValue = g2ValueTrans.get(g2Value.toUpperCase());
 			}
 			
 			// special cases:
@@ -606,9 +612,12 @@ public class IlsProperty {
 			
 			//logger.infof("factoryId %s prop %s g2 value %s -> enum %s", factoryId, property.getName(), g2Value, transValue);
 			if(transValue == null) {
-				transValue = Constants.TRANSLATION_ERROR;
+				transValue = g2Value;
 				//logger.errorf("no translation for g2 value %s in property %s step %s factoryId %s", g2Value, property.getName(), stepName, factoryId);
 				logger.errorf("no translation for g2 value %s in property %s factoryId %s", g2Value, property.getName(), factoryId);
+			}
+			else {
+				logger.infof("translated g2 value %s -> %s in property %s factoryId %s", g2Value, transValue, property.getName(), factoryId);
 			}
 			return transValue;
 		}

@@ -9,10 +9,9 @@ CREATE TABLE ClassMap(
     IgnitionClass text NOT NULL
 );
 -- These are values of symbolic constants
-CREATE TABLE EnumerationMap(
+CREATE TABLE SymbolMap(
    G2Name text      NOT NULL,
-   EnumerationName  text NOT NULL,
-   Value            text NOT NULL
+   IgnitionValue text NOT NULL
 );
 -- Define project preferences
 CREATE TABLE PreferenceMap(

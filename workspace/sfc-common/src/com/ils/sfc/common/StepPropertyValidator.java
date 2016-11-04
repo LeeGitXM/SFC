@@ -83,11 +83,11 @@ public class StepPropertyValidator {
 							String[] args = line.substring(lparenIndex+1, rparenIndex).split(",");
 							String key = null;
 							String location = null;
-							if(line.contains(s88GetPrefix)) {
+							if(line.contains(s88GetPrefix) && args.length>3) {
 								location = args[3].trim();
 								key = args[2].trim();
 							}
-							else {  // s88Set
+							else if(args.length>4 ){  // s88Set
 								location = args[4].trim();
 								key = args[2].trim();								
 							}

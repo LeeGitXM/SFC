@@ -4,6 +4,30 @@
 -- GENERIC DEFAULTS
 insert into PropertyValueMap values ('timeoutUnits','','SEC');
 
+-- Attribute Value Mapping (specific to property)
+insert into PropertyValueMap values ('autoMode','SEMI-AUTOMATIC','semiAutomatic');
+insert into PropertyValueMap values ('autoMode','AUTOMATIC','automatic');
+
+insert into PropertyValueMap values ('dataLocation','LOCAL','local');
+insert into PropertyValueMap values ('dataLocation','PREVIOUS','prior');
+insert into PropertyValueMap values ('dataLocation','SUPERIOR','superior');
+insert into PropertyValueMap values ('dataLocation','OPERATION','operation');
+insert into PropertyValueMap values ('dataLocation','PHASE','phase');
+insert into PropertyValueMap values ('dataLocation','PROCEDURE','global');
+insert into PropertyValueMap values ('dataLocation','GLOBAL','global');
+insert into PropertyValueMap values ('dataLocation','NAMED','named');
+
+insert into PropertyValueMap values ('fetchMode','SINGLE','single');
+insert into PropertyValueMap values ('fetchMode','MULTIPLE','multiple');
+
+insert into PropertyValueMap values ('keyMode','DYNAMIC','dynamic');
+insert into PropertyValueMap values ('keyMode','STATIC','static');
+
+insert into PropertyValueMap values ('priority','INFORMATION','Info');
+insert into PropertyValueMap values ('priority','WARNING','Warning');
+insert into PropertyValueMap values ('priority','ERROR','Error');
+insert into PropertyValueMap values ('priority','CRITICAL','Error');
+
 insert into PropertyValueMap values ('recipeLocation','LOCAL','local');
 insert into PropertyValueMap values ('recipeLocation','PREVIOUS','prior');
 insert into PropertyValueMap values ('recipeLocation','SUPERIOR','superior');
@@ -13,17 +37,23 @@ insert into PropertyValueMap values ('recipeLocation','PROCEDURE','global');
 insert into PropertyValueMap values ('recipeLocation','GLOBAL','global');
 insert into PropertyValueMap values ('recipeLocation','NAMED','named');
 
+insert into PropertyValueMap values ('security','PRIVATE','private');
+insert into PropertyValueMap values ('security','PUBLIC','public');
+
 insert into PropertyValueMap values ('strategy','local','static');   -- there is no local strategy
 insert into PropertyValueMap values ('strategy','LOCAL','static');   -- there is no local strategy
 insert into PropertyValueMap values ('strategy','STATIC','static');
 insert into PropertyValueMap values ('strategy','RECIPE-DATA','recipe');
 
-insert into PropertyValueMap values ('priority','INFORMATION','Info');
-insert into PropertyValueMap values ('priority','WARNING','Warning');
-insert into PropertyValueMap values ('priority','ERROR','Error');
+insert into PropertyValueMap values ('timerLocation','LOCAL','local');
+insert into PropertyValueMap values ('timerLocation','PREVIOUS','prior');
+insert into PropertyValueMap values ('timerLocation','SUPERIOR','superior');
+insert into PropertyValueMap values ('timerLocation','OPERATION','operation');
+insert into PropertyValueMap values ('timerLocation','PHASE','phase');
+insert into PropertyValueMap values ('timerLocation','PROCEDURE','global');
+insert into PropertyValueMap values ('timerLocation','GLOBAL','global');
+insert into PropertyValueMap values ('timerLocation','NAMED','named');
 
-insert into PropertyValueMap values ('autoMode','SEMI-AUTOMATIC','semiAutomatic');
-insert into PropertyValueMap values ('autoMode','AUTOMATIC','automatic');
 
 -- Names of callbacks get read from here and inserted into ProcedureMap also
 -- Formal test cases

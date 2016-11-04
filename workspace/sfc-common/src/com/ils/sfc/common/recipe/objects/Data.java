@@ -711,7 +711,7 @@ public abstract class Data {
 						path.substring(path.indexOf(".")+1, path.length()));
 				}
 				else {
-					if(data.hasProperty(keys[1])) {
+					if(keys.length>1 && data.hasProperty(keys[1])) {
 						return true;
 					}
 				}

@@ -324,7 +324,7 @@ public class Converter {
 			byte[] encoded = Files.readAllBytes(infile);
 			String xml =  new String(encoded, StandardCharsets.UTF_8);
 			xml = xml.replaceAll("&", "&amp;");
-			xml = xml.replaceAll("&amp;amp;", "&amp;");  // In case it was laready escaped
+			xml = xml.replaceAll("&amp;amp;", "&amp;");  // In case it was already escaped
 			
 			InputSource is = new InputSource(new StringReader(xml));
 			Document g2doc = docBuilder.parse(is);
