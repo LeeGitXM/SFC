@@ -226,6 +226,7 @@ public class SimpleHierarchyAnalyzer {
 	/** Get the ChartUIElement for the given recipe data scope, or null if not found. */
 	public ChartUIElement getElementForScope(String scope, String childChartPath, ChartUIElement referencingElement) {
 		if(scope.equals(Constants.LOCAL)) return referencingElement;
+		if(childChartPath==null)          return referencingElement;
 		List<EnclosureInfo> parents = getEnclosureHierarchyBottomUp(childChartPath, true);
 		if(parents.size() == 0) return null;
 		if(scope.equals(Constants.SUPERIOR)) {

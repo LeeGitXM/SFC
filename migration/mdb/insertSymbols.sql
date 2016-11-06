@@ -5,6 +5,8 @@ insert into SymbolMap values ('em-information','INFORMATION');
 insert into SymbolMap values ('s88-abort-command','ABORT');
 insert into SymbolMap values ('s88-superior-operation','OPERATION_SCOPE');
 insert into SymbolMap values ('s88-global','GLOBAL_SCOPE');
+insert into SymbolMap values ('s88-superior','SUPERIOR_SCOPE');
+insert into SymbolMap values ('s88-local','LOCAL_SCOPE');
 -- These are not used and are stripped out of the code
 insert into SymbolMap values ('s88-aborted-state','UNUSED');
 insert into SymbolMap values ('s88-complete-state','UNUSED');
