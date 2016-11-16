@@ -17,7 +17,7 @@ public class ConfirmControllersStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><center><b>Check<br>Mode</html>"; }
+	protected String getHeading() { return "Check Mode"; }
 
     public static final class ConfirmControllersStepFactory extends ConfirmControllersStepDelegate implements ClientStepFactory {
     	private ConfirmControllersStepUI UI = new ConfirmControllersStepUI();

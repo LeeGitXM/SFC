@@ -17,7 +17,7 @@ public class ShowWindowStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b>Show<br>Window</html>"; }
+	protected String getHeading() { return "Show Window"; }
 
     public static final class ShowWindowStepFactory extends ShowWindowStepDelegate implements ClientStepFactory {
     	private ShowWindowStepUI UI = new ShowWindowStepUI();

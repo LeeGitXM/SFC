@@ -17,7 +17,7 @@ public class ClearQueueStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return messageIcon; }
 	
 	@Override
-	protected String getText() { return "<html><b>Clear<br>Queue</html>"; }
+	protected String getHeading() { return "Clear Queue"; }
 
     public static final class ClearQueueStepFactory extends ClearQueueStepDelegate implements ClientStepFactory {
     	private ClearQueueStepUI UI = new ClearQueueStepUI();

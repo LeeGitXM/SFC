@@ -1,7 +1,5 @@
 package com.ils.sfc.client.step;
 
-import java.awt.Color;
-
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -20,7 +18,7 @@ public class LimitedInputStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return limitedQuestionIcon; }
 	
 	@Override
-	protected String getText() { return null; }
+	protected String getHeading() { return null; }
 
     public static final class LimitedInputStepFactory extends LimitedInputStepDelegate implements ClientStepFactory {
     	private LimitedInputStepUI UI = new LimitedInputStepUI();

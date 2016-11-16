@@ -16,8 +16,6 @@ import org.json.JSONObject;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.step.AllSteps;
-import com.inductiveautomation.ignition.common.util.LogUtil;
-import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.ElementStateEnum;
 import com.inductiveautomation.sfc.client.api.ChartStatusContext;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
@@ -92,7 +90,6 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	}
 		
 	protected AbstractIlsStepUI() {
-    	label.setText(getText());
     	label.setBorder(new LineBorder(Color.gray, 2));
     	label.setIcon(getIcon());	
     	label.setHorizontalTextPosition(SwingConstants.LEFT);  // text is to left of icon
@@ -106,12 +103,10 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	protected Icon getIcon() { return null; }
 	
 	/** Subclasses override to get text to display. */
-	protected String getText() { return null; }
+	protected abstract String getHeading();
 	
-	protected boolean isFoundationStep() {
-		return this instanceof ProcedureStepUI || this instanceof OperationStepUI ||
-			this instanceof PhaseStepUI;
-	}
+	/** Subclasses override to set the color of the heading text. */
+	protected String getHeadingColor() { return "black"; }
 	
     @Override
     public void drawStep(ChartUIElement propertyValues, ChartStatusContext chartStatusContext, 
@@ -135,13 +130,23 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	double ty = oldTransform.getTranslateY() + inset;
     	transform.translate(tx, ty);
 
-    	// For foundation steps, add the step name
-    	String oldLabelText = null;
+    	// The label consists of the class and step name.
+    	// Here we dynamically add the step.
 		String stepName = propertyValues.get(IlsProperty.NAME);
-    	if(isFoundationStep()) {
-    		oldLabelText = label.getText();
-    		label.setText(oldLabelText.replace("</html>", "<br>" + stepName + "</html>"));
+    	String heading = getHeading();
+    	String text = null;
+    	if( heading!=null ) {
+    		String hsize = "5";
+    		if( heading.length()>10 ) hsize = "6";
+    		String textColor = getHeadingColor();
+    		String pcnt="95%", lpcnt="100%";
+    		if( stepName.length()>10 ) { pcnt ="80%"; lpcnt="90%"; }
+    		if(stepName.length()>20 )  { pcnt ="70%"; lpcnt="75%"; }
+
+    		text = "<html><center><h"+hsize+" style=\"color:"+textColor+";padding-top:3px;margin:0px;\">"+heading+"</h"+hsize+"</center>";
+    		text = text + "<center><p style=\"font-size:"+pcnt+";line-height:"+lpcnt+";margin:0px;\">" + stepName + "</p></center></html>";
     	}
+    	label.setText(text);
 
     	boolean chartNotStarted = !chartStatusContext.getChartStatus().isPresent();
     	StepElementStatus stepElementStatus = chartStatusContext.getStepStatus(propertyValues);
@@ -174,11 +179,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	label.setBackground(background);
     	g2d.setTransform(transform);
     	label.paint(g2d);
-    	g2d.setTransform(oldTransform);
-    	
-    	if(isFoundationStep()) {
-    		label.setText(oldLabelText);
-    	}    	
+    	g2d.setTransform(oldTransform);    	
     }
 
 	private Color getBackgroundColor(ChartUIElement propertyValues) {

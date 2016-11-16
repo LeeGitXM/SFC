@@ -19,7 +19,7 @@ public class InputStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return questionIcon; }
 	
 	@Override
-	protected String getText() { return null; }
+	protected String getHeading() { return null; }
 
     public static final class InputStepFactory extends InputStepDelegate implements ClientStepFactory {
     	private InputStepUI UI = new InputStepUI();

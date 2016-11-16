@@ -1,7 +1,5 @@
 package com.ils.sfc.client.step;
 
-import java.awt.Color;
-
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -19,7 +17,7 @@ public class TimedDelayStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return clockIcon; }
 	
 	@Override
-	protected String getText() { return null; }
+	protected String getHeading() { return null; }
 
     public static final class TimedDelayStepFactory extends TimedDelayStepDelegate implements ClientStepFactory {
     	private TimedDelayStepUI UI = new TimedDelayStepUI();

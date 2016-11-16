@@ -17,7 +17,7 @@ public class DeleteDelayNotificationStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b><center>Work<br>Complete</html>"; }
+	protected String getHeading() { return "Work Complete"; }
 
     public static final class DeleteDelayNotificationStepFactory extends DeleteDelayNotificationStepDelegate implements ClientStepFactory {
     	private DeleteDelayNotificationStepUI UI = new DeleteDelayNotificationStepUI();

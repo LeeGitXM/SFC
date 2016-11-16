@@ -3,17 +3,12 @@ package com.ils.sfc.client.step;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import system.ils.sfc.common.Constants;
-
 import com.ils.sfc.common.step.ProcedureStepDelegate;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.StepUI;
-import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
-import com.inductiveautomation.sfc.elements.steps.ExpressionParamCollection;
-import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
-import com.inductiveautomation.sfc.elements.steps.enclosing.ExecutionMode;
-import com.inductiveautomation.sfc.elements.steps.enclosing.ReturnParamCollection;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
+
+import system.ils.sfc.common.Constants;
 
 public class ProcedureStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new ProcedureStepFactory();
@@ -26,7 +21,7 @@ public class ProcedureStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b>Procedure</html>"; }
+	protected String getHeading() { return "Procedure"; }
 
     public static final class ProcedureStepFactory extends ProcedureStepDelegate implements ClientStepFactory {
     	private ProcedureStepUI UI = new ProcedureStepUI();

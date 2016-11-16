@@ -17,7 +17,7 @@ public class PrintFileStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><center><b>Print&#x2F;View<br>File</html>"; }
+	protected String getHeading() { return "Print&#x2F;View File"; }
 
     public static final class PrintFileStepFactory extends PrintFileStepDelegate implements ClientStepFactory {
     	private PrintFileStepUI UI = new PrintFileStepUI();

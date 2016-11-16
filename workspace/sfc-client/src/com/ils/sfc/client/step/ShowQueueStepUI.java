@@ -17,7 +17,7 @@ public class ShowQueueStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return messageIcon; }
 	
 	@Override
-	protected String getText() { return "<html><b>Show<br>Queue</html>"; }
+	protected String getHeading() { return "Show Queue"; }
 
     public static final class ShowQueueStepFactory extends ShowQueueStepDelegate implements ClientStepFactory {
     	private ShowQueueStepUI UI = new ShowQueueStepUI();

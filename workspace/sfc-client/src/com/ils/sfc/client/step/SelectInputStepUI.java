@@ -1,7 +1,5 @@
 package com.ils.sfc.client.step;
 
-import java.awt.Color;
-
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -19,7 +17,9 @@ public class SelectInputStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return questionIcon; }
 	
 	@Override
-	protected String getText() { return "<html><center><font color=red><b>Select<br>Input</html>"; }
+	protected String getHeading() { return "Select Input"; }
+    @Override
+    protected String getHeadingColor() {return "red"; }
 
     public static final class SelectInputStepFactory extends SelectInputStepDelegate implements ClientStepFactory {
     	private SelectInputStepUI UI = new SelectInputStepUI();

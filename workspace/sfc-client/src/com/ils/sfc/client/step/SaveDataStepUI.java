@@ -17,7 +17,7 @@ public class SaveDataStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><center><b>Save<br>Data</html>"; }
+	protected String getHeading() { return "Save Data"; }
 
     public static final class SaveDataStepFactory extends SaveDataStepDelegate implements ClientStepFactory {
     	private SaveDataStepUI UI = new SaveDataStepUI();

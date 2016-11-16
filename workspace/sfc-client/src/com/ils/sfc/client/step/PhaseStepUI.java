@@ -3,14 +3,12 @@ package com.ils.sfc.client.step;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import system.ils.sfc.common.Constants;
-
 import com.ils.sfc.common.step.PhaseStepDelegate;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.StepUI;
-import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
-import com.inductiveautomation.sfc.elements.steps.enclosing.ExecutionMode;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
+
+import system.ils.sfc.common.Constants;
 
 public class PhaseStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new PhaseStepFactory();
@@ -23,7 +21,7 @@ public class PhaseStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b>Phase</html>"; }
+	protected String getHeading() { return "Phase"; }
 
     public static final class PhaseStepFactory extends PhaseStepDelegate implements ClientStepFactory {
     	private PhaseStepUI UI = new PhaseStepUI();

@@ -17,7 +17,9 @@ public class PauseStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b><font color=red>Pause!</html>"; }
+	protected String getHeading() { return "Pause!"; }
+    @Override
+    protected String getHeadingColor() {return "red";}
 
     public static final class PauseStepFactory extends PauseStepDelegate implements ClientStepFactory {
     	private PauseStepUI UI = new PauseStepUI();

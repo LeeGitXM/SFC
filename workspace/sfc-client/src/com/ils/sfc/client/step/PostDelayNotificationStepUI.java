@@ -17,7 +17,7 @@ public class PostDelayNotificationStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b>Working...</html>"; }
+	protected String getHeading() { return "Working..."; }
 
     public static final class PostDelayNotificationStepFactory extends PostDelayNotificationStepDelegate implements ClientStepFactory {
     	private PostDelayNotificationStepUI UI = new PostDelayNotificationStepUI();

@@ -17,7 +17,7 @@ public class SimpleQueryStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b><center>Simple<br>Query</html>"; }
+	protected String getHeading() { return "Simple Query"; }
 
     public static final class SimpleQueryStepFactory extends SimpleQueryStepDelegate implements ClientStepFactory {
     	private SimpleQueryStepUI UI = new SimpleQueryStepUI();

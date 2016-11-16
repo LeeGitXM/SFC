@@ -17,7 +17,7 @@ public class EnableDisableStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b><center><b>Enable/<br>Disable</html>"; }
+	protected String getHeading() { return "Enable/Disable"; }
 
     public static final class EnableDisableStepFactory extends EnableDisableStepDelegate implements ClientStepFactory {
     	private EnableDisableStepUI UI = new EnableDisableStepUI();

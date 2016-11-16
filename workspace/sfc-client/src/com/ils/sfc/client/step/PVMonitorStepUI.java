@@ -16,8 +16,11 @@ public class PVMonitorStepUI extends AbstractIlsStepUI {
    	@Override
 	protected Icon getIcon() { return null; }
 	
+   	/**
+   	 * 
+   	 */
 	@Override
-	protected String getText() { return "<html><center><b>PV<br>Monitor</html>"; }
+	protected String getHeading() { return "PV Monitor"; } 
 
     public static final class PVMonitorStepFactory extends PVMonitorStepDelegate implements ClientStepFactory {
     	private PVMonitorStepUI UI = new PVMonitorStepUI();

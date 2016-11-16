@@ -1,7 +1,5 @@
 package com.ils.sfc.client.step;
 
-import java.awt.Color;
-
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -19,7 +17,7 @@ public class ReviewDataStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b>Review<br>Data</html>"; }
+	protected String getHeading() { return "Review Data"; }
 
     public static final class ReviewDataStepFactory extends ReviewDataStepDelegate implements ClientStepFactory {
     	private ReviewDataStepUI UI = new ReviewDataStepUI();

@@ -17,7 +17,7 @@ public class SaveQueueStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return messageIcon; }
 	
 	@Override
-	protected String getText() { return "<html><center><b>Save<br>Queue</html>"; }
+	protected String getHeading() { return "Save Queue"; }
 
     public static final class SaveQueueStepFactory extends SaveQueueStepDelegate implements ClientStepFactory {
     	private SaveQueueStepUI UI = new SaveQueueStepUI();

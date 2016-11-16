@@ -17,7 +17,7 @@ public class WriteOutputStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><center><b>Write<br>Output</html>"; }
+	protected String getHeading() { return "Write Output"; }
 
     public static final class WriteOutputStepFactory extends WriteOutputStepDelegate implements ClientStepFactory {
     	private WriteOutputStepUI UI = new WriteOutputStepUI();

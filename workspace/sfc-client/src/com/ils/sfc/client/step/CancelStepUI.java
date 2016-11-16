@@ -17,7 +17,10 @@ public class CancelStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b><font color=red>Cancel!</html>"; }
+	protected String getHeading() { return "Cancel!"; }
+    
+    @Override
+    protected String getHeadingColor() {return "red";  }
 
     public static final class AbortStepFactory extends CancelStepDelegate implements ClientStepFactory {
     	private CancelStepUI UI = new CancelStepUI();

@@ -17,7 +17,7 @@ public class RawQueryStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b><center>Raw<br>Query</html>"; }
+	protected String getHeading() { return "Raw Query"; }
 
     public static final class RawQueryStepFactory extends RawQueryStepDelegate implements ClientStepFactory {
     	private RawQueryStepUI UI = new RawQueryStepUI();

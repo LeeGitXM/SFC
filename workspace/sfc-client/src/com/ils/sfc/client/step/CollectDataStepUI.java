@@ -17,7 +17,7 @@ public class CollectDataStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><center><b>Collect<br>Data</html>"; }
+	protected String getHeading() { return "Collect Data"; }
 
     public static final class CollectDataStepFactory extends CollectDataStepDelegate implements ClientStepFactory {
     	private CollectDataStepUI UI = new CollectDataStepUI();

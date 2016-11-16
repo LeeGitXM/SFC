@@ -17,7 +17,7 @@ public class ReviewDataWithAdviceStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return null; }
 	
 	@Override
-	protected String getText() { return "<html><b>Review<br>Data*</html>"; }
+	protected String getHeading() { return "Review Data*"; }
 
     public static final class ReviewDataWithAdviceStepFactory extends ReviewDataWithAdviceStepDelegate implements ClientStepFactory {
     	private ReviewDataWithAdviceStepUI UI = new ReviewDataWithAdviceStepUI();
