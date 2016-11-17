@@ -17,7 +17,7 @@ public class YesNoStepUI extends AbstractIlsStepUI {
 	protected Icon getIcon() { return questionIcon; }
 	
 	@Override
-	protected String getHeading() { return "Yes/No"; }
+	protected String getHeading() { return "Yes No"; }
 
     public static final class YesNoStepFactory extends YesNoStepDelegate implements ClientStepFactory {
     	private YesNoStepUI UI = new YesNoStepUI();
@@ -39,12 +39,13 @@ public class YesNoStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Yes/No";
+            return "Yes No";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            //return "Obtain a yes or no response from the user";
+        	return getPaletteText();
         }
 
         @Override
