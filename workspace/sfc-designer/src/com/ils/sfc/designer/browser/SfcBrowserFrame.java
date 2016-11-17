@@ -3,6 +3,7 @@
  */
 package com.ils.sfc.designer.browser;
 import java.awt.BorderLayout;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
@@ -13,6 +14,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 
+import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.inductiveautomation.ignition.client.util.EDTUtil;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
@@ -21,7 +23,11 @@ import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.ResourceWorkspaceFrame;
+import com.inductiveautomation.sfc.designer.workspace.SFCDesignableContainer;
+import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
 import com.jidesoft.docking.DockableFrame;
+
+import system.ils.sfc.common.Constants;
 
 /** This is a DockableFrame container for a Perfuse TreeView,
  * used to provide an alternative view of the list of SFC charts.
@@ -178,15 +184,35 @@ public class SfcBrowserFrame extends DockableFrame implements ResourceWorkspaceF
 		if( res==null || res.getName()==null || changeType==null ) return;
 		log.infof("%s.projectResourceModified: %s = %d (%s:%s)", TAG,changeType.name(),res.getResourceId(),res.getName(),res.getResourceType());
 		if( res.getResourceType().equals(BrowserConstants.CHART_RESOURCE_TYPE)) {
-			updateContentPanel();
-			fireStateChanged();
+			EDTUtil.invokeAfterJoin(new Runnable() {
+				@Override
+				public void run() {
+					updateContentPanel();
+					fireStateChanged();
+				}
+			},Thread.currentThread());
+
 		}
 	}
 
 	@Override
 	public void projectUpdated(Project arg0) {
 		log.infof("%s.projectResourceUpdated", TAG);
-		updateContentPanel();
-		fireStateChanged();
+		EDTUtil.invokeAfterJoin(new Runnable() {
+			@Override
+			public void run() {
+				
+			}
+		},Thread.currentThread());
 	}
+	
+	// Updating the content pane updates the browser,
+	// forcing it to re-analyze the chart structure.
+	private class BrowserUpdater implements Runnable {
+        public void run() {
+            log.infof("%s.run: BrowserUpdater %s...",TAG);
+            updateContentPanel();
+			fireStateChanged();
+        }
+    }
 }

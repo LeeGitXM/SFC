@@ -14,7 +14,7 @@ public class PVMonitorStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new PVMonitorStepFactory();
 
    	@Override
-	protected Icon getIcon() { return null; }
+	protected ImageIcon getIcon() { return null; }
 	
    	/**
    	 * 

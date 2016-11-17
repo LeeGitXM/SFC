@@ -14,7 +14,7 @@ public class SimpleQueryStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new SimpleQueryStepFactory();
 
    	@Override
-	protected Icon getIcon() { return null; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
 	protected String getHeading() { return "Simple Query"; }

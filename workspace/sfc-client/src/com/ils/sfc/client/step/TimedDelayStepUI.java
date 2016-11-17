@@ -14,7 +14,7 @@ public class TimedDelayStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new TimedDelayStepFactory();
 
    	@Override
-	protected Icon getIcon() { return clockIcon; }
+	protected ImageIcon getIcon() { return clockIcon; }
 	
 	@Override
 	protected String getHeading() { return null; }

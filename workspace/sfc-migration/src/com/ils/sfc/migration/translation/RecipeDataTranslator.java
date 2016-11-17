@@ -302,6 +302,11 @@ public class RecipeDataTranslator {
 			else {
 				errors.add("S88-RECIPE-OUTPUT-DATA: Tag lookup failed for: " + gsiName);
 			}
+			// Hard-code mode as a String
+			gsiName = map.get("val-type");         // Mapped to Ignition as outputType
+			if( gsiName!=null && gsiName.equalsIgnoreCase(Constants.MODE)) {
+				map.put(Constants.VALUE_TYPE,Constants.STRING);
+			}
 		}
 	}
 

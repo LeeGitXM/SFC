@@ -10,12 +10,12 @@ import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public class LimitedInputStepUI extends AbstractIlsStepUI {
 	protected static Icon limitedInputIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/limitedInput.png"));
-	protected static Icon limitedQuestionIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/limitedQuestion.png"));
+	protected static ImageIcon limitedQuestionIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/limitedQuestion.png"));
 
     public static final ClientStepFactory FACTORY = new LimitedInputStepFactory();
 
    	@Override
-	protected Icon getIcon() { return limitedQuestionIcon; }
+	protected ImageIcon getIcon() { return limitedQuestionIcon; }
 	
 	@Override
 	protected String getHeading() { return null; }

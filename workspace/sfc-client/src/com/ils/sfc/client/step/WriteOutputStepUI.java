@@ -14,7 +14,7 @@ public class WriteOutputStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new WriteOutputStepFactory();
 
    	@Override
-	protected Icon getIcon() { return null; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
 	protected String getHeading() { return "Write Output"; }

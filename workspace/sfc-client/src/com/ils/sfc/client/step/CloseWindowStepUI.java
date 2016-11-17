@@ -14,7 +14,7 @@ public class CloseWindowStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new CloseWindowStepFactory();
 
    	@Override
-	protected Icon getIcon() { return null; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
 	protected String getHeading() { return "Close Window"; }

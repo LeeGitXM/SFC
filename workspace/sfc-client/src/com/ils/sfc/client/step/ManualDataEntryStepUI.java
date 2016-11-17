@@ -14,7 +14,7 @@ public class ManualDataEntryStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new ManualDataEntryStepFactory();
 
    	@Override
-	protected Icon getIcon() { return null; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
 	protected String getHeading() { return "Enter Data"; }

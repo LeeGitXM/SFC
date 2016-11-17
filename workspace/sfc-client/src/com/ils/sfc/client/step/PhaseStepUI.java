@@ -18,7 +18,7 @@ public class PhaseStepUI extends AbstractIlsStepUI {
 	}
 		
    	@Override
-	protected Icon getIcon() { return null; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
 	protected String getHeading() { return "Phase"; }

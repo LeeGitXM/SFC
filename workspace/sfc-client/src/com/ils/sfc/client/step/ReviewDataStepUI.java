@@ -14,7 +14,7 @@ public class ReviewDataStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new ReviewDataStepFactory();
 
    	@Override
-	protected Icon getIcon() { return null; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
 	protected String getHeading() { return "Review Data"; }

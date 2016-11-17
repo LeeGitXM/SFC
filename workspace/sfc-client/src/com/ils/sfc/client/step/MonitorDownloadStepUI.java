@@ -14,7 +14,7 @@ public class MonitorDownloadStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new MonitorDownloadStepFactory();
 
    	@Override
-	protected Icon getIcon() { return null; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
 	protected String getHeading() { return "Download GUI"; }

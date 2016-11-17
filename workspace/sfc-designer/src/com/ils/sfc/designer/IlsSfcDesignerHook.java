@@ -62,7 +62,7 @@ import system.ils.sfc.common.Constants;
 public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectChangeListener {
 	private final static String TAG = "IlsSfcDesignerHook";
 	private static final String INTERFACE_MENU_TITLE  = "External Interface Configuration";
-	private static final String SHOW_MENU_TITLE                  = "Show Chart Ancestor";
+	private static final String SHOW_ANCESTOR_TITLE              = "Show Chart Ancestor";
 	private static final String SHOW_OPERATION_TITLE             = "Operation";
 	private static final String SHOW_PHASE_TITLE                 = "Phase";
 	private static final String SHOW_PROCEDURE_TITLE             = "Procedure";
@@ -70,9 +70,13 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private static final String START_MENU_PRODUCTION_TITLE      = "Start Chart (production)";
 	private static final String START_MENU_ISOLATION_TITLE       = "Start Chart (isolation)";
 	private static final String VALIDATION_MENU_TITLE = "Validate Charts";
+	private static final String ZOOM_MENU_TITLE = "Scale Display";
+	private static final String ZOOM_100 = "100%";
+	private static final String ZOOM_75  = " 75%";
+	private static final String ZOOM_50  = " 50%";
+	private static final String ZOOM_25  = " 25%";
 	private DesignerContext context = null;
 	private final LoggerEx log;
-	//private SFCWorkspace sfcWorkspace;
 	//private JPopupMenu stepPopup;
 	private SFCDesignerHook iaSfcHook;
 	private SfcBrowserFrame browser = null;
@@ -146,7 +150,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
             private static final long serialVersionUID = 5374887367733312464L;
             public void actionPerformed(ActionEvent ae) {
             	SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-                Thread runner = new Thread(new ChartRunner(context,iaSfcHook.getWorkspace(),browser.getModel(),true));
+                Thread runner = new Thread(new ChartRunner(context,iaSfcHook.getWorkspace(),true));
                 runner.start();
             }
         };
@@ -154,7 +158,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
             private static final long serialVersionUID = 5374667367733312464L;
             public void actionPerformed(ActionEvent ae) {
             	SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-                Thread runner = new Thread(new ChartRunner(context,iaSfcHook.getWorkspace(),browser.getModel(),false));
+                Thread runner = new Thread(new ChartRunner(context,iaSfcHook.getWorkspace(),false));
                 runner.start();
             }
         };
@@ -191,16 +195,56 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 				
             }
         };
+     // ----------------------- Menus to zoom current chart -----------------------------
+        Action execute100Zoom = new AbstractAction(ZOOM_100) {
+			private static final long serialVersionUID = 4029901359528539761L;
+
+			public void actionPerformed(ActionEvent ae) {
+            	// Show operation for currently displayed chart
+				SwingUtilities.invokeLater(new ZoomChart(1.0));
+            }
+        };
+        Action execute75Zoom = new AbstractAction(ZOOM_75) {
+			private static final long serialVersionUID = 4029901359528539762L;
+
+			public void actionPerformed(ActionEvent ae) {
+				// Show phase for currently displayed chart
+				SwingUtilities.invokeLater(new ZoomChart(0.75));
+            }
+        };
+        Action execute50Zoom = new AbstractAction(ZOOM_50) {
+			private static final long serialVersionUID = 4029901359528539762L;
+
+			public void actionPerformed(ActionEvent ae) {
+				// Show phase for currently displayed chart
+				SwingUtilities.invokeLater(new ZoomChart(0.50));
+            }
+        };
+        Action execute25Zoom = new AbstractAction(ZOOM_25) {
+			private static final long serialVersionUID = 4029901359528539763L;
+
+			public void actionPerformed(ActionEvent ae) {
+            	// Show superior for currently displayed chart
+				SwingUtilities.invokeLater(new ZoomChart(0.25));
+				
+            }
+        };
         JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
         toolsMenu.addSeparator();
         toolsMenu.add(executeIsolationAction);
         toolsMenu.add(executeProductionAction);
-        JMenu showMenu = new JMenu(SHOW_MENU_TITLE);
+        JMenu showMenu = new JMenu(SHOW_ANCESTOR_TITLE);
         toolsMenu.add(showMenu);
         showMenu.add(executeShowOperation);
         showMenu.add(executeShowPhase);
         showMenu.add(executeShowProcedure);
         showMenu.add(executeShowSuperior);
+        JMenu zoomMenu = new JMenu(ZOOM_MENU_TITLE);
+        toolsMenu.add(zoomMenu);
+        zoomMenu.add(execute100Zoom);
+        zoomMenu.add(execute75Zoom);
+        zoomMenu.add(execute50Zoom);
+        zoomMenu.add(execute25Zoom);
         merge.add(WellKnownMenuConstants.TOOLS_MENU_LOCATION, toolsMenu);
         return merge;
     }
@@ -299,12 +343,16 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	// No matter what the change is, we re-compute the maps
 	@Override
 	public void projectResourceModified(ProjectResource res,ResourceModification modType) {
+		log.infof("%s.ProjectResourceModified: structure compiler started",TAG);
 		structureManager.getCompiler().compile();
+		log.infof("%s.ProjectResourceModified: structure compiler ended",TAG);
 		
 	}
 	@Override
 	public void projectUpdated(Project proj) {
+		log.infof("%s.ProjectResourceUpdated: structure compiler started",TAG);
 		structureManager.getCompiler().compile();
+		log.infof("%s.ProjectResourceUpdated: structure compiler ended",TAG);
 	}
 	
 	
@@ -377,6 +425,31 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     				Long resid = hierarchyAnalyzer.getChartResourceForPath(path);
     				if( resid!=null ) workspace.openChart(resid.longValue());
     			}
+    		}
+    		else {
+    			// No chart is open.
+    		}
+            
+        }
+    }
+    /**
+     * Show a chart superior to the one currently selected. Run in a separate thread.
+     */
+    private class ZoomChart implements Runnable {
+    	private double scaleFactor = 1.0;
+    	
+    	public ZoomChart(double scale) {
+    		this.scaleFactor = scale;
+    	}
+
+        public void run() {
+            log.infof("%s.run: ZoomChart %f...",TAG,scaleFactor);
+            // We get the path to the open chart via the workspace.
+            SFCWorkspace workspace = iaSfcHook.getWorkspace();
+            SFCDesignableContainer tab = workspace.getSelectedContainer();
+    		if( tab!=null ) {
+    			Long resourceId = workspace.getSelectedContainer().getResourceId();
+    			if( resourceId!=null ) workspace.openChart(resourceId.longValue());
     		}
     		else {
     			// No chart is open.

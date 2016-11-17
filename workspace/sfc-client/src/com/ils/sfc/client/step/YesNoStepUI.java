@@ -9,12 +9,13 @@ import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public class YesNoStepUI extends AbstractIlsStepUI {
-	protected static Icon inputIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/input.png"));
+	// The yesNo icon contains the border for the palette
+	protected static Icon yesNoIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/yesNo.png"));
 
     public static final ClientStepFactory FACTORY = new YesNoStepFactory();
 
    	@Override
-	protected Icon getIcon() { return questionIcon; }
+	protected ImageIcon getIcon() { return questionIcon; }
 	
 	@Override
 	protected String getHeading() { return "Yes No"; }
@@ -29,7 +30,7 @@ public class YesNoStepUI extends AbstractIlsStepUI {
 
         @Override
         public Icon getPaletteIcon() {
-            return inputIcon; 
+            return yesNoIcon; 
         }
 
         @Override
@@ -39,13 +40,12 @@ public class YesNoStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Yes No";
+            return "Yes/No";
         }
 
         @Override
         public String getPaletteTooltip() {
-            //return "Obtain a yes or no response from the user";
-        	return getPaletteText();
+            return "Obtain a yes or no response from the user";
         }
 
         @Override

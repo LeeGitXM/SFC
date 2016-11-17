@@ -14,7 +14,7 @@ public class DeleteDelayNotificationStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new DeleteDelayNotificationStepFactory();
 
    	@Override
-	protected Icon getIcon() { return null; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
 	protected String getHeading() { return "Work Complete"; }

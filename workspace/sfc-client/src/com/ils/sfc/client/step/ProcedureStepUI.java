@@ -18,7 +18,7 @@ public class ProcedureStepUI extends AbstractIlsStepUI {
 	}
 		
    	@Override
-	protected Icon getIcon() { return null; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
 	protected String getHeading() { return "Procedure"; }

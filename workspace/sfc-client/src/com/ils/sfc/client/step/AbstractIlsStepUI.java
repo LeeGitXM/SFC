@@ -1,8 +1,8 @@
 package com.ils.sfc.client.step;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,13 +33,11 @@ import com.inductiveautomation.sfc.rpc.ChartStatus.StepElementStatus;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public abstract class AbstractIlsStepUI extends AbstractStepUI {		
-	protected static Icon messageIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/message.png"));
-	protected static Icon questionIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/question.png"));
-	protected static Icon clockIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/clock.png"));
-	protected static Icon asteriskIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/asterisk.png"));
-	public static final int ICON_HEIGHT = 50;
-	public static final int ICON_WIDTH  = 50;
-	public static final Dimension IMAGE_SIZE = new Dimension(ICON_WIDTH,ICON_HEIGHT);
+	protected static final ImageIcon messageIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/message.png"));
+	protected static final ImageIcon questionIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/question.png"));
+	protected static final ImageIcon clockIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/clock.png"));
+	protected static final ImageIcon asteriskIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/asterisk.png"));
+	private static final int INSET = 3;
 	private JLabel label = new JLabel();
 	protected enum PaletteTabs { Foundation, Messages, Input, Control, Notification, IO, Query, File, Window };
 	protected static final Color LONG_RUNNING_COLOR = new Color(255, 255, 153);
@@ -106,7 +104,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	}
 	
 	/** Subclasses override to get icon to display. */
-	protected Icon getIcon() { return null; }
+	protected ImageIcon getIcon() { return null; }
 	
 	/** Subclasses override to get text to display. */
 	protected abstract String getHeading();
@@ -117,13 +115,14 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 
 	/**
 	 * This is the method that draws the block plus label and icon. Since there is so little
-	 * space, treat the icon as a "badge". 
+	 * space, treat the icon as a "badge".
+	 * Note: The chartElement size() returns 1x1. 
 	 */
     @Override
-    public void drawStep(ChartUIElement propertyValues, ChartStatusContext chartStatusContext, Graphics2D g2d) {
-    	log.infof("drawStep: class = %s",getClass().getCanonicalName());
+    public void drawStep(ChartUIElement chartElement, ChartStatusContext chartStatusContext, Graphics2D g2d) {
+    	
     	// get the size of the cell:
-    	double cellWidth = g2d.getClipBounds().getWidth() * g2d.getTransform().getScaleX();
+    	double cellWidth = g2d.getClipBounds().getWidth() * g2d.getTransform().getScaleX();;
     	double cellHeight = g2d.getClipBounds().getHeight() * g2d.getTransform().getScaleY();
     	
     	// Give the label a slight inset
@@ -143,7 +142,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 
     	// The label consists of the class and step name.
     	// Here we dynamically add the step.
-		String stepName = propertyValues.get(IlsProperty.NAME);
+		String stepName = chartElement.get(IlsProperty.NAME);
     	String heading = getHeading();
     	String text = null;
     	if( heading!=null ) {
@@ -160,13 +159,13 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	label.setText(text);
 
     	boolean chartNotStarted = !chartStatusContext.getChartStatus().isPresent();
-    	StepElementStatus stepElementStatus = chartStatusContext.getStepStatus(propertyValues);
+    	StepElementStatus stepElementStatus = chartStatusContext.getStepStatus(chartElement);
     	ElementStateEnum stepState = stepElementStatus.getElementState();
     	boolean wasActivated = stepElementStatus.getLastActivation() != null;
     	Color background = null;
     	Color ranColor = Color.lightGray;
     	if(chartNotStarted) {
-    		background = getBackgroundColor(propertyValues);
+    		background = getBackgroundColor(chartElement);
     	}
     	else {
     		ChartStatus chartStatus = chartStatusContext.getChartStatus().get();
@@ -191,7 +190,8 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	g2d.setTransform(transform);
     	label.paint(g2d);
     	if( getIcon()!=null) {
-    		drawIcon(g2d,cellWidth,cellHeight,getIcon());
+    		boolean center = (heading==null||heading.isEmpty());
+    		drawIcon(g2d,cellWidth,cellHeight,getIcon(),center);
     	}
     	g2d.setTransform(oldTransform);
     }
@@ -222,15 +222,31 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	
 	/**
 	 *  Draw the icon as a "badge" in the top right corner of the box. Ignore if
-	 *  the box is too small.
+	 *  the box is too small. We assume icon has nearly square dimensions.
 	 *  
 	 */
-	protected void drawIcon(Graphics2D g,double width,double height,Icon icon) {
-		if( width<ICON_WIDTH || height<ICON_HEIGHT) return;   // Too small
+	protected void drawIcon(Graphics2D g,double width,double height,ImageIcon icon,boolean center) {
+		if( !center && height<20 ) return;   // Too small
+		Image img = icon.getImage();
+		// If we center the icon, make its height the full height of the box, otherwise 1/3
 		
-		int x = (int)(width - ICON_WIDTH/2.);
-		int y = (int)(ICON_HEIGHT/2.);
-		icon.paintIcon(null, g, x, y);
+		if(center) {
+			int imageHeight = (int)height-2*INSET;
+			int x = (int)((width - imageHeight)/2.);
+			int y = (int)((height-imageHeight)/2.)-INSET;
+			img = img.getScaledInstance(-1, imageHeight, Image.SCALE_SMOOTH);
+			Icon icn  = new ImageIcon(img);
+			icn.paintIcon(null, g, x, y);
+		}
+		else {    // put in upper right
+			int imageHeight = (int)height/2;
+			int x = (int)(width - imageHeight)-INSET;
+			int y = -INSET;
+			img = img.getScaledInstance(-1, imageHeight, Image.SCALE_FAST);
+			Icon icn  = new ImageIcon(img);
+			icn.paintIcon(null, g, x, y);
+		}
+		
 	}
 		/*
 		// Draw the text that is part of the rendered box. Recognize \n or \\n as newlines.
@@ -250,20 +266,6 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 			}
 		}
 		
-		protected void paintBadge(Graphics2D g,String iconPath,Rectangle bounds) {
-			if( iconPath == null || iconPath.length()==0 ) return;
-		
-			Dimension imageSize = new Dimension(bounds.width,bounds.height);
-			Image img = ImageLoader.getInstance().loadImage(iconPath,imageSize);
-			ImageIcon icon = null;
-			if( img !=null) icon = new ImageIcon(img);
-			if( icon!=null ) {
-				icon.paintIcon(getBlockComponent(), g, bounds.x, bounds.y);
-			}
-			else {
-				log.warnf("%s.paintBadge Missing icon at %s for %s",TAG,iconPath,block.getName());
-			}
-		}
 		*/
 		/**
 		 * Utility method to paint a text string.
