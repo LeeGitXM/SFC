@@ -9,12 +9,12 @@ import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public class YesNoStepUI extends AbstractIlsStepUI {
-	protected static Icon yesNoIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/yesNo.png"));
-  
+	protected static Icon yesNoIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/question.png"));
+	
     public static final ClientStepFactory FACTORY = new YesNoStepFactory();
 
    	@Override
-	protected Icon getIcon() { return questionIcon; }
+	protected Icon getIcon() { return yesNoIcon; }
 	
 	@Override
 	protected String getHeading() { return "Yes/No"; }
@@ -58,8 +58,6 @@ public class YesNoStepUI extends AbstractIlsStepUI {
 		public String getCategory() {
 			return PaletteTabs.Input.toString();
 		}
-
     }
-
 }
 

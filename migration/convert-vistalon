@@ -41,6 +41,8 @@ done
 
 # Finally - overwrite auto-generated charts
 #           with any that have been hand-crafted
-VETTED=${SFC}/migration/xml/vetted/
-cd $VETTED
-cp -af * ../ignition
+# This procedure is used for an interim period where the
+# hand-vetting has not completely taken over.
+#VETTED=${SFC}/migration/xml/vetted/
+#cd $VETTED
+#cp -af * ../ignition

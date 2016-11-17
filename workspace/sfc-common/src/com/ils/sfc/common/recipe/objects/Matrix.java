@@ -2,6 +2,9 @@ package com.ils.sfc.common.recipe.objects;
 
 import com.ils.sfc.common.IlsProperty;
 import com.inductiveautomation.ignition.common.Dataset;
+
+import system.ils.sfc.common.Constants;
+
 import static com.ils.sfc.common.IlsSfcCommonUtils.isEmpty;
 
 /**
@@ -20,6 +23,7 @@ public class Matrix extends DataWithUnits {
 		addProperty(IlsProperty.COLUMN_KEY);
 		//addProperty(IlsProperty.COLUMN_KEYED);
 		addProperty(IlsProperty.JSON_MATRIX);
+		addProperty(IlsProperty.VALUE_TYPE);
 	}
 	
 	/** Get a label for this data, typically its name and some values of interest. */
@@ -33,6 +37,22 @@ public class Matrix extends DataWithUnits {
 
 	public String validate() {
 		String matrixJSON = (String)getValue(IlsProperty.JSON_MATRIX);
+		String type = (String)getValue(IlsProperty.VALUE_TYPE);
+		if( type.equals(Constants.BOOLEAN)) {
+			
+		}
+		else if( type.equals(Constants.DATE_TIME)) {
+			
+		}
+		else if( type.equals(Constants.FLOAT)) {
+	
+		}
+		else if( type.equals(Constants.INT)) {
+	
+		}
+		else {    // Default to String
+	
+		}
 		Dataset dataset = null;
 		try {
 			dataset = createDataset(matrixJSON);

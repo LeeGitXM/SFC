@@ -2,7 +2,11 @@ package com.ils.sfc.common.recipe.objects;
 
 import static com.ils.sfc.common.IlsSfcCommonUtils.isEmpty;
 
+import java.util.Date;
+
 import com.ils.sfc.common.IlsProperty;
+
+import system.ils.sfc.common.Constants;
 
 /**
 A class that lumps together all the sequence/list types in G2
@@ -14,6 +18,7 @@ public class Array extends DataWithUnits {
 		addProperty(IlsProperty.LENGTH);
 		addProperty(IlsProperty.ARRAY_KEY);
 		addProperty(IlsProperty.JSON_LIST);
+		addProperty(IlsProperty.VALUE_TYPE);
 	}
 
 	/** Get a label for this data, typically its name and some values of interest. */
@@ -28,12 +33,59 @@ public class Array extends DataWithUnits {
 	
 	public String validate() {
 		String json = (String)getValue(IlsProperty.JSON_LIST);
-		Double[] array = null;
-		try {
-			array = createArray(json);
+		
+		String type = (String)getValue(IlsProperty.VALUE_TYPE);
+		int arrayLength = 0;
+		
+		if( type.equals(Constants.BOOLEAN)) {
+			Boolean[] array = null;
+			try {
+				array = createBooleanArray(json);
+				arrayLength = array.length;
+			}
+			catch(Exception e) {
+				return json + " is not a valid JSON array of booleans";
+			}
 		}
-		catch(Exception e) {
-			return json + " is not a valid JSON array";
+		else if( type.equals(Constants.DATE_TIME)) {
+			Date[] array = null;
+			try {
+				array = createDateArray(json);
+				arrayLength = array.length;
+			}
+			catch(Exception e) {
+				return json + " is not a valid JSON array of dates";
+			}
+		}
+		else if( type.equals(Constants.FLOAT)) {
+			Double[] array = null;
+			try {
+				array = createDoubleArray(json);
+				arrayLength = array.length;
+			}
+			catch(Exception e) {
+				return json + " is not a valid JSON array of doubles";
+			}
+		}
+		else if( type.equals(Constants.INT)) {
+			Integer[] array = null;
+			try {
+				array = createIntegerArray(json);
+				arrayLength = array.length;
+			}
+			catch(Exception e) {
+				return json + " is not a valid JSON array of integers";
+			}
+		}
+		else {    // Default to String
+			String[] array = null;
+			try {
+				array = createStringArray(json);
+				arrayLength = array.length;
+			}
+			catch(Exception e) {
+				return json + " is not a valid JSON array of strings";
+			}
 		}
 		
 		// Check rows
@@ -42,13 +94,13 @@ public class Array extends DataWithUnits {
 		
 		if(isKeyed) {
 			int keyLength = getIndexSize(key);
-			if(keyLength != array.length){
+			if(keyLength != arrayLength){
 				return "Row key length " + keyLength + "is different than # of rows in value";
 			}
 		}
 		else {
 			Integer length = (Integer)getValue(IlsProperty.LENGTH);
-			if(length == null || length.intValue() != array.length) {
+			if(length == null || length.intValue() != arrayLength) {
 				return "length property " + length + "is different than # of rows in value";
 			}
 		}

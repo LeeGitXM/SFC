@@ -1,6 +1,7 @@
 package com.ils.sfc.common.recipe.objects;
 
 import java.lang.reflect.Constructor;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,6 +64,7 @@ attributes:sequence (structure (
 public abstract class Data {
 	private static final String CLSS = "Data";
 	private static LoggerEx log = LogUtil.getLogger(Data.class.getName());
+	protected static SimpleDateFormat parser = new SimpleDateFormat("YYYY/mm/dd HH:mm:ss");
 	protected BasicPropertySet properties = new BasicPropertySet();
 	private Map<String, BasicProperty<?>> propertiesByName = new HashMap<String, BasicProperty<?>>();
 	// id and parentId come from the G2 export and are used to re-compose a hierarchy:
@@ -516,21 +518,75 @@ public abstract class Data {
 					value = createDataset((String)value);
 				}
 				else if(value != null && pval.getProperty() == IlsProperty.JSON_LIST) {
-					value = createArray((String)value);
+					String type = getValueType();
+					if( type==null ) type = Constants.STRING;  // Default
+					String json = (String)value;
+					value = null;
+					try {
+						if( type.equals(Constants.BOOLEAN)) {
+							value = createBooleanArray(json);
+						}
+						else if( type.equals(Constants.DATE_TIME)) {
+							value = createDateArray(json);
+
+						}
+						else if( type.equals(Constants.FLOAT)) {
+							value = createDoubleArray(json);
+						}
+						else if( type.equals(Constants.INT)) {
+							value = createIntegerArray(json);
+						}
+						else {    // Default to String
+							value = createStringArray(json);
+						}
+					}
+					catch(Exception e) {
+						value = "Not a valid JSON array of "+type;
+					}
+					// note: Ignition will not allow a synchronous tag write from
+					// a UI thread, so writes from Designer UI must be async
+					Object[] setArgs = {provider, attributePath, value, false};
+					PythonCall.SET_RECIPE_DATA.exec(setArgs);
 				}
-				// note: Ignition will not allow a synchronous tag write from
-				// a UI thread, so writes from Designer UI must be async
-				Object[] setArgs = {provider, attributePath, value, false};
-				PythonCall.SET_RECIPE_DATA.exec(setArgs);
 			}
-		} catch (JythonExecException e) {
+		}
+		catch (JythonExecException e) {
 			log.error("Recipe Data write to tags failed", e);
 		}
 	}
 
-
-	/** Create a dataset from a JSON array-of-arrays */
-	protected Double[] createArray(String value) {
+	/** Create a boolean array from a JSON string */
+	protected Boolean[] createBooleanArray(String value) {
+		try {
+			JSONArray jarray = new JSONArray((String)value);
+			Boolean[] array = new Boolean[jarray.length()];
+			for(int i = 0; i < jarray.length(); i++) {
+				array[i] = jarray.getBoolean(i);
+			}
+			return array;
+		}
+		catch(Exception e) {
+			log.error("createBooleanArray: Error converting JSON ("+value+") to array of bools", e);
+		}
+		return null;
+	}
+	/** Create a date array from a JSON string */
+	protected Date[] createDateArray(String value) {
+		try {
+			JSONArray jarray = new JSONArray((String)value);
+			Date[] array = new Date[jarray.length()];
+			for(int i = 0; i < jarray.length(); i++) {
+				array[i] = parser.parse(jarray.getString(i));
+			}
+			return array;
+		}
+		catch(Exception e) {
+			log.error("createDateArray: Error converting JSON ("+value+") to array of dates", e);
+		}
+		return null;
+	}
+	/** Create a double array from a JSON string */
+	protected Double[] createDoubleArray(String value) {
 		try {
 			JSONArray jarray = new JSONArray((String)value);
 			Double[] array = new Double[jarray.length()];
@@ -540,11 +596,40 @@ public abstract class Data {
 			return array;
 		}
 		catch(Exception e) {
-			log.error("Error converting JSON array to dataset", e);
+			log.error("createDoubleArray: Error converting JSON ("+value+") to array of doubles", e);
 		}
 		return null;
 	}
-
+	/** Create a integer array from a JSON string */
+	protected Integer[] createIntegerArray(String value) {
+		try {
+			JSONArray jarray = new JSONArray((String)value);
+			Integer[] array = new Integer[jarray.length()];
+			for(int i = 0; i < jarray.length(); i++) {
+				array[i] = jarray.getInt(i);
+			}
+			return array;
+		}
+		catch(Exception e) {
+			log.error("createIntegerArray: Error converting JSON ("+value+") to array of integers", e);
+		}
+		return null;
+	}
+	/** Create a string array from a JSON string */
+	protected String[] createStringArray(String value) {
+		try {
+			JSONArray jarray = new JSONArray((String)value);
+			String[] array = new String[jarray.length()];
+			for(int i = 0; i < jarray.length(); i++) {
+				array[i] = jarray.getString(i);
+			}
+			return array;
+		}
+		catch(Exception e) {
+			log.error("createStringArray: Error converting JSON ("+value+") to array of integers", e);
+		}
+		return null;
+	}
 	protected int getIndexSize(String keyName) {
 		Object[] args = new Object[] {keyName};
 		try {

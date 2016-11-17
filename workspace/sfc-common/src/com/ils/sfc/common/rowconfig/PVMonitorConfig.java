@@ -126,7 +126,7 @@ public class PVMonitorConfig extends RowConfig {
 					newRow.strategy = translationMap.get(strValue.toLowerCase());
 				}
 				else if(name.equals("toleranceType")) {
-					newRow.strategy = translationMap.get(strValue.toLowerCase());
+					newRow.toleranceType = translationMap.get(strValue.toLowerCase());
 				}
 				else if(name.equals("tolerance")) {
 					try {
@@ -150,10 +150,10 @@ public class PVMonitorConfig extends RowConfig {
 					}
 				}
 				else if(name.equals("download")) {
-					newRow.strategy = translationMap.get(strValue.toLowerCase());
+					newRow.download = translationMap.get(strValue.toLowerCase());
 				}
 				else if(name.equals("limits")) {
-					newRow.strategy = translationMap.get(strValue.toLowerCase());
+					newRow.limits = translationMap.get(strValue.toLowerCase());
 				}
 				else if(name.equals("targetId")) {
 					newRow.targetNameIdOrValue = strValue;

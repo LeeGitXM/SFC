@@ -174,8 +174,8 @@ public class IlsProperty {
     public static final BasicProperty<String> HELP = createProperty(Constants.HELP, String.class, "");
     public static final BasicProperty<Double> HIGH_LIMIT = createProperty(Constants.HIGH_LIMIT, Double.class, null);
     public static final BasicProperty<String> ID = createProperty(Constants.ID, String.class, null);
-    public static final BasicProperty<String> JSON_LIST = createProperty(Constants.VALUE, String.class, "[0., 0.]");
-    public static final BasicProperty<String> JSON_MATRIX = createProperty(Constants.VALUE, String.class, "[[0., 0.],[0., 0.]]");
+    public static final BasicProperty<String> JSON_LIST = createProperty(Constants.VALUE, String.class, "[]");
+    public static final BasicProperty<String> JSON_MATRIX = createProperty(Constants.VALUE, String.class, "[[],[]]");
     public static final BasicProperty<String> JSON_OBJECT = createProperty(Constants.VALUE, String.class, "{}", true);
     public static final BasicProperty<String> KEY = createProperty(Constants.KEY, String.class, "");
     //public static final BasicProperty<Boolean> KEYED = createProperty(Constants.KEYED, Boolean.class, Boolean.FALSE);

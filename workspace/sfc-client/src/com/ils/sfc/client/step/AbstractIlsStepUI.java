@@ -1,6 +1,7 @@
 package com.ils.sfc.client.step;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.util.HashMap;
@@ -16,6 +17,8 @@ import org.json.JSONObject;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.step.AllSteps;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.ElementStateEnum;
 import com.inductiveautomation.sfc.client.api.ChartStatusContext;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
@@ -34,9 +37,13 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	protected static Icon questionIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/question.png"));
 	protected static Icon clockIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/clock.png"));
 	protected static Icon asteriskIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/asterisk.png"));
+	public static final int ICON_HEIGHT = 50;
+	public static final int ICON_WIDTH  = 50;
+	public static final Dimension IMAGE_SIZE = new Dimension(ICON_WIDTH,ICON_HEIGHT);
 	private JLabel label = new JLabel();
 	protected enum PaletteTabs { Foundation, Messages, Input, Control, Notification, IO, Query, File, Window };
 	protected static final Color LONG_RUNNING_COLOR = new Color(255, 255, 153);
+	private static final LoggerEx log = LogUtil.getLogger(AbstractIlsStepUI.class.getPackage().getName());		
 	
 	public static ClientStepFactory[] clientStepFactories = {
 		QueueMessageStepUI.FACTORY,
@@ -90,8 +97,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	}
 		
 	protected AbstractIlsStepUI() {
-    	label.setBorder(new LineBorder(Color.gray, 2));
-    	label.setIcon(getIcon());	
+    	label.setBorder(new LineBorder(Color.gray, 2));	
     	label.setHorizontalTextPosition(SwingConstants.LEFT);  // text is to left of icon
     	label.setHorizontalAlignment(SwingConstants.CENTER);
     	label.setVerticalAlignment(SwingConstants.CENTER);
@@ -108,9 +114,14 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	/** Subclasses override to set the color of the heading text. */
 	protected String getHeadingColor() { return "black"; }
 	
+
+	/**
+	 * This is the method that draws the block plus label and icon. Since there is so little
+	 * space, treat the icon as a "badge". 
+	 */
     @Override
-    public void drawStep(ChartUIElement propertyValues, ChartStatusContext chartStatusContext, 
-    	Graphics2D g2d) {
+    public void drawStep(ChartUIElement propertyValues, ChartStatusContext chartStatusContext, Graphics2D g2d) {
+    	log.infof("drawStep: class = %s",getClass().getCanonicalName());
     	// get the size of the cell:
     	double cellWidth = g2d.getClipBounds().getWidth() * g2d.getTransform().getScaleX();
     	double cellHeight = g2d.getClipBounds().getHeight() * g2d.getTransform().getScaleY();
@@ -179,7 +190,10 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	label.setBackground(background);
     	g2d.setTransform(transform);
     	label.paint(g2d);
-    	g2d.setTransform(oldTransform);    	
+    	if( getIcon()!=null) {
+    		drawIcon(g2d,cellWidth,cellHeight,getIcon());
+    	}
+    	g2d.setTransform(oldTransform);
     }
 
 	private Color getBackgroundColor(ChartUIElement propertyValues) {
@@ -204,6 +218,76 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
         	associatedData = new JSONObject();
     		element.set(ChartStepProperties.AssociatedData, associatedData);
         }
-	}	 	
+	}
+	
+	/**
+	 *  Draw the icon as a "badge" in the top right corner of the box. Ignore if
+	 *  the box is too small.
+	 *  
+	 */
+	protected void drawIcon(Graphics2D g,double width,double height,Icon icon) {
+		if( width<ICON_WIDTH || height<ICON_HEIGHT) return;   // Too small
+		
+		int x = (int)(width - ICON_WIDTH/2.);
+		int y = (int)(ICON_HEIGHT/2.);
+		icon.paintIcon(null, g, x, y);
+	}
+		/*
+		// Draw the text that is part of the rendered box. Recognize \n or \\n as newlines.
+		// Pad with spaces so that we center
+		protected void drawEmbeddedText(Graphics2D g,int offsetx,int offsety) {
+			String text = block.getEmbeddedLabel();
+			if( text == null || text.length()==0 ) return;
+			Dimension sz = getPreferredSize();
+			String[] lines = text.split("\n");
+			if( lines.length==1 ) lines = text.split("\\n");
+			int lineCount = lines.length;
+			int dy = 3*block.getEmbeddedFontSize()/4;
+			int y = sz.height/2 - (lineCount-1)*dy/2;
+			for( String line: lines) {
+				paintTextAt(g,line,sz.width/2+offsetx,y+offsety,Color.BLACK,block.getEmbeddedFontSize());
+				y+=dy;
+			}
+		}
+		
+		protected void paintBadge(Graphics2D g,String iconPath,Rectangle bounds) {
+			if( iconPath == null || iconPath.length()==0 ) return;
+		
+			Dimension imageSize = new Dimension(bounds.width,bounds.height);
+			Image img = ImageLoader.getInstance().loadImage(iconPath,imageSize);
+			ImageIcon icon = null;
+			if( img !=null) icon = new ImageIcon(img);
+			if( icon!=null ) {
+				icon.paintIcon(getBlockComponent(), g, bounds.x, bounds.y);
+			}
+			else {
+				log.warnf("%s.paintBadge Missing icon at %s for %s",TAG,iconPath,block.getName());
+			}
+		}
+		*/
+		/**
+		 * Utility method to paint a text string.
+		 * @param g
+		 * @param text
+		 * @param xpos center of the text
+		 * @param ypos center of the text
+		 * @param fill color of the text
+		 */
+		/*
+		private void paintTextAt(Graphics2D g, String text, float xpos, float ypos, Color fill,int fontSize) {
+			Font font = g.getFont();
+			font = font.deriveFont((float)fontSize);  // This is, presumably the correct way
+			FontRenderContext frc = g.getFontRenderContext();
+			GlyphVector vector = font.createGlyphVector(frc, text);
+			Rectangle2D bounds = vector.getVisualBounds();
+			// xpos, ypos are centers. Adjust to upper left.
+			ypos+= bounds.getHeight()/2f;
+			xpos-= bounds.getWidth()/2f;
 
+			Shape textShape = vector.getOutline(xpos, ypos);
+			g.setColor(fill);
+			g.fill(textShape);
+		}
+	}
+	*/
 }
