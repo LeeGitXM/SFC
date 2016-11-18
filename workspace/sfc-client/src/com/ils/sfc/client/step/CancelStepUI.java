@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -20,7 +22,7 @@ public class CancelStepUI extends AbstractIlsStepUI {
 	protected String getHeading() { return "Cancel!"; }
     
     @Override
-    protected String getHeadingColor() {return "red";  }
+    protected Color getHeadingColor() {return Color.red;  }
 
     public static final class AbortStepFactory extends CancelStepDelegate implements ClientStepFactory {
     	private CancelStepUI UI = new CancelStepUI();

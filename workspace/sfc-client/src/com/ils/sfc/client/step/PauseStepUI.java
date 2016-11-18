@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -19,7 +21,7 @@ public class PauseStepUI extends AbstractIlsStepUI {
 	@Override
 	protected String getHeading() { return "Pause!"; }
     @Override
-    protected String getHeadingColor() {return "red";}
+    protected Color getHeadingColor() {return Color.red;}
 
     public static final class PauseStepFactory extends PauseStepDelegate implements ClientStepFactory {
     	private PauseStepUI UI = new PauseStepUI();

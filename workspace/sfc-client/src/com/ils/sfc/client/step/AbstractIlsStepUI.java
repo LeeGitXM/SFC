@@ -2,11 +2,16 @@ package com.ils.sfc.client.step;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.Stroke;
+import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +34,6 @@ import com.inductiveautomation.sfc.elements.steps.ExpressionParamCollection;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.elements.steps.enclosing.ExecutionMode;
 import com.inductiveautomation.sfc.elements.steps.enclosing.ReturnParamCollection;
-import com.inductiveautomation.sfc.rpc.ChartStatus;
 import com.inductiveautomation.sfc.rpc.ChartStatus.StepElementStatus;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
@@ -108,7 +112,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	protected abstract String getHeading();
 	
 	/** Subclasses override to set the color of the heading text. */
-	protected String getHeadingColor() { return "black"; }
+	protected Color getHeadingColor() { return Color.black; }
 	
 
 	/**
@@ -141,33 +145,53 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 		g2d.setPaint(getBackgroundColor(chartElement,chartStatusContext));
 		g2d.fill(rect);
 		// Setup for outlining
-		float outlineWidth = 5.0f;
+		float outlineWidth = 4.0f;
 		Stroke stroke = new BasicStroke(outlineWidth,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND);
 		g2d.setStroke(stroke);
 		g2d.setPaint(BORDER_DARK_COLOR);
 		g2d.draw(rect);
 
-    	// The label consists of the class and step name.
-    	// Here we dynamically add the step.
-		String stepName = chartElement.get(IlsProperty.NAME);
-    	String heading = getHeading();
-    	String text = null;
-    	if( heading!=null ) {
-    		String hsize = "5";
-    		if( heading.length()>10 ) hsize = "6";
-    		String textColor = getHeadingColor();
-    		String pcnt="95%", lpcnt="100%";
-    		if( stepName.length()>10 ) { pcnt ="80%"; lpcnt="90%"; }
-    		if(stepName.length()>20 )  { pcnt ="70%"; lpcnt="75%"; }
-
-    		text = "<html><center><h"+hsize+" style=\"color:"+textColor+";padding-top:3px;margin:0px;\">"+heading+"</h"+hsize+"</center>";
-    		text = text + "<center><p style=\"font-size:"+pcnt+";line-height:"+lpcnt+";margin:0px;\">" + stepName + "</p></center></html>";
-    	}
-
-
-
-  
+    	// Draw the heading in the upper 1/3 of the box.
+		String heading = getHeading();
+		double width = cellWidth - 2*INSET;
+		double height= cellHeight-2*INSET;
+		if( heading!=null && !heading.isEmpty() && height>0 &&width>0 ) {
+			Font font = getHeaderFont(g2d,width,height/3,heading);
+			double textWidth = font.getStringBounds(heading, g2d.getFontRenderContext()).getWidth();
+			paintTextAt(g2d,heading,(float)((width-textWidth)/2),2*INSET+(int)(height/12),getHeadingColor(),font);
+			
+			// Add the step name in the bottom 2/3. Allow 2 lines.
+			String stepName = chartElement.get(IlsProperty.NAME);
+			if( stepName!=null && !stepName.isEmpty() ) {
+				Rectangle2D bounds = font.getStringBounds(stepName, g2d.getFontRenderContext());
+				int pos = getTextBreak(stepName);
+				if( pos>0 && bounds.getWidth() > width ) {
+					// Double line
+					String line = stepName.substring(0, pos);
+					font = getNameFont(g2d,width,height/4,line,font);
+					textWidth = font.getStringBounds(line, g2d.getFontRenderContext()).getWidth();
+					paintTextAt(g2d,line,(float)((width-textWidth)/2),INSET+(int)(height/2),Color.black,font);
+					// Line 2
+					line = stepName.substring(pos+1);
+					textWidth = font.getStringBounds(line, g2d.getFontRenderContext()).getWidth();
+					paintTextAt(g2d,line,(float)((width-textWidth)/2),INSET+(int)(3*height/4),Color.black,font);
+				}
+				else {
+					// Single line
+					if( bounds.getWidth()>width) {
+						font = getNameFont(g2d,width,height/4,stepName,font);
+						bounds = font.getStringBounds(stepName, g2d.getFontRenderContext());
+					}
+					else {
+						font = font.deriveFont(Font.PLAIN);
+					}
+					textWidth = bounds.getWidth();
+					paintTextAt(g2d,stepName,(float)((width-textWidth)/2),INSET+(int)(7*height/12),Color.black,font);
+				}
+			}
+		}
     	
+    
     	if( getIcon()!=null) {
     		boolean center = (heading==null||heading.isEmpty());
     		drawIcon(g2d,cellWidth,cellHeight,getIcon(),center);
@@ -176,30 +200,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	g2d.setTransform(oldTransform);
     }
 
-	private Color getBackgroundColor(ChartUIElement chartElement,ChartStatusContext chartStatusContext) {
-    	boolean chartNotStarted = !chartStatusContext.getChartStatus().isPresent();
-    	StepElementStatus stepElementStatus = chartStatusContext.getStepStatus(chartElement);
-    	ElementStateEnum stepState = stepElementStatus.getElementState();
-    	Color background  = Color.lightGray;    // Color for block that has run
-    	if(chartNotStarted) {
-    		String factoryId = (String)chartElement.get(IlsProperty.FACTORY_ID);
-    		if(AllSteps.longRunningFactoryIds.contains(factoryId)) {
-    			background = LONG_RUNNING_COLOR;
-    		}
-    		else {
-    			background = Color.WHITE;
-    		}
-    	}
-    	else {
-    		if(stepState.isRunning()) {
-				background = Color.green.brighter();
-    		}
-			else if(ElementStateEnum.Paused == stepState) {
-				background = Color.blue.brighter();
-			}
-    	}
-		return background;
-	}
+
 
 	/** Initialize the Encapsulation step properties for our step types (e.g. ProcedureStep)
      *  that are really Encapsulation steps
@@ -241,50 +242,85 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 			Icon icn  = new ImageIcon(img);
 			icn.paintIcon(null, g, x, y);
 		}
-		
 	}
-		/*
-		// Draw the text that is part of the rendered box. Recognize \n or \\n as newlines.
-		// Pad with spaces so that we center
-		protected void drawEmbeddedText(Graphics2D g,int offsetx,int offsety) {
-			String text = block.getEmbeddedLabel();
-			if( text == null || text.length()==0 ) return;
-			Dimension sz = getPreferredSize();
-			String[] lines = text.split("\n");
-			if( lines.length==1 ) lines = text.split("\\n");
-			int lineCount = lines.length;
-			int dy = 3*block.getEmbeddedFontSize()/4;
-			int y = sz.height/2 - (lineCount-1)*dy/2;
-			for( String line: lines) {
-				paintTextAt(g,line,sz.width/2+offsetx,y+offsety,Color.BLACK,block.getEmbeddedFontSize());
-				y+=dy;
-			}
-		}
-		
-		*/
-		/**
-		 * Utility method to paint a text string.
-		 * @param g
-		 * @param text
-		 * @param xpos center of the text
-		 * @param ypos center of the text
-		 * @param fill color of the text
-		 */
-		/*
-		private void paintTextAt(Graphics2D g, String text, float xpos, float ypos, Color fill,int fontSize) {
-			Font font = g.getFont();
-			font = font.deriveFont((float)fontSize);  // This is, presumably the correct way
-			FontRenderContext frc = g.getFontRenderContext();
-			GlyphVector vector = font.createGlyphVector(frc, text);
-			Rectangle2D bounds = vector.getVisualBounds();
-			// xpos, ypos are centers. Adjust to upper left.
-			ypos+= bounds.getHeight()/2f;
-			xpos-= bounds.getWidth()/2f;
 
-			Shape textShape = vector.getOutline(xpos, ypos);
-			g.setColor(fill);
-			g.fill(textShape);
-		}
+		
+
+	/**
+	 * Utility method to paint a text string.
+	 * @param g
+	 * @param text
+	 * @param xpos left of the text
+	 * @param ypos top of the text
+	 * @param fill color of the text
+	 */
+	private void paintTextAt(Graphics2D g, String text, float xpos, float ypos, Color fill,Font font) {
+		if( xpos<0 ) xpos = 0;
+		if( ypos<0 ) ypos = 0;
+		FontRenderContext frc = g.getFontRenderContext();
+		GlyphVector vector = font.createGlyphVector(frc, text);
+		Shape textShape = vector.getOutline(xpos, ypos);
+		g.setColor(fill);
+		g.fill(textShape);
 	}
-	*/
+
+	private Color getBackgroundColor(ChartUIElement chartElement,ChartStatusContext chartStatusContext) {
+    	boolean chartNotStarted = !chartStatusContext.getChartStatus().isPresent();
+    	StepElementStatus stepElementStatus = chartStatusContext.getStepStatus(chartElement);
+    	ElementStateEnum stepState = stepElementStatus.getElementState();
+    	Color background  = Color.lightGray;    // Color for block that has run
+    	if(chartNotStarted) {
+    		String factoryId = (String)chartElement.get(IlsProperty.FACTORY_ID);
+    		if(AllSteps.longRunningFactoryIds.contains(factoryId)) {
+    			background = LONG_RUNNING_COLOR;
+    		}
+    		else {
+    			background = Color.WHITE;
+    		}
+    	}
+    	else {
+    		if(stepState.isRunning()) {
+				background = Color.green.brighter();
+    		}
+			else if(ElementStateEnum.Paused == stepState) {
+				background = Color.blue.brighter();
+			}
+    	}
+		return background;
+	}
+	// Compute the maximum font possible for the available space
+	private Font getHeaderFont(Graphics2D g,double width,double height,String text) {
+		FontRenderContext frc = g.getFontRenderContext();
+		Font font = g.getFont();
+		Rectangle2D bounds = g.getFont().getStringBounds(text, frc);
+		float scaleFactor = (float)(width/bounds.getWidth());
+		float scaley = (float)(height/bounds.getHeight());
+		if(scaley<scaleFactor) scaleFactor = scaley;
+		font = font.deriveFont(Font.BOLD,font.getSize2D()*scaleFactor);
+		return font;
+	}
+	// Compute the maximum font possible for the available space for a line of the
+	// name. However no bigger than the header font
+	private Font getNameFont(Graphics2D g,double width,double height,String text,Font headerFont) {
+		FontRenderContext frc = g.getFontRenderContext();
+		Font font = g.getFont();
+		Rectangle2D bounds = g.getFont().getStringBounds(text, frc);
+		float scaleFactor = (float)(width/bounds.getWidth());
+		float scaley = (float)(height/bounds.getHeight());
+		if(scaley<scaleFactor) scaleFactor = scaley;
+		float size = font.getSize2D()*scaleFactor;
+		if( size > headerFont.getSize2D() ) size = headerFont.getSize2D();
+		font = font.deriveFont(Font.PLAIN,size);
+		return font;
+	}
+	// Find the first space past 1/2 way
+	private int getTextBreak(String line) {
+		int midpoint = line.length()/2;
+		int pos = 0;
+		while( pos<midpoint ) {
+			pos = line.indexOf(" ", pos+1);
+			if( pos<0 ) break;
+		}
+		return pos;
+	}
 }

@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -19,6 +21,8 @@ public class YesNoStepUI extends AbstractIlsStepUI {
 	
 	@Override
 	protected String getHeading() { return "Yes No"; }
+    @Override
+    protected Color getHeadingColor() {return Color.red;}
 
     public static final class YesNoStepFactory extends YesNoStepDelegate implements ClientStepFactory {
     	private YesNoStepUI UI = new YesNoStepUI();
