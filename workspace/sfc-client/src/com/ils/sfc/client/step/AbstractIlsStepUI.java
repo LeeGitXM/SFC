@@ -1,17 +1,18 @@
 package com.ils.sfc.client.step;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.RoundRectangle2D;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
 
 import org.json.JSONObject;
 
@@ -37,8 +38,11 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	protected static final ImageIcon questionIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/question.png"));
 	protected static final ImageIcon clockIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/clock.png"));
 	protected static final ImageIcon asteriskIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/asterisk.png"));
-	private static final int INSET = 3;
-	private JLabel label = new JLabel();
+	protected final static int BORDER_WIDTH = 3;
+	protected final static Color BORDER_DARK_COLOR = Color.darkGray;
+	protected final static Color BORDER_LIGHT_COLOR = new Color(250,250,250); // Light gray
+	
+	private static final int INSET = 10;
 	protected enum PaletteTabs { Foundation, Messages, Input, Control, Notification, IO, Query, File, Window };
 	protected static final Color LONG_RUNNING_COLOR = new Color(255, 255, 153);
 	private static final LoggerEx log = LogUtil.getLogger(AbstractIlsStepUI.class.getPackage().getName());		
@@ -95,12 +99,6 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	}
 		
 	protected AbstractIlsStepUI() {
-    	label.setBorder(new LineBorder(Color.gray, 2));	
-    	label.setHorizontalTextPosition(SwingConstants.LEFT);  // text is to left of icon
-    	label.setHorizontalAlignment(SwingConstants.CENTER);
-    	label.setVerticalAlignment(SwingConstants.CENTER);
-    	label.setBackground(Color.white);
-    	label.setOpaque(true);
 	}
 	
 	/** Subclasses override to get icon to display. */
@@ -122,23 +120,32 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     public void drawStep(ChartUIElement chartElement, ChartStatusContext chartStatusContext, Graphics2D g2d) {
     	
     	// get the size of the cell:
-    	double cellWidth = g2d.getClipBounds().getWidth() * g2d.getTransform().getScaleX();;
-    	double cellHeight = g2d.getClipBounds().getHeight() * g2d.getTransform().getScaleY();
-    	
-    	// Give the label a slight inset
-    	int inset = 4;
-    	label.setSize((int)cellWidth - 2 * inset, (int)cellHeight - 2 * inset);
-    	    	
+    	double cellWidth = g2d.getClipBounds().getWidth();
+    	double cellHeight = g2d.getClipBounds().getHeight();
+
+		// Turn on anti-aliasing
+    	g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+				RenderingHints.VALUE_ANTIALIAS_ON);
+  	
     	// draw connections to other steps
     	this.drawUpLink(g2d);
     	this.drawDownLink(g2d);
     	// IA's drawing uses some significant scaling--remove that for our label display,
     	// but retain the translation part:
     	AffineTransform oldTransform = g2d.getTransform();
-    	AffineTransform transform = new AffineTransform();
-    	double tx = oldTransform.getTranslateX() + inset;
-    	double ty = oldTransform.getTranslateY() + inset;
-    	transform.translate(tx, ty);
+    	g2d.translate(INSET,INSET);
+    	// Draw the box.
+    	Color originalBackground = g2d.getBackground();
+		
+		RoundRectangle2D.Double rect = new RoundRectangle2D.Double(0,0, cellWidth-2*INSET, cellHeight-2*INSET, 8, 8);
+		g2d.setPaint(getBackgroundColor(chartElement,chartStatusContext));
+		g2d.fill(rect);
+		// Setup for outlining
+		float outlineWidth = 5.0f;
+		Stroke stroke = new BasicStroke(outlineWidth,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND);
+		g2d.setStroke(stroke);
+		g2d.setPaint(BORDER_DARK_COLOR);
+		g2d.draw(rect);
 
     	// The label consists of the class and step name.
     	// Here we dynamically add the step.
@@ -156,54 +163,42 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     		text = "<html><center><h"+hsize+" style=\"color:"+textColor+";padding-top:3px;margin:0px;\">"+heading+"</h"+hsize+"</center>";
     		text = text + "<center><p style=\"font-size:"+pcnt+";line-height:"+lpcnt+";margin:0px;\">" + stepName + "</p></center></html>";
     	}
-    	label.setText(text);
 
+
+
+  
+    	
+    	if( getIcon()!=null) {
+    		boolean center = (heading==null||heading.isEmpty());
+    		drawIcon(g2d,cellWidth,cellHeight,getIcon(),center);
+    	}
+    	g2d.setColor(originalBackground);
+    	g2d.setTransform(oldTransform);
+    }
+
+	private Color getBackgroundColor(ChartUIElement chartElement,ChartStatusContext chartStatusContext) {
     	boolean chartNotStarted = !chartStatusContext.getChartStatus().isPresent();
     	StepElementStatus stepElementStatus = chartStatusContext.getStepStatus(chartElement);
     	ElementStateEnum stepState = stepElementStatus.getElementState();
-    	boolean wasActivated = stepElementStatus.getLastActivation() != null;
-    	Color background = null;
-    	Color ranColor = Color.lightGray;
+    	Color background  = Color.lightGray;    // Color for block that has run
     	if(chartNotStarted) {
-    		background = getBackgroundColor(chartElement);
+    		String factoryId = (String)chartElement.get(IlsProperty.FACTORY_ID);
+    		if(AllSteps.longRunningFactoryIds.contains(factoryId)) {
+    			background = LONG_RUNNING_COLOR;
+    		}
+    		else {
+    			background = Color.WHITE;
+    		}
     	}
     	else {
-    		ChartStatus chartStatus = chartStatusContext.getChartStatus().get();
-			//if(chartStatus.getChartState().isTerminal()) {
-			//	background = Color.lightGray;
-			//}
     		if(stepState.isRunning()) {
 				background = Color.green.brighter();
     		}
 			else if(ElementStateEnum.Paused == stepState) {
 				background = Color.blue.brighter();
 			}
-			else if(wasActivated) {
-				background = ranColor;
-			}
-			else {
-				// hasn't run yet
-				background = Color.white;
-			}			
     	}
-    	label.setBackground(background);
-    	g2d.setTransform(transform);
-    	label.paint(g2d);
-    	if( getIcon()!=null) {
-    		boolean center = (heading==null||heading.isEmpty());
-    		drawIcon(g2d,cellWidth,cellHeight,getIcon(),center);
-    	}
-    	g2d.setTransform(oldTransform);
-    }
-
-	private Color getBackgroundColor(ChartUIElement propertyValues) {
-		String factoryId = (String)propertyValues.get(IlsProperty.FACTORY_ID);
-		if(AllSteps.longRunningFactoryIds.contains(factoryId)) {
-			return LONG_RUNNING_COLOR;
-		}
-		else {
-			return Color.WHITE;
-		}
+		return background;
 	}
 
 	/** Initialize the Encapsulation step properties for our step types (e.g. ProcedureStep)
