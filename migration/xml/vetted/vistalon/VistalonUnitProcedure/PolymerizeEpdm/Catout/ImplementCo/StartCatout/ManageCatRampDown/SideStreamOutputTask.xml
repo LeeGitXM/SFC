@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<sfc zoom="0.9142858" canvas="13 16" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Wed Nov 23 12:27:10 CST 2016" hot-editable="false" persist-state="true">
+	<step id="7f9289dd-9a31-11d9-b116-00065b88c6c2" location="3 0" name="S88Begin_13823" factory-id="begin-step">		<associated-data>{}</associated-data>
+	</step>
+	<step id="ab265c56-9a26-11d9-b116-00065b88c6c2" location="3 5" name="SS Mode w/ Ramp" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time.value</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>false</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>SS Mode w/ Ramp</name><writeOutputConfig>{"rows":[{"key":"r2-ss1-c3-flow-mode","confirmWrite":true},{"key":"r2-ss2-c3-flow-mode","confirmWrite":true},{"key":"r2-ss3-c3-flow-mode","confirmWrite":true},{"key":"r2-ss4-c3-flow-mode","confirmWrite":true},{"key":"r2-ss5-c3-flow-mode","confirmWrite":true},{"key":"r2-ss6-c3-flow-mode","confirmWrite":true},{"key":"r2-ss1-c6-flow-mode","confirmWrite":true},{"key":"r2-ss2-c6-flow-mode","confirmWrite":true},{"key":"r2-ss3-c6-flow-mode","confirmWrite":true},{"key":"r2-ss4-c6-flow-mode","confirmWrite":true},{"key":"r2-ss5-c6-flow-mode","confirmWrite":true},{"key":"r2-ss6-c6-flow-mode","confirmWrite":true}]}</writeOutputConfig><id>ab265c56-9a26-11d9-b116-00065b88c6c2</id>		<associated-data>{"download-error-counter":{"lowLimit":0.0,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"770e611c-7bd3-4e22-9ec6-01ed390dbe80","valueType":"float","highLimit":0.0,"category":"Simple Constant","class":"Value","value":0.0,"key":"download-error-counter"}}</associated-data>
+	</step>
+	<step id="ab265c5b-9a26-11d9-b116-00065b88c6c2" location="3 7" name="S88TimeDelay_13818" factory-id="com.ils.timedDelayStep"><postNotification>false</postNotification><recipeLocation>superior</recipeLocation><tagPath></tagPath><description></description><scale>1.0</scale><windowTitle></windowTitle><message></message><buttonLabel></buttonLabel><delay>15.0</delay><name>S88TimeDelay_13818</name><callback>G2</callback><id>ab265c5b-9a26-11d9-b116-00065b88c6c2</id><position>center</position><strategy>static</strategy><key>g2</key><delayUnit>SEC</delayUnit>		<associated-data>{}</associated-data>
+	</step>
+	<step id="806e8472-9a25-11d9-b116-00065b88c6c2" location="7 5" name="SS Mode" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time.value</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>false</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>SS Mode</name><writeOutputConfig>{"rows":[{"key":"r2-ss1-c3-flow-mode","confirmWrite":true},{"key":"r2-ss2-c3-flow-mode","confirmWrite":true},{"key":"r2-ss3-c3-flow-mode","confirmWrite":true},{"key":"r2-ss4-c3-flow-mode","confirmWrite":true},{"key":"r2-ss5-c3-flow-mode","confirmWrite":true},{"key":"r2-ss6-c3-flow-mode","confirmWrite":true},{"key":"r2-ss1-c6-flow-mode","confirmWrite":true},{"key":"r2-ss2-c6-flow-mode","confirmWrite":true},{"key":"r2-ss3-c6-flow-mode","confirmWrite":true},{"key":"r2-ss4-c6-flow-mode","confirmWrite":true},{"key":"r2-ss5-c6-flow-mode","confirmWrite":true},{"key":"r2-ss6-c6-flow-mode","confirmWrite":true}]}</writeOutputConfig><id>806e8472-9a25-11d9-b116-00065b88c6c2</id>		<associated-data>{"download-error-counter":{"lowLimit":0.0,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"4e925697-249f-4cb8-a5e9-8ba40bf170d9","valueType":"float","highLimit":0.0,"category":"Simple Constant","class":"Value","value":0.0,"key":"download-error-counter"}}</associated-data>
+	</step>
+	<step id="ab265c4a-9a26-11d9-b116-00065b88c6c2" location="3 9" name="SS SP w/ Ramp" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time.value</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>false</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>SS SP w/ Ramp</name><writeOutputConfig>{"rows":[{"key":"r2-ss1-c3-flow-sp","confirmWrite":true},{"key":"r2-ss2-c3-flow-sp","confirmWrite":true},{"key":"r2-ss3-c3-flow-sp","confirmWrite":true},{"key":"r2-ss4-c3-flow-sp","confirmWrite":true},{"key":"r2-ss5-c3-flow-sp","confirmWrite":true},{"key":"r2-ss6-c3-flow-sp","confirmWrite":true}]}</writeOutputConfig><id>ab265c4a-9a26-11d9-b116-00065b88c6c2</id>		<associated-data>{"download-error-counter":{"lowLimit":0.0,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"ea981fb0-3c0b-4e60-b97d-b176531ad351","valueType":"float","highLimit":0.0,"category":"Simple Constant","class":"Value","value":0.0,"key":"download-error-counter"}}</associated-data>
+	</step>
+	<step id="2b3f3405-9a2e-11d9-b116-00065b88c6c2" location="3 11" name="Catout Reminder" factory-id="com.ils.showWindowStep"><description></description><scale>1.0</scale><windowTitle></windowTitle><buttonLabel>Reminder</buttonLabel><security>public</security><name>Catout Reminder</name><id>2b3f3405-9a2e-11d9-b116-00065b88c6c2</id><position>center</position><window>Vistalon/SFC/Catout CRx Reminder</window>		<associated-data>{}</associated-data>
+	</step>
+	<step id="a1c28c86-9a2e-11d9-b116-00065b88c6c2" location="7 11" name="Catout Reminder" factory-id="com.ils.showWindowStep"><description></description><scale>1.0</scale><windowTitle></windowTitle><buttonLabel>Reminder</buttonLabel><security>public</security><name>Catout Reminder</name><id>a1c28c86-9a2e-11d9-b116-00065b88c6c2</id><position>center</position><window>Vistalon/SFC/Catout CRx Reminder</window>		<associated-data>{}</associated-data>
+	</step>
+	<step id="7f9289d8-9a31-11d9-b116-00065b88c6c2" location="1 13" name="S88End_13822" factory-id="end-step">		<associated-data>{}</associated-data>
+	</step>
+	<transition id="ccd881f6-9a31-11d9-b116-00065b88c6c2" location="2 2" timeout-enabled="true" timeout-delay="1000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13811">{operation.c3-ramp.value}</transition>
+	<transition id="ab265c5e-9a26-11d9-b116-00065b88c6c2" location="1 4" timeout-enabled="true" timeout-delay="1000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13821">!{tag.Recipe/Local/C-RX-GRADE}</transition>
+	<transition id="ab265c50-9a26-11d9-b116-00065b88c6c2" location="3 4" timeout-enabled="true" timeout-delay="1000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13814">{tag.Recipe/Local/C-RX-GRADE}</transition>
+	<transition id="ccd881fc-9a31-11d9-b116-00065b88c6c2" location="6 2" timeout-enabled="true" timeout-delay="1000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13810">!{operation.c3-ramp.value}</transition>
+	<transition id="0323732f-9a25-11d9-b116-00065b88c6c2" location="5 4" timeout-enabled="true" timeout-delay="1000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13813">!{tag.Recipe/Local/C-RX-GRADE}</transition>
+	<transition id="e83db495-cdf0-47fd-b6e3-d685663a9503" location="3 6">{previous.workDone}</transition>
+	<transition id="39f044bb-9a25-11d9-b116-00065b88c6c2" location="7 4" timeout-enabled="true" timeout-delay="1000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13815">{tag.Recipe/Local/C-RX-GRADE}</transition>
+	<transition id="c6510be4-7ecb-4c02-a86c-67b8bbc7257d" location="3 8">{previous.workDone}</transition>
+	<transition id="97b5ca73-d365-444a-9244-16a379d10406" location="7 6">{previous.workDone}</transition>
+	<transition id="eb85a40d-ba89-4f89-84e1-aad7c776ad0a" location="3 10">{previous.workDone}</transition>
+	<note id="100f440b-afb9-4a0d-aba5-77516e73dd6c" location="0 0" size="2 1">Manually Vetted
+11/9/16</note>
+	<note id="64cf2d54-435c-4474-8c04-5c513861eb2f" location="3 2" size="2 1">The left branch is 
+for a C3 ramp</note>
+	<note id="00e1de80-3ef9-41e5-b4ec-1989c102cd36" location="8 0" size="4 2">These transitions could have been
+refactored so that blocks below did not
+have to be copied.  However, in order to
+be visually identical with G2 the old structure
+is maintained.</note>
+	<note id="e665de03-18c3-4adc-9aba-004d1c8688be" location="8 3" size="3 1">The left branch for both of these 
+paths is if we are not C-Rx.</note>
+	<note id="cb75c0bd-4311-4b68-b666-a265a5a20436" location="8 5" size="3 1">These two write outputs 
+are identical</note>
+	<note id="6960e4f3-6888-44b9-b125-67c9fe7ee29d" location="8 11" size="3 1">These are showing the same 
+window</note>
+	<link id="b4edeab9-1f23-48b3-8eec-087af59ec02d" location="2 1"><down/><right/></link>
+	<link id="88113b28-5ba7-4cbd-aea2-6b271aef2f15" location="3 1"><up/><left/><right/></link>
+	<link id="5c054119-6170-4835-8056-ffa14326633f" location="1 3"><down/><right/></link>
+	<link id="71a5dbf5-6c33-464c-beb0-e1010d727389" location="2 3"><up/><left/><right/></link>
+	<link id="41088774-61c2-4755-a01e-47666ee2e283" location="4 1"><left/><right/></link>
+	<link id="239e510a-09fb-4a77-ada1-2a9540e24575" location="3 3"><left/><down/></link>
+	<link id="13cfcb77-55a1-4914-a14a-80ae9b78d2a8" location="5 1"><left/><right/></link>
+	<link id="34aeb4bc-388a-4365-9ca0-93e0768c756c" location="1 5"><up/><down/><right/></link>
+	<link id="48727184-d137-4ad7-9dad-a55880a0b6d3" location="5 3"><down/><right/></link>
+	<link id="26f6937a-d73e-411f-966a-084b6ec74915" location="6 1"><left/><down/></link>
+	<link id="e3ac0900-37ad-4288-a98f-eb35c81516d7" location="1 6"><up/><down/></link>
+	<link id="2e9b503e-3892-480f-b5f4-2522be2d676f" location="6 3"><up/><left/><right/></link>
+	<link id="f798494a-f1d5-42fa-a98a-150f1ea0d084" location="5 5"><up/><down/></link>
+	<link id="7c11060d-b0f8-4298-a33e-cb1ee79eb675" location="1 7"><up/><down/></link>
+	<link id="7dccad4b-865e-4ac2-a8fc-fddc1aa40b11" location="7 3"><left/><down/></link>
+	<link id="c664f0a4-31ab-41a3-aad9-114520e25ec7" location="5 6"><up/><down/></link>
+	<link id="19252f78-c430-4bb5-ba0b-2b00af54f694" location="1 8"><up/><down/></link>
+	<link id="d1408e08-701f-4841-9b67-66f1bd304704" location="5 7"><up/><down/></link>
+	<link id="9c21d19a-e8d1-4a84-9dd8-632dd50cb1ca" location="1 9"><up/><down/></link>
+	<link id="97af1677-1c88-4661-9218-5a71ae9aa94e" location="5 8"><up/><down/></link>
+	<link id="76b4efc1-6e58-4705-8613-b4ab69c8030b" location="7 7"><up/><down/></link>
+	<link id="2684f765-a969-4743-8a9d-553cd7c02aeb" location="1 10"><up/><down/></link>
+	<link id="e3d54480-d8e8-46d8-8048-e9b088cc18e1" location="5 9"><up/><down/></link>
+	<link id="b846598b-b0e9-49c7-8278-b39cf752cbab" location="7 8"><up/><down/></link>
+	<link id="e0e5ef7c-72a7-4906-9366-839943325314" location="1 11"><up/><down/></link>
+	<link id="a23dec3a-67b4-4bc7-8f2e-3e922b3d26f4" location="5 10"><up/><down/></link>
+	<link id="398a3619-2856-4956-98d7-8392f3333cba" location="7 9"><up/><down/></link>
+	<link id="c713c34d-fe67-4ac3-8549-82e531b8d77a" location="1 12"><up/><down/><right/></link>
+	<link id="290cf139-3d22-4984-8470-3459b4eb9531" location="5 11"><up/><down/></link>
+	<link id="2445701a-8c69-41e1-9ce0-f953f5368889" location="2 12"><left/><right/></link>
+	<link id="6030df1a-31ee-4ac5-921b-0ee28872eba1" location="7 10"><up/><down/></link>
+	<link id="1fac3699-fcfd-4c4e-92ad-426d7288468e" location="3 12"><up/><left/><right/></link>
+	<link id="b31b1b26-3ce8-4307-982f-3a752b4a719d" location="4 12"><left/><right/></link>
+	<link id="6816669d-a7de-4b8f-b170-4c50fe00925c" location="5 12"><up/><left/><right/></link>
+	<link id="1a9ac88c-034d-493f-9fd8-8fa0d7919408" location="6 12"><left/><right/></link>
+	<link id="f1bde568-f7b4-4553-a5af-2ec1e5edb73d" location="7 12"><up/><left/><down/></link>
+
+</sfc>
