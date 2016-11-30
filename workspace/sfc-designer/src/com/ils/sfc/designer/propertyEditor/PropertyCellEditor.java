@@ -49,7 +49,8 @@ class PropertyCellEditor extends AbstractCellEditor implements TableCellEditor{
 	@SuppressWarnings("unchecked")
 	public Object getCellEditorValue() {
 		if(component instanceof JTextField) {
-			return ((JTextField)component).getText();
+			String val = ((JTextField)component).getText();
+			return val;
 		}
 	    else if(component instanceof JCheckBox) {
 	    	return Boolean.valueOf(((JCheckBox)component).isSelected()).toString();

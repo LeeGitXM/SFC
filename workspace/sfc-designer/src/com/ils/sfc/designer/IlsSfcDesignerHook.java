@@ -21,6 +21,7 @@ import javax.swing.SwingUtilities;
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.PythonCall;
+import com.ils.sfc.common.chartStructure.ChartStructureCompiler;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AllSteps;
@@ -340,19 +341,23 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		return false;
 	}
 	// =================================== Project Change Listener ========================
-	// No matter what the change is, we re-compute the maps
+	// If there is a change to a chart resource, we re-compute the maps
 	@Override
 	public void projectResourceModified(ProjectResource res,ResourceModification modType) {
-		log.infof("%s.ProjectResourceModified: structure compiler started",TAG);
-		structureManager.getCompiler().compile();
-		log.infof("%s.ProjectResourceModified: structure compiler ended",TAG);
+		if( res.getResourceType().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE) ) {
+			log.infof("%s.ProjectResourceModified: structure compiler started",TAG);
+			structureManager.getCompiler().compile();
+			log.infof("%s.ProjectResourceModified: structure compiler ended",TAG);
+		}
 		
 	}
 	@Override
 	public void projectUpdated(Project proj) {
-		log.infof("%s.ProjectResourceUpdated: structure compiler started",TAG);
-		structureManager.getCompiler().compile();
-		log.infof("%s.ProjectResourceUpdated: structure compiler ended",TAG);
+		if( proj.getId()==-1 ) {
+			log.infof("%s.ProjectResourceUpdated: structure compiler started",TAG);
+			structureManager.getCompiler().compile();
+			log.infof("%s.ProjectResourceUpdated: structure compiler ended",TAG);
+		}
 	}
 	
 	

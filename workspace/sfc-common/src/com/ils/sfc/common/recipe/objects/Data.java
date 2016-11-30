@@ -702,8 +702,20 @@ public abstract class Data {
 			if(value instanceof Dataset) {
 				value = fromDataset((Dataset)value);
 			}
+			else if(value instanceof Boolean[]) {
+				value = fromBooleanArray((Boolean[])value);
+			}
+			else if(value instanceof Date[]) {
+				value = fromDateArray((Date[])value);
+			}
 			else if(value instanceof Double[]) {
 				value = fromDoubleArray((Double[])value);
+			}
+			else if(value instanceof Integer[]) {
+				value = fromIntegerArray((Integer[])value);
+			}
+			else if(value instanceof String[]) {
+				value = fromStringArray((String[])value);
 			}
 			return value;
 		} catch (JythonExecException e) {
@@ -732,7 +744,38 @@ public abstract class Data {
 			return null;
 		}
 	}
-	
+	/** Convert a boolean array to a JSON array */
+	private String fromBooleanArray(Boolean[] array) {
+		try {
+			JSONArray cells = new JSONArray();
+			for(int i = 0; i < array.length; i++) {
+				Boolean flag = array[i];
+				cells.put(flag.booleanValue());
+			}
+			String json = cells.toString();
+			return json;
+		}
+		catch(Exception e) {
+			log.error("Error converting boolean array to json", e);
+			return null;
+		}
+	}
+	/** Convert a date array to a JSON array */
+	private String fromDateArray(Date[] array) {
+		try {
+			JSONArray cells = new JSONArray();
+			for(int i = 0; i < array.length; i++) {
+				Date date = array[i];
+				cells.put(date.getTime());   // A long
+			}
+			String json = cells.toString();
+			return json;
+		}
+		catch(Exception e) {
+			log.error("Error converting date array to json", e);
+			return null;
+		}
+	}
 	/** Convert a double array to a JSON array */
 	private String fromDoubleArray(Double[] array) {
 		try {
@@ -746,6 +789,38 @@ public abstract class Data {
 		}
 		catch(Exception e) {
 			log.error("Error converting double array to json", e);
+			return null;
+		}
+	}
+	/** Convert a integer array to a JSON array */
+	private String fromIntegerArray(Integer[] array) {
+		try {
+			JSONArray cells = new JSONArray();
+			for(int i = 0; i < array.length; i++) {
+				Integer integer = array[i];
+				cells.put(integer.intValue());
+			}
+			String json = cells.toString();
+			return json;
+		}
+		catch(Exception e) {
+			log.error("Error converting integer array to json", e);
+			return null;
+		}
+	}
+	/** Convert a string array to a JSON array */
+	private String fromStringArray(String[] array) {
+		try {
+			JSONArray cells = new JSONArray();
+			for(int i = 0; i < array.length; i++) {
+				String val = array[i];
+				cells.put(val);
+			}
+			String json = cells.toString();
+			return json;
+		}
+		catch(Exception e) {
+			log.error("Error converting string array to json", e);
 			return null;
 		}
 	}

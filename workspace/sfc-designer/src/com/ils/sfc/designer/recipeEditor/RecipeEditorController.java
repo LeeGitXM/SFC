@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingWorker;
 
 import org.json.JSONObject;
 
@@ -25,7 +24,10 @@ import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-/** A controller for all the sliding panes that are involved in editing recipe data. */
+/** 
+ * A controller for all the sliding panes that are involved in editing recipe data.
+ * There is a single controller instance for the recipe editing frame. 
+ */
 public class RecipeEditorController extends PanelController implements EditorErrorHandler {
 	private static LoggerEx logger = LogUtil.getLogger(RecipeEditorController.class.getName());
 			
@@ -51,8 +53,8 @@ public class RecipeEditorController extends PanelController implements EditorErr
 	private UnitChooserPanel unitChooser = new UnitChooserPanel(this, UNIT_CHOOSER);
 	
 	// The step whose recipe data we are editing:
-	private ChartUIElement element;
-	private List<Data> recipeData;
+	private ChartUIElement element= null;
+	private List<Data> recipeData = null;
 	
 	public RecipeEditorController(DesignerContext ctx) { 
 		super(ctx);
@@ -73,7 +75,11 @@ public class RecipeEditorController extends PanelController implements EditorErr
 		slidingPane.add(loadingPane);  // a blank pane
 		slideTo(EMPTY_PANE);
 	}	
-	
+	/**
+	 * At this point the recipe data is newly un-serialized. It has not
+	 * been updated from the tags.
+	 * @param recipeData
+	 */
 	public void setRecipeData(List<Data> recipeData) {
 		this.recipeData = recipeData;
 		browser.rebuildTree();
@@ -119,7 +125,11 @@ public class RecipeEditorController extends PanelController implements EditorErr
 		messagePanel.setText(message);
 		messagePanel.activate(returnPanelIndex);
 	}
-
+	/**
+	 * Called by the workspace on itemSelectionChanged.
+	 * @param element
+	 * @param chartPath
+	 */
 	public void setElement(ChartUIElement element, String chartPath) {
 		this.element = element;
 		String stepName = element.get(IlsProperty.NAME);

@@ -308,9 +308,11 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	}
 	// =================================== Project Listener ========================
 	@Override
-	public void projectAdded(Project proj1, Project proj2) {
-		structureManager.getCompiler().compile();
-		log.infof("%s.projectAdded: re-analyzing charts.",TAG);
+	public void projectAdded(Project staging, Project published) {
+		if( staging.getId()==-1) {
+			structureManager.getCompiler().compile();
+			log.infof("%s.projectAdded: re-analyzing charts.",TAG);
+		}
 	}
 
 	@Override
@@ -319,8 +321,10 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 	@Override
 	public void projectUpdated(Project proj, ProjectVersion vers) {
-		structureManager.getCompiler().compile();
-		log.infof("%s.projectUpdated: re-analyzing charts.",TAG);
+		if( proj.getId()==-1 && vers==ProjectVersion.Staging) {
+			structureManager.getCompiler().compile();
+			log.infof("%s.projectUpdated: re-analyzing charts.",TAG);
+		}
 	}
 	// =================================== Initial Chart Structure ========================
 	/**
