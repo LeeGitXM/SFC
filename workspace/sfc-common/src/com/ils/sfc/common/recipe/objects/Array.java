@@ -14,9 +14,8 @@ A class that lumps together all the sequence/list types in G2
 public class Array extends DataWithUnits {
 	
 	public Array() {
-		//addProperty(IlsProperty.KEYED);
-		addProperty(IlsProperty.LENGTH);
 		addProperty(IlsProperty.ARRAY_KEY);
+		addProperty(IlsProperty.LENGTH);
 		addProperty(IlsProperty.JSON_LIST);
 		addProperty(IlsProperty.VALUE_TYPE);
 	}
@@ -27,6 +26,7 @@ public class Array extends DataWithUnits {
 		addLabelValue(IlsProperty.KEY, buf);		
 		addLabelValue(IlsProperty.CLASS, buf);		
 		addLabelValue(IlsProperty.UNITS, buf);
+		addLabelValue(IlsProperty.JSON_LIST, buf);
 		return buf.toString();
 	}
 	
@@ -90,19 +90,16 @@ public class Array extends DataWithUnits {
 		
 		// Check rows
 		String key = (String)getValue(IlsProperty.ARRAY_KEY);
-		boolean isKeyed = !isEmpty(key);
+		boolean isKeyed = !(isEmpty(key) || key.equalsIgnoreCase(Constants.NONE));
 		
 		if(isKeyed) {
-			int keyLength = getIndexSize(key);
+			int keyLength = getKeySize(key);
 			if(keyLength != arrayLength){
-				return "Row key length " + keyLength + "is different than # of rows in value";
+				return String.format("Required key length (%s) is different than array size of value (%s)",keyLength,arrayLength);
 			}
 		}
 		else {
-			Integer length = (Integer)getValue(IlsProperty.LENGTH);
-			if(length == null || length.intValue() != arrayLength) {
-				return "length property " + length + "is different than # of rows in value";
-			}
+			setValue(IlsProperty.LENGTH,arrayLength);
 		}
 		
 		return null; // OK

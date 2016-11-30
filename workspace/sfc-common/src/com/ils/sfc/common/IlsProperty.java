@@ -181,7 +181,7 @@ public class IlsProperty {
     //public static final BasicProperty<Boolean> KEYED = createProperty(Constants.KEYED, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<String> KEY_MODE = createProperty(Constants.KEY_MODE, String.class, "", Constants.KEY_MODE_CHOICES);
     public static final BasicProperty<String> LABEL = createProperty(Constants.LABEL, String.class, "");
-    public static final BasicProperty<Integer> LENGTH = createProperty(Constants.LENGTH, Integer.class, 0);
+    public static final BasicProperty<Integer> LENGTH = createProperty(Constants.LENGTH, Integer.class, 0,false);
     public static final BasicProperty<Double> LOW_LIMIT = createProperty(Constants.LOW_LIMIT, Double.class, null);
     public static final BasicProperty<Double> MAX_TIMING = createProperty(Constants.MAX_TIMING, Double.class, 0.);
     public static final BasicProperty<Double> MAXIMUM_VALUE = createProperty(Constants.MAXIMUM_VALUE, Double.class, 0.);

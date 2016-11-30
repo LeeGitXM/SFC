@@ -218,8 +218,6 @@ public abstract class Data {
 	}
 	
 	
-	
-	
 	public String getG2Id() {return g2Id;}
 	public String getParentG2Id() {return parentG2Id;}
 	public Object getValue(Property<?> property) {return properties.getOrDefault(property);	}
@@ -278,19 +276,17 @@ public abstract class Data {
 	
 
 
-	/** Convert this object (and any hierarchy) to a JSON object */
+	/** 
+	 * Convert this object (and any hierarchy) to a JSON object. 
+	 * NOTE: JSON_LIST and MATRIX objects are simply stored as Strings.
+	 */
 	public JSONObject toJSON() throws JSONException {
 		JSONObject jsonObj = new JSONObject();
 		boolean hasDateValue = hasDateValueType();  // CAUTION: must call OUTSIDE property iteration to avoid concurrent mod
 		for(PropertyValue<?> pvalue: properties) {
 			String propName = pvalue.getProperty().getName();
 			Object value = pvalue.getValue();
-			if(pvalue.getProperty() == IlsProperty.JSON_LIST || pvalue.getProperty() == IlsProperty.JSON_MATRIX) {
-				// we need to turn the list into a JSONArray first
-				JSONArray jsonArray = value != null ? new JSONArray((String)value) : new JSONArray();
-				value = jsonArray;
-			}
-			else if(value != null && hasDateValue && 
+			if(value != null && hasDateValue && 
 					pvalue.getProperty().equals(IlsProperty.VALUE)) {
 				// JSON doesn't understand Dates, so if we have a Date value
 				// we need to store it as a String
@@ -543,11 +539,11 @@ public abstract class Data {
 					catch(Exception e) {
 						value = "Not a valid JSON array of "+type;
 					}
-					// note: Ignition will not allow a synchronous tag write from
-					// a UI thread, so writes from Designer UI must be async
-					Object[] setArgs = {provider, attributePath, value, false};
-					PythonCall.SET_RECIPE_DATA.exec(setArgs);
 				}
+				// NOTE: Ignition will not allow a synchronous tag write from
+				// a UI thread (final argument is false) 
+				Object[] args = {provider, attributePath, value, false};
+				PythonCall.SET_RECIPE_DATA.exec(args);
 			}
 		}
 		catch (JythonExecException e) {
@@ -630,14 +626,14 @@ public abstract class Data {
 		}
 		return null;
 	}
-	protected int getIndexSize(String keyName) {
+	protected int getKeySize(String keyName) {
 		Object[] args = new Object[] {keyName};
 		try {
-			Integer count = (Integer)PythonCall.GET_INDEX_SIZE.exec(args);
+			Integer count = (Integer)PythonCall.GET_KEY_SIZE.exec(args);
 			return count.intValue();
 		}
 		catch(Exception e) {
-			log.error("Error getting index count", e);
+			log.error("Error getting key size", e);
 			return 0;
 		}
 	}
@@ -706,6 +702,9 @@ public abstract class Data {
 			if(value instanceof Dataset) {
 				value = fromDataset((Dataset)value);
 			}
+			else if(value instanceof Double[]) {
+				value = fromDoubleArray((Double[])value);
+			}
 			return value;
 		} catch (JythonExecException e) {
 			log.error("Recipe Data tag read failed", e);
@@ -730,6 +729,23 @@ public abstract class Data {
 		}
 		catch(Exception e) {
 			log.error("Error converting dataset to json", e);
+			return null;
+		}
+	}
+	
+	/** Convert a double array to a JSON array */
+	private String fromDoubleArray(Double[] array) {
+		try {
+			JSONArray cells = new JSONArray();
+			for(int i = 0; i < array.length; i++) {
+				Double dbl = array[i];
+				cells.put(dbl.doubleValue());
+			}
+			String json = cells.toString();
+			return json;
+		}
+		catch(Exception e) {
+			log.error("Error converting double array to json", e);
 			return null;
 		}
 	}

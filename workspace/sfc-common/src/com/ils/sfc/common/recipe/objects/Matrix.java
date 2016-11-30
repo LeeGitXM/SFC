@@ -67,9 +67,9 @@ public class Matrix extends DataWithUnits {
 		int datasetRowCount = dataset.getRowCount();
 		
 		if(rowIsKeyed) {
-			int keyLength = getIndexSize(rowKey);
+			int keyLength = getKeySize(rowKey);
 			if(keyLength != datasetRowCount) {
-				return "Row key length " + keyLength + "is different than # of rows in value";
+				return String.format("Required key length (%s) is different than rowcount value (%s)",keyLength,datasetRowCount);
 			}
 		}
 		else {
@@ -85,7 +85,7 @@ public class Matrix extends DataWithUnits {
 		int datasetColCount = dataset.getColumnCount();
 		
 		if(colIsKeyed) {
-			int keyLength = getIndexSize(colKey);
+			int keyLength = getKeySize(colKey);
 			if(keyLength != datasetColCount) {
 				return "col key length " + keyLength + "is different than # of cols in value";
 			}

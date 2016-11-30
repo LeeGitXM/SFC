@@ -26,7 +26,10 @@ public class RecipeDataTagReader {
 	private volatile boolean cancelTagRead;
 	
 	/** Read recipe data tag values in the background, as it can be rather 
-	 *  time consuming and we don't want to freeze the UI. */
+	 *  time consuming and we don't want to freeze the UI. 
+	 *  NOTE: The logic here insures that we will never read the tags.
+	 *        The canonical source of recipe data is the serialized chart.
+	 */
 	public void readRecipeDataTagValues(RecipeEditorController controller) {		
 		if(controller.getRecipeData().size() == 0 && !readingTagValues) {
 			// nothing to do, just open the browser

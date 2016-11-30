@@ -111,7 +111,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 			if(value != null) {
 				ui.setDirect(property, value);
 			}
-			else {
+			else if(!IlsProperty.isHiddenProperty(property.getName())) {
 				log.warn("fromXML: Unable to get value for Step property " + property + "; will be missing");				
 			}
 		}

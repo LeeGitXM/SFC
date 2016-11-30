@@ -10,17 +10,16 @@ import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import system.ils.sfc.common.Constants;
-
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.designer.EditorErrorHandler;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
+
+import system.ils.sfc.common.Constants;
 
 @SuppressWarnings("serial")
 public class PropertyTableModel extends AbstractTableModel {
@@ -31,7 +30,7 @@ public class PropertyTableModel extends AbstractTableModel {
 	private boolean hasChanged;
 	private BasicPropertySet propertyValues;
 	private String stepId;
-	private static final Logger logger = LoggerFactory.getLogger(PropertyTableModel.class);
+	private final LoggerEx log = LogUtil.getLogger(getClass().getName());
 	private EditorErrorHandler errorHandler;
 	
 	
@@ -163,6 +162,7 @@ public class PropertyTableModel extends AbstractTableModel {
 				pvsByName.put(pValue.getProperty().getName(), pValue);
 			}
 			for(Property<?> prop: orderedPropertiesOrNull) {
+				if( IlsProperty.isHiddenProperty(prop.getName())) continue;
 				PropertyValue<?> pval = pvsByName.get(prop.getName());
 				addPropertyValue(pval, valueTypeOrNull);
 			}
@@ -178,7 +178,7 @@ public class PropertyTableModel extends AbstractTableModel {
 
 	private void addPropertyValue(PropertyValue<?> pValue, String valueTypeOrNull) {
 		if(pValue == null) {
-			logger.error("Null property value!?");
+			log.errorf("Null property value !?");
 			return;
 		}
 		String name = pValue.getProperty().getName();

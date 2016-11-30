@@ -193,7 +193,7 @@ public class PythonCall {
 	public static final PythonCall GET_INDEX_NAMES = new PythonCall("ils.sfc.client.util." + "getIndexNames", 
 			PyList.class,  new String[]{} );
 
-	public static final PythonCall GET_INDEX_SIZE = new PythonCall("ils.sfc.client.util." + "getIndexSize", 
+	public static final PythonCall GET_KEY_SIZE = new PythonCall("ils.sfc.client.util." + "getKeySize", 
 			Integer.class,  new String[]{"keyName"} );
 
 
