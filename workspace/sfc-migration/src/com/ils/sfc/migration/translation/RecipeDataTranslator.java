@@ -1,5 +1,6 @@
 package com.ils.sfc.migration.translation;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -57,7 +58,6 @@ public class RecipeDataTranslator {
 		concreteClassesByG2Name.put("S88-RECIPE-STRUCTURE-DATA", Structure.class);
 		// we need a UDT for EM-RECIPE-DATA (??)
 		concreteClassesByG2Name.put("EM-RECIPE-DATA", EMData.class);
-
 		concreteClassesByG2Name.put("S88-RECIPE-SEQUENCE-DATA", Array.class);
 		concreteClassesByG2Name.put("S88-RECIPE-QUANTITY-LIST-DATA", Array.class);
 		concreteClassesByG2Name.put("S88-RECIPE-TEXT-LIST-DATA", Array.class);
@@ -79,7 +79,7 @@ public class RecipeDataTranslator {
 		g2ToIgName.put("column-keyed", null);
 		g2ToIgName.put("description", Constants.DESCRIPTION);
 		g2ToIgName.put("download", Constants.DOWNLOAD);
-		g2ToIgName.put("elements", Constants.VALUE);
+		g2ToIgName.put("elements", Constants.LENGTH);
 		g2ToIgName.put(G2_CLASS_NAME, Constants.CLASS);
 		g2ToIgName.put("help", Constants.HELP);
 		g2ToIgName.put("high-limit", Constants.HIGH_LIMIT);
@@ -184,14 +184,20 @@ public class RecipeDataTranslator {
 	public void setProperty(String factoryId,Data data, String name, String strValue) throws JSONException, org.apache.wicket.ajax.json.JSONException {		
 		BasicProperty<?> property = data.getProperty(name);
 		
-		if(data instanceof Array && property.equals(IlsProperty.VALUE)) {
-			data.setValue(property, parseListValue(strValue));
+		if(data instanceof Array && property.equals(IlsProperty.VALUE) ) {
+			Double[] array = parseDoubleArray(strValue);
+			//array = new Double[] { 1.2,3.4,5.6};
+			data.setValue(property, array);
+			property = data.getProperty(Constants.VALUE_TYPE);
+			data.setValue(property,Constants.FLOAT);
+			property = data.getProperty(Constants.LENGTH);
+			data.setValue(property,array.length);
 		}
 		else if(data instanceof Matrix && property.equals(IlsProperty.VALUE)) {
 			data.setValue(property, parseMatrixValue(strValue));
 		}
 		else if(data instanceof Structure && property.equals(IlsProperty.JSON_OBJECT)) {
-			createJsonStrucure((Structure)data, strValue) ;
+			createJsonStructure((Structure)data, strValue) ;
 		}
 		else {
 			Object objValue = null;
@@ -310,7 +316,7 @@ public class RecipeDataTranslator {
 		}
 	}
 
-	private void createJsonStrucure(Structure struct, String strValue) throws JSONException {
+	private void createJsonStructure(Structure struct, String strValue) throws JSONException {
 		String[] keyVals = strValue.substring(STRUCTURE_PREFIX.length(), strValue.length() - 1).split(",");
 		JSONObject jobj = new JSONObject();
 		for(String keyVal: keyVals) {
@@ -345,8 +351,27 @@ public class RecipeDataTranslator {
 		}
 		return outerArray.toString();
 	}
-	
-	private java.util.List<Object> parseListValue(String strValue) {
+
+	private Double[] parseDoubleArray(String strValue) {
+		Double[] values = new Double[0];
+		try {
+			if(strValue.startsWith("{")) {
+				String[] stringVals = strValue.substring(1,strValue.length()-1).split(",");
+				values = new Double[stringVals.length];
+				int index = 0;
+				for(String sval: stringVals) {
+					double dblVal = IlsProperty.parseDouble(sval.trim()).doubleValue();
+					values[index]=dblVal;
+					index = index+1;
+				}
+			}
+		}
+		catch(ParseException pe) {
+			log.warnf("parseDoubleArray - Parse error converting %s to an array (%s)", strValue,pe.getMessage());
+		}
+		return values;
+	}
+	private Object[] parseListValue(String strValue) {
 		java.util.List<Object> values = new java.util.ArrayList<Object>();
 		if(strValue.startsWith("{")) {
 			String[] stringVals = strValue.substring(1, strValue.length() - 1).split(",");
@@ -363,13 +388,11 @@ public class RecipeDataTranslator {
 				values.add(parseObjectValue(sval));
 			}
 		}
-		/*
-	for(Object val: values) {
-			System.out.print("  ");
-			System.out.println(val);
+		else {
+			Object objVal = IlsProperty.parseObjectValue(strValue.trim(), null);
+			values.add(objVal);
 		}
-		*/
-		return values;
+		return values.toArray();
 	}
 
 	private Object parseObjectValue(String strValue) {
