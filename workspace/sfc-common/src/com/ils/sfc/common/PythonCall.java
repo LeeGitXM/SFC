@@ -9,6 +9,7 @@ import org.python.core.PyList;
 import org.python.core.PyObject;
 import org.python.core.PyStringMap;
 
+import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -151,6 +152,9 @@ public class PythonCall {
 
 	public static final PythonCall CONVERT_UNITS = new PythonCall("ils.common.units.convert", 
 			Double.class,  new String[]{"fromUnit", "toUnit", "value"} );
+	
+	public static final PythonCall GET_UNITS = new PythonCall("ils.common.units.getUnits", 
+			Dataset.class,  new String[]{} );
 	
 	// recipe data:
 	public static final PythonCall GET_INDEXED_VALUE = new PythonCall("ils.sfc.gateway.recipe." + "getIndexedValue", 

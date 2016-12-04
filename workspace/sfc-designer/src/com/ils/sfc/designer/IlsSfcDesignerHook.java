@@ -18,8 +18,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 
+import org.python.core.PyList;
+
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
+import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureCompiler;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
@@ -31,6 +34,7 @@ import com.ils.sfc.designer.browser.validation.ValidationDialog;
 import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame;
 import com.ils.sfc.designer.search.IlsSfcSearchProvider;
 import com.ils.sfc.designer.stepEditor.IlsStepEditor;
+import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.modules.ModuleInfo;
 import com.inductiveautomation.ignition.common.modules.ModuleInfo.ModuleDependency;
@@ -108,8 +112,22 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	Object[] args = {null};
     	try {
 			PythonCall.INITIALIZE_UNITS.exec(args);
-		} catch (JythonExecException e) {
-			log.error("Error initializing units in Designer");
+			Dataset ds = (Dataset)PythonCall.GET_UNITS.exec(args);
+			String[] choices = new String[ds.getRowCount()+1];
+			log.infof("%d unit choices available ...",choices.length);
+			int row=0;
+			while(row<ds.getRowCount()) {
+				// First column in the dataset is the name
+				choices[row+1] = ds.getValueAt(row, 0).toString(); 
+				row++;
+			}
+			IlsProperty.setChoices(IlsProperty.UNITS, choices);
+		} 
+    	catch (JythonExecException jee) {
+			log.errorf("Error initializing units in Designer hook (%s)",jee.getMessage());
+		}
+    	catch (Exception ex) {
+			log.errorf("Exception initializing units in Designer hook (%s)",ex.getMessage());
 		}
     }
 	

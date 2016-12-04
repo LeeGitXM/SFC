@@ -25,6 +25,7 @@ import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.step.AllSteps;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
+import com.inductiveautomation.sfc.ChartStateEnum;
 import com.inductiveautomation.sfc.ElementStateEnum;
 import com.inductiveautomation.sfc.client.api.ChartStatusContext;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
@@ -280,7 +281,12 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	}
     	else {
     		if(stepState.isRunning()) {
-				background = Color.green.brighter();
+    			if( chartStatusContext.getChartStatus().get().getChartState().equals(ChartStateEnum.Suspended) ) {
+    				background = Color.WHITE;
+    			}
+    			else {
+    				background = Color.green.brighter();
+    			}
     		}
 			else if(ElementStateEnum.Paused == stepState) {
 				background = Color.blue.brighter();

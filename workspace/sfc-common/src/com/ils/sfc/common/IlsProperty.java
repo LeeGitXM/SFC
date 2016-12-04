@@ -248,7 +248,7 @@ public class IlsProperty {
     public static final BasicProperty<Boolean> TIMER_SET = createProperty(Constants.TIMER_SET, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<Boolean> TIMESTAMP = createProperty(Constants.TIMESTAMP, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> TYPE = createProperty(Constants.TYPE, String.class, "");
-    public static final BasicProperty<String> UNITS = createProperty(Constants.UNITS, String.class, "");
+    public static final BasicProperty<String> UNITS = createProperty(Constants.UNITS, String.class, Constants.UNIT_CHOICES[0], Constants.UNIT_CHOICES );
     public static final BasicProperty<Double> UPDATE_FREQUENCY = createProperty(Constants.UPDATE_FREQUENCY, Double.class, 10.);
     public static final BasicProperty<Object> VALUE = createProperty(Constants.VALUE, Object.class, null);
     public static final BasicProperty<String> VALUE_TYPE = createProperty(Constants.VALUE_TYPE, String.class, Constants.VALUE_TYPE_CHOICES[2],Constants.VALUE_TYPE_CHOICES);
@@ -451,6 +451,11 @@ public class IlsProperty {
 	public static String[] getChoices(Property<?> property) {
 		PropertyInfo info = infoById.get(getPropertyId(property));
 		return info != null ? info.choices : null;
+	}
+	
+	public static void setChoices(Property<?> property,String[] newChoices) {
+		PropertyInfo info = infoById.get(getPropertyId(property));
+		if( info!=null ) info.choices = newChoices;
 	}
 	
 	public static boolean isSerializedObject(Property<?> property) {
