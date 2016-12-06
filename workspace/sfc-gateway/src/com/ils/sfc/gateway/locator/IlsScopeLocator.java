@@ -33,8 +33,8 @@ public class IlsScopeLocator implements ScopeLocator {
 		if( !identifier.equalsIgnoreCase(Constants.TAG)) {
 			// check this step first, then walk up the hierarchy:
 			PyChartScope stepScope = scopeContext.getStepOrPrevious();
-			tagPath = RecipeDataAccess.getRecipeDataTagPath(chartScope, stepScope, identifier);
-			return new RecipeDataChartScope(tagPath, null, providerName, hook.getContext());
+			//tagPath = RecipeDataAccess.getRecipeDataTagPath(chartScope, stepScope, identifier);
+			return new S88Scope(chartScope,stepScope,identifier);
 		}
 		else {
 			return new TagChartScope(providerName, hook.getContext());	

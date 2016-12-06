@@ -200,7 +200,9 @@ public class PythonCall {
 	public static final PythonCall GET_KEY_SIZE = new PythonCall("ils.sfc.client.util." + "getKeySize", 
 			Integer.class,  new String[]{"keyName"} );
 
-
+	public static final PythonCall S88_GET = new PythonCall("ils.sfc.gateway.api.s88Get", 
+			Object.class, new String[]{"chartScope","stepScope","keyAttribute","scope"} );
+	
 	//public static final PythonCall INVOKE_STEP = new PythonCall("ils.sfc.gateway.steps." + "invokeStep", 
 	//		PyList.class,  new String[]{"chartProperties", "stepProperties", "methodName"} );
 
