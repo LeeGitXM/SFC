@@ -41,6 +41,7 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
 			}        	
         });
         log.debug("starting up...");
+        PythonCall.setContext(context);
 		registerSteps();
 		IlsClientScripts.setContext(context);
     }
@@ -57,7 +58,6 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
     @Override
     public void initializeScriptManager(ScriptManager manager) {
 		super.initializeScriptManager(manager);
-		PythonCall.setScriptMgr(manager);
 		manager.addStaticFields("system.ils.sfc", Constants.class);
 		manager.addScriptModule("system.ils.sfc", IlsClientScripts.class);
     }
