@@ -224,7 +224,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 	@Override
 	public void initializeScriptManager(ScriptManager manager) {
-		PythonCall.setScriptMgr(manager);
 		manager.addScriptModule("system.ils.sfc", IlsGatewayScripts.class);	
 		manager.addStaticFields("system.ils.sfc.common.Constants", Constants.class);	
 	};
