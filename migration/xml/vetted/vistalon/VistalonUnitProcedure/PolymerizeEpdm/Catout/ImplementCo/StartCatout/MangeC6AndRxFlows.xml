@@ -1,0 +1,219 @@
+<?xml version="1.0" ?>
+<sfc zoom="1.2166666" canvas="10 15" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Sat Dec 03 00:46:44 CST 2016" hot-editable="false" persist-state="false">
+	<step id="741cce52-9a24-11d9-b116-00065b88c6c2" location="3 0" name="S88Begin_13798" factory-id="begin-step">		<associated-data>{}</associated-data>
+	</step>
+	<step id="46c29480-9016-11d9-b116-00065b88c6c2" location="3 1" name="Managing C6" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>Managing the C6 valve.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><ackRequired>false</ackRequired><name>Managing C6</name><id>46c29480-9016-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	</step>
+	<step id="8b389340-6b65-11d9-a9ad-00022dc3c8fd" location="3 2" name="c6ModeWrite" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time.value</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>true</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>c6ModeWrite</name><writeOutputConfig>{"rows":[{"key":"r1-c6-flow-mode","confirmWrite":true}]}</writeOutputConfig><id>8b389340-6b65-11d9-a9ad-00022dc3c8fd</id>		<associated-data>{"download-error-counter":{"lowLimit":0.0,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"7ebd6912-4e69-413f-8700-9d321d7db15e","valueType":"float","highLimit":0.0,"category":"Simple Constant","class":"Value","value":0.0,"key":"download-error-counter"}}</associated-data>
+	</step>
+	<step id="7ab32336-51ec-11dd-a699-00142223a71b" location="3 3" name="MeterSelects" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time.value</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>true</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>MeterSelects</name><writeOutputConfig>{"rows":[{"key":"R1-C2-flow-meter","confirmWrite":true},{"key":"R1-C3-flow-meter","confirmWrite":true},{"key":"R1-C9-flow-meter","confirmWrite":true},{"key":"R2-C2-flow-meter","confirmWrite":true},{"key":"R2-C3-flow-meter","confirmWrite":true}]}</writeOutputConfig><id>7ab32336-51ec-11dd-a699-00142223a71b</id>		<associated-data>{"download-error-counter":{"lowLimit":0.0,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"7fd81e80-52c7-4473-abbf-8543926f4f8c","valueType":"float","highLimit":0.0,"category":"Simple Constant","class":"Value","value":0.0,"key":"download-error-counter"}}</associated-data>
+	</step>
+	<step id="46c29485-9016-11d9-b116-00065b88c6c2" location="3 4" name="Managing Feeds" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>Managing reactor feed flows.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><ackRequired>false</ackRequired><name>Managing Feeds</name><id>46c29485-9016-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	</step>
+	<step id="32b95160-6b65-11d9-a9ad-00022dc3c8fd" location="2 7" name="C3RampWrite" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time.value</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>false</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>C3RampWrite</name><writeOutputConfig>{"rows":[{"key":"r1-c3-flow-spcl","confirmWrite":true},{"key":"r2-c3-flow-spcl","confirmWrite":true}]}</writeOutputConfig><id>32b95160-6b65-11d9-a9ad-00022dc3c8fd</id>		<associated-data>{"download-error-counter":{"lowLimit":0.0,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"d0d66ba4-ecd2-4cfe-96c5-d3d03eb789c6","valueType":"float","highLimit":0.0,"category":"Simple Constant","class":"Value","value":0.0,"key":"download-error-counter"}}</associated-data>
+	</step>
+	<step id="e32303ae-4d10-11dd-a699-00142223a71b" location="7 3" name="S88TimeDelay_13782" factory-id="com.ils.timedDelayStep"><postNotification>false</postNotification><recipeLocation>superior</recipeLocation><tagPath></tagPath><description></description><scale>1.0</scale><windowTitle></windowTitle><message></message><buttonLabel></buttonLabel><delay>5.0</delay><name>S88TimeDelay_13782</name><callback>G2</callback><id>e32303ae-4d10-11dd-a699-00142223a71b</id><position>center</position><strategy>static</strategy><key>g2</key><delayUnit>SEC</delayUnit>		<associated-data>{}</associated-data>
+	</step>
+	<step id="32b95165-6b65-11d9-a9ad-00022dc3c8fd" location="4 7" name="c3ModeWrite" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time.value</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>false</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>c3ModeWrite</name><writeOutputConfig>{"rows":[{"key":"r1-c3-flow-mode","confirmWrite":true},{"key":"r2-c3-flow-mode","confirmWrite":true}]}</writeOutputConfig><id>32b95165-6b65-11d9-a9ad-00022dc3c8fd</id>		<associated-data>{"download-error-counter":{"lowLimit":0.0,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"1f2c2bf6-89b6-46a6-bb67-5859e708d1c2","valueType":"float","highLimit":0.0,"category":"Simple Constant","class":"Value","value":0.0,"key":"download-error-counter"}}</associated-data>
+	</step>
+	<step id="f94bb270-6b64-11d9-a9ad-00022dc3c8fd" location="7 5" name="MainC2SP" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time.value</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>false</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>MainC2SP</name><writeOutputConfig>{"rows":[{"key":"r1-c2-flow-sp","confirmWrite":true}]}</writeOutputConfig><id>f94bb270-6b64-11d9-a9ad-00022dc3c8fd</id>		<associated-data>{}</associated-data>
+	</step>
+	<step id="1062d4a0-6bcc-11d9-a9ad-00022dc3c8fd" location="7 6" name="CalcR2C2Delay" factory-id="action-step">
+		<start-script>'''
+    Calculate the R2 delay, in seconds.  It is used by the delay step immediately following this step.
+    The value is passed to the delay step via recipe data in the superior step. 
+'''
+import system
+from ils.sfc.common.constants import GLOBAL_SCOPE, SUPERIOR_SCOPE, MSG_STATUS_INFO
+from ils.sfc.gateway.api import getChartLogger, s88Get, s88Set, postToQueue, getProviderName, getDatabaseName
+
+def onStart(chart,step):	
+	provider = getProviderName(chart)
+	database = getDatabaseName(chart)
+	log = getChartLogger(chart)
+	log.tracef("In %s...", step.get("name",""))
+
+	readOK = False
+	tol = 0.001
+	mainC6RateTagPath = "[%s]SFC IO/Fast Scan Data/VRF006-7/value" % (provider)
+	
+	inventories=s88Get(chart,step,"inventories.value",GLOBAL_SCOPE)
+	log.tracef("Inventories: %s",str(inventories))
+	
+	if system.tag.read("[%s]Recipe/Local/SINGLE-RX-GRADE" % provider).getValue():
+		log.tracef("Setting the delay to 0.0 for a single Rx grade")
+		r2C2Delay = 0.0
+		
+	elif system.tag.read("[%s]Recipe/Local/C-RX-GRADE" % provider).getValue():
+		log.tracef("Calculating the delay for a C-Rx grade")
+		r2C6RateTagPath = "[%s]SFC IO/Fast Scan Data/CS-VRF206/value" % (provider)
+		
+		# These tags need to have history collected
+		tagPaths = []
+		tagPaths.append(mainC6RateTagPath)
+		tagPaths.append(r2C6RateTagPath)
+		
+		# Fetch the average value over the last 30 minutes
+		ds = system.tag.queryTagHistory(paths=tagPaths, aggregationMode='Average', returnSize=1, endDate=system.date.now(), rangeMinutes=-30.0)
+		if ds.rowCount == 1:
+			mainC6Rate = ds.getValueAt(0, 1)
+			r2C6Rate = ds.getValueAt(0, 2)
+			log.tracef("Querying the average feed rate over the last 30 minutes was successful, mainC6Rate: %s, r2C6Rate: %s",str(mainC6Rate), str(r2C6Rate))
+			if mainC6Rate == 0.0 or r2C6Rate == 0.0:
+				txt = "Setting the R2 C2 delay for a C-Rx grade to (0.0) because either the main C6 rate (%s) or the r2 C6 rate (%s) is 0." % (str(mainC6Rate), str(r2C6Rate))
+				log.tracef(txt)
+				postToQueue(chart, MSG_STATUS_INFO, txt)
+				r2C2Delay = 0.0
+			else:
+				readOK = True
+				log.tracef("The R2 C2 delay will be calculated using the history of the main C6 rate (%s) and the r2 C2 rate (%s)", str(mainC6Rate), str(r2C6Rate))
+		else:
+			log.warnf("Tag history query of %s did not return any data, reading the tags current values" % (tagPaths))
+	
+			mainC6Rate = system.tag.read(mainC6RateTagPath)
+			r2C6Rate = system.tag.read(r2C6RateTagPath)
+
+			if not(mainC6Rate.quality.isGood()):
+				txt = "Setting the R2 C2 delay for a C-Rx grade to (0.0) because the main C6 rate tag (%s) failed." % (mainC6RateTagPath)
+				log.tracef(txt)
+				postToQueue(chart, MSG_STATUS_INFO, txt)
+				r2C2Delay = 0.0
+			elif not(r2C6Rate.quality.isGood()):
+				txt = "Setting the R2 C2 delay for a C-Rx grade to (0.0) because the R2 C6 rate tag read failed." % (r2C6RateTagPath)
+				log.tracef(txt)
+				postToQueue(chart, MSG_STATUS_INFO, txt)
+				r2C2Delay = 0.0
+			else:
+				readOK = True
+				mainC6Rate = mainC6Rate.value
+				r2C6Rate = r2C6Rate.value
+				log.tracef("The R2 C2 delay will be calculated using the current values of the main C6 rate (%s) and the r2 C2 rate (%s)", str(mainC6Rate), str(r2C6Rate))
+				
+		if readOK:
+			if (r2C6Rate &lt; tol) or (mainC6Rate &lt; tol):
+				txt = "Setting the R2 C2 delay for a C-Rx grade to zero (0.0) becasue the main C6 rate or second reactor C6 rate is less than tolerance of %s." % (str(tol))
+				postToQueue(chart, MSG_STATUS_INFO, txt)
+				log.tracef(txt)
+				r2C2Delay = 0.0
+			else:
+				r2C2Delay = round((inventories[0] / mainC6Rate + inventories[6] / r2C6Rate) * 3600.0)
+				txt = "Calculated the R2 C2 delay for a C-Rx grade to be %s seconds." % (str(r2C2Delay))
+				log.tracef(txt)
+				postToQueue(chart, MSG_STATUS_INFO, txt)
+
+	elif system.tag.read("[%s]Recipe/Local/SERIES-RX-GRADE" % (provider)).getValue():
+		log.tracef("Calculating the delay for a series grade")
+		r2C6RateTagPath = "[%s]SFC IO/Fast Scan Data/CS-VRF106/value" % (provider)
+		
+		# These tags need to have history collected
+		tagPaths = []
+		tagPaths.append(mainC6RateTagPath)
+		tagPaths.append(r2C6RateTagPath)
+	
+		# Fetch the average value over the last 30 minutes
+		ds = system.tag.queryTagHistory(paths=tagPaths, aggregationMode='Average', returnSize=1, endDate=system.date.now(), rangeMinutes=-30.0)
+		if ds.rowCount == 1:
+			mainC6Rate = ds.getValueAt(0, 1)
+			r2C6Rate = ds.getValueAt(0, 2)
+			log.tracef("Querying the average feed rate over the last 30 minutes was successful, mainC6Rate: %s, r2C6Rate: %s",str(mainC6Rate), str(r2C6Rate))
+			if mainC6Rate == 0.0 or r2C6Rate == 0.0:
+				txt = "Setting the R2 C2 delay for a series grade to (0.0) because either the main C6 rate (%s) or the r2 C6 rate (%s) is 0." % (str(mainC6Rate), str(r2C6Rate))
+				log.tracef(txt)
+				postToQueue(chart, MSG_STATUS_INFO, txt)
+				r2C2Delay = 0.0
+			else:
+				readOK = True
+				log.tracef("The R2 C2 delay will be calculated using the history of the main C6 rate (%s) and the r2 C2 rate (%s)", str(mainC6Rate), str(r2C6Rate))
+
+		else:
+			mainC6Rate = system.tag.read(mainC6RateTagPath)
+			r2C6Rate = system.tag.read(r2C6RateTagPath)
+			
+			if not(mainC6Rate.quality.isGood()):
+				txt = "Setting the R2 C2 delay to zero (0.0) for a series grade because the main c6 rate tag (%s) read failed." % (mainC6RateTagPath)
+				postToQueue(chart, MSG_STATUS_INFO, txt)
+				log.tracef(txt)
+				r2C2Delay = 0.0
+			elif not(r2C6Rate.quality.isGood()):
+				txt = "Setting the R2 C2 delay to zero (0.0) for a series grade because the R2 C2 rate tag (%s) read failed." % (mainC6RateTagPath)
+				postToQueue(chart, MSG_STATUS_INFO, txt)
+				log.tracef(txt)
+				r2C2Delay = 0.0
+			else:
+				readOK = True
+				mainC6Rate = mainC6Rate.value
+				r2C6Rate = r2C6Rate.value
+				log.tracef("The R2 C2 delay will be calculated using the current values of the main C6 rate (%s) and the r2 C2 rate (%s)", str(mainC6Rate), str(r2C6Rate))
+		
+		if readOK:
+			if (r2C6Rate &lt; tol) or (mainC6Rate &lt; tol):
+				txt = "Setting the R2 C2 delay for a series grade to zero (0.0) becasue the main C6 rate or second reactor C6 rate is less than tolerance of %s."%(str(tol))
+				postToQueue(chart, MSG_STATUS_INFO, txt)
+				log.tracef(txt)
+				r2C2Delay = 0.0
+			else:
+				r2C2Delay = round((inventories[0] / mainC6Rate + inventories[6] / r2C6Rate) * 3600.0)
+				txt = "Calculated the R2 C2 delay for a series grade to be %s seconds." % (str(r2C2Delay))
+				postToQueue(chart, MSG_STATUS_INFO, txt)
+				log.tracef(txt)
+
+	elif system.tag.read("[%s]Site/CSTR/SPLIT-FEED_GRADE" % (provider)).getValue():
+		log.tracef("Setting the R2 C2 delay to 0.0 for a split feed grade")
+		r2C2Delay = 0.0
+		
+	else:
+		postToQueue(chart, MSG_STATUS_INFO, "Setting the R2 C2 delay to zero (0.0) because the reactor configuration could not be determined.")
+		r2C2Delay = 0.0
+
+	s88Set(chart, step, "r2C2Delay.value", r2C2Delay, SUPERIOR_SCOPE)</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="b36178c0-6b65-11d9-a9ad-00022dc3c8fd" location="7 7" name="S88TimeDelay_13787" factory-id="com.ils.timedDelayStep"><postNotification>false</postNotification><recipeLocation>superior</recipeLocation><tagPath></tagPath><description></description><scale>1.0</scale><windowTitle></windowTitle><message></message><buttonLabel></buttonLabel><delay>0.0</delay><name>S88TimeDelay_13787</name><callback>G2</callback><id>b36178c0-6b65-11d9-a9ad-00022dc3c8fd</id><position>center</position><strategy>recipe</strategy><key>r2c2delay.value</key><delayUnit>SEC</delayUnit>		<associated-data>{}</associated-data>
+	</step>
+	<step id="4174c020-4494-11da-b121-00065b88c6c2" location="1 10" name="r1C3SP" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time.value</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>false</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>r1C3SP</name><writeOutputConfig>{"rows":[{"key":"r1-c3-flow-sp","confirmWrite":true}]}</writeOutputConfig><id>4174c020-4494-11da-b121-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	</step>
+	<step id="741cce4d-9a24-11d9-b116-00065b88c6c2" location="7 9" name="S88End_13797" factory-id="end-step">		<associated-data>{}</associated-data>
+	</step>
+	<step id="db825dc0-4d10-11dd-a699-00142223a71b" location="3 12" name="FDandC2Mode" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time.value</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>false</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>FDandC2Mode</name><writeOutputConfig>{"rows":[{"key":"D20-return-h2o-flow-mode","confirmWrite":true},{"key":"d20a-return-h2o-flow-mode","confirmWrite":true},{"key":"d20b-return-h2o-flow-mode","confirmWrite":true},{"key":"r1-c2-flow-mode","confirmWrite":true}]}</writeOutputConfig><id>db825dc0-4d10-11dd-a699-00142223a71b</id>		<associated-data>{}</associated-data>
+	</step>
+	<transition id="24e33cc0-6b65-11d9-a9ad-00022dc3c8fd" location="2 6" timeout-enabled="true" timeout-delay="1000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13796">{operation.c3-ramp.value}</transition>
+	<transition id="24e33cc5-6b65-11d9-a9ad-00022dc3c8fd" location="4 6" timeout-enabled="true" timeout-delay="1000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13794">!{operation.c3-ramp.value}</transition>
+	<transition id="e0bf432b-df15-40a9-a80b-432c8d72152f" location="7 4">{previous.workDone}</transition>
+	<transition id="26c3a15a-4494-11da-b121-00065b88c6c2" location="1 9" timeout-enabled="true" timeout-delay="1000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13786">{tag.Recipe/Local/C-RX-GRADE}</transition>
+	<transition id="26c3a161-4494-11da-b121-00065b88c6c2" location="3 9" timeout-enabled="true" timeout-delay="1000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13785">!{tag.Recipe/Local/C-RX-GRADE}</transition>
+	<transition id="3ba437d5-9fae-4e00-8b1a-63a42d539fce" location="7 8">{previous.workDone}</transition>
+	<note id="70cbb6fe-d085-4268-a8cb-5207e35ceb01" location="1 6">c3 ramp</note>
+	<note id="405615c6-78cc-465e-bf5c-1d8d5f3957f2" location="7 0" size="2 1">Manually vetted 12/2/16</note>
+	<note id="0017ef6c-1d95-43a4-94f7-6a518c439359" location="0 9">C-Rx grade</note>
+	<link id="e2edf95c-4487-4012-b986-e8b7c3926d17" location="2 5"><down/><right/></link>
+	<link id="0f3fabfe-8ff6-4be5-90e1-2e5908fe0a47" location="3 5"><up/><left/><right/></link>
+	<link id="3de555a4-41b9-4dfa-974e-de30fa104090" location="6 2"><up/><down/><right/></link>
+	<link id="19e2b033-87dc-4927-bc4f-0ccb8605c760" location="4 5"><left/><down/></link>
+	<link id="c950933c-53f9-4e22-9151-6d36df6b226f" location="6 3"><up/><down/></link>
+	<link id="884cd3a2-3a82-43e3-9cc4-63d5eff8f86c" location="6 4"><up/><down/></link>
+	<link id="fcd18f85-79bf-444c-9ab9-cfd80461cfef" location="7 2"><left/><down/><right/></link>
+	<link id="bb5a03f7-8f5c-4b85-aebb-e93b7c812d56" location="6 5"><up/><down/></link>
+	<link id="88463292-ceaf-4a4c-b319-0123b2de33b6" location="1 8"><down/><right/></link>
+	<link id="4c957b0e-7a12-44b7-ba9d-1de005de89df" location="2 8"><up/><left/><right/></link>
+	<link id="5df07ecb-6249-4daf-8a0f-1e9371fccd4a" location="6 6"><up/><down/></link>
+	<link id="c0abc63d-e504-4f9b-92b7-c5d36525edd5" location="3 8"><left/><down/></link>
+	<link id="64f778de-1ef1-4b56-aac4-da11b3966300" location="4 8"><up/><down/></link>
+	<link id="ed7228b1-f097-4c12-ba05-bb6202f170f2" location="6 7"><up/><down/></link>
+	<link id="38f0e00a-3f8d-49b3-a5d7-e155df78edba" location="4 9"><up/><down/></link>
+	<link id="2965e175-ad1a-4be0-bc98-5a2f3e8d73f4" location="6 8"><up/><down/></link>
+	<link id="71024534-a896-4f2b-9052-9a0401c1ba24" location="3 10"><up/><down/></link>
+	<link id="95a23fba-206a-4906-9eea-4bd30075d9e5" location="4 10"><up/><down/></link>
+	<link id="345f4768-8b63-47af-a30b-2663ac87d456" location="6 9"><up/><down/></link>
+	<link id="64a88180-758b-4b18-ac56-c3f6b4942516" location="1 11"><up/><down/><right/></link>
+	<link id="e73ab192-88c8-488d-82a0-b2f4d1046776" location="2 11"><left/><right/></link>
+	<link id="7c81a3a2-9f21-4535-9896-cbe43511dea9" location="3 11"><up/><left/><down/><right/></link>
+	<link id="0e7f3085-ac57-474d-bf8e-576358577870" location="6 10"><up/><down/></link>
+	<link id="aa49ef1b-1663-42bf-8292-d385b2141343" location="4 11"><up/><left/><down/></link>
+	<link id="b393ef6e-c548-4803-bfb5-22fd6b53bef1" location="6 11"><up/><down/></link>
+	<link id="07ff069a-d0bc-463b-a0c9-4a8daf0f0024" location="3 13"><up/><down/><right/></link>
+	<link id="8812d33b-0997-4d15-9e10-5b2e2c81e53d" location="6 12"><up/><down/></link>
+	<link id="83d2befa-7ed2-4b39-9481-19869a51c4dc" location="4 13"><left/><right/></link>
+	<link id="27558b0e-209f-4bed-b0f2-84af45fbdd0d" location="5 13"><left/><right/></link>
+	<link id="e7a76f77-7790-4bbb-b3fb-facc70038c10" location="6 13"><up/><left/><right/></link>
+
+</sfc>
