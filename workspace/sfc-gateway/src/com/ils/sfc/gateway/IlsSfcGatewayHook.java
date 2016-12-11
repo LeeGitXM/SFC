@@ -209,6 +209,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	@Override
 	public void setup(GatewayContext ctxt) {
 		this.context = ctxt;
+		PythonCall.setContext(context);
 		context.getModuleServicesManager().subscribe(ChartManagerService.class, this);
 		IlsGatewayScripts.setHook(this);
 		

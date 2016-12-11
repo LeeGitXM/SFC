@@ -28,7 +28,7 @@ public class PythonCall {
 	private final Class<?> returnType;	// is null if no return value
 	private PyCode compiledCode;	// cached compiled code
 
-	private static BaseContext context;
+	private static BaseContext context = null;
 	private static final String[] stepArgs = new String[]{"scopeContext", "stepProperties", "state"};
 	private static final String STEPS_PKG = "ils.sfc.gateway.steps.";
 
