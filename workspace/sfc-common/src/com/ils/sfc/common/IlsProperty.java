@@ -160,6 +160,8 @@ public class IlsProperty {
     public static final BasicProperty<Boolean> ENABLE_PAUSE = createProperty(Constants.ENABLE_PAUSE, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<Boolean> ENABLE_RESUME = createProperty(Constants.ENABLE_RESUME, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<Boolean> ENABLE_CANCEL = createProperty(Constants.ENABLE_CANCEL, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<Boolean> ENABLE_START = createProperty(Constants.ENABLE_START, Boolean.class, Boolean.TRUE);
+    public static final BasicProperty<Boolean> ENABLE_RESET = createProperty(Constants.ENABLE_RESET, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<Double> ERROR_CODE = createProperty(Constants.ERROR_CODE, Double.class, 0.);
     public static final BasicProperty<String> ERROR_TEXT = createProperty(Constants.ERROR_TEXT, String.class, "");
     public static final BasicProperty<String> EXTENSION = createProperty(Constants.EXTENSION, String.class, ".txt");

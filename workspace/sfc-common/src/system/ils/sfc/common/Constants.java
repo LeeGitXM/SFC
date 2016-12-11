@@ -76,6 +76,8 @@ public class Constants {
 	public static final String ENABLE_PAUSE = "enablePause";
 	public static final String ENABLE_RESUME = "enableResume";
 	public static final String ENABLE_CANCEL = "enableCancel";
+	public static final String ENABLE_START = "enableStart";
+	public static final String ENABLE_RESET = "enableReset";
 	public static final String ERROR = "Error";
 	public static final String ERROR_CODE = "errorCode";
 	public static final String ERROR_TEXT = "errorText";
