@@ -256,6 +256,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		chartManager.addChartObserver(dropBox);
 
  		structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
+ 		AbstractIlsStepDelegate.setStructureManager(structureManager);
  		requestHandler = new GatewayRequestHandler(context,structureManager,requestResponseManager);
 		dispatcher = new GatewayRpcDispatcher(context,requestHandler);
 		chartDebugger = new ChartDebugger(

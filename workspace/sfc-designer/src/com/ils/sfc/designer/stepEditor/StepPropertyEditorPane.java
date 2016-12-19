@@ -7,11 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import system.ils.sfc.common.Constants;
-
-import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.panels.EditorPanel;
@@ -22,6 +18,8 @@ import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
+
+import system.ils.sfc.common.Constants;
 
 /** A thin wrapper for a PropertyEditor that adds an accept action.
  *  Also provides add/remove for dynamic properties, and extended

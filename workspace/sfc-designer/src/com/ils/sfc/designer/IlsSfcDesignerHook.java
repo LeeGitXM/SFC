@@ -25,6 +25,7 @@ import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureCompiler;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
+import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.common.step.AllSteps;
 import com.ils.sfc.designer.browser.SfcBrowserFrame;
 import com.ils.sfc.designer.browser.execute.ChartRunner;
@@ -300,6 +301,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	IlsClientScripts.setContext(context);
     	// Provide a central repository for the structure of the charts
     	structureManager = new ChartStructureManager(context.getGlobalProject().getProject(),stepRegistry);
+		AbstractIlsStepDelegate.setStructureManager(structureManager);
     	searchProvider = new IlsSfcSearchProvider(context);
 		context.registerSearchProvider(searchProvider);
 		context.addProjectChangeListener(this);

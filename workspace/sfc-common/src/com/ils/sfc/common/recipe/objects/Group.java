@@ -7,8 +7,6 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.inductiveautomation.ignition.common.config.BasicPropertySet;
-
 /**
 superiorClass: sequence (the symbol S88-RECIPE-DATA)
 attributes:sequence (structure (ATTRIBUTE-NAME: the symbol RECIPE-DATA-V2,

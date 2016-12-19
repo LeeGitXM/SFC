@@ -63,7 +63,12 @@ public class StepPropertyValidator {
 		}
 		else if(factoryId.equals(ActionStepProperties.FACTORY_ID)) {
 			String startScript = element.get(ActionStepProperties.START_SCRIPT);
-			validateScript(startScript, chart, element);
+			if( startScript==null ) {
+				addError(Long.valueOf(chart.resourceId), chart.path, getStepName(element), "start script is missing");
+			}
+			else {
+				validateScript(startScript, chart, element);
+			}
 		}
 	}
 

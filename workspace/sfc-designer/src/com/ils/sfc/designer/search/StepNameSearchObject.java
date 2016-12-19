@@ -61,5 +61,4 @@ public class StepNameSearchObject implements SearchObject {
 		ErrorUtil.showWarning(rb.getString("Locator.StepChangeWarning"), rb.getString("Locator.WarningTitle"));
 		
 	}
-
 }

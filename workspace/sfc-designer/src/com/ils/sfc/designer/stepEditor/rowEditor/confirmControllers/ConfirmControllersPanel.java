@@ -10,7 +10,6 @@ import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.ils.sfc.designer.stepEditor.rowEditor.GenericCellRenderer;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowCellEditor;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowEditorPanel;
-import com.ils.sfc.designer.stepEditor.rowEditor.collectData.CollectDataTableModel;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 @SuppressWarnings("serial")
