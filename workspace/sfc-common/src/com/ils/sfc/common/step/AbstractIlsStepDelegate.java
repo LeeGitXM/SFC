@@ -11,7 +11,9 @@ import org.w3c.dom.Element;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.StepPropertyValidator;
+import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer.ChartInfo;
+import com.ils.sfc.common.recipe.objects.Data;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertySet;
@@ -33,6 +35,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 		IlsProperty.DESCRIPTION
 	};
 	private Property<?>[] orderedProperties;
+	private static ChartStructureManager structureManager = null;
 	
     public static final Property<?>[] FOUNDATION_STEP_PROPERTIES = {
     	EnclosingStepProperties.CHART_PATH,
@@ -67,6 +70,11 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 			orderedProperties[p] = ilsProperties[i];
 		}
 	}
+	/**
+	 * The structure manager provides the information we need to validate
+	 * @param mgr
+	 */
+	public static void setStructureManager(ChartStructureManager mgr) { structureManager = mgr; }
 	
 	@Override
 	public void toXML(XMLStreamWriter writer, ChartUIElement element, String arg2)
@@ -144,10 +152,21 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 		return null;
 	}
 
+	/**
+	 * Use the structure manager to see if the step has compiled, and to traverse the call hierarchy 
+	 * so as to check whether or not referenced recipe data exist at the proper level.
+	 */
 	@Override
-	public void validate(ChartUIElement element,
-            ChartCompilationResults compilationResults) {
-	}
+	public void validate(ChartUIElement element,ChartCompilationResults compilationResults) {
+		if( structureManager!=null ) {   // Will be null in client scope
+			//String factoryId = element.get(SimpleHierarchyAnalyzer.factoryIdProperty);
+			//JSONObject associatedDataJson = element.get(SimpleHierarchyAnalyzer.associatedDataProperty);
+			//List<Data> recipeData = Data.fromAssociatedData(associatedDataJson);
+			// See com.ils.sfc.designer.browser.validation.StepErrorsPanel.java for current validator techniques
+			// and also com.ils.common.stepPropertyValidator
+			//compilationResults.addError(new ChartCompilationResults.CompilationError("I'm an invalid",element.getLocation()));
+		}
+	} 
 	
 	public PropertySet getPropertySet() {
 		// add the ILS properties

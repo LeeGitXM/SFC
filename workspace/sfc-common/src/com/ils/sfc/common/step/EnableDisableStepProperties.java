@@ -14,5 +14,5 @@ public interface EnableDisableStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.enableDisableStep";
 
     public static final BasicProperty<?>[] properties = { 
-    	ENABLE_PAUSE, ENABLE_RESUME, ENABLE_CANCEL };
+    	ENABLE_PAUSE, ENABLE_RESUME, ENABLE_CANCEL, ENABLE_START, ENABLE_RESET };
 }

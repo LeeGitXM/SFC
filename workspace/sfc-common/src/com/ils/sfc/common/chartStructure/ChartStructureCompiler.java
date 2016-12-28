@@ -78,8 +78,8 @@ public class ChartStructureCompiler {
 			compileCharts();  // do the IA chart compilation
 		}
 		else {
-			log.error("Could not compile SFC chart models");
-			return ;  // if we can't load the resources we can't do much...
+			log.error("Errors compiling SFC chart models");
+			//return ;  // if we can't load the resources we can't do much...
 		}
 		
 		linkParents();
@@ -105,22 +105,22 @@ public class ChartStructureCompiler {
 			if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
 				String path = project.getFolderPath(res.getResourceId());
 				try {
+					
 					byte[] chartResourceData = res.getData();					
 					//IlsSfcCommonUtils.printResource(data);					
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 					ChartUIModel uiModel = ChartUIModel.fromXML(xmlInput, stepRegistry );
-					
 					ChartModelInfo info = new ChartModelInfo(uiModel,res,path);
 					modelInfoByResourceId.put(new Long(res.getResourceId()),info);
 					modelInfoByChartPath.put(path,info);
 					log.debugf("loadModels: found resource %s (%d)",path,res.getResourceId());
 				}
 				catch(IOException ioe) {
-					log.errorf("loadModels: Exception deserializing %s (%s)",path,ioe.getLocalizedMessage());
+					log.errorf("loadModels: Exception reading %s:%d (%s)",path,res.getResourceId(),ioe.getLocalizedMessage());
 					success = false;
 				}
 				catch(XMLParseException xpe) {
-					log.errorf("loadModels: Error deserializing %s (%s)",path,xpe.getLocalizedMessage());
+					log.errorf("loadModels: Error deserializing %s:%d (%s)",path,res.getResourceId(),xpe.getLocalizedMessage());
 					success = false;
 				}
 			}

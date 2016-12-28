@@ -879,21 +879,24 @@ public abstract class Data {
 	/** Check if the given access path, e.g. "myValue.value", is valid
 	 *  for the given collection of recipe data. */
 	public static boolean hasPath(List<Data> datas, String path) {
-		String[] keys = path.split("\\.");
-		for(Data data: datas) {
-			if(keys.length > 0 && data.getKey().equals(keys[0])) {
-				if(data.isGroup() ) {
-					return hasPath(((Group)data).getChildren(), 
-						path.substring(path.indexOf(".")+1, path.length()));
-				}
-				else {
-					if(keys.length>1 && data.hasProperty(keys[1])) {
-						return true;
+		boolean result = false;
+		if( path!=null ) {
+			String[] keys = path.split("\\.");
+			for(Data data: datas) {
+				if(keys.length > 0 && data.getKey().equals(keys[0])) {
+					if(data.isGroup() ) {
+						return hasPath(((Group)data).getChildren(), 
+								path.substring(path.indexOf(".")+1, path.length()));
+					}
+					else {
+						if(keys.length>1 && data.hasProperty(keys[1])) {
+							return true;
+						}
 					}
 				}
 			}
 		}
-		return false;
+		return result;
 	}
 
 	public String validate() {

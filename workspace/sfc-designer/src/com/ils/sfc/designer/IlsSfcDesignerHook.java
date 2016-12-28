@@ -18,8 +18,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 
-import org.python.core.PyList;
-
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
@@ -27,6 +25,7 @@ import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureCompiler;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
+import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.common.step.AllSteps;
 import com.ils.sfc.designer.browser.SfcBrowserFrame;
 import com.ils.sfc.designer.browser.execute.ChartRunner;
@@ -105,7 +104,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void initializeScriptManager(ScriptManager mgr) {
 		super.initializeScriptManager(mgr);
-		PythonCall.setScriptMgr(mgr);
 		mgr.addStaticFields("system.ils.sfc", Constants.class);
 		mgr.addScriptModule("system.ils.sfc", IlsClientScripts.class);
 		// Initialize units. Since this is a lazy initialization, 
@@ -299,9 +297,11 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	for(String factoryId: AllSteps.editorFactoryIds) {
     		configRegistry.register(factoryId, editorFactory);
     	} 
+		PythonCall.setContext(ctx);
     	IlsClientScripts.setContext(context);
     	// Provide a central repository for the structure of the charts
     	structureManager = new ChartStructureManager(context.getGlobalProject().getProject(),stepRegistry);
+		AbstractIlsStepDelegate.setStructureManager(structureManager);
     	searchProvider = new IlsSfcSearchProvider(context);
 		context.registerSearchProvider(searchProvider);
 		context.addProjectChangeListener(this);

@@ -209,6 +209,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	@Override
 	public void setup(GatewayContext ctxt) {
 		this.context = ctxt;
+		PythonCall.setContext(context);
 		context.getModuleServicesManager().subscribe(ChartManagerService.class, this);
 		IlsGatewayScripts.setHook(this);
 		
@@ -224,7 +225,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 	@Override
 	public void initializeScriptManager(ScriptManager manager) {
-		PythonCall.setScriptMgr(manager);
 		manager.addScriptModule("system.ils.sfc", IlsGatewayScripts.class);	
 		manager.addStaticFields("system.ils.sfc.common.Constants", Constants.class);	
 	};
@@ -256,6 +256,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		chartManager.addChartObserver(dropBox);
 
  		structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
+ 		AbstractIlsStepDelegate.setStructureManager(structureManager);
  		requestHandler = new GatewayRequestHandler(context,structureManager,requestResponseManager);
 		dispatcher = new GatewayRpcDispatcher(context,requestHandler);
 		chartDebugger = new ChartDebugger(

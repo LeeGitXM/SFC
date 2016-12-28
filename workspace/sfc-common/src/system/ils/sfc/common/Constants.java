@@ -76,6 +76,8 @@ public class Constants {
 	public static final String ENABLE_PAUSE = "enablePause";
 	public static final String ENABLE_RESUME = "enableResume";
 	public static final String ENABLE_CANCEL = "enableCancel";
+	public static final String ENABLE_START = "enableStart";
+	public static final String ENABLE_RESET = "enableReset";
 	public static final String ERROR = "Error";
 	public static final String ERROR_CODE = "errorCode";
 	public static final String ERROR_TEXT = "errorText";
@@ -194,6 +196,7 @@ public class Constants {
 	public static final String STATIC = "static";
 	public static final String STATE = "state";
 	public static final String STATUS = "status";
+	public static final String STEP_NAME = "name";
 	public static final String STEP_TIME = "stepTime";
 	public static final String STEP_TIMESTAMP = "stepTimestamp";
 	public static final String SUCCESS = "Success";

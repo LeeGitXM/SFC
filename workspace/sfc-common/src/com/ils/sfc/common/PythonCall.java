@@ -10,6 +10,7 @@ import org.python.core.PyObject;
 import org.python.core.PyStringMap;
 
 import com.inductiveautomation.ignition.common.Dataset;
+import com.inductiveautomation.ignition.common.model.BaseContext;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -27,7 +28,7 @@ public class PythonCall {
 	private final Class<?> returnType;	// is null if no return value
 	private PyCode compiledCode;	// cached compiled code
 
-	private static ScriptManager scriptMgr;
+	private static BaseContext context = null;
 	private static final String[] stepArgs = new String[]{"scopeContext", "stepProperties", "state"};
 	private static final String STEPS_PKG = "ils.sfc.gateway.steps.";
 
@@ -221,6 +222,7 @@ public class PythonCall {
 	
 	/** Execute this method and return the result. */
 	public Object exec(Object...argValues) throws JythonExecException {
+		ScriptManager scriptMgr = context.getScriptManager();
 		PyStringMap localMap = scriptMgr.createLocalsMap();
 
 		//System.out.println("python exec: " + methodName);
@@ -296,8 +298,8 @@ public class PythonCall {
 		compiledCode = Py.compile_flags(script, "ils", CompileMode.exec, CompilerFlags.getCompilerFlags());		
 	}
 
-	public static void setScriptMgr(ScriptManager scriptManager) {
-		scriptMgr = scriptManager;
+	public static void setContext(BaseContext ctx) {
+		context = ctx;
 	}
 	
 	public static String[] toArray(Object o) {
