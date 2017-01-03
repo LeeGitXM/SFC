@@ -135,6 +135,19 @@ public class PythonCall {
 	public static final PythonCall WRITE_OUTPUT = new PythonCall(STEPS_PKG + "writeOutput.activate", 
 		Boolean.class, stepArgs );
 
+	//Structure Manager
+	
+	public static final PythonCall CREATE_CHART = new PythonCall("ils.sfc.recipeData.structureManager.createChart", 
+			null,  new String[]{"resourceId", "chartPath", "db"} );
+	public static final PythonCall DELETE_CHART = new PythonCall("ils.sfc.recipeData.structureManager.deleteChart", 
+			null,  new String[]{"resourceId", "chartPath", "db"} );
+	public static final PythonCall UPDATE_CHART_HIERARCHY = new PythonCall("ils.sfc.recipeData.structureManager.updateChartHierarchy", 
+			null,  new String[]{"parentPath", "parentResourceId", "childPaths", "childNames", "childUUIDs", "childTypes", "db"} );
+	
+	// Recipe Data V2
+	public static final PythonCall GET_RECIPE_DATA_LIST = new PythonCall("ils.sfc.recipeData.editor.getRecipeDataList", 
+			PyList.class,  new String[]{"stepUUID"} );
+	
 	// units
 	public static final PythonCall INITIALIZE_UNITS = new PythonCall("ils.common.units.lazyInitialize", 
 			null,  new String[]{"database"} );

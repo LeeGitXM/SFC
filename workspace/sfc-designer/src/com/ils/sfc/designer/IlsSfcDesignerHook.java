@@ -23,6 +23,7 @@ import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureCompiler;
+import com.ils.sfc.common.chartStructure.ChartStructureCompilerV2;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
@@ -86,6 +87,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private SfcBrowserFrame browser = null;
 	private final List<DockableFrame> frames;
 	private ChartStructureManager structureManager = null;
+	private ChartStructureCompilerV2 structureCompilerV2 = null;
 	private IlsSfcSearchProvider searchProvider = null;
 	private RecipeEditorFrame recipeEditorFrame;
 	private RecipeDataCleaner recipeDataCleaner;
@@ -270,7 +272,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	public void startup(DesignerContext ctx, LicenseState activationState) throws Exception {
 		this.context = ctx;
 		DesignerUtil.context = ctx;
-        log.debug("IlsSfcDesignerHook.startup...");
+        log.info("IlsSfcDesignerHook.startup...");
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
 		recipeEditorFrame = new RecipeEditorFrame(ctx, iaSfcHook.getWorkspace());
 		sfcWorkspace = iaSfcHook.getWorkspace();
@@ -289,7 +291,10 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			stepRegistry.register(clientStepFactory);
 		}
 		recipeDataCleaner = new RecipeDataCleaner(context, stepRegistry);
-		context.getGlobalProject().addProjectChangeListener(recipeDataCleaner);
+//		context.getGlobalProject().addProjectChangeListener(recipeDataCleaner);
+		
+		// Listen to changes on the global project PETE
+		context.getGlobalProject().addProjectChangeListener(this);
 		    	
 		// register the step config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory(context);
@@ -302,9 +307,13 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	// Provide a central repository for the structure of the charts
     	structureManager = new ChartStructureManager(context.getGlobalProject().getProject(),stepRegistry);
 		AbstractIlsStepDelegate.setStructureManager(structureManager);
-    	searchProvider = new IlsSfcSearchProvider(context);
+    	
+		// Pete's Structure manager - instantiate this once in the beginning because the step registry is static.
+		structureCompilerV2 = new ChartStructureCompilerV2(context.getGlobalProject().getProject(), stepRegistry);
+		
+		searchProvider = new IlsSfcSearchProvider(context);
 		context.registerSearchProvider(searchProvider);
-		context.addProjectChangeListener(this);
+//		context.addProjectChangeListener(this);
 		
 		new Thread(new ModuleWatcher(context)).start();             // Watch for modules to start
  	}
@@ -359,21 +368,43 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		return false;
 	}
 	// =================================== Project Change Listener ========================
-	// If there is a change to a chart resource, we re-compute the maps
-	@Override
+	// Called when there is a change to a chart resource
+	@Override//
 	public void projectResourceModified(ProjectResource res,ResourceModification modType) {
-		if( res.getResourceType().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE) ) {
-			log.infof("%s.ProjectResourceModified: structure compiler started",TAG);
-			structureManager.getCompiler().compile();
-			log.infof("%s.ProjectResourceModified: structure compiler ended",TAG);
-		}
+		log.infof("A project Resource has been modified (type: %s)", modType.toString());
 		
+
+		if( res.getResourceType().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE) ) {
+			
+			// This is called as soon as a chart is created.  Literally, as soon as user presses create chart in the project resource tree.
+			if (modType.toString().equals("Added")){
+				log.infof("A resource has been added");
+				structureCompilerV2.createChart(res);
+			} 
+			
+			else if (modType.toString().equals("Deleted")){
+				log.infof("A resource has been deleted");
+				structureCompilerV2.deleteChart(res);
+			} else {
+				log.infof("%s.ProjectResourceModified: structure compiler started",TAG);
+	//			structureManager.getCompiler().compile();
+				structureCompilerV2.compileResource(res);
+				log.infof("%s.ProjectResourceModified: structure compiler ended",TAG);
+			}
+		}
 	}
+	
+	// This is called when the project is saved - I'm not sure what I should do here, if anything...
 	@Override
 	public void projectUpdated(Project proj) {
+		log.infof("A project has been updated (id = %d)", proj.getId());
+		
+		// Added by Pete
+//		structureCompilerV2.compile(proj);
+
 		if( proj.getId()==-1 ) {
 			log.infof("%s.ProjectResourceUpdated: structure compiler started",TAG);
-			structureManager.getCompiler().compile();
+//			structureManager.getCompiler().compile();
 			log.infof("%s.ProjectResourceUpdated: structure compiler ended",TAG);
 		}
 	}

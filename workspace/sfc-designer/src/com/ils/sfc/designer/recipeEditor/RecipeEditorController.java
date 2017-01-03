@@ -26,7 +26,8 @@ import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** 
  * A controller for all the sliding panes that are involved in editing recipe data.
- * There is a single controller instance for the recipe editing frame. 
+ * There is a single controller instance for the recipe editing frame that gets instantiated when 
+ * Designer is launched.
  */
 public class RecipeEditorController extends PanelController implements EditorErrorHandler {
 	private static LoggerEx logger = LogUtil.getLogger(RecipeEditorController.class.getName());
@@ -58,6 +59,7 @@ public class RecipeEditorController extends PanelController implements EditorErr
 	
 	public RecipeEditorController(DesignerContext ctx) { 
 		super(ctx);
+		logger.info("Initializing a RecipeEditorController");
 		objectEditor.getPropertyEditor().getTableModel().setErrorHandler(this);
 		// sub-panes added according to the indexes above:
 		slidingPane.add(browser);
@@ -132,10 +134,23 @@ public class RecipeEditorController extends PanelController implements EditorErr
 	 */
 	public void setElement(ChartUIElement element, String chartPath) {
 		this.element = element;
+		logger.infof("The chart element is: %s", element.toString());
 		String stepName = element.get(IlsProperty.NAME);
+		String stepUUID = element.getId().toString();
 		String stepPath = chartPath + "/" + stepName;
 		creator.setChartPath(stepPath);
 		
+		logger.infof("In setElement with %s - %s", stepName, stepUUID);
+		try {
+			List<Data> recipeData = Data.fromDatabase(stepUUID);
+		} catch (Exception e){
+			showMessage("Error getting associated recipe data: " + e.getMessage(), BROWSER);
+			setRecipeData(new ArrayList<Data>());			
+		}
+	
+	}
+		
+/*
 		if(element.contains(ChartStepProperties.AssociatedData)) {
 			JSONObject associatedData = element.getOrDefault(ChartStepProperties.AssociatedData);
 			try {
@@ -145,6 +160,7 @@ public class RecipeEditorController extends PanelController implements EditorErr
 				for(Data data: recipeData) {
 					data.setStepPath(stepPath);
 					data.setProvider(provider);
+					logger.infof("%s", data);
 				}
 				setRecipeData(recipeData);
 			} catch (Exception e) {
@@ -157,9 +173,8 @@ public class RecipeEditorController extends PanelController implements EditorErr
 		}
 		
 		RecipeDataTagReader.reader.readRecipeDataTagValues(this);	
-
 	}
-
+*/
 	
 	public void commit() {
 		if(recipeData == null) return;

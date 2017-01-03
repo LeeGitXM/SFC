@@ -26,5 +26,9 @@ public class Value extends DataWithUnits {
 		addProperty(IlsProperty.VALUE_TYPE);
 		addProperty(IlsProperty.HIGH_LIMIT);
 		addProperty(IlsProperty.LOW_LIMIT);
+	};
+	
+	public String toString() {
+		return properties.toString();
 	}
 }

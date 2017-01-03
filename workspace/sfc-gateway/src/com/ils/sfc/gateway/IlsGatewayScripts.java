@@ -115,7 +115,7 @@ public class IlsGatewayScripts {
 			    		if(isEmpty(advice)) {
 			    			String adviceKey = changeValueKey(row.valueKey, "advice");
 			    			try {
-			    				advice = (String) RecipeDataAccess.s88Get(chartScope, stepScope, adviceKey, row.recipeScope);
+			    				advice = (String) RecipeDataAccess.s88GetOld(chartScope, stepScope, adviceKey, row.recipeScope);
 			    			}
 			    			catch(Exception e) {
 			    				logger.error("Error getting advice from recipe data", e);
@@ -129,7 +129,7 @@ public class IlsGatewayScripts {
 				    	buffer[i++] = convertedValue;
 			    	}
 			    	catch(IllegalArgumentException e) {
-			    		Object rawValue = RecipeDataAccess.s88Get(chartScope, stepScope, row.valueKey, row.recipeScope);
+			    		Object rawValue = RecipeDataAccess.s88GetOld(chartScope, stepScope, row.valueKey, row.recipeScope);
 				    	buffer[i++] = rawValue;
 				    	String errMsg = "Failed to convert review data " + row.valueKey + " to display units--perhaps recipe data does not have units";
 				    	logger.error(errMsg);
@@ -174,7 +174,7 @@ public class IlsGatewayScripts {
 			    			// TODO: should we check the other flow keys?
 			    			String adviceKey = changeValueKey(row.flow1Key, "advice");
 			    			try {
-			    				advice = (String) RecipeDataAccess.s88Get(chartScope, stepScope, adviceKey, row.destination);
+			    				advice = (String) RecipeDataAccess.s88GetOld(chartScope, stepScope, adviceKey, row.destination);
 			    			}
 			    			catch(Exception e) {
 			    				logger.error("Error getting advice from recipe data", e);
@@ -233,15 +233,15 @@ public class IlsGatewayScripts {
 		String configKey, String configScope, ReviewDataConfig.Row scriptedConfig) {
 		String adviceKey = configKey + ".advice";
 		if(RecipeDataAccess.s88DataExists(chartScope, stepScope, adviceKey, configScope)) {
-			scriptedConfig.advice = (String)RecipeDataAccess.s88Get(chartScope, stepScope, adviceKey, configScope);
+			scriptedConfig.advice = (String)RecipeDataAccess.s88GetOld(chartScope, stepScope, adviceKey, configScope);
 		}
 		String unitsKey = configKey + ".units";
 		if(RecipeDataAccess.s88DataExists(chartScope, stepScope, unitsKey, configScope)) {
-			scriptedConfig.units = (String)RecipeDataAccess.s88Get(chartScope, stepScope, unitsKey, configScope);		
+			scriptedConfig.units = (String)RecipeDataAccess.s88GetOld(chartScope, stepScope, unitsKey, configScope);		
 		}
 		String promptKey = configKey + ".label";
 		if(RecipeDataAccess.s88DataExists(chartScope, stepScope, promptKey, configScope)) {
-			scriptedConfig.prompt = (String)RecipeDataAccess.s88Get(chartScope, stepScope, promptKey, configScope);	
+			scriptedConfig.prompt = (String)RecipeDataAccess.s88GetOld(chartScope, stepScope, promptKey, configScope);	
 		}
 	}
 
@@ -250,22 +250,22 @@ public class IlsGatewayScripts {
 		String configKey, String configScope, ReviewFlowsConfig.Row scriptedConfig) {
 		String adviceKey = configKey + ".advice";
 		if(RecipeDataAccess.s88DataExists(chartScope, stepScope, adviceKey, configScope)) {
-			scriptedConfig.advice = (String)RecipeDataAccess.s88Get(chartScope, stepScope, adviceKey, configScope);
+			scriptedConfig.advice = (String)RecipeDataAccess.s88GetOld(chartScope, stepScope, adviceKey, configScope);
 		}
 		String unitsKey = configKey + ".units";
 		if(RecipeDataAccess.s88DataExists(chartScope, stepScope, unitsKey, configScope)) {
-			scriptedConfig.units = (String)RecipeDataAccess.s88Get(chartScope, stepScope, unitsKey, configScope);		
+			scriptedConfig.units = (String)RecipeDataAccess.s88GetOld(chartScope, stepScope, unitsKey, configScope);		
 		}
 		String promptKey = configKey + ".label";
 		if(RecipeDataAccess.s88DataExists(chartScope, stepScope, promptKey, configScope)) {
-			scriptedConfig.prompt = (String)RecipeDataAccess.s88Get(chartScope, stepScope, promptKey, configScope);	
+			scriptedConfig.prompt = (String)RecipeDataAccess.s88GetOld(chartScope, stepScope, promptKey, configScope);	
 		}
 	}
 
 	/** Convert the recipe data value to the display units given in the Review Data config. */
 	private static double getValueInDisplayUnits(PyChartScope chartScope, PyChartScope stepScope, 
 		String valueKey, String recipeScope, String toUnits) {
-		Object oVal = RecipeDataAccess.s88Get(chartScope, stepScope, valueKey, recipeScope);
+		Object oVal = RecipeDataAccess.s88GetOld(chartScope, stepScope, valueKey, recipeScope);
 		double doubleVal = 0.;
 		if(oVal instanceof Number) {
 			doubleVal = ((Number)oVal).doubleValue();
@@ -276,7 +276,7 @@ public class IlsGatewayScripts {
 		}
 		// else error!
 		String unitsKey = changeValueKey(valueKey,  "units");
-		String fromUnits = (String)RecipeDataAccess.s88Get(chartScope, stepScope, unitsKey, recipeScope);
+		String fromUnits = (String)RecipeDataAccess.s88GetOld(chartScope, stepScope, unitsKey, recipeScope);
 		if(IlsSfcCommonUtils.isEmpty(fromUnits) || IlsSfcCommonUtils.isEmpty(toUnits)) {
 			String errMsg = "units missing in display conversion " + fromUnits + "->" + toUnits;
 	    	logger.error(errMsg);
