@@ -1,5 +1,7 @@
 package com.ils.sfc.common.recipe.objects;
 
+import org.python.core.PyDictionary;
+
 import com.ils.sfc.common.IlsProperty;
 
 /**
@@ -53,5 +55,23 @@ public abstract class IO extends DataWithUnits {
 		addProperty(IlsProperty.TARGET_VALUE);
 		addProperty(IlsProperty.UNITS);
 		addProperty(IlsProperty.LABEL);
+	}
+	
+	public void setValuesFromDatabase(PyDictionary pyDict){
+		super.setValuesFromDatabase(pyDict);
+		log.info("Setting values from dictionary in IO");
+		
+		this.setValue(IlsProperty.TAG_PATH, (String) pyDict.get("Tag"));
+		this.setValue(IlsProperty.VALUE, (String) pyDict.get(""));
+		this.setValue(IlsProperty.VALUE_TYPE, (String) pyDict.get("ValueType"));
+//		this.setValue(IlsProperty.ERROR_CODE, (String) pyDict.get("ErrorCode"));	// read-only?
+		this.setValue(IlsProperty.ERROR_TEXT, (String) pyDict.get("ErrorText"));
+		this.setValue(IlsProperty.PV_MONITOR_STATUS, (String) pyDict.get("PVMonitorStatus"));
+//		this.setValue(IlsProperty.SETPOINT_STATUS, (String) pyDict.get(""));	// I don't see this attribute in DB
+		this.setValue(IlsProperty.PV_MONITOR_ACTIVE, (Boolean) pyDict.get("PVMonitorActive"));
+		this.setValue(IlsProperty.PV_VALUE, (Double) pyDict.get("PVValue"));
+		this.setValue(IlsProperty.TARGET_VALUE, (Double) pyDict.get("TargetValue"));
+		this.setValue(IlsProperty.UNITS, (String) pyDict.get("Units"));
+		this.setValue(IlsProperty.LABEL, (String) pyDict.get("Label"));
 	}
 }

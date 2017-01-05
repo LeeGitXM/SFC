@@ -64,7 +64,7 @@ attributes:sequence (structure (
  */
 public abstract class Data {
 	private static final String CLSS = "Data";
-	private static LoggerEx log = LogUtil.getLogger(Data.class.getName());
+	public static LoggerEx log = LogUtil.getLogger(Data.class.getName());
 	protected static SimpleDateFormat parser = new SimpleDateFormat("YYYY/mm/dd HH:mm:ss");
 	protected BasicPropertySet properties = new BasicPropertySet();
 	private Map<String, BasicProperty<?>> propertiesByName = new HashMap<String, BasicProperty<?>>();
@@ -89,6 +89,17 @@ public abstract class Data {
 		properties.set(IlsProperty.CLASS, getClass().getSimpleName());
 	}
 
+	public void setValuesFromDatabase(PyDictionary pyDict){
+		log.info("Setting values from dictionary in Data");
+		
+		// set the attribute values of the new instance from the dictionary
+		setKey((String) pyDict.get("RecipeDataKey"));
+		setValue(IlsProperty.LABEL, (String) pyDict.get("Label"));
+		setValue(IlsProperty.DESCRIPTION, (String) pyDict.get("Description"));
+		setValue(IlsProperty.HELP, (String) pyDict.get("Help"));
+		setValue(IlsProperty.ADVICE, (String) pyDict.get("Advice"));
+	}
+	
 	// ======================================== Static Initializers ==============================
 	
 	/** Create a brand new instance of the given class. This includes
@@ -183,19 +194,33 @@ public abstract class Data {
 	 *  just some random JSONbject. */
 	public static List<Data> fromDatabase(String stepUUID) throws Exception {
 		List<Data> recipeData = new ArrayList<Data>();
+		String packageName;
+		String recipeDataType;
+		String javaClassName;
+		String recipeDataKey;
+		String fullClassName;
 		
 		try {
+			BasicProperty dummyProperty = new BasicProperty();
 			List<PyDictionary> pyDictList = (List<PyDictionary>) PythonCall.GET_RECIPE_DATA_LIST.exec(stepUUID);
 			log.infof("Back in Java land, received: %s", pyDictList);
 			for (PyDictionary pyDict:pyDictList){
 				log.infof("%s", pyDict);
 				
-				//Get the class name out of my Python dictionary
+				//Get the class name and other properties out of the Python dictionary
 				
-				String fullClassName = "ffoo";
+				packageName = Data.class.getPackage().getName();
+				recipeDataType = (String) pyDict.get("RecipeDataType");
+				javaClassName = (String) pyDict.get("JavaClassName");
+				recipeDataKey = (String) pyDict.get("RecipeDataKey");
+				fullClassName = packageName + "." + javaClassName;
+
+				log.infof("Creating recipe data: %s - %s - %s: %s", recipeDataKey, recipeDataType, javaClassName, fullClassName);
+				
 				Data data = Data.createNewInstance(fullClassName);
 				
-				// set the attribute values of the new instance from the dictionary
+				// It would be nice if I could pass the dictionary to the constructor...
+				data.setValuesFromDatabase(pyDict);
 				
 				recipeData.add(data);
 			}
@@ -204,10 +229,11 @@ public abstract class Data {
 		catch(Exception e) {
 			// ?? what to do...we are blindly assuming that everything in the associated
 			// data object is recipe data, which isn't necessarily true...
-			log.debug("Error creating recipe data", e);
+			log.errorf("Error creating recipe data: %s", e.getMessage());
 		}
 		return recipeData;
 	}
+
 	
 	/** Create a recipe data hierarchy from a JSON Object that was
 	 *  originally created from a recipe hierarchy (i.e. not

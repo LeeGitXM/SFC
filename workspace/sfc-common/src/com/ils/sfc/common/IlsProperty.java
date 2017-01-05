@@ -232,7 +232,7 @@ public class IlsProperty {
     public static final BasicProperty<String> SQL = createProperty(Constants.SQL, String.class, "");
     public static final BasicProperty<Date> START_TIME = createProperty(Constants.START_TIME, Date.class, new Date());
     public static final BasicProperty<String> STATE = createProperty(Constants.STATE, String.class, "");
-    public static final BasicProperty<Double> STEP_TIME = createProperty(Constants.STEP_TIME, Double.class, 0.);
+    public static final BasicProperty<Date> STEP_TIME = createProperty(Constants.STEP_TIME, Date.class, new Date());
     public static final BasicProperty<String> STEP_TIMESTAMP = createProperty(Constants.STEP_TIMESTAMP, String.class, "");
     public static final BasicProperty<String> TAG_PATH = createProperty(Constants.TAG_PATH, String.class, "");
     public static final BasicProperty<String> TIME_LIMIT_RECIPE_KEY = createProperty(Constants.KEY, String.class, "", false, "time limit recipe key");

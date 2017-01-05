@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 
 import org.json.JSONObject;
 
@@ -84,6 +85,7 @@ public class RecipeEditorController extends PanelController implements EditorErr
 	 */
 	public void setRecipeData(List<Data> recipeData) {
 		this.recipeData = recipeData;
+		logger.info("...telling the browser to rebuild the tree...");
 		browser.rebuildTree();
 	}
 
@@ -143,38 +145,24 @@ public class RecipeEditorController extends PanelController implements EditorErr
 		logger.infof("In setElement with %s - %s", stepName, stepUUID);
 		try {
 			List<Data> recipeData = Data.fromDatabase(stepUUID);
+			String provider = IlsClientScripts.getProviderName(false);
+			for(Data data: recipeData) {
+				data.setStepPath(stepPath);
+				data.setProvider(provider);
+				logger.infof("%s", data);
+			}
+			setRecipeData(recipeData);
 		} catch (Exception e){
 			showMessage("Error getting associated recipe data: " + e.getMessage(), BROWSER);
 			setRecipeData(new ArrayList<Data>());			
 		}
+
+		// This used to call RecipeDataTagReader.reader.recipeDataTagValues() but since we get the latest values from the database
+		// we don't need to do this anymore.  There was also logic to refresh teh browser periodically, I'm not sure that it worked.  
+		// We may need a refresh button. PAH
+		getBrowser().activate(-1);
+	}
 	
-	}
-		
-/*
-		if(element.contains(ChartStepProperties.AssociatedData)) {
-			JSONObject associatedData = element.getOrDefault(ChartStepProperties.AssociatedData);
-			try {
-				//System.out.println(associatedData.toString());
-				List<Data> recipeData = Data.fromAssociatedData(associatedData);
-				String provider = IlsClientScripts.getProviderName(false);
-				for(Data data: recipeData) {
-					data.setStepPath(stepPath);
-					data.setProvider(provider);
-					logger.infof("%s", data);
-				}
-				setRecipeData(recipeData);
-			} catch (Exception e) {
-				showMessage("Error getting associated recipe data: " + e.getMessage(), BROWSER);
-				setRecipeData(new ArrayList<Data>());			
-			}
-		}
-		else {
-			setRecipeData(new ArrayList<Data>());			
-		}
-		
-		RecipeDataTagReader.reader.readRecipeDataTagValues(this);	
-	}
-*/
 	
 	public void commit() {
 		if(recipeData == null) return;

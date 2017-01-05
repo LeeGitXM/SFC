@@ -1,5 +1,7 @@
 package com.ils.sfc.common.recipe.objects;
 
+import org.python.core.PyDictionary;
+
 import com.ils.sfc.common.IlsProperty;
 
 /**
@@ -63,4 +65,23 @@ public class Output extends IO {
 		addProperty(IlsProperty.MAX_TIMING);
 	}
 	
+	public String toString() {
+		return properties.toString();
+	}
+	
+	public void setValuesFromDatabase(PyDictionary pyDict){
+		super.setValuesFromDatabase(pyDict);
+		log.info("Setting values from dictionary in Output");
+		
+		this.setValue(IlsProperty.OUTPUT_TYPE, (String) pyDict.get("OutputType"));
+		this.setValue(IlsProperty.WRITE_CONFIRM, (Boolean) pyDict.get("WriteConfirm"));
+		this.setValue(IlsProperty.WRITE_CONFIRMED, (Boolean) pyDict.get("WriteConfirmed"));
+		this.setValue(IlsProperty.DOWNLOAD, (Boolean) pyDict.get("Download"));
+		this.setValue(IlsProperty.DOWNLOAD_STATUS, (String) pyDict.get("DownloadStatus"));
+		this.setValue(IlsProperty.TIMING, (Double) pyDict.get("Timing"));
+		this.setValue(IlsProperty.TYPE, (String) pyDict.get("ValueType"));
+		this.setValue(IlsProperty.STEP_TIME, (java.util.Date) pyDict.get("StepTime")); // We store the step time as a datetime in the DB, it comes through the pydictionary as a text
+//		this.setValue(IlsProperty.STEP_TIMESTAMP, (String) pyDict.get("StepTime"));
+		this.setValue(IlsProperty.MAX_TIMING, (Double) pyDict.get("MaxTiming"));
+	}
 }
