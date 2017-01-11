@@ -25,6 +25,7 @@ import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureCompiler;
 import com.ils.sfc.common.chartStructure.ChartStructureCompilerV2;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
+import com.ils.sfc.common.chartStructure.RecipeDataMigrator;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.common.step.AllSteps;
@@ -88,6 +89,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private final List<DockableFrame> frames;
 	private ChartStructureManager structureManager = null;
 	private ChartStructureCompilerV2 structureCompilerV2 = null;
+	private RecipeDataMigrator recipeDataMigrator = null;
 	private IlsSfcSearchProvider searchProvider = null;
 	private RecipeEditorFrame recipeEditorFrame;
 	private RecipeDataCleaner recipeDataCleaner;
@@ -311,6 +313,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		// Pete's Structure manager - instantiate this once in the beginning because the step registry is static.
 		structureCompilerV2 = new ChartStructureCompilerV2(context.getGlobalProject().getProject(), stepRegistry);
 		
+		// Pete's Recipe Data Migrator - instantiate this once in the beginning because the step registry is static.
+		recipeDataMigrator = new RecipeDataMigrator(context.getGlobalProject().getProject(), stepRegistry);
+		
 		searchProvider = new IlsSfcSearchProvider(context);
 		context.registerSearchProvider(searchProvider);
 //		context.addProjectChangeListener(this);
@@ -380,15 +385,14 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			if (modType.toString().equals("Added")){
 				log.infof("A resource has been added");
 				structureCompilerV2.createChart(res);
-			} 
-			
-			else if (modType.toString().equals("Deleted")){
+			} else if (modType.toString().equals("Deleted")){
 				log.infof("A resource has been deleted");
 				structureCompilerV2.deleteChart(res);
 			} else {
 				log.infof("%s.ProjectResourceModified: structure compiler started",TAG);
 	//			structureManager.getCompiler().compile();
 				structureCompilerV2.compileResource(res);
+				recipeDataMigrator.migrateResource(res);
 				log.infof("%s.ProjectResourceModified: structure compiler ended",TAG);
 			}
 		}

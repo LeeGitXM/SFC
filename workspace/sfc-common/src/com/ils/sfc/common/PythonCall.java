@@ -147,6 +147,8 @@ public class PythonCall {
 	// Recipe Data V2
 	public static final PythonCall GET_RECIPE_DATA_LIST = new PythonCall("ils.sfc.recipeData.editor.getRecipeDataList", 
 			PyList.class,  new String[]{"stepUUID"} );
+	public static final PythonCall MIGRATE_RECIPE_DATA = new PythonCall("ils.sfc.recipeData.migrator.migrateChart", 
+			null,  new String[]{"chartPath", "resourceId", "chartResourceAsXML", "database"} );
 	
 	// units
 	public static final PythonCall INITIALIZE_UNITS = new PythonCall("ils.common.units.lazyInitialize", 
