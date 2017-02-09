@@ -142,7 +142,7 @@ public class PythonCall {
 	public static final PythonCall DELETE_CHART = new PythonCall("ils.sfc.recipeData.structureManager.deleteChart", 
 			null,  new String[]{"resourceId", "chartPath", "db"} );
 	public static final PythonCall UPDATE_CHART_HIERARCHY = new PythonCall("ils.sfc.recipeData.structureManager.updateChartHierarchy", 
-			null,  new String[]{"parentPath", "parentResourceId", "childPaths", "childNames", "childUUIDs", "childTypes", "db"} );
+			null,  new String[]{"parentPath", "parentResourceId", "stepNames", "stepUUIDs", "stepFactoryIds", "childPaths", "childNames", "childUUIDs", "childTypes", "db"} );
 	
 	// Recipe Data V2
 	public static final PythonCall GET_RECIPE_DATA_LIST = new PythonCall("ils.sfc.recipeData.editor.getRecipeDataList", 

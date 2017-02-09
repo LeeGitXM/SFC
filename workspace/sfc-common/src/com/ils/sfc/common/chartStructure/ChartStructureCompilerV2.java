@@ -55,10 +55,16 @@ public class ChartStructureCompilerV2 {
 		String chartPath;
 		long resourceId;
 		
+		// These lists are used for the chart Hierarchy
 		ArrayList<String> childPaths = new ArrayList<String>();
 		ArrayList<String> childNames = new ArrayList<String>();
 		ArrayList<String> childUUIDs = new ArrayList<String>();
 		ArrayList<String> childTypes = new ArrayList<String>();
+		
+		// These lists are used for the step catalog (There will be more rows here than in the above lists)
+		ArrayList<String> stepNames = new ArrayList<String>();
+		ArrayList<String> stepUUIDs = new ArrayList<String>();
+		ArrayList<String> stepFactoryIds = new ArrayList<String>();
 
 		if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
 			chartPath = globalProject.getFolderPath(res.getResourceId());
@@ -71,7 +77,7 @@ public class ChartStructureCompilerV2 {
 				byte[] chartResourceData = res.getData();
 
 				// This prints out nicely formatted XML of the resource.
-				IlsSfcCommonUtils.printResource(chartResourceData);
+//				IlsSfcCommonUtils.printResource(chartResourceData);
 				
 				GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 				ChartUIModel uiModel = ChartUIModel.fromXML(xmlInput, stepRegistry );
@@ -82,7 +88,14 @@ public class ChartStructureCompilerV2 {
 					log.tracef("Looking at a chart element");
 					log.tracef("        Id: %s", el.getId());
 					log.tracef("      Type: %s", el.getType());
+					log.tracef("      Name: %s", el.getRawValueMap().get(IlsProperty.NAME));
 					log.tracef(" Value Map: %s", el.getRawValueMap());
+					
+					// build the step catalog structures
+					stepNames.add( (String) el.getRawValueMap().get(IlsProperty.NAME));
+					stepUUIDs.add( (String) el.getRawValueMap().get(IlsProperty.ID).toString());
+					stepFactoryIds.add( (String) el.getRawValueMap().get(IlsProperty.FACTORY_ID));
+					
 //					for(Property<?> obj: el.getRawValueMap().keySet()){
 //						log.infof(" map type: %s",obj.getType());
 //						log.infof(" key: %s", BasicProperty.getClass().getCanonicalName());
@@ -92,15 +105,23 @@ public class ChartStructureCompilerV2 {
 						log.tracef(">>> Processing a parallel transition");
 						ChartUIModel parallelUiModel = (ChartUIModel) el.getRawValueMap().get(IlsProperty.PARALLEL_CHILDREN);
 						for(ChartUIElement child: parallelUiModel.getChartElements()) {
-							log.tracef("Looking at a CHILD element");
+							log.tracef("Looking at a EMBEDDED CHILD element");
 							log.tracef("            Id: %s", child.getId());
 							log.tracef("          Type: %s", child.getType());
+							log.tracef("          Name: %s", child.getRawValueMap().get(IlsProperty.NAME));
 							log.tracef("     Value Map: %s", child.getRawValueMap());
 							if (child.getType().equals(ElementType.Step)){
-								String childChartPath = (String) child.getRawValueMap().get(IlsProperty.CHART_PATH);
-								if (chartPath != null){
-									log.tracef("Found an encapsulation INSIDE the parallel translation that calls %s", childChartPath);
-									childPaths.add( (String) childChartPath);
+								
+								// Add to the step catalog
+								stepNames.add( (String) child.getRawValueMap().get(IlsProperty.NAME));
+								stepUUIDs.add( (String) child.getRawValueMap().get(IlsProperty.ID).toString());
+								stepFactoryIds.add( (String) child.getRawValueMap().get(IlsProperty.FACTORY_ID));
+								
+								// If we find an encapsulation step inside of a parallel transition pair.
+								String embeddedChildChartPath = (String) child.getRawValueMap().get(IlsProperty.CHART_PATH);
+								if (embeddedChildChartPath != null){
+									log.tracef("Found an encapsulation INSIDE the parallel translation that calls %s", embeddedChildChartPath);
+									childPaths.add( (String) embeddedChildChartPath);
 									childNames.add( (String) child.getRawValueMap().get(IlsProperty.NAME));
 									childUUIDs.add( (String) child.getRawValueMap().get(IlsProperty.ID).toString());
 									childTypes.add( (String) child.getRawValueMap().get(IlsProperty.FACTORY_ID));
@@ -123,7 +144,7 @@ public class ChartStructureCompilerV2 {
 
 				// Update the database with the children
 				try {
-					Object[] args = {chartPath, resourceId, childPaths, childNames, childUUIDs, childTypes, database};
+					Object[] args = {chartPath, resourceId, stepNames, stepUUIDs, stepFactoryIds, childPaths, childNames, childUUIDs, childTypes, database};
 					PythonCall.UPDATE_CHART_HIERARCHY.exec( args );
 				} catch (JythonExecException e) {
 					log.error("Caught an error");

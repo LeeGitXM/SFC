@@ -51,7 +51,7 @@ public class RecipeDataMigrator {
 			chartPath = globalProject.getFolderPath(res.getResourceId());
 			resourceId = res.getResourceId();
 			
-			log.infof("Migrating a SFC chart resource. Path: %s, Name: %s, id: %d", chartPath, res.getName(), resourceId);
+			log.infof("Migrating a SFC Recipe Data. Path: %s, Name: %s, id: %d", chartPath, res.getName(), resourceId);
 			try {
 				byte[] chartResourceData = res.getData();
 
