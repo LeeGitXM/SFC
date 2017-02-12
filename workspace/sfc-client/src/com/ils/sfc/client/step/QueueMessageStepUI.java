@@ -14,10 +14,10 @@ public class QueueMessageStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new QueueMessageStepFactory();
     
    	@Override
-	protected ImageIcon getIcon() { return messageIcon; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
-	protected String getHeading() { return "<Queue Msg"; }
+	protected String getHeading() { return "Queue Msg"; }
 	
     public static final class QueueMessageStepFactory extends QueueMessageStepDelegate implements ClientStepFactory {
     	private QueueMessageStepUI UI = new QueueMessageStepUI();

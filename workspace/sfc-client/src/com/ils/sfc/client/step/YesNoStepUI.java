@@ -17,7 +17,7 @@ public class YesNoStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new YesNoStepFactory();
 
    	@Override
-	protected ImageIcon getIcon() { return questionIcon; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
 	protected String getHeading() { return "Yes No"; }
