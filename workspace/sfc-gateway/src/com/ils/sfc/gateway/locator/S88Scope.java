@@ -14,14 +14,14 @@ public class S88Scope extends PyChartScope {
 	private final PyChartScope stepScope;
 	private final PyChartScope chartScope;
 	private final String identifier;
-
-
+	private final String fullKey;
 	
-	public S88Scope(PyChartScope chartScope,PyChartScope stepScope,String identifier) {
+	public S88Scope(PyChartScope chartScope,PyChartScope stepScope,String identifier, String fullKey) {
 		this.chartScope = chartScope;
 		this.stepScope = stepScope;
 		this.identifier = identifier;
-
+		this.fullKey = fullKey;
+		log.infof("Instantiating my very own S88Scope object");
 	}
 
 	
@@ -32,6 +32,7 @@ public class S88Scope extends PyChartScope {
 	
 	@Override
 	public boolean containsKey(Object key) {
+		log.infof("HELLO Key: %s", key.toString());
 		return true;
 	}
 		
@@ -45,15 +46,27 @@ public class S88Scope extends PyChartScope {
 	 */
 	public Object get(Object keyObj) {		
 		// Build the tag path as far as the name of the UDT
-		String key = (String)keyObj;
+		String key = keyObj.toString();
+		if (!fullKey.isEmpty()) {
+			key = fullKey + "." + key;
+		}
 		Object result = "ERROR";
 		try{ 
+			log.infof("Key: %s", key);
+			log.infof("Identifier: %s", identifier);
+			
 			result = PythonCall.S88_GET.exec(chartScope,stepScope,key,identifier);
+			log.infof("****  S88Get worked ****");
+			return new PyChartScope();
+			
+
 		}
 		catch(Exception ex) {
 			log.errorf("EXCEPTION: %s",ex.getMessage());
+			
 		}
-		return result;
+		log.infof("The key wasn't valid, returning a s88Scope");
+		return new S88Scope(chartScope, stepScope, identifier, key);
 	}
 
 }

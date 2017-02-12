@@ -293,7 +293,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			stepRegistry.register(clientStepFactory);
 		}
 		recipeDataCleaner = new RecipeDataCleaner(context, stepRegistry);
-//		context.getGlobalProject().addProjectChangeListener(recipeDataCleaner);
 		
 		// Listen to changes on the global project PETE
 		context.getGlobalProject().addProjectChangeListener(this);
@@ -318,7 +317,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		
 		searchProvider = new IlsSfcSearchProvider(context);
 		context.registerSearchProvider(searchProvider);
-//		context.addProjectChangeListener(this);
 		
 		new Thread(new ModuleWatcher(context)).start();             // Watch for modules to start
  	}

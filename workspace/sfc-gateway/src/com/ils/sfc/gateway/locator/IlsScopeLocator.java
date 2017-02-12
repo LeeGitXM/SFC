@@ -29,12 +29,16 @@ public class IlsScopeLocator implements ScopeLocator {
 	public synchronized PyChartScope locate(ScopeContext scopeContext, String identifier) {
 		PyChartScope chartScope = scopeContext.getChartScope();
 		String providerName = RecipeDataAccess.getProviderName(RecipeDataAccess.getIsolationMode(chartScope));
-		String tagPath = "";
+
 		if( !identifier.equalsIgnoreCase(Constants.TAG)) {
-			// check this step first, then walk up the hierarchy:
+			
+			// I think this is always called from a transition.  The following call will get the stepScope of the previous 
+			// step, which is really handy when the transition uses scope locator PRIOR
 			PyChartScope stepScope = scopeContext.getStepOrPrevious();
-			//tagPath = RecipeDataAccess.getRecipeDataTagPath(chartScope, stepScope, identifier);
-			return new S88Scope(chartScope,stepScope,identifier);
+			PyChartScope rootScope = scopeContext.getRoot();
+			System.out.println("Root scope: " + rootScope.toString());
+
+			return new S88Scope(chartScope,stepScope,identifier, "");
 		}
 		else {
 			return new TagChartScope(providerName, hook.getContext());	

@@ -65,6 +65,7 @@ public class ChartStructureCompilerV2 {
 		ArrayList<String> stepNames = new ArrayList<String>();
 		ArrayList<String> stepUUIDs = new ArrayList<String>();
 		ArrayList<String> stepFactoryIds = new ArrayList<String>();
+		
 
 		if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
 			chartPath = globalProject.getFolderPath(res.getResourceId());
@@ -143,6 +144,7 @@ public class ChartStructureCompilerV2 {
 				log.infof("The children are: %s", childNames);
 
 				// Update the database with the children
+
 				try {
 					Object[] args = {chartPath, resourceId, stepNames, stepUUIDs, stepFactoryIds, childPaths, childNames, childUUIDs, childTypes, database};
 					PythonCall.UPDATE_CHART_HIERARCHY.exec( args );
@@ -176,7 +178,8 @@ public class ChartStructureCompilerV2 {
 			PythonCall.CREATE_CHART.exec(args);
 		} catch (JythonExecException e) {
 			log.error("Caught an error");
-		}	
+		}
+
 	}
 	
 	/** This is called as soon as a chart is deleted.  Literally, as soon as user presses delete chart in the project resource tree.
