@@ -62,7 +62,7 @@ public class S88Scope extends PyChartScope {
 
 		}
 		catch(Exception ex) {
-			log.errorf("EXCEPTION: %s",ex.getMessage());
+			log.errorf("EXCEPTION: %s", ex.getMessage());
 			
 		}
 		log.infof("The key wasn't valid, returning a s88Scope");
