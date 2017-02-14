@@ -15,22 +15,24 @@ import com.inductiveautomation.sfc.api.PyChartScope;
 
 @SuppressWarnings("serial")
 public class S88Scope extends PyChartScope {
+	private static final String CLSS = "S88Scope";
 	private static LoggerEx log = LogUtil.getLogger(S88Scope.class.getName());
 	private final PyChartScope stepScope;
 	private final PyChartScope chartScope;
 	private final String identifier;
 	private final String fullKey;
 	private final JavaToPython j2p = new JavaToPython();
-	private final S88PollTask pollTask;
+	
 	private final ScheduledExecutorService executor;
+	private S88PollTask pollTask = null;
+	private Object value = null;
 	
 	public S88Scope(PyChartScope chartScope,PyChartScope stepScope,String identifier, String fullKey) {
 		this.chartScope = chartScope;
 		this.stepScope = stepScope;
 		this.identifier = identifier;
 		this.fullKey = fullKey;
-		log.infof("Instantiating my very own S88Scope object");
-        this.pollTask = new S88PollTask(chartScope,stepScope,fullKey);
+		log.infof("%s: Constructing new scope for %s",CLSS,fullKey);
         this.executor = Executors.newSingleThreadScheduledExecutor();
 	}
 
@@ -38,10 +40,12 @@ public class S88Scope extends PyChartScope {
 	 * When there are no more observers, shut down the executor.
 	 */
 	@Override
-	public void removeScopeObserver(ScopeObserver observer) {
+	public synchronized void removeScopeObserver(ScopeObserver observer) {
 		super.removeScopeObserver(observer);
 		if( observers.isEmpty() ) {
 			executor.shutdown();
+			pollTask = null;
+			log.infof("%s.removeScopeObserver",CLSS);
 		}
 	}
 	
@@ -59,25 +63,26 @@ public class S88Scope extends PyChartScope {
 	 *  folder is given as the key param, we return RecipeDataAccess object with the names of 
 	 *  subfolders as the keys.
 	 */
-	public Object get(Object keyObj) {		
+	public synchronized Object get(Object keyObj) {		
 		// Build the key path one section at a time.  A key with only a single element is illegal.
 		String key = keyObj.toString();
 		if( !fullKey.isEmpty()) {
 			key = fullKey + "." + key;
 			try{ 
-				log.infof("Key: %s", key);
-				log.infof("Identifier: %s", identifier);
-
-				Object value  = PythonCall.S88_GET.exec(chartScope,stepScope,key,identifier);
-				log.infof("****  S88Get worked ****");
-				pollTask.setKey(key);
-				executor.scheduleAtFixedRate(pollTask, 5, 3, TimeUnit.SECONDS);  // Every 5 seconds
+				log.infof("%s.get: Key: %s", CLSS,key);
+				// First time get the value directly, otherwise from the poll
+				if( pollTask==null) {
+					value  = PythonCall.S88_GET.exec(chartScope,stepScope,key,identifier);
+					log.infof("****  S88Get worked ****");
+					pollTask = new S88PollTask(chartScope,stepScope,key,identifier);
+					executor.scheduleAtFixedRate(pollTask, 5, 5, TimeUnit.SECONDS);  // Every 5 seconds
+				}
 				PyChartScope result = new PyChartScope();
 				result.put(key, value);
 				return result;
 			}
 			catch(Exception ex) {
-				log.errorf("EXCEPTION: Fetching %s (%s)", key, ex.getMessage());
+				log.errorf("%s.get: EXCEPTION: Fetching %s (%s)", CLSS,key, ex.getMessage());
 			}
 		}
 		return new S88Scope(chartScope, stepScope, identifier, key);
@@ -87,32 +92,34 @@ public class S88Scope extends PyChartScope {
 	 * Run periodically to read the recipe data value..
 	 */
 	private class S88PollTask implements Runnable{
-		private String key = "";
+		private final String key;
 		private final PyChartScope chartScope;
 		private final PyChartScope stepScope;
 		private final String identifier;
 		/**
 		 * Constructor 
 		 */
-		public S88PollTask(PyChartScope cScope,PyChartScope sScope,String ident) {
+		public S88PollTask(PyChartScope cScope,PyChartScope sScope,String key,String ident) {
 			this.chartScope = cScope;
 			this.stepScope  = sScope;
 			this.identifier = ident;
+			this.key = key;
 		}
 		
-		public void setKey(String fullkey) { this.key=fullkey; }
 		/**
 		 * Execute a single read.
 		 */
 		public void run() {
 			try {
-				Object value  = PythonCall.S88_GET.exec(chartScope,stepScope,key,identifier);
+				Object val  = PythonCall.S88_GET.exec(chartScope,stepScope,key,identifier);
+				S88Scope.this.value = val;
 				for(ScopeObserver observer:observers) {
-					observer.observe(key, j2p.objectToPy(value));
+					observer.observe(key, j2p.objectToPy(val));
+					log.infof("S88PollTask: Got %s = %s", key, val.toString());
 				}
 			}
 			catch(Exception ex) {
-				log.errorf("EXCEPTION: Running S88 %s (%s)", key, ex.getMessage());
+				log.errorf("S88PollTask: EXCEPTION: Running S88 %s (%s)", key, ex.getMessage());
 			}
 		}
 	}
