@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.ils.common.JavaToPython;
 import com.ils.sfc.common.PythonCall;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.PyChartScope;
@@ -68,23 +69,32 @@ public class S88Scope extends PyChartScope {
 		String key = keyObj.toString();
 		if( !fullKey.isEmpty()) {
 			key = fullKey + "." + key;
-			try{ 
-				log.infof("%s.get: Key: %s", CLSS,key);
-				// First time get the value directly, otherwise from the poll
-				if( pollTask==null) {
+		
+			log.infof(">>>> %s.get: Key: %s", CLSS,key);
+			// First time get the value directly, otherwise from the poll
+			if( pollTask==null) {
+				try {
 					value  = PythonCall.S88_GET.exec(chartScope,stepScope,key,identifier);
-					log.infof("****  S88Get worked ****");
+				} catch (JythonExecException e) {
+					// TODO Auto-generated catch block
+					log.errorf("In our exception handling catch");
+					value = null;
+					e.printStackTrace();
+				}
+				if (value != null) {
+					log.infof("****  S88Get worked ****  %s for key %s", value.toString(), key);
 					pollTask = new S88PollTask(chartScope,stepScope,key,identifier);
 					executor.scheduleAtFixedRate(pollTask, 5, 5, TimeUnit.SECONDS);  // Every 5 seconds
 				}
+			}
+			if (value != null){
+				log.infof("...got a value %s for key %s", value.toString(), key);
 				PyChartScope result = new PyChartScope();
 				result.put(key, value);
 				return result;
 			}
-			catch(Exception ex) {
-				log.errorf("%s.get: EXCEPTION: Fetching %s (%s)", CLSS,key, ex.getMessage());
-			}
 		}
+
 		return new S88Scope(chartScope, stepScope, identifier, key);
 	}
 	//================================= Execution Task ========================================
@@ -104,6 +114,7 @@ public class S88Scope extends PyChartScope {
 			this.stepScope  = sScope;
 			this.identifier = ident;
 			this.key = key;
+			log.infof("Constructing a poller....");
 		}
 		
 		/**
@@ -111,6 +122,7 @@ public class S88Scope extends PyChartScope {
 		 */
 		public void run() {
 			try {
+				log.infof("Running a poller....");
 				Object val  = PythonCall.S88_GET.exec(chartScope,stepScope,key,identifier);
 				S88Scope.this.value = val;
 				for(ScopeObserver observer:observers) {

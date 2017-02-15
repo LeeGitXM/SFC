@@ -16,7 +16,7 @@ public class SelectInputStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new SelectInputStepFactory();
 
    	@Override
-	protected ImageIcon getIcon() { return questionIcon; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
 	protected String getHeading() { return "Select Input"; }
