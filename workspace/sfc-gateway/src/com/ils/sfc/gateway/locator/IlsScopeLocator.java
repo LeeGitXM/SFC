@@ -1,3 +1,7 @@
+/**
+ *   (c) 2017  ILS Automation. All rights reserved.
+ *  
+ */
 package com.ils.sfc.gateway.locator;
 
 import com.ils.sfc.gateway.IlsSfcGatewayHook;
@@ -38,7 +42,7 @@ public class IlsScopeLocator implements ScopeLocator {
 			PyChartScope rootScope = scopeContext.getRoot();
 			System.out.println("Root scope: " + rootScope.toString());
 
-			return new S88Scope(chartScope,stepScope,identifier, "");
+			return new S88Scope(hook.getContext(),chartScope,stepScope,identifier, "");
 		}
 		else {
 			return new TagChartScope(providerName, hook.getContext());	
