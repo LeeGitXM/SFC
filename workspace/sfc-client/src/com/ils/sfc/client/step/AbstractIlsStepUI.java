@@ -210,11 +210,12 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 		element.set(EnclosingStepProperties.EXECUTION_MODE, ExecutionMode.RunUntilCompletion);
 		element.set(EnclosingStepProperties.PASSED_PARAMS, new ExpressionParamCollection());
 		element.set(EnclosingStepProperties.RETURN_PARAMS, new ReturnParamCollection());
-        JSONObject associatedData = element.get(ChartStepProperties.AssociatedData);
-        if(associatedData == null) {
-        	associatedData = new JSONObject();
-    		element.set(ChartStepProperties.AssociatedData, associatedData);
-        }
+		log.infof("Skipping setting the associated data (PETE)");
+//        JSONObject associatedData = element.get(ChartStepProperties.AssociatedData);
+//        if(associatedData == null) {
+//        	associatedData = new JSONObject();
+//    		element.set(ChartStepProperties.AssociatedData, associatedData);
+//        }
 	}
 	
 	/**

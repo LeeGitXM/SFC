@@ -21,6 +21,7 @@ public class YesNoStepUI extends AbstractIlsStepUI {
 	
 	@Override
 	protected String getHeading() { return "Yes No"; }
+	
     @Override
     protected Color getHeadingColor() {return Color.red;}
 

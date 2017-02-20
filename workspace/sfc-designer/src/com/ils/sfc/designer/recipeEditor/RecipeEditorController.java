@@ -165,16 +165,17 @@ public class RecipeEditorController extends PanelController implements EditorErr
 	
 	
 	public void commit() {
+		logger.infof("In commit - bypassing overwrite of associated data (PETE)");
 		if(recipeData == null) return;
 		
-		try {
+//		try {
 			// Note: we are assuming that we have exclusive use of the associatedData
 			// and can completely overwrite it.
-			JSONObject newAssociatedData = Data.toAssociatedData(recipeData);			
-			element.set(ChartStepProperties.AssociatedData, newAssociatedData);
-		} catch (Exception e) {
-			showMessage("Error setting associated recipe data: " + e.getMessage(), BROWSER);
-		}
+//			JSONObject newAssociatedData = Data.toAssociatedData(recipeData);			
+//			element.set(ChartStepProperties.AssociatedData, newAssociatedData);
+//		} catch (Exception e) {
+//			showMessage("Error setting associated recipe data: " + e.getMessage(), BROWSER);
+//		}
 	}
 
 	/** Handler for bad format errors in property editor */
