@@ -62,7 +62,7 @@ public class S88Scope extends PyChartScope implements WatchdogObserver {
 		super.removeScopeObserver(observer);
 		if( observers.isEmpty() ) {
 			log.infof("%s.%s: removeScopeObserver (%s.%s.%s)",CLSS,baseKey,identifier,baseKey,leafKey);
-			//timer.removeWatchdog(dog);	
+			timer.removeWatchdog(dog);	
 		}
 	}
 	
@@ -72,6 +72,7 @@ public class S88Scope extends PyChartScope implements WatchdogObserver {
 	 */
 	@Override
 	public boolean containsKey(Object key) {
+		set key , get value,add watchdog
 		supportsKey = true;
 		log.infof("%s.CONTAINS %s ?  (%s)", baseKey, key.toString(),(supportsKey?"TRUE":"FALSE"));
 		return supportsKey;
@@ -123,11 +124,10 @@ public class S88Scope extends PyChartScope implements WatchdogObserver {
 			Object val  = PythonCall.S88_GET.exec(chartScope,stepScope,fullKey,identifier);
 			log.infof("%s.evaluate: Returned ............................ %s",CLSS,val.toString());
 			S88Scope.this.value = val;
-			notifyObservers(fullKey,null);
-			//for(ScopeObserver observer:observers) {
-			//	observer.observe(fullKey, j2p.objectToPy(val));
+			for(ScopeObserver observer:observers) {
+				observer.observe(fullKey, j2p.objectToPy(val));
 				log.infof("S88PollTask: Got %s = %s", fullKey, val.toString());
-			//}
+			}
 
 			log.infof("%s.evaluate: completing a poll ............................ for %s.%s.%s",CLSS,identifier,baseKey,leafKey);
 		}

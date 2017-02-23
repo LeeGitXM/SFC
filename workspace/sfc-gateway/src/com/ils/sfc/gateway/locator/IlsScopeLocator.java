@@ -25,7 +25,7 @@ public class IlsScopeLocator implements ScopeLocator {
 		this.hook = hook;
 	}
 	
-	/** Given an identifier like local, superior, previous, global, operation
+	/** Given an identifier like local, superior, prior, global, operation
 	 *  return the corresponding STEP scope. The enclosing step scope is stored
 	 *  in the chart scope of the level BELOW it
 	 */
@@ -41,7 +41,6 @@ public class IlsScopeLocator implements ScopeLocator {
 			PyChartScope stepScope = scopeContext.getStepOrPrevious();
 			PyChartScope rootScope = scopeContext.getRoot();
 			System.out.println("Root scope: " + rootScope.toString());
-
 			return new S88Scope(hook.getContext(),chartScope,stepScope,identifier, "");
 		}
 		else {
