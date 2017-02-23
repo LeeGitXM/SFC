@@ -216,7 +216,7 @@ public class PythonCall {
 	public static final PythonCall GET_KEY_SIZE = new PythonCall("ils.sfc.client.util." + "getKeySize", 
 			Integer.class,  new String[]{"keyName"} );
 
-	public static final PythonCall S88_GET = new PythonCall("ils.sfc.gateway.api.s88Get", 
+	public static final PythonCall S88_GET = new PythonCall("ils.sfc.recipeData.api.s88Get", 
 			Object.class, new String[]{"chartScope","stepScope","keyAttribute","scope"} );
 	
 	//public static final PythonCall INVOKE_STEP = new PythonCall("ils.sfc.gateway.steps." + "invokeStep", 
@@ -235,22 +235,26 @@ public class PythonCall {
 		return methodName;
 	}
 	
-	/** Execute this method and return the result. */
+	/** Execute this method and return the result. 
+	 * NOTE: Callers are forced to trap exceptions, so we don't do it here.
+	 */
 	public Object exec(Object...argValues) throws JythonExecException {
 		ScriptManager scriptMgr = context.getScriptManager();
 		PyStringMap localMap = scriptMgr.createLocalsMap();
 
-		//System.out.println("python exec: " + methodName);
 		if(compiledCode == null) {
 			//System.out.println("   first call; compiling method");
 			compileCode();
 		}
+		synchronized(methodName) {
 		PyStringMap globalsMap = scriptMgr.getGlobals();
 		for(int i = 0; i < argNames.length; i++) {
 			localMap.__setitem__(argNames[i], Py.java2py(argValues[i]));
 		}
-		try {
+		//try {
+			System.out.println("python exec: RUNNING " + methodName);
 			scriptMgr.runCode(compiledCode, localMap, globalsMap);
+			System.out.println("python exec: COMPLETE " + methodName);
 			if (returnType != null) {
 				PyObject pyResult = localMap.__getitem__(RESULT_NAME);
 				Object result = pyResult.__tojava__(returnType);
@@ -260,6 +264,8 @@ public class PythonCall {
 				return null;
 			}
 		}
+		/*
+		}
 		catch(JythonExecException ex) {
 			if(this != HANDLE_STEP_ERROR) {  // avoid recursion
 				Throwable lowestCause = getLowestCause(ex);
@@ -267,10 +273,13 @@ public class PythonCall {
 				String msg2 = ex.toString();
 				String msg = msg1 + "\n\n" + msg2;
 				boolean isStepCode = argNames.length > 0 && "scopeContext".equals(argNames[0]);
+				System.out.println("PythonCall: start ************************************************************");
 				if(isStepCode) {
 					ScopeContext scopeContext = (ScopeContext)argValues[0];
 					HANDLE_STEP_ERROR.exec(scopeContext.getChartScope(), msg);
 				}
+				
+				System.out.println("PythonCall:   end ************************************************************");
 				logger.error("Error invoking script : " + msg, ex);					
 			}
 			else {
@@ -278,7 +287,7 @@ public class PythonCall {
 			}
 			return null;
 		}
-
+	*/
 	}
 
 	private Throwable getLowestCause(Throwable ex) {
