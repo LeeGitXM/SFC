@@ -11,10 +11,10 @@ import com.ils.common.watchdog.WatchdogTimer;
 import com.ils.sfc.common.IlsSfcModule;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.gateway.IlsSfcGatewayHook;
-import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
+import com.inductiveautomation.sfc.api.MonitoredScopeLifecycle;
 import com.inductiveautomation.sfc.api.PyChartScope;
 
 /** A wrapper around a chart scope that actually goes out to recipe data
@@ -25,18 +25,18 @@ import com.inductiveautomation.sfc.api.PyChartScope;
  */
 
 @SuppressWarnings("serial")
-public class S88Scope extends PyChartScope implements WatchdogObserver {
+public class S88Scope extends PyChartScope implements WatchdogObserver,MonitoredScopeLifecycle {
 	private static final String CLSS = "S88Scope";
 	private static final double POLL_INTERVAL = 5.0;
+	private static final double INITIAL_POLL_INTERVAL = 0.5;
 	private final LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
 	private final GatewayContext context;
 	private final PyChartScope stepScope;
 	private final PyChartScope chartScope;
 	private final JavaToPython j2p = new JavaToPython();
-	boolean supportsKey = true;  // Until proved otherwise
+	private boolean running = false;  // Until proved otherwise
 	private final String identifier;
-	private final String baseKey;
-	private String leafKey;
+	private String key;
 	private final Watchdog dog;
 	private final WatchdogTimer timer;
 	private Object value = null;
@@ -46,96 +46,82 @@ public class S88Scope extends PyChartScope implements WatchdogObserver {
 		this.chartScope = chartScope;
 		this.stepScope = stepScope;
 		this.identifier = identifier;
-		this.baseKey = key;
-		this.leafKey = "";
+		if( key==null ) key="";
+		this.key = key;
 		IlsSfcGatewayHook hook = (IlsSfcGatewayHook)context.getModule(IlsSfcModule.MODULE_ID);
 		this.timer = hook.getTimer();
-		this.dog = new Watchdog(baseKey,this);
-		log.infof("%s: Constructing new scope for %s",CLSS,baseKey);
+		this.dog = new Watchdog(key,this);
+		dog.setActive(false);
+		log.infof("%s: Constructing new scope for %s",CLSS,key);
 	}
 
-	/**
-	 * When there are no more observers, shut down the executor.
-	 */
-	@Override
-	public synchronized void removeScopeObserver(ScopeObserver observer) {
-		super.removeScopeObserver(observer);
-		if( observers.isEmpty() ) {
-			log.infof("%s.%s: removeScopeObserver (%s.%s.%s)",CLSS,baseKey,identifier,baseKey,leafKey);
-			timer.removeWatchdog(dog);	
-		}
-	}
 	
 	/**
-	 * This appears to get called with a leaf. 
-	 * We were not successful here calling S88Get.
+	 * Since supportsSubScopes is false, this returns the complete key. 
+	 * If you return false here, "NOT_FOUND" quality will ultimately be 
+	 * returned by the expression.		
 	 */
 	@Override
 	public boolean containsKey(Object key) {
-		set key , get value,add watchdog
-		supportsKey = true;
-		log.infof("%s.CONTAINS %s ?  (%s)", baseKey, key.toString(),(supportsKey?"TRUE":"FALSE"));
-		return supportsKey;
+		this.key = key.toString();
+		startWatchDogIfReady();
+		//log.infof("%s.CONTAINS %s ?",CLSS, key);
+		return true;
 		
 	}
-		
-	@Override 
-	/** Get a dictionary with the values of a recipe datum. 
-	 *  If no hierarchy is involved, the given key will be the name of the datum,
-	 *  and the returned map will have keys for each of the UDT members (including value).
-	 *  If there is a hierarchy, the parent datums will correspond to tag folders. If a
-	 *  folder is given as the key param, we return RecipeDataAccess object with the names of 
-	 *  subfolders as the keys.
-	 */
-	public synchronized Object get(Object keyObj) {		
-		// Build the key path one section at a time.  A key with only a single element is illegal.
-		leafKey = keyObj.toString();
-		if( baseKey.isEmpty()) {
-			supportsKey = false;
-			return new S88Scope(context,chartScope, stepScope, identifier, leafKey);
-		}
-		String key = baseKey + "." + leafKey;
+	/**
+	* This is a new function that causes keys like "a.b.c" to be sent in their entirety. Note they still won't include the identifier part, like "prior".
+	**/
+	//@Override
+	public boolean supportsSubScopes() {
+		return false;
+	}
+	/***************
+	* MonitoredScopeLifecycle functions. These are called based on when the transition starts/stops.
+	****************/
+	@Override
+	public void start() {
+		log.infof("%s.start: Starting %s............................",CLSS,key);
+		this.running = true;
+		startWatchDogIfReady();
+	}
 
-		log.infof(">>>> %s.get: Key: %s", CLSS,key);
-		try {
-			value  = PythonCall.S88_GET.exec(chartScope,stepScope,key,identifier);
-			log.infof("****  S88Get worked ****  %s for key %s", value.toString(), key);
-			dog.setSecondsDelay(POLL_INTERVAL);
-			timer.updateWatchdog(dog);  // pet dog
-			log.infof("...returning  %s for key %s", value.toString(), key);
-			return value;
-		} 
-		catch (JythonExecException jee) {
-			log.errorf("S88Scope.get: EXCEPTION for %s (UNSUPPORTED)",key);
-			value = null;
-			supportsKey = false;
-			return new S88Scope(context,chartScope, stepScope, identifier, key);
-		}
-	}
+	@Override
+	public void stop() {
+		log.infof("%s.stop: Stopping %s............................",CLSS,key);
+		timer.removeWatchdog(dog);
+		this.running = false;
+	}	
 	
 	//================================= Watchdog Evaluation Method ========================================
 	/** 
-	 * Run periodically to read the recipe data value..
+	 * Run periodically to read the recipe data value. If successful, it "pets" the dog
+	 * to trigger another cycle.
 	 */
+	@Override
 	public void evaluate() {
+		if( key.isEmpty()) return;
 		try {
-			log.infof("%s.evaluate: Running a poll ............................ for %s.%s.%s",CLSS,identifier,baseKey,leafKey);
-			String fullKey = String.format("%s.%s",baseKey,leafKey);
-			Object val  = PythonCall.S88_GET.exec(chartScope,stepScope,fullKey,identifier);
-			log.infof("%s.evaluate: Returned ............................ %s",CLSS,val.toString());
-			S88Scope.this.value = val;
-			for(ScopeObserver observer:observers) {
-				observer.observe(fullKey, j2p.objectToPy(val));
-				log.infof("S88PollTask: Got %s = %s", fullKey, val.toString());
-			}
-
-			log.infof("%s.evaluate: completing a poll ............................ for %s.%s.%s",CLSS,identifier,baseKey,leafKey);
+			Object val  = PythonCall.S88_GET.exec(chartScope,stepScope,key,identifier);
+			log.infof("%s.evaluate: Returned .................. %s.%s=%s",CLSS,identifier,key,val.toString());
+			setVariable(key,val);
+			// Restroke the dog
+			dog.setSecondsDelay(POLL_INTERVAL);
+			timer.updateWatchdog(dog);  // pet dog
+			//log.infof("%s.evaluate: completing a poll ............................ for %s.%s",CLSS,identifier,key);
 		}
 		catch(Exception ex) {
-			log.errorf("S88PollTask: EXCEPTION: Running S88 %s (%s)", baseKey, ex.getMessage());
+			log.errorf("S88PollTask: EXCEPTION: Running S88 %s.%s (%s)", identifier,key, ex.getMessage());
 		}
-		// Restroke the dog
-		dog.setSecondsDelay(POLL_INTERVAL);
-		timer.updateWatchdog(dog);  // pet dog
+	}
+	
+	/**
+	 * Start the watch dog if it is not already started and the key is set
+	 */
+	protected void startWatchDogIfReady(){
+		if(running && !key.isEmpty() && !dog.isActive()) {
+			dog.setSecondsDelay(INITIAL_POLL_INTERVAL);
+			timer.updateWatchdog(dog); 
+		}
 	}
 }

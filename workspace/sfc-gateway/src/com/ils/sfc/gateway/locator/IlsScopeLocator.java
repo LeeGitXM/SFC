@@ -14,8 +14,6 @@ import system.ils.sfc.common.Constants;
 
 /**
  * Handle locating the special ILS recipe data sources as well as tag sources.
- * 
- *
  */
 public class IlsScopeLocator implements ScopeLocator {
 	private final IlsSfcGatewayHook hook;

@@ -2,6 +2,8 @@ package com.ils.sfc.designer.stepEditor;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JPopupMenu;
+
 import com.ils.sfc.designer.IlsSfcDesignerHook;
 import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.inductiveautomation.ignition.common.config.Property;
@@ -35,6 +37,11 @@ public class IlsStepEditor  extends AbstractStepEditor {
 			return editor;
 		}
 
+		@Override
+		public void initPopupMenu(ChartUIModel arg0, ChartUIElement arg1, JPopupMenu arg2) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 	protected IlsStepEditor(ChartUIModel chartModel, DesignerContext context) {
