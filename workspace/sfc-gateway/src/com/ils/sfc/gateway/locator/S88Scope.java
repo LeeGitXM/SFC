@@ -65,7 +65,7 @@ public class S88Scope extends PyChartScope implements WatchdogObserver,Monitored
 	public boolean containsKey(Object key) {
 		this.key = key.toString();
 		startWatchDogIfReady();
-		//log.infof("%s.CONTAINS %s ?",CLSS, key);
+		log.infof("%s.CONTAINS %s ?",CLSS, key);
 		return true;
 		
 	}

@@ -252,9 +252,7 @@ public class PythonCall {
 			localMap.__setitem__(argNames[i], Py.java2py(argValues[i]));
 		}
 		//try {
-			System.out.println("python exec: RUNNING " + methodName);
 			scriptMgr.runCode(compiledCode, localMap, globalsMap);
-			System.out.println("python exec: COMPLETE " + methodName);
 			if (returnType != null) {
 				PyObject pyResult = localMap.__getitem__(RESULT_NAME);
 				Object result = pyResult.__tojava__(returnType);
