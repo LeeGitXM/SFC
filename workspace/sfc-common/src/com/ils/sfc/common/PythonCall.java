@@ -15,7 +15,6 @@ import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
-import com.inductiveautomation.sfc.api.ScopeContext;
 
 /** An object that can call a particular method in Python. 
  *  Also holds static singletons for particular calls. Each
@@ -252,9 +251,7 @@ public class PythonCall {
 			localMap.__setitem__(argNames[i], Py.java2py(argValues[i]));
 		}
 		//try {
-			System.out.println("python exec: RUNNING " + methodName);
 			scriptMgr.runCode(compiledCode, localMap, globalsMap);
-			System.out.println("python exec: COMPLETE " + methodName);
 			if (returnType != null) {
 				PyObject pyResult = localMap.__getitem__(RESULT_NAME);
 				Object result = pyResult.__tojava__(returnType);
