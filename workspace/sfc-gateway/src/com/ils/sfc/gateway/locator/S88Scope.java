@@ -4,7 +4,6 @@
  */
 package com.ils.sfc.gateway.locator;
 
-import com.ils.common.JavaToPython;
 import com.ils.common.watchdog.Watchdog;
 import com.ils.common.watchdog.WatchdogObserver;
 import com.ils.common.watchdog.WatchdogTimer;
