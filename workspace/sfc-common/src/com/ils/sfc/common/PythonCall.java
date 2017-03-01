@@ -15,7 +15,6 @@ import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
-import com.inductiveautomation.sfc.api.ScopeContext;
 
 /** An object that can call a particular method in Python. 
  *  Also holds static singletons for particular calls. Each

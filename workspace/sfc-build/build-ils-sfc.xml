@@ -2,7 +2,7 @@
 
 	<import file="${basedir}/sfc-build/build.xml"/>
 
-	<property name="version.build" value="3" />	
+	<property name="version.build" value="7" />	
 	<!-- Change version.beta value to "" for release builds -->
 	<property name="version.beta" value="-development" />
 	<property name="root.dir" value="${basedir}/../.." />
