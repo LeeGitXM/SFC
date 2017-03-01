@@ -29,7 +29,7 @@ public class S88Scope extends PyChartScope implements WatchdogObserver,Monitored
 	private static final double POLL_INTERVAL = 5.0;
 	private static final double INITIAL_POLL_INTERVAL = 0.5;
 	private final LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
-	private static boolean DEBUG = true;
+	private static boolean DEBUG = false;
 	private final GatewayContext context;
 	private final PyChartScope stepScope;
 	private final PyChartScope chartScope;
