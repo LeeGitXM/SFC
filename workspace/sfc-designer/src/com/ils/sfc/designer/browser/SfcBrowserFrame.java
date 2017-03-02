@@ -3,7 +3,6 @@
  */
 package com.ils.sfc.designer.browser;
 import java.awt.BorderLayout;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
@@ -14,7 +13,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 
-import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.inductiveautomation.ignition.client.util.EDTUtil;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
@@ -23,11 +21,7 @@ import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.ResourceWorkspaceFrame;
-import com.inductiveautomation.sfc.designer.workspace.SFCDesignableContainer;
-import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
 import com.jidesoft.docking.DockableFrame;
-
-import system.ils.sfc.common.Constants;
 
 /** This is a DockableFrame container for a Perfuse TreeView,
  * used to provide an alternative view of the list of SFC charts.

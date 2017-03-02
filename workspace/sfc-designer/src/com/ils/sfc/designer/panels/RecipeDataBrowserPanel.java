@@ -13,8 +13,6 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.json.JSONObject;
 
-import system.ils.sfc.common.Constants;
-
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer.EnclosureInfo;
 import com.ils.sfc.common.recipe.objects.Data;
@@ -23,13 +21,12 @@ import com.ils.sfc.common.step.OperationStepProperties;
 import com.ils.sfc.common.step.PhaseStepProperties;
 import com.ils.sfc.common.step.ProcedureStepProperties;
 import com.ils.sfc.designer.IlsSfcDesignerHook;
-import com.ils.sfc.designer.panels.PanelController;
-import com.ils.sfc.designer.panels.ValueHoldingEditorPanel;
 import com.ils.sfc.designer.propertyEditor.ValueHolder;
 import com.ils.sfc.designer.stepEditor.StepEditorController;
-import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
+
+import system.ils.sfc.common.Constants;
 
 /** A browser that can be invoked on a given SFC step in the Designer and that will show 
  *  a tree view of all recipe data available in scopes visible from (i.e. at and above) that step.

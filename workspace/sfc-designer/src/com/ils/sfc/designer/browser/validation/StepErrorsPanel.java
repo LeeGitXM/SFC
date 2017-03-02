@@ -11,7 +11,6 @@ import java.util.zip.GZIPInputStream;
 import javax.swing.table.DefaultTableModel;
 
 import com.ils.sfc.common.StepPropertyValidator;
-import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AllSteps;
 import com.ils.sfc.designer.browser.BrowserConstants;
 import com.ils.sfc.designer.browser.ChartTreeDataModel;

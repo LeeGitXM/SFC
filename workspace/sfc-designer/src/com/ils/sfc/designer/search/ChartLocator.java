@@ -1,5 +1,5 @@
 /**
- *   (c) 2013-2015  ILS Automation. All rights reserved.
+ *   (c) 2013-2016  ILS Automation. All rights reserved.
  *  
  */
 package com.ils.sfc.designer.search;
