@@ -8,7 +8,7 @@
 SFC=$GIT_REPO/sfc
 PYDIR=${SFC}/migration/procs/ignition/vistalon
 INDIR="$SFC/migration/xml/ignition/vistalon"
-OUTDIR=$SFC/migration/projects/Vistalon-migrated
+OUTDIR=$SFC/migration/projects/Vistalon
 mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
 
