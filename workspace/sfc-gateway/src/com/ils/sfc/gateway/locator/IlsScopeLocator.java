@@ -1,3 +1,7 @@
+/**
+ *   (c) 2017  ILS Automation. All rights reserved.
+ *  
+ */
 package com.ils.sfc.gateway.locator;
 
 import com.ils.sfc.gateway.IlsSfcGatewayHook;
@@ -10,8 +14,6 @@ import system.ils.sfc.common.Constants;
 
 /**
  * Handle locating the special ILS recipe data sources as well as tag sources.
- * 
- *
  */
 public class IlsScopeLocator implements ScopeLocator {
 	private final IlsSfcGatewayHook hook;
@@ -21,7 +23,7 @@ public class IlsScopeLocator implements ScopeLocator {
 		this.hook = hook;
 	}
 	
-	/** Given an identifier like local, superior, previous, global, operation
+	/** Given an identifier like local, superior, prior, global, operation
 	 *  return the corresponding STEP scope. The enclosing step scope is stored
 	 *  in the chart scope of the level BELOW it
 	 */
@@ -29,12 +31,15 @@ public class IlsScopeLocator implements ScopeLocator {
 	public synchronized PyChartScope locate(ScopeContext scopeContext, String identifier) {
 		PyChartScope chartScope = scopeContext.getChartScope();
 		String providerName = RecipeDataAccess.getProviderName(RecipeDataAccess.getIsolationMode(chartScope));
-		String tagPath = "";
+
 		if( !identifier.equalsIgnoreCase(Constants.TAG)) {
-			// check this step first, then walk up the hierarchy:
+			
+			// I think this is always called from a transition.  The following call will get the stepScope of the previous 
+			// step, which is really handy when the transition uses scope locator PRIOR
 			PyChartScope stepScope = scopeContext.getStepOrPrevious();
-			tagPath = RecipeDataAccess.getRecipeDataTagPath(chartScope, stepScope, identifier);
-			return new RecipeDataChartScope(tagPath, null, providerName, hook.getContext());
+			PyChartScope rootScope = scopeContext.getRoot();
+			System.out.println("Root scope: " + rootScope.toString());
+			return new S88Scope(hook.getContext(),chartScope,stepScope,identifier, "");
 		}
 		else {
 			return new TagChartScope(providerName, hook.getContext());	

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 
 import org.json.JSONObject;
 
@@ -26,7 +27,8 @@ import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** 
  * A controller for all the sliding panes that are involved in editing recipe data.
- * There is a single controller instance for the recipe editing frame. 
+ * There is a single controller instance for the recipe editing frame that gets instantiated when 
+ * Designer is launched.
  */
 public class RecipeEditorController extends PanelController implements EditorErrorHandler {
 	private static LoggerEx logger = LogUtil.getLogger(RecipeEditorController.class.getName());
@@ -58,6 +60,7 @@ public class RecipeEditorController extends PanelController implements EditorErr
 	
 	public RecipeEditorController(DesignerContext ctx) { 
 		super(ctx);
+		logger.info("Initializing a RecipeEditorController");
 		objectEditor.getPropertyEditor().getTableModel().setErrorHandler(this);
 		// sub-panes added according to the indexes above:
 		slidingPane.add(browser);
@@ -82,6 +85,7 @@ public class RecipeEditorController extends PanelController implements EditorErr
 	 */
 	public void setRecipeData(List<Data> recipeData) {
 		this.recipeData = recipeData;
+		logger.info("...telling the browser to rebuild the tree...");
 		browser.rebuildTree();
 	}
 
@@ -132,46 +136,46 @@ public class RecipeEditorController extends PanelController implements EditorErr
 	 */
 	public void setElement(ChartUIElement element, String chartPath) {
 		this.element = element;
+		logger.infof("The chart element is: %s", element.toString());
 		String stepName = element.get(IlsProperty.NAME);
+		String stepUUID = element.getId().toString();
 		String stepPath = chartPath + "/" + stepName;
 		creator.setChartPath(stepPath);
 		
-		if(element.contains(ChartStepProperties.AssociatedData)) {
-			JSONObject associatedData = element.getOrDefault(ChartStepProperties.AssociatedData);
-			try {
-				//System.out.println(associatedData.toString());
-				List<Data> recipeData = Data.fromAssociatedData(associatedData);
-				String provider = IlsClientScripts.getProviderName(false);
-				for(Data data: recipeData) {
-					data.setStepPath(stepPath);
-					data.setProvider(provider);
-				}
-				setRecipeData(recipeData);
-			} catch (Exception e) {
-				showMessage("Error getting associated recipe data: " + e.getMessage(), BROWSER);
-				setRecipeData(new ArrayList<Data>());			
+		logger.infof("In setElement with %s - %s", stepName, stepUUID);
+		try {
+			List<Data> recipeData = Data.fromDatabase(stepUUID);
+			String provider = IlsClientScripts.getProviderName(false);
+			for(Data data: recipeData) {
+				data.setStepPath(stepPath);
+				data.setProvider(provider);
+				logger.infof("%s", data);
 			}
-		}
-		else {
+			setRecipeData(recipeData);
+		} catch (Exception e){
+			showMessage("Error getting associated recipe data: " + e.getMessage(), BROWSER);
 			setRecipeData(new ArrayList<Data>());			
 		}
-		
-		RecipeDataTagReader.reader.readRecipeDataTagValues(this);	
 
+		// This used to call RecipeDataTagReader.reader.recipeDataTagValues() but since we get the latest values from the database
+		// we don't need to do this anymore.  There was also logic to refresh teh browser periodically, I'm not sure that it worked.  
+		// We may need a refresh button. PAH
+		getBrowser().activate(-1);
 	}
-
+	
 	
 	public void commit() {
+		logger.infof("In commit - bypassing overwrite of associated data (PETE)");
 		if(recipeData == null) return;
 		
-		try {
+//		try {
 			// Note: we are assuming that we have exclusive use of the associatedData
 			// and can completely overwrite it.
-			JSONObject newAssociatedData = Data.toAssociatedData(recipeData);			
-			element.set(ChartStepProperties.AssociatedData, newAssociatedData);
-		} catch (Exception e) {
-			showMessage("Error setting associated recipe data: " + e.getMessage(), BROWSER);
-		}
+//			JSONObject newAssociatedData = Data.toAssociatedData(recipeData);			
+//			element.set(ChartStepProperties.AssociatedData, newAssociatedData);
+//		} catch (Exception e) {
+//			showMessage("Error setting associated recipe data: " + e.getMessage(), BROWSER);
+//		}
 	}
 
 	/** Handler for bad format errors in property editor */

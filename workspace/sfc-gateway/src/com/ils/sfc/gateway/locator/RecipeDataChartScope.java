@@ -64,8 +64,8 @@ public class RecipeDataChartScope extends PyChartScope {
 	
 	@Override
 	public boolean containsKey(Object key) {
-		if( DEBUG ) log.infof("containsKey: key %s", key.toString());
-		return true;
+		log.infof("containsKey: key %s", key.toString());
+		return false;
 	}
 		
 	@Override 
@@ -78,6 +78,7 @@ public class RecipeDataChartScope extends PyChartScope {
 	 */
 	public Object get(Object keyObj) {		
 		// Build the tag path as far as the name of the UDT
+		log.infof("Class name: %s",keyObj.getClass().getCanonicalName());
 		key = (String)keyObj;
 		String keyPath = getKeyPath();
 		String strTagPath = Constants.RECIPE_DATA_FOLDER + "/" + stepPath + "/" + keyPath;

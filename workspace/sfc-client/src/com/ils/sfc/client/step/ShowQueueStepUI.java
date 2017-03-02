@@ -14,7 +14,7 @@ public class ShowQueueStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new ShowQueueStepFactory();
 
    	@Override
-	protected ImageIcon getIcon() { return messageIcon; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
 	protected String getHeading() { return "Show Queue"; }

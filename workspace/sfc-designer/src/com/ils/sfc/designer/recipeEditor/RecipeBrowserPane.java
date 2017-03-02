@@ -22,10 +22,13 @@ import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.panels.EditorPanel;
 import com.ils.sfc.designer.propertyEditor.ValueHolder;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 /** Provide a tree view of all recipe data. */
 @SuppressWarnings("serial")
 public class RecipeBrowserPane extends EditorPanel implements ValueHolder {
+	private static LoggerEx logger = LogUtil.getLogger(RecipeEditorController.class.getName());
 	private ButtonPanel buttonPanel = new ButtonPanel(false, true, true, true, false, false, false, false);
 	private JTree tree;
 	private JScrollPane treeScroll;
@@ -77,6 +80,7 @@ public class RecipeBrowserPane extends EditorPanel implements ValueHolder {
 	
 	private void createTree(List<Data> recipeData) {		
 		selectedNode = null;
+		logger.info("creating a tree from the recipe data...");
 		rootNode.removeAllChildren();
 		treeModel = new DefaultTreeModel(rootNode);
 		Collections.sort(recipeData, new Comparator<Data>() {
@@ -86,6 +90,7 @@ public class RecipeBrowserPane extends EditorPanel implements ValueHolder {
 			}			
 		});
 		for(Data data: recipeData) {
+			logger.infof("Adding recipe data for: %s", data);
 			addLayer(rootNode, data);
 		}
 		tree = new JTree(treeModel);

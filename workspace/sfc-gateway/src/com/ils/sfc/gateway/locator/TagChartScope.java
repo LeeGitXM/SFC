@@ -61,6 +61,15 @@ public class TagChartScope extends PyChartScope {
 		if( DEBUG ) log.infof("containsKey: %s", keyObj.toString());
 		return true;
 	}
+	
+	/**
+	 * This is a new function that causes keys like "a.b.c" to be sent in their entirety.
+	 * We are expecting each tag directory separately.
+	 */
+	//@Override
+	public boolean supportsSubScopes() {
+		return true;
+	}
 		
 	@Override 
 	/** 

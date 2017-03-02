@@ -76,8 +76,12 @@ public class RecipeDataAccess {
 		}					
 	}
 
-	public static void s88Set(PyChartScope chartScope, PyChartScope stepScope,
+	public static void s88SetOld(PyChartScope chartScope, PyChartScope stepScope,
 		String path, String scopeIdentifier, Object value) {
+		
+		throw new IllegalStateException("This is the old version of s88Get in RecipeDataAccess");
+		
+		/*
 		try {
 			String providerName = getProviderName(getIsolationMode(chartScope));
 			String fullPath = getRecipeDataTagPath(chartScope, stepScope, scopeIdentifier) +
@@ -86,11 +90,15 @@ public class RecipeDataAccess {
 			PythonCall.SET_RECIPE_DATA.exec(args);
 		} catch (JythonExecException e) {
 			logChartError(chartScope,"Recipe Data tag read failed", e);
-		}					
+		}
+		*/
 	}
 
-	public static Object s88Get(PyChartScope chartScope,
+	public static Object s88GetOld(PyChartScope chartScope,
 			PyChartScope stepScope, String s88Path, String scopeIdentifier) {
+		
+		throw new IllegalStateException("This is the old version of s88Get in RecipeDataAccess");
+/*		
 		try {
 			String providerName = getProviderName(getIsolationMode(chartScope));
 			Object value = null;
@@ -102,7 +110,8 @@ public class RecipeDataAccess {
 		} catch (JythonExecException e) {
 			logChartError(chartScope, "Recipe Data tag read failed", e);
 			return null;
-		}			
+		}		
+*/	
 	}
 
 	/** Get the chart scope corresponding to the given recipe data scope. */

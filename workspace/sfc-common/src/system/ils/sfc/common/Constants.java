@@ -196,6 +196,7 @@ public class Constants {
 	public static final String STATIC = "static";
 	public static final String STATE = "state";
 	public static final String STATUS = "status";
+	public static final String STEP_NAME = "name";
 	public static final String STEP_TIME = "stepTime";
 	public static final String STEP_TIMESTAMP = "stepTimestamp";
 	public static final String SUCCESS = "Success";

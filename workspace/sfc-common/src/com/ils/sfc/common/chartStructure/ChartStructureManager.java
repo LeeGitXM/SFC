@@ -24,6 +24,8 @@ public class ChartStructureManager   {
 	public ChartStructureManager(Project proj,StepRegistry registry) {
 		this.project = proj;
 		this.compiler = new ChartStructureCompiler(project,registry);
+		System.out.printf("Hello World");
+		System.out.printf("The project is: %s", proj.getName());
 		compiler.compile();
 	}
 	

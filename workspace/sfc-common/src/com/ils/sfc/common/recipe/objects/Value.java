@@ -1,5 +1,7 @@
 package com.ils.sfc.common.recipe.objects;
 
+import org.python.core.PyDictionary;
+
 import com.ils.sfc.common.IlsProperty;
 
 /**
@@ -26,5 +28,16 @@ public class Value extends DataWithUnits {
 		addProperty(IlsProperty.VALUE_TYPE);
 		addProperty(IlsProperty.HIGH_LIMIT);
 		addProperty(IlsProperty.LOW_LIMIT);
+	};
+	
+	public String toString() {
+		return properties.toString();
+	}
+	
+	public void setValuesFromDatabase(PyDictionary pyDict){
+		super.setValuesFromDatabase(pyDict);
+		log.info("Setting values from dictionary in Value");
+		this.setValue(IlsProperty.VALUE_TYPE, (String) pyDict.get("ValueType"));
+		this.setValue(IlsProperty.VALUE, (String) pyDict.get("Value"));
 	}
 }

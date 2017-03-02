@@ -76,6 +76,17 @@ public class IlsSfcCommonUtils {
 		}
 		System.out.println(bldr.toString());
 	}
+	
+	/** A debug utility that prints out a gzipped text resource--e.g. the XML for a stored chart. */
+	public static String returnResource(byte[] data) throws IOException {
+		java.io.BufferedReader test = new java.io.BufferedReader(new java.io.InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(data))));
+		StringBuilder bldr = new StringBuilder();
+		String line = null;
+		while((line = test.readLine()) != null) {
+			bldr.append(line);
+		}
+		return (bldr.toString());
+	}
 
 	public static void toXML(XMLStreamWriter writer, ChartUIElement element) {
 		// TODO: XMLStreamWriter's escaping of characters is incomplete; e.g.

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.ils.common.persistence.ToolkitRecord;
+import com.ils.common.watchdog.WatchdogTimer;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
@@ -83,7 +84,7 @@ import system.ils.sfc.common.Constants;
  * Ignition core.
  */
 public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements ModuleServiceConsumer,ProjectListener {
-	public static String TAG = "SFCGatewayHook";
+	public static String CLSS = "IlsSfcGatewayHook";
 	private final LoggerEx log;
 	private transient GatewayContext context = null;
 	private transient GatewayRpcDispatcher dispatcher = null;
@@ -97,7 +98,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
 	private TestMgr testMgr = new TestMgr();
 	private IlsDropBox dropBox = new IlsDropBox();
-	//private IlsSfcSessionMgr sessionMgr;
+	private WatchdogTimer timer = null;
 	private ChartDebugger chartDebugger = null;
 	private static StepFactory[] stepFactories = {
 		new QueueMessageStepFactory(),
@@ -155,6 +156,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 	public IlsSfcGatewayHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
+		timer = new WatchdogTimer(CLSS);
 	}
 	
 	// NOTE: During this period, the module status is LOADED, not RUNNING
@@ -163,19 +165,12 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		return testMgr;
 	}
 
-	public ChartDebugger getChartDebugger() {
-		return chartDebugger;
-	}
-
-	public IlsDropBox getDropBox() {
-		return dropBox;
-	}
-	
+	public ChartDebugger getChartDebugger() {return chartDebugger;}
+	public IlsDropBox getDropBox() {return dropBox;}	
 	public LoggerEx getLogger() { return log; }
+	public IlsStepMonitor getStepMonitor() {return stepMonitor;}
+	public WatchdogTimer getTimer() { return this.timer; };
 
-	public IlsStepMonitor getStepMonitor() {
-		return stepMonitor;
-	}
 
 
 	public GatewayContext getContext() {
@@ -199,9 +194,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		return requestResponseManager;
 	}
 	@Override
-	public Object getRPCHandler(ClientReqSession session, Long projectId) {
-		return dispatcher;
-	}
+	public Object getRPCHandler(ClientReqSession session, Long projectId) {return dispatcher;}
 	
 	// @Override  (Ignition-7.8.3 feature)
 	public boolean isFreeModule() { return true; }
@@ -237,7 +230,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		// we aren't set up to handle that anyway. We choose to use the units from the 
 		// production database.
 		String databaseName =  requestHandler.getDatabaseName(false);
-		log.infof("%s:initializeUnits: Database name is %s", TAG,databaseName);
+		log.infof("%s:initializeUnits: Database name is %s", CLSS,databaseName);
 		Object[] args = {databaseName};
 		try {
 			PythonCall.INITIALIZE_UNITS.exec(args);
@@ -268,13 +261,16 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		Thread delayThread = new Thread(new StructureCompilerRunner());
 		delayThread.start();
     	context.getProjectManager().addProjectListener(this);
-		log.infof("%s: Startup complete.",TAG);
+    	this.timer.start();
+		log.infof("%s: Startup complete.",CLSS);
 	}
 	
 	@Override
 	public void shutdown() {
 		context.getProjectManager().removeProjectListener(this);
 		stepMonitor.shutdown();
+		context.getExecutionManager().shutdown();
+		this.timer.stop();
 	}
 
 	@Override
@@ -312,7 +308,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public void projectAdded(Project staging, Project published) {
 		if( staging.getId()==-1) {
 			structureManager.getCompiler().compile();
-			log.infof("%s.projectAdded: re-analyzing charts.",TAG);
+			log.infof("%s.projectAdded: re-analyzing charts.",CLSS);
 		}
 	}
 
@@ -324,7 +320,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public void projectUpdated(Project proj, ProjectVersion vers) {
 		if( proj.getId()==-1 && vers==ProjectVersion.Staging) {
 			structureManager.getCompiler().compile();
-			log.infof("%s.projectUpdated: re-analyzing charts.",TAG);
+			log.infof("%s.projectUpdated: re-analyzing charts.",CLSS);
 		}
 	}
 	// =================================== Initial Chart Structure ========================
@@ -338,7 +334,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 			}
 			catch(InterruptedException ignore) {}
 			structureManager.getCompiler().compile();
-			log.infof("%s.StructureCompilerRunner: analyze charts.",TAG);
+			log.infof("%s.StructureCompilerRunner: analyze charts.",CLSS);
 		}
 	}
 }

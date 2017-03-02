@@ -13,6 +13,7 @@ import java.util.UUID;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.python.core.PyDictionary;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
@@ -63,7 +64,7 @@ attributes:sequence (structure (
  */
 public abstract class Data {
 	private static final String CLSS = "Data";
-	private static LoggerEx log = LogUtil.getLogger(Data.class.getName());
+	public static LoggerEx log = LogUtil.getLogger(Data.class.getName());
 	protected static SimpleDateFormat parser = new SimpleDateFormat("YYYY/mm/dd HH:mm:ss");
 	protected BasicPropertySet properties = new BasicPropertySet();
 	private Map<String, BasicProperty<?>> propertiesByName = new HashMap<String, BasicProperty<?>>();
@@ -88,6 +89,17 @@ public abstract class Data {
 		properties.set(IlsProperty.CLASS, getClass().getSimpleName());
 	}
 
+	public void setValuesFromDatabase(PyDictionary pyDict){
+		log.info("Setting values from dictionary in Data");
+		
+		// set the attribute values of the new instance from the dictionary
+		setKey((String) pyDict.get("RecipeDataKey"));
+		setValue(IlsProperty.LABEL, (String) pyDict.get("Label"));
+		setValue(IlsProperty.DESCRIPTION, (String) pyDict.get("Description"));
+		setValue(IlsProperty.HELP, (String) pyDict.get("Help"));
+		setValue(IlsProperty.ADVICE, (String) pyDict.get("Advice"));
+	}
+	
 	// ======================================== Static Initializers ==============================
 	
 	/** Create a brand new instance of the given class. This includes
@@ -138,6 +150,7 @@ public abstract class Data {
 	
 	
 	public static JSONObject fromStepScope(PyChartScope stepScope) throws JSONException {
+		log.info("In Data.fromStepScope()");
 		return Data.fromStepScopeRecursive(stepScope, 0);
 	}
 	
@@ -163,6 +176,7 @@ public abstract class Data {
 	/** Create an associated data object containing only the recipe data 
 	 * @throws JSONException */
 	public static JSONObject toAssociatedData(List<Data> recipeData) throws JSONException {
+		log.info("in Data.toAssociatedData");
 		JSONObject associatedDataJson = new JSONObject();
 		setAssociatedData(associatedDataJson, recipeData);
 		return associatedDataJson;
@@ -178,7 +192,54 @@ public abstract class Data {
 	/** Create a recipe data hierarchy from a JSON Object that was
 	 *  originally created from a recipe hierarchy (i.e. not
 	 *  just some random JSONbject. */
+	public static List<Data> fromDatabase(String stepUUID) throws Exception {
+		List<Data> recipeData = new ArrayList<Data>();
+		String packageName;
+		String recipeDataType;
+		String javaClassName;
+		String recipeDataKey;
+		String fullClassName;
+		
+		try {
+			BasicProperty dummyProperty = new BasicProperty();
+			List<PyDictionary> pyDictList = (List<PyDictionary>) PythonCall.GET_RECIPE_DATA_LIST.exec(stepUUID);
+			log.infof("Back in Java land, received: %s", pyDictList);
+			for (PyDictionary pyDict:pyDictList){
+				log.infof("%s", pyDict);
+				
+				//Get the class name and other properties out of the Python dictionary
+				
+				packageName = Data.class.getPackage().getName();
+				recipeDataType = (String) pyDict.get("RecipeDataType");
+				javaClassName = (String) pyDict.get("JavaClassName");
+				recipeDataKey = (String) pyDict.get("RecipeDataKey");
+				fullClassName = packageName + "." + javaClassName;
+
+				log.infof("Creating recipe data: %s - %s - %s: %s", recipeDataKey, recipeDataType, javaClassName, fullClassName);
+				
+				Data data = Data.createNewInstance(fullClassName);
+				
+				// It would be nice if I could pass the dictionary to the constructor...
+				data.setValuesFromDatabase(pyDict);
+				
+				recipeData.add(data);
+			}
+			
+		}
+		catch(Exception e) {
+			// ?? what to do...we are blindly assuming that everything in the associated
+			// data object is recipe data, which isn't necessarily true...
+			log.errorf("Error creating recipe data: %s", e.getMessage());
+		}
+		return recipeData;
+	}
+
+	
+	/** Create a recipe data hierarchy from a JSON Object that was
+	 *  originally created from a recipe hierarchy (i.e. not
+	 *  just some random JSONbject. */
 	public static List<Data> fromAssociatedData(JSONObject associatedDataJson) throws Exception {
+		log.info("In Data.fromAssociatedData()");
 		List<Data> recipeData = new ArrayList<Data>();
 		Iterator<String> keyIter = associatedDataJson.keys();
 		while(keyIter.hasNext()) {
@@ -202,6 +263,7 @@ public abstract class Data {
 
 	/** Restore an object from JSON */
 	public static Data fromJson(JSONObject jsonObject) throws Exception {
+		log.info("In Data.fromJSON()");
 		String simpleClassName = jsonObject.getString(Constants.CLASS);
 		String packageName = Data.class.getPackage().getName();
 		String fullClassName = packageName + "." + simpleClassName;
@@ -868,6 +930,7 @@ public abstract class Data {
 
 	public static List<Data> fromStepProperties(PropertySet stepProperties) throws Exception {
 		JSONObject assDataJson = stepProperties.get(IlsProperty.ASSOCIATED_DATA);
+		log.info("In Data.fromStepProperties");
 		if(assDataJson != null) {
 			return fromAssociatedData(assDataJson);
 		}

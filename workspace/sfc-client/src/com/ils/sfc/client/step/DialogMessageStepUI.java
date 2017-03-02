@@ -14,7 +14,7 @@ public class DialogMessageStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new DialogMessageStepFactory();
 
    	@Override
-	protected ImageIcon getIcon() { return asteriskIcon; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
 	protected String getHeading() { return "Notify Dialog"; }

@@ -139,6 +139,7 @@ public class IlsProperty {
     public static final BasicProperty<String> BUTTON_LABEL = createProperty(Constants.BUTTON_LABEL, String.class, "");
     public static final BasicProperty<String> CALLBACK = createProperty(Constants.CALLBACK, String.class, "");
     public static final BasicProperty<String> CATEGORY = createProperty(Constants.CATEGORY, String.class, "");
+    public static final BasicProperty<String> CHART_PATH = createProperty("chart-path", String.class, "");
     public static final BasicProperty<String> CHOICES_RECIPE_LOCATION = createProperty(Constants.CHOICES_RECIPE_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
     public static final BasicProperty<String> CHOICES_KEY = createProperty(Constants.CHOICES_KEY, String.class, "");
     public static final BasicProperty<String> CLASS = createProperty(Constants.CLASS, String.class, "");
@@ -196,6 +197,7 @@ public class IlsProperty {
     public static final BasicProperty<String> MONITOR_DOWNLOADS_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_MONITOR_DOWNLOADS_WINDOW, false);
 	public static final BasicProperty<String> NAME = new BasicProperty<String>(Constants.NAME, String.class);
     public static final BasicProperty<Object> OUTPUT_TYPE = createProperty(Constants.OUTPUT_TYPE, Object.class, Constants.OUTPUT_VALUE_TYPE_CHOICES[0], Constants.OUTPUT_VALUE_TYPE_CHOICES);
+    public static final BasicProperty<String> PARALLEL_CHILDREN = createProperty("parallel-children", String.class, "");
     public static final BasicProperty<String> POSITION = createProperty(Constants.POSITION, String.class, Constants.POSITION_CHOICES[0], Constants.POSITION_CHOICES);
     public static final BasicProperty<Boolean> POST_NOTIFICATION = createProperty(Constants.POST_NOTIFICATION, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<Boolean> POST_TO_QUEUE = createProperty(Constants.POST_TO_QUEUE, Boolean.class, Boolean.FALSE);
@@ -230,7 +232,7 @@ public class IlsProperty {
     public static final BasicProperty<String> SQL = createProperty(Constants.SQL, String.class, "");
     public static final BasicProperty<Date> START_TIME = createProperty(Constants.START_TIME, Date.class, new Date());
     public static final BasicProperty<String> STATE = createProperty(Constants.STATE, String.class, "");
-    public static final BasicProperty<Double> STEP_TIME = createProperty(Constants.STEP_TIME, Double.class, 0.);
+    public static final BasicProperty<Date> STEP_TIME = createProperty(Constants.STEP_TIME, Date.class, new Date());
     public static final BasicProperty<String> STEP_TIMESTAMP = createProperty(Constants.STEP_TIMESTAMP, String.class, "");
     public static final BasicProperty<String> TAG_PATH = createProperty(Constants.TAG_PATH, String.class, "");
     public static final BasicProperty<String> TIME_LIMIT_RECIPE_KEY = createProperty(Constants.KEY, String.class, "", false, "time limit recipe key");
