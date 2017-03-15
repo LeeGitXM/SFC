@@ -52,6 +52,8 @@ public class MockEnclosingScopeFactory {
 			parentScope.put("startTime", "mock");
 			PyChartScope enclosingStepScope = new PyChartScope();
 			enclosingStepScope.put("name", parentInfo.parentStepName);
+			// Pete added step UUID
+			enclosingStepScope.put("id", parentInfo.parentElement.getId().toString());
 			if(parentInfo.parentStepFactoryId.equals(ProcedureStepProperties.FACTORY_ID)) {
 				enclosingStepScope.put(Constants.S88_LEVEL, Constants.GLOBAL);
 			}
