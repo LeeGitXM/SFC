@@ -149,6 +149,14 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	@Override
 	public void activateStep(StepController controller) {
 		logger.trace("Step activating");
+
+		// Added by Pete to handle a step in a loop to initialize things the second time around
+		paused = false;
+		cancelled = false;
+		deactivated = false;
+		resumed = false;
+		done = false;
+		
 		// It is important for the correct function of Cancel steps that callPython be called
 		// once outside of the controller:execute stuff:
 		done = callPython(getState());
