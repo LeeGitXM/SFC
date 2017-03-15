@@ -14,7 +14,7 @@ public class ControlPanelMessageStepUI extends AbstractIlsStepUI {
     public static final ClientStepFactory FACTORY = new ControlPanelMessageStepFactory();
 
    	@Override
-	protected ImageIcon getIcon() { return asteriskIcon; }
+	protected ImageIcon getIcon() { return null; }
 	
 	@Override
 	protected String getHeading() { return "Control Panel"; }
