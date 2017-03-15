@@ -36,10 +36,10 @@ public class IlsChartObserver implements ChartObserver {
 		if(!isEMCSFC) return;
 		
 		// create the recipe data tags
-		String projectName = (String)topScope.get(Constants.PROJECT);
-		if(projectName != null) {  // only ILS charts will have this
-			createTags(chartContext);
-		}
+//		String projectName = (String)topScope.get(Constants.PROJECT);
+//		if(projectName != null) {  // only ILS charts will have this
+//			createTags(chartContext);
+//		}
 	}
 	
 	private synchronized void createTags(ChartContext chartContext) {
