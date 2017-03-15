@@ -38,7 +38,6 @@ public class IlsScopeLocator implements ScopeLocator {
 			// step, which is really handy when the transition uses scope locator PRIOR
 			PyChartScope stepScope = scopeContext.getStepOrPrevious();
 			PyChartScope rootScope = scopeContext.getRoot();
-			System.out.println("Root scope: " + rootScope.toString());
 			return new S88Scope(hook.getContext(),chartScope,stepScope,identifier, "");
 		}
 		else {

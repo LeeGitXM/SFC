@@ -82,7 +82,7 @@ public class S88Scope extends PyChartScope implements WatchdogObserver,Monitored
 	public void start() {
 		this.running = true;
 		if(DEBUG || log.isDebugEnabled() ) log.infof("%s.start: Starting %s............................",CLSS,key);
-		startWatchDogIfReady();
+		evaluate();
 	}
 
 	@Override
