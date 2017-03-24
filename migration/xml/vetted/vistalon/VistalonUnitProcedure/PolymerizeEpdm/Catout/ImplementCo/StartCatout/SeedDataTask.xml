@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<sfc zoom="1.3499997" canvas="7 9" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Mon Feb 27 13:37:39 CST 2017" hot-editable="false" persist-state="false">
+<sfc zoom="1.6499994" canvas="7 9" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Sun Mar 19 20:39:02 CDT 2017" hot-editable="false" persist-state="false">
 	<step id="39288788-8071-11d9-a871-006008c66680" location="1 0" name="S88Begin_13833" factory-id="begin-step">
 <parameters>
 	<parameter><name>returnStatus</name><expression>"NULL"</expression></parameter>
@@ -68,7 +68,7 @@ def onStart(chart,block):
 	</step>
 	<step id="de52e3de-f9ef-11d9-a219-00b0d0d0fabc" location="1 4" name="Timeout" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>Rx data has NOT been saved for the restick of reactor due to timeout.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>1.0</timeout><ackRequired>false</ackRequired><name>Timeout</name><id>de52e3de-f9ef-11d9-a219-00b0d0d0fabc</id>		<associated-data>{}</associated-data>
 	</step>
-	<step id="e16b42f0-6b63-11d9-a9ad-00022dc3c8fd" location="2 4" name="SeedRateData" factory-id="action-step">
+	<step id="e16b42f0-6b63-11d9-a9ad-00022dc3c8fd" location="3 4" name="SeedRateData" factory-id="action-step">
 		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
 
 '''
@@ -116,10 +116,13 @@ def onStart(chart,block):
 conclusion to the following transitions
 using a chart scope variable (defined
 in the Begin step).</note>
-	<note id="af2503a8-f7b4-4241-8e68-afd241a5e691" location="3 4" note-background="color(255,0,0,255)">Needs work...</note>
+	<note id="af2503a8-f7b4-4241-8e68-afd241a5e691" location="4 4" size="2 2" note-background="color(255,0,0,255)">Needs work...
+I don't have the destination charts migrated yet
+so I don't have a destination block to write to.</note>
 	<link id="06de345a-c66c-41ba-b5a4-61d078a52233" location="0 2"><down/><right/></link>
 	<link id="ef72c927-6ff2-4dad-b82e-ddfc2b76f377" location="1 2"><up/><left/><down/><right/></link>
 	<link id="cbff0d19-5871-42ba-954f-f69738801e51" location="2 2"><left/><down/></link>
+	<link id="ffc7cf75-be39-4d6c-bffb-fa2bb7e806c0" location="2 4"><up/><down/></link>
 	<link id="61e10c77-c76e-4463-a737-8fe267ef4915" location="0 5"><up/><down/><right/></link>
 	<link id="3031e317-5c05-4dd7-8a98-e426dd45378c" location="1 5"><up/><down/></link>
 	<link id="7ac821a1-cd84-4777-a77f-1d2c637cc679" location="0 6"><up/><down/><right/></link>

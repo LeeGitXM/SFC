@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<sfc zoom="1.3999996" canvas="10 10" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Mon Feb 27 13:35:05 CST 2017" hot-editable="false" persist-state="false">
+<sfc zoom="1.3999996" canvas="10 10" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Mon Mar 20 05:58:32 CDT 2017" hot-editable="false" persist-state="false">
 	<step id="ee726450-d70c-11e4-9591-00142223a71b" location="3 0" name="S88Begin_13751" factory-id="begin-step">
 <parameters>
 	<parameter><name>sidestreamEthyleneTimeout</name><expression>False</expression></parameter>
@@ -7,9 +7,9 @@
 </parameters>
 		<associated-data>{}</associated-data>
 	</step>
-	<step id="0446d0dc-d70d-11e4-9591-00142223a71b" location="3 4" name="S88TimeDelay_13749" factory-id="com.ils.timedDelayStep"><postNotification>true</postNotification><recipeLocation>superior</recipeLocation><tagPath></tagPath><description></description><scale>1.0</scale><windowTitle>Catalyst Divert Timer</windowTitle><message>Wait for a set period of time after sidestream ethlyne valve closes to divert catalyst from C-Rx to CSTR</message><buttonLabel>Timer</buttonLabel><delay>120.0</delay><name>S88TimeDelay_13749</name><callback>G2</callback><id>0446d0dc-d70d-11e4-9591-00142223a71b</id><position>topRight</position><strategy>static</strategy><key>g2</key><delayUnit>SEC</delayUnit>		<associated-data>{}</associated-data>
+	<step id="0446d0dc-d70d-11e4-9591-00142223a71b" location="3 4" name="Delay2Minutes" factory-id="com.ils.timedDelayStep"><postNotification>true</postNotification><recipeLocation>superior</recipeLocation><tagPath></tagPath><description></description><scale>1.0</scale><windowTitle>Catalyst Divert Timer</windowTitle><message>Wait for a set period of time after sidestream ethlyne valve closes to divert catalyst from C-Rx to CSTR</message><buttonLabel>Timer</buttonLabel><delay>120.0</delay><name>Delay2Minutes</name><callback>G2</callback><id>0446d0dc-d70d-11e4-9591-00142223a71b</id><position>topRight</position><strategy>static</strategy><key>g2</key><delayUnit>SEC</delayUnit>		<associated-data>{}</associated-data>
 	</step>
-	<step id="2895e6a6-4e69-4d21-9f1e-4044ca9a8ba8" location="4 4" name="TO" factory-id="action-step">
+	<step id="2895e6a6-4e69-4d21-9f1e-4044ca9a8ba8" location="4 4" name="Timeout" factory-id="action-step">
 		<start-script>def onStart(chart, step):
 	"""
 	This will run when the step starts, before any
