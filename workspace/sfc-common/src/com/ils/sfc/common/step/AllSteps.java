@@ -114,9 +114,12 @@ public class AllSteps {
 			try {
 				Field factoryIdField = clazz.getField("FACTORY_ID");
 				String factoryId = (String)factoryIdField.get(null);
-				Field propertyField = clazz.getField("properties");
+				Field propertyField = clazz.getField("properties"); 
 				Property<?>[] properties = (Property<?>[])propertyField.get(null);
-				propertiesByFactoryId.put(factoryId, properties);
+				Property<?>[] combinedProperties = new Property<?>[properties.length+AbstractIlsStepDelegate.commonProperties.length];
+				System.arraycopy(properties, 0, combinedProperties, 0, properties.length);
+				System.arraycopy(AbstractIlsStepDelegate.commonProperties,0,combinedProperties,properties.length,AbstractIlsStepDelegate.commonProperties.length);
+				propertiesByFactoryId.put(factoryId, combinedProperties);
 			}
 			catch(Exception e) {
 				e.printStackTrace();
@@ -125,7 +128,8 @@ public class AllSteps {
 	}
 
 	/** Get the declared properties of an Ils step. This will not include the
-	 * Ignition step properties like id, name, etc. 
+	 * Ignition step properties like id, name, etc. It does include the generic
+	 * properties NAME and DESCRIPTION. 
 	 */
 	public static Property<?>[] getIlsProperties(String factoryId) {
 		return propertiesByFactoryId.get(factoryId);

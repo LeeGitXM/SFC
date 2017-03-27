@@ -122,7 +122,14 @@ public class PVMonitorConfig extends RowConfig {
 				String name = item.getNodeName();
 				String strValue = item.getTextContent();	
 
-				if(name.equals("strategy")) {
+				if(name.equals("deadTime")) {
+					try {	
+						newRow.deadTime = IlsProperty.parseDouble(strValue);
+					} catch (ParseException e) {
+						logger.error("Error parsing PVMonitorConfig.deadTime double value from " + strValue);
+					}
+				}
+				else if(name.equals("strategy")) {
 					newRow.strategy = translationMap.get(strValue.toLowerCase());
 				}
 				else if(name.equals("toleranceType")) {
@@ -168,6 +175,9 @@ public class PVMonitorConfig extends RowConfig {
 				else if(name.equals("state")) {
 					// TODO: should this be an enum?
 					newRow.status = strValue;
+				}
+				else {
+					logger.error("Error parsing PVMonitorConfig: Unknown G2 attribute - " + name);
 				}
 			}
 		}
