@@ -269,7 +269,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public void shutdown() {
 		context.getProjectManager().removeProjectListener(this);
 		stepMonitor.shutdown();
-		context.getExecutionManager().shutdown();
 		this.timer.stop();
 	}
 

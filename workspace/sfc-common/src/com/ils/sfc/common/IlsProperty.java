@@ -151,6 +151,7 @@ public class IlsProperty {
     public static final BasicProperty<String> COMPUTER = createProperty(Constants.COMPUTER, String.class, Constants.COMPUTER_CHOICES[0], Constants.COMPUTER_CHOICES);
     public static final BasicProperty<String> DATA_ID = createProperty(Constants.DATA_ID, String.class, "");
     public static final BasicProperty<String> TIME_LIMIT_RECIPE_LOCATION = createProperty(Constants.DATA_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], false, Constants.RECIPE_LOCATION_CHOICES, "time limit recipe location");
+    public static final BasicProperty<Double> DEADTIME = createProperty(Constants.DEADTIME, Double.class, 0.);
     public static final BasicProperty<Double> DELAY = createProperty(Constants.DELAY, Double.class, 0.);
     public static final BasicProperty<String> DELAY_UNIT = createProperty(Constants.DELAY_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);  
     public static final BasicProperty<String> DESCRIPTION = createProperty(Constants.DESCRIPTION, String.class, "");
@@ -530,6 +531,7 @@ public class IlsProperty {
 		g2ToIgProperty.put("callback", CALLBACK);
 		g2ToIgProperty.put("clearTimer", TIMER_CLEAR);
 		g2ToIgProperty.put("dataLocation", TIME_LIMIT_RECIPE_LOCATION);
+		g2ToIgProperty.put("deadTime", DEADTIME);
 		g2ToIgProperty.put("description", DESCRIPTION);
 		g2ToIgProperty.put("delay-time", DELAY);
 		g2ToIgProperty.put("delay-units", DELAY_UNIT);

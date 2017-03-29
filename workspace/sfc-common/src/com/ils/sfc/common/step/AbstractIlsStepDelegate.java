@@ -13,7 +13,6 @@ import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.StepPropertyValidator;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer.ChartInfo;
-import com.ils.sfc.common.recipe.objects.Data;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertySet;
@@ -30,8 +29,9 @@ import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	private static LoggerEx log = LogUtil.getLogger(AbstractIlsStepDelegate.class.getName());
-	private static final BasicProperty<?>[] commonProperties = {
-		IlsProperty.NAME, 
+	// Note that NAME is handled separately. 
+	public static final BasicProperty<?>[] commonProperties = {
+		//IlsProperty.NAME, 
 		IlsProperty.DESCRIPTION
 	};
 	private Property<?>[] orderedProperties;

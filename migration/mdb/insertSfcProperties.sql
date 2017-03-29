@@ -78,7 +78,7 @@ insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','timeoutUnit','
 insert into SfcPropertyMap values ('com.ils.monitorDownloadStep','position','');
 insert into SfcPropertyMap values ('com.ils.monitorDownloadStep','scale','workspaceScale');
 insert into SfcPropertyMap values ('com.ils.monitorDownloadStep','timerClear','clearTimer');
-insert into SfcPropertyMap values ('com.ils.monitorDownloadStep','timerKey','');
+insert into SfcPropertyMap values ('com.ils.monitorDownloadStep','timerKey','timerKey');
 insert into SfcPropertyMap values ('com.ils.monitorDownloadStep','timerLocation','timerSource');
 insert into SfcPropertyMap values ('com.ils.monitorDownloadStep','timerSet','setTimer');
 insert into SfcPropertyMap values ('com.ils.monitorDownloadStep','window','');
