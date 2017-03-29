@@ -1,5 +1,13 @@
 <?xml version="1.0" ?>
-<sfc zoom="0.8333333" canvas="9 15" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Mon Feb 27 13:33:16 CST 2017" hot-editable="false" persist-state="false">
+<sfc zoom="0.8333333" canvas="9 15" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Tue Mar 28 12:30:56 CDT 2017" hot-editable="false" persist-state="false">
+	<oncancel>def onCancel(chart):
+	"""
+	This will run once if the chart is cancelled.
+
+	Arguments:
+		chart: A reference to the chart's scope.
+	"""
+</oncancel>
 	<step id="2ac6ee47-6b3a-11d9-a9ad-00022dc3c8fd" location="2 1" name="S88Begin_6065" factory-id="begin-step">
 <parameters>
 	<parameter key="true"><name>Name</name><expression>"Cat-Out"</expression></parameter>
@@ -54,8 +62,8 @@ data, but this is a plain Vision window, so it can't access
 recipe data.  Use a plain memory tag instead.  So the 
 Enter Data block is eliminated in favor of just doing a tag
 write in the callback above.</note>
-	<note id="2c331884-9938-4425-8f42-e175f8c9dd8b" location="6 0" size="2 1">Manually vetted by Pete
-10/23/2016</note>
+	<note id="2c331884-9938-4425-8f42-e175f8c9dd8b" location="6 0" size="3 2">10/23/16 vetted
+03/28/17 updated</note>
 	<link id="76c76dfd-4b97-4ec5-af4c-fa38b7888287" location="2 4"><up/><down/></link>
 	<link id="402744ef-601b-4bff-bb04-28d1b3c97909" location="2 6"><up/><down/></link>
 	<link id="0f1e612a-e681-4f75-8366-ebc59044d9d3" location="1 7"><down/><right/></link>

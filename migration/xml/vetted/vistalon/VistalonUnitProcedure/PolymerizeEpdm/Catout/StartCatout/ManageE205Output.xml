@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<sfc zoom="1.2749999" canvas="11 14" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Sun Mar 26 10:34:28 CDT 2017" hot-editable="false" persist-state="false">
+	<step id="5fe95b3b-b70d-11d9-b117-00065b88c6c2" location="2 0" name="S88Begin_13780" factory-id="begin-step">		<associated-data>{}</associated-data>
+	</step>
+	<step id="05962300-6b66-11d9-a9ad-00022dc3c8fd" location="2 1" name="E205 Bypass Mode" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>false</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>E205 Bypass Mode</name><writeOutputConfig>{"rows":[{"key":"e205-bypass-flow-mode","confirmWrite":true}]}</writeOutputConfig><id>05962300-6b66-11d9-a9ad-00022dc3c8fd</id>		<associated-data>{"download-error-counter":{"lowLimit":0.0,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"c99ff29e-bf12-46bc-8d69-74b56640324a","valueType":"float","highLimit":0.0,"category":"Simple Constant","class":"Value","value":0.0,"key":"download-error-counter"}}</associated-data>
+	</step>
+	<step id="cf1521bd-b64f-11d9-b117-00065b88c6c2" location="2 2" name="S88TimeDelay_13777" factory-id="com.ils.timedDelayStep"><postNotification>false</postNotification><recipeLocation>superior</recipeLocation><tagPath></tagPath><description></description><scale>1.0</scale><windowTitle></windowTitle><message></message><buttonLabel></buttonLabel><delay>5.0</delay><name>S88TimeDelay_13777</name><callback>G2</callback><id>cf1521bd-b64f-11d9-b117-00065b88c6c2</id><position>center</position><strategy>static</strategy><key>g2</key><delayUnit>SEC</delayUnit>		<associated-data>{}</associated-data>
+	</step>
+	<step id="c1370268-b64f-11d9-b117-00065b88c6c2" location="2 4" name="E205 Flow SP" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>true</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>E205 Flow SP</name><writeOutputConfig>{"rows":[{"key":"e205-bypass-flow-sp","confirmWrite":true}]}</writeOutputConfig><id>c1370268-b64f-11d9-b117-00065b88c6c2</id>		<associated-data>{"download-error-counter":{"lowLimit":0.0,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"d834d4e8-8585-471d-857a-0d6fc57b51e7","valueType":"float","highLimit":0.0,"category":"Simple Constant","class":"Value","value":0.0,"key":"download-error-counter"}}</associated-data>
+	</step>
+	<step id="a5032a26-4d2a-11dd-a699-00142223a71b" location="4 7" name="E205 Temp Mode" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>false</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>E205 Temp Mode</name><writeOutputConfig>{"rows":[{"key":"e502-temp-mode","confirmWrite":true}]}</writeOutputConfig><id>a5032a26-4d2a-11dd-a699-00142223a71b</id>		<associated-data>{"download-error-counter":{"lowLimit":0.0,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"ceec99fa-d20c-4031-9ad1-686b32696e88","valueType":"float","highLimit":0.0,"category":"Simple Constant","class":"Value","value":0.0,"key":"download-error-counter"}}</associated-data>
+	</step>
+	<step id="a5032a33-4d2a-11dd-a699-00142223a71b" location="4 8" name="S88TimeDelay_13771" factory-id="com.ils.timedDelayStep"><postNotification>false</postNotification><recipeLocation>superior</recipeLocation><tagPath></tagPath><description></description><scale>1.0</scale><windowTitle></windowTitle><message></message><buttonLabel></buttonLabel><delay>5.0</delay><name>S88TimeDelay_13771</name><callback>G2</callback><id>a5032a33-4d2a-11dd-a699-00142223a71b</id><position>center</position><strategy>static</strategy><key>g2</key><delayUnit>SEC</delayUnit>		<associated-data>{}</associated-data>
+	</step>
+	<step id="fcee8aa0-4499-11da-b121-00065b88c6c2" location="4 10" name="E205 Temp SP" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>false</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>E205 Temp SP</name><writeOutputConfig>{"rows":[{"key":"e502-temp-sp","confirmWrite":true}]}</writeOutputConfig><id>fcee8aa0-4499-11da-b121-00065b88c6c2</id>		<associated-data>{"download-error-counter":{"lowLimit":0.0,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"75e6d3f4-42a4-4458-8d3d-136f249d917b","valueType":"float","highLimit":0.0,"category":"Simple Constant","class":"Value","value":0.0,"key":"download-error-counter"}}</associated-data>
+	</step>
+	<step id="5fe95b36-b70d-11d9-b117-00065b88c6c2" location="2 12" name="S88End_13779" factory-id="end-step">		<associated-data>{}</associated-data>
+	</step>
+	<transition id="2427fa43-6222-4248-9bbe-22d0c597c187" location="2 3">{previous.workDone}</transition>
+	<transition id="ced25cba-4499-11da-b121-00065b88c6c2" location="2 6" timeout-delay="-1000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13774">!{tag.Recipe/Local/SPLIT-FEED-GRADE}</transition>
+	<transition id="ced25cb3-4499-11da-b121-00065b88c6c2" location="4 6" timeout-delay="-1000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13775">{tag.Recipe/Local/SPLIT-FEED-GRADE}</transition>
+	<transition id="f8878711-393c-4726-9c20-b03433a71ac6" location="4 9">{previous.workDone}</transition>
+	<note id="769244f2-776e-4dd6-be6d-81e3af70f06f" location="7 1" size="2 1">Manually Vetted
+11/8/16</note>
+	<note id="afe30e2e-4236-46e7-9d03-040e4ef3c312" location="5 5" size="3 1">This is a split feed grade</note>
+	<link id="8c2caeaa-ed73-4718-b179-f6ad2742e2cc" location="2 5"><up/><down/><right/></link>
+	<link id="77c9355f-5315-4282-8229-3d80af8d3db7" location="3 5"><left/><right/></link>
+	<link id="784e8cd3-e315-464f-beb7-67c02236fcf0" location="4 5"><up/><left/><down/></link>
+	<link id="17b3bd40-191f-49ed-a586-485c8f8952b4" location="2 7"><up/><down/><right/></link>
+	<link id="50983cd3-1a00-42cc-9807-85eaeb6d62fc" location="2 8"><up/><down/></link>
+	<link id="99f776e8-ff74-4c1b-93d7-7f58604c6a37" location="2 9"><up/><down/></link>
+	<link id="460355d2-0e0a-45e3-a1d6-19b0ca75a491" location="2 10"><up/><down/></link>
+	<link id="d723a6ae-aab7-4af6-89d5-0060d1a3e110" location="2 11"><up/><left/><down/><right/></link>
+	<link id="204c9ce8-44e7-4892-96a7-c974f16661e0" location="3 11"><left/><right/></link>
+	<link id="5dff9fb3-e8ad-46ac-b7ef-1c06164eed65" location="4 11"><up/><left/><down/></link>
+
+</sfc>

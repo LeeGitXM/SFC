@@ -1,12 +1,12 @@
 <?xml version="1.0" ?>
-<sfc zoom="1.0" canvas="8 8" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Mon Feb 27 13:33:48 CST 2017" hot-editable="false" persist-state="false">
+<sfc zoom="1.0" canvas="8 8" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Tue Mar 28 10:44:18 CDT 2017" hot-editable="false" persist-state="false">
 	<step id="88fbe0bc-6c1f-11d9-a9ae-000bcd538076" location="1 1" name="S88Begin_13916" factory-id="begin-step">
 <parameters>
 	<parameter key="true"><name>Name</name><expression>"Abort Cleanup"</expression></parameter>
 </parameters>
 		<associated-data>{}</associated-data>
 	</step>
-	<step id="1ab029c8-78bd-11d9-a870-006008c66680" location="1 2" name="S88MessageQueueTask_13914" factory-id="com.ils.queueMessageStep"><name>S88MessageQueueTask_13914</name><description></description><id>1ab029c8-78bd-11d9-a870-006008c66680</id><message>The Catout for {global.grade.value} was ABORTED by the OC.</message><priority>Info</priority>		<associated-data>{}</associated-data>
+	<step id="1ab029c8-78bd-11d9-a870-006008c66680" location="1 2" name="Abort Message" factory-id="com.ils.queueMessageStep"><name>Abort Message</name><description></description><id>1ab029c8-78bd-11d9-a870-006008c66680</id><message>The Catout for {global.grade.value} was ABORTED by the OC.</message><priority>Info</priority>		<associated-data>{}</associated-data>
 	</step>
 	<step id="c1bb04c2-85ab-11d9-a871-006008c66680" location="2 3" name="S88AbortTask_13913" factory-id="com.ils.abortStep"><ackRequired>false</ackRequired><name>S88AbortTask_13913</name><description>Catout aborted by the operator.</description><id>c1bb04c2-85ab-11d9-a871-006008c66680</id><message></message>		<associated-data>{}</associated-data>
 	</step>
@@ -15,8 +15,8 @@
 	<note id="ed23c391-3e09-4441-9010-c93837099682" location="3 3" size="3 2">There really is no need to cancel it, this is the 
 end of the recipe!  If we need to, we can write 
 ABORT to the control panel?</note>
-	<note id="b428bfbe-1498-4d0e-941c-7d93118a1e1c" location="5 1" size="2 1">Manually vetted by Pete
-10/19/2016</note>
+	<note id="b428bfbe-1498-4d0e-941c-7d93118a1e1c" location="5 0" size="2 2">10/19/16 Vetted
+03/28/17 Updated label</note>
 	<link id="fef121be-6a08-40fa-ba7f-66108fbf6bd9" location="1 3"><up/><down/></link>
 
 </sfc>
