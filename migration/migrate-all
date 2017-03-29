@@ -9,9 +9,25 @@ MIGRATION=${SFC}/migration
 LOG=${MIGRATION}/m.log
 rm -f $LOG
 
+INDIR="$SFC/migration/xml/ignition/vistalon"
+OUTDIR=$SFC/migration/projects/Vistalon
+mkdir -p $OUTDIR
+rm -rf $OUTDIR/*
+
+${MIGRATION}/process-vistalon all > ${LOG} 2>&1
+
 # Copy the vetted charts into the main processing area 
 echo "Hand-vetted Charts ------------------------"
 cd ${MIGRATION}/xml/vetted
 rsync -av vistalon/ ${MIGRATION}/xml/ignition/vistalon
 
-${MIGRATION}/process-vistalon all > ${LOG} 2>&1
+#
+# Make the project files
+cd $INDIR
+for PROJ in *
+do
+    INFIL=${INDIR}/$PROJ
+    OUTFIL=${OUTDIR}/$PROJ
+    rm -f $OUTFIL
+    $SFC/migration/build-project "$INFIL" "$OUTFIL"
+done
