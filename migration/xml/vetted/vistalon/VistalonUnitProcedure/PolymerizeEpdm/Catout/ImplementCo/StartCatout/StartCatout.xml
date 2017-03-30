@@ -1,8 +1,12 @@
 <?xml version="1.0" ?>
-<sfc zoom="1.2261903" canvas="11 15" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Mon Mar 20 06:02:31 CDT 2017" hot-editable="false" persist-state="false">
-	<step id="2f208c4c-6b43-11d9-a9ad-00022dc3c8fd" location="2 1" name="S88Begin_13770" factory-id="begin-step">		<associated-data>{}</associated-data>
+<sfc zoom="1.2261903" canvas="11 15" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Wed Mar 29 16:48:49 CDT 2017" hot-editable="false" persist-state="false">
+	<step id="2f208c4c-6b43-11d9-a9ad-00022dc3c8fd" location="2 1" name="S88Begin_13770" factory-id="begin-step">
+<parameters>
+	<parameter key="true"><name>Name</name><expression>"Start CATOUT"</expression></parameter>
+</parameters>
+		<associated-data>{}</associated-data>
 	</step>
-	<step id="0c9c147c-8c12-11d9-b116-00065b88c6c2" location="2 2" name="DisableCommands" factory-id="com.ils.enableDisableStep"><enableStart>false</enableStart><enableCancel>false</enableCancel><enableResume>false</enableResume><enableReset>false</enableReset><name>DisableCommands</name><description></description><id>0c9c147c-8c12-11d9-b116-00065b88c6c2</id><enablePause>false</enablePause>		<associated-data>{}</associated-data>
+	<step id="0c9c147c-8c12-11d9-b116-00065b88c6c2" location="2 2" name="DisableCommands" factory-id="com.ils.enableDisableStep" breakpoint="true"><description></description><breakpoint>true</breakpoint><enablePause>false</enablePause><enableStart>false</enableStart><enableCancel>false</enableCancel><enableResume>false</enableResume><enableReset>false</enableReset><name>DisableCommands</name><id>0c9c147c-8c12-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
 	</step>
 	<step id="8dd3fa46-6e82-11d9-a86e-006008c66680" location="1 3" name="CopyData" factory-id="action-step">
 		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
@@ -62,17 +66,17 @@ def onStart(chart,block):
 	log.tracef("%s has completed!",block.get("name",""))</start-script>
 		<associated-data>{}</associated-data>
 	</step>
-	<step id="63a6770c-91a2-11d9-b116-00065b88c6c2" location="2 4" name="WriteOutputs" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time.value</timerKey><timerLocation>global</timerLocation><recipeLocation>global</recipeLocation><timerSet>false</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>WriteOutputs</name><writeOutputConfig>{"rows":[{"key":"rla3-output-to-phd-text","confirmWrite":true}]}</writeOutputConfig><id>63a6770c-91a2-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	<step id="63a6770c-91a2-11d9-b116-00065b88c6c2" location="2 4" name="WriteOutputs" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time</timerKey><timerLocation>global</timerLocation><recipeLocation>global</recipeLocation><timerSet>false</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>WriteOutputs</name><writeOutputConfig>{"rows":[{"key":"rla3-output-to-phd-text","confirmWrite":true}]}</writeOutputConfig><id>63a6770c-91a2-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
 	</step>
-	<step id="e10c4250-6b61-11d9-a9ad-00022dc3c8fd" location="2 6" name="StartMessage" factory-id="com.ils.queueMessageStep"><name>StartMessage</name><description></description><id>e10c4250-6b61-11d9-a9ad-00022dc3c8fd</id><message>The CATOUT was started for grade [grade.val].</message><priority>Info</priority>		<associated-data>{}</associated-data>
+	<step id="e10c4250-6b61-11d9-a9ad-00022dc3c8fd" location="2 6" name="StartMessage" factory-id="com.ils.queueMessageStep"><name>StartMessage</name><description></description><id>e10c4250-6b61-11d9-a9ad-00022dc3c8fd</id><message>The CATOUT was started for grade {global.grade.value}.</message><priority>Info</priority>		<associated-data>{}</associated-data>
 	</step>
 	<step id="741cce46-9a24-11d9-b116-00065b88c6c2" location="6 3" name="C6andRxFlows" factory-id="enclosing-step" chart-path="VistalonUnitProcedure/PolymerizeEpdm/Catout/ImplementCo/StartCatout/MangeC6AndRxFlows" execution-mode="RunUntilCompletion">		<associated-data>{}</associated-data>
 	</step>
-	<step id="b61ed641-9016-11d9-b116-00065b88c6c2" location="6 4" name="ManagingCatalystMessage" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>Managing the catalyst, sidestreams, and E205 valve.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><ackRequired>false</ackRequired><name>ManagingCatalystMessage</name><id>b61ed641-9016-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	<step id="b61ed641-9016-11d9-b116-00065b88c6c2" location="6 4" name="ManagingCatalystMessage" factory-id="com.ils.controlPanelMessageStep" breakpoint="true"><description></description><timeoutUnit>SEC</timeoutUnit><message>Managing the catalyst, sidestreams, and E205 valve.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><breakpoint>true</breakpoint><ackRequired>false</ackRequired><name>ManagingCatalystMessage</name><id>b61ed641-9016-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
 	</step>
 	<step id="bd2175d0-89ce-11d9-a9b8-000bcd538076" location="6 5" name="CatRampDown" factory-id="enclosing-step" chart-path="VistalonUnitProcedure/PolymerizeEpdm/Catout/ImplementCo/StartCatout/ManageCatRampDown/ManageCatRampDown" execution-mode="RunUntilCompletion">		<associated-data>{}</associated-data>
 	</step>
-	<step id="e24a9f50-6b65-11d9-a9ad-00022dc3c8fd" location="6 6" name="Delay2Minutes" factory-id="com.ils.timedDelayStep"><postNotification>false</postNotification><recipeLocation>superior</recipeLocation><tagPath></tagPath><description></description><scale>1.0</scale><windowTitle></windowTitle><message></message><buttonLabel></buttonLabel><delay>2.0</delay><name>Delay2Minutes</name><callback>G2</callback><id>e24a9f50-6b65-11d9-a9ad-00022dc3c8fd</id><position>center</position><strategy>static</strategy><key>g2</key><delayUnit>MIN</delayUnit>		<associated-data>{}</associated-data>
+	<step id="e24a9f50-6b65-11d9-a9ad-00022dc3c8fd" location="6 6" name="Delay2Minutes" factory-id="com.ils.timedDelayStep" breakpoint="true"><postNotification>false</postNotification><recipeLocation>superior</recipeLocation><tagPath></tagPath><description></description><scale>1.0</scale><windowTitle></windowTitle><message></message><breakpoint>true</breakpoint><buttonLabel></buttonLabel><delay>2.0</delay><name>Delay2Minutes</name><callback>G2</callback><id>e24a9f50-6b65-11d9-a9ad-00022dc3c8fd</id><position>center</position><strategy>static</strategy><key>g2</key><delayUnit>MIN</delayUnit>		<associated-data>{}</associated-data>
 	</step>
 	<step id="3928877c-8071-11d9-a871-006008c66680" location="1 9" name="SeedData" factory-id="enclosing-step" chart-path="VistalonUnitProcedure/PolymerizeEpdm/Catout/ImplementCo/StartCatout/SeedDataTask" execution-mode="RunUntilCompletion">		<associated-data>{}</associated-data>
 	</step>
@@ -84,9 +88,9 @@ def onStart(chart,block):
 	</step>
 	<step id="eb2791ea-6e1d-11d9-a86e-006008c66680" location="1 11" name="C3ClampData" factory-id="enclosing-step" chart-path="VistalonUnitProcedure/PolymerizeEpdm/Catout/ImplementCo/StartCatout/C3ClampDataCollection" execution-mode="RunUntilCompletion">		<associated-data>{}</associated-data>
 	</step>
-	<step id="0c9c1482-8c12-11d9-b116-00065b88c6c2" location="6 10" name="EnableCommands" factory-id="com.ils.enableDisableStep"><enableStart>true</enableStart><enableCancel>true</enableCancel><enableResume>true</enableResume><enableReset>true</enableReset><name>EnableCommands</name><description></description><id>0c9c1482-8c12-11d9-b116-00065b88c6c2</id><enablePause>true</enablePause>		<associated-data>{}</associated-data>
+	<step id="0c9c1482-8c12-11d9-b116-00065b88c6c2" location="6 10" name="EnableCommands" factory-id="com.ils.enableDisableStep" breakpoint="true"><description></description><enablePause>true</enablePause><breakpoint>true</breakpoint><enableStart>true</enableStart><enableCancel>true</enableCancel><enableResume>true</enableResume><enableReset>true</enableReset><name>EnableCommands</name><id>0c9c1482-8c12-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
 	</step>
-	<step id="80fd5260-6b64-11d9-a9ad-00022dc3c8fd" location="1 12" name="C3Message" factory-id="com.ils.queueMessageStep"><name>C3Message</name><description></description><id>80fd5260-6b64-11d9-a9ad-00022dc3c8fd</id><message>The C3 SPCL's to be used are R1 = [r1-c3-flow-spcl.val] and R2 = [r2-c3-flow-spcl.val].</message><priority>Info</priority>		<associated-data>{}</associated-data>
+	<step id="80fd5260-6b64-11d9-a9ad-00022dc3c8fd" location="1 12" name="C3Message" factory-id="com.ils.queueMessageStep" breakpoint="true"><name>C3Message</name><description></description><id>80fd5260-6b64-11d9-a9ad-00022dc3c8fd</id><message>The C3 SPCLs to be used are R1 = {operation.r1-c3-flow-spcl.outputValue} and R2 = {operation.r2-c3-flow-spcl.outputValue}.</message><priority>Info</priority><breakpoint>true</breakpoint>		<associated-data>{}</associated-data>
 	</step>
 	<step id="2f208c47-6b43-11d9-a9ad-00022dc3c8fd" location="6 11" name="S88End_13769" factory-id="end-step">		<associated-data>{}</associated-data>
 	</step>
@@ -95,8 +99,8 @@ def onStart(chart,block):
 	<transition id="7a6cf910-6bcb-11d9-a9ad-00022dc3c8fd" location="3 8" timeout-enabled="true" timeout-delay="1000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13763">{operation.catout-mode.value} != "Proceed-With-Capture"</transition>
 	<transition id="1c04701e-603c-4eb1-967b-013709864d1f" location="6 7">{previous.workDone}</transition>
 	<note id="9bcf9843-c478-4bd0-97ee-19c1ea12b349" location="3 3" size="2 1" note-background="color(255,0,0,255)">Needs work</note>
-	<note id="d5f8ecbf-9155-4fa3-b5b9-39eb6dbc5d8d" location="8 1" size="2 1">Manually Vetted
-11/8/16</note>
+	<note id="d5f8ecbf-9155-4fa3-b5b9-39eb6dbc5d8d" location="8 1" size="2 1">Manually Vetted 11/8/16
+Fixed Timers 3/26/17</note>
 	<link id="7a548738-7751-441a-ab66-8f664cc977dd" location="2 3"><up/><down/></link>
 	<link id="bb215b46-eee5-48ba-b9e7-1cb211042aa3" location="5 2"><up/><down/><right/></link>
 	<link id="81fc6771-66cb-4089-83ba-76d35b4f1b35" location="5 3"><up/><down/></link>

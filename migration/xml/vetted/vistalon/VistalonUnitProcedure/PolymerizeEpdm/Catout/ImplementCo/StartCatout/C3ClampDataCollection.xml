@@ -1,6 +1,10 @@
 <?xml version="1.0" ?>
-<sfc zoom="1.0" canvas="11 14" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Mon Feb 27 13:36:27 CST 2017" hot-editable="false" persist-state="false">
-	<step id="eb2791f6-6e1d-11d9-a86e-006008c66680" location="4 1" name="S88Begin_13845" factory-id="begin-step">		<associated-data>{}</associated-data>
+<sfc zoom="1.0" canvas="11 14" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Wed Mar 29 16:48:48 CDT 2017" hot-editable="false" persist-state="false">
+	<step id="eb2791f6-6e1d-11d9-a86e-006008c66680" location="4 1" name="S88Begin_13845" factory-id="begin-step">
+<parameters>
+	<parameter key="true"><name>Name</name><expression>"C3 Clamp"</expression></parameter>
+</parameters>
+		<associated-data>{}</associated-data>
 	</step>
 	<step id="41f25729-68f4-4e91-95e8-4fa898688171" location="4 2" name="Start" factory-id="action-step">
 		<start-script>def onStart(chart, step):
@@ -24,10 +28,9 @@
 '''
 
 import system
-from ils.sfc.gateway.api import s88Set, s88Get, getDatabaseName, getProviderName, fetchRecipeDataValue, getChartLogger
+from ils.sfc.gateway.api import getDatabaseName, getProviderName, getChartLogger, postToQueue
+from ils.sfc.recipeData.api import s88Set, s88Get, s88GetFromName
 from ils.sfc.common.constants import LOCAL_SCOPE, SUPERIOR_SCOPE, PHASE_SCOPE, OPERATION_SCOPE, GLOBAL_SCOPE
-from ils.sfc.gateway.api import postToQueue
-from ils.common.error import catch
 
 def onStart(chart,block):
 	provider = getProviderName(chart)
@@ -35,11 +38,12 @@ def onStart(chart,block):
 	log = getChartLogger(chart)
 	log.tracef("In %s...", block.get("name",""))
 
-	rxConfig = "single-rx"
-
-	r1C3Conv = fetchRecipeDataValue(rxConfig,"r1-c3-conversion","value",database)
-	mainC2Rate = fetchRecipeDataValue(rxConfig,"main-c2-rate","value",database)
-	mainC3ToC2Ratio = fetchRecipeDataValue(rxConfig,"main-c3-to-c2-ratio","value",database)
+	chartPath = "SomeChart"
+	stepName = "SomeStep"
+	
+	r1C3Conv = s88GetFromName(chartPath, stepName, "r1-c3-conversion.value", database)
+	mainC2Rate = s88GetFromName(chartPath, stepName, "main-c2-rate.value", database)
+	mainC3ToC2Ratio = s88GetFromName(chartPath, stepName, "main-c3-to-c2-ratio.value", database)
 	log.tracef("Fetched current configuration data: r1C3Conv=%s, mainC2Rate=%s, mainC3ToC2Ratio=%s", str(r1C3Conv), str(mainC2Rate), str(mainC3ToC2Ratio))
 
 	if r1C3Conv == None or mainC2Rate == None or mainC3ToC2Ratio == None:
@@ -68,10 +72,9 @@ def onStart(chart,block):
 '''
 
 import system
-from ils.sfc.gateway.api import s88Set, s88Get, getDatabaseName, getProviderName, fetchRecipeDataValue, getChartLogger
+from ils.sfc.gateway.api import getDatabaseName, getProviderName, getChartLogger, postToQueue
+from ils.sfc.recipeData.api import s88Set, s88Get, s88GetFromName
 from ils.sfc.common.constants import LOCAL_SCOPE, SUPERIOR_SCOPE, PHASE_SCOPE, OPERATION_SCOPE, GLOBAL_SCOPE
-from ils.sfc.gateway.api import postToQueue
-from ils.common.error import catch
 
 def onStart(chart,block):
 	print "Starting..."
@@ -80,14 +83,15 @@ def onStart(chart,block):
 	log = getChartLogger(chart)
 	log.tracef("In %s...", block.get("name",""))
 
-	rxConfig = "series-rx"
+	chartPath = "SomeChart"
+	stepName = "SomeStep"
 
-	r1C3Conv = fetchRecipeDataValue(rxConfig,"r1-c3-conversion","value",database)
-	mainC2Rate = fetchRecipeDataValue(rxConfig,"main-c2-rate","value",database)
-	mainC3ToC2Ratio = fetchRecipeDataValue(rxConfig,"main-c3-to-c2-ratio","value",database)
-	tC3Conv = fetchRecipeDataValue(rxConfig,"total-c3-conversion","value",database)
-	r2C2Rate = fetchRecipeDataValue(rxConfig,"r2-c2-rate","value",database)
-	r2C3ToC2Ratio = fetchRecipeDataValue(rxConfig,"r2-c3-to-c2-ratio","value",database)
+	r1C3Conv = s88GetFromName(chartPath, stepName,"r1-c3-conversion.value",database)
+	mainC2Rate = s88GetFromName(chartPath, stepName,"main-c2-rate.value",database)
+	mainC3ToC2Ratio = s88GetFromName(chartPath, stepName,"main-c3-to-c2-ratio.value",database)
+	tC3Conv = s88GetFromName(chartPath, stepName,"total-c3-conversion.value",database)
+	r2C2Rate = s88GetFromName(chartPath, stepName,"r2-c2-rate.value",database)
+	r2C3ToC2Ratio = s88GetFromName(chartPath, stepName,"r2-c3-to-c2-ratio.value",database)
 	
 	log.tracef("Fetched current configuration data: r1C3Conv=%s, mainC2Rate=%s, mainC3ToC2Ratio=%s, tC3Conv=%s, r2C2Rate=%s, r2C3ToC2Ratio=%s", str(r1C3Conv), str(mainC2Rate), str(mainC3ToC2Ratio), str(tC3Conv), str(r2C2Rate), str(r2C3ToC2Ratio))
 
@@ -121,10 +125,9 @@ def onStart(chart,block):
 '''
 
 import system
-from ils.sfc.gateway.api import s88Set, s88Get, getDatabaseName, getProviderName, fetchRecipeDataValue, getChartLogger
+from ils.sfc.gateway.api import getDatabaseName, getProviderName, getChartLogger, postToQueue
+from ils.sfc.recipeData.api import s88Set, s88Get, s88GetFromName
 from ils.sfc.common.constants import LOCAL_SCOPE, SUPERIOR_SCOPE, PHASE_SCOPE, OPERATION_SCOPE, GLOBAL_SCOPE
-from ils.sfc.gateway.api import postToQueue
-from ils.common.error import catch
 
 def onStart(chart,block):
 	provider = getProviderName(chart)
@@ -132,15 +135,15 @@ def onStart(chart,block):
 	log = getChartLogger(chart)
 	log.tracef("In %s...", block.get("name",""))
 
-	# Not sure if this should just be "split-rx"
-	rxConfig = "split-fd-rx"
+	chartPath = "SomeChart"
+	stepName = "SomeStep"
 
-	mainC2Rate = fetchRecipeDataValue(rxConfig,"main-c2-rate","value",database)
-	mainC3ToC2Ratio = fetchRecipeDataValue(rxConfig,"main-c3-to-c2-ratio","value",database)
-	mainToR2Split = fetchRecipeDataValue(rxConfig,"r1-to-total-split","value",database)
-	tC3Conv = fetchRecipeDataValue(rxConfig,"r1-c3-conversion","value",database)
-	r2C2Rate = fetchRecipeDataValue(rxConfig,"r2-c2-rate","value",database)
-	r2C3ToC2Ratio = fetchRecipeDataValue(rxConfig,"r2-c3-to-c2-ratio","value",database)
+	mainC2Rate = s88GetFromName(chartPath, stepName,"main-c2-rate.value",database)
+	mainC3ToC2Ratio = s88GetFromName(chartPath, stepName,"main-c3-to-c2-ratio.value",database)
+	mainToR2Split = s88GetFromName(chartPath, stepName,"r1-to-total-split.value",database)
+	tC3Conv = s88GetFromName(chartPath, stepName,"r1-c3-conversion.value",database)
+	r2C2Rate = s88GetFromName(chartPath, stepName,"r2-c2-rate.value",database)
+	r2C3ToC2Ratio = s88GetFromName(chartPath, stepName,"r2-c3-to-c2-ratio.value",database)
 	
 	log.tracef("Fetched current configuration data: mainC2Rate=%s, mainC3ToC2Ratio=%s, mainToR2Split=%s, tC3Conv=%s, r2C2Rate=%s, r2C3ToC2Ratio=%s", str(mainC2Rate), str(mainC3ToC2Ratio), str(mainToR2Split), str(tC3Conv), str(r2C2Rate), str(r2C3ToC2Ratio))
 
@@ -178,10 +181,9 @@ def onStart(chart,block):
 '''
 
 import system
-from ils.sfc.gateway.api import s88Set, s88Get, getDatabaseName, getProviderName, fetchRecipeDataValue, getChartLogger
+from ils.sfc.gateway.api import getDatabaseName, getProviderName, getChartLogger, postToQueue
+from ils.sfc.recipeData.api import s88Set, s88Get, s88GetFromName
 from ils.sfc.common.constants import LOCAL_SCOPE, SUPERIOR_SCOPE, PHASE_SCOPE, OPERATION_SCOPE, GLOBAL_SCOPE
-from ils.sfc.gateway.api import postToQueue
-from ils.common.error import catch
 
 def onStart(chart,block):
 	provider = getProviderName(chart)
@@ -189,11 +191,12 @@ def onStart(chart,block):
 	log = getChartLogger(chart)
 	log.tracef("In %s...", block.get("name",""))
 
-	rxConfig = "c-rx"
+	chartPath = "SomeChart"
+	stepName = "SomeStep"
 
-	tC3Conv = fetchRecipeDataValue(rxConfig,"c3-conv","value",database)
-	r1C3Rate = fetchRecipeDataValue(rxConfig,"main-c3-rate","value",database)
-	r2C3Rate = fetchRecipeDataValue(rxConfig,"ss-c3-rate","value",database)
+	tC3Conv = s88GetFromName(chartPath, stepName,"c3-conv.value",database)
+	r1C3Rate = s88GetFromName(chartPath, stepName,"main-c3-rate.value",database)
+	r2C3Rate = s88GetFromName(chartPath, stepName,"ss-c3-rate.value",database)
 
 	if tC3Conv == None or r1C3Rate == None or r2C3Rate == None:
 		txt = "No data found for one or more of: tC3Conv, r1C3Rate or r2C3Rate for %s reactor configuration." % (rxConfig)
@@ -232,7 +235,8 @@ def onStart(chart,block):
 '''
 
 import system
-from ils.sfc.gateway.api import s88Set, s88Get, getDatabaseName, getProviderName, getChartLogger
+from ils.sfc.gateway.api import getDatabaseName, getProviderName, getChartLogger
+from ils.sfc.recipeData.api import s88Set, s88Get
 from ils.sfc.common.constants import LOCAL_SCOPE, SUPERIOR_SCOPE, PHASE_SCOPE, OPERATION_SCOPE, GLOBAL_SCOPE
 
 def onStart(chart,block):
@@ -240,8 +244,8 @@ def onStart(chart,block):
 	log = getChartLogger(chart)
 	log.tracef("In %s, determining C3 ramp, getting flows...", block.get("name",""))
   
-	r1C3Spcl = s88Get(chart, block, "r1-c3-flow-spcl.value", OPERATION_SCOPE)
-	r2C3Spcl = s88Get(chart, block, "r2-c3-flow-spcl.value", OPERATION_SCOPE)
+	r1C3Spcl = s88Get(chart, block, "r1-c3-flow-spcl.outputValue", OPERATION_SCOPE)
+	r2C3Spcl = s88Get(chart, block, "r2-c3-flow-spcl.outputValue", OPERATION_SCOPE)
 	minimumC3Rate = s88Get(chart, block, "minimum-c3-rate.value", OPERATION_SCOPE)
 
 	log.tracef("  ...determining if there is a ramp...")
@@ -259,10 +263,9 @@ def onStart(chart,block):
 '''
 
 import system
-from ils.sfc.gateway.api import s88Set, s88Get, getDatabaseName, getProviderName, fetchRecipeDataValue, getChartLogger
+from ils.sfc.gateway.api import s88Set, s88Get, getDatabaseName, getProviderName, fetchRecipeDataValue, getChartLogger, postToQueue
+from ils.sfc.recipeData.api import s88Set, s88Get, s88GetFromName
 from ils.sfc.common.constants import LOCAL_SCOPE, SUPERIOR_SCOPE, PHASE_SCOPE, OPERATION_SCOPE, GLOBAL_SCOPE
-from ils.sfc.gateway.api import postToQueue
-from ils.common.error import catch
 
 def onStart(chart,block):
 	provider = getProviderName(chart)
@@ -270,11 +273,12 @@ def onStart(chart,block):
 	log = getChartLogger(chart)
 	log.tracef("In %s...", block.get("name",""))
 
-	rxConfig = "c-rx"
+	chartPath = "SomeChart"
+	stepName = "SomeStep"
 
-	ssC2Flow = fetchRecipeDataValue(rxConfig,"ss-c2-rate","value",database)
-	ssC3Flow = fetchRecipeDataValue(rxConfig,"ss-c3-rate","value",database)
-	r2C3Spcl = fetchRecipeDataValue(rxConfig,"r2-c3-flow-spcl","value",database)
+	ssC2Flow = fetchRecipeDataValue(chartPath, stepName,"ss-c2-rate.value",database)
+	ssC3Flow = fetchRecipeDataValue(chartPath, stepName,"ss-c3-rate.value",database)
+	r2C3Spcl = fetchRecipeDataValue(chartPath, stepName,"r2-c3-flow-spcl.value",database)
 	
 	if ssC2Flow == None or ssC3Flow == None or r2C3Spcl == None:
 		txt = "No data found for one or more of: ssC2Flow, ssC3Flow or r2C3Spcl for %s reactor configuration." % (rxConfig)
@@ -326,6 +330,8 @@ def onStart(chart,block):
 	<note id="55d3126e-9eaa-4af5-86aa-44e78e043d70" location="0 1" size="2 1">Configuration Specific Data 
 Collection Tasks </note>
 	<note id="56be94d6-21a9-45db-af16-8d2369ae1917" location="7 0" size="2 1">Vetted 11/22/2016</note>
+	<note id="39cbe076-7044-447a-9248-19dff7849eb0" location="8 2" size="2 2" note-background="color(255,0,0,255)">This chart is dependent on 
+Rate Change!</note>
 	<note id="07859cdc-e6ee-4733-ad80-d6c4341ef877" location="8 7" size="2 1">This should reference some
 latency time constant</note>
 	<link id="e8129260-2295-4e4b-8be9-19aa551eb761" location="1 3"><down/><right/></link>

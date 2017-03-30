@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<sfc zoom="0.8333333" canvas="9 15" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Tue Mar 28 12:30:56 CDT 2017" hot-editable="false" persist-state="false">
+<sfc zoom="0.8333333" canvas="9 15" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Wed Mar 29 16:48:50 CDT 2017" hot-editable="false" persist-state="false">
 	<oncancel>def onCancel(chart):
 	"""
 	This will run once if the chart is cancelled.
@@ -8,6 +8,16 @@
 		chart: A reference to the chart's scope.
 	"""
 </oncancel>
+	<onabort>def onAbort(chart):
+	"""
+	This will run once if the chart is aborted.
+	The exception that caused the abort is
+	available via chart.abortCause
+
+	Arguments:
+		chart: A reference to the chart's scope.
+	"""
+</onabort>
 	<step id="2ac6ee47-6b3a-11d9-a9ad-00022dc3c8fd" location="2 1" name="S88Begin_6065" factory-id="begin-step">
 <parameters>
 	<parameter key="true"><name>Name</name><expression>"Cat-Out"</expression></parameter>

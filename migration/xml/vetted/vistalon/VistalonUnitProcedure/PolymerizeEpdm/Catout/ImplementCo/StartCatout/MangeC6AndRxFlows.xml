@@ -1,8 +1,12 @@
 <?xml version="1.0" ?>
-<sfc zoom="1.0166668" canvas="10 15" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Sun Mar 19 19:40:11 CDT 2017" hot-editable="false" persist-state="false">
-	<step id="741cce52-9a24-11d9-b116-00065b88c6c2" location="3 0" name="S88Begin_13798" factory-id="begin-step">		<associated-data>{}</associated-data>
+<sfc zoom="1.1666666" canvas="10 15" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Wed Mar 29 16:48:45 CDT 2017" hot-editable="false" persist-state="false">
+	<step id="741cce52-9a24-11d9-b116-00065b88c6c2" location="3 0" name="S88Begin_13798" factory-id="begin-step">
+<parameters>
+	<parameter key="true"><name>Name</name><expression>"Manage C6 &amp; Rx"</expression></parameter>
+</parameters>
+		<associated-data>{}</associated-data>
 	</step>
-	<step id="46c29480-9016-11d9-b116-00065b88c6c2" location="3 1" name="Managing C6" factory-id="com.ils.controlPanelMessageStep" breakpoint="true"><description></description><timeoutUnit>SEC</timeoutUnit><message>Managing the C6 valve.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><breakpoint>true</breakpoint><ackRequired>false</ackRequired><name>Managing C6</name><id>46c29480-9016-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	<step id="46c29480-9016-11d9-b116-00065b88c6c2" location="3 1" name="Managing C6" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>Managing the C6 valve.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><ackRequired>false</ackRequired><name>Managing C6</name><id>46c29480-9016-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
 	</step>
 	<step id="8b389340-6b65-11d9-a9ad-00022dc3c8fd" location="3 2" name="c6ModeWrite" factory-id="com.ils.writeOutputStep"><globalErrorCountKey>total-download-errors.value</globalErrorCountKey><timerKey>unit-procedure-start-time</timerKey><timerLocation>global</timerLocation><recipeLocation>operation</recipeLocation><timerSet>true</timerSet><description></description><globalErrorCountLocation>operation</globalErrorCountLocation><verbose>true</verbose><name>c6ModeWrite</name><writeOutputConfig>{"rows":[{"key":"r1-c6-flow-mode","confirmWrite":true}]}</writeOutputConfig><id>8b389340-6b65-11d9-a9ad-00022dc3c8fd</id>		<associated-data>{"download-error-counter":{"lowLimit":0.0,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"7ebd6912-4e69-413f-8700-9d321d7db15e","valueType":"float","highLimit":0.0,"category":"Simple Constant","class":"Value","value":0.0,"key":"download-error-counter"}}</associated-data>
 	</step>
@@ -185,7 +189,8 @@ def onStart(chart,step):
 	<transition id="26c3a161-4494-11da-b121-00065b88c6c2" location="3 9" timeout-enabled="true" timeout-delay="1000" timeout-flag="S88-CONDITIONAL-TRANSITION-XXX-13785">!{tag.Recipe/Local/C-RX-GRADE}</transition>
 	<transition id="3ba437d5-9fae-4e00-8b1a-63a42d539fce" location="7 8">{previous.workDone}</transition>
 	<note id="70cbb6fe-d085-4268-a8cb-5207e35ceb01" location="1 6">c3 ramp</note>
-	<note id="405615c6-78cc-465e-bf5c-1d8d5f3957f2" location="7 0" size="2 1">Manually vetted 12/2/16</note>
+	<note id="405615c6-78cc-465e-bf5c-1d8d5f3957f2" location="7 0" size="2 1">Manually vetted 12/2/16
+Fixed Timer &amp; Exported 3/26/17</note>
 	<note id="0017ef6c-1d95-43a4-94f7-6a518c439359" location="0 9">C-Rx grade</note>
 	<link id="e2edf95c-4487-4012-b986-e8b7c3926d17" location="2 5"><down/><right/></link>
 	<link id="0f3fabfe-8ff6-4be5-90e1-2e5908fe0a47" location="3 5"><up/><left/><right/></link>
