@@ -7,10 +7,6 @@
 #
 SFC=$GIT_REPO/sfc
 PYDIR=${SFC}/migration/procs/ignition/vistalon
-INDIR="$SFC/migration/xml/ignition/vistalon"
-OUTDIR=$SFC/migration/projects/Vistalon
-mkdir -p $OUTDIR
-rm -rf $OUTDIR/*
 
 cd $SFC/migration
 #./clear-procs vistalon
@@ -26,13 +22,3 @@ cd $SFC/migration
 #
 # Convert the XML (NOTE: procedures from checkin area)
 ./convert-vistalon all
-
-#
-cd $INDIR
-for PROJ in *
-do
-    INFIL=${INDIR}/$PROJ
-    OUTFIL=${OUTDIR}/$PROJ
-    rm -f $OUTFIL
-    $SFC/migration/build-project "$INFIL" "$OUTFIL"
-done
