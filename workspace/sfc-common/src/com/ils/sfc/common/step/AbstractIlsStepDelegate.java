@@ -31,7 +31,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	private static LoggerEx log = LogUtil.getLogger(AbstractIlsStepDelegate.class.getName());
 	// Note that NAME is handled separately. 
 	public static final BasicProperty<?>[] commonProperties = {
-		//IlsProperty.NAME, 
+		IlsProperty.NAME, 
 		IlsProperty.DESCRIPTION
 	};
 	private Property<?>[] orderedProperties;
