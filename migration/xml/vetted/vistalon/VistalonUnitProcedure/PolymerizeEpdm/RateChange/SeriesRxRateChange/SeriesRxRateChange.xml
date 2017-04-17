@@ -1,0 +1,338 @@
+<?xml version="1.0" ?>
+<sfc zoom="0.6346154" canvas="16 29" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Mon Apr 17 12:39:33 CDT 2017" hot-editable="false" persist-state="true">
+	<step id="072a0016-8113-11d9-a871-006008c66680" location="7 4" name="RcNewDatainitialize" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+
+'''
+ Find the New Data block on the same workspace as this block and set the VAL of all of the calculated-value data entities in its recipe data to "****".  These will be completed after the user presses calculate new values and enters a new rate. 
+'''
+import system
+from ils.sfc.common.constants import LOCAL_SCOPE
+from ils.sfc.gateway.api import getChartLogger
+from ils.sfc.gateway import api
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	log.tracef("In %s with %s, a %s. . .",chart.get("name",""),block.get("name",""),"step")
+
+	ws = block.get("workspace","")
+	newDataBlock = emS88RateChangeNewDataCallback
+	for rd in recipedatav2.get("s88RecipeValueData",""):
+		if toUpper() == "CALCULATED VALUE":
+			api.s88SetData(chart,newDataBlock,"%s.val"%(rd.get("key","")),"****",LOCAL_SCOPE)
+
+
+	log.tracef("%s has completed!",block.get("name",""))
+</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="e6405de7-efc8-11d9-a219-00b0d0d0fabc" location="7 5" name="RcSeriespolyValidate" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+
+'''
+     Check is the polyrate is varying too much to allow for collection of current plant conditions. 
+'''
+import system
+from ils.sfc.common.constants import GLOBAL_SCOPE,LOCAL_SCOPE
+from ils.blt.functions import minimumOverTime
+from api import s88GetData
+from com.ils.queue import post
+from ils.blt.functions import maximumOverTime
+from ils.sfc.gateway.api import getChartLogger
+from ils.blt.functions import averageOverTime
+from ils.sfc.gateway import api
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	log.tracef("Entering %s with %s, a %s.",chart.get("name",""),block.get("name",""),"step")
+
+	status,polyRateDataCollectPct=api.s88GetData(chart,block,"poly-rate-data-collect-pct.val",GLOBAL_SCOPE)
+	status,polyRateDataCollectInterval=api.s88GetData(chart,block,"poly-rate-data-collect-interval.val",GLOBAL_SCOPE)
+	try:
+		avgPolyRate = averageOverTime("SFC IO/Rate Change/VRF9101Z",polyRateDataCollectInterval*60)
+		minPolyRate = minimumOverTime("SFC IO/Rate Change/VRF9101Z",polyRateDataCollectInterval*60)
+		maxPolyRate = maximumOverTime("SFC IO/Rate Change/VRF9101Z",polyRateDataCollectInterval*60)
+	except:
+		post.messageToQueue(chart,block,"Rate change data was not available.",s88LitWarning,block)
+		api.s88SetData(chart,block,"return-status.val","timeout",LOCAL_SCOPE)
+		
+
+	if (maxPolyRate - minPolyRate) / avgPolyRate * 100.0 &gt; polyRateDataCollectPct:
+		api.s88SetData(chart,block,"return-status.val","data varied too much",LOCAL_SCOPE)
+	else:
+		api.s88SetData(chart,block,"return-status.val","data ok",LOCAL_SCOPE)
+
+	log.tracef("Leaving %s as complete!",block.get("name",""))
+</start-script>
+		<associated-data>{"return-status":{"lowLimit":null,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"45b0f73e-d016-4036-86a2-f6dfde72e414","valueType":"float","highLimit":null,"category":"Simple Constant","class":"Value","value":"data ok","key":"return-status"}}</associated-data>
+	</step>
+	<step id="072a0039-8113-11d9-a871-006008c66680" location="9 1" name="Begin" factory-id="begin-step">		<associated-data>{}</associated-data>
+	</step>
+	<step id="e6405dfd-efc8-11d9-a219-00b0d0d0fabc" location="5 8" name="RcSeriesVariationMsg" factory-id="com.ils.queueMessageStep"><name>RcSeriesVariationMsg</name><description></description><id>e6405dfd-efc8-11d9-a219-00b0d0d0fabc</id><message>Reactor data varied too much and has NOT been updated for the current rate change.</message><priority>Warning</priority>		<associated-data>{}</associated-data>
+	</step>
+	<step id="e6405e02-efc8-11d9-a219-00b0d0d0fabc" location="7 8" name="RcSeriesToSeedMsg" factory-id="com.ils.queueMessageStep"><name>RcSeriesToSeedMsg</name><description></description><id>e6405e02-efc8-11d9-a219-00b0d0d0fabc</id><message>A timeout collecting reactor data has occurred. Rate data has NOT been updated for the this rate change.</message><priority>Warning</priority>		<associated-data>{}</associated-data>
+	</step>
+	<step id="072a0025-8113-11d9-a871-006008c66680" location="9 8" name="CurrentData" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+import system
+from ils.sfc.gateway.api import getChartLogger
+from ils.blt.lib import namedItemExists
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	ws = block.get("workspace","")
+	log.tracef("In %s with %s, a %s.",chart.get("name",""),block.get("name",""),"step")
+
+	if block == "em-s88-rate-change-current-data-callback":
+		procName = "_em-s88-copy-[the configuration of BLOCK]-data"
+	else:
+		procName = "_em-s88-new-[the configuration of BLOCK]-production"
+
+	if not(namedItemExists(procName,procedure)):
+		error = {}
+		error["errordescription"]="Unable to find the private copy procedure named &lt;%s&gt;.  In %s."%(str(procName),chart.get("name",""))
+
+		raise ValueError(error)
+
+	eval(proc(block,currentDataBlock,newDataBlock))
+</start-script>
+		<associated-data>{"r2-c2-rate":{"lowLimit":null,"advice":"","description":"R2 C2 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"8dbab90e-0be2-4dcc-8d04-a87653ac609f","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":6.071,"key":"r2-c2-rate"},"total-enb-conversion":{"lowLimit":null,"advice":"","description":"Total ENB Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"955cccb6-9b92-4173-a3cc-3e25f5a44795","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.0,"key":"total-enb-conversion"},"r1-outlet-temp":{"lowLimit":null,"advice":"","description":"R1 Outlet Temp","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"3db18c78-1fe8-4115-89b8-2bf7ce449517","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":90.147,"key":"r1-outlet-temp"},"total-c3-conversion":{"lowLimit":null,"advice":"","description":"Total C3 Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"a02e3ed0-a4a1-4601-bf33-b2f5cb45c808","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":29.718,"key":"total-c3-conversion"},"cat-efficiency":{"lowLimit":null,"advice":"","description":"Cat Efficiency","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"1322c86d-a510-4e1f-b5dd-0979575fe06f","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":679.428,"key":"cat-efficiency"},"poly-split":{"lowLimit":null,"advice":"","description":"Poly Split","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"a2a1c27d-6ef1-4c1f-aa46-962be2bc7f45","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":77.025,"key":"poly-split"},"al-to-va":{"lowLimit":null,"advice":"","description":"AL to VA","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"17f8e8ff-0768-4387-b2f8-37507999cd5e","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":4.503,"key":"al-to-va"},"h2-to-va-ratio":{"lowLimit":null,"advice":"","description":"H2 / VA","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"8a52bf38-c04b-4dc3-8c76-9372ff43360a","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":2.209,"key":"h2-to-va-ratio"},"r1-c2-conversion":{"lowLimit":null,"advice":"","description":"R1 C2 Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"eb35c2cb-baff-4e58-bca3-6008f5df7dbe","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":100.926,"key":"r1-c2-conversion"},"r2-enb-to-c2-ratio":{"lowLimit":null,"advice":"","description":"R2 ENB / C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"31718546-0e4b-4ae6-a764-a80a14d258c5","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.0,"key":"r2-enb-to-c2-ratio"},"main-enb-to-c2-ratio":{"lowLimit":null,"advice":"","description":"ENB / C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"6bd691ff-5516-49e6-8382-922e7515c50a","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.0,"key":"main-enb-to-c2-ratio"},"total-c2-conversion":{"lowLimit":null,"advice":"","description":"Total C2 Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"d57a1359-097c-4b20-a6e9-a28104c5b323","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":91.74,"key":"total-c2-conversion"},"r1-inlet-temp":{"lowLimit":null,"advice":"","description":"R1 Inlet Temp","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"75153963-0915-4670-b158-44f0140c2b6b","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":-29.57,"key":"r1-inlet-temp"},"r1-enb-conversion":{"lowLimit":null,"advice":"","description":"R1 ENB Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"f9546949-1f47-4f65-a773-3ecd4f942544","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.0,"key":"r1-enb-conversion"},"grade":{"lowLimit":null,"advice":"","description":"Grade","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"efbaa54c-c190-4b7d-a5c8-d64ecfeb6cfa","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":706,"key":"grade"},"main-c3-to-c2-ratio":{"lowLimit":null,"advice":"","description":"C3 / C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"42f24574-34bb-430d-9f67-30c0e2ef9101","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":1.07,"key":"main-c3-to-c2-ratio"},"r2-c3-to-c2-ratio":{"lowLimit":null,"advice":"","description":"R2 C3 / C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"aeac01a0-65d0-44b3-93df-d7c579ad32ae","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":2.914,"key":"r2-c3-to-c2-ratio"},"va-to-c2-ratio":{"lowLimit":null,"advice":"","description":"VA / C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"3a97514c-c5a1-4d5b-b141-00ab5fb4f2ca","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":3.061,"key":"va-to-c2-ratio"},"r1-c3-conversion":{"lowLimit":null,"advice":"","description":"R1 C3 Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"fe40872e-31de-4f7c-93ea-526c1dbd9673","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":55.419,"key":"r1-c3-conversion"},"main-c2-rate":{"lowLimit":null,"advice":"","description":"C2 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"3cfbe94e-cda0-4510-b29c-5fa19cea07e2","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":12.819,"key":"main-c2-rate"},"nh3-to-va-ratio":{"lowLimit":null,"advice":"","description":"NH3 / VA","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"f75fdfe4-6d11-45fc-9cef-bd3c832f5ea1","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":1.0,"key":"nh3-to-va-ratio"},"poly-rate":{"lowLimit":null,"advice":"","description":"Poly Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"c0dcd38d-2453-4b8f-ada6-60278c82eb54","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":639.821,"key":"poly-rate"}}</associated-data>
+	</step>
+	<step id="c5497f15-9018-11d9-b116-00065b88c6c2" location="5 11" name="NewRateEntryMsg" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>Choose to enter a new rate, transfer rate change to setpoint workspace, or initiate a re-stick of the reactor.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><ackRequired>false</ackRequired><name>NewRateEntryMsg</name><id>c5497f15-9018-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	</step>
+	<step id="60b9efc1-8fe6-11d9-b116-00065b88c6c2" location="11 6" name="CsToRcMsg" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>A rate change from the cold-stick conditions has been requested. Initializing the review screen.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><ackRequired>false</ackRequired><name>CsToRcMsg</name><id>60b9efc1-8fe6-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	</step>
+	<step id="e6405de2-efc8-11d9-a219-00b0d0d0fabc" location="9 9" name="RcSeriesOkSeedMsg" factory-id="com.ils.queueMessageStep"><name>RcSeriesOkSeedMsg</name><description></description><id>e6405de2-efc8-11d9-a219-00b0d0d0fabc</id><message>Reactor data has been updated for this rate change.</message><priority>Info</priority>		<associated-data>{}</associated-data>
+	</step>
+	<step id="d214b412-843e-11d9-a871-006008c66680" location="5 12" name="ReviewSeriesRxData" factory-id="enclosing-step" chart-path="VistalonUnitProcedure/PolymerizeEpdm/RateChange/SeriesRxRateChange/ReviewSeriesRxData" execution-mode="RunUntilCompletion">		<associated-data>{"SELECTED-BUTTON":{"lowLimit":null,"advice":"","description":"","label":"","units":"","type":"Text","help":"","dataId":"ed538873-5813-41a4-ad69-6fbf228daa73","valueType":"string","highLimit":null,"category":"Simple Constant","class":"Value","value":"Cancel","key":"SELECTED-BUTTON"}}</associated-data>
+	</step>
+	<step id="274dd64a-a2c3-11d9-b116-00065b88c6c2" location="11 7" name="CsNewDatainitialize" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+
+'''
+ Find the New Data block on the same workspace as this block and set the VAL of all of the calculated-value data entities in its recipe data to "****".  These will be completed after the user presses calculate new values and enters a new rate. 
+'''
+import system
+from ils.sfc.common.constants import LOCAL_SCOPE
+from ils.sfc.gateway.api import getChartLogger
+from ils.sfc.gateway import api
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	log.tracef("In %s with %s, a %s. . .",chart.get("name",""),block.get("name",""),"step")
+
+	ws = block.get("workspace","")
+	newDataBlock = emS88RateChangeNewDataCallback
+	for rd in recipedatav2.get("s88RecipeValueData",""):
+		if toUpper() == "CALCULATED VALUE":
+			api.s88SetData(chart,newDataBlock,"%s.val"%(rd.get("key","")),"****",LOCAL_SCOPE)
+
+
+	log.tracef("%s has completed!",block.get("name",""))
+</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="7ba8fbd3-a6d7-11d9-b116-00065b88c6c2" location="13 6" name="NewDataToOlddataInitialize" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+import system
+from ils.sfc.common.constants import LOCAL_SCOPE
+from ils.sfc.gateway.api import getChartLogger
+from ils.sfc.gateway import api
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	ws = block.get("workspace","")
+	log.tracef("In %s with %s, a %s. . .",chart.get("name",""),block.get("name",""),"step")
+
+	currentDataBlock = emS88RateChangeCurrentDataCallback
+	newDataBlock = emS88RateChangeNewDataCallback
+	# Copy the current operating point definition to the new data block
+	api.s88UpdateValue(chart,currentDataBlock,"",LOCAL_SCOPE,newDataBlock,"",LOCAL_SCOPE,False,"calculated value")
+	#   	for STRUC = each structure in the recipe-data of CURRENT-DATA-BLOCK do  		if the type of STRUC = the symbol calculated-value then begin  			status, val = call s88-get-data (CURRENT-DATA-BLOCK, "[the key of STRUC].val", s88-local);  			call s88-set-data (NEW-DATA-BLOCK, "[the key of STRUC].val", val, s88-local);  		end;  	end;
+</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="089ab8dd-9019-11d9-b116-00065b88c6c2" location="5 15" name="CalculateTrueMsg" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>Calculating new rate for rate change based on operator input.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><ackRequired>false</ackRequired><name>CalculateTrueMsg</name><id>089ab8dd-9019-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	</step>
+	<step id="28ec0520-8637-11d9-a871-006008c66680" location="7 15" name="CancelAbort" factory-id="com.ils.abortStep"><ackRequired>false</ackRequired><name>CancelAbort</name><description>Operator has cancelled the rate change.</description><id>28ec0520-8637-11d9-a871-006008c66680</id><message></message>		<associated-data>{}</associated-data>
+	</step>
+	<step id="072a0006-8113-11d9-a871-006008c66680" location="5 16" name="NewRateEntry" factory-id="com.ils.inputStep"><recipeLocation>local</recipeLocation><description></description><scale>1.0</scale><timeoutUnit>SEC</timeoutUnit><windowTitle></windowTitle><timeout>-1.0</timeout><buttonLabel></buttonLabel><name>NewRateEntry</name><id>072a0006-8113-11d9-a871-006008c66680</id><position>center</position><prompt>Type NEW rate, press enter key, and click OK button:</prompt><key>user-response.value</key>		<associated-data>{"user-response":{"lowLimit":null,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"90abe3f6-9c39-45c2-bf87-7e0b4c5c6396","valueType":"float","highLimit":null,"category":"Simple Constant","class":"Value","value":650,"key":"user-response"}}</associated-data>
+	</step>
+	<step id="123bd438-58d6-11dd-a699-00142223a71b" location="9 15" name="SetRcDownloadG2StartTime" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+
+'''
+ Sets time operator choose to move SPs to the SP Spreadsheet for download.  Used to ensure the attribute that indicates Download in the spreadsheet occurs AFTER this time.
+'''
+import system
+from ils.sfc.common.constants import OPERATION_SCOPE
+import java.util.Date
+from ils.sfc.gateway.api import getChartLogger
+from ils.sfc.gateway import api
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	log.tracef("In %s with %s, a %s. . .",chart.get("name",""),block.get("name",""),"step")
+
+	currentTime = Date().toString()
+	api.s88SetData(chart,block,"RC-DOWNLOAD-START-TIME.val",currentTime,OPERATION_SCOPE)
+	log.tracef("%s has completed!",block.get("name",""))
+</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="d8c54aae-58d0-11dd-a699-00142223a71b" location="9 16" name="SetModesTransfer" factory-id="enclosing-step" chart-path="" execution-mode="RunUntilCompletion">		<associated-data>{}</associated-data>
+	</step>
+	<step id="54f64a27-8b72-11d9-b116-00065b88c6c2" location="11 15" name="RestickTrueMsg" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>Initiate restick was selected. Printing rate change screens. Please be patient.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><ackRequired>false</ackRequired><name>RestickTrueMsg</name><id>54f64a27-8b72-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	</step>
+	<step id="072a0036-8113-11d9-a871-006008c66680" location="7 18" name="End" factory-id="end-step">		<associated-data>{}</associated-data>
+	</step>
+	<step id="0729fff3-8113-11d9-a871-006008c66680" location="6 19" name="AcceptNewRate" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+
+'''
+ Copy the rate that was just entered from the get input block to the new rate block so that it is available for calculations. 
+'''
+import system
+from ils.sfc.common.constants import LOCAL_SCOPE
+from api import s88GetData
+from ils.sfc.gateway.api import getChartLogger
+from ils.sfc.gateway import api
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	ws = block.get("workspace","")
+	log.tracef("In %s with %s, a %s. . .",chart.get("name",""),block.get("name",""),"step")
+
+	getInputBlock = s88GetInputTask
+	newDataBlock = emS88RateChangeNewDataCallback
+	status,newRate=api.s88GetData(chart,getInputBlock,"%s"%(getinputblock.get("key","")),LOCAL_SCOPE)
+	api.s88SetData(chart,newDataBlock,"poly-rate.val",newRate,LOCAL_SCOPE)
+	log.tracef("%s has completed - the new rate is %s!",block.get("name",""),str(newRate))
+</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="072a0021-8113-11d9-a871-006008c66680" location="6 20" name="NewDataCalc" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+import system
+from ils.sfc.gateway.api import getChartLogger
+from ils.blt.lib import namedItemExists
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	ws = block.get("workspace","")
+	log.tracef("In %s with %s, a %s.",chart.get("name",""),block.get("name",""),"step")
+
+	if block == "em-s88-rate-change-current-data-callback":
+		procName = "_em-s88-copy-[the configuration of BLOCK]-data"
+	else:
+		procName = "_em-s88-new-[the configuration of BLOCK]-production"
+
+	if not(namedItemExists(procName,procedure)):
+		error = {}
+		error["errordescription"]="Unable to find the private copy procedure named &lt;%s&gt;.  In %s."%(str(procName),chart.get("name",""))
+
+		raise ValueError(error)
+
+	eval(proc(block,currentDataBlock,newDataBlock))
+</start-script>
+		<associated-data>{"r2-c2-rate":{"lowLimit":null,"advice":"","description":"R2 C2 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"ce90005b-89ce-4c3f-82ae-a7bf341891e7","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"r2-c2-rate"},"total-enb-conversion":{"lowLimit":null,"advice":"","description":"Total ENB Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"c35b9c47-7d51-4527-a5d8-6e8b56ae7f5a","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"total-enb-conversion"},"r1-outlet-temp":{"lowLimit":null,"advice":"","description":"R1 Outlet Temp","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"662df4db-4e14-47b8-bdbe-2be8e8e1b75a","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"r1-outlet-temp"},"show-series-instruction":{"lowLimit":null,"advice":"","description":"Used to determine if WS should be shown","label":"NA","units":"","type":"Text","help":"","dataId":"b6b24417-a69b-4466-a854-95332c98c074","valueType":"string","highLimit":null,"category":"Simple Constant","class":"Value","value":false,"key":"show-series-instruction"},"total-c3-conversion":{"lowLimit":null,"advice":"","description":"Total C3 Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"38983615-8d52-4e79-bd04-64bd49709673","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"total-c3-conversion"},"cat-efficiency":{"lowLimit":null,"advice":"","description":"Cat Efficiency","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"8ab484f9-cb7b-4b3e-8c4d-186723a5d3e2","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"cat-efficiency"},"poly-split":{"lowLimit":null,"advice":"","description":"Poly Split","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"ecc14c9e-8abe-4661-b4cd-e3894dec49b7","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"poly-split"},"al-to-va":{"lowLimit":null,"advice":"","description":"AL to VA","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"0a162a72-d65d-44e1-b036-3e560beedd43","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"al-to-va"},"h2-to-va-ratio":{"lowLimit":null,"advice":"","description":"H2 / VA","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"07eb1ca8-fb66-4834-990f-fa5e2349f6d8","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"h2-to-va-ratio"},"r1-c2-conversion":{"lowLimit":null,"advice":"","description":"R1 C2 Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"10cd1b1f-f322-421f-bd7b-c0d29021f372","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"r1-c2-conversion"},"r2-enb-to-c2-ratio":{"lowLimit":null,"advice":"","description":"R2 ENB / C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"9780946e-c963-483d-8236-37fcbb0aa79d","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"r2-enb-to-c2-ratio"},"main-enb-to-c2-ratio":{"lowLimit":null,"advice":"","description":"ENB / C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"52941a03-7a75-48bc-9040-3c5adc60f83c","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"main-enb-to-c2-ratio"},"total-c2-conversion":{"lowLimit":null,"advice":"","description":"Total C2 Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"2594ac3e-36ac-4165-8202-c7d3952f2d83","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"total-c2-conversion"},"r1-inlet-temp":{"lowLimit":null,"advice":"","description":"R1 Inlet Temp","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"7e44ae3d-ee72-4885-b7b4-89f9885ce699","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"r1-inlet-temp"},"r1-enb-conversion":{"lowLimit":null,"advice":"","description":"R1 ENB Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"18ff68b7-2ad6-4ef8-9ebe-7bd9e38b0b3d","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"r1-enb-conversion"},"grade":{"lowLimit":null,"advice":"","description":"Grade","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"a113b172-1c3d-4229-9900-7a1aa5f23887","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"grade"},"main-c3-to-c2-ratio":{"lowLimit":null,"advice":"","description":"C3 / C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"5a300c9c-ddc2-43c9-aa39-7455a324b743","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"main-c3-to-c2-ratio"},"r2-c3-to-c2-ratio":{"lowLimit":null,"advice":"","description":"R2 C3 / C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"0e3d684a-2e99-4ac5-b22b-b21f79313f65","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"r2-c3-to-c2-ratio"},"va-to-c2-ratio":{"lowLimit":null,"advice":"","description":"VA / C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"83acde9e-0575-40b9-bd9c-6c4f7ec47ae0","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"va-to-c2-ratio"},"r1-c3-conversion":{"lowLimit":null,"advice":"","description":"R1 C3 Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"7c92158b-f7d1-4534-adf6-c78a6d9f9576","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"r1-c3-conversion"},"main-c2-rate":{"lowLimit":null,"advice":"","description":"C2 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"a1cd9738-d7e1-4df7-999c-015fe08ae417","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"main-c2-rate"},"nh3-to-va-ratio":{"lowLimit":null,"advice":"","description":"NH3 / VA","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"3d69eade-7587-4f00-95f5-c636e9c80f60","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"nh3-to-va-ratio"},"poly-rate":{"lowLimit":null,"advice":"","description":"Poly Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"69a79c48-36a3-49dd-9d84-87c76127c695","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":"****","key":"poly-rate"}}</associated-data>
+	</step>
+	<step id="29f2b565-8bfc-11d9-b116-00065b88c6c2" location="5 23" name="ResetWait" factory-id="com.ils.timedDelayStep"><postNotification>false</postNotification><recipeLocation>superior</recipeLocation><tagPath></tagPath><description></description><scale>1.0</scale><windowTitle></windowTitle><message></message><buttonLabel></buttonLabel><delay>5.0</delay><name>ResetWait</name><callback>G2</callback><id>29f2b565-8bfc-11d9-b116-00065b88c6c2</id><position>center</position><strategy>static</strategy><key>g2</key><delayUnit>SEC</delayUnit>		<associated-data>{}</associated-data>
+	</step>
+	<step id="c7d7562e-8bf7-11d9-b116-00065b88c6c2" location="7 23" name="ShowInstructionwksp" factory-id="com.ils.showWindowStep"><description></description><scale>1.0</scale><windowTitle></windowTitle><buttonLabel></buttonLabel><security>public</security><name>ShowInstructionwksp</name><id>c7d7562e-8bf7-11d9-b116-00065b88c6c2</id><position>center</position><window>EM-S88-REACTANT-CHANGE</window>		<associated-data>{}</associated-data>
+	</step>
+	<step id="f650a6f4-8bf7-11d9-b116-00065b88c6c2" location="7 25" name="Acknowlegeinstuctions" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>Review the colored workspace at center of screen. Once managed, use &amp;quot;Acknowledge&amp;quot; on the control panel to continue.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>36.0</timeout><ackRequired>false</ackRequired><name>Acknowlegeinstuctions</name><id>f650a6f4-8bf7-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	</step>
+	<step id="c7d75633-8bf7-11d9-b116-00065b88c6c2" location="7 26" name="HideInstructionwksp" factory-id="com.ils.closeWindowStep"><name>HideInstructionwksp</name><description></description><id>c7d75633-8bf7-11d9-b116-00065b88c6c2</id><window></window>		<associated-data>{}</associated-data>
+	</step>
+	<transition id="3a74c43b-8b72-11d9-b116-00065b88c6c2" location="7 3" timeout-enabled="true" timeout-delay="30000" timeout-flag="Cat Is In-True">{tag.Site/CRX/CAT-AND-C2-IS-IN} = ".TRUE"</transition>
+	<transition id="e6405e06-efc8-11d9-a219-00b0d0d0fabc" location="5 7" timeout-enabled="true" timeout-delay="30000" timeout-flag="RC Series Seed Variation-True">{previous.return-status.value} = "data varied too much"</transition>
+	<transition id="e6405dec-efc8-11d9-a219-00b0d0d0fabc" location="7 7" timeout-enabled="true" timeout-delay="30000" timeout-flag="RC Sereis Seed Timeout-True">{previous.return-status.value} = "timeout"</transition>
+	<transition id="e6405df3-efc8-11d9-a219-00b0d0d0fabc" location="9 7" timeout-enabled="true" timeout-delay="30000" timeout-flag="RC Series Seed OK-True">{previous.return-status.value} = "data ok"</transition>
+	<transition id="3e21b5c3-8f52-11d9-b116-00065b88c6c2" location="11 5" timeout-enabled="true" timeout-delay="108000000" timeout-flag="CS Rate Change-True">{global.review-data-button.value} = "Calc-New-Rate"</transition>
+	<transition id="429d5a77-8b72-11d9-b116-00065b88c6c2" location="12 3" timeout-enabled="true" timeout-delay="30000" timeout-flag="Cat Is In-False">{tag.Site/CRX/CAT-AND-C2-IS-IN} != ".TRUE"</transition>
+	<transition id="3e21b5bd-8f52-11d9-b116-00065b88c6c2" location="13 5" timeout-enabled="true" timeout-delay="108000000" timeout-flag="CS Rate Change-False">{global.review-data-button.value} != "Calc-New-Rate"</transition>
+	<transition id="a6b147e4-843f-11d9-a871-006008c66680" location="5 14" timeout-enabled="true" timeout-delay="108000000" timeout-flag="Calculate-True">{previous.selected-button.value} = "calculate"</transition>
+	<transition id="a6b147ea-843f-11d9-a871-006008c66680" location="7 14" timeout-enabled="true" timeout-delay="108000000" timeout-flag="Cancel-True">{previous.selected-button.value} = "Cancel"</transition>
+	<transition id="a6b147f0-843f-11d9-a871-006008c66680" location="9 14" timeout-enabled="true" timeout-delay="108000000" timeout-flag="Transfer-True">{previous.selected-button.value} = "transfer"</transition>
+	<transition id="54f64a21-8b72-11d9-b116-00065b88c6c2" location="11 14" timeout-enabled="true" timeout-delay="108000000" timeout-flag="Restick-True">{previous.selected-button.value} = "re-stick"</transition>
+	<transition id="072a0003-8113-11d9-a871-006008c66680" location="3 18" timeout-enabled="true" timeout-delay="-1000" timeout-flag="New Rate Cancel-True">{previous.user-response.value} = "CANCEL"</transition>
+	<transition id="072a0000-8113-11d9-a871-006008c66680" location="6 18" timeout-enabled="true" timeout-delay="-1000" timeout-flag="New Rate Cancel-False">{previous.user-response.value} != "CANCEL"</transition>
+	<transition id="cf118016-8bf7-11d9-b116-00065b88c6c2" location="5 22" timeout-enabled="true" timeout-delay="30000" timeout-flag="Show Instr-False">{previous.show-series-instruction.value} != "true"</transition>
+	<transition id="cf11801b-8bf7-11d9-b116-00065b88c6c2" location="7 22" timeout-enabled="true" timeout-delay="30000" timeout-flag="Show Instr-True">{previous.show-series-instruction.value} = "true"</transition>
+	<transition id="485619f0-bf43-47b7-9e39-7b43c767d051" location="5 24">{previous.workDone}</transition>
+	<transition id="60b2f156-d3e3-4c99-a2b7-f8507058362c" location="7 24">{previous.workDone}</transition>
+	<link id="c6d9294a-9642-495e-8db5-a8b8142f142d" location="7 2"><down/><right/></link>
+	<link id="a0e925ad-83f2-4466-813d-3dd884922505" location="5 6"><down/><right/></link>
+	<link id="2d5cca9b-184f-4769-b04a-9dfd98960497" location="8 2"><left/><right/></link>
+	<link id="e4e5f8a5-0e5d-4163-9844-193026932d8b" location="6 6"><left/><right/></link>
+	<link id="af0cf7a0-aeb2-4166-9aae-0e9a3dd5ae75" location="9 2"><up/><left/><right/></link>
+	<link id="0d4e27b3-35b3-4ef2-ab87-83a95be688cc" location="7 6"><up/><left/><down/><right/></link>
+	<link id="af9ba11b-0b2d-45e7-8c09-3151b26c2c68" location="8 6"><left/><right/></link>
+	<link id="44113cdd-6691-45ac-8806-c2ded9cf9835" location="10 2"><left/><right/></link>
+	<link id="5b7aad34-9624-4bea-ba37-727995ebf703" location="2 10"><up/><down/><right/></link>
+	<link id="88c6695e-811c-4d02-a75e-e7f873a964a2" location="5 9"><up/><down/><right/></link>
+	<link id="291545b6-4e39-4cc4-a0cd-d874c330a43b" location="3 10"><left/><right/></link>
+	<link id="292fda0e-e5b5-4362-9955-0c097977ee30" location="4 10"><left/><right/></link>
+	<link id="a096f131-91ca-482b-91cc-e76225b1aef6" location="9 6"><left/><down/></link>
+	<link id="a50cd56f-eb2b-47ea-b43d-19bf1d596e64" location="11 2"><left/><right/></link>
+	<link id="f1f696da-daac-438e-96fc-950790e81d7d" location="5 10"><up/><left/><down/><right/></link>
+	<link id="dc57d35b-4d7e-4ce7-ab15-ab5b5b1bbe18" location="2 11"><up/><down/></link>
+	<link id="8c68f07a-0fa2-4267-88f3-643cb161da7b" location="7 9"><up/><down/></link>
+	<link id="b608f368-52e3-4bad-9809-472a163254d7" location="6 10"><left/><right/></link>
+	<link id="934dc42a-8842-4913-a0ee-ff7a4b5d434a" location="11 4"><down/><right/></link>
+	<link id="25ceb7dc-d888-4739-bfe5-9f2df6427640" location="12 2"><left/><down/></link>
+	<link id="a965478b-e80e-41b5-a912-579a445c3909" location="2 12"><up/><down/></link>
+	<link id="84235711-7c3d-489a-a2f7-2b089404120f" location="7 10"><up/><left/><right/></link>
+	<link id="d69c62be-052a-4b14-b997-0e38848a4a26" location="12 4"><up/><left/><right/></link>
+	<link id="8a2d1955-522f-41ea-a158-c91acb081a26" location="8 10"><left/><right/></link>
+	<link id="c6341b0f-4384-4bd6-9e32-9c75bb3b46a3" location="2 13"><up/><down/></link>
+	<link id="05657111-81e1-47f0-bab0-784391616c11" location="9 10"><up/><left/><right/></link>
+	<link id="3d953dee-6bf2-484a-9f27-4f60239ff776" location="13 4"><left/><down/></link>
+	<link id="232bc5c0-c5cc-42a6-a3e0-36125864bed6" location="11 8"><up/><down/></link>
+	<link id="fa7b0a65-76f7-42ae-a0dc-27517e81692c" location="5 13"><up/><down/><right/></link>
+	<link id="1a71cc09-5735-4035-b08a-7a80619729b3" location="10 10"><left/><right/></link>
+	<link id="3c699566-46f6-4935-8fbc-08d7aa7f617d" location="2 14"><up/><down/></link>
+	<link id="5256b787-e46b-41d1-9fa1-02d7177a8f1d" location="11 9"><up/><down/></link>
+	<link id="27efec59-b4be-42ab-b464-67b7620b4afd" location="6 13"><left/><right/></link>
+	<link id="7bad3cdf-ea73-4bc5-8f6e-ce4504fe5444" location="13 7"><up/><down/></link>
+	<link id="d0080449-5744-4572-aaf2-0a6b5774896a" location="7 13"><left/><down/><right/></link>
+	<link id="43953d6e-ba56-43dd-9dc9-ba5634226420" location="11 10"><up/><left/><right/></link>
+	<link id="93881e6a-e936-4d01-b748-320a3ea3605f" location="2 15"><up/><down/></link>
+	<link id="18ef6b74-3063-444b-892c-3d7083704928" location="13 8"><up/><down/></link>
+	<link id="69f30601-9e24-4666-9bb5-f5a4b73df102" location="8 13"><left/><right/></link>
+	<link id="d9108663-5b1f-4225-b6ac-1766c676d04a" location="12 10"><left/><right/></link>
+	<link id="b4184f57-ce51-457f-8486-4624e0325382" location="13 9"><up/><down/></link>
+	<link id="c3ed77c4-9c97-4408-bd56-f02f03322a2d" location="9 13"><left/><down/><right/></link>
+	<link id="3a20d954-10b3-46d2-b5ff-d70115ea7b3e" location="2 16"><up/><down/></link>
+	<link id="006e1068-7ee5-4850-98c6-267f6973fb42" location="13 10"><up/><left/><down/></link>
+	<link id="3f52bd1c-44e0-4692-b813-db5e70704902" location="10 13"><left/><right/></link>
+	<link id="b0849a8d-6783-4f4c-9c08-a882595c6b20" location="11 13"><up/><left/><down/></link>
+	<link id="52463810-92d1-43f3-9b15-df07b27806aa" location="2 17"><up/><down/></link>
+	<link id="2beb7742-c90e-44fa-a144-ef941c165181" location="3 17"><left/><down/><right/></link>
+	<link id="9387a99c-e4ec-4921-9680-7125cfb6e4f6" location="7 16"><up/><down/><right/></link>
+	<link id="ecb8f19e-9f30-45d9-8daf-dda7efcbdf2c" location="4 17"><left/><down/><right/></link>
+	<link id="f1b35cc7-ab30-4302-9957-c84e21e75745" location="5 17"><up/><left/><right/></link>
+	<link id="79d3f438-a4d0-4c28-9efe-c4e58c561216" location="6 17"><up/><left/><down/></link>
+	<link id="541ed15e-7a81-488d-9c92-49f86270aa3b" location="2 18"><up/><down/></link>
+	<link id="7529cce5-abe9-49b5-a3f3-4be569ac811f" location="7 17"><up/><down/><right/></link>
+	<link id="d4bab084-f6ac-4ad2-9338-0b8346b300a8" location="8 17"><left/><right/></link>
+	<link id="c1bf390d-b8f4-4ebe-bf8a-f7a17016db82" location="2 19"><up/><left/><down/><right/></link>
+	<link id="62940c8a-180f-4060-a5c2-55fb1fbe292e" location="9 17"><up/><left/><right/></link>
+	<link id="fac1a04a-13a3-4585-9af9-639f0a8d4cc2" location="3 19"><up/><left/><down/></link>
+	<link id="36732d84-f150-4654-9b71-18f8b41e408a" location="11 16"><up/><down/></link>
+	<link id="8bfac584-a70b-4f2d-af1c-653db35d0a43" location="10 17"><left/><right/></link>
+	<link id="ec286f20-28d4-42fe-acac-61a660319c8a" location="2 20"><up/><down/></link>
+	<link id="905f77a8-96f1-4c20-b196-f5226a3af1fc" location="11 17"><up/><left/><down/></link>
+	<link id="e09850dd-d060-4f21-86ae-b2124e893b6f" location="2 21"><up/><down/></link>
+	<link id="bd8a74d3-c2dc-4812-ac23-4f2c42c4fa12" location="5 21"><down/><right/></link>
+	<link id="a7da2faf-e9de-4464-89b2-7886c4eb77a9" location="6 21"><up/><left/><right/></link>
+	<link id="77a44412-1f62-4a19-bb44-b93cc9045b89" location="2 22"><up/><down/></link>
+	<link id="4cac7243-ff84-4d94-aef8-7a8490d9c97a" location="7 21"><left/><down/></link>
+	<link id="590344ce-8218-4bee-b097-484a17e08e43" location="2 23"><up/><down/></link>
+	<link id="02dee159-1059-47d4-9712-2cd073babcd4" location="2 24"><up/><down/></link>
+	<link id="a72297a2-3dda-41b8-83d6-69b1c00a2a41" location="2 25"><up/><down/><right/></link>
+	<link id="d4d339c0-d308-4e7a-be56-827e9b176e13" location="3 25"><left/><right/></link>
+	<link id="0bad31dc-48cc-4463-8db0-244a9ec6a288" location="4 25"><left/><right/></link>
+	<link id="517d1ef9-fdd5-482d-b6be-e28b0c205e8c" location="5 25"><up/><left/><down/></link>
+	<link id="031e49a9-1f0d-4cd7-a7ab-ed7b092e2402" location="2 26"><up/><down/></link>
+	<link id="f9d8ab1b-1b6b-4797-bdea-6e383fd2fc0d" location="2 27"><up/><left/><right/></link>
+	<link id="3a7b0254-3ce5-45a6-a6f9-133ed0466d3b" location="3 27"><left/><right/></link>
+	<link id="2b1d69ce-5409-41b3-8cf9-43ec00fbea00" location="4 27"><left/><right/></link>
+	<link id="00cd7f51-17b3-432d-969a-e952076f72c9" location="5 27"><left/><right/></link>
+	<link id="a5e50986-b5b0-409d-8173-0d7aa3e76cbc" location="6 27"><left/><right/></link>
+	<link id="db93c414-bd3a-49d8-9110-9042f4e0bcd7" location="7 27"><up/><left/><down/></link>
+
+</sfc>

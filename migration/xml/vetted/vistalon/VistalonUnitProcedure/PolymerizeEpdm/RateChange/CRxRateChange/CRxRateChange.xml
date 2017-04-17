@@ -1,0 +1,378 @@
+<?xml version="1.0" ?>
+<sfc zoom="0.75000006" canvas="11 23" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Mon Apr 17 12:34:52 CDT 2017" hot-editable="false" persist-state="true">
+	<step id="155b63eb-81e5-11d9-a871-006008c66680" location="2 3" name="RcNewDatainitialize" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+
+'''
+ Find the New Data block on the same workspace as this block and set the VAL of all of the calculated-value data entities in its recipe data to "****".  These will be completed after the user presses calculate new values and enters a new rate. 
+'''
+import system
+from ils.sfc.common.constants import LOCAL_SCOPE
+from ils.sfc.gateway.api import getChartLogger
+from ils.sfc.gateway import api
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	log.tracef("In %s with %s, a %s. . .",chart.get("name",""),block.get("name",""),"step")
+
+	ws = block.get("workspace","")
+	newDataBlock = emS88RateChangeNewDataCallback
+	for rd in recipedatav2.get("s88RecipeValueData",""):
+		if toUpper() == "CALCULATED VALUE":
+			api.s88SetData(chart,newDataBlock,"%s.val"%(rd.get("key","")),"****",LOCAL_SCOPE)
+
+
+	log.tracef("%s has completed!",block.get("name",""))
+</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="155b640e-81e5-11d9-a871-006008c66680" location="4 0" name="Begin" factory-id="begin-step">		<associated-data>{}</associated-data>
+	</step>
+	<step id="4f8aa95f-efca-11d9-a219-00b0d0d0fabc" location="2 4" name="RcCrxpolyValidate" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+
+'''
+     Check is the polyrate is varying too much to allow for collection of current plant conditions. 
+'''
+import system
+from ils.sfc.common.constants import GLOBAL_SCOPE,LOCAL_SCOPE
+from ils.blt.functions import minimumOverTime
+from api import s88GetData
+from com.ils.queue import post
+from ils.blt.functions import maximumOverTime
+from ils.sfc.gateway.api import getChartLogger
+from ils.blt.functions import averageOverTime
+from ils.sfc.gateway import api
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	log.tracef("Entering %s with %s, a %s.",chart.get("name",""),block.get("name",""),"step")
+
+	status,polyRateDataCollectPct=api.s88GetData(chart,block,"poly-rate-data-collect-pct.val",GLOBAL_SCOPE)
+	status,polyRateDataCollectInterval=api.s88GetData(chart,block,"poly-rate-data-collect-interval.val",GLOBAL_SCOPE)
+	try:
+		avgPolyRate = averageOverTime("SFC IO/Rate Change/VRF9101Z",polyRateDataCollectInterval*60)
+		minPolyRate = minimumOverTime("SFC IO/Rate Change/VRF9101Z",polyRateDataCollectInterval*60)
+		maxPolyRate = maximumOverTime("SFC IO/Rate Change/VRF9101Z",polyRateDataCollectInterval*60)
+	except:
+		post.messageToQueue(chart,block,"Rate change data was not available.",s88LitWarning,block)
+		api.s88SetData(chart,block,"return-status.val","timeout",LOCAL_SCOPE)
+		
+
+	if (maxPolyRate - minPolyRate) / avgPolyRate * 100.0 &gt; polyRateDataCollectPct:
+		api.s88SetData(chart,block,"return-status.val","data varied too much",LOCAL_SCOPE)
+	else:
+		api.s88SetData(chart,block,"return-status.val","data ok",LOCAL_SCOPE)
+
+	log.tracef("Leaving %s as complete!",block.get("name",""))
+</start-script>
+		<associated-data>{"return-status":{"lowLimit":null,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"df0e89bb-62a9-424d-85b8-7fcae3e2fa3b","valueType":"float","highLimit":null,"category":"Simple Constant","class":"Value","value":"data ok","key":"return-status"}}</associated-data>
+	</step>
+	<step id="4f8aa96f-efca-11d9-a219-00b0d0d0fabc" location="2 7" name="RcCrxVariationMsg" factory-id="com.ils.queueMessageStep"><name>RcCrxVariationMsg</name><description></description><id>4f8aa96f-efca-11d9-a219-00b0d0d0fabc</id><message>Reactor data varied too much and has NOT been updated for the current rate change.</message><priority>Warning</priority>		<associated-data>{}</associated-data>
+	</step>
+	<step id="4f8aa974-efca-11d9-a219-00b0d0d0fabc" location="3 7" name="RcCrxToSeedMsg" factory-id="com.ils.queueMessageStep"><name>RcCrxToSeedMsg</name><description></description><id>4f8aa974-efca-11d9-a219-00b0d0d0fabc</id><message>A timeout collecting reactor data has occurred. Rate data has NOT been updated for the this rate change.</message><priority>Warning</priority>		<associated-data>{}</associated-data>
+	</step>
+	<step id="af48ee08-8fe6-11d9-b116-00065b88c6c2" location="6 5" name="CsToRcMsg" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>A rate change from the cold-stick conditions has been requested. Initializing the review screen.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><ackRequired>false</ackRequired><name>CsToRcMsg</name><id>af48ee08-8fe6-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	</step>
+	<step id="155b63fa-81e5-11d9-a871-006008c66680" location="4 7" name="CurrentData" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+import system
+from ils.sfc.gateway.api import getChartLogger
+from ils.blt.lib import namedItemExists
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	ws = block.get("workspace","")
+	log.tracef("In %s with %s, a %s.",chart.get("name",""),block.get("name",""),"step")
+
+	if block == "em-s88-rate-change-current-data-callback":
+		procName = "_em-s88-copy-[the configuration of BLOCK]-data"
+	else:
+		procName = "_em-s88-new-[the configuration of BLOCK]-production"
+
+	if not(namedItemExists(procName,procedure)):
+		error = {}
+		error["errordescription"]="Unable to find the private copy procedure named &lt;%s&gt;.  In %s."%(str(procName),chart.get("name",""))
+
+		raise ValueError(error)
+
+	eval(proc(block,currentDataBlock,newDataBlock))
+</start-script>
+		<associated-data>{"pct-ss-c2-to-total-c2":{"lowLimit":null,"advice":"","description":"Sidestream C2 / Total C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"370d79de-2325-4769-8af9-5014b3acec7c","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":94.834,"key":"pct-ss-c2-to-total-c2"},"r1-outlet-temp":{"lowLimit":null,"advice":"","description":"R1 Outlet Temp","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"f53ea53f-5004-4442-9eac-ba3a36162a78","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":120.21,"key":"r1-outlet-temp"},"ss4-rate":{"lowLimit":null,"advice":"","description":"Sidestream 4 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"6856955f-d91b-4f0b-b286-3b19e8d337dc","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":14.532,"key":"ss4-rate"},"al-to-va":{"lowLimit":null,"advice":"","description":"AL to VA","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"b3b1e00a-959b-4c3e-9e04-54f6038c0466","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":8.0,"key":"al-to-va"},"c3-conv":{"lowLimit":null,"advice":"","description":"C3 Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"7b912e3f-7a12-4855-8cd1-7ba3a40f73be","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":18.363,"key":"c3-conv"},"h2-to-va-ratio":{"lowLimit":null,"advice":"","description":"H2 / Va","label":"NA","units":"NA","type":"Quantity","help":"NA","dataId":"fc816613-3a50-4a7b-8250-4217aa6fc8d0","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.0,"key":"h2-to-va-ratio"},"sdstrm-c3-to-c2-ratio":{"lowLimit":null,"advice":"","description":"Sidestream C3 / C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"1c111640-f5e2-4741-9e12-ad360ebf5d3c","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":1.659,"key":"sdstrm-c3-to-c2-ratio"},"ss-c2-rate":{"lowLimit":null,"advice":"","description":"Sidestream C2 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"6f0c03b7-178a-43d7-bee4-bb5679fa3075","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":10.304,"key":"ss-c2-rate"},"cat-fdfwd":{"lowLimit":null,"advice":"","description":"Cat Feed Forward","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"1162af3b-73ba-470c-8c68-7df64dc6864a","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.0,"key":"cat-fdfwd"},"c3strm-c3-frct":{"lowLimit":null,"advice":"","description":"Sidestream C3 Fraction","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"70e67e58-624d-491e-b545-88974b27c5c4","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.895,"key":"c3strm-c3-frct"},"ss3-rate":{"lowLimit":null,"advice":"","description":"Sidestream 3 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"7fb0de52-c4c2-4174-b925-8d36db6ca07d","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":43.752,"key":"ss3-rate"},"cat-mix-temp":{"lowLimit":null,"advice":"","description":"Cat Mix Temperature","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"ec117ffb-9d21-42b4-ae95-91fdd9478cbf","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":59.987,"key":"cat-mix-temp"},"prod-rate-percent-delta":{"lowLimit":null,"advice":"","description":"Production Rate Percent Delta","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"0cadaf30-056b-4c49-9e46-de100710cd34","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.0,"key":"prod-rate-percent-delta"},"sdstrm-c6-to-c2-ratio":{"lowLimit":null,"advice":"","description":"Sidestream C6 / C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"12b82ca6-9970-42a5-a775-d1ca74f5e3d1","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":9.573,"key":"sdstrm-c6-to-c2-ratio"},"c2-conv":{"lowLimit":null,"advice":"","description":"C2 Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"13bd697b-6d87-466a-a054-ed1887461e0e","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":101.597,"key":"c2-conv"},"main-c2-rate":{"lowLimit":null,"advice":"","description":"C2 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"e1f38912-2e88-4294-bf24-1a7f414065ed","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.561,"key":"main-c2-rate"},"nh3-to-va-ratio":{"lowLimit":null,"advice":"","description":"NH3 / VA","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"2bbbee44-bd8b-4b37-a7e3-126d9485a0ae","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.0,"key":"nh3-to-va-ratio"},"poly-rate":{"lowLimit":null,"advice":"","description":"Poly Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"62290229-5d92-4674-92ba-442c7888be04","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":437.896,"key":"poly-rate"},"ss6-rate":{"lowLimit":null,"advice":"","description":"Sidestream 6 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"56ba9675-1802-4d9f-bb78-71bcd4bd8bf4","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":20.513,"key":"ss6-rate"},"ss-c3-rate":{"lowLimit":null,"advice":"","description":"Sidestream C3 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"322a86e6-6c04-44bb-bcde-d3a13f386567","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":17.092,"key":"ss-c3-rate"},"main-c6-rate":{"lowLimit":null,"advice":"","description":"Main C6 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"cd1b4281-b0d0-49e0-b31f-11044aa22685","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":233.813,"key":"main-c6-rate"},"c3strm-c2-frct":{"lowLimit":null,"advice":"","description":"Sidestream C2 Fraction","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"0ef5cbd0-427f-45b5-8287-fe8d60bf3a9a","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.007,"key":"c3strm-c2-frct"},"cat-efficiency":{"lowLimit":null,"advice":"","description":"Cat Efficiency","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"7f973381-92ee-4850-a7f7-a8cbdb57d3e0","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":368.409,"key":"cat-efficiency"},"ss5-rate":{"lowLimit":null,"advice":"","description":"Sidestream 5 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"c6813d96-fbda-4bb8-ae57-98573d38ae9b","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":34.507,"key":"ss5-rate"},"ss2-rate":{"lowLimit":null,"advice":"","description":"Sidestream 2 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"dd7e664a-bdff-463c-a944-9a368d17d3a4","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":5.892,"key":"ss2-rate"},"main-c3-rate":{"lowLimit":null,"advice":"","description":"Main C3 rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"ab28f7ca-7afa-4dc7-8bf8-6401fddc9f40","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":22.155,"key":"main-c3-rate"},"dilute-c6-temp":{"lowLimit":null,"advice":"","description":"Dilute C6 Temperature","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"0300a300-eca7-46b1-87d8-927716d8c092","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":19.247,"key":"dilute-c6-temp"},"r1-inlet-temp":{"lowLimit":null,"advice":"","description":"R1 Inlet Temp","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"0ed3172a-3b53-49fb-9269-952fadedd15a","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":30.712,"key":"r1-inlet-temp"},"grade":{"lowLimit":null,"advice":"","description":"Grade","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"a9fde7db-6dda-46d3-a6ee-8e83d74acbf5","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":878,"key":"grade"},"ss-temp":{"lowLimit":null,"advice":"","description":"Sidestream Temperature","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"a289a365-4fed-4a2d-bf73-a5381658d310","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":19.253,"key":"ss-temp"},"ss1-rate":{"lowLimit":null,"advice":"","description":"Sidestream 1 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"ace6bce0-72df-4435-8b2a-09398a6a50e9","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":8.704,"key":"ss1-rate"}}</associated-data>
+	</step>
+	<step id="37eaade5-a2c4-11d9-b116-00065b88c6c2" location="6 6" name="CsNewDatainitialize" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+
+'''
+ Find the New Data block on the same workspace as this block and set the VAL of all of the calculated-value data entities in its recipe data to "****".  These will be completed after the user presses calculate new values and enters a new rate. 
+'''
+import system
+from ils.sfc.common.constants import LOCAL_SCOPE
+from ils.sfc.gateway.api import getChartLogger
+from ils.sfc.gateway import api
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	log.tracef("In %s with %s, a %s. . .",chart.get("name",""),block.get("name",""),"step")
+
+	ws = block.get("workspace","")
+	newDataBlock = emS88RateChangeNewDataCallback
+	for rd in recipedatav2.get("s88RecipeValueData",""):
+		if toUpper() == "CALCULATED VALUE":
+			api.s88SetData(chart,newDataBlock,"%s.val"%(rd.get("key","")),"****",LOCAL_SCOPE)
+
+
+	log.tracef("%s has completed!",block.get("name",""))
+</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="4f8aa95a-efca-11d9-a219-00b0d0d0fabc" location="4 8" name="RcCrxOkSeedMsg" factory-id="com.ils.queueMessageStep"><name>RcCrxOkSeedMsg</name><description></description><id>4f8aa95a-efca-11d9-a219-00b0d0d0fabc</id><message>Reactor data has been updated for this rate change.</message><priority>Info</priority>		<associated-data>{}</associated-data>
+	</step>
+	<step id="ee31a2f8-a6d8-11d9-b116-00065b88c6c2" location="8 5" name="NewDataToOlddataInitialize" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+import system
+from ils.sfc.common.constants import LOCAL_SCOPE
+from ils.sfc.gateway.api import getChartLogger
+from ils.sfc.gateway import api
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	ws = block.get("workspace","")
+	log.tracef("In %s with %s, a %s. . .",chart.get("name",""),block.get("name",""),"step")
+
+	currentDataBlock = emS88RateChangeCurrentDataCallback
+	newDataBlock = emS88RateChangeNewDataCallback
+	# Copy the current operating point definition to the new data block
+	api.s88UpdateValue(chart,currentDataBlock,"",LOCAL_SCOPE,newDataBlock,"",LOCAL_SCOPE,False,"calculated value")
+	#   	for STRUC = each structure in the recipe-data of CURRENT-DATA-BLOCK do  		if the type of STRUC = the symbol calculated-value then begin  			status, val = call s88-get-data (CURRENT-DATA-BLOCK, "[the key of STRUC].val", s88-local);  			call s88-set-data (NEW-DATA-BLOCK, "[the key of STRUC].val", val, s88-local);  		end;  	end;
+</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="5637f215-ea45-11d9-a219-00b0d0d0fabc" location="2 10" name="NewRateEntryMsg" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>Choose to enter a new rate, transfer rate change to setpoint workspace, or initiate a restick of the reactor.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><ackRequired>false</ackRequired><name>NewRateEntryMsg</name><id>5637f215-ea45-11d9-a219-00b0d0d0fabc</id>		<associated-data>{}</associated-data>
+	</step>
+	<step id="d214b462-843e-11d9-a871-006008c66680" location="2 11" name="ReviewCRxData" factory-id="enclosing-step" chart-path="VistalonUnitProcedure/PolymerizeEpdm/RateChange/CRxRateChange/ReviewCRxData" execution-mode="RunUntilCompletion">		<associated-data>{"SELECTED-BUTTON":{"lowLimit":null,"advice":"","description":"","label":"","units":"","type":"Text","help":"","dataId":"65442738-d219-44cd-a1d2-726c91d3abaa","valueType":"string","highLimit":null,"category":"Simple Constant","class":"Value","value":"Cancel","key":"SELECTED-BUTTON"}}</associated-data>
+	</step>
+	<step id="c725b73b-9019-11d9-b116-00065b88c6c2" location="2 14" name="CalculateTrueMsg" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>Calculating new rate for rate change based on operator input.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><ackRequired>false</ackRequired><name>CalculateTrueMsg</name><id>c725b73b-9019-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	</step>
+	<step id="01383c6a-8637-11d9-a871-006008c66680" location="4 14" name="CancelAbort" factory-id="com.ils.abortStep"><ackRequired>false</ackRequired><name>CancelAbort</name><description>Operator has cancelled the rate change.</description><id>01383c6a-8637-11d9-a871-006008c66680</id><message></message>		<associated-data>{}</associated-data>
+	</step>
+	<step id="155b63db-81e5-11d9-a871-006008c66680" location="2 15" name="NewRateEntry" factory-id="com.ils.inputStep"><recipeLocation>local</recipeLocation><description></description><scale>1.0</scale><timeoutUnit>SEC</timeoutUnit><windowTitle></windowTitle><timeout>-1.0</timeout><buttonLabel></buttonLabel><name>NewRateEntry</name><id>155b63db-81e5-11d9-a871-006008c66680</id><position>center</position><prompt>Type NEW rate, press enter key, and click OK button:</prompt><key>user-response.value</key>		<associated-data>{"user-response":{"lowLimit":null,"advice":"","description":"","label":"","units":"","type":"Quantity","help":"","dataId":"f7ee6038-fd25-4eb6-9d11-b4d47e7d4f80","valueType":"float","highLimit":null,"category":"Simple Constant","class":"Value","value":350.0,"key":"user-response"}}</associated-data>
+	</step>
+	<step id="a923b8bd-9019-11d9-b116-00065b88c6c2" location="6 14" name="TransferTrueMsg" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>Transfer of rate change setpoints to the setpoint download screen has been selected by the operator.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><ackRequired>false</ackRequired><name>TransferTrueMsg</name><id>a923b8bd-9019-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	</step>
+	<step id="e0d24b92-8b72-11d9-b116-00065b88c6c2" location="8 14" name="RestickTrueMsg" factory-id="com.ils.controlPanelMessageStep"><description></description><timeoutUnit>SEC</timeoutUnit><message>Initiate restick was selected. Printing rate change screens. Please be patient.</message><priority>Info</priority><postToQueue>false</postToQueue><timeout>10.0</timeout><ackRequired>false</ackRequired><name>RestickTrueMsg</name><id>e0d24b92-8b72-11d9-b116-00065b88c6c2</id>		<associated-data>{}</associated-data>
+	</step>
+	<step id="155b63bb-81e5-11d9-a871-006008c66680" location="6 15" name="TransferData" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+
+'''
+ This implements the logic formerly found in button-action::rate-change-results-icon-gda().  When the OC wants to perform a rate change, the button is pressed and the rate change final diagnosis is made true. The procedure then waits for the recommendation icon arrow to go red before launching output display to show the recommendations to download for the rate change. 
+'''
+import system
+from ils.sfc.common.constants import OPERATION_SCOPE,ERROR,WARNING
+import java.util.Date
+from finalDiagnosis import getBlock
+from util import getPost
+from api import s88GetData
+from com.ils.queue import post
+from lib import getWindow
+from ils.sfc.gateway.api import getChartLogger
+from time import sleep
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	maxWait = 10.0
+	ws = block.get("workspace","")
+	log.tracef("In %s with %s, a %s. . .",chart.get("name",""),block.get("name",""),"step")
+
+	#  Disable rate change button in favor of restick button if cat is out. 
+	if system.tag.read("[]Site/CSTR/CAT-AND-C2-IS-IN-TIMER").getValue() == False:
+		log.tracef("CAT and C2 are out!")
+		post.messageToQueue(chart,block,"Cat is out.  Do not use this button at this time.%s%sUse the 'Initiate Re-Stick' button on the same workspace to initiate a stick from the conditions specified in the New Setpoints column."%(str(cr),str(cr)),WARNING,block)
+		
+
+	currentDataBlock = finalDiagnosis.getBlock(block,"em-s88-rate-change-current-data-callback")
+	# the em-s88-rate-change-current-data-callback upon WS;
+	newDataBlock = finalDiagnosis.getBlock(block,"em-s88-rate-change-new-data-callback")
+	# the em-s88-rate-change-new-data-callback upon WS;
+	winSeq = lib.getWindow(block)
+	if  &lt; 1:
+		
+
+	w = winSeq
+	# ======================== Case =====================
+	caseArg=currentdatablock.get("configuration","")
+	if caseArg=="single-rx":
+		log.tracef("Handling Single-Rx")
+		system.tag.write("[]Site/RateChange/SINGLE-RATE-CHANGE-INPUT",False)
+
+		sleep(system.tag.read("[]Site/G2-LATENCY-TIME").getValue())
+		system.tag.write("[]Site/RateChange/SINGLE-RATE-CHANGE-INPUT",True)
+
+
+	elif caseArg=="series-rx":
+		system.tag.write("[]Site/RateChange/SERIES-RATE-CHANGE-INPUT",False)
+
+		sleep(system.tag.read("[]Site/G2-LATENCY-TIME").getValue())
+		system.tag.write("[]Site/RateChange/SERIES-RATE-CHANGE-INPUT",True)
+
+
+	elif caseArg=="split-fd-rx":
+		system.tag.write("[]Site/RateChange/SPLIT-RATE-CHANGE-INPUT",False)
+
+		sleep(system.tag.read("[]Site/G2-LATENCY-TIME").getValue())
+		system.tag.write("[]Site/RateChange/SPLIT-RATE-CHANGE-INPUT",True)
+
+
+	elif caseArg=="c-rx":
+		system.tag.write("[]Site/RateChange/CRX-RATE-CHANGE-INPUT",False)
+
+		sleep(system.tag.read("[]Site/G2-LATENCY-TIME").getValue())
+		system.tag.write("[]Site/RateChange/CRX-RATE-CHANGE-INPUT",True)
+
+	else:
+		post.messageToQueue(chart,block,"%s could not determine reactor type to use &lt;%s&gt;."%("emS88TransferData.onStart",currentdatablock.get("configuration","")),ERROR,block)
+
+	log.tracef("Waiting for the setpoints to be enunciated to the post.)")
+	startWait = Date().toString()
+	status,post=api.s88GetData(chart,block,"post.val",OPERATION_SCOPE)
+	postIndex = util.getPost(post)
+	while True:
+		if postIndex == "red" or Date().toString() - startWait &gt; maxWait:
+			break;
+		sleep(1.0)
+	log.tracef("Cleaning up and showing extra workspace, if desired.")
+	#  Display rate change reminder for OC required actions after rate change 
+	try:
+		currentGrade = round(system.tag.read("[]DiagnosticToolkit/CSTR/RLA3-Current-Grade/value").getValue())
+	except:
+currentGrade = 3666.0
+	# STATUS, CURRENT_RATE = call s88-get-data(CURRENT-DATA-BLOCK, "poly-rate.val", s88-local);  STATUS, NEW_RATE = call s88-get-data(NEW-DATA-BLOCK, "poly-rate.val", s88-local);  call calc-new-rx-mst-target(CURRENT_RATE, NEW_RATE);
+	if currentGrade == 3666.0:
+		w
+
+	log.tracef("Complete!")
+</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="46e1a287-925f-11d9-b116-00065b88c6c2" location="4 17" name="EndEnd" factory-id="end-step">		<associated-data>{}</associated-data>
+	</step>
+	<step id="155b63c8-81e5-11d9-a871-006008c66680" location="3 18" name="AcceptNewrate" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+
+'''
+ Copy the rate that was just entered from the get input block to the new rate block so that it is available for calculations. 
+'''
+import system
+from ils.sfc.common.constants import LOCAL_SCOPE
+from api import s88GetData
+from ils.sfc.gateway.api import getChartLogger
+from ils.sfc.gateway import api
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	ws = block.get("workspace","")
+	log.tracef("In %s with %s, a %s. . .",chart.get("name",""),block.get("name",""),"step")
+
+	getInputBlock = s88GetInputTask
+	newDataBlock = emS88RateChangeNewDataCallback
+	status,newRate=api.s88GetData(chart,getInputBlock,"%s"%(getinputblock.get("key","")),LOCAL_SCOPE)
+	api.s88SetData(chart,newDataBlock,"poly-rate.val",newRate,LOCAL_SCOPE)
+	log.tracef("%s has completed - the new rate is %s!",block.get("name",""),str(newRate))
+</start-script>
+		<associated-data>{}</associated-data>
+	</step>
+	<step id="155b63f6-81e5-11d9-a871-006008c66680" location="3 19" name="NewDataCalc" factory-id="action-step">
+		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+import system
+from ils.sfc.gateway.api import getChartLogger
+from ils.blt.lib import namedItemExists
+def onStart(chart,block):
+	log = system.util.getLogger(getChartLogger(chart))
+	ws = block.get("workspace","")
+	log.tracef("In %s with %s, a %s.",chart.get("name",""),block.get("name",""),"step")
+
+	if block == "em-s88-rate-change-current-data-callback":
+		procName = "_em-s88-copy-[the configuration of BLOCK]-data"
+	else:
+		procName = "_em-s88-new-[the configuration of BLOCK]-production"
+
+	if not(namedItemExists(procName,procedure)):
+		error = {}
+		error["errordescription"]="Unable to find the private copy procedure named &lt;%s&gt;.  In %s."%(str(procName),chart.get("name",""))
+
+		raise ValueError(error)
+
+	eval(proc(block,currentDataBlock,newDataBlock))
+</start-script>
+		<associated-data>{"pct-ss-c2-to-total-c2":{"lowLimit":null,"advice":"","description":"Sidestream C2 / Total C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"fa18dab8-0514-4b18-82fa-0a7a2b9ef655","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":95.846,"key":"pct-ss-c2-to-total-c2"},"r1-outlet-temp":{"lowLimit":null,"advice":"","description":"R1 Outlet Temp","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"63ecdb36-15ea-45a1-9f4d-eca23f94b7cc","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":129.313,"key":"r1-outlet-temp"},"ss4-rate":{"lowLimit":null,"advice":"","description":"Sidestream 4 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"832e8c8e-45de-4125-848f-735a33fc3bf5","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":20.695,"key":"ss4-rate"},"al-to-va":{"lowLimit":null,"advice":"","description":"AL to VA","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"cb267105-36d4-45b3-9e49-972c069badcd","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":8.001,"key":"al-to-va"},"c3-conv":{"lowLimit":null,"advice":"","description":"C3 Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"60f9f112-3110-43f1-bca6-60ee189b4cfb","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":18.977,"key":"c3-conv"},"h2-to-va-ratio":{"lowLimit":null,"advice":"","description":"H2 / Va","label":"NA","units":"NA","type":"Quantity","help":"NA","dataId":"8a5f3f25-fa54-4db7-afdc-dab6783c7f2f","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.0,"key":"h2-to-va-ratio"},"sdstrm-c3-to-c2-ratio":{"lowLimit":null,"advice":"","description":"Sidestream C3 / C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"988aff75-ac51-4426-8aa1-2d67b7d28ee8","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":1.75,"key":"sdstrm-c3-to-c2-ratio"},"ss-c2-rate":{"lowLimit":null,"advice":"","description":"Sidestream C2 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"eb791c34-0c1e-4009-bad0-929a4acb4e8b","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":8.346,"key":"ss-c2-rate"},"cat-fdfwd":{"lowLimit":null,"advice":"","description":"Cat Feed Forward","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"74ef729d-f3a2-44a7-b2c3-d17bdcecde83","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":1.275,"key":"cat-fdfwd"},"c3strm-c3-frct":{"lowLimit":null,"advice":"","description":"Sidestream C3 Fraction","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"9f0ec083-f208-48cc-aa70-c5ca93619635","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.894,"key":"c3strm-c3-frct"},"ss3-rate":{"lowLimit":null,"advice":"","description":"Sidestream 3 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"8607d716-2281-42a7-8717-62e2a0dea9ef","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":36.669,"key":"ss3-rate"},"cat-mix-temp":{"lowLimit":null,"advice":"","description":"Cat Mix Temperature","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"2451e673-8807-4a8d-bd23-757c4c9de42f","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":60.067,"key":"cat-mix-temp"},"prod-rate-percent-delta":{"lowLimit":null,"advice":"","description":"Production Rate Percent Delta","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"86f988f7-170c-483f-843a-df1880007276","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":-10.828,"key":"prod-rate-percent-delta"},"sdstrm-c6-to-c2-ratio":{"lowLimit":null,"advice":"","description":"Sidestream C6 / C2","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"d15807f7-c045-4efc-b5c8-017b65580f25","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":11.409,"key":"sdstrm-c6-to-c2-ratio"},"c2-conv":{"lowLimit":null,"advice":"","description":"C2 Conversion","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"26d742d4-d901-44dd-ac27-e788d7be556f","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":101.329,"key":"c2-conv"},"main-c2-rate":{"lowLimit":null,"advice":"","description":"C2 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"25e456e5-89e9-4c0d-88d1-c86a84b220da","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.362,"key":"main-c2-rate"},"nh3-to-va-ratio":{"lowLimit":null,"advice":"","description":"NH3 / VA","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"ecc12678-7dba-40f9-940d-c22fb047dd46","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.0,"key":"nh3-to-va-ratio"},"poly-rate":{"lowLimit":null,"advice":"","description":"Poly Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"73f0c83a-d378-4aad-9dcd-890d2c97a90c","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":350.0,"key":"poly-rate"},"ss6-rate":{"lowLimit":null,"advice":"","description":"Sidestream 6 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"7ba2469f-6d29-434f-acbd-64a73eadef9a","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":23.764,"key":"ss6-rate"},"ss-c3-rate":{"lowLimit":null,"advice":"","description":"Sidestream C3 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"d277a1c9-983b-4b51-9767-6476d55807d2","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":14.607,"key":"ss-c3-rate"},"main-c6-rate":{"lowLimit":null,"advice":"","description":"Main C6 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"df23cc78-b457-44dc-a6ad-2e17137bd542","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":197.622,"key":"main-c6-rate"},"c3strm-c2-frct":{"lowLimit":null,"advice":"","description":"Sidestream C2 Fraction","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"4bcf39aa-8912-40e3-8b1e-871d81a51fcb","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":0.009,"key":"c3strm-c2-frct"},"cat-efficiency":{"lowLimit":null,"advice":"","description":"Cat Efficiency","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"4eab1e6e-1025-436a-8a75-56540cb69749","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":337.973,"key":"cat-efficiency"},"ss5-rate":{"lowLimit":null,"advice":"","description":"Sidestream 5 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"f3bc8dd3-26b0-4885-9942-b4a9b581fa09","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":23.225,"key":"ss5-rate"},"ss2-rate":{"lowLimit":null,"advice":"","description":"Sidestream 2 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"fd9a43cb-2f1f-47a6-b854-79948aa64137","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":6.137,"key":"ss2-rate"},"main-c3-rate":{"lowLimit":null,"advice":"","description":"Main C3 rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"7986603f-1480-46ef-9ce9-15d4104be060","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":15.747,"key":"main-c3-rate"},"dilute-c6-temp":{"lowLimit":null,"advice":"","description":"Dilute C6 Temperature","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"42b3e411-1afb-4321-9ec5-82f005ac9894","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":19.613,"key":"dilute-c6-temp"},"r1-inlet-temp":{"lowLimit":null,"advice":"","description":"R1 Inlet Temp","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"adb9b970-ff62-4d1e-9310-72f6910bd45d","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":30.044,"key":"r1-inlet-temp"},"grade":{"lowLimit":null,"advice":"","description":"Grade","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"499bd467-52a6-4f59-a095-dcf57e433fde","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":878,"key":"grade"},"ss-temp":{"lowLimit":null,"advice":"","description":"Sidestream Temperature","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"dab3c9aa-508e-4e03-906d-8c0aef36820d","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":18.44,"key":"ss-temp"},"ss1-rate":{"lowLimit":null,"advice":"","description":"Sidestream 1 Rate","label":"NA","units":"","type":"Quantity","help":"NA","dataId":"ec89d249-3df5-4a24-ab96-e8fb750e9671","valueType":"float","highLimit":null,"category":"Calculated Value","class":"Value","value":9.266,"key":"ss1-rate"}}</associated-data>
+	</step>
+	<transition id="e1a879d7-8ccd-11d9-b116-00065b88c6c2" location="2 2" timeout-enabled="true" timeout-delay="30000" timeout-flag="Cat Is In-True">{tag.Site/CRX/CAT-AND-C2-IS-IN} = ".TRUE"</transition>
+	<transition id="4f8aa97e-efca-11d9-a219-00b0d0d0fabc" location="2 6" timeout-enabled="true" timeout-delay="30000" timeout-flag="RC CRx Seed Variation-True">{previous.return-status.value} = "data varied too much"</transition>
+	<transition id="4f8aa964-efca-11d9-a219-00b0d0d0fabc" location="3 6" timeout-enabled="true" timeout-delay="30000" timeout-flag="RC CRx Seed Timeout-True">{previous.return-status.value} = "timeout"</transition>
+	<transition id="4f8aa978-efca-11d9-a219-00b0d0d0fabc" location="4 6" timeout-enabled="true" timeout-delay="30000" timeout-flag="RC CRx Seed OK-True">{previous.return-status.value} = "data ok"</transition>
+	<transition id="c36cd50b-8f52-11d9-b116-00065b88c6c2" location="6 4" timeout-enabled="true" timeout-delay="360000000" timeout-flag="CS Rate Change-True">{global.review-data-button.value} = "Calc-New-Rate"</transition>
+	<transition id="e1a879dd-8ccd-11d9-b116-00065b88c6c2" location="7 2" timeout-enabled="true" timeout-delay="30000" timeout-flag="Cat Is In-False">{tag.Site/CRX/CAT-AND-C2-IS-IN} != ".TRUE"</transition>
+	<transition id="c36cd505-8f52-11d9-b116-00065b88c6c2" location="8 4" timeout-enabled="true" timeout-delay="360000000" timeout-flag="CS Rate Change-False">{global.review-data-button.value} != "Calc-New-Rate"</transition>
+	<transition id="8efb24d6-843f-11d9-a871-006008c66680" location="2 13" timeout-enabled="true" timeout-delay="108000000" timeout-flag="Calculate-True">{previous.selected-button.value} = "calculate"</transition>
+	<transition id="8efb24d0-843f-11d9-a871-006008c66680" location="4 13" timeout-enabled="true" timeout-delay="108000000" timeout-flag="Cancel-True">{previous.selected-button.value} = "Cancel"</transition>
+	<transition id="8efb24dc-843f-11d9-a871-006008c66680" location="6 13" timeout-enabled="true" timeout-delay="108000000" timeout-flag="Transfer-True">{previous.selected-button.value} = "transfer"</transition>
+	<transition id="e0d24b8c-8b72-11d9-b116-00065b88c6c2" location="8 13" timeout-enabled="true" timeout-delay="108000000" timeout-flag="Restick-True">{previous.selected-button.value} = "re-stick"</transition>
+	<transition id="155b63d8-81e5-11d9-a871-006008c66680" location="1 17" timeout-enabled="true" timeout-delay="-1000" timeout-flag="New Rate Cancel-True">{previous.user-response.value} = "CANCEL"</transition>
+	<transition id="155b63d5-81e5-11d9-a871-006008c66680" location="3 17" timeout-enabled="true" timeout-delay="-1000" timeout-flag="New Rate Cancel-False">{previous.user-response.value} != "CANCEL"</transition>
+	<link id="5924971e-bb05-4fc7-991a-8fc69d6031fb" location="2 1"><down/><right/></link>
+	<link id="b7bfa5d2-31ec-458b-b56e-a12815b88651" location="3 1"><left/><right/></link>
+	<link id="1da19ec1-eea3-45ef-a187-9f51b1cf9a46" location="4 1"><up/><left/><right/></link>
+	<link id="386f79ef-2a55-48af-baf9-057a1cc93d3b" location="5 1"><left/><right/></link>
+	<link id="56628cc2-6d51-40cd-b13d-deedee7603f6" location="2 5"><up/><left/><down/><right/></link>
+	<link id="f67199a9-6e5b-44d1-856a-e8fdb9e95ffb" location="3 5"><left/><down/><right/></link>
+	<link id="ba97d9eb-b94e-4d82-a0f1-76e69a412b7d" location="6 1"><left/><right/></link>
+	<link id="bb54f97c-4011-4958-a3be-9bb1cefe9ee3" location="4 5"><left/><down/></link>
+	<link id="b3cca56a-36a2-4568-88dc-fa5b785e31b5" location="6 3"><down/><right/></link>
+	<link id="edde43b1-b6c2-4b29-b604-77629ec269e1" location="7 1"><left/><down/></link>
+	<link id="64176ed8-241f-452c-b593-7045ef9f6daa" location="7 3"><up/><left/><right/></link>
+	<link id="361e678f-4d33-47c5-a2e4-2a40a5cb357e" location="2 8"><up/><down/><right/></link>
+	<link id="4c790d90-5ff8-4b3a-ad14-b71cf9b8cbec" location="8 3"><left/><down/></link>
+	<link id="84ffb033-01cd-4d98-941b-e217e56f4260" location="3 8"><up/><down/></link>
+	<link id="7690e246-87fc-4419-ad9d-7e0cc21acbc7" location="0 9"><up/><down/><right/></link>
+	<link id="039d6c72-9d1b-419f-a11c-562b0e21b981" location="1 9"><left/><right/></link>
+	<link id="71e21338-5762-4f0b-8231-6e4ed6a72a70" location="6 7"><up/><down/></link>
+	<link id="7e89ef5b-3ad2-441d-a85d-e98853b9119d" location="2 9"><up/><left/><down/><right/></link>
+	<link id="cc548af0-537a-4346-bffd-7d1066a19750" location="3 9"><up/><left/><right/></link>
+	<link id="7354d8be-6700-4161-9a67-bd9b6de9ef37" location="4 9"><up/><left/><right/></link>
+	<link id="7768280e-4339-47ee-9cff-88af627edec4" location="8 6"><up/><down/></link>
+	<link id="f3c19e61-a7ab-4435-9990-e6d1d0e2dfa7" location="0 10"><up/><down/></link>
+	<link id="f8e531a2-31fb-4b56-940e-90cb5067043d" location="6 8"><up/><down/></link>
+	<link id="882b802c-3734-45e7-940c-f2418c1a7b5a" location="5 9"><left/><right/></link>
+	<link id="886a649c-3d36-4a81-bc05-f73b06643b4e" location="8 7"><up/><down/></link>
+	<link id="da32c749-e2ec-4b49-81d5-f7ed08bbcf29" location="6 9"><up/><left/><right/></link>
+	<link id="9270d1cf-7984-4814-9fdf-904428e4d4e8" location="0 11"><up/><down/></link>
+	<link id="29246ee1-c9f1-4866-9ce3-f897403cf68c" location="8 8"><up/><down/></link>
+	<link id="89a53398-a2d3-46a2-9dbc-4a4d33e1d7ff" location="7 9"><left/><right/></link>
+	<link id="e465a182-132b-46ed-b2d2-9fe82d922cb1" location="0 12"><up/><down/></link>
+	<link id="fa26d25b-3372-4137-902a-73fe066e6a75" location="8 9"><up/><left/><down/></link>
+	<link id="561abc85-cbcf-47c8-891c-d693aa11d1e9" location="2 12"><up/><down/><right/></link>
+	<link id="e809c403-46ff-47bd-999b-e0df15eb5438" location="3 12"><left/><right/></link>
+	<link id="454bbecf-5187-4703-8e54-63601f27fbeb" location="4 12"><left/><down/><right/></link>
+	<link id="cbb2dbb3-3e2e-417b-aa24-4a9f7d36fdcb" location="5 12"><left/><right/></link>
+	<link id="bc155071-cc4a-46e3-b480-9cb4eddf360f" location="0 13"><up/><down/></link>
+	<link id="eb0175bc-15f1-45d6-b7ec-73e2192b1ca5" location="6 12"><left/><down/><right/></link>
+	<link id="9bef0858-9f96-4fdc-a42b-ec5e7d6b4df6" location="7 12"><left/><right/></link>
+	<link id="56343be9-8b4b-4e2a-b9cc-bf4966b8fa45" location="0 14"><up/><down/></link>
+	<link id="def41beb-bea3-4541-bee6-4b753793c030" location="8 12"><up/><left/><down/></link>
+	<link id="6ab2e3dd-16fe-42de-b46f-653d97cfd1a1" location="0 15"><up/><down/></link>
+	<link id="c9c4e60f-4275-4c92-80ea-bdea720c0019" location="4 15"><up/><down/><right/></link>
+	<link id="67212aab-a77d-4082-a912-3da8c4921945" location="0 16"><up/><down/></link>
+	<link id="6650a797-b3aa-45b1-a67b-08eb0e88403c" location="1 16"><down/><right/></link>
+	<link id="d2400586-5547-4b84-8222-fe8bf417131a" location="2 16"><up/><left/><right/></link>
+	<link id="772edbcb-0a98-4f33-84db-82e157149fc2" location="3 16"><left/><down/></link>
+	<link id="9d7c85c6-f38f-4746-b348-d14ebe21077d" location="4 16"><up/><down/><right/></link>
+	<link id="61b8e948-0637-4ce8-81af-de83bd7f1af2" location="5 16"><left/><right/></link>
+	<link id="8fdeabab-b45f-4443-9107-b34afcbb34f1" location="8 15"><up/><down/></link>
+	<link id="28dcb6c2-72e6-4e98-a173-382756415a60" location="0 17"><up/><down/></link>
+	<link id="7466f7ec-992f-4fc4-b748-8670c589c5dc" location="6 16"><up/><left/><right/></link>
+	<link id="9b05d504-565e-4b20-befd-ab6718352c20" location="7 16"><left/><right/></link>
+	<link id="6c8e4922-df07-443a-a5cf-ca69614f7597" location="8 16"><up/><left/><down/></link>
+	<link id="575290be-0cab-4e65-96ce-b55bc0fbe321" location="0 18"><up/><down/><right/></link>
+	<link id="08a846cd-2eec-4532-87ca-64717e705db1" location="1 18"><up/><down/></link>
+	<link id="814757e6-972b-444a-ad7b-f6bd1c21128b" location="0 19"><up/><down/></link>
+	<link id="f4ef2da0-d7a1-48a0-a194-e5299bafa354" location="1 19"><up/><down/></link>
+	<link id="83d19f5e-a9a8-4930-9b96-e95b90f8f311" location="0 20"><up/><left/><right/></link>
+	<link id="ef5c8245-e937-406d-a76d-55449a3d3213" location="1 20"><up/><left/><right/></link>
+	<link id="b7446702-3843-44f5-97f3-5f12ce40faa6" location="2 20"><left/><right/></link>
+	<link id="09b662f8-4c66-456c-bde0-fa91200f0b79" location="3 20"><up/><left/><down/></link>
+
+</sfc>
