@@ -23,6 +23,7 @@ public class Constants {
 	public static final String ABORT = "abort";
 	public static final String ABS = "Abs";
 	public static final String ACK_REQUIRED = "ackRequired";
+	public static final String ACTIVATION_CALLBACK = "activationCallback";
 	public static final String ADVICE = "advice";
 	public static final String ARRAY_KEY = "arrayKey";
 	public static final String ASSOCIATED_DATA = "associated-data";

@@ -129,6 +129,7 @@ public class IlsProperty {
 
 
     public static final BasicProperty<Boolean> ACK_REQUIRED = createProperty(Constants.ACK_REQUIRED, Boolean.class, Boolean.FALSE);
+    public static final BasicProperty<String> ACTIVATION_CALLBACK = createProperty(Constants.ACTIVATION_CALLBACK, String.class, "");
     public static final BasicProperty<String> ADVICE = createProperty(Constants.ADVICE, String.class, "");
     public static final BasicProperty<String> ARRAY_KEY = createProperty(Constants.ARRAY_KEY, String.class, null);
     public static final BasicProperty<JSONObject> ASSOCIATED_DATA = new BasicProperty<JSONObject>(Constants.ASSOCIATED_DATA, JSONObject.class, null);
