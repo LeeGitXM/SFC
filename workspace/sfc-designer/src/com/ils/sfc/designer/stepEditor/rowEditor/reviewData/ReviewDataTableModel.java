@@ -42,7 +42,7 @@ public class ReviewDataTableModel extends RowTableModel {
 	protected String[] getChoices(int row, int col) {
 		String[] choices = null;
 		if(isDestinationColumn(col)) { // recipe scope
-			choices = Constants.RECIPE_LOCATION_CHOICES;
+			choices = Constants.RECIPE_PLUS_VALUE_LOCATION_CHOICES;
 		}
 		return choices;
 	}
