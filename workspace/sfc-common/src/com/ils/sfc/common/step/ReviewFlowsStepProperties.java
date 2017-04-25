@@ -17,16 +17,15 @@ public interface ReviewFlowsStepProperties extends ChartStepProperties {
     	SCALE,
     	BUTTON_LABEL,
     	WINDOW_TITLE,
-    	REVIEW_FLOWS_WINDOW,
     	BUTTON_KEY,
     	BUTTON_KEY_LOCATION,
     	TIMEOUT,
     	TIMEOUT_UNIT,
-    	AUTO_MODE,
     	HEADING1,
     	HEADING2,
     	HEADING3,
     	REVIEW_FLOWS,
-    	ACTIVATION_CALLBACK
+    	ACTIVATION_CALLBACK,
+    	CUSTOM_WINDOW_PATH
    };
 }

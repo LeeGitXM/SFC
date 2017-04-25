@@ -13,7 +13,6 @@ public interface CancelStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.abortStep";
 	
     public static final BasicProperty<?>[] properties = {
-    	DESCRIPTION, 
     	ACK_REQUIRED,
     	MESSAGE };
 }

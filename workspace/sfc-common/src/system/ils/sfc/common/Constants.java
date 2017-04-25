@@ -55,6 +55,7 @@ public class Constants {
 	public static final String CONFIRM_CONTROLLERS_CONFIG = "confirmControllersConfig";
 	public static final String CONTROL_PANEL_ID = "controlPanelId";
 	public static final String CONTROL_PANEL_SCRATCH_ID = "-42";
+	public static final String CUSTOM_WINDOW_PATH = "customWindowPath";
 	public static final String CURRENT = "current";
 	public static final String DATA = "data";
 	public static final String DATA_ID = "dataId";
@@ -101,6 +102,7 @@ public class Constants {
 	public static final String IMMEDIATE = "Immediate";
 	public static final String INFO = "Info";
 	public static final String INSTANCE_ID = "instanceId";
+	public static final String IS_SFC_WINDOW = "isSfcWindow";
 	public static final String ITEM_ID = "itemid";
 	public static final String ISOLATION_MODE = "isolationMode";
 	public static final String JSON_LIST = "jsonList";

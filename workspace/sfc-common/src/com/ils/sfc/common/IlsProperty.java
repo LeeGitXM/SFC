@@ -150,6 +150,7 @@ public class IlsProperty {
     public static final BasicProperty<String> COLUMN_KEY = createProperty(Constants.COLUMN_KEY, String.class, null);
     //public static final BasicProperty<Boolean> COLUMN_KEYED = createProperty(Constants.COLUMN_KEYED, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<String> COMPUTER = createProperty(Constants.COMPUTER, String.class, Constants.COMPUTER_CHOICES[0], Constants.COMPUTER_CHOICES);
+    public static final BasicProperty<String> CUSTOM_WINDOW_PATH = createProperty(Constants.CUSTOM_WINDOW_PATH, String.class, "");
     public static final BasicProperty<String> DATA_ID = createProperty(Constants.DATA_ID, String.class, "");
     public static final BasicProperty<String> TIME_LIMIT_RECIPE_LOCATION = createProperty(Constants.DATA_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], false, Constants.RECIPE_LOCATION_CHOICES, "time limit recipe location");
     public static final BasicProperty<Double> DEADTIME = createProperty(Constants.DEADTIME, Double.class, 0.);
@@ -179,6 +180,7 @@ public class IlsProperty {
     public static final BasicProperty<String> HELP = createProperty(Constants.HELP, String.class, "");
     public static final BasicProperty<Double> HIGH_LIMIT = createProperty(Constants.HIGH_LIMIT, Double.class, null);
     public static final BasicProperty<String> ID = createProperty(Constants.ID, String.class, null);
+    public static final BasicProperty<Boolean> IS_SFC_WINDOW = createProperty(Constants.IS_SFC_WINDOW, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<String> JSON_LIST = createProperty(Constants.VALUE, String.class, "[]");
     public static final BasicProperty<String> JSON_MATRIX = createProperty(Constants.VALUE, String.class, "[[],[]]");
     public static final BasicProperty<String> JSON_OBJECT = createProperty(Constants.VALUE, String.class, "{}", true);
