@@ -4,15 +4,22 @@
  */
 package com.ils.sfc.gateway.locator;
 
+import java.io.IOException;
+
 import com.ils.common.watchdog.Watchdog;
 import com.ils.common.watchdog.WatchdogObserver;
 import com.ils.common.watchdog.WatchdogTimer;
 import com.ils.sfc.common.IlsSfcModule;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.gateway.IlsSfcGatewayHook;
+import com.inductiveautomation.ignition.common.TypeUtilities;
+import com.inductiveautomation.ignition.common.sqltags.model.Tag;
+import com.inductiveautomation.ignition.common.sqltags.model.TagPath;
+import com.inductiveautomation.ignition.common.sqltags.parser.TagPathParser;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
+import com.inductiveautomation.ignition.gateway.sqltags.TagProvider;
 import com.inductiveautomation.sfc.api.MonitoredScopeLifecycle;
 import com.inductiveautomation.sfc.api.PyChartScope;
 
@@ -27,7 +34,7 @@ import com.inductiveautomation.sfc.api.PyChartScope;
 public class S88Scope extends PyChartScope implements WatchdogObserver,MonitoredScopeLifecycle {
 	private static final String CLSS = "S88Scope";
 	private static final double POLL_INTERVAL = 5.0;
-	private static final double INITIAL_POLL_INTERVAL = 0.5;
+	private static final double INITIAL_POLL_INTERVAL = 0.0;
 	private final LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
 	private static boolean DEBUG = false;
 	private final GatewayContext context;
@@ -61,12 +68,17 @@ public class S88Scope extends PyChartScope implements WatchdogObserver,Monitored
 	 */
 	@Override
 	public boolean containsKey(Object key) {
-		this.key = key.toString();
-		startWatchDogIfReady();
 		if(DEBUG || log.isDebugEnabled() ) log.infof("%s.containsKey %s ?",CLSS, key);
-		return true;
 		
+	    if(!TypeUtilities.equalsIgnoreCase(this.key, key.toString())){
+	        this.key = key.toString();
+	        startWatchDogIfReady();
+	        evaluate();
+	    }
+	    return true;	
 	}
+	
+	
 	/**
 	* This is a new function that causes keys like "a.b.c" to be sent in their entirety. Note they still won't include the identifier part, like "prior".
 	**/
@@ -74,6 +86,8 @@ public class S88Scope extends PyChartScope implements WatchdogObserver,Monitored
 	public boolean supportsSubScopes() {
 		return false;
 	}
+
+	
 	
 	/***************
 	* MonitoredScopeLifecycle functions. These are called based on when the transition starts/stops.
