@@ -366,6 +366,22 @@ public class Converter {
 		name = toCamelCase(name);
 		return name;
 	}
+	
+	/**
+	 * The chart name is the next to last component of a step path
+	 * @param path
+	 * @return
+	 */
+	private String chartNameFromPathString(String path) {
+		int index = path.lastIndexOf(".");
+		// Strip off extension
+		if( index>0) path = path.substring(0,index);
+		// Take last segment
+		index = path.lastIndexOf(".");
+		if( index>0 ) path = path.substring(index+1);
+		path = toCamelCase(path);
+		return path;
+	}
 
 	public ClassNameMapper getClassMapper()             { return classMapper; }
 	public ProcedureMapper getProcedureMapper()         { return procedureMapper; }
@@ -437,7 +453,7 @@ public class Converter {
 	 */
 	private void updateChartForSingletonStep(Document chart,Element g2block,String xml) {
 		Element root = chart.getDocumentElement();   // "sfc"
-		root.appendChild(createBeginStep(chart,UUID.randomUUID(),1,1));
+		root.appendChild(createBeginStep(chart,g2block,UUID.randomUUID(),1,1));
 		root.appendChild(stepTranslator.translate(chart,g2block,1,2, xml));
 		root.appendChild(createEndStep(chart,UUID.randomUUID(),1,3));
 	}
@@ -684,6 +700,10 @@ public class Converter {
 		else if(factoryId.startsWith("com.ils") && properties==null) {
 			log.warnf("%s.updateStepFromG2Block: class %s has no defined properties",CLSS,factoryId);
 		}
+		// Convert the chart path attribute into "pretty" property
+		if(factoryId.equalsIgnoreCase("begin-step")) {
+			addChartNameScopeVariable(chart,step,g2block);
+		}
 		
 		// Convert the block configurations, if any.
 		// First delete any existing elements of the same name (they will be empty).
@@ -712,12 +732,14 @@ public class Converter {
 	}
 	
 	// Add a single chart element to the document
-	private Element createBeginStep(Document chart,UUID uuid,int x,int y) {
+	private Element createBeginStep(Document chart,Element g2block,UUID uuid,int x,int y) {
 		Element step = chart.createElement("step");
 		step.setAttribute("id", uuid.toString());
 		step.setAttribute("location", String.format("%d %d", x,y));
 		step.setAttribute("name", "__begin");
 		step.setAttribute(Constants.FACTORY_ID, "begin-step");
+		
+		addChartNameScopeVariable(chart,step,g2block);
 		return step;
 	}
 	// Add a single chart element to the document
@@ -774,6 +796,27 @@ public class Converter {
 				}
 			}
 		}
+	}
+	private void addChartNameScopeVariable(Document chart,Element step,Element g2block) {
+		Element parameters = chart.createElement("parameters");
+		Element parameter  = chart.createElement("parameter");
+		parameters.appendChild(parameter);
+		Element name = chart.createElement("name");
+		Node textNode = chart.createTextNode("chartName");
+		name.appendChild(textNode);
+		parameter.appendChild(name);
+		
+		Element expression = chart.createElement("expression");
+		String fullPath = g2block.getAttribute("block-full-path-label");
+		if( fullPath==null || fullPath.isEmpty() ) fullPath = g2block.getAttribute("full-path");
+		//log.infof("%s.updateStepFromG2Block: begin block full   path is %s",CLSS,fullPath);
+		String prettyPath = chartNameFromPathString(fullPath);
+		//log.infof("%s.updateStepFromG2Block: begin block pretty path is %s",CLSS,prettyPath);
+		textNode = chart.createTextNode('"'+prettyPath+'"');  // Make a legal text expression
+		expression.appendChild(textNode);
+		parameter.appendChild(expression);
+		step.appendChild(parameters);
+		
 	}
 	
 	/**
