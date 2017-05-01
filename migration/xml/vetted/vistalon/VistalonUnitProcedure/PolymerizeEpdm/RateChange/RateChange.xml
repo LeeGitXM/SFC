@@ -1,36 +1,39 @@
 <?xml version="1.0" ?>
-<sfc zoom="1.0666667" canvas="12 18" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Mon Apr 17 12:39:35 CDT 2017" hot-editable="false" persist-state="true">
-	<step id="e8350bbd-7958-11d9-a870-006008c66680" location="4 0" name="Begin" factory-id="begin-step">		<associated-data>{}</associated-data>
+<sfc zoom="0.91666675" canvas="12 18" execution-mode="Callable" version="7.9.0 (b2016101208)" timestamp="Mon May 01 15:49:43 CDT 2017" hot-editable="false" persist-state="true">
+	<step id="e8350bbd-7958-11d9-a870-006008c66680" location="4 0" name="Begin" factory-id="begin-step">
+<parameters>
+	<parameter key="true"><name>ChartName</name><expression>"Rate Change"</expression></parameter>
+</parameters>
+		<associated-data>{}</associated-data>
 	</step>
 	<step id="190eef0a-d4f7-11e1-b661-00142223a71b" location="4 1" name="Rate Change Queue" factory-id="com.ils.clearQueueStep" breakpoint="true"><name>Rate Change Queue</name><description></description><id>190eef0a-d4f7-11e1-b661-00142223a71b</id><breakpoint>true</breakpoint>		<associated-data>{}</associated-data>
 	</step>
 	<step id="e66b0158-798c-11d9-a870-006008c66680" location="2 6" name="ValidateState" factory-id="action-step">
-		<start-script># Copyright 2016 ExxonMobil Corporation. All rights reserved.
+		<start-script>import system
+from ils.sfc.common.constants import MSG_STATUS_ERROR,LOCAL_SCOPE
+from ils.sfc.gateway.api import getChartLogger, postToQueue, getProviderName
+from ils.sfc.recipeData.api import s88Set
 
-'''
- . 
-'''
-
-import system
-from ils.sfc.common.constants import ERROR,LOCAL_SCOPE
-from com.ils.queue import post
-from ils.sfc.gateway.api import getChartLogger
-from ils.sfc.gateway import api
 def onStart(chart,block):
-	log = system.util.getLogger(getChartLogger(chart))
-	log.tracef("In %s with %s, a %s. . .",chart.get("name",""),block.get("name",""),"step")
+	log = getChartLogger(chart)
+	provider = getProviderName(chart)
+	log.tracef("In %s with %s...", chart.get("name",""), block.get("name",""))
 
-	grade = round(system.tag.read("[]DiagnosticToolkit/CSTR/RLA3-Current-Grade/value").getValue())
-
+	grade = round(system.tag.read("[%s]Site/RLA3/Grade/grade" % (provider)).value)
+	rateChangeGrade = round(system.tag.read("[%s]Site/RateChange/GRADE" % (provider)).value)
+	
+	print "The current grade is &lt;%s&gt; and the rate change grade is &lt;%s&gt;" % (grade, rateChangeGrade)
+	
 	#  wrong button used - alert OC 
-	if grade != button.get("grade",""):
-		post.messageToQueue(chart,block,"Current grade is %s. Rate change data is for %s. Use the rocket on the Operator Console for a cold stick."%(str(grade),button.get("grade","")),ERROR,block)
-		api.s88SetData(chart,block,"ok-to-proceed.val","false",LOCAL_SCOPE)
+	if grade != rateChangeGrade:
+		print "Setting False"
+		postToQueue(chart, MSG_STATUS_ERROR, "Current grade is %s. Rate change data is for %s. Use the rocket on the Operator Console for a cold stick." % (str(grade),str(rateChangeGrade)))
+		s88Set(chart,block,"ok-to-proceed.value",False,LOCAL_SCOPE)
 	else:
-		api.s88SetData(chart,block,"ok-to-proceed.val","true",LOCAL_SCOPE)
+		print "Setting True"
+		s88Set(chart,block,"ok-to-proceed.value",True,LOCAL_SCOPE)
 
-	log.tracef("%s has completed!",block.get("name",""))
-</start-script>
+	log.tracef("%s has completed!",block.get("name",""))</start-script>
 		<associated-data>{}</associated-data>
 	</step>
 	<step id="89fcb8e9-91b0-11d9-b116-00065b88c6c2" location="0 9" name="WrongGrade" factory-id="com.ils.abortStep"><ackRequired>false</ackRequired><name>WrongGrade</name><description>Since the grade for rate change data is not for the current grade, abort the rate change.</description><id>89fcb8e9-91b0-11d9-b116-00065b88c6c2</id><message></message>		<associated-data>{}</associated-data>
@@ -51,12 +54,13 @@ def onStart(chart,block):
 	<transition id="434073d8-cbb4-11d9-b117-00065b88c6c2" location="2 5" timeout-enabled="true" timeout-delay="360000000" timeout-flag="CS Rate Change-False">{global.review-data-button.value} != "Calc-New-Rate"</transition>
 	<transition id="434073de-cbb4-11d9-b117-00065b88c6c2" location="5 3" timeout-enabled="true" timeout-delay="30000" timeout-flag="Cat Is Out-True">{tag.Site/CRX/CAT-AND-C2-IS-IN} = "TRUE"</transition>
 	<transition id="434073d2-cbb4-11d9-b117-00065b88c6c2" location="4 5" timeout-enabled="true" timeout-delay="360000000" timeout-flag="CS Rate Change-True">{global.review-data-button.value} = "Calc-New-Rate"</transition>
-	<transition id="0b80d544-798d-11d9-a870-006008c66680" location="0 8" timeout-enabled="true" timeout-delay="30000" timeout-flag="Right Grade-False">!{previous.ok-to-proceed.value}</transition>
-	<transition id="7e6ae9d9-7991-11d9-a870-006008c66680" location="3 8" timeout-enabled="true" timeout-delay="30000" timeout-flag="RightGrade-True">{previous.ok-to-proceed.value}</transition>
+	<transition id="0b80d544-798d-11d9-a870-006008c66680" location="0 8" timeout-enabled="true" timeout-delay="30000" timeout-flag="Right Grade-False">!{prior.ok-to-proceed.value}</transition>
+	<transition id="7e6ae9d9-7991-11d9-a870-006008c66680" location="3 8" timeout-enabled="true" timeout-delay="30000" timeout-flag="RightGrade-True">{prior.ok-to-proceed.value}</transition>
 	<transition id="0f378364-7987-11d9-a870-006008c66680" location="2 12" timeout-enabled="true" timeout-delay="30000" timeout-flag="Single Rx-True">{tag.Recipe/Local/SINGLE-RX-GRADE}</transition>
 	<transition id="0f37836a-7987-11d9-a870-006008c66680" location="4 12" timeout-enabled="true" timeout-delay="30000" timeout-flag="Series Rx-True">{tag.Recipe/Local/SERIES-RX-GRADE}</transition>
 	<transition id="0f378370-7987-11d9-a870-006008c66680" location="6 12" timeout-enabled="true" timeout-delay="30000" timeout-flag="Split Rx-True">{tag.Site/CSTR/SPLIT-FEED_GRADE}</transition>
 	<transition id="0f378376-7987-11d9-a870-006008c66680" location="8 12" timeout-enabled="true" timeout-delay="30000" timeout-flag="C-Rx-True">{tag.Recipe/Local/C-RX-GRADE}</transition>
+	<note id="bfe8a13c-d34b-4869-b316-4b0dd0dfffa8" location="6 1" size="2 1">04/27/2017 Exported</note>
 	<link id="0c3779e4-7218-4074-8aea-1cf58cafba59" location="3 2"><down/><right/></link>
 	<link id="4ca500e1-50d1-4b5a-bfed-590000889824" location="4 2"><up/><left/><right/></link>
 	<link id="366173c1-12da-4b3e-9d65-fbb4986f4052" location="2 4"><down/><right/></link>
