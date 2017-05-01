@@ -19,10 +19,13 @@ public interface ReviewDataWithAdviceStepProperties extends ChartStepProperties 
     	WINDOW_TITLE,
     	BUTTON_KEY,
     	BUTTON_KEY_LOCATION,
-    	REVIEW_DATA_WINDOW,
+    	TIMEOUT,
+    	TIMEOUT_UNIT,
     	PRIMARY_REVIEW_DATA_WITH_ADVICE,
     	PRIMARY_TAB_LABEL,
     	SECONDARY_REVIEW_DATA_WITH_ADVICE,
     	SECONDARY_TAB_LABEL,
+    	ACTIVATION_CALLBACK,
+    	CUSTOM_WINDOW_PATH
    };
 }

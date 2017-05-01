@@ -19,5 +19,6 @@ public interface ShowWindowStepProperties extends ChartStepProperties {
     	WINDOW_TITLE,
     	WINDOW,
     	SECURITY,
+    	IS_SFC_WINDOW
     	};
 }

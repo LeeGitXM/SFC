@@ -23,6 +23,7 @@ public class Constants {
 	public static final String ABORT = "abort";
 	public static final String ABS = "Abs";
 	public static final String ACK_REQUIRED = "ackRequired";
+	public static final String ACTIVATION_CALLBACK = "activationCallback";
 	public static final String ADVICE = "advice";
 	public static final String ARRAY_KEY = "arrayKey";
 	public static final String ASSOCIATED_DATA = "associated-data";
@@ -54,6 +55,7 @@ public class Constants {
 	public static final String CONFIRM_CONTROLLERS_CONFIG = "confirmControllersConfig";
 	public static final String CONTROL_PANEL_ID = "controlPanelId";
 	public static final String CONTROL_PANEL_SCRATCH_ID = "-42";
+	public static final String CUSTOM_WINDOW_PATH = "customWindowPath";
 	public static final String CURRENT = "current";
 	public static final String DATA = "data";
 	public static final String DATA_ID = "dataId";
@@ -100,6 +102,7 @@ public class Constants {
 	public static final String IMMEDIATE = "Immediate";
 	public static final String INFO = "Info";
 	public static final String INSTANCE_ID = "instanceId";
+	public static final String IS_SFC_WINDOW = "isSfcWindow";
 	public static final String ITEM_ID = "itemid";
 	public static final String ISOLATION_MODE = "isolationMode";
 	public static final String JSON_LIST = "jsonList";
@@ -300,6 +303,7 @@ public class Constants {
 	// choices:
 	public static final String[] RECIPE_STATIC_STRATEGY_CHOICES = {STATIC, RECIPE};
 	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, PRIOR, SUPERIOR,GLOBAL, OPERATION, PHASE};
+	public static String[] RECIPE_PLUS_VALUE_LOCATION_CHOICES = {VALUE, LOCAL, PRIOR, SUPERIOR,GLOBAL, OPERATION, PHASE};
 	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
 	public static final String[] TIME_LIMIT_STRATEGY_CHOICES = {STATIC, RECIPE};
 	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK, TAG};

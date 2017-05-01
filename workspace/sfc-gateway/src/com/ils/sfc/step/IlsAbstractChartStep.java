@@ -32,6 +32,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	volatile boolean resumed = false;
 	volatile boolean done = false;
 	private static final String WORK_DONE_FLAG = "workDone";
+	private static final String WAITING_FOR_REPLY = "waitingForReply";
 	
 	protected IlsAbstractChartStep(ChartContext context,  ScopeContext scopeContext, StepDefinition definition) {
 		super(context, definition);
@@ -84,6 +85,9 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 			if (deactivated){
 				logger.trace("...doing DEACTIVATED work...");
 				callPython(Constants.DEACTIVATED);
+				
+//				logger.trace("Resetting WORK_DONE_FLAG to False (2)");
+//				scopeContext.getStepScope().setVariable(WORK_DONE_FLAG, 0);
 			}
 			logger.trace("Done working!");
 		}
@@ -157,6 +161,10 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		resumed = false;
 		done = false;
 		
+		// These twp initialization steps are needed for a Long Running Block the second time thrugh a chart loop.
+		scopeContext.getStepScope().setVariable(WORK_DONE_FLAG, 0);
+		scopeContext.getStepScope().setVariable(WAITING_FOR_REPLY, 0);
+		
 		// It is important for the correct function of Cancel steps that callPython be called
 		// once outside of the controller:execute stuff:
 		done = callPython(getState());
@@ -172,6 +180,10 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		logger.trace("Step deactivated");
 		deactivated = true;
 		//In this example, we want to block flow until the work has finished. Therefore, we take no special action during deactivate.
+		
+		// note: just using "put" will not trigger change notification--use setVariable()
+		// logger.trace("Resetting WORK_DONE_FLAG to False (1)");
+		// scopeContext.getStepScope().setVariable(WORK_DONE_FLAG, 0);
 	}
 
 	@Override

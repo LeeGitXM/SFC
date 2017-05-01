@@ -17,14 +17,15 @@ public interface ReviewDataStepProperties extends ChartStepProperties {
     	SCALE,
     	BUTTON_LABEL,
     	WINDOW_TITLE,
-    	BUTTON_KEY_LOCATION,
     	BUTTON_KEY,
+    	BUTTON_KEY_LOCATION,
     	TIMEOUT,
     	TIMEOUT_UNIT,
-    	REVIEW_DATA_WINDOW,
     	PRIMARY_REVIEW_DATA,
     	PRIMARY_TAB_LABEL,
     	SECONDARY_REVIEW_DATA,
     	SECONDARY_TAB_LABEL,
+    	ACTIVATION_CALLBACK,
+    	CUSTOM_WINDOW_PATH
     };
 }
