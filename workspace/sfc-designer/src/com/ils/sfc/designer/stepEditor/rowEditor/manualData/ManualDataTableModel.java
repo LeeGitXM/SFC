@@ -77,7 +77,7 @@ private static final String[] columnNames = {"Key", "Destination", "Prompt", "Un
 
 	protected String[] getChoices(int row, int col) {
 		if(col == DESTINATION_COL) {
-			return Constants.RECIPE_LOCATION_CHOICES;
+			return Constants.RECIPE_PLUS_TAG_LOCATION_CHOICES;
 		}
 		else {
 			return null;
