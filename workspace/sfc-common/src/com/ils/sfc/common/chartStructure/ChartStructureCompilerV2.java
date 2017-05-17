@@ -27,6 +27,7 @@ import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 import com.inductiveautomation.sfc.uimodel.ElementType;
 
 public class ChartStructureCompilerV2 {
+	private static final String CLSS = "ChartStructureCompilerV2";
 	private final LoggerEx log;
 	private final StepRegistry stepRegistry;
 	private final Project globalProject;
@@ -148,8 +149,9 @@ public class ChartStructureCompilerV2 {
 				try {
 					Object[] args = {chartPath, resourceId, stepNames, stepUUIDs, stepFactoryIds, childPaths, childNames, childUUIDs, childTypes, database};
 					PythonCall.UPDATE_CHART_HIERARCHY.exec( args );
-				} catch (JythonExecException e) {
-					log.error("Caught an error");
+				} 
+				catch (JythonExecException e) {
+					log.errorf("%s: Error in python (update chart hierarchy): %s",CLSS,e.getLocalizedMessage());
 				}
 
 			}
@@ -176,8 +178,9 @@ public class ChartStructureCompilerV2 {
 		Object[] args = {resourceId, chartPath, database};
 		try {
 			PythonCall.CREATE_CHART.exec(args);
-		} catch (JythonExecException e) {
-			log.error("Caught an error");
+		} 
+		catch (JythonExecException e) {
+			log.errorf("%s: Error in python (create chart): %s",CLSS,e.getLocalizedMessage());
 		}
 
 	}
@@ -193,8 +196,9 @@ public class ChartStructureCompilerV2 {
 		Object[] args = {resourceId, chartPath, database};
 		try {
 			PythonCall.DELETE_CHART.exec(args);
-		} catch (JythonExecException e) {
-			log.error("Caught an error");
+		} 
+		catch (JythonExecException e) {
+			log.errorf("%s: Error in python (delete chart): %s",CLSS,e.getLocalizedMessage());
 		}
 	}
 
