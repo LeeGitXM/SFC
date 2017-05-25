@@ -87,9 +87,9 @@ public class ProjectBuilder {
 		out.println("<project>");
 		out.println("<version>");
 		out.println(" <major>7</major>");
-		out.println(" <minor>7</minor>");
-		out.println(" <rev>3</rev>");
-		out.println(" <build>2015021401</build>");
+		out.println(" <minor>9</minor>");
+		out.println(" <rev>2</rev>");
+		out.println(" <build>201704131</build>");
 		out.println("</version>");
 		out.printf("<timestamp>%s</timestamp>\n",df.format(now));
 		out.println("<id>-1</id>");

@@ -14,7 +14,7 @@ OUTDIR=$SFC/migration/projects/Vistalon
 mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
 
-${MIGRATION}/process-vistalon all > ${LOG} 2>&1
+#${MIGRATION}/process-vistalon all > ${LOG} 2>&1
 
 # Copy the vetted charts into the main processing area 
 echo "Hand-vetted Charts ------------------------"
