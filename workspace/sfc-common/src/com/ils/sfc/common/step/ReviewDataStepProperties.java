@@ -19,8 +19,6 @@ public interface ReviewDataStepProperties extends ChartStepProperties {
     	WINDOW_TITLE,
     	BUTTON_KEY,
     	BUTTON_KEY_LOCATION,
-    	TIMEOUT,
-    	TIMEOUT_UNIT,
     	PRIMARY_REVIEW_DATA,
     	PRIMARY_TAB_LABEL,
     	SECONDARY_REVIEW_DATA,

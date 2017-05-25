@@ -21,8 +21,6 @@ public interface LimitedInputStepProperties extends ChartStepProperties {
     	RECIPE_LOCATION, 
     	KEY, 
     	MINIMUM_VALUE, 
-    	MAXIMUM_VALUE,
-    	TIMEOUT,
-    	TIMEOUT_UNIT,
+    	MAXIMUM_VALUE
     };
 }

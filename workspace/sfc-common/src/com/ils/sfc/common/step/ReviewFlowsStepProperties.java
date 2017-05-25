@@ -19,8 +19,6 @@ public interface ReviewFlowsStepProperties extends ChartStepProperties {
     	WINDOW_TITLE,
     	BUTTON_KEY,
     	BUTTON_KEY_LOCATION,
-    	TIMEOUT,
-    	TIMEOUT_UNIT,
     	HEADING1,
     	HEADING2,
     	HEADING3,

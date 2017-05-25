@@ -19,8 +19,6 @@ public interface YesNoStepProperties extends ChartStepProperties {
     	WINDOW_TITLE,
     	PROMPT, 
     	RECIPE_LOCATION,
-    	KEY,
-    	TIMEOUT,
-    	TIMEOUT_UNIT,
+    	KEY
     };
 }

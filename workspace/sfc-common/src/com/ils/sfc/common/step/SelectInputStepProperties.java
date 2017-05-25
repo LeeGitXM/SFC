@@ -20,9 +20,7 @@ public interface SelectInputStepProperties extends ChartStepProperties {
     	PROMPT, 
     	CHOICES_RECIPE_LOCATION, 
     	CHOICES_KEY, 
-    	RECIPE_LOCATION, 
-    	KEY,
-    	TIMEOUT,
-    	TIMEOUT_UNIT,
+    	RECIPE_LOCATION,
+    	RESPONSE_KEY_AND_ATTRIBUTE
     };
 }
