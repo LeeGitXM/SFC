@@ -13,6 +13,6 @@ public interface ControlPanelMessageStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.controlPanelMessageStep";
 	     
     public static final BasicProperty<?>[] properties = { 
-    	MESSAGE, ACK_REQUIRED, PRIORITY, POST_TO_QUEUE, TIMEOUT, TIMEOUT_UNIT
+    	MESSAGE, ACK_REQUIRED, PRIORITY, POST_TO_QUEUE
     };
 }

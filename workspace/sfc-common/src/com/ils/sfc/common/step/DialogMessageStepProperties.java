@@ -24,7 +24,5 @@ public interface DialogMessageStepProperties extends ChartStepProperties {
     	KEY, 
     	WINDOW,
     	ACK_REQUIRED, 
-    	TIMEOUT, 
-    	TIMEOUT_UNIT, 
     };
 }
