@@ -167,6 +167,11 @@ public class IlsProperty {
     public static final BasicProperty<Boolean> ENABLE_START = createProperty(Constants.ENABLE_START, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<Boolean> ENABLE_RESET = createProperty(Constants.ENABLE_RESET, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<Double> ERROR_CODE = createProperty(Constants.ERROR_CODE, Double.class, 0.);
+    
+    public static final BasicProperty<String> ERROR_COUNT_SCOPE = createProperty(Constants.ERROR_COUNT_SCOPE, String.class, Constants.RECIPE_PLUS_CHART_STEP_CHOICES[7], Constants.RECIPE_PLUS_CHART_STEP_CHOICES);
+    public static final BasicProperty<String> ERROR_COUNT_KEY = createProperty(Constants.ERROR_COUNT_KEY, String.class, "errorCount");
+    public static final BasicProperty<String> ERROR_COUNT_MODE = createProperty(Constants.ERROR_COUNT_MODE, String.class, Constants.COUNT_MODE_CHOICES[0], Constants.COUNT_MODE_CHOICES);
+    
     public static final BasicProperty<String> ERROR_TEXT = createProperty(Constants.ERROR_TEXT, String.class, "");
     public static final BasicProperty<String> EXTENSION = createProperty(Constants.EXTENSION, String.class, ".txt");
     public static final BasicProperty<String> FACTORY_ID = createProperty("factory-id", String.class, "");

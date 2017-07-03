@@ -13,13 +13,13 @@ public interface WriteOutputStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.writeOutputStep";
 	
     public static final BasicProperty<?>[] properties = {
-    	VERBOSE,
-    	GLOBAL_ERROR_COUNT_LOCATION,
-    	GLOBAL_ERROR_COUNT_KEY,
     	RECIPE_LOCATION,
     	TIMER_LOCATION,
     	TIMER_KEY,
     	TIMER_SET,
-    	WRITE_OUTPUT_CONFIG
+    	WRITE_OUTPUT_CONFIG,
+    	ERROR_COUNT_SCOPE,
+    	ERROR_COUNT_KEY,
+    	ERROR_COUNT_MODE
     };
 }
