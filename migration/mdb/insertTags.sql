@@ -166,7 +166,7 @@ insert into TagMap values ('SDSTRM-4','[]DiagnosticToolkit/CRX/SDSTRM-4','DOUBLE
 insert into TagMap values ('SDSTRM-5','[]DiagnosticToolkit/CRX/SDSTRM-5','DOUBLE');
 insert into TagMap values ('SDSTRM-6','[]DiagnosticToolkit/CRX/SDSTRM-6','DOUBLE');
 insert into TagMap values ('SDSTRM-C2','[]DiagnosticToolkit/CRX/SDSTRM-C2','DOUBLE');
-insert into TagMap values ('SDSTRM-C3C2-RATIO','[]DiagnosticToolkit/CRX/VRF503R-2/value','DOUBLE');
+insert into TagMap values ('SDSTRM-C3C2-RATIO','[]DiagnosticToolkit/CRX/VRF503R-2/sp/value','DOUBLE');
 insert into TagMap values ('SDSTRM_C3-TO-C2_RATIO_HIGH_LIMIT','[]Site/CRX/Limits-Targets-and-Gains/Limits/SDSTRM-C3-TO-C2-RATIO-HIGH-LIMIT/value','DOUBLE');
 insert into TagMap values ('SDSTRM_C3-TO-C2_RATIO_LOW_LIMIT','[]Site/CRX/Limits-Targets-and-Gains/Limits/SDSTRM-C3-TO-C2-RATIO-LOW-LIMIT/value','DOUBLE');
 insert into TagMap values ('SDSTRM_C3C2_RATIO','[]DiagnosticToolkit/Connections/SdstrmC3C2Ratio','STRING');
@@ -254,7 +254,7 @@ insert into TagMap values ('[the bad-value of RLA3-CURRENT-GRADE]','[]Diagnostic
 insert into TagMap values ('[the bad-value of RX_CONFIGURATION ]','[]DiagnosticToolkit/CSTR/RX-CONFIGURATION/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of RX_CONFIGURATION]','[]DiagnosticToolkit/CSTR/RX-CONFIGURATION/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of SD-STRM-C2_FLOW]','[]DiagnosticToolkit/CRX/VRF202S/badValue','BOOLEAN');
-insert into TagMap values ('[the bad-value of SDSTRM-C3C2-RATIO]','[]DiagnosticToolkit/CRX/VRF503R-2/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of SDSTRM-C3C2-RATIO]','[]DiagnosticToolkit/CRX/VRF503R-2/sp/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of SS1_TAPER_TIP_HEIGHT]','[]Site/CRX/Calculated-Variables/SS1-TAPER-TIP-HEIGHT/badValue','BOOLEAN');
 insert into TagMap values ('[the bad-value of SS2_TAPER_TIP_HEIGHT]','[]Site/CRX/Calculated-Variables/SS2-TAPER-TIP-HEIGHT/badValue','BOOLEAN');
 
