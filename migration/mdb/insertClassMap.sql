@@ -1,3 +1,4 @@
+-- G2Class, IgnitionClass
 insert into ClassMap values ('EM-GDA-ABSOLUTE-COMPARE','com.ils.block.CompareAbsolute');
 insert into ClassMap values ('EM-GDA-BAD-DATA-HANDLER','com.ils.block.DataConditioner');
 insert into ClassMap values ('EM-GDA-CLOCK-TIMER','com.ils.block.TruthValuePulse');
@@ -10,6 +11,7 @@ insert into ClassMap values ('EM-GDA-HIGH-LIMIT','com.ils.block.HighLimitObserva
 insert into ClassMap values ('EM-GDA-HIGH-LIMIT-WITH-DEADBAND','com.ils.block.HighLimitObservation');
 insert into ClassMap values ('EM-GDA-LATCH','com.ils.block.LogicLatch');
 insert into ClassMap values ('EM-GDA-LOGIC-FILTER','com.ils.block.LogicFilter');
+insert into ClassMap values ('EM-GDA-LOGICAL-PARAMETER','com.ils.block.Parameter');
 insert into ClassMap values ('EM-GDA-LOGICAL-VARIABLE','com.ils.block.Parameter');
 insert into ClassMap values ('EM-GDA-LOW-LIMIT','com.ils.block.LowLimitObservation');
 insert into ClassMap values ('EM-GDA-LOW-LIMIT-WITH-DEADBAND','com.ils.block.LowLimitObservation');
@@ -49,6 +51,7 @@ insert into ClassMap values ('GDL-TIMER','com.ils.block.Timer');
 insert into ClassMap values ('INTEGER-PARAMETER','com.ils.block.Parameter');
 insert into ClassMap values ('LOGICAL-PARAMETER','com.ils.block.Parameter');
 insert into ClassMap values ('LOGICAL-VARIABLE','com.ils.block.Parameter');
+insert into ClassMap values ('OC-MESSAGE-PARAMETER','com.ils.block.Parameter');
 insert into ClassMap values ('SYMBOLIC-PARAMETER','com.ils.block.Parameter');
 -- NOTE: We convert all connnection posts to "sinks"
 --       later on we analyze and determine which are "sources"
@@ -60,6 +63,8 @@ insert into ClassMap values('em-diagnosis-family','com.ils.blt.gateway.engine.Pr
 insert into ClassMap values('em-gda-final-diagnosis','com.ils.block.finaldiagnosis');
 insert into ClassMap values('em-s88-rate-change-callback','java.util.Map');
 insert into ClassMap values('em-s88-rate-change-current-data-callback','java.util.Map');
+-- These are for procedure translation
+insert into ClassMap values ('g2Window','java.awt.Window');
 -- These are generic classes used for SFC translation
 insert into ClassMap values ('chart','chart');
 insert into ClassMap values ('error','java.util.Map');

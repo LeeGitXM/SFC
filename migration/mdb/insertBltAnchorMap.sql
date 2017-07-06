@@ -29,6 +29,8 @@ insert into BltAnchorMap values ('EM-GDA-LATCH','IP-IN','in','');
 insert into BltAnchorMap values ('EM-GDA-LATCH','IP-OUT','out','');
 insert into BltAnchorMap values ('EM-GDA-LOGIC-FILTER','IP-IN','in','');
 insert into BltAnchorMap values ('EM-GDA-LOGIC-FILTER','IP-OUT','out','');
+insert into BltAnchorMap values ('EM-GDA-LOGICAL-PARAMETER','IP-IN','in','');
+insert into BltAnchorMap values ('EM-GDA-LOGICAL-PARAMETER','IP-OUT','out','');
 insert into BltAnchorMap values ('EM-GDA-LOGICAL-VARIABLE','IP-IN','in','');
 insert into BltAnchorMap values ('EM-GDA-LOGICAL-VARIABLE','IP-OUT','out','');
 insert into BltAnchorMap values ('EM-GDA-LOW-LIMIT','DP-IN','in','');

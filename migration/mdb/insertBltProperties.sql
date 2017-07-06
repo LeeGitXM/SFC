@@ -44,6 +44,7 @@ insert into BltPropertyMap values ('EM-GDA-LOGIC-FILTER','filterTimInMinutes','T
 insert into BltPropertyMap values ('EM-GDA-LOGIC-FILTER','fractionTrueRequired','MinimumTrueFraction','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-LOGIC-FILTER','hysteresis','Hysteresis','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-LOGIC-FILTER','recalculationIntervalInSeconds','scanInterval','DOUBLE',1,'NONE');
+insert into BltPropertyMap values ('EM-GDA-LOGICAL-PARAMETER','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-LOGICAL-VARIABLE','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-LOW-LIMIT','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-LOW-LIMIT','statusOnInitialization','','STRING',1,'NONE');
@@ -139,4 +140,5 @@ insert into BltPropertyMap values ('GDL-TIMER','triggeron','Trigger','BOOLEAN',1
 insert into BltPropertyMap values ('INTEGER-PARAMETER','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('LOGICAL-PARAMETER','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('LOGICAL-VARIABLE','label','','STRING',1,'NONE');
+insert into BltPropertyMap values ('OC-MESSAGE-PARAMETER','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('SYMBOLIC-PARAMETER','label','','STRING',1,'NONE');
