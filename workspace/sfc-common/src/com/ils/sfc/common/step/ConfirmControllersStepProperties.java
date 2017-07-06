@@ -13,6 +13,9 @@ public interface ConfirmControllersStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.confirmControllersStep";
 	
     public static final BasicProperty<?>[] properties = { 
-    	CONFIRM_CONTROLLERS_CONFIG
+    	CONFIRM_CONTROLLERS_CONFIG,
+    	ERROR_COUNT_SCOPE,
+    	ERROR_COUNT_KEY,
+    	ERROR_COUNT_MODE
     };
 }

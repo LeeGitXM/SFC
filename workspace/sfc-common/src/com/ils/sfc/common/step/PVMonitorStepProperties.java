@@ -21,6 +21,10 @@ public interface PVMonitorStepProperties extends ChartStepProperties {
         TIME_LIMIT_RECIPE_KEY,
         TIME_LIMIT_STATIC_VALUE,
         TIME_LIMIT_RECIPE_LOCATION,
+    	ERROR_COUNT_SCOPE,
+    	ERROR_COUNT_KEY,
+    	ERROR_COUNT_MODE,
+    	ACTIVATION_CALLBACK,
     	PV_MONITOR_CONFIG
     };
 }

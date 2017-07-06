@@ -124,6 +124,8 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-update-stru
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('insert-at-end','append');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('instancesOfClass','com.ils.function.find');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('lab-baler-sqc-problem-start-uir','ils.vistalon.crx.uir.startLabBalerSqc');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('length-of-text','len');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('matrix-scalar-multiply','multiplyMatrixByScalar');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('max-mst-var-gda','ils.blt.lib.maxMstVar');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ml-mst-bias-ctl-gain-gda','ils.blt.lib.mlBstBiasCtlGain');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('named-item-exists','ils.blt.lib.namedItemExists');

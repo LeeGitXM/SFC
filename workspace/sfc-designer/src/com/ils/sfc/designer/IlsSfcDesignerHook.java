@@ -374,7 +374,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	// Called when there is a change to a chart resource
 	@Override//
 	public void projectResourceModified(ProjectResource res,ResourceModification modType) {
-		log.infof("A project Resource has been modified (type: %s)", modType.toString());
+		log.infof("A project Resource has been modified (modification type: %s, resource type: %s)", modType.toString(), res.getResourceType());
 		
 
 		if( res.getResourceType().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE) ) {
@@ -406,6 +406,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 
 		if( proj.getId()==-1 ) {
 			log.infof("%s.ProjectResourceUpdated: structure compiler started",TAG);
+			structureCompilerV2.saveProject(proj);
 //			structureManager.getCompiler().compile();
 			log.infof("%s.ProjectResourceUpdated: structure compiler ended",TAG);
 		}

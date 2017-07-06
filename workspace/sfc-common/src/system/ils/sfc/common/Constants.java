@@ -83,6 +83,9 @@ public class Constants {
 	public static final String ENABLE_RESET = "enableReset";
 	public static final String ERROR = "Error";
 	public static final String ERROR_CODE = "errorCode";
+	public static final String ERROR_COUNT_KEY = "errorCountKey";
+	public static final String ERROR_COUNT_MODE = "errorCountMode";
+	public static final String ERROR_COUNT_SCOPE = "errorCountScope";
 	public static final String ERROR_TEXT = "errorText";
 	public static final String EXTENSION = "extension";
 	public static final String FAILURE = "Failure";
@@ -280,6 +283,10 @@ public class Constants {
 	public static final String GLOBAL = "global";  // same as Procedure, Unit Procedure
 	public static final String OPERATION = "operation";	
 	public static final String PHASE = "phase";
+	
+	// standard Ignition scopes:
+	public static final String CHART_SCOPE = "chartScope";
+	public static final String STEP_SCOPE = "stepScope";
 
 	// recipe data value types
 	public static final String FLOAT = "float";
@@ -287,6 +294,10 @@ public class Constants {
 	public static final String STRING = "string";
 	public static final String BOOLEAN = "boolean";
 	public static final String DATE_TIME = "date/time";
+	
+	// Counting Modes (specifically for error counts but may be more generally applicable)
+	public static final String COUNT_ABSOLUTE = "absolute";
+	public static final String COUNT_INCREMENTAL = "incremental";
 	
 	// symbols for a TimeDelayStep unit choice
 	// these have nothing to do with unit conversion, they
@@ -303,9 +314,12 @@ public class Constants {
 
 	// choices:
 	public static final String[] RECIPE_STATIC_STRATEGY_CHOICES = {STATIC, RECIPE};
-	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, PRIOR, SUPERIOR,GLOBAL, OPERATION, PHASE};
+	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, PRIOR, SUPERIOR, PHASE, OPERATION, GLOBAL};
 	public static String[] RECIPE_PLUS_VALUE_LOCATION_CHOICES = {VALUE, LOCAL, PRIOR, SUPERIOR,GLOBAL, OPERATION, PHASE};
 	public static String[] RECIPE_PLUS_TAG_LOCATION_CHOICES = {LOCAL, PRIOR, SUPERIOR,GLOBAL, OPERATION, PHASE, TAG};
+	public static String[] RECIPE_PLUS_CHART_STEP_CHOICES = {LOCAL, PRIOR, SUPERIOR, PHASE, OPERATION, GLOBAL, CHART_SCOPE, STEP_SCOPE};
+	
+	public static final String[] COUNT_MODE_CHOICES = {COUNT_ABSOLUTE, COUNT_INCREMENTAL};
 	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
 	public static final String[] TIME_LIMIT_STRATEGY_CHOICES = {STATIC, RECIPE};
 	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK, TAG};

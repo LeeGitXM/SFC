@@ -201,6 +201,20 @@ public class ChartStructureCompilerV2 {
 			log.errorf("%s: Error in python (delete chart): %s",CLSS,e.getLocalizedMessage());
 		}
 	}
+	
+	/** This is called when the project is saved.
+	 */
+	public void saveProject(Project proj) {
+		log.infof("Deleting the chart");
+		
+		Object[] args = {proj, database};
+		try {
+			PythonCall.SAVE_PROJECT.exec(args);
+		} 
+		catch (JythonExecException e) {
+			log.errorf("%s: Error in python (save project): %s",CLSS,e.getLocalizedMessage());
+		}
+	}
 
 
 }
