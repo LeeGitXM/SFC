@@ -22,6 +22,7 @@ insert into ClassMap values ('EM-GDA-SYMBOLIC-VARIABLE','com.ils.block.Parameter
 insert into ClassMap values ('EM-GDA-TEST-POINT','com.ils.block.Junction');
 insert into ClassMap values ('GDL-AND-GATE','com.ils.block.And');
 insert into ClassMap values ('GDL-ARITHMETIC-FUNCTION','xom.block.arithmetic.Arithmetic');
+insert into ClassMap values ('GDL-BELIEF-ENTRY-POINT','com.ils.block.Input');
 insert into ClassMap values ('GDL-BLOCK-EVALUATION','com.ils.block.Command');
 insert into ClassMap values ('GDL-BLOCK-RESET','com.ils.block.Reset');
 insert into ClassMap values ('GDL-CONCLUSION','com.ils.block.Explanation');
@@ -29,6 +30,7 @@ insert into ClassMap values ('GDL-D.D-DISPLAY','com.ils.block.Readout');
 insert into ClassMap values ('GDL-DATA-PATH-DISPLAY','com.ils.block.Readout');
 insert into ClassMap values ('GDL-DATA-SHIFT','com.ils.block.DataShift');
 insert into ClassMap values ('GDL-DATA-TIME-STAMP','com.ils.block.TimeFork');
+insert into ClassMap values ('GDL-DISCRETE-RATE-OF-CHANGE','com.ils.block.DiscreteRateOfChange');
 insert into ClassMap values ('GDL-DIFFERENCE','com.ils.block.Difference');
 insert into ClassMap values ('GDL-ENCAPSULATION','com.ils.block.Encapsulation');
 insert into ClassMap values ('GDL-ENCAPSULATION-BLOCK','com.ils.block.Encapsulation');
@@ -40,16 +42,20 @@ insert into ClassMap values ('GDL-HIGH-VALUE-OBSERVATION','com.ils.block.HighLim
 insert into ClassMap values ('GDL-IN-RANGE-OBSERVATION','com.ils.block.RangeObservation');
 insert into ClassMap values ('GDL-LOW-VALUE-OBSERVATION','com.ils.block.LowLimitObservation');
 insert into ClassMap values ('GDL-MOVING-AVERAGE','com.ils.block.MovingAverageSample');
+insert into ClassMap values ('GDL-MULTI-STATE-OBSERVATION','com.ils.block.MultiStateObservation');
 insert into ClassMap values ('GDL-NOT-GATE','com.ils.block.Not');
 insert into ClassMap values ('GDL-NUMERIC-ENTRY-POINT','com.ils.block.Input');
 insert into ClassMap values ('GDL-OR-GATE','com.ils.block.Or');
 insert into ClassMap values ('GDL-PERSISTENCE-GATE','com.ils.block.PersistenceGate');
 insert into ClassMap values ('GDL-SYMBOLIC-ENTRY-POINT','com.ils.block.Input');
+insert into ClassMap values ('GDL-TEXT-ENTRY-POINT','com.ils.block.Input');
 insert into ClassMap values ('GDL-TIMER','com.ils.block.Timer');
+insert into ClassMap values ('FLOAT-VARIABLE','com.ils.block.Parameter');
 insert into ClassMap values ('INTEGER-PARAMETER','com.ils.block.Parameter');
 insert into ClassMap values ('LOGICAL-PARAMETER','com.ils.block.Parameter');
 insert into ClassMap values ('LOGICAL-VARIABLE','com.ils.block.Parameter');
 insert into ClassMap values ('SYMBOLIC-PARAMETER','com.ils.block.Parameter');
+insert into ClassMap values ('TFA-SEQ-PERM-TRUTH-CHECK','com.ils.block.Parameter');
 -- NOTE: We convert all connnection posts to "sinks"
 --       later on we analyze and determine which are "sources"
 insert into ClassMap values ('GDL-INFERENCE-PATH-CONNECTION-POST','com.ils.block.SinkConnection');

@@ -77,6 +77,7 @@ insert into BltPropertyMap values ('GDL-AND-GATE','maximumUnknownInputs','','INT
 insert into BltPropertyMap values ('GDL-AND-GATE','outputUncertainty','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-AND-GATE','useExpiredInputs','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-ARITHMETIC-FUNCTION','arithmeticFunction','Function','BOOLEAN',1,'NONE');
+insert into BltPropertyMap values ('GDL-BELIEF-ENTRY-POINT','nameOfSensor','TagPath','STRING',1,'TAG_READ');
 insert into BltPropertyMap values ('GDL-CONCLUSION','descriptionWhenFalse','ExplanationWhenFalse','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-CONCLUSION','descriptionWhenTrue','ExplanationWhenTrue','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-CONCLUSION','descriptionWhenUnknown','','STRING',1,'NONE');
@@ -132,10 +133,13 @@ insert into BltPropertyMap values ('GDL-OR-GATE','maximumUnknownInputs','','INTE
 insert into BltPropertyMap values ('GDL-OR-GATE','outputUncertainty','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-OR-GATE','useExpiredInputs','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-SYMBOLIC-ENTRY-POINT','nameOfSensor','TagPath','STRING',1,'TAG_READ');
+insert into BltPropertyMap values ('GDL-TEXT-ENTRY-POINT','nameOfSensor','TagPath','STRING',1,'TAG_READ');
 insert into BltPropertyMap values ('GDL-TIMER','countBy','Interval','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-TIMER','displayUnits','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-TIMER','stopwhen','StopOn','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-TIMER','triggeron','Trigger','BOOLEAN',1,'NONE');
+insert into BltPropertyMap values ('TFA-SEQ-PERM-TRUTH-CHECK','label','','STRING',1,'NONE');
+insert into BltPropertyMap values ('FLOAT-VARIABLE','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('INTEGER-PARAMETER','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('LOGICAL-PARAMETER','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('LOGICAL-VARIABLE','label','','STRING',1,'NONE');
