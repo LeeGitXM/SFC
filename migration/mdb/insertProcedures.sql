@@ -173,6 +173,8 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-transfer','
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-update-recipe-data','ils.sfc.gateway.api.s88UpdateData');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-update-recipe-data-val','ils.sfc.gateway.api.s88UpdateValue');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('taper_list_build-gda','ils.blt.lib.buildTaperList');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('tfa-seq-set-false-value','ils.diagToolkit.util.setTfaSeqFalse');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('tfa-seq-set-true-value','ils.diagToolkit.util.setTfaSeqTrue');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('uil-post-delay-notification','ils.diagToolkit.util.outputMessage.create');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('unset-value','ils.vistalon.util.UnsetValue.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('write-ml-gravity-file-gda','xom.vistalon.diagToolkit.crx.writeMlGravity.main');

@@ -1,4 +1,4 @@
-#!/bin/sh
+
 #  Build a database for migration of diagnostics applications. Copy into the migration
 #  directory of the project tree.
 #
@@ -10,7 +10,6 @@ DB=conversion.db
 BIN=${GIT_REPO}/sfc/migration/mdb
 TARGETDIR=${GIT_REPO}/sfc/migration/mdb
 mkdir -p ${TARGETDIR}
-
 
 cd ${TARGETDIR}
 rm -f $DB

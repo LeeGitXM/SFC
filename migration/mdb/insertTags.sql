@@ -2,7 +2,19 @@
 
 -- Columns are GSI name, tag path
 --
+-- ========================================================= G-Line ============================================
+insert into TagMap values ('CMD_OUTPUT','[]DiagnosticToolkit/FinishProduct/CMD-OUTPUT','TEXT');
+insert into TagMap values ('L2-WT-TEST','[]DiagnosticToolkit/FinishProduct/L2-WT-TEST','BOOLEAN');
+insert into TagMap values ('PARALLEL_FLYING_SWITCH-GDA-INPUT','[]DiagnosticToolkit/FlyingSwitch/PARALLEL-FLYING-SWITCH-INPUT','BOOLEAN');
+insert into TagMap values ('PARALLEL_FLYING_SWITCH_TEMPS-GDA-INPUT','[]DiagnosticToolkit/FlyingSwitch/PARALLEL-FLYING-SWITCH-TEMPS-INPUT','BOOLEAN');
+insert into TagMap values ('PARALLEL_FLYING_SWITCH_OUTPUT','[]DiagnosticToolkit/FlyingSwitch/PARALLEL-FLYING-SWITCH-OUTPUT','BOOLEAN');
+insert into TagMap values ('SERIES_FLYING_SWITCH_TEMPS-GDA-INPUT','[]DiagnosticToolkit/FlyingSwitch/SERIES-FLYING-SWITCH-TEMPS-INPUT','BOOLEAN');
+insert into TagMap values ('SINGLE_FLYING_SWITCH_TEMPS-GDA-INPUT','[]DiagnosticToolkit/FlyingSwitch/SINGLE-FLYING-SWITCH-TEMPS-INPUT','BOOLEAN');
+insert into TagMap values ('[the bad-value of L1-WT-TEST]','[]DiagnosticToolkit/FinishProduct/L1-WT-TEST/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of L2-WT-TEST]','[]DiagnosticToolkit/FinishProduct/L2-WT-TEST/badValue','DOUBLE');
 -- ================================================ Escorez Unaffiliated Diagrams ==============================
+insert into TagMap values ('G2-EPKS-ALERT','[]TFU/G2-EPKS-ALERT','BOOLEAN');
+insert into TagMap values ('E1000-TFA-CR01-GRADE','[]TFU/E1000-TFA-CR01-GRADE','TEXT');
 insert into TagMap values ('E5000-TFA-RML342-INP','[]Site/TFU/Connections/E5000-TFA-RML342-INP','DOUBLE');
 insert into TagMap values ('E5000-TFA-RML343-INP','[]Site/TFU/Connections/E5000-TFA-RML343-INP','DOUBLE');
 insert into TagMap values ('E5000-TFA-RML342-INP-BYP','[]Site/TFU/Connections/E5000-TFA-RML342-INP-BYP','DOUBLE');
@@ -15,15 +27,18 @@ insert into TagMap values ('E1000-TFA-RMS403-INP','[]Site/TFU/Connections/E1000-
 insert into TagMap values ('E1000-TFA-RMS404-INP','[]Site/TFU/Connections/E1000-TFA-RMS404-INP','DOUBLE');
 insert into TagMap values ('E5000-TFA-RMS405-INP-BYP','[]Site/TFU/Connections/E5000-TFA-RMS405-INP-BYP','DOUBLE');
 insert into TagMap values ('E5000-TFA-RMS405-INP-RMT','[]Site/TFU/Connections/E5000-TFA-RMS405-INP-RMT','DOUBLE');
-insert into TagMap values ('E5000-TFA-RMS405-PERM-CLOSE','[]Site/TFU/Connections/E5000-TFA-RMS405-PERM-CLOSE','DOUBLE');
-insert into TagMap values ('E5000-TFA-RMS405-PERM-RUN','[]Site/TFU/Connections/E5000-TFA-RMS405-PERM-RUN','DOUBLE');
-insert into TagMap values ('E1000-TFA-RMS402-TXT','[]Site/TFU/Connections/E1000-TFA-RMS402-TXT','DOUBLE');
-insert into TagMap values ('E1000-TFA-RMS403-TXT','[]Site/TFU/Connections/E1000-TFA-RMS403-TXT','DOUBLE');
-insert into TagMap values ('E1000-TFA-RMS404-TXT','[]Site/TFU/Connections/E1000-TFA-RMS404-TXT','DOUBLE');
-insert into TagMap values ('E1000-TFA-RMS405-TXT','[]Site/TFU/Connections/E1000-TFA-RMS405-TXT','DOUBLE');
+insert into TagMap values ('E5000-TFA-RMS405-PERM-CLOSE','[]Site/TFU/Connections/E5000-TFA-RMS405-PERM-CLOSE','BOOLEAN');
+insert into TagMap values ('E5000-TFA-RMS405-PERM-RUN','[]Site/TFU/Connections/E5000-TFA-RMS405-PERM-RUN','BOOLEAN');
+insert into TagMap values ('E5000-TFA-RMS402-TXT','[]Site/TFU/Connections/E5000-TFA-RMS402-TXT','TEXT');
+insert into TagMap values ('E5000-TFA-RMS403-TXT','[]Site/TFU/Connections/E5000-TFA-RMS403-TXT','TEXT');
+insert into TagMap values ('E5000-TFA-RMS404-TXT','[]Site/TFU/Connections/E5000-TFA-RMS404-TXT','TEXT');
+insert into TagMap values ('E5000-TFA-RMS405-TXT','[]Site/TFU/Connections/E5000-TFA-RMS405-TXT','TEXT');
+insert into TagMap values ('E1000-TFA-RMV402-REMOTE','[]Site/TFU/Connections/E1000-TFA-RMV402-REMOTE','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV403-REMOTE','[]Site/TFU/Connections/E1000-TFA-RMV403-REMOTE','DOUBLE');
 insert into TagMap values ('E1000-TFA-RMV405','[]Site/TFU/Connections/E1000-TFA-RMV405','DOUBLE');
 insert into TagMap values ('E1000-TFA-RMV406','[]Site/TFU/Connections/E1000-TFA-RMV406','DOUBLE');
 insert into TagMap values ('E1000-TFA-RMV407','[]Site/TFU/Connections/E1000-TFA-RMV407','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV405-BYPASS','[]Site/TFU/Connections/E1000-TFA-RMV405-BYPASS','DOUBLE');
 insert into TagMap values ('E1000-TFA-RMV405-INP','[]Site/TFU/Connections/E1000-TFA-RMV405-INP','DOUBLE');
 insert into TagMap values ('E1000-TFA-RMV406-INP','[]Site/TFU/Connections/E1000-TFA-RMV406-INP','DOUBLE');
 insert into TagMap values ('E1000-TFA-RMV407-INP','[]Site/TFU/Connections/E1000-TFA-RMV407-INP','DOUBLE');
@@ -36,15 +51,41 @@ insert into TagMap values ('E1000-TFA-RMV413-INP','[]Site/TFU/Connections/E1000-
 insert into TagMap values ('E1000-TFA-RMV414-INP','[]Site/TFU/Connections/E1000-TFA-RMV414-INP','DOUBLE');
 insert into TagMap values ('E1000-TFA-RMV407-INP-BYP','[]Site/TFU/Connections/E1000-TFA-RMV407-INP-BYP','DOUBLE');
 insert into TagMap values ('E1000-TFA-RMV408-INP-BYP','[]Site/TFU/Connections/E1000-TFA-RMV408-INP-BYP','DOUBLE');
-insert into TagMap values ('E1000-TFA-RMV409-TXT','[]Site/TFU/Connections/E1000-TFA-RMV409-TXT','DOUBLE');
-insert into TagMap values ('E1000-TFA-RMV410-TXT','[]Site/TFU/Connections/E1000-TFA-RMV410-TXT','DOUBLE');
-insert into TagMap values ('E1000-TFA-RMV411-TXT','[]Site/TFU/Connections/E1000-TFA-RMV411-TXT','DOUBLE');
-insert into TagMap values ('E1000-TFA-RMV412-TXT','[]Site/TFU/Connections/E1000-TFA-RMV412-TXT','DOUBLE');
-insert into TagMap values ('E1000-TFA-RMV413-TXT','[]Site/TFU/Connections/E1000-TFA-RMV413-TXT','DOUBLE');
-insert into TagMap values ('E1000-TFA-RMV414-TXT','[]Site/TFU/Connections/E1000-TFA-RMV414-TXT','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV409-TXT','[]Site/TFU/Connections/E1000-TFA-RMV409-TXT','TEXT');
+insert into TagMap values ('E1000-TFA-RMV410-TXT','[]Site/TFU/Connections/E1000-TFA-RMV410-TXT','TEXT');
+insert into TagMap values ('E1000-TFA-RMV411-TXT','[]Site/TFU/Connections/E1000-TFA-RMV411-TXT','TEXT');
+insert into TagMap values ('E1000-TFA-RMV412-TXT','[]Site/TFU/Connections/E1000-TFA-RMV412-TXT','TEXT');
+insert into TagMap values ('E1000-TFA-RMV413-TXT','[]Site/TFU/Connections/E1000-TFA-RMV413-TXT','TEXT');
+insert into TagMap values ('E1000-TFA-RMV414-TXT','[]Site/TFU/Connections/E1000-TFA-RMV414-TXT','TEXT');
+insert into TagMap values ('E1000-TFA-TK1305-GRADE','[]TFU/E1000-TFA-TK1305-GRADE','TEXT');
+insert into TagMap values ('E1000-TFA-TK1305-PERM-OPEN','[]Site/TFU/Connections/E1000-TFA-TK1305-PERM-OPEN','BOOLEAN');
+insert into TagMap values ('E1000-TFA-TK1306-GRADE','[]TFU/E1000-TFA-TK1306-GRADE','TEXT');
+insert into TagMap values ('RHF205RP','[]TFU/RHF205RP','DOUBLE');
+insert into TagMap values ('RHT203X','[]TFU/RHT203X','DOUBLE');
+insert into TagMap values ('RKA670','[]TFU/RKA670','DOUBLE');
+insert into TagMap values ('RKF100','[]TFU/RKF100','DOUBLE');
+insert into TagMap values ('RKF101VP','[]TFU/RKF101VP','DOUBLE');
+insert into TagMap values ('RKF103','[]TFU/RKF103','DOUBLE');
+insert into TagMap values ('RKF103R','[]TFU/RKF103R','DOUBLE');
+insert into TagMap values ('RKF154Z','[]TFU/RKF154Z','DOUBLE');
+insert into TagMap values ('RKF145','[]TFU/RKF145','DOUBLE');
+insert into TagMap values ('RKF160','[]TFU/RKF160','DOUBLE');
+insert into TagMap values ('RKT009','[]TFU/RKT009','DOUBLE');
+insert into TagMap values ('RKT011','[]TFU/RKT011','DOUBLE');
+insert into TagMap values ('RKT063','[]TFU/RKT063','DOUBLE');
+insert into TagMap values ('RKT064','[]TFU/RKT064','DOUBLE');
+insert into TagMap values ('RKT065','[]TFU/RKT065','DOUBLE');
+insert into TagMap values ('RKT134X','[]TFU/RKT134X','DOUBLE');
+insert into TagMap values ('RKT134X-AE-PERM','[]TFU/RKT134X-AE-PERM','DOUBLE');
+insert into TagMap values ('RKT134X-SPHILM','[]TFU/RKT134X-SPHILM','DOUBLE');
+insert into TagMap values ('RKT134Z','[]TFU/RKT134Z','DOUBLE');
+insert into TagMap values ('RKT134Z-BPS','[]TFU/RKT134Z-BPS','DOUBLE');
+insert into TagMap values ('RKT512','[]TFU/RKT512','DOUBLE');
+insert into TagMap values ('RKT687','[]TFU/RKT687','DOUBLE');
+insert into TagMap values ('RKT134Z-STATE','[]TFU/RKT134Z-STATE','DOUBLE');
+insert into TagMap values ('RKT135','[]TFU/RKT135','DOUBLE');
 
 
-=======
 -- ================================================== ESCOREZ  ========================================
 insert into TagMap values ('CAT_STRENGTH_LAB_DATA','[]LabData/CSTR/CAT-STRENGTH-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('CL-LAB-DATA','[]LabData/CSTR/CL-LAB-DATA/value','DOUBLE');
