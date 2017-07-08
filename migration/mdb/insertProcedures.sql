@@ -45,6 +45,8 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-frnt_short
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-high_c2_chng_feeds-outputs-gda','project.vistalon.crx.C2ChangeFeeds.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-main_feed-outputs-gda','project.vistalon.crx.MainFeed.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-no-output-gda','ils.vistalon.fd.NoOutput.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc_r1_c2_problem-output-uir','ils.gline.polyprod.r1C2Uir.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc_r1_vis_problem-output-uir','ils.gline.polyprod.r1VisUir.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-reslurry-problem-output-gda','ils.vistalon.fd.ReslurryOutput.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-sdstrm_c3-outputs-gda','xom.vistalon.crx.SdstrmC3.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-swap_cntr_feeds-outputs-gda','project.vistalon.crx.SwapCenterFeedsOutputs.calculate');
