@@ -3,15 +3,56 @@
 -- Columns are GSI name, tag path
 --
 -- ========================================================= G-Line ============================================
+insert into TagMap values ('CAT-IS-IN-DELAYED-FOR-FBD','[]Site/pow/Connections/CAT-IS-IN-DELAYED-FOR-FBD','DOUBLE');
+insert into TagMap values ('CAT_IS_OUT','[]DiagnosticToolkit/PolyProduct/CAT-IS-OUT','BOOLEAN');
+insert into TagMap values ('CAT_IS_OUT_SYMBOL','[]DiagnosticToolkit/PolyProduct/CAT-IS-OUT-SYMBOL','TEXT');
 insert into TagMap values ('CMD_OUTPUT','[]DiagnosticToolkit/FinishProduct/CMD-OUTPUT','TEXT');
+insert into TagMap values ('FBD-C2-TEST','[]DiagnosticToolkit/PolyProduct/FBD-C2-TEST','DOUBLE');
+insert into TagMap values ('FBD-C9-TEST','[]DiagnosticToolkit/PolyProduct/FBD-C9-TEST','DOUBLE');
+insert into TagMap values ('FBD-DENS-TEST','[]DiagnosticToolkit/PolyProduct/FBD-DENS-TEST','DOUBLE');
+insert into TagMap values ('FBD-MWD-SELECTOR','[]DiagnosticToolkit/PolyProduct/FBD-MWD-SELECTOR','TEXT');
+insert into TagMap values ('FBD-MWD-TEST','[]DiagnosticToolkit/PolyProduct/FBD-MWD-TEST','TEXT');
+insert into TagMap values ('FBD-VIS-SELECTOR','[]DiagnosticToolkit/PolyProduct/FBD-VIS-SELECTOR','TEXT');
+insert into TagMap values ('FBD-VIS-TEST','[]DiagnosticToolkit/PolyProduct/FBD-VIS-TEST','TEXT');
+insert into TagMap values ('H2-USE','[]DiagnosticToolkit/POW/H2-USE','DOUBLE');
 insert into TagMap values ('L2-WT-TEST','[]DiagnosticToolkit/FinishProduct/L2-WT-TEST','BOOLEAN');
 insert into TagMap values ('PARALLEL_FLYING_SWITCH-GDA-INPUT','[]DiagnosticToolkit/FlyingSwitch/PARALLEL-FLYING-SWITCH-INPUT','BOOLEAN');
 insert into TagMap values ('PARALLEL_FLYING_SWITCH_TEMPS-GDA-INPUT','[]DiagnosticToolkit/FlyingSwitch/PARALLEL-FLYING-SWITCH-TEMPS-INPUT','BOOLEAN');
 insert into TagMap values ('PARALLEL_FLYING_SWITCH_OUTPUT','[]DiagnosticToolkit/FlyingSwitch/PARALLEL-FLYING-SWITCH-OUTPUT','BOOLEAN');
+insert into TagMap values ('PARALLEL_RATE_CHANGE-GDA-INPUT','[]DiagnosticToolkit/RateChange/PARALLEL-RATE-CHANGE-INPUT','BOOLEAN');
+insert into TagMap values ('PARALLEL_RATE_CHANGE_OUTPUT','[]DiagnosticToolkit/RateChange/PARALLEL-RATE-CHANGE-OUTPUT','BOOLEAN');
+insert into TagMap values ('POW-C2-TO-COMMON-R1-TRIP','[]DiagnosticToolkit/POW/POW-C2-TO-COMMON-R1-TRIP','BOOLEAN');
+insert into TagMap values ('POW-C2-TO-COMMON-R2-TRIP','[]DiagnosticToolkit/POW/POW-C2-TO-COMMON-R2-TRIP','BOOLEAN');
+insert into TagMap values ('POW-HPS-INTERFACE-OK','[]DiagnosticToolkit/POW/POW-HPS-INTERFACE-OK','BOOLEAN');
+insert into TagMap values ('POW-HPS-INTERFACE-LOC','[]DiagnosticToolkit/POW/POW-HPS-INTERFACE-LOC','BOOLEAN');
+insert into TagMap values ('POW-R1-C4-FLOW','[]DiagnosticToolkit/POW/POW-R1-C4-FLOW','DOUBLE');
+insert into TagMap values ('POW-R2-C2-FLOW','[]DiagnosticToolkit/POW/POW-R2-C2-FLOW','DOUBLE');
+insert into TagMap values ('POW-R2-C3-FLOW','[]DiagnosticToolkit/POW/POW-R2-C3-FLOW','DOUBLE');
+insert into TagMap values ('POW-R2-C4-FLOW','[]DiagnosticToolkit/POW/POW-R2-C4-FLOW','DOUBLE');
+insert into TagMap values ('POW-R2-C8-FLOW','[]DiagnosticToolkit/POW/POW-R2-C8-FLOW','DOUBLE');
+insert into TagMap values ('R1_TEMP_OUT','[]DiagnosticToolkit/POW/R1-TEMP-OUT','DOUBLE');
+insert into TagMap values ('R1-C2-FLOW','[]DiagnosticToolkit/POW/R1-C2-FLOW','DOUBLE');
+insert into TagMap values ('R1-C3-FLOW','[]DiagnosticToolkit/POW/R1-C3-FLOW','DOUBLE');
+insert into TagMap values ('R1-C4-FLOW','[]DiagnosticToolkit/POW/R1-C4-FLOW','DOUBLE');
+insert into TagMap values ('R1-C8-FLOW','[]DiagnosticToolkit/POW/R1-C8-FLOW','DOUBLE');
+insert into TagMap values ('R1-RX-TEMP','[]DiagnosticToolkit/POW/R1-RX-TEMP','DOUBLE');
+insert into TagMap values ('R2-RX-TEMP','[]DiagnosticToolkit/POW/R2-RX-TEMP','DOUBLE');
+insert into TagMap values ('R2_TEMP_OUT','[]DiagnosticToolkit/POW/R2-TEMP-OUT','DOUBLE');
 insert into TagMap values ('SERIES_FLYING_SWITCH_TEMPS-GDA-INPUT','[]DiagnosticToolkit/FlyingSwitch/SERIES-FLYING-SWITCH-TEMPS-INPUT','BOOLEAN');
+insert into TagMap values ('SERIES_CMD-GDA-INPUT','[]DiagnosticToolkit/PolyCommand/SERIES-CMD-INPUT','TEXT');
+insert into TagMap values ('SERIES_CMD_OUTPUT','[]DiagnosticToolkit/PolyCommand/SERIES-CMD-OUTPUT','TEXT');
+insert into TagMap values ('SINGLE_CMD-GDA-INPUT','[]DiagnosticToolkit/PolyCommand/SINGLE-CMD-INPUT','TEXT');
+insert into TagMap values ('SINGLE_CMD_OUTPUT','[]DiagnosticToolkit/PolyCommand/SINGLE-CMD-OUTPUT','TEXT');
 insert into TagMap values ('SINGLE_FLYING_SWITCH_TEMPS-GDA-INPUT','[]DiagnosticToolkit/FlyingSwitch/SINGLE-FLYING-SWITCH-TEMPS-INPUT','BOOLEAN');
 insert into TagMap values ('[the bad-value of L1-WT-TEST]','[]DiagnosticToolkit/FinishProduct/L1-WT-TEST/badValue','DOUBLE');
 insert into TagMap values ('[the bad-value of L2-WT-TEST]','[]DiagnosticToolkit/FinishProduct/L2-WT-TEST/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of r1-c2-flow]','[]DiagnosticToolkit/POW/R1-C2-FLOW/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of R1-C3-FLOW]','[]DiagnosticToolkit/POW/R1-C3-FLOW/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of r1-c4-flow]','[]DiagnosticToolkit/POW/R1-C4-FLOW/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of r1-rx-temp]','[]DiagnosticToolkit/POW/R1-RX-TEMP/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of r2-rx-temp]','[]DiagnosticToolkit/POW/R2-RX-TEMP/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of r1_temp_out]','[]DiagnosticToolkit/POW/R1-TEMP-OUT/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of r2_temp_out]','[]DiagnosticToolkit/POW/R2-TEMP-OUT/badValue','DOUBLE');
 -- ================================================ Escorez Unaffiliated Diagrams ==============================
 insert into TagMap values ('G2-EPKS-ALERT','[]TFU/G2-EPKS-ALERT','BOOLEAN');
 insert into TagMap values ('E1000-TFA-CR01-GRADE','[]TFU/E1000-TFA-CR01-GRADE','TEXT');
