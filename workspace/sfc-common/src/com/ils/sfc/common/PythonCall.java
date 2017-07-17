@@ -142,6 +142,8 @@ public class PythonCall {
 			null,  new String[]{"resourceId", "chartPath", "db"} );
 	public static final PythonCall SAVE_PROJECT = new PythonCall("ils.sfc.recipeData.structureManager.saveProject", 
 			null,  new String[]{"project", "db"} );
+	public static final PythonCall SHUTDOWN_PROJECT = new PythonCall("ils.sfc.recipeData.structureManager.shutdown", 
+			null,  new String[]{"db"} );
 	public static final PythonCall UPDATE_CHART_HIERARCHY = new PythonCall("ils.sfc.recipeData.structureManager.updateChartHierarchy", 
 			null,  new String[]{"parentPath", "parentResourceId", "stepNames", "stepUUIDs", "stepFactoryIds", "childPaths", "childNames", "childUUIDs", "childTypes", "db"} );
 	

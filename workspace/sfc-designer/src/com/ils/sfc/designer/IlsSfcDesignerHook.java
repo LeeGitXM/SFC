@@ -331,6 +331,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 
 	@Override
 	public void shutdown() {	
+		log.info("IlsSfcDesignerHook.shutdown...");
+		structureCompilerV2.shutdownDesigner();
 		context.removeProjectChangeListener(this);
 		context.removeProjectChangeListener(recipeDataCleaner);
 		frames.remove(browser);

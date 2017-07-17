@@ -215,6 +215,21 @@ public class ChartStructureCompilerV2 {
 			log.errorf("%s: Error in python (save project): %s",CLSS,e.getLocalizedMessage());
 		}
 	}
+		
+	/** This is called when the project is saved.
+	 */
+	public void shutdownDesigner() {
+		log.infof("Shutting down the chart structure compiler");
+/*
+		Object[] args = {database};
+		try {
+			PythonCall.SAVE_PROJECT.exec(args);
+		} 
+		catch (JythonExecException e) {
+			log.errorf("%s: Error in python (save project): %s",CLSS,e.getLocalizedMessage());
+		}
+*/
+	}
 
 
 }
