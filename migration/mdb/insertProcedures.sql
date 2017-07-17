@@ -45,6 +45,8 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-frnt_short
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-high_c2_chng_feeds-outputs-gda','project.vistalon.crx.C2ChangeFeeds.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-main_feed-outputs-gda','project.vistalon.crx.MainFeed.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-no-output-gda','ils.vistalon.fd.NoOutput.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc_r1_c2_problem-output-uir','ils.gline.polyprod.r1C2Uir.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc_r1_vis_problem-output-uir','ils.gline.polyprod.r1VisUir.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-reslurry-problem-output-gda','ils.vistalon.fd.ReslurryOutput.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-sdstrm_c3-outputs-gda','xom.vistalon.crx.SdstrmC3.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-swap_cntr_feeds-outputs-gda','project.vistalon.crx.SwapCenterFeedsOutputs.calculate');
@@ -124,6 +126,8 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-update-stru
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('insert-at-end','append');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('instancesOfClass','com.ils.function.find');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('lab-baler-sqc-problem-start-uir','ils.vistalon.crx.uir.startLabBalerSqc');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('length-of-text','len');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('matrix-scalar-multiply','multiplyMatrixByScalar');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('max-mst-var-gda','ils.blt.lib.maxMstVar');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ml-mst-bias-ctl-gain-gda','ils.blt.lib.mlBstBiasCtlGain');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('named-item-exists','ils.blt.lib.namedItemExists');
@@ -171,6 +175,8 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-transfer','
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-update-recipe-data','ils.sfc.gateway.api.s88UpdateData');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-update-recipe-data-val','ils.sfc.gateway.api.s88UpdateValue');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('taper_list_build-gda','ils.blt.lib.buildTaperList');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('tfa-seq-set-false-value','ils.diagToolkit.util.setTfaSeqFalse');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('tfa-seq-set-true-value','ils.diagToolkit.util.setTfaSeqTrue');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('uil-post-delay-notification','ils.diagToolkit.util.outputMessage.create');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('unset-value','ils.vistalon.util.UnsetValue.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('write-ml-gravity-file-gda','xom.vistalon.diagToolkit.crx.writeMlGravity.main');

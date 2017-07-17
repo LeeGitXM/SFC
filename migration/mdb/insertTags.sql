@@ -2,6 +2,202 @@
 
 -- Columns are GSI name, tag path
 --
+-- ========================================================= G-Line ============================================
+insert into TagMap values ('BAG-E-TARGET-WT','[]DiagnosticToolkit/finishProduct/BAG-E-TARGET-WT','DOUBLE');
+insert into TagMap values ('BAG-W-TARGET-WT','[]DiagnosticToolkit/finishProduct/BAG-W-TARGET-WT','DOUBLE');
+insert into TagMap values ('BULK-TARGET-WT','[]DiagnosticToolkit/finishProduct/BULK-TARGET-WT','DOUBLE');
+insert into TagMap values ('CAT-FLOW-MONITOR','[]DiagnosticToolkit/monitoring/CAT-FLOW-MONITOR','DOUBLE');
+insert into TagMap values ('CAT-IS-IN-DELAYED-FOR-FBD','[]Site/pow/Connections/CAT-IS-IN-DELAYED-FOR-FBD','DOUBLE');
+insert into TagMap values ('CAT_IS_OUT','[]DiagnosticToolkit/PolyProduct/CAT-IS-OUT','BOOLEAN');
+insert into TagMap values ('CAT_IS_OUT_SYMBOL','[]DiagnosticToolkit/PolyProduct/CAT-IS-OUT-SYMBOL','TEXT');
+insert into TagMap values ('CMD_OUTPUT','[]DiagnosticToolkit/FinishProduct/CMD-OUTPUT','TEXT');
+insert into TagMap values ('FBD-AC5781-TEMP','[]DiagnosticToolkit/Monitoring/FBD-AC5781-TEMP','DOUBLE');
+insert into TagMap values ('FBD-AMBIENT-TEMP','[]DiagnosticToolkit/Monitoring/FBD-AMBIENT-TEMP','DOUBLE');
+insert into TagMap values ('FBD-C2-TEST','[]DiagnosticToolkit/PolyProduct/FBD-C2-TEST','DOUBLE');
+insert into TagMap values ('FBD-C9-TEST','[]DiagnosticToolkit/PolyProduct/FBD-C9-TEST','DOUBLE');
+insert into TagMap values ('FBD-DENS-TEST','[]DiagnosticToolkit/PolyProduct/FBD-DENS-TEST','DOUBLE');
+insert into TagMap values ('FBD-MWD-SELECTOR','[]DiagnosticToolkit/PolyProduct/FBD-MWD-SELECTOR','TEXT');
+insert into TagMap values ('FBD-MWD-TEST','[]DiagnosticToolkit/PolyProduct/FBD-MWD-TEST','TEXT');
+insert into TagMap values ('FBD-VIS-SELECTOR','[]DiagnosticToolkit/PolyProduct/FBD-VIS-SELECTOR','TEXT');
+insert into TagMap values ('FBD-VIS-TEST','[]DiagnosticToolkit/PolyProduct/FBD-VIS-TEST','TEXT');
+insert into TagMap values ('H2-USE','[]DiagnosticToolkit/POW/H2-USE','DOUBLE');
+insert into TagMap values ('L1-WT-TEST','[]DiagnosticToolkit/FinishProduct/L1-WT-TEST','BOOLEAN');
+insert into TagMap values ('L2-WT-TEST','[]DiagnosticToolkit/FinishProduct/L2-WT-TEST','BOOLEAN');
+insert into TagMap values ('PARALLEL_FLYING_SWITCH-GDA-INPUT','[]DiagnosticToolkit/FlyingSwitch/PARALLEL-FLYING-SWITCH-INPUT','BOOLEAN');
+insert into TagMap values ('PARALLEL_FLYING_SWITCH_TEMPS-GDA-INPUT','[]DiagnosticToolkit/FlyingSwitch/PARALLEL-FLYING-SWITCH-TEMPS-INPUT','BOOLEAN');
+insert into TagMap values ('PARALLEL_FLYING_SWITCH_OUTPUT','[]DiagnosticToolkit/FlyingSwitch/PARALLEL-FLYING-SWITCH-OUTPUT','BOOLEAN');
+insert into TagMap values ('PARALLEL_RATE_CHANGE-GDA-INPUT','[]DiagnosticToolkit/RateChange/PARALLEL-RATE-CHANGE-INPUT','BOOLEAN');
+insert into TagMap values ('PARALLEL_RATE_CHANGE_OUTPUT','[]DiagnosticToolkit/RateChange/PARALLEL-RATE-CHANGE-OUTPUT','BOOLEAN');
+insert into TagMap values ('POW-C2-TO-COMON-R1-TRIP','[]DiagnosticToolkit/POW/POW-C2-TO-COMMON-R1-TRIP','BOOLEAN');
+insert into TagMap values ('POW-C2-TO-COMON-R2-TRIP','[]DiagnosticToolkit/POW/POW-C2-TO-COMMON-R2-TRIP','BOOLEAN');
+insert into TagMap values ('POW-HPS-INTERFACE-OK','[]DiagnosticToolkit/POW/POW-HPS-INTERFACE-OK','BOOLEAN');
+insert into TagMap values ('POW-HPS-INTERFACE-LOC','[]DiagnosticToolkit/POW/POW-HPS-INTERFACE-LOC','BOOLEAN');
+insert into TagMap values ('POW-R1-C4-FLOW','[]DiagnosticToolkit/POW/POW-R1-C4-FLOW','DOUBLE');
+insert into TagMap values ('POW-R2-C2-FLOW','[]DiagnosticToolkit/POW/POW-R2-C2-FLOW','DOUBLE');
+insert into TagMap values ('POW-R2-C3-FLOW','[]DiagnosticToolkit/POW/POW-R2-C3-FLOW','DOUBLE');
+insert into TagMap values ('POW-R2-C4-FLOW','[]DiagnosticToolkit/POW/POW-R2-C4-FLOW','DOUBLE');
+insert into TagMap values ('POW-R2-C8-FLOW','[]DiagnosticToolkit/POW/POW-R2-C8-FLOW','DOUBLE');
+insert into TagMap values ('R1_TEMP_OUT','[]DiagnosticToolkit/POW/R1-TEMP-OUT','DOUBLE');
+insert into TagMap values ('R1-C2-FLOW','[]DiagnosticToolkit/POW/R1-C2-FLOW','DOUBLE');
+insert into TagMap values ('R1-C3-FLOW','[]DiagnosticToolkit/POW/R1-C3-FLOW','DOUBLE');
+insert into TagMap values ('R1-C4-FLOW','[]DiagnosticToolkit/POW/R1-C4-FLOW','DOUBLE');
+insert into TagMap values ('R1-C8-FLOW','[]DiagnosticToolkit/POW/R1-C8-FLOW','DOUBLE');
+insert into TagMap values ('R1-RX-TEMP','[]DiagnosticToolkit/POW/R1-RX-TEMP','DOUBLE');
+insert into TagMap values ('R2-C2-SELECTOR','[]DiagnosticToolkit/PolyProduct/R2-C2-SELECTOR','TEXT');
+insert into TagMap values ('R2-C2-TEST','[]DiagnosticToolkit/PolyProduct/R2-C2-TEST','TEXT');
+insert into TagMap values ('R2-MWD-SELECTOR','[]DiagnosticToolkit/PolyProduct/R2-MWD-SELECTOR','TEXT');
+insert into TagMap values ('R2-MWD-TEST','[]DiagnosticToolkit/PolyProduct/R2-MWD-TEST','TEXT');
+insert into TagMap values ('R2-RX-TEMP','[]DiagnosticToolkit/POW/R2-RX-TEMP','DOUBLE');
+insert into TagMap values ('R2_TEMP_OUT','[]DiagnosticToolkit/POW/R2-TEMP-OUT','DOUBLE');
+insert into TagMap values ('R2-VIS-SELECTOR','[]DiagnosticToolkit/PolyProduct/R2-VIS-SELECTOR','TEXT');
+insert into TagMap values ('R2-VIS-TEST','[]DiagnosticToolkit/PolyProduct/R2-VIS-TEST','TEXT');
+insert into TagMap values ('SERIES_FLYING_SWITCH_TEMPS-GDA-INPUT','[]DiagnosticToolkit/FlyingSwitch/SERIES-FLYING-SWITCH-TEMPS-INPUT','BOOLEAN');
+insert into TagMap values ('SERIES_CMD-GDA-INPUT','[]DiagnosticToolkit/PolyCommand/SERIES-CMD-INPUT','TEXT');
+insert into TagMap values ('SERIES_CMD_OUTPUT','[]DiagnosticToolkit/PolyCommand/SERIES-CMD-OUTPUT','TEXT');
+insert into TagMap values ('SINGLE_CMD-GDA-INPUT','[]DiagnosticToolkit/PolyCommand/SINGLE-CMD-INPUT','TEXT');
+insert into TagMap values ('SINGLE_CMD_OUTPUT','[]DiagnosticToolkit/PolyCommand/SINGLE-CMD-OUTPUT','TEXT');
+insert into TagMap values ('SINGLE_FLYING_SWITCH_TEMPS-GDA-INPUT','[]DiagnosticToolkit/FlyingSwitch/SINGLE-FLYING-SWITCH-TEMPS-INPUT','BOOLEAN');
+insert into TagMap values ('[the bad-value of H2-use]','[]DiagnosticToolkit/POW/H2-USE/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of h2-use]','[]DiagnosticToolkit/POW/H2-USE/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of L1-WT-TEST]','[]DiagnosticToolkit/FinishProduct/L1-WT-TEST/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of L2-WT-TEST]','[]DiagnosticToolkit/FinishProduct/L2-WT-TEST/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of pow-hps-interface-loc]','[]DiagnosticToolkit/POW/POW-HPS-INTERFACE-LOC/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of pow-hps-interface-ok]','[]DiagnosticToolkit/POW/POW-HPS-INTERFACE-OK/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of r1-c2-flow]','[]DiagnosticToolkit/POW/R1-C2-FLOW/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of R1-C3-FLOW]','[]DiagnosticToolkit/POW/R1-C3-FLOW/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of R1-c8-FLOW]','[]DiagnosticToolkit/POW/R1-C8-FLOW/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of r1-c4-flow]','[]DiagnosticToolkit/POW/R1-C4-FLOW/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of r1-rx-temp]','[]DiagnosticToolkit/POW/R1-RX-TEMP/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of r2-rx-temp]','[]DiagnosticToolkit/POW/R2-RX-TEMP/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of r1_temp_out]','[]DiagnosticToolkit/POW/R1-TEMP-OUT/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of r2_temp_out]','[]DiagnosticToolkit/POW/R2-TEMP-OUT/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of rx_configuration]','[]DiagnosticToolkit/POW/RX-CONFIGURATION/badValue','DOUBLE');
+-- ================================================ Escorez Unaffiliated Diagrams ==============================
+insert into TagMap values ('G2-EPKS-ALERT','[]TFU/G2-EPKS-ALERT','BOOLEAN');
+insert into TagMap values ('E1000-TFA-CR01-GRADE','[]TFU/E1000-TFA-CR01-GRADE','TEXT');
+insert into TagMap values ('E5000-TFA-RML342-INP','[]Site/TFU/Connections/E5000-TFA-RML342-INP','DOUBLE');
+insert into TagMap values ('E5000-TFA-RML343-INP','[]Site/TFU/Connections/E5000-TFA-RML343-INP','DOUBLE');
+insert into TagMap values ('E5000-TFA-RML342-INP-BYP','[]Site/TFU/Connections/E5000-TFA-RML342-INP-BYP','DOUBLE');
+insert into TagMap values ('E5000-TFA-RML343-INP-BYP','[]Site/TFU/Connections/E5000-TFA-RML343-INP-BYP','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMS402','[]Site/TFU/Connections/E1000-TFA-RMS402','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMS403','[]Site/TFU/Connections/E1000-TFA-RMS403','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMS404','[]Site/TFU/Connections/E1000-TFA-RMS404','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMS402-INP','[]Site/TFU/Connections/E1000-TFA-RMS402-INP','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMS403-INP','[]Site/TFU/Connections/E1000-TFA-RMS403-INP','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMS404-INP','[]Site/TFU/Connections/E1000-TFA-RMS404-INP','DOUBLE');
+insert into TagMap values ('E5000-TFA-RMS405-INP-BYP','[]Site/TFU/Connections/E5000-TFA-RMS405-INP-BYP','DOUBLE');
+insert into TagMap values ('E5000-TFA-RMS405-INP-RMT','[]Site/TFU/Connections/E5000-TFA-RMS405-INP-RMT','DOUBLE');
+insert into TagMap values ('E5000-TFA-RMS405-PERM-CLOSE','[]Site/TFU/Connections/E5000-TFA-RMS405-PERM-CLOSE','BOOLEAN');
+insert into TagMap values ('E5000-TFA-RMS405-PERM-RUN','[]Site/TFU/Connections/E5000-TFA-RMS405-PERM-RUN','BOOLEAN');
+insert into TagMap values ('E5000-TFA-RMS402-TXT','[]Site/TFU/Connections/E5000-TFA-RMS402-TXT','TEXT');
+insert into TagMap values ('E5000-TFA-RMS403-TXT','[]Site/TFU/Connections/E5000-TFA-RMS403-TXT','TEXT');
+insert into TagMap values ('E5000-TFA-RMS404-TXT','[]Site/TFU/Connections/E5000-TFA-RMS404-TXT','TEXT');
+insert into TagMap values ('E5000-TFA-RMS405-TXT','[]Site/TFU/Connections/E5000-TFA-RMS405-TXT','TEXT');
+insert into TagMap values ('E1000-TFA-RMV402-REMOTE','[]Site/TFU/Connections/E1000-TFA-RMV402-REMOTE','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV403-REMOTE','[]Site/TFU/Connections/E1000-TFA-RMV403-REMOTE','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV405','[]Site/TFU/Connections/E1000-TFA-RMV405','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV406','[]Site/TFU/Connections/E1000-TFA-RMV406','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV407','[]Site/TFU/Connections/E1000-TFA-RMV407','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV405-BYPASS','[]Site/TFU/Connections/E1000-TFA-RMV405-BYPASS','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV405-INP','[]Site/TFU/Connections/E1000-TFA-RMV405-INP','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV406-INP','[]Site/TFU/Connections/E1000-TFA-RMV406-INP','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV407-INP','[]Site/TFU/Connections/E1000-TFA-RMV407-INP','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV408-INP','[]Site/TFU/Connections/E1000-TFA-RMV408-INP','DOUBLE');
+insert into TagMap values ('E5000-TFA-RMV409-INP','[]Site/TFU/Connections/E5000-TFA-RMV409-INP','DOUBLE');
+insert into TagMap values ('E5000-TFA-RMV410-INP','[]Site/TFU/Connections/E5000-TFA-RMV410-INP','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV411-INP','[]Site/TFU/Connections/E1000-TFA-RMV411-INP','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV412-INP','[]Site/TFU/Connections/E1000-TFA-RMV412-INP','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV413-INP','[]Site/TFU/Connections/E1000-TFA-RMV413-INP','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV414-INP','[]Site/TFU/Connections/E1000-TFA-RMV414-INP','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV407-INP-BYP','[]Site/TFU/Connections/E1000-TFA-RMV407-INP-BYP','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV408-INP-BYP','[]Site/TFU/Connections/E1000-TFA-RMV408-INP-BYP','DOUBLE');
+insert into TagMap values ('E1000-TFA-RMV409-TXT','[]Site/TFU/Connections/E1000-TFA-RMV409-TXT','TEXT');
+insert into TagMap values ('E1000-TFA-RMV410-TXT','[]Site/TFU/Connections/E1000-TFA-RMV410-TXT','TEXT');
+insert into TagMap values ('E1000-TFA-RMV411-TXT','[]Site/TFU/Connections/E1000-TFA-RMV411-TXT','TEXT');
+insert into TagMap values ('E1000-TFA-RMV412-TXT','[]Site/TFU/Connections/E1000-TFA-RMV412-TXT','TEXT');
+insert into TagMap values ('E1000-TFA-RMV413-TXT','[]Site/TFU/Connections/E1000-TFA-RMV413-TXT','TEXT');
+insert into TagMap values ('E1000-TFA-RMV414-TXT','[]Site/TFU/Connections/E1000-TFA-RMV414-TXT','TEXT');
+insert into TagMap values ('E1000-TFA-TK1305-GRADE','[]TFU/E1000-TFA-TK1305-GRADE','TEXT');
+insert into TagMap values ('E1000-TFA-TK1305-PERM-OPEN','[]Site/TFU/Connections/E1000-TFA-TK1305-PERM-OPEN','BOOLEAN');
+insert into TagMap values ('E1000-TFA-TK1306-GRADE','[]TFU/E1000-TFA-TK1306-GRADE','TEXT');
+insert into TagMap values ('RHF205RP','[]TFU/RHF205RP','DOUBLE');
+insert into TagMap values ('RHT203X','[]TFU/RHT203X','DOUBLE');
+insert into TagMap values ('RKA670','[]TFU/RKA670','DOUBLE');
+insert into TagMap values ('RKF100','[]TFU/RKF100','DOUBLE');
+insert into TagMap values ('RKF101VP','[]TFU/RKF101VP','DOUBLE');
+insert into TagMap values ('RKF103','[]TFU/RKF103','DOUBLE');
+insert into TagMap values ('RKF103R','[]TFU/RKF103R','DOUBLE');
+insert into TagMap values ('RKF154Z','[]TFU/RKF154Z','DOUBLE');
+insert into TagMap values ('RKF145','[]TFU/RKF145','DOUBLE');
+insert into TagMap values ('RKF160','[]TFU/RKF160','DOUBLE');
+insert into TagMap values ('RKT009','[]TFU/RKT009','DOUBLE');
+insert into TagMap values ('RKT011','[]TFU/RKT011','DOUBLE');
+insert into TagMap values ('RKT063','[]TFU/RKT063','DOUBLE');
+insert into TagMap values ('RKT064','[]TFU/RKT064','DOUBLE');
+insert into TagMap values ('RKT065','[]TFU/RKT065','DOUBLE');
+insert into TagMap values ('RKT134X','[]TFU/RKT134X','DOUBLE');
+insert into TagMap values ('RKT134X-AE-PERM','[]TFU/RKT134X-AE-PERM','DOUBLE');
+insert into TagMap values ('RKT134X-SPHILM','[]TFU/RKT134X-SPHILM','DOUBLE');
+insert into TagMap values ('RKT134Z','[]TFU/RKT134Z','DOUBLE');
+insert into TagMap values ('RKT134Z-BPS','[]TFU/RKT134Z-BPS','DOUBLE');
+insert into TagMap values ('RKT512','[]TFU/RKT512','DOUBLE');
+insert into TagMap values ('RKT687','[]TFU/RKT687','DOUBLE');
+insert into TagMap values ('RKT134Z-STATE','[]TFU/RKT134Z-STATE','DOUBLE');
+insert into TagMap values ('RKT135','[]TFU/RKT135','DOUBLE');
+
+
+-- ================================================== ESCOREZ  ========================================
+insert into TagMap values ('CAT_STRENGTH_LAB_DATA','[]LabData/CSTR/CAT-STRENGTH-LAB-DATA/value','DOUBLE');
+insert into TagMap values ('CL-LAB-DATA','[]LabData/CSTR/CL-LAB-DATA/value','DOUBLE');
+insert into TagMap values ('COLOR-LAB-DATA','[]LabData/CSTR/COLOR-LAB-DATA/value','DOUBLE');
+insert into TagMap values ('EBIN_STATUS','[]DiagnosticToolkit/CSTR/EBIN-STATUS/value','DOUBLE');
+insert into TagMap values ('FD_FLOW','[]DiagnosticToolkit/CSTR/FD-FLOW/value','DOUBLE');
+insert into TagMap values ('IRX-RUN-FLAG','[]DiagnosticToolkit/TPU/IRX-RUN-FLAG/value','DOUBLE');
+insert into TagMap values ('JRX-RUN-FLAG','[]DiagnosticToolkit/TPU/JRX-RUN-FLAG/value','DOUBLE');
+insert into TagMap values ('MANUAL-TRUTH-ENTRY','[]DiagnosticToolkit/RHU/MANUAL-TRUTH-ENTRY/value','BOOLEAN');
+insert into TagMap values ('MZ-LAB-DATA','[]LabData/CSTR/MZ-LAB-DATA/value','DOUBLE');
+insert into TagMap values ('RHU-AROMATICITY','[]DiagnosticToolkit/RHU/RHU-AROMATICITY/value','DOUBLE');
+insert into TagMap values ('RHU-COLOR','[]DiagnosticToolkit/RHU/RHU-COLOR/value','DOUBLE');
+insert into TagMap values ('RHU-SOFT-POINT','[]DiagnosticToolkit/RHU/RHU-SOFT-POINT/value','DOUBLE');
+insert into TagMap values ('SOFTENING_POINT','[]DiagnosticToolkit/CSTR/SOFTENING-POINT/value','DOUBLE');
+insert into TagMap values ('TK1775-ALERT','[]DiagnosticToolkit/RHU/TK1775-ALERT/value','DOUBLE');
+insert into TagMap values ('TK1775_CHLORIDE_TRUTH','[]DiagnosticToolkit/RHU/TK1775-CHLORIDE-TRUTH/value','BOOLEAN');
+insert into TagMap values ('TK1775_RESIN_TRUTH','[]DiagnosticToolkit/RHU/TK1775-RESIN-TRUTH/value','BOOLEAN');
+insert into TagMap values ('TK1775_SULFUR_TRUTH','[]DiagnosticToolkit/RHU/TK1775-SULPHUR-TRUTH/value','BOOLEAN');
+insert into TagMap values ('TK1775_UWG_TRUTH','[]DiagnosticToolkit/RHU/TK1775-UWG-TRUTH/value','BOOLEAN');
+insert into TagMap values ('TK1775_WG_TRUTH','[]DiagnosticToolkit/RHU/TK1775-WG-TRUTH/value','BOOLEAN');
+insert into TagMap values ('TPU_IRX_SP','[]DiagnosticToolkit/TPU/TPU-IRX-SP/value','DOUBLE');
+insert into TagMap values ('TPU_JRX_SP','[]DiagnosticToolkit/TPU/TPU-JRX-SP/value','DOUBLE');
+insert into TagMap values ('TPU_IS_IN_PATH-GDA','[]DiagnosticToolkit/TPU/TPU-IS-IN-PATH/value','DOUBLE');
+insert into TagMap values ('TPU_IS_OUT_PATH-GDA','[]DiagnosticToolkit/TPU/TPU-IS-OUT-PATH/value','DOUBLE');
+insert into TagMap values ('WBIN_STATUS','[]DiagnosticToolkit/CSTR/WBIN-STATUS/value','DOUBLE');
+insert into TagMap values ('[the bad-value of EBIN_STATUS]','[]DiagnosticToolkit/CSTR/EBIN-STATUS/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of FD_FLOW]','[]DiagnosticToolkit/CSTR/FD-FLOW/badValue','DOUBLE');
+insert into TagMap values ('[the bad-value of IRX-RUN-FLAG]','[]DiagnosticToolkit/TPU/IRX-RUN-FLAG/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of JRX-RUN-FLAG]','[]DiagnosticToolkit/TPU/JRX-RUN-FLAG/badValue','BOOLEAN');
+insert into TagMap values ('[the bad-value of WBIN_STATUS]','[]DiagnosticToolkit/CSTR/WBIN-STATUS/badValue','DOUBLE');
+insert into TagMap values ('[the standard-deviation of CAT_STRENGTH_LAB_DATA]','[]LabData/CSTR/CAT-STRENGTH-LAB-DATA-SQC/standardDeviation','DOUBLE');
+insert into TagMap values ('[the standard-deviation of CL-LAB-DATA]','[]LabData/CSTR/CL-LAB-DATA-SQC/standardDeviation','DOUBLE');
+insert into TagMap values ('[the standard-deviation of COLOR-LAB-DATA]','[]LabData/CSTR/COLOR-LAB-DATA-SQC/standardDeviation','DOUBLE');
+insert into TagMap values ('[the standard-deviation of MZ-LAB-DATA]','[]LabData/CSTR/MZ-LAB-DATA-SQC/standardDeviation','DOUBLE');
+insert into TagMap values ('[the standard-deviation of RHU-AROMATICITY]','[]LabData/RHU/RHU-AROMATICITY-LAB-DATA-SQC/standardDeviation','DOUBLE');
+insert into TagMap values ('[the standard-deviation of RHU-COLOR]','[]LabData/RHU/RHU-COLOR-LAB-DATA-SQC/standardDeviation','DOUBLE');
+insert into TagMap values ('[the standard-deviation of RHU-SOFT-POINT]','[]LabData/RHU/RHU-SOFT-POINT-LAB-DATA-SQC/standardDeviation','DOUBLE');
+insert into TagMap values ('[the standard-deviation of SOFTENING_POINT]','[]LabData/CSTR/SOFTENING_-POINT-LAB-DATA-SQC/standardDeviation','DOUBLE');
+insert into TagMap values ('[the standard-deviation of TPU_IRX_SP]','[]LabData/TPU/TPU-IRX-SP-LAB-DATA-SQC/standardDeviation','DOUBLE');
+insert into TagMap values ('[the standard-deviation of TPU_JRX_SP]','[]LabData/TPU/TPU-JRX-SP-LAB-DATA-SQC/standardDeviation','DOUBLE');
+insert into TagMap values ('[the target of CAT_STRENGTH_LAB_DATA]','[]LabData/CSTR/CAT-STRENGTH-LAB-DATA-SQC/target','DOUBLE');
+insert into TagMap values ('[the target of CL-LAB-DATA]','[]LabData/CSTR/CL-LAB-DATA-SQC/target','DOUBLE');
+insert into TagMap values ('[the target of COLOR-LAB-DATA]','[]LabData/CSTR/COLOR-LAB-DATA-SQC/target','DOUBLE');
+insert into TagMap values ('[the target of MZ-LAB-DATA]','[]LabData/CSTR/MZ-LAB-DATA-SQC/target','DOUBLE');
+insert into TagMap values ('[the target of RHU-AROMATICITY]','[]LabData/RHU/RHU-AROMATICITY-LAB-DATA-SQC/target','DOUBLE');
+insert into TagMap values ('[the target of RHU-COLOR]','[]LabData/RHU/RHU-COLOR-LAB-DATA-SQC/target','DOUBLE');
+insert into TagMap values ('[the target of SOFTENING_POINT]','[]LabData/CSTR/SOFTENING_-POINT-LAB-DATA-SQC/target','DOUBLE');
+insert into TagMap values ('[the target of RHU-SOFT-POINT]','[]LabData/RHU/RHU-SOFT-POINT-LAB-DATA-SQC/target','DOUBLE');
+insert into TagMap values ('[the target of TPU_IRX_SP]','[]LabData/TPU/TPU-IRX-SP-LAB-DATA-SQC/target','DOUBLE');
+insert into TagMap values ('[the target of TPU_JRX_SP]','[]LabData/TPU/TPU-JRX-SP-LAB-DATA-SQC/target','DOUBLE');
+
+-- ================================================== VISTALON ========================================
 insert into TagMap values ('A-BALER-TEMP-LAB-DATA','[]LabData/VFU/A-BALER-TEMP-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('AB-BALER-TEMP-LAB-DATA','[]LabData/VFU/AB-BALER-TEMP/value','DOUBLE');
 insert into TagMap values ('AB-BALER-VOL-FTNIR-DATA','[]LabData/VFU/AB-BALER-VOL-FTNIR-DATA/value','DOUBLE');
@@ -13,14 +209,10 @@ insert into TagMap values ('B-BALER-TEMP-LAB-DATA','[]LabData/VFU/B-BALER-TEMP-L
 insert into TagMap values ('C-BALER-TEMP-LAB-DATA','[]LabData/VFU/C-BALER-TEMP-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('C-D-E-BALER-TEMP-SQC','[]DiagnosticToolkit/Connections/CDEBalerTemp','STRING');
 insert into TagMap values ('C-RX_GRD_PATH-GDA','[]DiagnosticToolkit/Connections/CRxGrd','STRING');
-
-
 insert into TagMap values ('C2-LAB-DATA','[]LabData/RLA3/C2-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('C2-LAB-DATA-FOR-R1-NLC','[]LabData/RLA3/C2-LAB-DATA-FOR-R1-NLC/value','DOUBLE');
 insert into TagMap values ('C2_FLOW','[]DiagnosticToolkit/CSTR/VRF002S/value','DOUBLE');
 insert into TagMap values ('C2_SQC_TO_C2_CSTR-GDA','[]DiagnosticToolkit/Connections/C2SqcToC2Cstr','STRING');
-
-
 insert into TagMap values ('C3CONV_LOW_LIMIT','[]Site/CRX/Limits-Targets-and-Gains/Limits/C3CONV-LOW-LIMIT','DOUBLE');
 insert into TagMap values ('C3_CONVERSION','[]DiagnosticToolkit/CRX/VRG521Z/value','DOUBLE');
 insert into TagMap values ('C6_RX_FEED-VNB','[]DiagnosticToolkit/CRX/C6-RX-IN-FEED','DOUBLE');
@@ -46,13 +238,10 @@ insert into TagMap values ('CD-BALER-VOL-FTNIR-SQC-PATH','[]DiagnosticToolkit/Co
 insert into TagMap values ('CD-BALER-VOL-LAB-DATA','[]LabData/VFU/CD-BALER-VOL-LAB-DATA/value','DOUBLE');
 insert into TagMap values ('CD-BALER-VOL-LAB-SQC-PATH','[]DiagnosticToolkit/Connections/CDBalerVolLab','STRING');
 insert into TagMap values ('CD-BALER-VOL-ftnir-DATA','[]LabData/VFU/CD-BALER-VOL-FTNIR-DATA','DOUBLE');
-
 insert into TagMap values ('CNTR_AVG_TPR_TIP_HT','[]Site/CRX/Calculated-Variables/CNTR-AVG-TPR-TIP-HT/value','DOUBLE');
 insert into TagMap values ('CNTR_AVG_TPR_TIP_HT_MAX_DEADBAND','[]Site/CRX/Limits-Targets-and-Gains/Structure-Molecule/CNTR-AVG-TPR-TIP-HT-MAX-DEADBAND','DOUBLE');
 insert into TagMap values ('CNTR_AVG_TPR_TIP_HT_TARGET','[]Site/CRX/Limits-Targets-and-Gains/Structure-Molecule/CNTR-AVG-TPR-TIP-HT-TARGET','DOUBLE');
 insert into TagMap values ('CRX-BLOCK-POLYMER-FLAG','[]DiagnosticToolkit/CRX/CRX-BLOCK-POLYMER-FLAG/value','DOUBLE');
-
-
 insert into TagMap values ('C_FLYING_SWITCH-GDA-INPUT','[]Site/FlyingSwitch/CRX-FLYING-SWITCH-INPUT','BOOLEAN');
 insert into TagMap values ('C_FLYING_SWITCH_OUTPUT','[]DiagnosticToolkit/Connections/CFlyingSwitchOutput','STRING');
 insert into TagMap values ('C-RX_GRADE_FLAG','[]Recipe/Local/C-RX-GRADE','BOOLEAN');
@@ -373,8 +562,6 @@ insert into TagMap values ('s88-rx-rcp-vocl3-sweep','[]Site/S88-RX-RCP/VOCL3-SWE
 
 insert into TagMap values ('split_feed_grade','[]Site/CSTR/SPLIT-FEED_GRADE','BOOLEAN');
 insert into TagMap values ('stab_filtered_value','[]LabData/RLA3/STAB-LAB-DATA/filteredValue','DOUBLE');
-
-
 
 -- Miscellaneous Named Objects
 insert into TagMap values ('the em-sqc-plot upon the subworkspace of toolkit-console','[]Site/Plots/SqcPlotName','STRING');
