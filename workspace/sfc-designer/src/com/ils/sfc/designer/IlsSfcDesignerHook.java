@@ -29,7 +29,7 @@ import com.ils.sfc.common.chartStructure.RecipeDataMigrator;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.common.step.AllSteps;
-import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame;
+/* import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame; */
 import com.ils.sfc.designer.runner.ChartRunner;
 import com.ils.sfc.designer.search.IlsSfcSearchProvider;
 import com.ils.sfc.designer.stepEditor.IlsStepEditor;
@@ -88,7 +88,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private ChartStructureCompilerV2 structureCompilerV2 = null;
 	private RecipeDataMigrator recipeDataMigrator = null;
 	private IlsSfcSearchProvider searchProvider = null;
-	private RecipeEditorFrame recipeEditorFrame;
+/*	private RecipeEditorFrame recipeEditorFrame; */
 	private RecipeDataCleaner recipeDataCleaner;
 	
 	private static ClientStepRegistry stepRegistry;
@@ -273,11 +273,11 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		DesignerUtil.context = ctx;
         log.info("IlsSfcDesignerHook.startup...");
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-		recipeEditorFrame = new RecipeEditorFrame(ctx, iaSfcHook.getWorkspace());
+/*		recipeEditorFrame = new RecipeEditorFrame(ctx, iaSfcHook.getWorkspace()); */
 		sfcWorkspace = iaSfcHook.getWorkspace();
-      	iaSfcHook.getWorkspace().getInnerWorkspace().addDesignableWorkspaceListener(recipeEditorFrame);
+/*      	iaSfcHook.getWorkspace().getInnerWorkspace().addDesignableWorkspaceListener(recipeEditorFrame); */
 		
-      	frames.add(recipeEditorFrame); 
+/*      	frames.add(recipeEditorFrame); */
        	
 		// Register steps
 		stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
@@ -327,7 +327,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		structureCompilerV2.shutdownDesigner();
 		context.removeProjectChangeListener(this);
 		context.removeProjectChangeListener(recipeDataCleaner);
-		frames.remove(recipeEditorFrame);
+/*		frames.remove(recipeEditorFrame); */
 	}
 	
 	public ChartStructureManager getChartStructureManager() {return structureManager;}
