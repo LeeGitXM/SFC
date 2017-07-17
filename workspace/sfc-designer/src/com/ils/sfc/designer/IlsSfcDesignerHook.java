@@ -30,7 +30,6 @@ import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.common.step.AllSteps;
 import com.ils.sfc.designer.browser.SfcBrowserFrame;
-import com.ils.sfc.designer.browser.execute.ChartRunner;
 import com.ils.sfc.designer.browser.validation.ValidationDialog;
 import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame;
 import com.ils.sfc.designer.search.IlsSfcSearchProvider;

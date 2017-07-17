@@ -1,4 +1,4 @@
-package com.ils.sfc.designer.browser.execute;
+package com.ils.sfc.designer;
 
 import java.io.Serializable;
 import java.util.UUID;
