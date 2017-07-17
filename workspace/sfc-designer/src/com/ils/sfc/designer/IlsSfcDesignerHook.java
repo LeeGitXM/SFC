@@ -29,9 +29,8 @@ import com.ils.sfc.common.chartStructure.RecipeDataMigrator;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.common.step.AllSteps;
-import com.ils.sfc.designer.browser.SfcBrowserFrame;
-import com.ils.sfc.designer.browser.validation.ValidationDialog;
 import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame;
+import com.ils.sfc.designer.runner.ChartRunner;
 import com.ils.sfc.designer.search.IlsSfcSearchProvider;
 import com.ils.sfc.designer.stepEditor.IlsStepEditor;
 import com.inductiveautomation.ignition.common.Dataset;
@@ -84,7 +83,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private final LoggerEx log;
 	//private JPopupMenu stepPopup;
 	private SFCDesignerHook iaSfcHook;
-	private SfcBrowserFrame browser = null;
 	private final List<DockableFrame> frames;
 	private ChartStructureManager structureManager = null;
 	private ChartStructureCompilerV2 structureCompilerV2 = null;
@@ -280,11 +278,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
       	iaSfcHook.getWorkspace().getInnerWorkspace().addDesignableWorkspaceListener(recipeEditorFrame);
 		
       	frames.add(recipeEditorFrame); 
-       	browser = new SfcBrowserFrame(context);
-       	browser.setInitMode(DockContext.STATE_AUTOHIDE);
-       	browser.setInitSide(DockContext.DOCK_SIDE_WEST);
-       	browser.setInitIndex(1);
-       	frames.add(browser);
        	
 		// Register steps
 		stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
@@ -334,7 +327,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		structureCompilerV2.shutdownDesigner();
 		context.removeProjectChangeListener(this);
 		context.removeProjectChangeListener(recipeDataCleaner);
-		frames.remove(browser);
 		frames.remove(recipeEditorFrame);
 	}
 	
@@ -454,7 +446,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 				}
 				ready = true;
 			}
-			ctx.addProjectChangeListener(browser);
 		}
 	}
 	/**
@@ -518,15 +509,20 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	/**
      * Display a popup dialog for configuration of dialog execution parameters.
      * Run in a separate thread, as a modal dialog in-line here will freeze the UI.
+     * 
+     * I HAVE NO IDEA WHAT THIS DOES, IS SUPPOSED TO DO, OR IF IT WORKS - PETE 3/17/17
+     * 
      */
     private class ValidationDialogRunner implements Runnable {
 
         public void run() {
-            log.debugf("%s.run: starting ValidationDialogRunner ...",TAG);
+            log.infof("%s.run: starting ValidationDialogRunner ...",TAG);
+            /*
             ValidationDialog validator = new ValidationDialog(context,browser.getModel());
             validator.pack();
             validator.setVisible(true);
             browser.addChangeListener(validator);
+            */
         }
     }
 }

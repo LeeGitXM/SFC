@@ -1,9 +1,8 @@
-package com.ils.sfc.designer;
+package com.ils.sfc.designer.runner;
 
 import java.io.Serializable;
 import java.util.UUID;
 
-import com.ils.sfc.designer.browser.SfcBrowserRequestHandler;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayConnectionManager;
 import com.inductiveautomation.ignition.common.user.AuthenticatedUser;
 import com.inductiveautomation.ignition.common.util.LogUtil;

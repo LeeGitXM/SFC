@@ -43,12 +43,10 @@
 		<fileset dir="${basedir}/../../external/lib" includes="jide-*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="jython-2.5.3.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="log4j*.jar" />
-		<fileset dir="${basedir}/../../external/lib" includes="lucene-*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="miglayout-*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="sfc-*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="slf4j-*.jar" />
 		<fileset dir="${basedir}/../../external/lib" includes="sqlite-*.jar" />
-		<fileset dir="${basedir}/../../external/lib" includes="prefuse*.jar" />
 	</path>
 	
 	<!-- Generic Buildfile (reference via Antcalls) -->

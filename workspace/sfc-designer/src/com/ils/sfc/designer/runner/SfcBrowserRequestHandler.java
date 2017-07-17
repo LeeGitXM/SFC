@@ -2,7 +2,7 @@
  *   (c) 2015  ILS Automation. All rights reserved.
  *  
  */
-package com.ils.sfc.designer.browser;
+package com.ils.sfc.designer.runner;
 
 import java.util.UUID;
 
