@@ -1,0 +1,24 @@
+#!/bin/sh
+# Start-to-finish processing of escorez SFCs
+#   -- copy from svn repository
+#   -- translate all relevant procedures
+#   -- convert from G2 xml to Ignition xml
+#   -- create project files from the converted XML and translated procedures
+#
+SFC=$GIT_REPO/sfc
+PYDIR=${SFC}/migration/procs/ignition/escorez
+
+cd $SFC/migration
+#./clear-procs escorez
+./clear-xml escorez
+./copy-procs
+./copy-xml
+#
+# Translate the procedures
+#./translate-escorez all
+#cd $SFC/migration/procs/ignition/escorez
+#cp -a * $PYDIR
+cd $SFC/migration
+#
+# Convert the XML (NOTE: procedures from checkin area)
+./convert-escorez all

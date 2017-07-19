@@ -182,8 +182,10 @@ public class ConnectionRouter {
 				}
 				// Turn corner
 				link = linkArray.get(sourceHub.getChartElement(),x, y);
-				link.setUp(true);
-				link.setLeft(true);
+				if( link!=null ) {      // How does this happen?
+					link.setUp(true); 
+					link.setLeft(true);
+				}
 				x--;
 				// Draw horizontally left
 				while(x > destination.x) {
