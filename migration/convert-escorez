@@ -1,0 +1,48 @@
+#!/bin/sh
+# Process the .xml files in the repository "g2" area.
+# If the argument is "all", then all the files are processed.
+# If the argument is "next" then the current file is processed
+# and deleted. Then the next file is processed.
+#
+# We start with raw G2 exports. Convert, then save the
+# results in the procedure storage area for ignition.
+#
+OPT="one"
+if [ $# -gt 0 ]
+then
+    OPT=$1
+fi
+SFC=$GIT_REPO/sfc
+# Expect ostart/onstop sub-directories
+PYDIR=${SFC}/migration/procs/ignition/escorez
+APP=$SFC/migration/convert
+INDIR=$SFC/migration/xml/g2/escorez
+OUTDIR=$SFC/migration/xml/ignition/escorez
+
+mkdir -p $INDIR
+mkdir -p $OUTDIR
+rm -rf $OUTDIR/*
+cd $INDIR
+for file in *
+do
+	echo "Processing $file..."
+    $APP "$INDIR" "$OUTDIR" $PYDIR $file
+	if [ $OPT == "all" ]
+	then
+		continue
+	elif [ $OPT == "one" ]
+	then
+		exit
+	else
+		rm -r "$INDIR/$file"
+		OPT="one"
+	fi
+done
+
+# Finally - overwrite auto-generated charts
+#           with any that have been hand-crafted
+# This procedure is used for an interim period where the
+# hand-vetting has not completely taken over.
+#VETTED=${SFC}/migration/xml/vetted/
+#cd $VETTED
+#cp -af * ../ignition

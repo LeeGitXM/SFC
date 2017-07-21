@@ -4,12 +4,17 @@
 # versus those destined to be "onstart"
 #
 SVN="${SVN_REPO}/EMChemicals/G2Artifacts/Sequential Control"
-EXPORTS="${SVN_REPO}/EMChemicals/Migration/Vistalon/Exports From G2/SequentialControl"
+ESCOREZ="${SVN_REPO}/EMChemicals/Migration/Escorez/Exports From G2/SequentialControl"
+VISTALON="${SVN_REPO}/EMChemicals/Migration/Vistalon/Exports From G2/SequentialControl"
 PROCS=${GIT_REPO}/sfc/migration/procs
+mkdir -p $PROCS/g2/escorez/onstart
+mkdir -p $PROCS/g2/escorez/onstop
 mkdir -p $PROCS/g2/usecase/onstart
 mkdir -p $PROCS/g2/vistalon/onstart
 mkdir -p $PROCS/g2/vistalon/onstop
 mkdir -p $PROCS/g2/usecase/normal
+mkdir -p $PROCS/ignition/escorez/onstart
+mkdir -p $PROCS/ignition/escorez/onstop
 mkdir -p $PROCS/ignition/usecase/onstart
 mkdir -p $PROCS/ignition/vistalon/onstart
 mkdir -p $PROCS/ignition/vistalon/onstop
@@ -25,7 +30,14 @@ do
 	name=`basename "$fil"`
 	cat "$fil"  > ${PROCS}/g2/usecase/onstart/$name
 done
-for fil in "${EXPORTS}"/*/callbacks/*.txt "${EXPORTS}"/*/callbacks/*/*.txt
+# ======================================== Escorez ==========================================
+for fil in "${ESCOREZ}"/*/callbacks/*.txt "${ESCOREZ}"/*/callbacks/*/*.txt
+do
+	name=`basename "$fil"`
+	cat "$fil"  > ${PROCS}/g2/escorez/onstart/$name
+done
+# ======================================== Vistalon ==========================================
+for fil in "${VISTALON}"/*/callbacks/*.txt "${VISTALON}"/*/callbacks/*/*.txt
 do
 	name=`basename "$fil"`
 	cat "$fil"  > ${PROCS}/g2/vistalon/onstart/$name
