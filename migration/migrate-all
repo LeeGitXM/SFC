@@ -21,7 +21,7 @@ rm -rf $OUTDIR/*
 # Copy the vetted charts into the main processing area 
 echo "Hand-vetted Charts ------------------------"
 cd ${MIGRATION}/xml/vetted
-find . -name ".DS_Store" -exec rm {}
+find . -name ".DS_Store" -exec rm {} \;
 rsync -av vistalon/ ${MIGRATION}/xml/ignition/vistalon
 
 #

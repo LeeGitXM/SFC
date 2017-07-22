@@ -62,7 +62,7 @@ insert into ClassMap values ('GDL-LOW-VALUE-OBSERVATION','com.ils.block.LowLimit
 insert into ClassMap values ('GDL-LOW-VALUE-PATTERN','com.ils.block.LowValuePattern');
 insert into ClassMap values ('GDL-MOVING-AVERAGE','com.ils.block.MovingAverageSample');
 insert into ClassMap values ('GDL-MULTI-STATE-OBSERVATION','com.ils.block.MultiStateObservation');
-insert into ClassMap values ('GDL-NOT-GATE','com.ils.block.NotGate');
+insert into ClassMap values ('GDL-NOT-GATE','com.ils.block.Not');
 insert into ClassMap values ('GDL-N-TRUE-GATE','com.ils.block.NTrue');
 insert into ClassMap values ('GDL-NUMERIC-ENTRY-POINT','com.ils.block.Input');
 insert into ClassMap values ('GDL-OR-GATE','com.ils.block.Or');
@@ -74,7 +74,7 @@ insert into ClassMap values ('GDL-SUMMING','com.ils.block.Sum');
 insert into ClassMap values ('GDL-SYMBOLIC-ENTRY-POINT','com.ils.block.Input');
 insert into ClassMap values ('GDL-TEXT-ENTRY-POINT','com.ils.block.Input');
 insert into ClassMap values ('GDL-TIMER','com.ils.block.Timer');
-insert into ClassMap values ('GDL-TRUE-IF-UNKNOWN-GATE','com.ils.block.FuzzyGate');
+insert into ClassMap values ('GDL-TRUE-IF-UNKNOWN-GATE','com.ils.block.Unknown');
 insert into ClassMap values ('GDL-TWO-OPTION-USER-QUERY-CONTROL-SWITCH','com.ils.block.DualOptionQueryControl');
 insert into ClassMap values ('GDL-THREE-OPTION-CONTROL-SWITCH','com.ils.block.TripleOptionControl');
 insert into ClassMap values ('OPC-FLOAT-BAD-FLAG','com.ils.block.Output');
