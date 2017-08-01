@@ -210,7 +210,7 @@ public class PythonCall {
 	public static final PythonCall GET_QUEUE_NAMES = new PythonCall("ils.queue.commons.getQueueNames", 
 			PyList.class, new String[]{"db"});
 
-	public static final PythonCall HANDLE_STEP_ERROR = new PythonCall("ils.sfc.gateway.util." + "handleUnexpectedGatewayError", 
+	public static final PythonCall HANDLE_STEP_ERROR = new PythonCall("ils.sfc.gateway.api." + "handleUnexpectedGatewayError", 
 			PyList.class,  new String[]{"chartProps", "msg"} );
 
 	public static final PythonCall GET_INDEX_NAMES = new PythonCall("ils.sfc.client.util." + "getIndexNames", 

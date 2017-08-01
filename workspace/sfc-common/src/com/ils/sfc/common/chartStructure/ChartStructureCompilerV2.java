@@ -71,8 +71,9 @@ public class ChartStructureCompilerV2 {
 		if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
 			chartPath = globalProject.getFolderPath(res.getResourceId());
 			resourceId = res.getResourceId();
-			
-			createChart(res);
+
+// Commented out on 7/31/17 PH
+//			createChart(res);
 			
 			log.infof("Compiling a SFC chart resource. Path: %s, Name: %s, id: %d", chartPath, res.getName(), resourceId);
 			try {
@@ -166,26 +167,9 @@ public class ChartStructureCompilerV2 {
 		}
 	}
 	
-	
-	/** This is called as soon as a chart is created.  Literally, as soon as user presses create chart in the project resource tree.
-	 */
-	public void createChart(ProjectResource res) {
-		log.infof("Creating the chart");
 		
-		String chartPath = globalProject.getFolderPath(res.getResourceId());
-		long resourceId = res.getResourceId();
-		
-		Object[] args = {resourceId, chartPath, database};
-		try {
-			PythonCall.CREATE_CHART.exec(args);
-		} 
-		catch (JythonExecException e) {
-			log.errorf("%s: Error in python (create chart): %s",CLSS,e.getLocalizedMessage());
-		}
-
-	}
-	
-	/** This is called as soon as a chart is deleted.  Literally, as soon as user presses delete chart in the project resource tree.
+	/** This is called when the chart is saved.  The hook in designer is called as soon as a chart is deleted, but the deleted resource is added to a list 
+	 * of deleted resources to be dealt with when the project is saved.
 	 */
 	public void deleteChart(ProjectResource res) {
 		log.infof("Deleting the chart");
@@ -201,35 +185,5 @@ public class ChartStructureCompilerV2 {
 			log.errorf("%s: Error in python (delete chart): %s",CLSS,e.getLocalizedMessage());
 		}
 	}
-	
-	/** This is called when the project is saved.
-	 */
-	public void saveProject(Project proj) {
-		log.infof("Deleting the chart");
-		
-		Object[] args = {proj, database};
-		try {
-			PythonCall.SAVE_PROJECT.exec(args);
-		} 
-		catch (JythonExecException e) {
-			log.errorf("%s: Error in python (save project): %s",CLSS,e.getLocalizedMessage());
-		}
-	}
-		
-	/** This is called when the project is saved.
-	 */
-	public void shutdownDesigner() {
-		log.infof("Shutting down the chart structure compiler");
-/*
-		Object[] args = {database};
-		try {
-			PythonCall.SAVE_PROJECT.exec(args);
-		} 
-		catch (JythonExecException e) {
-			log.errorf("%s: Error in python (save project): %s",CLSS,e.getLocalizedMessage());
-		}
-*/
-	}
-
 
 }

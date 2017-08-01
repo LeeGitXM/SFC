@@ -8,7 +8,9 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -58,7 +60,6 @@ import com.inductiveautomation.sfc.designer.SFCDesignerHook;
 import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
 import com.inductiveautomation.sfc.designer.workspace.SFCDesignableContainer;
 import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
-import com.jidesoft.docking.DockContext;
 import com.jidesoft.docking.DockableFrame;
 
 import system.ils.sfc.common.Constants;
@@ -90,13 +91,18 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private IlsSfcSearchProvider searchProvider = null;
 /*	private RecipeEditorFrame recipeEditorFrame; */
 	private RecipeDataCleaner recipeDataCleaner;
+	private Map <Long, ProjectResource> changedResourceMap;
+	private Map <Long, ProjectResource> deletedResourceMap;
 	
 	private static ClientStepRegistry stepRegistry;
 	private static SFCWorkspace sfcWorkspace;
 	
 	public IlsSfcDesignerHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
+		LogUtil.getLogger("com.ils.sfc.python.structureManager");
 		this.frames = new ArrayList<>();
+		this.changedResourceMap = new HashMap<>();
+		this.deletedResourceMap = new HashMap<>();
 	}
 		
 	@Override
@@ -324,7 +330,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void shutdown() {	
 		log.info("IlsSfcDesignerHook.shutdown...");
-		structureCompilerV2.shutdownDesigner();
 		context.removeProjectChangeListener(this);
 		context.removeProjectChangeListener(recipeDataCleaner);
 /*		frames.remove(recipeEditorFrame); */
@@ -368,40 +373,47 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override//
 	public void projectResourceModified(ProjectResource res,ResourceModification modType) {
 		log.infof("A project Resource has been modified (modification type: %s, resource type: %s)", modType.toString(), res.getResourceType());
-		
 
 		if( res.getResourceType().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE) ) {
 			
-			// This is called as soon as a chart is created.  Literally, as soon as user presses create chart in the project resource tree.
 			if (modType.toString().equals("Added")){
-				log.infof("A resource has been added");
-				structureCompilerV2.createChart(res);
+				// This is called as soon as a chart is created.  Literally, as soon as user presses create chart in the project resource tree.
+				// The Updated case will be called when the Save button is pressed or when the new cart is renamed
+				log.tracef("A resource has been added");
 			} else if (modType.toString().equals("Deleted")){
-				log.infof("A resource has been deleted");
-				structureCompilerV2.deleteChart(res);
+				log.infof("A resource has been deleted - inserting it into the deleted list...");
+				// Store the resource id into a map that will be acted on when the user presses Save 
+				deletedResourceMap.put(new Long (res.getResourceId()), res);
 			} else {
-				log.infof("%s.ProjectResourceModified: structure compiler started",TAG);
-	//			structureManager.getCompiler().compile();
-				structureCompilerV2.compileResource(res);
-				recipeDataMigrator.migrateResource(res);
-				log.infof("%s.ProjectResourceModified: structure compiler ended",TAG);
+				// This is the updated case - keep track of the changed resource
+				log.infof("Inserting resource id %d - chart %s into the changedResourceMap...", 
+						res.getResourceId(), context.getGlobalProject().getProject().getFolderPath(res.getResourceId()));
+				
+				// Store the resource id into a map that will be acted on when the user presses Save 
+				changedResourceMap.put(new Long (res.getResourceId()), res);
 			}
 		}
 	}
 	
-	// This is called when the project is saved - I'm not sure what I should do here, if anything...
+	// This is called when the project is saved - Ignition is going to make chart resources permanent now so I can update all of the 
+	// resources that have been changed or deleted.
 	@Override
 	public void projectUpdated(Project proj) {
 		log.infof("A project has been updated (id = %d)", proj.getId());
-		
-		// Added by Pete
-//		structureCompilerV2.compile(proj);
 
-		if( proj.getId()==-1 ) {
-			log.infof("%s.ProjectResourceUpdated: structure compiler started",TAG);
-			structureCompilerV2.saveProject(proj);
-//			structureManager.getCompiler().compile();
-			log.infof("%s.ProjectResourceUpdated: structure compiler ended",TAG);
+		if( proj.getId() == -1 ) {
+			for (ProjectResource res:changedResourceMap.values()){
+				log.infof("Saving resource %d", res.getResourceId());
+				structureCompilerV2.compileResource(res);
+				recipeDataMigrator.migrateResource(res);
+			}
+			changedResourceMap.clear();
+			
+			for (ProjectResource res:deletedResourceMap.values()){
+				log.infof("Deleting resource %d", res.getResourceId());
+				structureCompilerV2.deleteChart(res);
+			}
+			deletedResourceMap.clear();
 		}
 	}
 	
