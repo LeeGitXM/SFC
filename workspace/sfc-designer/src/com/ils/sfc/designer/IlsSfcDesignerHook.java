@@ -304,8 +304,12 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		PythonCall.setContext(ctx);
     	IlsClientScripts.setContext(context);
     	// Provide a central repository for the structure of the charts
-    	structureManager = new ChartStructureManager(context.getGlobalProject().getProject(),stepRegistry);
-		AbstractIlsStepDelegate.setStructureManager(structureManager);
+
+// Commented out on 8/1/17 to unwind the old structure manager.
+// Removing this eliminated all of the chart analysis that would happen when opening the designer.  I verified that I could still run charts 
+// From Designer using the Run Production menu and correctly access recipe data.
+//    	structureManager = new ChartStructureManager(context.getGlobalProject().getProject(),stepRegistry);
+//		AbstractIlsStepDelegate.setStructureManager(structureManager);
     	
 		// Pete's Structure manager - instantiate this once in the beginning because the step registry is static.
 		structureCompilerV2 = new ChartStructureCompilerV2(context.getGlobalProject().getProject(), stepRegistry);
