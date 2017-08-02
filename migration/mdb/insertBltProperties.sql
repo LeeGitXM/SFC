@@ -119,7 +119,7 @@ insert into BltPropertyMap values ('GDL-IN-RANGE-OBSERVATION','upperThreshold','
 insert into BltPropertyMap values ('GDL-IN-RANGE-OBSERVATION','upperThresholdUncertainty','UpperDeadband','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-IN-RANGE-OBSERVATION','hysteresisWhen','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-IN-RANGE-OBSERVATION','statusOnInitialization','','DOUBLE',1,'NONE');
-insert into BltPropertyMap values ('GDL-INFERENCE-COUNTER','statusOnInitialization','ClearOnReset','BOOLEAN',1,'NONE');
+insert into BltPropertyMap values ('GDL-INFERENCE-COUNTER','statusOnInitialization','InitialValue','INTEGER',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-COUNTER','triggerOn','Trigger','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-DELAY','countBy','','INTEGER',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-DELAY','delay','SampleDelay','INTEGER',1,'NONE');
