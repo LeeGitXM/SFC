@@ -128,7 +128,7 @@ insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','holdFor','HoldInterval
 insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','hysteresisWhen','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','outputUncertainty','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','triggerOn','Trigger','BOOLEAN',1,'NONE');
-insert into BltPropertyMap values ('GDL-INFERENCE-INHIBIT','statusOnInitialization','ClearOnReset','BOOLEAN',1,'NONE');
+insert into BltPropertyMap values ('GDL-INFERENCE-INHIBIT','statusOnInitialization','InitialValue','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-INHIBIT','triggerOn','Trigger','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-LINEAR-FIT','eraseHistoryWhenReset','ClearOnReset','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-LINEAR-FIT','linearInterpolation','LinearInterpolation','BOOLEAN',1,'NONE');

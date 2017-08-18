@@ -49,7 +49,7 @@ insert into ClassMap values ('GDL-HIGH-VALUE-PATTERN','com.ils.block.HighValuePa
 insert into ClassMap values ('GDL-INFERENCE-COUNTER','com.ils.block.TruthCycleCounter');
 insert into ClassMap values ('GDL-INFERENCE-DELAY','com.ils.block.Delay');
 insert into ClassMap values ('GDL-INFERENCE-EVENT','com.ils.block.EdgeTrigger');
-insert into ClassMap values ('GDL-INFERENCE-INHIBIT','com.ils.block.Inhibitor');
+insert into ClassMap values ('GDL-INFERENCE-INHIBIT','com.ils.block.InferenceInhibitor');
 insert into ClassMap values ('GDL-INFERENCE-MEMORY','com.ils.block.InferenceMemory');
 insert into ClassMap values ('GDL-INFERENCE-OUTPUT-ACTION','xom.block.action.Action');
 insert into ClassMap values ('GDL-INFERENCE-TIME-STAMP','com.ils.block.TimeFork');
