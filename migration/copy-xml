@@ -4,12 +4,15 @@
 #
 SVNUC=${SVN_REPO}/EMChemicals/G2Artifacts/Sequential\ Control/UnitTests
 SVNESC="${SVN_REPO}/EMChemicals/Migration/Escorez/Exports From G2/SequentialControl"
+SVNHB="${SVN_REPO}/EMChemicals/Migration/Halobutyl/Exports From G2/Sequential Control"
 SVNVIST="${SVN_REPO}/EMChemicals/Migration/Vistalon/Exports From G2/SequentialControl"
 XML=${GIT_REPO}/sfc/migration/xml
 mkdir -p $XML/g2/usecase
 mkdir -p $XML/g2/escorez
+mkdir -p $XML/g2/halobutyl
 mkdir -p $XML/g2/vistalon
 mkdir -p $XML/ignition/escorez
+mkdir -p $XML/ignition/halobutyl
 mkdir -p $XML/ignition/vistalon
 cp -a "${SVNUC}"/* $XML/g2/usecase
 cd "${SVNESC}"
@@ -23,6 +26,19 @@ do
 	  cd XML
       cp -a * $XML/g2/escorez/$dir
       cd "${SVNESC}"
+   fi
+done
+cd "${SVNHB}"
+for dir in *
+do
+   if [ -d $dir ]
+   then
+      cd $dir
+      echo `pwd`
+      mkdir -p $XML/g2/halobutyl/$dir
+	  cd XML
+      cp -a * $XML/g2/halobutyl/$dir
+      cd "${SVNHB}"
    fi
 done
 cd "${SVNVIST}"

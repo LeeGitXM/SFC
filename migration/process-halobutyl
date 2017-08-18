@@ -1,0 +1,24 @@
+#!/bin/sh
+# Start-to-finish processing of escorez SFCs
+#   -- copy from svn repository
+#   -- translate all relevant procedures
+#   -- convert from G2 xml to Ignition xml
+#   -- create project files from the converted XML and translated procedures
+#
+SFC=$GIT_REPO/sfc
+PYDIR=${SFC}/migration/procs/ignition/halobutyl
+
+cd $SFC/migration
+#./clear-procs halobutyl
+./clear-xml halobutyl
+./copy-procs
+./copy-xml
+#
+# Translate the procedures (currently there aren't any)
+#./translate-halobutyl all
+#cd $SFC/migration/procs/ignition/halobutyl
+#cp -a * $PYDIR
+cd $SFC/migration
+#
+# Convert the XML (NOTE: procedures from checkin area)
+./convert-halobutyl all

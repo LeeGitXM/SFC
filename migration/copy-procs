@@ -5,16 +5,21 @@
 #
 SVN="${SVN_REPO}/EMChemicals/G2Artifacts/Sequential Control"
 ESCOREZ="${SVN_REPO}/EMChemicals/Migration/Escorez/Exports From G2/SequentialControl"
+HALOBUTYL="${SVN_REPO}/EMChemicals/Migration/Halobutyl/Exports From G2/Sequential Control"
 VISTALON="${SVN_REPO}/EMChemicals/Migration/Vistalon/Exports From G2/SequentialControl"
 PROCS=${GIT_REPO}/sfc/migration/procs
 mkdir -p $PROCS/g2/escorez/onstart
 mkdir -p $PROCS/g2/escorez/onstop
+mkdir -p $PROCS/g2/halobutyl/onstart
+mkdir -p $PROCS/g2/halobutyl/onstop
 mkdir -p $PROCS/g2/usecase/onstart
 mkdir -p $PROCS/g2/vistalon/onstart
 mkdir -p $PROCS/g2/vistalon/onstop
 mkdir -p $PROCS/g2/usecase/normal
 mkdir -p $PROCS/ignition/escorez/onstart
 mkdir -p $PROCS/ignition/escorez/onstop
+mkdir -p $PROCS/ignition/halobutyl/onstart
+mkdir -p $PROCS/ignition/halobutyl/onstop
 mkdir -p $PROCS/ignition/usecase/onstart
 mkdir -p $PROCS/ignition/vistalon/onstart
 mkdir -p $PROCS/ignition/vistalon/onstop
@@ -35,6 +40,13 @@ for fil in "${ESCOREZ}"/*/callbacks/*.txt "${ESCOREZ}"/*/callbacks/*/*.txt
 do
 	name=`basename "$fil"`
 	cat "$fil"  > ${PROCS}/g2/escorez/onstart/$name
+done
+# ======================================== Halobu=tyl ==========================================
+# Currently no callback are found
+for fil in "${HALOBUTYL}"/*/callbacks/*.txt "${HALOBUTYL}"/*/callbacks/*/*.txt
+do
+	name=`basename "$fil"`
+	cat "$fil"  > ${PROCS}/g2/halobutyl/onstart/$name
 done
 # ======================================== Vistalon ==========================================
 for fil in "${VISTALON}"/*/callbacks/*.txt "${VISTALON}"/*/callbacks/*/*.txt
