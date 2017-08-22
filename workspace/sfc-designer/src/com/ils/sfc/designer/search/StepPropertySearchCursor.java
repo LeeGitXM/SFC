@@ -19,8 +19,8 @@ public class StepPropertySearchCursor extends SearchObjectCursor {
 	private final PropertyValue pv;
 	private final long resourceId;
 	private int index = 0;
-	private final boolean searchName;
-	private final boolean searchValue;
+//	private final boolean searchName;
+//	private final boolean searchValue;
 
 	public StepPropertySearchCursor(DesignerContext ctx,String parentName,long resid, PropertyValue val,int searchKey) {
 		this.context = ctx;
@@ -29,18 +29,18 @@ public class StepPropertySearchCursor extends SearchObjectCursor {
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.index = 0;
 		this.resourceId = resid;
-		this.searchName = (searchKey&IlsSfcSearchProvider.SEARCH_SCOPE)!=0;
-		this.searchValue = (searchKey&IlsSfcSearchProvider.SEARCH_SCOPE_DATA)!=0;
+//		this.searchName = (searchKey&IlsSfcSearchProvider.SEARCH_SCOPE)!=0;
+//		this.searchValue = (searchKey&IlsSfcSearchProvider.SEARCH_SCOPE_DATA)!=0;
 	}
 	@Override
 	public Object next() {
 		Object so = null;   // SearchObject
-		if( index==0 && searchName ) {
-			so = new StepPropertySearchObject(context,parent,resourceId,pv.getProperty().getName(),pv.getProperty().getName());
-		}
-		else if( searchValue &&  index== (searchName?1:0) ) {
-			so = new StepPropertySearchObject(context,parent,resourceId,pv.getProperty().getName(),pv.getValue().toString());
-		}
+//		if( index==0 && searchName ) {
+//			so = new StepPropertySearchObject(context,parent,resourceId,pv.getProperty().getName(),pv.getProperty().getName());
+//		}
+//		else if( searchValue &&  index== (searchName?1:0) ) {
+//			so = new StepPropertySearchObject(context,parent,resourceId,pv.getProperty().getName(),pv.getValue().toString());
+//		}
 		index++;
 		return so;
 	}

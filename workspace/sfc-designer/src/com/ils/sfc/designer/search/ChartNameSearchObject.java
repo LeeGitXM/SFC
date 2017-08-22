@@ -5,6 +5,8 @@ import java.util.ResourceBundle;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import org.w3c.dom.Element;
+
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.inductiveautomation.ignition.client.util.gui.ErrorUtil;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
@@ -17,17 +19,27 @@ import com.inductiveautomation.ignition.designer.model.DesignerContext;
  */
 public class ChartNameSearchObject implements SearchObject {
 
+	private String chartName = "";
+	private final long resourceId;
 	private final String parentPath;
-	private final ProjectResource chartResource;
 	private final DesignerContext context;
 	private final ResourceBundle rb;
 	
-	public ChartNameSearchObject(DesignerContext ctx,String parent,ProjectResource pr) {
+	public ChartNameSearchObject(DesignerContext ctx, String parent, Long resourceId) {
 		this.context = ctx;
-		this.chartResource = pr;
 		this.parentPath = parent;
+		this.resourceId = resourceId;
 		this.rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
+		
+		int pos = parentPath.lastIndexOf("/");
+		if (pos > 0){
+			this.chartName = parentPath.substring(pos + 1);
+		}
+		else {
+			this.chartName = parent;
+		}
 	}
+		
 	@Override
 	public Icon getIcon() {
 		ImageIcon icon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/chart.png"));
@@ -36,7 +48,7 @@ public class ChartNameSearchObject implements SearchObject {
 
 	@Override
 	public String getName() {
-		return chartResource.getName();
+		return chartName;
 	}
 
 	@Override
@@ -46,16 +58,17 @@ public class ChartNameSearchObject implements SearchObject {
 
 	@Override
 	public String getText() {
-		return chartResource.getName();
+		return chartName;
 	}
 
 	@Override
 	public void locate() {
 		ChartLocator locator = new ChartLocator(context);
-		locator.locate(chartResource.getResourceId());
+		locator.locate(resourceId);
 	}
 
 	@Override
+	// We can't rename a resource in the project tree from the find replace.
 	public void setText(String arg0) throws IllegalArgumentException {
 		ErrorUtil.showWarning(rb.getString("Locator.ChartChangeWarning"), rb.getString("Locator.WarningTitle"));
 	}

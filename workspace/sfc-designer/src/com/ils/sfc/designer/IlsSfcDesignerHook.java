@@ -81,6 +81,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private static final String ZOOM_50  = " 50%";
 	private static final String ZOOM_25  = " 25%";
 	private DesignerContext context = null;
+	private Project project = null;
+	
 	private final LoggerEx log;
 	//private JPopupMenu stepPopup;
 	private SFCDesignerHook iaSfcHook;
@@ -276,6 +278,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void startup(DesignerContext ctx, LicenseState activationState) throws Exception {
 		this.context = ctx;
+		this.project = context.getGlobalProject().getProject();
 		DesignerUtil.context = ctx;
         log.info("IlsSfcDesignerHook.startup...");
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
@@ -311,17 +314,23 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 //    	structureManager = new ChartStructureManager(context.getGlobalProject().getProject(),stepRegistry);
 //		AbstractIlsStepDelegate.setStructureManager(structureManager);
     	
-		// Pete's Structure manager - instantiate this once in the beginning because the step registry is static.
+		// Pete's Structure compiler - instantiate this once in the beginning because the step registry is static.
 		structureCompilerV2 = new ChartStructureCompilerV2(context.getGlobalProject().getProject(), stepRegistry);
 		
 		// Pete's Recipe Data Migrator - instantiate this once in the beginning because the step registry is static.
 		recipeDataMigrator = new RecipeDataMigrator(context.getGlobalProject().getProject(), stepRegistry);
-		
-		searchProvider = new IlsSfcSearchProvider(context);
+
+//  I added the step registry to the constructor
+//		searchProvider = new IlsSfcSearchProvider(context);
+		searchProvider = new IlsSfcSearchProvider(context, stepRegistry, project);
 		context.registerSearchProvider(searchProvider);
 		
 		new Thread(new ModuleWatcher(context)).start();             // Watch for modules to start
  	}
+	
+	public ChartStructureCompilerV2 getStructureCompiler() {
+		return structureCompilerV2;
+	}
 	
 	public static SFCWorkspace getSfcWorkspace() {
 		return sfcWorkspace;

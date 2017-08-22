@@ -17,8 +17,8 @@ public class RecipeSearchCursor extends SearchObjectCursor {
 	private final DesignerContext context;
 	private final String parent;
 	private final long resourceId;
-	private final boolean searchRecipeKey;
-	private final boolean searchRecipeData;
+//	private final boolean searchRecipeKey;
+//	private final boolean searchRecipeData;
 	private JSONObject json = null;
 	private int index = 0;
 
@@ -26,8 +26,8 @@ public class RecipeSearchCursor extends SearchObjectCursor {
 		this.context = ctx;
 		this.parent = parentName+":"+stepName;
 		this.resourceId = resid;
-		this.searchRecipeKey = (searchKey&IlsSfcSearchProvider.SEARCH_KEY)!=0;
-		this.searchRecipeData = (searchKey&IlsSfcSearchProvider.SEARCH_DATA)!=0;
+//		this.searchRecipeKey = (searchKey&IlsSfcSearchProvider.SEARCH_KEY)!=0;
+//		this.searchRecipeData = (searchKey&IlsSfcSearchProvider.SEARCH_DATA)!=0;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		if( val.getValue() instanceof JSONObject ) this.json = (JSONObject) val.getValue();
 		this.index = 0;
@@ -45,25 +45,26 @@ public class RecipeSearchCursor extends SearchObjectCursor {
 		Iterator<String> iter = json.keys();
 		while( iter.hasNext() ) {
 			String key = iter.next();
-			if( searchRecipeKey ) {
-				if( subindex==index) {
-					so = new RecipeKeySearchObject(context,parent,resourceId,key);
-					break;
-				}
-				subindex++;
-			}
-			else if(searchRecipeData ) {
-				if( subindex==index) {
-					try {
-						so = new JSONSearchCursor(context,parent,resourceId,key,json.getJSONObject(key));
-					}
-					catch(JSONException jse) {
-						log.warnf("%s.next: Exception getting value for key ^%s (&%s)", TAG,key,jse.getLocalizedMessage());
-					}
-					break;
-				}
-				subindex++;
-			}
+// Commented out by Pete 8/16/2017
+//			if( searchRecipeKey ) {
+//				if( subindex==index) {
+//					so = new RecipeKeySearchObject(context,parent,resourceId,key);
+//					break;
+//				}
+//				subindex++;
+//			}
+//			else if(searchRecipeData ) {
+//				if( subindex==index) {
+//					try {
+//						so = new JSONSearchCursor(context,parent,resourceId,key,json.getJSONObject(key));
+//					}
+//					catch(JSONException jse) {
+//						log.warnf("%s.next: Exception getting value for key ^%s (&%s)", TAG,key,jse.getLocalizedMessage());
+//					}
+//					break;
+//				}
+//				subindex++;
+//			}
 		}
 		
 		index++;
