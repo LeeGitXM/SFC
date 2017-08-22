@@ -43,6 +43,13 @@ mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
 ${MIGRATION}/process-escorez all > ${LOG} 2>&1
 
+# ============================= Halobutyl =================
+INDIR="$SFC/migration/xml/ignition/halobutyl"
+OUTDIR=$SFC/migration/projects/Halobutyl
+mkdir -p $OUTDIR
+rm -rf $OUTDIR/*
+${MIGRATION}/process-halobutyl all > ${LOG} 2>&1
+
 # Make the project files
 cd $INDIR
 for PROJ in *

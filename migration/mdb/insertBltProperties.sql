@@ -119,7 +119,7 @@ insert into BltPropertyMap values ('GDL-IN-RANGE-OBSERVATION','upperThreshold','
 insert into BltPropertyMap values ('GDL-IN-RANGE-OBSERVATION','upperThresholdUncertainty','UpperDeadband','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-IN-RANGE-OBSERVATION','hysteresisWhen','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-IN-RANGE-OBSERVATION','statusOnInitialization','','DOUBLE',1,'NONE');
-insert into BltPropertyMap values ('GDL-INFERENCE-COUNTER','statusOnInitialization','ClearOnReset','BOOLEAN',1,'NONE');
+insert into BltPropertyMap values ('GDL-INFERENCE-COUNTER','valueOnInitialization','InitialValue','INTEGER',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-COUNTER','triggerOn','Trigger','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-DELAY','countBy','','INTEGER',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-DELAY','delay','SampleDelay','INTEGER',1,'NONE');
@@ -128,7 +128,7 @@ insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','holdFor','HoldInterval
 insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','hysteresisWhen','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','outputUncertainty','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-EVENT','triggerOn','Trigger','BOOLEAN',1,'NONE');
-insert into BltPropertyMap values ('GDL-INFERENCE-INHIBIT','statusOnInitialization','ClearOnReset','BOOLEAN',1,'NONE');
+insert into BltPropertyMap values ('GDL-INFERENCE-INHIBIT','statusOnInitialization','InitialValue','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-INFERENCE-INHIBIT','triggerOn','Trigger','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-LINEAR-FIT','eraseHistoryWhenReset','ClearOnReset','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-LINEAR-FIT','linearInterpolation','LinearInterpolation','BOOLEAN',1,'NONE');
@@ -175,7 +175,7 @@ insert into BltPropertyMap values ('GDL-N-TRUE-GATE','useExpiredInputs','','STRI
 insert into BltPropertyMap values ('GDL-N-TRUE-GATE','logic','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-N-TRUE-GATE','n','NTrue','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-NOT-GATE','logic','','STRING',1,'NONE');
-insert into BltPropertyMap values ('GDL-NOT-GATE','outputUncertainty','uncertainty','DOUBLE',1,'NONE');
+insert into BltPropertyMap values ('GDL-NOT-GATE','outputUncertainty','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-OUT-of-RANGE-OBSERVATION','outputUncertainty','','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-OUT-OF-RANGE-OBSERVATION','lowerThreshold','LowerLimit','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-OUT-OF-RANGE-OBSERVATION','lowerThresholdUncertainty','LowerDeadband','DOUBLE',1,'NONE');
@@ -199,8 +199,8 @@ insert into BltPropertyMap values ('GDL-TIMER','countBy','Interval','DOUBLE',1,'
 insert into BltPropertyMap values ('GDL-TIMER','displayUnits','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-TIMER','stopwhen','StopOn','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-TIMER','triggeron','Trigger','BOOLEAN',1,'NONE');
-insert into BltPropertyMap values ('GDL-TRUE-IF-UNKNOWN-GATE','logic','logic','STRING',1,'NONE');
-insert into BltPropertyMap values ('GDL-TRUE-IF-UNKNOWN-GATE','outputUncertainty','uncertainty','STRING',1,'NONE');
+insert into BltPropertyMap values ('GDL-TRUE-IF-UNKNOWN-GATE','logic','','STRING',1,'NONE');
+insert into BltPropertyMap values ('GDL-TRUE-IF-UNKNOWN-GATE','outputUncertainty','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-TWO-OPTION-USER-QUERY-CONTROL-SWITCH','currentOption','CurrentOption','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-TWO-OPTION-USER-QUERY-CONTROL-SWITCH','defaultOption','DefaultOption','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-TWO-OPTION-USER-QUERY-CONTROL-SWITCH','displayRouting','DisplayRouting','STRING',1,'NONE');
