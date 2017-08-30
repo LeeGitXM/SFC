@@ -50,12 +50,8 @@ mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
 ${MIGRATION}/process-halobutyl all > ${LOG} 2>&1
 
-# Make the project files
-cd $INDIR
-for PROJ in *
-do
-    INFIL=${INDIR}/$PROJ
-    OUTFIL=${OUTDIR}/$PROJ
-    rm -f $OUTFIL
-    $SFC/migration/build-project "$INFIL" "$OUTFIL"
-done
+# ====================== Make the project files ============
+cd $MIGRATION
+./build-escorez-projects
+./build-halobutyl-projects
+./build-vistalon-projects

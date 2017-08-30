@@ -1,0 +1,19 @@
+#!/bin/sh
+# Starting with generated XML files, create projects.
+#
+SFC=$GIT_REPO/sfc
+INDIR="$SFC/migration/xml/ignition/escorez"
+OUTDIR=$SFC/migration/projects/Escorez
+mkdir -p $OUTDIR
+rm -rf $OUTDIR/*
+
+cd $SFC/migration
+#
+cd $INDIR
+for PROJ in *
+do
+    INFIL=${INDIR}/$PROJ
+    OUTFIL=${OUTDIR}/$PROJ
+    rm -f $OUTFIL
+    $SFC/migration/build-project "$INFIL" "$OUTFIL"
+done
