@@ -4,6 +4,7 @@ import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.StepPropertyValidator;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer.ChartInfo;
+import com.ils.sfc.common.rowconfig.ReviewDataConfig;
 import com.ils.sfc.common.rowconfig.ReviewFlowsConfig;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -38,6 +39,7 @@ ReviewFlowsStepProperties {
 
 		try {
 			ReviewFlowsConfig config = ReviewFlowsConfig.fromJSON(element.get(IlsProperty.REVIEW_FLOWS));
+			ReviewDataConfig secondaryConfig = ReviewDataConfig.fromJSON(element.get(IlsProperty.SECONDARY_REVIEW_DATA));
 			for(ReviewFlowsConfig.Row row: config.getRows()) {
 				validator.validateRecipeKey(row.destination, row.flow1Key, chart, element);
 				validator.validateRecipeKey(row.destination, row.flow2Key, chart, element);

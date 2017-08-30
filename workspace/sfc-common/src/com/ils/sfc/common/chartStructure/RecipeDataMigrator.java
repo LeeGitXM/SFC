@@ -57,12 +57,13 @@ public class RecipeDataMigrator {
 
 				// This prints out nicely formatted XML of the resource.
 				String chartResourceAsXML=IlsSfcCommonUtils.returnResource(chartResourceData);
-
+				log.infof("Resource: %s", chartResourceAsXML);
+				
 				try {				
 					Object[] args = {chartPath, resourceId, chartResourceAsXML, database};
 					PythonCall.MIGRATE_RECIPE_DATA.exec( args );
 				} catch (JythonExecException e) {
-					log.error("Caught an error");
+					log.errorf("Caught an error (%s)", e.getMessage());
 				
 				}
 			}
@@ -74,3 +75,4 @@ public class RecipeDataMigrator {
 	}
 	
 }
+

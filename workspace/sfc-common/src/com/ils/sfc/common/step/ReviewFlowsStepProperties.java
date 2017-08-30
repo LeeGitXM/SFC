@@ -23,6 +23,9 @@ public interface ReviewFlowsStepProperties extends ChartStepProperties {
     	HEADING2,
     	HEADING3,
     	REVIEW_FLOWS,
+    	PRIMARY_TAB_LABEL,
+    	SECONDARY_REVIEW_DATA,
+    	SECONDARY_TAB_LABEL,
     	ACTIVATION_CALLBACK,
     	CUSTOM_WINDOW_PATH
    };
