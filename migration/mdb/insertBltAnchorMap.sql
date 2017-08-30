@@ -92,9 +92,9 @@ insert into BltAnchorMap values ('GDL-DATA-SHIFT','DP-IN','in','');
 insert into BltAnchorMap values ('GDL-DATA-SHIFT','DP-OUT','out','');
 insert into BltAnchorMap values ('GDL-DATA-TIME-STAMP','DP-IN','in','');
 insert into BltAnchorMap values ('GDL-DATA-TIME-STAMP','DP-OUT','out','');
-insert into BltAnchorMap values ('GDL-DATA-SELECT','DP-IN-1','a','');
-insert into BltAnchorMap values ('GDL-DATA-SELECT','DP-IN-2','b','');
-insert into BltAnchorMap values ('GDL-DATA-SELECT','IP-IN','signal','');
+insert into BltAnchorMap values ('GDL-DATA-SELECT','DP-IN-1','in1','');
+insert into BltAnchorMap values ('GDL-DATA-SELECT','DP-IN-2','in2','');
+insert into BltAnchorMap values ('GDL-DATA-SELECT','IP-IN','recv','');
 insert into BltAnchorMap values ('GDL-DATA-SELECT','DP-OUT','out','');
 insert into BltAnchorMap values ('GDL-DIFFERENCE','DP-IN-1','a','');
 insert into BltAnchorMap values ('GDL-DIFFERENCE','DP-IN-2','b','');
@@ -206,4 +206,5 @@ insert into BltAnchorMap values ('LOGICAL-PARAMETER','IP-OUT','out','');
 insert into BltAnchorMap values ('LOGICAL-VARIABLE','IP-IN','in','');
 insert into BltAnchorMap values ('LOGICAL-VARIABLE','IP-OUT','out','');
 insert into BltAnchorMap values ('SYMBOLIC-PARAMETER','IP-IN','in','');
+insert into BltAnchorMap values ('SYMBOLIC-PARAMETER','IP-OUT','out','');
 
