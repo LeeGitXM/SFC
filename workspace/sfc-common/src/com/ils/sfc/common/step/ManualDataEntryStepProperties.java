@@ -17,6 +17,7 @@ public interface ManualDataEntryStepProperties extends ChartStepProperties {
     	SCALE,
     	BUTTON_LABEL,
     	WINDOW_TITLE,
+    	WINDOW_HEADER,
     	MANUAL_DATA_WINDOW,
     	AUTO_MODE,
     	REQUIRE_ALL_INPUTS,

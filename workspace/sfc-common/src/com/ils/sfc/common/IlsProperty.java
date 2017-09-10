@@ -252,7 +252,7 @@ public class IlsProperty {
     public static final BasicProperty<String> RECIPE_STATIC_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.RECIPE_STATIC_STRATEGY_CHOICES[0], Constants.RECIPE_STATIC_STRATEGY_CHOICES);
     public static final BasicProperty<Double> SCALE = createProperty(Constants.SCALE, Double.class, 1.0);
     public static final BasicProperty<Double> TARGET_VALUE = createProperty(Constants.TARGET_VALUE, Double.class, 0.);
-    public static final BasicProperty<Object> TIME_LIMIT_STATIC_VALUE = createProperty(Constants.VALUE, Object.class, null, false, "time limit static value");
+    public static final BasicProperty<Object> TIME_LIMIT_STATIC_VALUE = createProperty(Constants.VALUE, Object.class, null, false, "time limit static value (min)");
     public static final BasicProperty<Double> TIMEOUT = createProperty(Constants.TIMEOUT, Double.class, -1.);
     public static final BasicProperty<String> TIMEOUT_BEHAVIOR = createProperty(Constants.TIMEOUT_BEHAVIOR, String.class, Constants.TIMEOUT_BEHAVIOR_CHOICES[0], Constants.TIMEOUT_BEHAVIOR_CHOICES);
     public static final BasicProperty<String> TIMEOUT_UNIT = createProperty(Constants.TIMEOUT_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);
@@ -269,6 +269,7 @@ public class IlsProperty {
     public static final BasicProperty<Boolean> VERBOSE = createProperty(Constants.VERBOSE, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<Boolean> VIEW_FILE = createProperty(Constants.VIEW_FILE, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> WINDOW = createProperty(Constants.WINDOW, String.class, "");
+    public static final BasicProperty<String> WINDOW_HEADER = createProperty(Constants.WINDOW_HEADER, String.class, "");
     public static final BasicProperty<String> WINDOW_TITLE = createProperty(Constants.WINDOW_TITLE, String.class, "");
     public static final BasicProperty<Boolean> WRITE_CONFIRM = createProperty(Constants.WRITE_CONFIRM, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<Boolean> WRITE_CONFIRMED = createProperty(Constants.WRITE_CONFIRMED, Boolean.class, Boolean.TRUE);

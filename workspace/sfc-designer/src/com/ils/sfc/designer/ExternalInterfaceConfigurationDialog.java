@@ -99,7 +99,9 @@ public class ExternalInterfaceConfigurationDialog extends JDialog {
 		// Time factor
 		internalPanel.add(createLabel("Setup.TimeFactor"),"");
 		mainTimeFactorField = createTimeFactorTextField("Setup.ProductionTimeFactor.tooltip","");
-		mainTimeFactorField.setEnabled(false);
+		
+		// PAH 9/7/17 I commented out the following line so that I can edit the production time factor
+		// mainTimeFactorField.setEnabled(false);
 		internalPanel.add(mainTimeFactorField, "");
 		secondaryTimeFactorField = createTimeFactorTextField("Setup.IsolationTimeFactor.tooltip",ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME);
 		internalPanel.add(secondaryTimeFactorField, "wrap");
@@ -206,6 +208,10 @@ public class ExternalInterfaceConfigurationDialog extends JDialog {
 		// Do not allow tag providers to be the same
 		Object db1 = mainDatabaseBox.getSelectedItem();
 		Object db2 = secondaryDatabaseBox.getSelectedItem();
+		
+		// PAH 9/7/2017 I commented out the following code so that I could make the Isolation and Production tag providers the same.
+		//              This is really useful during off-line development and testing.
+		/*
 		if( db1!=null && db2!=null && db1.toString().length()>0 && db2.toString().length()>0 &&
 				db1.toString().equals(db2.toString()) )  {
 
@@ -215,7 +221,9 @@ public class ExternalInterfaceConfigurationDialog extends JDialog {
 					JOptionPane.WARNING_MESSAGE);
 			secondaryDatabaseBox.setSelectedItem("");
 		}
-		else if( db1==null || db1.toString().length()==0 )  {
+		else 
+		*/
+		if( db1==null || db1.toString().length()==0 )  {
 
 			JOptionPane.showMessageDialog(context.getFrame(),
 					"Production database connection must be configured.",

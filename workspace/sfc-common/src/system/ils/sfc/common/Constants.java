@@ -243,6 +243,7 @@ public class Constants {
 	public static final String WARNING = "Warning";
 	public static final String WATCH = "watch";
 	public static final String WINDOW = "window";
+	public static final String WINDOW_HEADER = "windowHeader";
 	public static final String WINDOW_TITLE = "windowTitle";
 	public static final String WRITE_CONFIRM = "writeConfirm";
 	public static final String WRITE_CONFIRMED = "writeConfirmed";
