@@ -15,5 +15,6 @@ public interface SaveQueueStepProperties extends ChartStepProperties {
     public static final BasicProperty<?>[] properties = {
      	DIRECTORY,
     	FILENAME,  // includes extension
+    	TIMESTAMP,
     };
 }
