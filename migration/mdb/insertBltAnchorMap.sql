@@ -114,6 +114,8 @@ insert into BltAnchorMap values ('GDL-FIXED-GAIN','DP-OUT','out','');
 insert into BltAnchorMap values ('GDL-GENERIC-ACTION','CP-IN','in','');
 insert into BltAnchorMap values ('GDL-GENERIC-ACTION','CP-OUT','out','');
 insert into BltAnchorMap values ('GDL-GENERIC-ACTION','DP-OUT','out','');
+insert into BltAnchorMap values ('GDL-DISCRETE-RATE-OF-CHANGE','DP-IN','in','');
+insert into BltAnchorMap values ('GDL-DISCRETE-RATE-OF-CHANGE','DP-OUT','out','');
 insert into BltAnchorMap values ('GDL-HIGH-SELECTING','DP-IN','in','');
 insert into BltAnchorMap values ('GDL-HIGH-SELECTING','DP-OUT','out','');
 insert into BltAnchorMap values ('GDL-HIGH-VALUE-OBSERVATION','DP-IN','in','');
@@ -142,6 +144,8 @@ insert into BltAnchorMap values ('GDL-INFERENCE-OUTPUT-ACTION','IP-OUT','out',''
 insert into BltAnchorMap values ('GDL-INFERENCE-TIME-STAMP','IP-IN','in','');
 insert into BltAnchorMap values ('GDL-INFERENCE-TIME-STAMP','DP-OUT-1','out','');
 insert into BltAnchorMap values ('GDL-LINEAR-FIT','DP-IN','in','');
+insert into BltAnchorMap values ('GDL-LINEAR-FIT','DP-OUT-1','out','');
+insert into BltAnchorMap values ('GDL-LINEAR-FIT','DP-OUT-2','slope','');
 insert into BltAnchorMap values ('GDL-LOW-LIMITING','DP-IN','in','');
 insert into BltAnchorMap values ('GDL-LOW-LIMITING','DP-OUT','out','');
 insert into BltAnchorMap values ('GDL-LOW-VALUE-PATTERN','DP-IN','in','');
