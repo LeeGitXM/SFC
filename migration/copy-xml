@@ -1,19 +1,22 @@
 #!/bin/sh
 # Copy XML export files from svn into our project
 # for viewing in Eclipse. Clean out irrelevant directories.
+# Vistalon and Halobutyl have been vetted (hand-worked) and
+# checked into SVN. For these we don't bother with the 
+# raw migrations
 #
 SVNUC=${SVN_REPO}/EMChemicals/G2Artifacts/Sequential\ Control/UnitTests
 SVNESC="${SVN_REPO}/EMChemicals/Migration/Escorez/Exports From G2/SequentialControl"
-SVNHB="${SVN_REPO}/EMChemicals/Migration/Halobutyl/Exports From G2/Sequential Control"
-SVNVIST="${SVN_REPO}/EMChemicals/Migration/Vistalon/Exports From G2/SequentialControl"
+SVNHB="${SVN_REPO}/EMChemicals/Migration/Halobutyl/SFCs/Vetted"
+SVNVIST="${SVN_REPO}/EMChemicals/Migration/Vistalon/SFCs/Vetted"
 XML=${GIT_REPO}/sfc/migration/xml
+rm -rf $XML/ignition
+rm -rf $XML/vetted
 mkdir -p $XML/g2/usecase
 mkdir -p $XML/g2/escorez
-mkdir -p $XML/g2/halobutyl
-mkdir -p $XML/g2/vistalon
 mkdir -p $XML/ignition/escorez
-mkdir -p $XML/ignition/halobutyl
-mkdir -p $XML/ignition/vistalon
+mkdir -p $XML/vetted/halobutyl
+mkdir -p $XML/vetted/vistalon
 cp -a "${SVNUC}"/* $XML/g2/usecase
 cd "${SVNESC}"
 for dir in *
@@ -29,31 +32,11 @@ do
    fi
 done
 cd "${SVNHB}"
-for dir in *
-do
-   if [ -d $dir ]
-   then
-      cd $dir
-      echo `pwd`
-      mkdir -p $XML/g2/halobutyl/$dir
-	  cd XML
-      cp -a * $XML/g2/halobutyl/$dir
-      cd "${SVNHB}"
-   fi
-done
+cp -a *.proj $XML/vetted/halobutyl
+
 cd "${SVNVIST}"
-for dir in *
-do
-   if [ -d $dir ]
-   then
-      cd $dir
-      cd SFCs
-      echo `pwd`
-      mkdir -p $XML/g2/vistalon/$dir
-      cp -a * $XML/g2/vistalon/$dir
-      cd "${SVNVIST}"
-   fi
-done
+cp -a *.proj $XML/vetted/vistalon
+
 # Clean up the non-xml
 find ${XML}/g2 -type f ! -name "*.xml" -exec rm {}  \; 
 rm -r `find ${XML}/g2 -type d -name Diagrams`  2&>/dev/null
