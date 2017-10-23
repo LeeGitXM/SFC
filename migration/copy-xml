@@ -5,20 +5,22 @@
 # checked into SVN. For these we don't bother with the 
 # raw migrations
 #
-SVNUC=${SVN_REPO}/EMChemicals/G2Artifacts/Sequential\ Control/UnitTests
-SVNESC="${SVN_REPO}/EMChemicals/Migration/Escorez/Exports From G2/SequentialControl"
+SVNESCRAW="${SVN_REPO}/EMChemicals/Migration/Escorez/Exports From G2/SequentialControl"
+SVNHBRAW="${SVN_REPO}/EMChemicals/Migration/Halobutyl/Exports From G2/Sequential Control"
 SVNHB="${SVN_REPO}/EMChemicals/Migration/Halobutyl/SFCs/Vetted"
+SVNVISTRAW="${SVN_REPO}/EMChemicals/Migration/Vistalon/Exports From G2/SequentialControl"
 SVNVIST="${SVN_REPO}/EMChemicals/Migration/Vistalon/SFCs/Vetted"
 XML=${GIT_REPO}/sfc/migration/xml
-rm -rf $XML/ignition
 rm -rf $XML/vetted
-mkdir -p $XML/g2/usecase
 mkdir -p $XML/g2/escorez
+mkdir -p $XML/g2/halobutyl
+mkdir -p $XML/g2/vistalon
 mkdir -p $XML/ignition/escorez
+mkdir -p $XML/ignition/halobutyl
+mkdir -p $XML/ignition/vistalon
 mkdir -p $XML/vetted/halobutyl
 mkdir -p $XML/vetted/vistalon
-cp -a "${SVNUC}"/* $XML/g2/usecase
-cd "${SVNESC}"
+cd "${SVNESCRAW}"
 for dir in *
 do
    if [ -d $dir ]
@@ -28,12 +30,38 @@ do
       mkdir -p $XML/g2/escorez/$dir
 	  cd XML
       cp -a * $XML/g2/escorez/$dir
-      cd "${SVNESC}"
+      cd "${SVNESCRAW}"
+   fi
+done
+cd "${SVNHBRAW}"
+for dir in *
+do
+   if [ -d $dir ]
+   then
+      cd $dir
+      echo `pwd`
+      mkdir -p $XML/g2/halobutyl/$dir
+	  cd XML
+      cp -a * $XML/g2/halobutyl/$dir
+      cd "${SVNHBRAW}"
    fi
 done
 cd "${SVNHB}"
 cp -a *.proj $XML/vetted/halobutyl
 
+cd "${SVNVISTRAW}"
+for dir in *
+do
+   if [ -d $dir ]
+   then
+      cd $dir
+      echo `pwd`
+      mkdir -p $XML/g2/vistalon/$dir
+	  cd SFCs
+      cp -a * $XML/g2/vistalon/$dir
+      cd "${SVNVISTRAW}"
+   fi
+done
 cd "${SVNVIST}"
 cp -a *.proj $XML/vetted/vistalon
 
