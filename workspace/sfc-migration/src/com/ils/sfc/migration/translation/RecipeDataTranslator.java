@@ -44,6 +44,7 @@ import system.ils.sfc.common.Constants;
 public class RecipeDataTranslator {
 	private static final String CLSS = "RecipeDataTranslator";
 	private static LoggerEx log = LogUtil.getLogger(RecipeDataTranslator.class.getName());
+	private static final boolean DEBUG = false;
 	private static Map<String, Class<?>> concreteClassesByG2Name = new HashMap<String, Class<?>>();
 	static {
 		concreteClassesByG2Name.put("S88-RECIPE-DATA-GROUP", Group.class);
@@ -156,7 +157,7 @@ public class RecipeDataTranslator {
 	public List<Data> DOMToData(String factoryId) {
 		final java.util.List<Data> flatRecipeObjects = new ArrayList<Data>();
 		NodeList recipeNodes = blockElement.getElementsByTagName("recipe");
-		log.infof("RecipeDataTranslator:DOMTOData: block has %d recipe nodes", recipeNodes.getLength());
+		if(DEBUG) log.infof("RecipeDataTranslator:DOMTOData: block has %d recipe nodes", recipeNodes.getLength());
 		for (int temp = 0; temp < recipeNodes.getLength(); temp++) {			 
 			Node nNode = recipeNodes.item(temp);	 
 			if (nNode.getNodeType() == Node.ELEMENT_NODE) {	 
@@ -168,7 +169,7 @@ public class RecipeDataTranslator {
 					Node item = attributes.item(i);
 					String name = item.getNodeName();
 					String value = item.getTextContent();
-					log.infof("RecipeDataTranslator:DOMTOData: %s = %s", name,value);
+					if(DEBUG) log.infof("RecipeDataTranslator:DOMTOData: %s = %s", name,value);
 					attMap.put(name, value);					
 				}
 				customizeRecipeAttributeMap(attMap);
@@ -208,11 +209,11 @@ public class RecipeDataTranslator {
 				objValue = IlsProperty.parseObjectValue(strValue, property.getType());
 			}
 			if(objValue != null && property.getType().isAssignableFrom(objValue.getClass())) {
-				log.infof("RecipeDataTranslator:setProperty: %s = %s (from %s)",property.getName(),objValue.toString(),strValue);
+				if(DEBUG) log.infof("RecipeDataTranslator:setProperty: %s = %s (from %s)",property.getName(),objValue.toString(),strValue);
 				data.getProperties().setDirect(property, objValue);
 			}
 			else if(objValue==null) {
-				log.infof("RecipeDataTranslator:setProperty: %s = null (from %s)",property.getName(),strValue);
+				if(DEBUG) log.infof("RecipeDataTranslator:setProperty: %s = null (from %s)",property.getName(),strValue);
 			}
 			else {
 				errors.add(objValue + "(" + objValue.getClass().getSimpleName() + 

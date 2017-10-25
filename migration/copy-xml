@@ -67,9 +67,9 @@ cp -a *.proj $XML/vetted/vistalon
 
 # Clean up the non-xml
 find ${XML}/g2 -type f ! -name "*.xml" -exec rm {}  \; 
-rm -r `find ${XML}/g2 -type d -name Diagrams`  2&>/dev/null
-rm -r `find ${XML}/g2 -type d -name diagrams`  2&>/dev/null
-rm -r `find ${XML}/g2 -type d -name callbacks`  2&>/dev/null
+rm -rf `find ${XML}/g2 -type d -name Diagrams`  2&>/dev/null
+rm -rf `find ${XML}/g2 -type d -name diagrams`  2&>/dev/null
+rm -rf `find ${XML}/g2 -type d -name callbacks`  2&>/dev/null
 rm `find ${XML}/g2 -type f -name "*.csv"`  2&>/dev/null
 # Clean up unwanted charts
 cd ${XML}

@@ -190,8 +190,10 @@ public class ConnectionRouter {
 				// Draw horizontally left
 				while(x > destination.x) {
 					link = linkArray.get(sourceHub.getChartElement(),x,y);
-					link.setLeft(true);
-					link.setRight(true);
+					if( link!=null) {
+						link.setLeft(true);
+						link.setRight(true);
+					}
 					x--;
 				}
 				// Draw corner down

@@ -43,11 +43,11 @@ do
 done
 # ======================================== Halobu=tyl ==========================================
 # Currently no callback are found
-for fil in "${HALOBUTYL}"/*/callbacks/*.txt "${HALOBUTYL}"/*/callbacks/*/*.txt
-do
-	name=`basename "$fil"`
-	cat "$fil"  > ${PROCS}/g2/halobutyl/onstart/$name
-done
+#for fil in "${HALOBUTYL}"/*/callbacks/*.txt "${HALOBUTYL}"/*/callbacks/*/*.txt
+#do
+#	name=`basename "$fil"`
+#	cat "$fil"  > ${PROCS}/g2/halobutyl/onstart/$name
+#done
 # ======================================== Vistalon ==========================================
 for fil in "${VISTALON}"/*/callbacks/*.txt "${VISTALON}"/*/callbacks/*/*.txt
 do

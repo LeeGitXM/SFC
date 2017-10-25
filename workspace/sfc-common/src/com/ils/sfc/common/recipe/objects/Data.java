@@ -176,7 +176,7 @@ public abstract class Data {
 	/** Create an associated data object containing only the recipe data 
 	 * @throws JSONException */
 	public static JSONObject toAssociatedData(List<Data> recipeData) throws JSONException {
-		log.info("in Data.toAssociatedData");
+		//log.info("in Data.toAssociatedData");
 		JSONObject associatedDataJson = new JSONObject();
 		setAssociatedData(associatedDataJson, recipeData);
 		return associatedDataJson;

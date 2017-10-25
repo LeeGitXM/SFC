@@ -59,7 +59,9 @@ insert into SfcPropertyMap values ('com.ils.inputStep','windowTitle','');
 -- ENABLE-DISABLE
 insert into SfcPropertyMap values ('com.ils.enableDisableStep','enableCancel','');
 insert into SfcPropertyMap values ('com.ils.enableDisableStep','enablePause','');
+insert into SfcPropertyMap values ('com.ils.enableDisableStep','enableReset','');
 insert into SfcPropertyMap values ('com.ils.enableDisableStep','enableResume','');
+insert into SfcPropertyMap values ('com.ils.enableDisableStep','enableStart','');
 
 -- MANUAL DATA ENTRY
 -- Note that spreadsheetPopulateMethod and spreadsheetSpecification are not directly translated
@@ -67,6 +69,7 @@ insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','timeout','manu
 insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','requireInputs','requireAllInputs');
 insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','autoMode','mode');
 insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','window','dialog');
+insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','windowHeader','header');
 insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','windowTitle','header');
 insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','buttonLabel','toolbarButtonLabel');
 insert into SfcPropertyMap values ('com.ils.manualDataEntryStep','scale','workspaceScale');
