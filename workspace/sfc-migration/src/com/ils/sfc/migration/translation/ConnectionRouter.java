@@ -198,8 +198,10 @@ public class ConnectionRouter {
 				}
 				// Draw corner down
 				link = linkArray.get(sourceHub.getChartElement(),x,y);
-				link.setRight(true);
-				link.setDown(true);
+				if( link!=null ) {
+					link.setRight(true);
+					link.setDown(true);
+				}
 			}
 			else if( source.x < destination.x ) {
 				// Route is right and down
