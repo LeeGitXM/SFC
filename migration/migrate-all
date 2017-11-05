@@ -43,6 +43,14 @@ mkdir -p $OUTDIR
 rm -rf $OUTDIR/*
 ${MIGRATION}/process-escorez all >> ${LOG} 2>&1
 
+# ============================= Gline =================
+echo "Gline ------------------------" >> ${LOG} 2>&1
+INDIR="$SFC/migration/xml/ignition/gline"
+OUTDIR=$SFC/migration/projects/Gline
+mkdir -p $OUTDIR
+rm -rf $OUTDIR/*
+${MIGRATION}/process-gline all >> ${LOG} 2>&1
+
 # ============================= Halobutyl =================
 echo "Halobutyl ------------------------" >> ${LOG} 2>&1
 INDIR="$SFC/migration/xml/ignition/halobutyl"

@@ -7,8 +7,6 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import system.ils.sfc.common.Constants;
-
 /**
  * Convert a G2 classname into a SFC classname
  */

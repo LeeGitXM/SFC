@@ -6,6 +6,7 @@
 # raw migrations
 #
 SVNESCRAW="${SVN_REPO}/EMChemicals/Migration/Escorez/Exports From G2/SequentialControl"
+SVNGLINERAW="${SVN_REPO}/EMChemicals/Migration/G-Line/Exports From G2/SequentialControl"
 SVNHBRAW="${SVN_REPO}/EMChemicals/Migration/Halobutyl/Exports From G2/Sequential Control"
 SVNHB="${SVN_REPO}/EMChemicals/Migration/Halobutyl/SFCs/Vetted"
 SVNVISTRAW="${SVN_REPO}/EMChemicals/Migration/Vistalon/Exports From G2/SequentialControl"
@@ -13,6 +14,7 @@ SVNVIST="${SVN_REPO}/EMChemicals/Migration/Vistalon/SFCs/Vetted"
 XML=${GIT_REPO}/sfc/migration/xml
 rm -rf $XML/vetted
 mkdir -p $XML/g2/escorez
+mkdir -p $XML/g2/gline
 mkdir -p $XML/g2/halobutyl
 mkdir -p $XML/g2/vistalon
 mkdir -p $XML/ignition/escorez
@@ -31,6 +33,19 @@ do
 	  cd XML
       cp -a * $XML/g2/escorez/$dir
       cd "${SVNESCRAW}"
+   fi
+done
+cd "${SVNGLINERAW}"
+for dir in *
+do
+   if [ -d $dir ]
+   then
+      cd $dir
+      echo `pwd`
+      mkdir -p $XML/g2/gline/$dir
+	  cd XML
+      cp -a * $XML/g2/gline/$dir
+      cd "${SVNGLINERAW}"
    fi
 done
 cd "${SVNHBRAW}"
