@@ -24,7 +24,6 @@ PythonGenerator:recordError:No python equivalent defined for s88-get-next-block 
 PythonGenerator:recordError:No python equivalent defined for s88-get-input-blocks  after 'call'
 PythonGenerator:recordError:No python equivalent defined for get-from-text  before '()
 PythonGenerator:recordError:No python equivalent with return defined for uil-post-notification-dialog  after 'call'
-PythonGenerator:recordError:No class mapped for G2 class s88-conditional-transition
 PythonGenerator:recordError:No python equivalent defined for em-s88-chk-pv  after 'call'
 
 PythonGenerator:recordError:No python equivalent defined for uil-update-notification-text  after 'call'
@@ -60,7 +59,6 @@ PythonGenerator:recordError:No class mapped for G2 class s88-unit-operation
 PythonGenerator:recordError:No class mapped for G2 class g2-window
 PythonGenerator:recordError:No class mapped for G2 class uir-data-entry
 PythonGenerator:recordError:No class mapped for G2 class em-recipe-data
-
 PythonGenerator:recordError:No class mapped for G2 class s88-conditional-transition
 PythonGenerator:recordError:No class mapped for G2 class tfa-seq-select-errors
 PythonGenerator:recordError:No class mapped for G2 class s88-message-queue-task

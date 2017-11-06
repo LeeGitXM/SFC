@@ -1,4 +1,4 @@
--- Fields aare:  G2 class name, Ignition factory-id, type (enclosure/transition/ ), requiresTransition (0,1)
+-- Fields are:  G2 class name, Ignition factory-id, type (enclosure/transition/ ), requiresTransition (0,1)
 -- insert into SfcClassMap values ('S88-UNIT-PROCEDURE','enclosing-step','enclosure',0);
 insert into SfcClassMap values ('EM-S88-INITIALIZE-CONTAINER-DATA','action-step','',0);     -- target
 insert into SfcClassMap values ('EM-S88-RATE-CHANGE-CURRENT-DATA-CALLBACK','action-step','',0);
