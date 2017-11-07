@@ -112,6 +112,7 @@ insert into ClassMap values ('g2Variable','java.util.Map');
 insert into ClassMap values ('float-variable','java.lang.Double');
 insert into ClassMap values ('kb-workspace','java.util.List');
 insert into ClassMap values ('procedure','java.util.Map');
+insert into ClassMap values ('float-array','java.util.List');
 insert into ClassMap values ('quantity-array','java.util.List');
 insert into ClassMap values ('opc-text-conditional-text-output','java.util.Map');
 insert into ClassMap values ('s88-get-input-task','java.util.Map');

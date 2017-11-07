@@ -143,6 +143,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('prod-g2-port','
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('prod-mooney-gda','project.vistalon.cstr.ProductMooney.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('prod-mooney-reset-mooney-gda','project.vistalon.cstr.ProductMooney.resetMooney');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('recalc-cat-sps-gda','ils.vistalon.fd.CatSps.recalculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('recipe-get-sub-recipe','ils.escorez.getSubRecipe.evaluate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('reset_fd-gda','ils.diagToolkit.fd.reset');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('rx-type','ils.sfc.python.rx.getType');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('sequence','');
@@ -157,6 +158,8 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-feed-enthal
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get','com.ils.sfc.python.ScopeData.get');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get-with-units','com.ils.sfc.python.ScopeData.getWithUnits');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get-block-in-hierarchy','ils.diagToolkit.finalDiagnosis.getBlock');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get-input-blocks','ils.escorez.blocks.getInputBlock');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get-next-block','ils.escorez.blocks.getNextBlock');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get-control-panel','ils.sfc.gateway.api.s88GetControlPanel');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get-data','ils.sfc.gateway.api.s88GetData');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('s88-get-superior-operation','com.ils.sfc.python.UnitProcedure.getSuperior');
@@ -193,6 +196,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('test-16-initial
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('test-16-writer','com.ils.sfc.python.File.print');
 
 -- Built-into Python
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('get-from-text','find');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('round-to-x-places','ils.vistalon.util.round');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('max','max');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('min','min');
