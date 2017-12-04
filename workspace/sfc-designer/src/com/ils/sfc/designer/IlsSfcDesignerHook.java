@@ -145,9 +145,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
     	
         MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  
  
-        JMenuMerge viewMenu = new JMenuMerge(WellKnownMenuConstants.VIEW_MENU_NAME);
-        viewMenu.addSeparator();
-        viewMenu.addSeparator();
+        JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
+        toolsMenu.addSeparator();
+        toolsMenu.addSeparator();
         
         if( !menuExists(context.getFrame(),INTERFACE_MENU_TITLE) ) {
         	Action interfaceAction = new AbstractAction(INTERFACE_MENU_TITLE) {
@@ -156,7 +156,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         			SwingUtilities.invokeLater(new DialogRunner());
         		}
         	};
-            viewMenu.add(interfaceAction);
+        	toolsMenu.add(interfaceAction);
         }
         // ----------------------- Menu to launch chart validator -----------------------------
         Action validateAction = new AbstractAction(VALIDATION_MENU_TITLE) {
@@ -166,10 +166,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
             }
         };
 
-        viewMenu.add(validateAction);
-        viewMenu.addSeparator();
-        viewMenu.addSeparator();
-        merge.add(WellKnownMenuConstants.VIEW_MENU_LOCATION, viewMenu);
+        toolsMenu.add(validateAction);
+        toolsMenu.addSeparator();
+        toolsMenu.addSeparator();
         
         // ----------------------- Menus to start current chart -----------------------------
         Action executeIsolationAction = new AbstractAction(START_MENU_ISOLATION_TITLE) {
@@ -255,7 +254,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 				
             }
         };
-        JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
         toolsMenu.addSeparator();
         toolsMenu.add(executeIsolationAction);
         toolsMenu.add(executeProductionAction);
