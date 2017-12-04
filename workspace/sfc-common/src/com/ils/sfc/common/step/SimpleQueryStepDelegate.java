@@ -8,8 +8,7 @@ import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer.ChartInfo;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-public class SimpleQueryStepDelegate extends AbstractIlsStepDelegate implements
-SimpleQueryStepProperties {
+public class SimpleQueryStepDelegate extends AbstractIlsStepDelegate implements SimpleQueryStepProperties {
 
 	protected SimpleQueryStepDelegate() {
 		super(properties);

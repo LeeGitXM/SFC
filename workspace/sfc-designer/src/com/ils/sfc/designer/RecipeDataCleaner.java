@@ -17,7 +17,7 @@ import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.api.StepRegistry;
-import com.inductiveautomation.sfc.api.XMLParseException;
+import com.inductiveautomation.sfc.api.XmlParseException;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 import com.inductiveautomation.sfc.uimodel.ElementType;
@@ -62,10 +62,10 @@ public class RecipeDataCleaner implements ProjectChangeListener {
 
 	/** Get the step names in the given chart resource. */
 	private Set<String> getStepNames(ProjectResource resource)
-			throws IOException, XMLParseException {
+			throws IOException, XmlParseException {
 		BasicProperty<String> nameProperty = new BasicProperty<String>("name", String.class);
 		GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(resource.getData()));
-		ChartUIModel uiModel = ChartUIModel.fromXML(xmlInput, stepRegistry );
+		ChartUIModel uiModel = ChartUIModel.fromXml(xmlInput, stepRegistry );
 		Set<String> stepNames = new HashSet<String>();
 		for(ChartUIElement element: uiModel.getChartElements()) {
 			ElementType elementType = element.getType();

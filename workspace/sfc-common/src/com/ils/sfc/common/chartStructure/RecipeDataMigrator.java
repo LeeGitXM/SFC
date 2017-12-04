@@ -1,11 +1,7 @@
 package com.ils.sfc.common.chartStructure;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.zip.GZIPInputStream;
 
-import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.common.project.Project;
@@ -14,10 +10,6 @@ import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.StepRegistry;
-import com.inductiveautomation.sfc.api.XMLParseException;
-import com.inductiveautomation.sfc.uimodel.ChartUIElement;
-import com.inductiveautomation.sfc.uimodel.ChartUIModel;
-import com.inductiveautomation.sfc.uimodel.ElementType;
 
 public class RecipeDataMigrator {
 	private final LoggerEx log;

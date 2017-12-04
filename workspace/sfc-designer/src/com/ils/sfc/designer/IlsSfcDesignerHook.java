@@ -29,7 +29,6 @@ import com.ils.sfc.common.chartStructure.ChartStructureCompilerV2;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.chartStructure.RecipeDataMigrator;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
-import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.common.step.AllSteps;
 /* import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame; */
 import com.ils.sfc.designer.runner.ChartRunner;
@@ -58,8 +57,8 @@ import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistryProvider;
 import com.inductiveautomation.sfc.designer.SFCDesignerHook;
 import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
-import com.inductiveautomation.sfc.designer.workspace.SFCDesignableContainer;
-import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
+import com.inductiveautomation.sfc.designer.workspace.SfcDesignableContainer;
+import com.inductiveautomation.sfc.designer.workspace.SfcWorkspace;
 import com.jidesoft.docking.DockableFrame;
 
 import system.ils.sfc.common.Constants;
@@ -97,7 +96,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private Map <Long, ProjectResource> deletedResourceMap;
 	
 	private static ClientStepRegistry stepRegistry;
-	private static SFCWorkspace sfcWorkspace;
+	private static SfcWorkspace sfcWorkspace;
 	
 	public IlsSfcDesignerHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
@@ -332,7 +331,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		return structureCompilerV2;
 	}
 	
-	public static SFCWorkspace getSfcWorkspace() {
+	public static SfcWorkspace getSfcWorkspace() {
 		return sfcWorkspace;
 	}
 
@@ -486,8 +485,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         public void run() {
             log.infof("%s.run: ShowAncestor %s...",TAG,level);
             // We get the path to the open chart via the workspace.
-            SFCWorkspace workspace = iaSfcHook.getWorkspace();
-            SFCDesignableContainer tab = workspace.getSelectedContainer();
+            SfcWorkspace workspace = iaSfcHook.getWorkspace();
+            SfcDesignableContainer tab = workspace.getSelectedContainer();
     		if( tab!=null ) {
     			long resourceId = workspace.getSelectedContainer().getResourceId();
     			String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
@@ -519,8 +518,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         public void run() {
             log.infof("%s.run: ZoomChart %f...",TAG,scaleFactor);
             // We get the path to the open chart via the workspace.
-            SFCWorkspace workspace = iaSfcHook.getWorkspace();
-            SFCDesignableContainer tab = workspace.getSelectedContainer();
+            SfcWorkspace workspace = iaSfcHook.getWorkspace();
+            SfcDesignableContainer tab = workspace.getSelectedContainer();
     		if( tab!=null ) {
     			Long resourceId = workspace.getSelectedContainer().getResourceId();
     			if( resourceId!=null ) workspace.openChart(resourceId.longValue());

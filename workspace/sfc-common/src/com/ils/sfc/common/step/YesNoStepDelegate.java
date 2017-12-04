@@ -6,8 +6,7 @@ import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer.ChartInfo;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
-public class YesNoStepDelegate extends AbstractIlsStepDelegate implements
-YesNoStepProperties {
+public class YesNoStepDelegate extends AbstractIlsStepDelegate implements YesNoStepProperties {
 
 	protected YesNoStepDelegate() {
 		super(properties);

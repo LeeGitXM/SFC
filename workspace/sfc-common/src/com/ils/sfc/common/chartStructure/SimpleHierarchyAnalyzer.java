@@ -9,8 +9,6 @@ import java.util.zip.GZIPInputStream;
 
 import org.json.JSONObject;
 
-import system.ils.sfc.common.Constants;
-
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.step.OperationStepProperties;
 import com.ils.sfc.common.step.PhaseStepProperties;
@@ -22,10 +20,12 @@ import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.StepRegistry;
-import com.inductiveautomation.sfc.api.XMLParseException;
+import com.inductiveautomation.sfc.api.XmlParseException;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 import com.inductiveautomation.sfc.uimodel.ChartUIModel;
+
+import system.ils.sfc.common.Constants;
 
 /** A utility to analyze chart inclusion hierarchy. This is intended to be as robust as
  *  possible in the face of chart errors, so it avoids using IA chart compilation and 
@@ -92,7 +92,7 @@ public class SimpleHierarchyAnalyzer {
 				try {
 					byte[] chartResourceData = res.getData();					
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
-					ChartUIModel uiModel = ChartUIModel.fromXML(xmlInput, stepRegistry );					
+					ChartUIModel uiModel = ChartUIModel.fromXml(xmlInput, stepRegistry );					
 					chartsByPath.put(chartPath, new ChartInfo(uiModel, chartPath, res.getResourceId()));
 					analyzeModel(uiModel, chartPath);					
 				}
@@ -103,7 +103,7 @@ public class SimpleHierarchyAnalyzer {
 		}
 	}
 
-	private void analyzeModel(ChartUIModel uiModel, String parentChartPath) throws XMLParseException {
+	private void analyzeModel(ChartUIModel uiModel, String parentChartPath) throws XmlParseException {
 		for(ChartUIElement element: uiModel.getChartElements()) {
 			if(element.getProperties().contains(chartPathProperty)) {
 				String parentStepPath = element.get(stepNameProperty);
