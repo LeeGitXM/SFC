@@ -9,7 +9,7 @@ import com.inductiveautomation.ignition.designer.designable.DesignableWorkspaceL
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.ResourceWorkspaceFrame;
 import com.inductiveautomation.sfc.client.ui.StepComponent;
-import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
+import com.inductiveautomation.sfc.designer.workspace.SfcWorkspace;
 import com.jidesoft.docking.DockContext;
 
 /** Provides a dockable frame in the Ignition Designer to hold our recipe data editor. */
@@ -18,10 +18,10 @@ public class RecipeEditorFrame extends com.jidesoft.docking.DockableFrame implem
 	private static String KEY = "ILS Recipe Editor";
 	private static String TITLE = "Recipe Data";
 	private RecipeEditorController controller;
-	private SFCWorkspace sfcWorkspace;
+	private SfcWorkspace sfcWorkspace;
 	private DesignerContext context;
 	
-	public RecipeEditorFrame(DesignerContext ctx, SFCWorkspace sfcWorkspace) {
+	public RecipeEditorFrame(DesignerContext ctx, SfcWorkspace sfcWorkspace) {
 		super(KEY);
 		this.sfcWorkspace = sfcWorkspace;
 		context = ctx;

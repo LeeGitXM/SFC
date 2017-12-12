@@ -8,8 +8,8 @@ import com.inductiveautomation.ignition.common.user.AuthenticatedUser;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
-import com.inductiveautomation.sfc.designer.workspace.SFCDesignableContainer;
-import com.inductiveautomation.sfc.designer.workspace.SFCWorkspace;
+import com.inductiveautomation.sfc.designer.workspace.SfcDesignableContainer;
+import com.inductiveautomation.sfc.designer.workspace.SfcWorkspace;
 
 public class ChartRunner implements Runnable {
 	private final static String TAG = "ChartRunner";
@@ -17,12 +17,12 @@ public class ChartRunner implements Runnable {
 	private final boolean isolationMode;
 	private final LoggerEx log;
 	private final SfcBrowserRequestHandler requestHandler;
-	private final SFCWorkspace workspace;
+	private final SfcWorkspace workspace;
 	
 	/**
 	 * Constructor
 	 */
-	public ChartRunner(DesignerContext ctx,SFCWorkspace wksp,boolean isIsolation) {
+	public ChartRunner(DesignerContext ctx,SfcWorkspace wksp,boolean isIsolation) {
 		this.context = ctx;
 		this.isolationMode = isIsolation;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
@@ -32,7 +32,7 @@ public class ChartRunner implements Runnable {
 	
 	// ============================= Runnable ========================
 	public void run() {
-		SFCDesignableContainer tab = workspace.getSelectedContainer();
+		SfcDesignableContainer tab = workspace.getSelectedContainer();
 		if( tab!=null ) {
 			long resourceId = workspace.getSelectedContainer().getResourceId();
 			String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);

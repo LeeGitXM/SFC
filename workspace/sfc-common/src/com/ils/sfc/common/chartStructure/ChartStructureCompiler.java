@@ -17,7 +17,7 @@ import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.StepRegistry;
-import com.inductiveautomation.sfc.api.XMLParseException;
+import com.inductiveautomation.sfc.api.XmlParseException;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
 import com.inductiveautomation.sfc.definitions.ParallelDefinition;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
@@ -109,7 +109,7 @@ public class ChartStructureCompiler {
 					byte[] chartResourceData = res.getData();					
 					//IlsSfcCommonUtils.printResource(data);					
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
-					ChartUIModel uiModel = ChartUIModel.fromXML(xmlInput, stepRegistry );
+					ChartUIModel uiModel = ChartUIModel.fromXml(xmlInput, stepRegistry );
 					ChartModelInfo info = new ChartModelInfo(uiModel,res,path);
 					modelInfoByResourceId.put(new Long(res.getResourceId()),info);
 					modelInfoByChartPath.put(path,info);
@@ -119,7 +119,7 @@ public class ChartStructureCompiler {
 					log.errorf("loadModels: Exception reading %s:%d (%s)",path,res.getResourceId(),ioe.getLocalizedMessage());
 					success = false;
 				}
-				catch(XMLParseException xpe) {
+				catch(XmlParseException xpe) {
 					log.errorf("loadModels: Error deserializing %s:%d (%s)",path,res.getResourceId(),xpe.getLocalizedMessage());
 					success = false;
 				}

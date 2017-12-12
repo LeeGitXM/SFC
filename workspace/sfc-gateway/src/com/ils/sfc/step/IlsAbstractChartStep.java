@@ -1,12 +1,11 @@
 package com.ils.sfc.step;
 
-import org.apache.log4j.LogManager;
-
-import system.ils.sfc.common.Constants;
+import org.w3c.dom.Element;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.step.annotation.ILSStep;
+import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.ChartContext;
 import com.inductiveautomation.sfc.api.ScopeContext;
@@ -14,6 +13,9 @@ import com.inductiveautomation.sfc.api.elements.AbstractChartElement;
 import com.inductiveautomation.sfc.api.elements.StepController;
 import com.inductiveautomation.sfc.api.elements.StepElement;
 import com.inductiveautomation.sfc.definitions.StepDefinition;
+import com.inductiveautomation.sfc.uimodel.ChartUIElement;
+
+import system.ils.sfc.common.Constants;
 
 /**
  * This abstract class is the basis of all custom steps. 
@@ -24,7 +26,7 @@ import com.inductiveautomation.sfc.definitions.StepDefinition;
  */
 @ILSStep
 public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefinition> implements StepElement {
-	private final LoggerEx logger = new LoggerEx(LogManager.getLogger("sfc.steps.IlsAbstractChartStep"));
+	private final LoggerEx logger =LogUtil.getLogger(getClass().getPackage().getName());
 	protected ScopeContext scopeContext;
 	volatile boolean paused = false;
 	volatile boolean cancelled = false;
@@ -206,7 +208,11 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 		//On resume, we can just continue the work that we were previously doing.
 		controller.execute(this::doWork);
 	}
-
+	
+	public String fromXML(Element element,ChartUIElement chartUIElement) {
+		return "XML";		
+	}
+	
 	protected abstract PythonCall getPythonCall();
 	
 	/** Get the name of a step from its definition */

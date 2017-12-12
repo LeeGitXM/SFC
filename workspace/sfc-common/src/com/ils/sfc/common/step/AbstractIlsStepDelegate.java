@@ -19,7 +19,7 @@ import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.StepDelegate;
-import com.inductiveautomation.sfc.api.XMLParseException;
+import com.inductiveautomation.sfc.api.XmlParseException;
 import com.inductiveautomation.sfc.elements.steps.ExpressionParamCollection;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.elements.steps.enclosing.ExecutionMode;
@@ -77,14 +77,19 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	public static void setStructureManager(ChartStructureManager mgr) { structureManager = mgr; }
 	
 	@Override
-	public void toXML(XMLStreamWriter writer, ChartUIElement element, String arg2)
+	public void toXml(XMLStreamWriter writer, ChartUIElement element, String arg2)
 			throws XMLStreamException {
 		IlsSfcCommonUtils.toXML(writer, element);
 	}
 
+
+	public void fromXML(Element dom, ChartUIElement ui) {
+		
+	}
+	
 	@Override
-	public void fromXML(Element dom, ChartUIElement ui)
-		throws XMLParseException {
+	public void fromXml(Element dom, ChartUIElement ui)
+		throws XmlParseException {
 		for(Property<?> property: orderedProperties) {
 			String stringValue = IlsSfcCommonUtils.getPropertyAsString(property, dom);
 			String stepName = IlsSfcCommonUtils.getPropertyAsString(IlsProperty.NAME, dom);
@@ -95,7 +100,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 					checkValueChoices(property, stepName, value);
 				}
 				catch(ParseException e) {
-					log.warn("fromXML: Error deserializing step property "+property+" from "+stringValue, e);
+					log.warn("fromXml: Error deserializing step property "+property+" from "+stringValue, e);
 					value = stringValue;
 				}
 			}
@@ -113,14 +118,14 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 					value = property.getDefaultValue();
 				}
 				if(value == null) {
-					log.warn("fromXML:Step property "+property+" missing in supplied DOM for " + ui.getType() + "; will use default");
+					log.warn("fromXml:Step property "+property+" missing in supplied DOM for " + ui.getType() + "; will use default");
 				}
 			}
 			if(value != null) {
 				ui.setDirect(property, value);
 			}
 			else if(!IlsProperty.isHiddenProperty(property.getName())) {
-				log.warn("fromXML: Unable to get value for Step property " + property + "; will be missing");				
+				log.warn("fromXml: Unable to get value for Step property " + property + "; will be missing");				
 			}
 		}
 	}
