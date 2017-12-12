@@ -81,11 +81,6 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 			throws XMLStreamException {
 		IlsSfcCommonUtils.toXML(writer, element);
 	}
-
-
-	public void fromXML(Element dom, ChartUIElement ui) {
-		
-	}
 	
 	@Override
 	public void fromXml(Element dom, ChartUIElement ui)
