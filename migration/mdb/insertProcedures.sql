@@ -49,7 +49,6 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc_r1_c2_prob
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc_r1_vis_problem-output-uir','ils.gline.polyprod.r1VisUir.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-reslurry-problem-output-gda','ils.vistalon.fd.ReslurryOutput.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-sdstrm_c3-outputs-gda','xom.vistalon.crx.SdstrmC3.calculate');
-insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-swap_cntr_feeds-outputs-gda','project.vistalon.crx.SwapCenterFeedsOutputs.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-swap_frnt_feeds-outputs-gda','project.vistalon.crx.SwapFrontFeedsOutputs.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('change-attribute','__setattr__');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('change-element','ils.blt.lib.changeArrayElement');
