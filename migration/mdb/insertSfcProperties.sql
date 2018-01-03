@@ -237,6 +237,9 @@ insert into SfcPropertyMap values ('com.ils.procedureStep','return-parameters','
 
 
 -- WRITE OUTPUT
+insert into SfcPropertyMap values ('com.ils.writeOutputStep','errorCountKey','');
+insert into SfcPropertyMap values ('com.ils.writeOutputStep','errorCountMode','');
+insert into SfcPropertyMap values ('com.ils.writeOutputStep','errorCountScope','');
 insert into SfcPropertyMap values ('com.ils.writeOutputStep','globalErrorCountKey','');
 insert into SfcPropertyMap values ('com.ils.writeOutputStep','globalErrorCountLocation','');
 insert into SfcPropertyMap values ('com.ils.writeOutputStep','recipeLocation','recipeLocation');

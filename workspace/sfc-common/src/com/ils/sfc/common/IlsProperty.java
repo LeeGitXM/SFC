@@ -638,7 +638,7 @@ public class IlsProperty {
 				logger.errorf("no translation for g2 value %s in property %s factoryId %s", g2Value, property.getName(), factoryId);
 			}
 			else {
-				logger.infof("translated g2 value %s -> %s in property %s factoryId %s", g2Value, transValue, property.getName(), factoryId);
+				logger.debugf("translated g2 value %s -> %s in property %s factoryId %s", g2Value, transValue, property.getName(), factoryId);
 			}
 			return transValue;
 		}

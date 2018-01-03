@@ -340,7 +340,7 @@ public class StepLayoutManager {
 			// If we reference a block that is already connected, and not in a parallel zone
 			// then create an anchor. Multiple inputs are expected for an ending parallel block.
 			if( childlocation.isConnected() && pa==null ) {
-				createAnchor(stepId,childuuid);
+				if( !createAnchor(stepId,childuuid) ) break;  // Give up
 			}
 			else {
 				GridPoint parentlocation = gridMap.get(stepId);  // Can change between siblings
@@ -353,13 +353,13 @@ public class StepLayoutManager {
 	}
 	
 	/**
-	 * Create an anchor plus a corresponding jumps for every block connecting to it.  
+	 * Create an anchor plus corresponding jumps for every block connecting to it.  
 	 * @param upstreamStepId the uuid of the upstream block
 	 * @param stepId target step
 	 * @param stepHub the connection hub of the block
 	 * @return
 	 */
-	private void createAnchor(String source,String target) {
+	private boolean createAnchor(String source,String target) {
 		String parent = null;  // The parent of the target block
 		ConnectionHub targetHub = connectionMap.get(target);
 		for(String from:targetHub.getConnectionsFrom() ) {
@@ -373,7 +373,7 @@ public class StepLayoutManager {
 		
 		if( parent==null ) {
 			log.errorf("%s.createAnchor: Unable to find parent of target %s",TAG,target);
-			return;
+			return false;
 		}
 		
 		// Search all steps with connections to the target
@@ -440,6 +440,7 @@ public class StepLayoutManager {
 		}
 
 		anchorCount++;
+		return true;
 	}
 	
 	// The original layout may create indices that are out-of-range.

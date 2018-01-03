@@ -1,4 +1,3 @@
--- Map G2 block properties into Ignition block properties
 -- Columns are: G2Class, G2Property, ignition propertyName, datatype, editable, binding type
 insert into BltPropertyMap values ('EM-GDA-ABSOLUTE-COMPARE','bandwidth','deadband','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('EM-GDA-ABSOLUTE-COMPARE','label','','STRING',1,'NONE');
@@ -93,7 +92,7 @@ insert into BltPropertyMap values ('GDL-DATA-SHIFT','sampleType','','STRING',1,'
 insert into BltPropertyMap values ('GDL-DISCRETE-RATE-OF-CHANGE','eraseHistoryWhenReset','ClearOnReset','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-DISCRETE-RATE-OF-CHANGE','linearInterpolation','','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-DISCRETE-RATE-OF-CHANGE','polynomialOrder','PolynomialOrder','INTEGER',1,'NONE');
-insert into BltPropertyMap values ('GDL-DISCRETE-RATE-OF-CHANGE','requireFullHistory','FillRequired','BOOLEAN',1,'NONE');
+insert into BltPropertyMap values ('GDL-DISCRETE-RATE-OF-CHANGE','requireFullHistory','','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-DISCRETE-RATE-OF-CHANGE','sampleType','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-DISCRETE-RATE-OF-CHANGE','sampleSize','NumberOfPoints','INTEGER',1,'NONE');
 insert into BltPropertyMap values ('GDL-DISCRETE-RATE-OF-CHANGE','scaleFactor','ScaleFactor','DOUBLE',1,'NONE');
@@ -214,6 +213,7 @@ insert into BltPropertyMap values ('GDL-TWO-OPTION-USER-QUERY-CONTROL-SWITCH','d
 insert into BltPropertyMap values ('GDL-TWO-OPTION-USER-QUERY-CONTROL-SWITCH','messageText','MessageText','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-TWO-OPTION-USER-QUERY-CONTROL-SWITCH','option1Description','Description1','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-TWO-OPTION-USER-QUERY-CONTROL-SWITCH','option2Description','Description2','STRING',1,'NONE');
+insert into BltPropertyMap values ('OPC-INT-BAD-FLAG','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('OPC-FLOAT-BAD-FLAG','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('OPC-FLOAT-OUTPUT','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('OPC-INT-OUTPUT','label','','STRING',1,'NONE');

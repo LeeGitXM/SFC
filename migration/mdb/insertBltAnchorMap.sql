@@ -156,6 +156,7 @@ insert into BltAnchorMap values ('GDL-LOW-VALUE-OBSERVATION','CP-OUT','out','');
 insert into BltAnchorMap values ('GDL-MOVING-AVERAGE','DP-IN','in','');
 insert into BltAnchorMap values ('GDL-MOVING-AVERAGE','DP-OUT','out','');
 insert into BltAnchorMap values ('GDL-MULTI-STATE-OBSERVATION','DP-IN','in','');
+insert into BltAnchorMap values ('GDL-MULTI-STATE-OBSERVATION','DP-OUT','out','');
 insert into BltAnchorMap values ('GDL-N-TRUE-GATE','IP-IN','in','');
 insert into BltAnchorMap values ('GDL-N-TRUE-GATE','IP-OUT','out','');
 insert into BltAnchorMap values ('GDL-NOT-GATE','IP-IN','in','');
@@ -209,6 +210,10 @@ insert into BltAnchorMap values ('LOGICAL-PARAMETER','IP-IN','in','');
 insert into BltAnchorMap values ('LOGICAL-PARAMETER','IP-OUT','out','');
 insert into BltAnchorMap values ('LOGICAL-VARIABLE','IP-IN','in','');
 insert into BltAnchorMap values ('LOGICAL-VARIABLE','IP-OUT','out','');
+insert into BltAnchorMap values ('OPC-FLOAT-BAD-FLAG','IP-IN','in','');
+insert into BltAnchorMap values ('OPC-FLOAT-BAD-FLAG','IP-OUT','out','');
+insert into BltAnchorMap values ('OPC-INT-BAD-FLAG','IP-IN','in','');
+insert into BltAnchorMap values ('OPC-INT-BAD-FLAG','IP-OUT','out','');
 insert into BltAnchorMap values ('SYMBOLIC-PARAMETER','IP-IN','in','');
 insert into BltAnchorMap values ('SYMBOLIC-PARAMETER','IP-OUT','out','');
 
