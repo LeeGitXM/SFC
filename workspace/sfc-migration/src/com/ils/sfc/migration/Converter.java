@@ -485,9 +485,11 @@ public class Converter {
 	
 	/**
 	 * If the G2 block maps to action-step, then look for a "callback" then read its converted value from the 
-	 * file system and insert as a step property.
+	 * file system and insert as a step property.  
 	 * 
-	 * @param step
+	 * NOTE: This is currently not called --- we leave the callbacks to be configured manually.
+	 * 
+	 * @param step 
 	 * @param g2block
 	 */
 	public void insertOnStartFromG2Block(Document chart,Element step,Element g2block) {
