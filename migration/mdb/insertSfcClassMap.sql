@@ -8,6 +8,7 @@ insert into SfcClassMap values ('LONG-RUNNING-STEP-TRANSITION','transition','tra
 insert into SfcClassMap values ('S88-ABORT-BLOCK', 'transition','transition',0);
 insert into SfcClassMap values ('S88-ABORT-TASK', 'com.ils.abortStep','',0);
 insert into SfcClassMap values ('S88-ACTIVATE-WORKSPACE','com.ils.showWindowStep','',1);         -- target, targetType,postDwellTime
+insert into SfcClassMap values ('S88-ADVANCED-CONDITIONAL-TRANSITION','transition','transition',0);
 insert into SfcClassMap values ('S88-BEGIN','begin-step','',0);
 insert into SfcClassMap values ('S88-CALLBACK','action-step','',0);
 insert into SfcClassMap values ('S88-CLEAR-QUEUE-TASK','com.ils.clearQueueStep','',0);
