@@ -86,7 +86,8 @@ public class StepTranslator {
 				step.setAttribute("execution-mode", "RunUntilCompletion");   // versus RunUntilStopped
 			}
 			if( factoryId.equalsIgnoreCase("action-step") ) {
-				delegate.insertOnStartFromG2Block(chart,step,block);
+				//delegate.insertOnStartFromG2Block(chart,step,block);
+				;
 			}
 			else {
 				delegate.updateStepFromG2Block(chart,step,block);
