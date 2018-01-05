@@ -308,10 +308,25 @@ insert into TagMap values ('[the target of TPU_JRX_SP]','[]LabData/TPU/TPU-JRX-S
 -- SFCs
 insert into TagMap values ('RBF103','[]Site/RBF103','DOUBLE');
 insert into TagMap values ('RCF111','[]Site/RCF111','DOUBLE');
+insert into TagMap values ('RCF101R.feedstream','[]Site/RCF101R/feedstream','DOUBLE');
+insert into TagMap values ('RCF102R.feedstream','[]Site/RCF102R/feedstream','DOUBLE');
+insert into TagMap values ('RCF103R.feedstream','[]Site/RCF103R/feedstream','DOUBLE');
+insert into TagMap values ('RCF105R.feedstream','[]Site/RCF105R/feedstream','DOUBLE');
+insert into TagMap values ('RCF106R.feedstream','[]Site/RCF106R/feedstream','DOUBLE');
+insert into TagMap values ('RCF109R.feedstream','[]Site/RCF109R/feedstream','DOUBLE');
+insert into TagMap values ('RCF112R.feedstream','[]Site/RCF112R/feedstream','DOUBLE');
+insert into TagMap values ('RCF123R.feedstream','[]Site/RCF123R/feedstream','DOUBLE');
+insert into TagMap values ('RCF124R.feedstream','[]Site/RCF124R/feedstream','DOUBLE');
+insert into TagMap values ('RCF125R.feedstream','[]Site/RCF125R/feedstream','DOUBLE');
 insert into TagMap values ('RCL117','[]Site/RCL117','DOUBLE');
 insert into TagMap values ('RCS426','[]Site/RCS426','DOUBLE');
 insert into TagMap values ('RCS900ME','[]Site/RCS900ME','DOUBLE');
 insert into TagMap values ('RCS900ME2','[]Site/RCS900ME2','DOUBLE');
+insert into TagMap values ('RCV303','[]Site/RCV303','DOUBLE');
+insert into TagMap values ('RCW415','[]Site/RCW415','DOUBLE');
+insert into TagMap values ('RKA670LT.784','[]Site/RKA670LT_784','DOUBLE');
+insert into TagMap values ('RKA670Z1LT0.05','[]Site/RKA670Z1LT0_05','DOUBLE');
+insert into TagMap values ('RKA670LT.784','[]Site/RKA670LT_784','DOUBLE');
 insert into TagMap values ('E1000-TFA-SEQ-RFF103','[]Site/E1000-TFA-SEQ-RFF103','DOUBLE');
 insert into TagMap values ('E1000-TFA-SEQ-RMF116','[]Site/E1000-TFA-SEQ-RMF116','DOUBLE');
 insert into TagMap values ('E1000-TFA-SEQ-RMS404','[]Site/E1000-TFA-SEQ-RMS404','DOUBLE');
@@ -319,6 +334,8 @@ insert into TagMap values ('E1000-TFA-SEQ-RMV405-OP','[]Site/E1000-TFA-SEQ-RMV40
 insert into TagMap values ('E1000-TFA-SEQ-RMV406-OP','[]Site/E1000-TFA-SEQ-RMV406-OP','DOUBLE');
 insert into TagMap values ('E1000-TFA-SEQ-RMV407-OP','[]Site/E1000-TFA-SEQ-RMV407-OP','DOUBLE');
 insert into TagMap values ('E1000-TFA-SEQ-RMV408-OP','[]Site/E1000-TFA-SEQ-RMV408-OP','DOUBLE');
+insert into TagMap values ('the write-target of RKF100','[]LabData/RKF100/target','DOUBLE');
+insert into TagMap values ('the write-target of RKF145','[]LabData/RKF145/target','DOUBLE');
 
 -- ================================================== VISTALON ========================================
 insert into TagMap values ('A-BALER-TEMP-LAB-DATA','[]LabData/VFU/A-BALER-TEMP-LAB-DATA/value','DOUBLE');

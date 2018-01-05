@@ -3,9 +3,15 @@
  */
 package com.ils.sfc.migration.translation;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.ils.sfc.migration.Converter;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -20,6 +26,15 @@ public class TransitionTranslator {
 	private  final LoggerEx log = LogUtil.getLogger(StepTranslator.class.getPackage().getName());
 	private final Element g2Block;
 	private final Converter delegate;
+	private final static Map<String,String> conversionMap;
+	
+	// Build a map of operator translations from G2 to Ignition
+	static {
+		conversionMap = new HashMap<>();
+		conversionMap.put("/=", "!=");
+		conversionMap.put("LE", "<=");
+		conversionMap.put("GE", ">=");
+	}
 
 	public TransitionTranslator(Element block,Converter converter) {
 		this.g2Block = block;
@@ -44,6 +59,11 @@ public class TransitionTranslator {
 		String operator    = g2Block.getAttribute("operator");
 		if( clss.equalsIgnoreCase("LONG-RUNNING-STEP-TRANSITION")) {
 			expression = "{previous.workDone}";
+		}
+		else if( clss.equalsIgnoreCase("S88-ADVANCED-CONDITIONAL-TRANSITION")) {
+			String genericFormula = g2Block.getAttribute("generic-formula");
+			NodeList conditions = g2Block.getElementsByTagName("condition");
+			expression = handleAdvancedConditionalTranslation(genericFormula,conditions);
 		}
 		else if( strategy.equalsIgnoreCase("RECIPE-DATA") && targetStrategy.equalsIgnoreCase("CONSTANT-VALUE")) {
 			expression = handleRecipeValue(recipeLocation,item,constant,operator);
@@ -121,6 +141,64 @@ public class TransitionTranslator {
 		}
 		
 	}
+	// The generic formula has a very specific structure, e.g c2 and c1. Simply use this structure
+	// and substitute the specifics.
+	private String handleAdvancedConditionalTranslation(String genericFormula,NodeList conditions) {
+		String ans = "true";
+		ans = genericFormula;
+		int count = conditions.getLength();
+		int index = 0;
+		while( index<count ) {
+			Element condition = (Element)conditions.item(index);
+			String specific = condition.getAttribute("specific-formula");
+			// The conditional expressions are free-Form.class We just don't know how free.
+			// Assume numeric constants, operators and G2 tag names. Handle operators like LE, GE.
+			List<String> tokens = new ArrayList<>();
+			// Find strings within parentheses
+			int pos1 = specific.indexOf("(");
+			int pos2 = specific.indexOf(")");
+			while( pos1>=0 ) {
+				String[] pretokens = specific.substring(0, pos1).split("[ ]+");
+				for(String token:pretokens) {
+					tokens.add(token);
+				}
+				tokens.add(specific.substring(pos1+1,pos2));
+				specific = specific.substring(pos2+1);
+				pos1 = specific.indexOf("(");
+				pos2 = specific.indexOf(")");
+			}
+			String[] posttokens = specific.split("[ ]+");
+			for(String token:posttokens) {
+				tokens.add(token);
+			}
+				
+			StringBuffer sb = new StringBuffer();
+			sb.append("(");
+			for(String token:tokens) {
+				if( token.isEmpty()) continue;
+				// If we can do a tag lookup, then do it, else pass along literally
+				String tagPath = delegate.getTagMapper().getTagPath(token.toLowerCase());
+				if( tagPath!=null ) {
+					sb.append(String.format("{%s}",locatorPath(tagPath)));
+				}
+				else {
+					String converted = conversionMap.get(token);
+					if( converted!=null) sb.append(converted);
+					else sb.append(token);
+				}
+				sb.append(" ");
+			}
+			sb.append(")");
+			String order = "c"+condition.getAttribute("order");
+			ans = ans.replace(order, sb.toString());
+			ans = ans.replaceAll("&quot;","\"");
+			index++;
+		}
+		//log.infof("TRANSITION-TRANSLATOR: %s", ans);
+		return ans;
+	}
+	
+	
 	// QUESTION: How does a recipe block differ from a simple value.
 	private String handleRecipeBlockValue(String recipeLocation,String item,String constant,String operator) {
 		String ans = "true";
