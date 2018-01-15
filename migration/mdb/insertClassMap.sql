@@ -60,7 +60,7 @@ insert into ClassMap values ('GDL-LOW-LIMITING','com.ils.block.LowLimit');
 insert into ClassMap values ('GDL-LOW-VALUE-OBSERVATION','com.ils.block.LowLimitObservation');
 insert into ClassMap values ('GDL-LOW-VALUE-PATTERN','com.ils.block.LowValuePattern');
 insert into ClassMap values ('GDL-MOVING-AVERAGE','com.ils.block.MovingAverageSample');
-insert into ClassMap values ('GDL-MULTI-STATE-OBSERVATION','com.ils.block.MultiStateObservation');
+insert into ClassMap values ('GDL-MULTI-STATE-OBSERVATION','com.ils.block.StateLookup');
 insert into ClassMap values ('GDL-NOT-GATE','com.ils.block.Not');
 insert into ClassMap values ('GDL-N-TRUE-GATE','com.ils.block.NTrue');
 insert into ClassMap values ('GDL-NUMERIC-ENTRY-POINT','com.ils.block.Input');
