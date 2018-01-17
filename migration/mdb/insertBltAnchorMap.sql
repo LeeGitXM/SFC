@@ -156,7 +156,7 @@ insert into BltAnchorMap values ('GDL-LOW-VALUE-OBSERVATION','CP-OUT','out','');
 insert into BltAnchorMap values ('GDL-MOVING-AVERAGE','DP-IN','in','');
 insert into BltAnchorMap values ('GDL-MOVING-AVERAGE','DP-OUT','out','');
 insert into BltAnchorMap values ('GDL-MULTI-STATE-OBSERVATION','DP-IN','in','');
-insert into BltAnchorMap values ('GDL-MULTI-STATE-OBSERVATION','DP-OUT','out','');
+insert into BltAnchorMap values ('GDL-MULTI-STATE-OBSERVATION','IP-OUT-2','out','');
 insert into BltAnchorMap values ('GDL-N-TRUE-GATE','IP-IN','in','');
 insert into BltAnchorMap values ('GDL-N-TRUE-GATE','IP-OUT','out','');
 insert into BltAnchorMap values ('GDL-NOT-GATE','IP-IN','in','');
