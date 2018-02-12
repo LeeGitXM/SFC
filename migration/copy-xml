@@ -25,9 +25,9 @@ mkdir -p $XML/vetted/vistalon
 cd "${SVNESCRAW}"
 for dir in *
 do
-   if [ -d $dir ]
+   if [ -d "$dir" ]
    then
-      cd $dir
+      cd "$dir"
       echo `pwd`
       mkdir -p $XML/g2/escorez/$dir
 	  cd XML
@@ -38,9 +38,9 @@ done
 cd "${SVNGLINERAW}"
 for dir in *
 do
-   if [ -d $dir ]
+   if [ -d "$dir" ]
    then
-      cd $dir
+      cd "$dir"
       echo `pwd`
       mkdir -p $XML/g2/gline/$dir
 	  cd XML

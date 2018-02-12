@@ -51,17 +51,19 @@ public class ConnectionRouter {
 	private void createConnections() {
 		for(String blockuuid:connectionMap.keySet()) {
 			GridPoint source = gridMap.get(blockuuid);
-			if( !source.isConnected())  continue;
+			if( source==null || !source.isConnected())  continue;
 			ConnectionHub hub = connectionMap.get(blockuuid);
 			for(String destuuid:hub.getConnectionsTo()) {
 				GridPoint destination = gridMap.get(destuuid);
-				// If the destination has never been positioned place below the source
-				if( destination.x==GridPoint.UNSET ) {
-					log.infof("%s.createConnections: Step %s has never been positioned.",TAG,destuuid);
-					destination.x = source.x;
-					destination.y = source.y+1;
+				if( destination!=null ) {
+					// If the destination has never been positioned place below the source
+					if( destination.x==GridPoint.UNSET ) {
+						log.infof("%s.createConnections: Step %s has never been positioned.",TAG,destuuid);
+						destination.x = source.x;
+						destination.y = source.y+1;
+					}
+					route(source,destination,hub,connectionMap.get(destuuid));
 				}
-				route(source,destination,hub,connectionMap.get(destuuid));
 			}
 		}
 	}
@@ -89,7 +91,7 @@ public class ConnectionRouter {
 		for( String key: connectionMap.keySet()) {
 			GridPoint gp = gridPointMap.get(key);
 			ConnectionHub hub = connectionHubMap.get(key);
-			if( !gp.isConnected()) continue;
+			if( gp==null || hub==null || !gp.isConnected()) continue;
 			if( gp.x>maxx ) maxx = gp.x;
 			if( gp.y>maxy ) maxy = gp.y;
 			ParallelArea pa = hub.getParallelArea();

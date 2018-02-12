@@ -82,7 +82,7 @@ public class StepTranslator {
 				String chartPath = delegate.partialPathFromInfile(reference);
 				
 				step.setAttribute(Constants.CHART_PATH, chartPath);
-				log.tracef("%s.translate: Encapsulation: %s translates to %s",CLSS,reference,chartPath);
+				log.infof("%s.translate: Encapsulation: %s translates to %s",CLSS,name,chartPath);
 				step.setAttribute("execution-mode", "RunUntilCompletion");   // versus RunUntilStopped
 			}
 			if( factoryId.equalsIgnoreCase("action-step") ) {
