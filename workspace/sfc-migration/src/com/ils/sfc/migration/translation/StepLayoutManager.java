@@ -151,7 +151,7 @@ public class StepLayoutManager {
 	}
 	// ========================================= This is where the work gets done ================================
 	// Analyze a list of G2 blocks
-	// Note: the blocklist contains transitions
+	// Note: the blocklist contains transitions.
 	private void analyze(NodeList blocklist) {
 		int index = 0;
 		// First-time through create default entries in the grid map
@@ -171,31 +171,35 @@ public class StepLayoutManager {
 				parallelMap.put(uuid, new ParallelArea(e));
 				hub.setParallelBlock(true);
 			}
+
 			index++;
 		}
-		// Loop one more time, creating the connections
+		// Loop one more time, creating the connections.
+		// Ignore connections to selfs
 		index = 0;
 		while( index<blocklist.getLength() ) {
 			Element block = (Element)blocklist.item(index);
 			String uuid = StepTranslator.canonicalForm(block.getAttribute("uuid"));
 			ConnectionHub hub = connectionMap.get(uuid);
-			NodeList connections = block.getElementsByTagName("connectedTo");
-			int jndex = 0;
-			while( jndex < connections.getLength() ) {
-				Element connection = (Element)connections.item(jndex);
-				String cxn = StepTranslator.canonicalForm(connection.getAttribute("uuid"));
-				if(DEBUG || log.isDebugEnabled()) {
-					Element to = blockMap.get(cxn);
-					log.infof("%s.analyze: %s(%s) connected to %s(%s)",TAG,block.getAttribute("name"),uuid,to.getAttribute("name"),cxn);
+			if( hub!=null  ) {
+				NodeList connections = block.getElementsByTagName("connectedTo");
+				int jndex = 0;
+				while( jndex < connections.getLength() ) {
+					Element connection = (Element)connections.item(jndex);
+					String cxn = StepTranslator.canonicalForm(connection.getAttribute("uuid"));
+					if(DEBUG || log.isDebugEnabled()) {
+						Element to = blockMap.get(cxn);
+						log.infof("%s.analyze: %s(%s) connected to %s(%s)",TAG,block.getAttribute("name"),uuid,to.getAttribute("name"),cxn);
+					}
+					ConnectionHub destinationHub = connectionMap.get(cxn);
+					if( destinationHub==null) {
+						destinationHub = new ConnectionHub(chart.getDocumentElement());
+						connectionMap.put(cxn,destinationHub);
+					}
+					hub.addConnectionTo(cxn);
+					destinationHub.addConnectionFrom(uuid);
+					jndex++;
 				}
-				ConnectionHub destinationHub = connectionMap.get(cxn);
-				if( destinationHub==null) {
-					destinationHub = new ConnectionHub(chart.getDocumentElement());
-					connectionMap.put(cxn,destinationHub);
-				}
-				hub.addConnectionTo(cxn);
-				destinationHub.addConnectionFrom(uuid);
-				jndex++;
 			}
 			index++;
 		}
@@ -316,7 +320,7 @@ public class StepLayoutManager {
 		
 		// By default position one step down. From here on x,y are for next blocks ...
 		y = y+1;
-		if(DEBUG || log.isDebugEnabled()) {
+		if(log.isDebugEnabled()) {
 			Element blk = blockMap.get(stepId);
 			if( blk!=null )
 				log.infof("%s.positionNode: at %d,%d %s(%s) ", TAG,gp.x,gp.y,blk.getAttribute("name"),stepId);
@@ -335,19 +339,23 @@ public class StepLayoutManager {
 		}
 		 	
 		int index = 0;
+		int blockCount = nextBlocks.size();
 		for( String childuuid:nextBlocks) {
 			GridPoint childlocation = gridMap.get(childuuid);
 			// If we reference a block that is already connected, and not in a parallel zone
 			// then create an anchor. Multiple inputs are expected for an ending parallel block.
-			if( childlocation.isConnected() && pa==null ) {
-				if( !createAnchor(stepId,childuuid) ) break;  // Give up
+			// Fail if the connection is to a transition (legal in G2, not Ignition).
+			if( childlocation!=null ) {
+				if( childlocation.isConnected()  ) {
+					createAnchor(stepId,childuuid);
+				}
+				else {
+					GridPoint parentlocation = gridMap.get(stepId);  // Can change between siblings
+					int dy = 1;
+					if( blockCount >= 2 && !stepHub.isParallelBlock() ) dy++; // Allow for horizontal connections
+					positionNode(stepId,childuuid,parentlocation.x-dx+index*2,parentlocation.y+dy);
+				} 
 			}
-			else {
-				GridPoint parentlocation = gridMap.get(stepId);  // Can change between siblings
-				int dy = 1;
-				if( nextBlocks.size() >= 2 && !stepHub.isParallelBlock() ) dy++; // Allow for horizontal connections
-				positionNode(stepId,childuuid,parentlocation.x-dx+index*2,parentlocation.y+dy);
-			} 
 			index++;
 		}
 	}
@@ -359,7 +367,7 @@ public class StepLayoutManager {
 	 * @param stepHub the connection hub of the block
 	 * @return
 	 */
-	private boolean createAnchor(String source,String target) {
+	private void createAnchor(String source,String target) {
 		String parent = null;  // The parent of the target block
 		ConnectionHub targetHub = connectionMap.get(target);
 		for(String from:targetHub.getConnectionsFrom() ) {
@@ -373,7 +381,7 @@ public class StepLayoutManager {
 		
 		if( parent==null ) {
 			log.errorf("%s.createAnchor: Unable to find parent of target %s",TAG,target);
-			return false;
+			return;
 		}
 		
 		// Search all steps with connections to the target
@@ -440,7 +448,7 @@ public class StepLayoutManager {
 		}
 
 		anchorCount++;
-		return true;
+		return;
 	}
 	
 	// The original layout may create indices that are out-of-range.
@@ -592,7 +600,7 @@ public class StepLayoutManager {
 			for(String child:hub.getConnectionsTo() ) {
 				if( moved.contains(child)) continue;
 				GridPoint gp = gridMap.get(child);
-				if( !gp.isConnected() ) continue;
+				if( gp==null || !gp.isConnected() ) continue;
 				if( gp.y<ploc.y-2 ) continue;
 				ParallelArea pa = parallelMap.get(child);
 				if( pa!=null ) {
@@ -646,7 +654,7 @@ public class StepLayoutManager {
 	}
 	
 	private Element createAnchorElement(Document chart,String uuid,int count) {
-		if(DEBUG || log.isDebugEnabled()) log.infof("%s.createAnchor: %c %s", TAG,'A'+count,uuid);
+		if(DEBUG || log.isDebugEnabled()) log.infof("%s.createAnchorElement: %c %s", TAG,'A'+count,uuid);
 		Element e = chart.createElement("anchor");
 		e.setAttribute("id", uuid);
 		Node node = chart.createTextNode(String.format("%c",'A'+count));
