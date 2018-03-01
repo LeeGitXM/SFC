@@ -31,7 +31,7 @@ public class TagChartScope extends PyChartScope {
 	private final Map<String,ListenerInfo> listenersByKey = new HashMap<String, ListenerInfo>();
 	private String key;
 	
-	static class ListenerInfo {
+	public class ListenerInfo {
 		public TagPath tagPath;
 		public TagListener tagListener;
 		
@@ -45,6 +45,7 @@ public class TagChartScope extends PyChartScope {
 	public TagChartScope(String providerName, GatewayContext gatewayContext) {
 		this.providerName = providerName;
 		this.context = gatewayContext;
+		if( DEBUG ) log.infof("new tagchartscope");
 	}
 	
 	@Override
@@ -88,7 +89,7 @@ public class TagChartScope extends PyChartScope {
 					// Read the tag return its value.
 					if( DEBUG ) log.infof("get: return %s = %s", tag.getName(), tag.getValue().getValue());
 					if(!listenersByKey.containsKey(tag.getName())) {
-						addValueChangeListener(key, tp);
+						addValueChangeListener(tag.getName(), tp);
 					}
 					return tag.getValue().getValue();
 				}
