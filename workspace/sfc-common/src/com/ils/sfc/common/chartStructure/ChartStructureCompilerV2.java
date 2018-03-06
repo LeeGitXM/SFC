@@ -43,8 +43,7 @@ public class ChartStructureCompilerV2 {
 	 *  compile so some useful information is available even if there are errors. A null return indicates
 	 *  the errors were severe enough we couldn't get any useful info.
 	 */
-	public void compileResource(ProjectResource res) {
-		boolean success = true;
+	public void compileResource (ProjectResource res)  throws IOException, JythonExecException, XmlParseException  {
 		String chartPath;
 		long resourceId;
 		
@@ -68,7 +67,7 @@ public class ChartStructureCompilerV2 {
 //			createChart(res);
 			
 			log.infof("Compiling a SFC chart resource. Path: %s, Name: %s, id: %d", chartPath, res.getName(), resourceId);
-			try {
+//			try {
 				byte[] chartResourceData = res.getData();
 
 				// This prints out nicely formatted XML of the resource.
@@ -139,23 +138,21 @@ public class ChartStructureCompilerV2 {
 
 				// Update the database with the children
 
-				try {
+//				try {
 					Object[] args = {chartPath, resourceId, stepNames, stepUUIDs, stepFactoryIds, childPaths, childNames, childUUIDs, childTypes, database};
 					PythonCall.UPDATE_CHART_HIERARCHY.exec( args );
-				} 
-				catch (JythonExecException e) {
-					log.errorf("%s: Error in python (update chart hierarchy): %s",CLSS,e.getLocalizedMessage());
-				}
-
-			}
-			catch(IOException ioe) {
-				log.errorf("loadModels: Exception reading %s:%d (%s)",chartPath,res.getResourceId(),ioe.getLocalizedMessage());
-				success = false;
-			}
-			catch(XmlParseException xpe) {
-				log.errorf("loadModels: Error deserializing %s:%d (%s)",chartPath,res.getResourceId(),xpe.getLocalizedMessage());
-				success = false;
-			}
+//				} 
+//				catch (JythonExecException e) {
+//					log.errorf("%s: Error in python (update chart hierarchy): %s",CLSS,e.getLocalizedMessage());
+//				}
+//
+//			}
+//			catch(IOException ioe) {
+//				log.errorf("loadModels: Exception reading %s:%d (%s)",chartPath,res.getResourceId(),ioe.getLocalizedMessage());
+//			}
+//			catch(XmlParseException xpe) {
+//				log.errorf("loadModels: Error deserializing %s:%d (%s)",chartPath,res.getResourceId(),xpe.getLocalizedMessage());
+//			}
 		}
 	}
 	
