@@ -13,13 +13,12 @@ import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-
-import org.json.JSONObject;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.step.AllSteps;
@@ -30,7 +29,6 @@ import com.inductiveautomation.sfc.ElementStateEnum;
 import com.inductiveautomation.sfc.client.api.ChartStatusContext;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.ui.AbstractStepUI;
-import com.inductiveautomation.sfc.elements.steps.ChartStepProperties;
 import com.inductiveautomation.sfc.elements.steps.ExpressionParamCollection;
 import com.inductiveautomation.sfc.elements.steps.enclosing.EnclosingStepProperties;
 import com.inductiveautomation.sfc.elements.steps.enclosing.ExecutionMode;
@@ -50,7 +48,10 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	private static final int INSET = 10;
 	protected enum PaletteTabs { Foundation, Messages, Input, Control, Notification, IO, Query, File, Window };
 	protected static final Color LONG_RUNNING_COLOR = new Color(255, 255, 153);
-	private static final LoggerEx log = LogUtil.getLogger(AbstractIlsStepUI.class.getPackage().getName());		
+	protected static final Color FINISHED_RUNNING_COLOR = new Color(237, 237, 237);
+	private static final LoggerEx log = LogUtil.getLogger(AbstractIlsStepUI.class.getPackage().getName());
+	private boolean stepActivated = false;
+	private boolean finished = false;
 	
 	public static ClientStepFactory[] clientStepFactories = {
 		QueueMessageStepUI.FACTORY,
@@ -270,9 +271,14 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	boolean chartNotStarted = !chartStatusContext.getChartStatus().isPresent();
     	StepElementStatus stepElementStatus = chartStatusContext.getStepStatus(chartElement);
     	ElementStateEnum stepState = stepElementStatus.getElementState();
-    	Color background  = Color.lightGray;    // Color for block that has run
+    	Color background  = Color.WHITE;    // Color for block that has not run
+
+    	String factoryId = (String)chartElement.get(IlsProperty.FACTORY_ID);
+		if(!finished && AllSteps.longRunningFactoryIds.contains(factoryId)) {
+			background = LONG_RUNNING_COLOR;
+		}
+
     	if(chartNotStarted) {
-    		String factoryId = (String)chartElement.get(IlsProperty.FACTORY_ID);
     		if(AllSteps.longRunningFactoryIds.contains(factoryId)) {
     			background = LONG_RUNNING_COLOR;
     		}
@@ -289,8 +295,14 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     				background = Color.green.brighter();
     			}
     		}
-			else if(ElementStateEnum.Paused == stepState) {
-				background = Color.blue.brighter();
+			else {
+				if(stepActivated && ElementStateEnum.Inactive == stepState) {
+					finished = true;
+					background = FINISHED_RUNNING_COLOR;
+				}
+			}
+			if(ElementStateEnum.Activating == stepState) {   // This is smells bad, but I couldn't find another way to tell when it's done - CJL
+				stepActivated = true;
 			}
     	}
 		return background;

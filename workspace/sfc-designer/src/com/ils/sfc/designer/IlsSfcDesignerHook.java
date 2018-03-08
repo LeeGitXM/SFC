@@ -30,7 +30,6 @@ import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.chartStructure.RecipeDataMigrator;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AllSteps;
-/* import com.ils.sfc.designer.recipeEditor.RecipeEditorFrame; */
 import com.ils.sfc.designer.runner.ChartRunner;
 import com.ils.sfc.designer.search.IlsSfcSearchProvider;
 import com.ils.sfc.designer.stepEditor.IlsStepEditor;
@@ -92,6 +91,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private IlsSfcSearchProvider searchProvider = null;
 /*	private RecipeEditorFrame recipeEditorFrame; */
 	private RecipeDataCleaner recipeDataCleaner;
+//	private Map <Long, ProjectResource> addedResourceMap;
 	private Map <Long, ProjectResource> changedResourceMap;
 	private Map <Long, ProjectResource> deletedResourceMap;
 	
@@ -104,6 +104,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		this.frames = new ArrayList<>();
 		this.changedResourceMap = new HashMap<>();
 		this.deletedResourceMap = new HashMap<>();
+//		this.addedResourceMap = new HashMap<>();
 	}
 		
 	@Override
@@ -389,6 +390,10 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			if (modType.toString().equals("Added")){
 				// This is called as soon as a chart is created.  Literally, as soon as user presses create chart in the project resource tree.
 				// The Updated case will be called when the Save button is pressed or when the new cart is renamed
+				
+				// CJL  At this point we should check the resource IDs and see if it is a copy, in which case the UUIDs should be updated
+//				addedResourceMap.put(new Long (res.getResourceId()), res);
+				
 				log.tracef("A resource has been added");
 			} else if (modType.toString().equals("Deleted")){
 				log.infof("A resource has been deleted - inserting it into the deleted list...");
@@ -410,23 +415,50 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void projectUpdated(Project proj) {
 		log.infof("A project has been updated (id = %d)", proj.getId());
+		
 
-		if( proj.getId() == -1 ) {
-			for (ProjectResource res:changedResourceMap.values()){
-				log.infof("Saving resource %d", res.getResourceId());
-				structureCompilerV2.compileResource(res);
-				recipeDataMigrator.migrateResource(res);
+		try {
+			if( proj.getId() == -1 ) {
+				for (ProjectResource res:changedResourceMap.values()){
+					log.infof("Saving resource %d", res.getResourceId());
+					structureCompilerV2.compileResource(res);
+					recipeDataMigrator.migrateResource(res);
+				}
+				changedResourceMap.clear();
+				
+				for (ProjectResource res:deletedResourceMap.values()){
+					log.infof("Deleting resource %d", res.getResourceId());
+					structureCompilerV2.deleteChart(res);
+				}
+				deletedResourceMap.clear();
 			}
-			changedResourceMap.clear();
 			
-			for (ProjectResource res:deletedResourceMap.values()){
-				log.infof("Deleting resource %d", res.getResourceId());
-				structureCompilerV2.deleteChart(res);
-			}
-			deletedResourceMap.clear();
+		} catch (Exception ex) {
+			log.errorf("%s: Error Updating Project (Project updated): %s", TAG, ex.getLocalizedMessage());
+			
+			ExceptionDialogRunner dlg = new ExceptionDialogRunner();
+			dlg.setMsg(ex.getLocalizedMessage());
+			SwingUtilities.invokeLater(dlg);
 		}
 	}
 	
+	/**
+     * Display a popup error dialog
+     * Run in a separate thread, as a modal dialog in-line here will freeze the UI.
+     */
+    private class ExceptionDialogRunner implements Runnable {
+    	String msg = "";
+    	
+    	public void setMsg(String errMsg) { this.msg = errMsg;};
+    	
+
+        public void run() {
+        	ExceptionDialog errorDlg = new ExceptionDialog(context, msg);
+            errorDlg.pack();
+            errorDlg.setVisible(true);
+        }
+    }
+
 	
 	/**
      * Display a popup dialog for configuration of dialog execution parameters.
