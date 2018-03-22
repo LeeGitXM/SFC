@@ -14,6 +14,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.ChartStateEnum;
 import com.inductiveautomation.sfc.ElementStateEnum;
+import com.inductiveautomation.sfc.StepState;
 import com.inductiveautomation.sfc.client.api.ChartStatusContext;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.ui.AbstractStepUI;
@@ -50,8 +52,6 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	protected static final Color LONG_RUNNING_COLOR = new Color(255, 255, 153);
 	protected static final Color FINISHED_RUNNING_COLOR = new Color(237, 237, 237);
 	private static final LoggerEx log = LogUtil.getLogger(AbstractIlsStepUI.class.getPackage().getName());
-	private boolean stepActivated = false;
-	private boolean finished = false;
 	
 	public static ClientStepFactory[] clientStepFactories = {
 		QueueMessageStepUI.FACTORY,
@@ -267,14 +267,20 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 		g.fill(textShape);
 	}
 
+	
+	// Notes to self.  Even if you figure out if this is done running it may even get called after completion on short-running steps
+    //  Maybe it has to happen from the running step instance and trigger a repaint? 
+	
+	
 	private Color getBackgroundColor(ChartUIElement chartElement,ChartStatusContext chartStatusContext) {
     	boolean chartNotStarted = !chartStatusContext.getChartStatus().isPresent();
     	StepElementStatus stepElementStatus = chartStatusContext.getStepStatus(chartElement);
     	ElementStateEnum stepState = stepElementStatus.getElementState();
     	Color background  = Color.WHITE;    // Color for block that has not run
 
+    	
     	String factoryId = (String)chartElement.get(IlsProperty.FACTORY_ID);
-		if(!finished && AllSteps.longRunningFactoryIds.contains(factoryId)) {
+		if(AllSteps.longRunningFactoryIds.contains(factoryId)) {
 			background = LONG_RUNNING_COLOR;
 		}
 
@@ -294,20 +300,17 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     			else {
     				background = Color.green.brighter();
     			}
-    		}
-			else {
-				if(stepActivated && ElementStateEnum.Inactive == stepState) {
-					finished = true;
-					background = FINISHED_RUNNING_COLOR;
-				}
-			}
-			if(ElementStateEnum.Activating == stepState) {   // This is smells bad, but I couldn't find another way to tell when it's done - CJL
-				stepActivated = true;
+//			} else {
+//      Something like this should work, but a finished state doesn't seem to exist - CJL  How do I get to a StepState and not a ElementStateEnum?
+//	    		if(stepState.equals(StepState.Visited)) {
+//	    			background = FINISHED_RUNNING_COLOR;
+//	    		}
 			}
     	}
 		return background;
 	}
-	// Compute the maximum font possible for the available space
+
+    // Compute the maximum font possible for the available space
 	private Font getHeaderFont(Graphics2D g,double width,double height,String text) {
 		FontRenderContext frc = g.getFontRenderContext();
 		Font font = g.getFont();
