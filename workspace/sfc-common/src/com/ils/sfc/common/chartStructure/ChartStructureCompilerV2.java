@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 
 import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
@@ -45,114 +46,19 @@ public class ChartStructureCompilerV2 {
 	 */
 	public void compileResource (ProjectResource res)  throws IOException, JythonExecException, XmlParseException  {
 		String chartPath;
-		long resourceId;
-		
-		// These lists are used for the chart Hierarchy
-		ArrayList<String> childPaths = new ArrayList<String>();
-		ArrayList<String> childNames = new ArrayList<String>();
-		ArrayList<String> childUUIDs = new ArrayList<String>();
-		ArrayList<String> childTypes = new ArrayList<String>();
-		
-		// These lists are used for the step catalog (There will be more rows here than in the above lists)
-		ArrayList<String> stepNames = new ArrayList<String>();
-		ArrayList<String> stepUUIDs = new ArrayList<String>();
-		ArrayList<String> stepFactoryIds = new ArrayList<String>();
-		
+		long resourceId;		
 
 		if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
 			chartPath = globalProject.getFolderPath(res.getResourceId());
 			resourceId = res.getResourceId();
-
-// Commented out on 7/31/17 PH
-//			createChart(res);
 			
 			log.infof("Compiling a SFC chart resource. Path: %s, Name: %s, id: %d", chartPath, res.getName(), resourceId);
-//			try {
-				byte[] chartResourceData = res.getData();
 
-				// This prints out nicely formatted XML of the resource.
-//				IlsSfcCommonUtils.printResource(chartResourceData);
-				
-				GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
-				ChartUIModel uiModel = ChartUIModel.fromXml(xmlInput, stepRegistry );
+			byte[] chartResourceData = res.getData();
+			String chartResourceAsXML=IlsSfcCommonUtils.returnResource(chartResourceData);
 
-				for(ChartUIElement el: uiModel.getChartElements()) {
-					ElementType stepType = el.getType();
-					log.tracef(" ----  ");
-					log.tracef("Looking at a chart element");
-					log.tracef("        Id: %s", el.getId());
-					log.tracef("      Type: %s", el.getType());
-					log.tracef("      Name: %s", el.getRawValueMap().get(IlsProperty.NAME));
-					log.tracef(" Value Map: %s", el.getRawValueMap());
-					
-					// build the step catalog structures
-					stepNames.add( (String) el.getRawValueMap().get(IlsProperty.NAME));
-					stepUUIDs.add( (String) el.getRawValueMap().get(IlsProperty.ID).toString());
-					stepFactoryIds.add( (String) el.getRawValueMap().get(IlsProperty.FACTORY_ID));
-					
-//					for(Property<?> obj: el.getRawValueMap().keySet()){
-//						log.infof(" map type: %s",obj.getType());
-//						log.infof(" key: %s", BasicProperty.getClass().getCanonicalName());
-//					}
-
-					if (stepType.equals(ElementType.Parallel)){
-						log.tracef(">>> Processing a parallel transition");
-						ChartUIModel parallelUiModel = (ChartUIModel) el.getRawValueMap().get(IlsProperty.PARALLEL_CHILDREN);
-						for(ChartUIElement child: parallelUiModel.getChartElements()) {
-							log.tracef("Looking at a EMBEDDED CHILD element");
-							log.tracef("            Id: %s", child.getId());
-							log.tracef("          Type: %s", child.getType());
-							log.tracef("          Name: %s", child.getRawValueMap().get(IlsProperty.NAME));
-							log.tracef("     Value Map: %s", child.getRawValueMap());
-							if (child.getType().equals(ElementType.Step)){
-								
-								// Add to the step catalog
-								stepNames.add( (String) child.getRawValueMap().get(IlsProperty.NAME));
-								stepUUIDs.add( (String) child.getRawValueMap().get(IlsProperty.ID).toString());
-								stepFactoryIds.add( (String) child.getRawValueMap().get(IlsProperty.FACTORY_ID));
-								
-								// If we find an encapsulation step inside of a parallel transition pair.
-								String embeddedChildChartPath = (String) child.getRawValueMap().get(IlsProperty.CHART_PATH);
-								if (embeddedChildChartPath != null){
-									log.tracef("Found an encapsulation INSIDE the parallel translation that calls %s", embeddedChildChartPath);
-									childPaths.add( (String) embeddedChildChartPath);
-									childNames.add( (String) child.getRawValueMap().get(IlsProperty.NAME));
-									childUUIDs.add( (String) child.getRawValueMap().get(IlsProperty.ID).toString());
-									childTypes.add( (String) child.getRawValueMap().get(IlsProperty.FACTORY_ID));
-								}
-							}
-						}
-					}
-					else if (stepType.equals(ElementType.Step)){
-						String childChartPath = (String) el.getRawValueMap().get(IlsProperty.CHART_PATH);
-						if (childChartPath != null){
-							log.tracef("Found an encapsulation that calls %s", childChartPath);
-							childPaths.add( (String) childChartPath);
-							childNames.add( (String) el.getRawValueMap().get(IlsProperty.NAME));
-							childUUIDs.add( (String) el.getRawValueMap().get(IlsProperty.ID).toString());
-							childTypes.add( (String) el.getRawValueMap().get(IlsProperty.FACTORY_ID));
-						}
-					}	
-				}
-				log.infof("The children are: %s", childNames);
-
-				// Update the database with the children
-
-//				try {
-					Object[] args = {chartPath, resourceId, stepNames, stepUUIDs, stepFactoryIds, childPaths, childNames, childUUIDs, childTypes, database};
-					PythonCall.UPDATE_CHART_HIERARCHY.exec( args );
-//				} 
-//				catch (JythonExecException e) {
-//					log.errorf("%s: Error in python (update chart hierarchy): %s",CLSS,e.getLocalizedMessage());
-//				}
-//
-//			}
-//			catch(IOException ioe) {
-//				log.errorf("loadModels: Exception reading %s:%d (%s)",chartPath,res.getResourceId(),ioe.getLocalizedMessage());
-//			}
-//			catch(XmlParseException xpe) {
-//				log.errorf("loadModels: Error deserializing %s:%d (%s)",chartPath,res.getResourceId(),xpe.getLocalizedMessage());
-//			}
+			Object[] args = {chartPath, resourceId, chartResourceAsXML, database};
+			PythonCall.UPDATE_CHART_HIERARCHY.exec( args );
 		}
 	}
 	
