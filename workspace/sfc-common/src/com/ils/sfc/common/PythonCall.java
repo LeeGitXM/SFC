@@ -145,7 +145,7 @@ public class PythonCall {
 	public static final PythonCall SHUTDOWN_PROJECT = new PythonCall("ils.sfc.recipeData.structureManager.shutdown", 
 			null,  new String[]{"db"} );
 	public static final PythonCall UPDATE_CHART_HIERARCHY = new PythonCall("ils.sfc.recipeData.structureManager.updateChartHierarchy", 
-			null,  new String[]{"parentPath", "parentResourceId", "stepNames", "stepUUIDs", "stepFactoryIds", "childPaths", "childNames", "childUUIDs", "childTypes", "db"} );
+			null,  new String[]{"parentPath", "parentResourceId", "chartXML", "db"} );
 	
 	// Recipe Data V2
 	public static final PythonCall GET_RECIPE_DATA_LIST = new PythonCall("ils.sfc.recipeData.editor.getRecipeDataList", 
