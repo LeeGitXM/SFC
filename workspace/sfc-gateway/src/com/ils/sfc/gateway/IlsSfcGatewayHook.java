@@ -346,8 +346,9 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 				Thread.sleep(5000l);    // 5 seconds
 			}
 			catch(InterruptedException ignore) {}
+			log.infof("%s.StructureCompilerRunner: analyzing charts...",CLSS);
 			structureManager.getCompiler().compile();
-			log.infof("%s.StructureCompilerRunner: analyze charts.",CLSS);
+			log.infof("%s.StructureCompilerRunner: done analyzing!",CLSS);
 		}
 	}
 }
