@@ -19,8 +19,9 @@ public interface LimitedInputStepProperties extends ChartStepProperties {
     	WINDOW_TITLE,
     	PROMPT, 
     	RECIPE_LOCATION, 
-    	KEY, 
-    	MINIMUM_VALUE, 
-    	MAXIMUM_VALUE
+    	KEY,
+    	MAXIMUM_VALUE,
+    	DEFAULT_VALUE,
+    	MINIMUM_VALUE 
     };
 }
