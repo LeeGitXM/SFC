@@ -70,6 +70,13 @@ public class AllSteps {
         WriteOutputStepProperties.FACTORY_ID,     
 	});
 	
+	public static List<String> foundationFactoryIds = Arrays.asList(new String[]{
+			// The foundation steps which are really encapsulations
+			ProcedureStepProperties.FACTORY_ID,   
+	        OperationStepProperties.FACTORY_ID,   
+	        PhaseStepProperties.FACTORY_ID,   
+		});
+	
 	public static Class<?>[] propertyClasses = {
     	QueueMessageStepProperties.class,
     	SetQueueStepProperties.class,

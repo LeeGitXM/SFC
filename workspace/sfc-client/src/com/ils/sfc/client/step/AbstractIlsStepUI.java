@@ -276,21 +276,12 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     	boolean chartNotStarted = !chartStatusContext.getChartStatus().isPresent();
     	StepElementStatus stepElementStatus = chartStatusContext.getStepStatus(chartElement);
     	ElementStateEnum stepState = stepElementStatus.getElementState();
+    	Date lastActivation = stepElementStatus.getLastActivation();
     	Color background  = Color.WHITE;    // Color for block that has not run
-
-    	
     	String factoryId = (String)chartElement.get(IlsProperty.FACTORY_ID);
-		if(AllSteps.longRunningFactoryIds.contains(factoryId)) {
-			background = LONG_RUNNING_COLOR;
-		}
 
     	if(chartNotStarted) {
-    		if(AllSteps.longRunningFactoryIds.contains(factoryId)) {
-    			background = LONG_RUNNING_COLOR;
-    		}
-    		else {
-    			background = Color.WHITE;
-    		}
+    		background = Color.WHITE;
     	}
     	else {
     		if(stepState.isRunning()) {
@@ -298,13 +289,23 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
     				background = Color.WHITE;
     			}
     			else {
+    				if(AllSteps.foundationFactoryIds.contains(factoryId)) {
+    					background = Color.YELLOW;
+    				}
+    				else{
     				background = Color.green.brighter();
+    				}
     			}
-//			} else {
-//      Something like this should work, but a finished state doesn't seem to exist - CJL  How do I get to a StepState and not a ElementStateEnum?
-//	    		if(stepState.equals(StepState.Visited)) {
-//	    			background = FINISHED_RUNNING_COLOR;
-//	    		}
+			} else {
+				// It is a little tricky to tell the difference between inactive because a step has not run, which we want to be white, and a step that is inactive
+				// because it has finished running, which we want to be grey.  The key is to use the lastActivation property which will be NULL if the step has not
+				// run yet.
+	    		if(lastActivation == null) {
+	    			background = Color.WHITE;
+	    		}
+	    		else {
+	    			background = FINISHED_RUNNING_COLOR;
+	    		}
 			}
     	}
 		return background;
