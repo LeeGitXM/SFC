@@ -158,7 +158,7 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	 */
 	@Override
 	public void validate(ChartUIElement element,ChartCompilationResults compilationResults) {
-		if( structureManager!=null ) {   // Will be null in client scope
+		if( getStructureManager()!=null ) {   // Will be null in client scope
 			//String factoryId = element.get(SimpleHierarchyAnalyzer.factoryIdProperty);
 			//JSONObject associatedDataJson = element.get(SimpleHierarchyAnalyzer.associatedDataProperty);
 			//List<Data> recipeData = Data.fromAssociatedData(associatedDataJson);
@@ -175,6 +175,10 @@ public abstract class AbstractIlsStepDelegate implements StepDelegate {
 	}
 
 	public void validate(ChartInfo chart, ChartUIElement element, StepPropertyValidator validator) {
+	}
+	
+	public static ChartStructureManager getStructureManager() {
+		return structureManager;
 	}
 	
 }
