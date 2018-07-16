@@ -154,6 +154,7 @@ public class IlsProperty {
     public static final BasicProperty<String> DATA_ID = createProperty(Constants.DATA_ID, String.class, "");
     public static final BasicProperty<String> TIME_LIMIT_RECIPE_LOCATION = createProperty(Constants.DATA_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], false, Constants.RECIPE_LOCATION_CHOICES, "time limit recipe location");
     public static final BasicProperty<Double> DEADTIME = createProperty(Constants.DEADTIME, Double.class, 0.);
+    public static final BasicProperty<String> DEFAULT_VALUE = createProperty(Constants.DEFAULT_VALUE, String.class, "");
     public static final BasicProperty<Double> DELAY = createProperty(Constants.DELAY, Double.class, 0.);
     public static final BasicProperty<String> DELAY_UNIT = createProperty(Constants.DELAY_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);  
     public static final BasicProperty<String> DESCRIPTION = createProperty(Constants.DESCRIPTION, String.class, "");

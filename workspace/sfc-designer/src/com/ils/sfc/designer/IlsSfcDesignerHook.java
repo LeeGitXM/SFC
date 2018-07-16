@@ -395,16 +395,19 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 //				addedResourceMap.put(new Long (res.getResourceId()), res);
 				
 				log.tracef("A resource has been added");
+				
 			} else if (modType.toString().equals("Deleted")){
-				log.infof("A resource has been deleted - inserting it into the deleted list...");
-				// Store the resource id into a map that will be acted on when the user presses Save 
+				String chartPath = context.getGlobalProject().getProject().getFolderPath(res.getResourceId());
+				log.infof("A resource has been deleted (%s) - inserting it into the deleted list...", chartPath);
+				// Store the resource into a map that will be acted on when the project is Saved 
 				deletedResourceMap.put(new Long (res.getResourceId()), res);
+
 			} else {
 				// This is the updated case - keep track of the changed resource
 				log.infof("Inserting resource id %d - chart %s into the changedResourceMap...", 
 						res.getResourceId(), context.getGlobalProject().getProject().getFolderPath(res.getResourceId()));
 				
-				// Store the resource id into a map that will be acted on when the user presses Save 
+				// Store the resource into a map that will be acted on when the project is Saved
 				changedResourceMap.put(new Long (res.getResourceId()), res);
 			}
 		}
@@ -416,7 +419,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	public void projectUpdated(Project proj) {
 		log.infof("A project has been updated (id = %d)", proj.getId());
 		
-
 		try {
 			if( proj.getId() == -1 ) {
 				for (ProjectResource res:changedResourceMap.values()){
@@ -426,11 +428,17 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 				}
 				changedResourceMap.clear();
 				
-				for (ProjectResource res:deletedResourceMap.values()){
-					log.infof("Deleting resource %d", res.getResourceId());
-					structureCompilerV2.deleteChart(res);
-				}
+//				for (ProjectResource res:deletedResourceMap.values()){
+//					log.infof("Deleting resource %d", res.getResourceId());
+//					structureCompilerV2.deleteChart(res);
+//				}
+//				deletedResourceMap.clear();
+				
+				structureCompilerV2.deleteCharts(deletedResourceMap);
 				deletedResourceMap.clear();
+				
+//				structureCompilerV2.deleteCharts(deletedResourceIds);
+//				deletedResourceIds.clear();
 			}
 			
 		} catch (Exception ex) {

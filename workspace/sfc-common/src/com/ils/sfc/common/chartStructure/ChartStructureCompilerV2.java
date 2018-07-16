@@ -3,6 +3,9 @@ package com.ils.sfc.common.chartStructure;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
 import com.ils.sfc.common.IlsProperty;
@@ -62,23 +65,31 @@ public class ChartStructureCompilerV2 {
 		}
 	}
 	
-		
-	/** This is called when the chart is saved.  The hook in designer is called as soon as a chart is deleted, but the deleted resource is added to a list 
-	 * of deleted resources to be dealt with when the project is saved.
+	
+	/** This is called when the project is saved.  The hook in designer is called as soon as a chart is deleted, but the deleted resource is added to a list 
+	 * of deleted resources to be dealt with when the project is saved.  I went to a fair amount of work here to make a hashmap that I could use over on the 
+	 * Python side, Python doesn't have access to the Resource class, so a HashMap with a Resource is useless.  Specifically, I wanted to include the chartPath.  
+	 * Unfortunately, since the chart has been deleted, it doesn't have a chartPath.  I tried capturing the chartPath at the time the resource was deleted but
+	 * it wasn't available then either.  I'll leave everything in place to pass the chartPath in case someday it is available.  
 	 */
-	public void deleteChart(ProjectResource res) {
-		log.infof("Deleting the chart");
+	public void deleteCharts(Map <Long, ProjectResource> deletedResourceMap) {
+		log.infof("Deleting the charts (with the whole Map");
+		HashMap<Long, String> deletedResources = new HashMap <Long, String>();
 		
-		String chartPath = globalProject.getFolderPath(res.getResourceId());
-		long resourceId = res.getResourceId();
-		
-		Object[] args = {resourceId, chartPath, database};
+		for (ProjectResource res:deletedResourceMap.values()){
+			String chartPath = globalProject.getFolderPath(res.getResourceId());
+			log.infof("Deleting resource %d - %s", res.getResourceId(), chartPath);
+			deletedResources.put(res.getResourceId(), chartPath);
+		}
+
+		Object[] args = {deletedResources, database};
 		try {
-			PythonCall.DELETE_CHART.exec(args);
+			PythonCall.DELETE_CHARTS.exec(args);
 		} 
 		catch (JythonExecException e) {
-			log.errorf("%s: Error in python (delete chart): %s",CLSS,e.getLocalizedMessage());
+			log.errorf("%s: Error in python (delete charts): %s",CLSS,e.getLocalizedMessage());
 		}
+
 	}
 
 }

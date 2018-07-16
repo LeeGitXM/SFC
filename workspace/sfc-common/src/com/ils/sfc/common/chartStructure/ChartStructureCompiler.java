@@ -74,7 +74,9 @@ public class ChartStructureCompiler {
 		modelInfoByResourceId.clear();
 		modelInfoByChartPath.clear();
 		
+		log.infof("*** In compile ***");
 		if(loadModels()) {
+			log.infof("compiling charts...");
 			compileCharts();  // do the IA chart compilation
 		}
 		else {

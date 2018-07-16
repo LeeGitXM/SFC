@@ -138,8 +138,8 @@ public class PythonCall {
 	
 	public static final PythonCall CREATE_CHART = new PythonCall("ils.sfc.recipeData.structureManager.createChart", 
 			null,  new String[]{"resourceId", "chartPath", "db"} );
-	public static final PythonCall DELETE_CHART = new PythonCall("ils.sfc.recipeData.structureManager.deleteChart", 
-			null,  new String[]{"resourceId", "chartPath", "db"} );
+	public static final PythonCall DELETE_CHARTS = new PythonCall("ils.sfc.recipeData.structureManager.deleteCharts", 
+			null,  new String[]{"resources", "db"} );
 	public static final PythonCall SAVE_PROJECT = new PythonCall("ils.sfc.recipeData.structureManager.saveProject", 
 			null,  new String[]{"project", "db"} );
 	public static final PythonCall SHUTDOWN_PROJECT = new PythonCall("ils.sfc.recipeData.structureManager.shutdown", 
