@@ -202,13 +202,13 @@ insert into BltPropertyMap values ('GDL-SET-ATTRIBUTE','targetAttribute','target
 insert into BltPropertyMap values ('GDL-SUMMING','useExpiredInputs','','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-SYMBOLIC-ENTRY-POINT','nameOfSensor','TagPath','STRING',1,'TAG_READ');
 insert into BltPropertyMap values ('GDL-TEXT-ENTRY-POINT','nameOfSensor','TagPath','STRING',1,'TAG_READ');
+insert into BltPropertyMap values ('GDL-THREE-OPTION-CONTROL-SWITCH','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-TIMER','countBy','Interval','DOUBLE',1,'NONE');
 insert into BltPropertyMap values ('GDL-TIMER','displayUnits','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-TIMER','stopwhen','StopOn','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-TIMER','triggeron','Trigger','BOOLEAN',1,'NONE');
 insert into BltPropertyMap values ('GDL-TRUE-IF-UNKNOWN-GATE','logic','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-TRUE-IF-UNKNOWN-GATE','outputUncertainty','','STRING',1,'NONE');
-insert into BltPropertyMap values ('GDL-THREE-OPTION-CONTROL-SWITCH','label','','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-TWO-OPTION-USER-QUERY-CONTROL-SWITCH','currentOption','CurrentOption','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-TWO-OPTION-USER-QUERY-CONTROL-SWITCH','defaultOption','DefaultOption','STRING',1,'NONE');
 insert into BltPropertyMap values ('GDL-TWO-OPTION-USER-QUERY-CONTROL-SWITCH','displayRouting','DisplayRouting','STRING',1,'NONE');

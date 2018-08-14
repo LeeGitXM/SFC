@@ -77,7 +77,7 @@ insert into ClassMap values ('GDL-TEXT-ENTRY-POINT','com.ils.block.Input');
 insert into ClassMap values ('GDL-TIMER','com.ils.block.Timer');
 insert into ClassMap values ('GDL-TRUE-IF-UNKNOWN-GATE','com.ils.block.Unknown');
 insert into ClassMap values ('GDL-TWO-OPTION-USER-QUERY-CONTROL-SWITCH','com.ils.block.DualOptionQueryControl');
-insert into ClassMap values ('GDL-THREE-OPTION-CONTROL-SWITCH','com.ils.block.TripleOptionQueryControl');
+insert into ClassMap values ('GDL-THREE-OPTION-CONTROL-SWITCH','com.ils.block.TripleOptionControl');
 insert into ClassMap values ('OPC-FLOAT-BAD-FLAG','com.ils.block.Parameter');
 insert into ClassMap values ('OPC-FLOAT-OUTPUT','com.ils.block.Output');
 insert into ClassMap values ('OPC-INT-BAD-FLAG','com.ils.block.Parameter');

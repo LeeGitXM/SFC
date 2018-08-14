@@ -50,6 +50,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc_r1_vis_pro
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-reslurry-problem-output-gda','ils.vistalon.fd.ReslurryOutput.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-sdstrm_c3-outputs-gda','xom.vistalon.crx.SdstrmC3.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-swap_frnt_feeds-outputs-gda','project.vistalon.crx.SwapFrontFeedsOutputs.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('catout-uir-diagnosis','xom.gline.uir.catoutDiagnosis.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('change-attribute','__setattr__');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('change-element','ils.blt.lib.changeArrayElement');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('clear-quantity-list-gda','ils.blt.lib.clearQuantityList');
@@ -94,6 +95,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-set-catout-d
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-set-crossover-time','com.ils.sfc.python.crossoverTime.set');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-start-clock-timer','ils.diagToolkit.timer.start');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-write-file','com.ils.sfc.python.File.write');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('fbd-dust-control-wait-diagnosis','xom.gline.monitoring.fbdDustControlWaitDiagnosis.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('freezer-sample-problem-reset','ils.diagToolkit.crx.freezer.reset');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('fs-r1-c2-conv-vs-pr','com.ils.sfc.python.block.fsR1C2ConvVsPr');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('fs-r1-c3-conv-vs-pr','com.ils.sfc.python.block.fsR1C3ConvVsPr');
@@ -144,6 +146,8 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('prod-mooney-res
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('recalc-cat-sps-gda','ils.vistalon.fd.CatSps.recalculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('recipe-get-sub-recipe','ils.escorez.getSubRecipe.evaluate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('reset_fd-gda','ils.diagToolkit.fd.reset');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('r1-temp-control-uir-diagnosis-monitor-and-alarm','xom.gline.uir.r1TempControlMonitor.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('r2-temp-control-uir-diagnosis-monitor-and-alarm','xom.gline.uir.r2TempControlMonitor.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('rx-type','ils.sfc.python.rx.getType');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('sequence','');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('set_output-gda','ils.diagToolkit.util.setOutput');
