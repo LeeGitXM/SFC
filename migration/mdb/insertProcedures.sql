@@ -121,6 +121,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('getParent','ils
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-collect-inferior-instances','ils.vistalon.util.getInferiorInstances');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-get-window','ils.blt.lib.getWindow');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-get-g2-name','ils.vistalon.util.getG2Name');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-g2-time-to-MM-DD-YYYY-HH-MM','ils.gline.util.formattedTime');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-insert-into-sorted-sequence','ils.vistalon.util.insertIntoList');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-inform-the-operator','com.ils.queue.post.inform');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-update-structure-in-a-keyed-sequence','ils.vistalon.util.updateStructureInKeyedSequence');
@@ -203,5 +204,6 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('get-from-text',
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('round-to-x-places','ils.vistalon.util.round');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('max','max');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('min','min');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('truncate','trim');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('upper-case-text','toUpper');
 

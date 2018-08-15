@@ -105,8 +105,11 @@ insert into ClassMap values('em-diagnosis-family','com.ils.blt.gateway.engine.Pr
 insert into ClassMap values('em-gda-final-diagnosis','com.ils.block.finaldiagnosis');
 insert into ClassMap values('em-s88-rate-change-callback','java.util.Map');
 insert into ClassMap values('em-s88-rate-change-current-data-callback','java.util.Map');
+insert into ClassMap values('quant-recommendation-def','java.util.Map');
+insert into ClassMap values('uir-data-entry','java.util.Map');
 -- These are for procedure translation
 insert into ClassMap values ('g2Window','java.awt.Window');
+insert into ClassMap values ('g2-window','java.awt.Window');
 -- These are generic classes used for SFC translation
 insert into ClassMap values ('chart','chart');
 insert into ClassMap values ('error','java.util.Map');

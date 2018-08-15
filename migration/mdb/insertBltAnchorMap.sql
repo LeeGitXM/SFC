@@ -150,13 +150,11 @@ insert into BltAnchorMap values ('GDL-INFERENCE-DELAY','IP-OUT','out','');
 insert into BltAnchorMap values ('GDL-INFERENCE-EVENT','IP-IN','in','');
 insert into BltAnchorMap values ('GDL-INFERENCE-EVENT','IP-OUT','out','');
 insert into BltAnchorMap values ('GDL-INFERENCE-EVENT','CP-OUT','out','');
-insert into BltAnchorMap values ('GDL-INFERENCE-INHIBIT','IP-IN','a','');
 insert into BltAnchorMap values ('GDL-INFERENCE-INHIBIT','IP-IN-1','a','');
 insert into BltAnchorMap values ('GDL-INFERENCE-INHIBIT','IP-IN-2','b','');
 insert into BltAnchorMap values ('GDL-INFERENCE-INHIBIT','IP-OUT','out','');
 insert into BltAnchorMap values ('GDL-INFERENCE-MEMORY','IP-IN-1','a','');
 insert into BltAnchorMap values ('GDL-INFERENCE-MEMORY','IP-IN-2','b','');
-insert into BltAnchorMap values ('GDL-INFERENCE-MEMORY','IP-IN','a','');
 insert into BltAnchorMap values ('GDL-INFERENCE-MEMORY','IP-OUT','out','');
 insert into BltAnchorMap values ('GDL-INFERENCE-OUTPUT-ACTION','CP-IN','in','');
 insert into BltAnchorMap values ('GDL-INFERENCE-OUTPUT-ACTION','IP-IN','in','');
@@ -225,7 +223,6 @@ insert into BltAnchorMap values ('GDL-THREE-OPTION-CONTROL-SWITCH','CP-IN-1','si
 insert into BltAnchorMap values ('GDL-THREE-OPTION-CONTROL-SWITCH','IP-IN','in','');
 insert into BltAnchorMap values ('GDL-THREE-OPTION-CONTROL-SWITCH','CP-OUT-1','a','');
 insert into BltAnchorMap values ('GDL-THREE-OPTION-CONTROL-SWITCH','CP-OUT-2','b','');
-insert into BltAnchorMap values ('GDL-THREE-OPTION-CONTROL-SWITCH','IP-OUT','a','');
 insert into BltAnchorMap values ('TFA-SEQ-PERM-TRUTH-CHECK','IP-IN','in','');
 
 -- Parameters and Variables
