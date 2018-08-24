@@ -70,7 +70,7 @@ insert into ClassMap values ('GDL-OR-GATE','com.ils.block.Or');
 insert into ClassMap values ('GDL-OUT-OF-RANGE-OBSERVATION','com.ils.block.OutOfRangeObservation');
 insert into ClassMap values ('GDL-PERSISTENCE-GATE','com.ils.block.PersistenceGate');
 insert into ClassMap values ('GDL-QUOTIENT','com.ils.block.Quotient');
-insert into ClassMap values ('GDL-SET-ATTRIBUTE','com.ils.block.SetAttribute');
+insert into ClassMap values ('GDL-SET-ATTRIBUTE','com.ils.block.SetProperty');
 insert into ClassMap values ('GDL-SUMMING','com.ils.block.Sum');
 insert into ClassMap values ('GDL-SYMBOLIC-ENTRY-POINT','com.ils.block.Input');
 insert into ClassMap values ('GDL-TEXT-ENTRY-POINT','com.ils.block.Input');
@@ -105,6 +105,7 @@ insert into ClassMap values('em-diagnosis-family','com.ils.blt.gateway.engine.Pr
 insert into ClassMap values('em-gda-final-diagnosis','com.ils.block.finaldiagnosis');
 insert into ClassMap values('em-s88-rate-change-callback','java.util.Map');
 insert into ClassMap values('em-s88-rate-change-current-data-callback','java.util.Map');
+insert into ClassMap values('em-recipe-data','java.util.Map');
 insert into ClassMap values('quant-recommendation-def','java.util.Map');
 insert into ClassMap values('uir-data-entry','java.util.Map');
 -- These are for procedure translation

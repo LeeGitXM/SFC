@@ -85,6 +85,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-make-sqc-lim
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-calc-monomer-flows','com.ils.sfc.python.monomerFlows.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-c-rx-calc-dil-flows','com.ils.sfc.python.DilFlows.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-calc-delay-drivers-cold-stick','com.ils.sfc.python.DelayDriversColdStick.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-chk-pv','ils.sfc.gateway.api.checkPV');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-get-rate-change-data-block','ils.sfc.gateway.api.s88GetRateChangeBlock');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-mid-run-catout-uir','com.ils.sfc.python.uir.midRunCatout');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-move-cold-stick-data-from-the-model-screen','com.ils.sfc.python.coldStickData.moveFromScreen');
@@ -95,6 +96,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-set-catout-d
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-set-crossover-time','com.ils.sfc.python.crossoverTime.set');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-start-clock-timer','ils.diagToolkit.timer.start');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-write-file','com.ils.sfc.python.File.write');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-write-to-logbook','print');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('fbd-dust-control-wait-diagnosis','xom.gline.monitoring.fbdDustControlWaitDiagnosis.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('freezer-sample-problem-reset','ils.diagToolkit.crx.freezer.reset');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('fs-r1-c2-conv-vs-pr','com.ils.sfc.python.block.fsR1C2ConvVsPr');
@@ -201,9 +203,11 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('test-16-writer'
 
 -- Built-into Python
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('get-from-text','find');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('is-contained-in-text','find');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('round-to-x-places','ils.vistalon.util.round');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('max','max');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('min','min');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('text-msg-beginning-ending-blank-removal','trim');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('truncate','trim');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('upper-case-text','toUpper');
 

@@ -14,33 +14,8 @@ then
 fi
 SFC=${GIT_REPO}/sfc
 # ======================= OnStop ====================
-# The onstop methods are generic. Use vistalon and copy
-# to the gline area
-APP=${SFC}/migration/translate-onstop
-DIR=${SFC}/migration/procs/g2/vistalon/onstop
-mkdir -p ${DIR}
-cd ${DIR}
-OUTDIR=${SFC}/migration/procs/ignition/gline/onstop
-for fil in *.txt
-do
-    if [ -f $DIR/$fil ]
-    then
-	   echo "Processing $fil..."
-       $APP $DIR/$fil $OUTDIR
-    else
-       continue
-    fi
-	if [ $OPT == "all" ]
-	then
-		continue
-	elif [ $OPT == "one" ]
-	then
-		exit
-	else
-		rm $DIR/$fil
-		OPT="one"
-	fi
-done
+# The onstop methods are generic. Let Pete copy
+# vetted from Vistalon.
 # ======================= OnStart ====================
 APP=${SFC}/migration/translate-onstart
 DIR=${SFC}/migration/procs/g2/gline/onstart
