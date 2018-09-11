@@ -50,6 +50,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc_r1_vis_pro
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-reslurry-problem-output-gda','ils.vistalon.fd.ReslurryOutput.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-sdstrm_c3-outputs-gda','xom.vistalon.crx.SdstrmC3.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('calc-swap_frnt_feeds-outputs-gda','project.vistalon.crx.SwapFrontFeedsOutputs.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('catout-uir-diagnosis','xom.gline.uir.catoutDiagnosis.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('change-attribute','__setattr__');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('change-element','ils.blt.lib.changeArrayElement');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('clear-quantity-list-gda','ils.blt.lib.clearQuantityList');
@@ -84,6 +85,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-make-sqc-lim
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-calc-monomer-flows','com.ils.sfc.python.monomerFlows.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-c-rx-calc-dil-flows','com.ils.sfc.python.DilFlows.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-calc-delay-drivers-cold-stick','com.ils.sfc.python.DelayDriversColdStick.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-chk-pv','ils.sfc.gateway.api.checkPV');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-get-rate-change-data-block','ils.sfc.gateway.api.s88GetRateChangeBlock');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-mid-run-catout-uir','com.ils.sfc.python.uir.midRunCatout');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-s88-move-cold-stick-data-from-the-model-screen','com.ils.sfc.python.coldStickData.moveFromScreen');
@@ -94,6 +96,8 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-set-catout-d
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-set-crossover-time','com.ils.sfc.python.crossoverTime.set');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-start-clock-timer','ils.diagToolkit.timer.start');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-write-file','com.ils.sfc.python.File.write');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('em-write-to-logbook','print');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('fbd-dust-control-wait-diagnosis','xom.gline.monitoring.fbdDustControlWaitDiagnosis.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('freezer-sample-problem-reset','ils.diagToolkit.crx.freezer.reset');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('fs-r1-c2-conv-vs-pr','com.ils.sfc.python.block.fsR1C2ConvVsPr');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('fs-r1-c3-conv-vs-pr','com.ils.sfc.python.block.fsR1C3ConvVsPr');
@@ -119,6 +123,7 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('getParent','ils
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-collect-inferior-instances','ils.vistalon.util.getInferiorInstances');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-get-window','ils.blt.lib.getWindow');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-get-g2-name','ils.vistalon.util.getG2Name');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-g2-time-to-MM-DD-YYYY-HH-MM','ils.gline.util.formattedTime');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-insert-into-sorted-sequence','ils.vistalon.util.insertIntoList');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-inform-the-operator','com.ils.queue.post.inform');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('ils-update-structure-in-a-keyed-sequence','ils.vistalon.util.updateStructureInKeyedSequence');
@@ -144,6 +149,8 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('prod-mooney-res
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('recalc-cat-sps-gda','ils.vistalon.fd.CatSps.recalculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('recipe-get-sub-recipe','ils.escorez.getSubRecipe.evaluate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('reset_fd-gda','ils.diagToolkit.fd.reset');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('r1-temp-control-uir-diagnosis-monitor-and-alarm','xom.gline.uir.r1TempControlMonitor.calculate');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('r2-temp-control-uir-diagnosis-monitor-and-alarm','xom.gline.uir.r2TempControlMonitor.calculate');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('rx-type','ils.sfc.python.rx.getType');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('sequence','');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('set_output-gda','ils.diagToolkit.util.setOutput');
@@ -196,8 +203,11 @@ insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('test-16-writer'
 
 -- Built-into Python
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('get-from-text','find');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('is-contained-in-text','find');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('round-to-x-places','ils.vistalon.util.round');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('max','max');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('min','min');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('text-msg-beginning-ending-blank-removal','trim');
+insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('truncate','trim');
 insert into ProcedureMap(G2Procedure,IgnitionProcedure) values ('upper-case-text','toUpper');
 

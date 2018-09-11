@@ -10,9 +10,9 @@ PYDIR=${SFC}/migration/procs/ignition/gline
 
 cd $SFC/migration
 #./clear-procs gline
-./clear-xml gline
-./copy-procs
-./copy-xml
+#./clear-xml gline
+#./copy-procs
+#./copy-xml
 #
 # Translate the procedures
 #./translate-gline all

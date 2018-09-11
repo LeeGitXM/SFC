@@ -4,6 +4,9 @@
 -- GENERIC DEFAULTS
 insert into PropertyValueMap values ('timeoutUnits','','SEC');
 
+-- BLT - not many of these
+insert into PropertyValueMap(Property,G2Value,IgnitionValue) values ('LimitType','HIGH-LOW','BOTH');
+
 -- Attribute Value Mapping (specific to property)
 insert into PropertyValueMap values ('autoMode','SEMI-AUTOMATIC','semiAutomatic');
 insert into PropertyValueMap values ('autoMode','AUTOMATIC','automatic');

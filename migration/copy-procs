@@ -41,13 +41,13 @@ do
 	cat "$fil"  > ${PROCS}/g2/usecase/onstart/$name
 done
 # ======================================== Escorez ==========================================
-for fil in "${ESCOREZ}"/*/callbacks/*.txt "${ESCOREZ}"/*/callbacks/*/*.txt
-do
-	echo $fil
-	name=`basename "$fil"`
-	echo $name
-	cat "$fil"  > ${PROCS}/g2/escorez/onstart/$name
-done
+#for fil in "${ESCOREZ}"/*/callbacks/*.txt "${ESCOREZ}"/*/callbacks/*/*.txt
+#do
+	#echo $fil
+	#name=`basename "$fil"`
+	#echo $name
+	#cat "$fil"  > ${PROCS}/g2/escorez/onstart/$name
+#done
 # ======================================== Gline ==========================================
 for fil in "${GLINE}"/*/callbacks/*.txt "${GLINE}"/*/callbacks/*/*.txt
 do
