@@ -81,7 +81,17 @@ public class PVMonitorConfig extends RowConfig {
 		@JsonIgnore
 		public Object io;   // the controller
 		@JsonIgnore
-		public Object isOutput;   // is the io recipe data an Output object?
+		public boolean isOutput;   // is the io recipe data an Output object?
+		
+		// Added by Pete to optimize by reducing DB calls 9/7/2018
+		@JsonIgnore
+		public double lastPV;   // the PV from the last invocation
+		@JsonIgnore
+		public String lastStatus;   // the status from the last invocation
+		@JsonIgnore
+		public int targetRecipeDataId;   // the recipe data id to optimize s88 access
+		@JsonIgnore
+		public String targetRecipeDataType;   // the recipe data id to optimize s88 access
 	}
 
 	public List<Row> getRows() {
