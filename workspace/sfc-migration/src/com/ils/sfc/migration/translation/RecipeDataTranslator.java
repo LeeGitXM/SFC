@@ -352,7 +352,7 @@ public class RecipeDataTranslator {
 		}
 		return outerArray.toString();
 	}
-
+	// IlsProperty.parseDouble returns null for an empty string
 	private Double[] parseDoubleArray(String strValue) {
 		Double[] values = new Double[0];
 		try {
@@ -361,7 +361,9 @@ public class RecipeDataTranslator {
 				values = new Double[stringVals.length];
 				int index = 0;
 				for(String sval: stringVals) {
-					double dblVal = IlsProperty.parseDouble(sval.trim()).doubleValue();
+					double dblVal = 0.;
+					if( sval!=null) sval = sval.trim();
+					if( !sval.isEmpty() ) dblVal = IlsProperty.parseDouble(sval).doubleValue();
 					values[index]=dblVal;
 					index = index+1;
 				}
