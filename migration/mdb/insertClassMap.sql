@@ -68,7 +68,7 @@ insert into ClassMap values ('GDL-OR-GATE','com.ils.block.Or');
 insert into ClassMap values ('GDL-OUT-OF-RANGE-OBSERVATION','com.ils.block.OutOfRangeObservation');
 insert into ClassMap values ('GDL-PERSISTENCE-GATE','com.ils.block.PersistenceGate');
 insert into ClassMap values ('GDL-QUOTIENT','com.ils.block.Quotient');
-insert into ClassMap values ('GDL-SET-ATTRIBUTE','com.ils.block.SetAttribute');
+insert into ClassMap values ('GDL-SET-ATTRIBUTE','com.ils.block.SetProperty');
 insert into ClassMap values ('GDL-SUMMING','com.ils.block.Sum');
 insert into ClassMap values ('GDL-SYMBOLIC-ENTRY-POINT','com.ils.block.Input');
 insert into ClassMap values ('GDL-TEXT-ENTRY-POINT','com.ils.block.Input');
