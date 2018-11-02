@@ -261,8 +261,6 @@ public class Constants {
 	public static final String PRES = "pres";
 	public static final String RECC = "recc";
 	public static final String STAG = "stag";
-	
-	
 
 	// Timer (Write output/PV Monitoring/Download GUI) things
 	// These are the states and the commands for the timer UDT
@@ -284,6 +282,7 @@ public class Constants {
 	public static final String GLOBAL = "global";  // same as Procedure, Unit Procedure
 	public static final String OPERATION = "operation";	
 	public static final String PHASE = "phase";
+	public static final String REFERENCE = "reference";  // Used to implement pass-by-reference for libraries.
 	
 	// standard Ignition scopes:
 	public static final String CHART_SCOPE = "chartScope";
@@ -315,10 +314,10 @@ public class Constants {
 
 	// choices:
 	public static final String[] RECIPE_STATIC_STRATEGY_CHOICES = {STATIC, RECIPE};
-	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, PRIOR, SUPERIOR, PHASE, OPERATION, GLOBAL};
-	public static String[] RECIPE_PLUS_VALUE_LOCATION_CHOICES = {VALUE, LOCAL, PRIOR, SUPERIOR,GLOBAL, OPERATION, PHASE};
-	public static String[] RECIPE_PLUS_TAG_LOCATION_CHOICES = {LOCAL, PRIOR, SUPERIOR,GLOBAL, OPERATION, PHASE, TAG};
-	public static String[] RECIPE_PLUS_CHART_STEP_CHOICES = {LOCAL, PRIOR, SUPERIOR, PHASE, OPERATION, GLOBAL, CHART_SCOPE, STEP_SCOPE};
+	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, SUPERIOR, PHASE, OPERATION, GLOBAL, REFERENCE};
+	public static String[] RECIPE_PLUS_VALUE_LOCATION_CHOICES = {VALUE, LOCAL, SUPERIOR, PHASE, OPERATION, GLOBAL, REFERENCE};
+	public static String[] RECIPE_PLUS_TAG_LOCATION_CHOICES = {LOCAL, SUPERIOR, PHASE, OPERATION, GLOBAL, REFERENCE, TAG};
+	public static String[] RECIPE_PLUS_CHART_STEP_CHOICES = {LOCAL, SUPERIOR, PHASE, OPERATION, GLOBAL, REFERENCE, CHART_SCOPE, STEP_SCOPE};
 	
 	public static final String[] COUNT_MODE_CHOICES = {COUNT_ABSOLUTE, COUNT_INCREMENTAL};
 	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
