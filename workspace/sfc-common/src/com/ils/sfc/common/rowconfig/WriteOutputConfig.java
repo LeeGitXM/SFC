@@ -34,6 +34,8 @@ public class WriteOutputConfig extends RowConfig implements java.io.Serializable
 		@JsonIgnore
 		public String tagPath;
 		@JsonIgnore
+		public String recipeLocation;
+		@JsonIgnore
 		public Object value;
 		@JsonIgnore
 		public double timingMinutes;
@@ -43,8 +45,7 @@ public class WriteOutputConfig extends RowConfig implements java.io.Serializable
 		public Object outputRD;
 		@JsonIgnore
 		public Object io;
-
-}
+	}
 
 	public List<Row> getRows() {
 		return rows;
