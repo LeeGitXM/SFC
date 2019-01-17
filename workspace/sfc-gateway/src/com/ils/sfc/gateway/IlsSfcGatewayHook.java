@@ -204,7 +204,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		this.context = ctxt;
 		PythonCall.setContext(context);
 
-		log.infof("EREIAM JH - Setup 1 ***************************************************************************************");
+		log.tracef("EREIAM JH - Setup 1 ***************************************************************************************");
 		
 		context.getModuleServicesManager().subscribe(ChartManagerService.class, this);
 		IlsGatewayScripts.setHook(this);
@@ -270,12 +270,12 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	
 	@Override
 	public void shutdown() {
-		log.infof("EREIAM JH - Shut them all down 1, context is " + context.getContextName());
+		log.infof("In Shutdown(), context is " + context.getContextName());
 
 //		context.getProjectManager().removeProjectListener(this);  // disabled to see if it is preventing shutdown - cjl
-		log.infof("EREIAM JH - Shutdown 2");
+		log.tracef("Shutdown 2");
 		stepMonitor.shutdown();
-		log.infof("EREIAM JH - Shutdown 3");
+		log.tracef("Shutdown 3");
 		this.timer.stop();
 	}
 
@@ -296,21 +296,21 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 	@Override
 	public void serviceShutdown(Class<?> arg0) {
-		log.infof("EREIAM JH - Service Shutdown 1");
+		log.infof("In serviceShutdown()");
 		chartManager.unregisterScopeLocator(scopeLocator);
-		log.infof("EREIAM JH - Service Shutdown 2");
+		log.tracef("Service Shutdown 2");
 		for(StepFactory stepFactory: stepFactories) {
 			chartManager.unregister(stepFactory);
 		}
-		log.infof("EREIAM JH - Service Shutdown 3");
+		log.tracef("Service Shutdown 3");
 		chartManager.removeChartObserver(chartObserver);
-		log.infof("EREIAM JH - Service Shutdown 4");
+		log.tracef("Service Shutdown 4");
 		//chartManager.removeChartObserver(sessionMgr);
-		log.infof("EREIAM JH - Service Shutdown 5");
+		log.tracef("Service Shutdown 5");
 		chartManager = null;
-		log.infof("EREIAM JH - Service Shutdown 6");
+		log.tracef("Service Shutdown 6");
 		stepMonitor.shutdown();
-		log.infof("EREIAM JH - Service Shutdown 7");
+		log.tracef("Service Shutdown 7");
 	}
 
 	public static Map<String, List<String>> getPropertyNamesById() {
