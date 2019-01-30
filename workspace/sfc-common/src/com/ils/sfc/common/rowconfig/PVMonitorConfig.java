@@ -89,9 +89,13 @@ public class PVMonitorConfig extends RowConfig {
 		@JsonIgnore
 		public String lastStatus;   // the status from the last invocation
 		@JsonIgnore
-		public int targetRecipeDataId;   // the recipe data id to optimize s88 access
+		public int targetRecipeDataId;   // the target recipe data id to optimize s88 access
 		@JsonIgnore
-		public String targetRecipeDataType;   // the recipe data id to optimize s88 access
+		public String targetRecipeDataType;   // the target recipe data type to optimize s88 access
+		@JsonIgnore
+		public int pvRecipeDataId;   // the PV recipe data id to optimize s88 access
+		@JsonIgnore
+		public String pvRecipeDataType;   // the PV recipe data type to optimize s88 access
 	}
 
 	public List<Row> getRows() {
