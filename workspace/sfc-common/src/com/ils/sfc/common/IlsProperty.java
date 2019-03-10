@@ -144,6 +144,7 @@ public class IlsProperty {
     public static final BasicProperty<String> CHOICES_RECIPE_LOCATION = createProperty(Constants.CHOICES_RECIPE_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
     public static final BasicProperty<String> CHOICES_KEY = createProperty(Constants.CHOICES_KEY, String.class, "");
     public static final BasicProperty<String> CLASS = createProperty(Constants.CLASS, String.class, "");
+    public static final BasicProperty<String> CLASS_TO_CREATE = createProperty(Constants.CLASS_TO_CREATE, String.class, Constants.SIMPLE_VALUE, Constants.RECIPE_DATA_CLASS_CHOICES);
     public static final BasicProperty<String> COLLECT_DATA_CONFIG = createProperty(Constants.COLLECT_DATA_CONFIG, String.class, EMPTY_COLLECT_DATA_CONFIG, true, Constants.CONFIG);
     public static final BasicProperty<String> CONFIRM_CONTROLLERS_CONFIG = createProperty(Constants.CONFIRM_CONTROLLERS_CONFIG, String.class, EMPTY_CONFIRM_CONTROLLERS_CONFIG, true, Constants.CONFIG);
     public static final BasicProperty<Integer> COLUMNS = createProperty(Constants.COLUMNS, Integer.class, 0);
@@ -253,7 +254,7 @@ public class IlsProperty {
     public static final BasicProperty<String> RECIPE_STATIC_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.RECIPE_STATIC_STRATEGY_CHOICES[0], Constants.RECIPE_STATIC_STRATEGY_CHOICES);
     public static final BasicProperty<Double> SCALE = createProperty(Constants.SCALE, Double.class, 1.0);
     public static final BasicProperty<Double> TARGET_VALUE = createProperty(Constants.TARGET_VALUE, Double.class, 0.);
-    public static final BasicProperty<Object> TIME_LIMIT_STATIC_VALUE = createProperty(Constants.VALUE, Object.class, null, false, "time limit static value (min)");
+    public static final BasicProperty<Double> TIME_LIMIT_STATIC_VALUE = createProperty(Constants.VALUE, Double.class, 0.0, false, "time limit static value (min)");
     public static final BasicProperty<Double> TIMEOUT = createProperty(Constants.TIMEOUT, Double.class, -1.);
     public static final BasicProperty<String> TIMEOUT_BEHAVIOR = createProperty(Constants.TIMEOUT_BEHAVIOR, String.class, Constants.TIMEOUT_BEHAVIOR_CHOICES[0], Constants.TIMEOUT_BEHAVIOR_CHOICES);
     public static final BasicProperty<String> TIMEOUT_UNIT = createProperty(Constants.TIMEOUT_UNIT, String.class, Constants.TIME_DELAY_UNIT_CHOICES[0], Constants.TIME_DELAY_UNIT_CHOICES);
