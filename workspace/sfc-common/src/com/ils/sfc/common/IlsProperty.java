@@ -192,6 +192,7 @@ public class IlsProperty {
     public static final BasicProperty<String> JSON_MATRIX = createProperty(Constants.VALUE, String.class, "[[],[]]");
     public static final BasicProperty<String> JSON_OBJECT = createProperty(Constants.VALUE, String.class, "{}", true);
     public static final BasicProperty<String> KEY = createProperty(Constants.KEY, String.class, "");
+    public static final BasicProperty<String> KEY_AND_ATTRIBUTE = createProperty(Constants.KEY_AND_ATTRIBUTE, String.class, "");
     //public static final BasicProperty<Boolean> KEYED = createProperty(Constants.KEYED, Boolean.class, Boolean.FALSE);
     public static final BasicProperty<String> KEY_MODE = createProperty(Constants.KEY_MODE, String.class, "", Constants.KEY_MODE_CHOICES);
     public static final BasicProperty<String> LABEL = createProperty(Constants.LABEL, String.class, "");

@@ -114,6 +114,7 @@ public class Constants {
 	public static final String LOW_LIMIT = "lowLimit";
 	public static final String LOW = "Low";
 	public static final String KEY = "key";
+	public static final String KEY_AND_ATTRIBUTE = "keyAndAttribute";
 	public static final String KEY_MODE = "keyMode";
 	//public static final String KEYED = "keyed";
 	public static final String LABEL = "label";
