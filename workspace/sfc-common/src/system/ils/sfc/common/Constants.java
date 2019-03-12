@@ -42,6 +42,7 @@ public class Constants {
 	public static final String CENTER = "center";
 	public static final String CHILDREN = "children";
 	public static final String CLASS = "class";
+	public static final String CLASS_TO_CREATE = "classToCreate";
 	public static final String COMMAND = "callback";
 	public static final String CHOICES= "choices";
 	public static final String CHOICES_KEY = "choicesKey";
@@ -113,6 +114,7 @@ public class Constants {
 	public static final String LOW_LIMIT = "lowLimit";
 	public static final String LOW = "Low";
 	public static final String KEY = "key";
+	public static final String KEY_AND_ATTRIBUTE = "keyAndAttribute";
 	public static final String KEY_MODE = "keyMode";
 	//public static final String KEYED = "keyed";
 	public static final String LABEL = "label";
@@ -133,6 +135,7 @@ public class Constants {
 	public static final String MULTIPLE = "multiple";
 	public static final String NAME = "name";
 	public static final String NO = "No";
+	public static final String NO_LIMIT = "No Limit";
 	public static final String NONE = "none";
 	public static final String NOT_PERSISTENT = "NotPersistent";
 	public static final String NOT_CONSISTENT = "NotConsistent";
@@ -295,6 +298,13 @@ public class Constants {
 	public static final String BOOLEAN = "boolean";
 	public static final String DATE_TIME = "date/time";
 	
+	//recipe data classes
+	public static final String ARRAY = "array";
+	public static final String INPUT = "input";
+	public static final String OUTPUT_RAMP = "outputRamp";
+	public static final String SIMPLE_VALUE = "simpleValue";
+	public static final String SQC = "sqc";
+	
 	// Counting Modes (specifically for error counts but may be more generally applicable)
 	public static final String COUNT_ABSOLUTE = "absolute";
 	public static final String COUNT_INCREMENTAL = "incremental";
@@ -312,35 +322,37 @@ public class Constants {
 	public static final String ENCLOSING_STEP_SCOPE_KEY = "enclosingStep";
 	public static final String RESPONSE = "response";
 
-	// choices:
+	// Recipe Data Related choices:
 	public static final String[] RECIPE_STATIC_STRATEGY_CHOICES = {STATIC, RECIPE};
+	public static final String[] RECIPE_DATA_CLASS_CHOICES = {ARRAY, INPUT, OUTPUT, OUTPUT_RAMP, RECIPE, SIMPLE_VALUE, SQC};
 	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, SUPERIOR, PHASE, OPERATION, GLOBAL, REFERENCE};
 	public static String[] RECIPE_PLUS_VALUE_LOCATION_CHOICES = {VALUE, LOCAL, SUPERIOR, PHASE, OPERATION, GLOBAL, REFERENCE};
 	public static String[] RECIPE_PLUS_TAG_LOCATION_CHOICES = {LOCAL, SUPERIOR, PHASE, OPERATION, GLOBAL, REFERENCE, TAG};
 	public static String[] RECIPE_PLUS_CHART_STEP_CHOICES = {LOCAL, SUPERIOR, PHASE, OPERATION, GLOBAL, REFERENCE, CHART_SCOPE, STEP_SCOPE};
 	
+	// General choices
+	public static final String[] AUDIT_LEVEL_CHOICES = {OFF, LOW, HIGH};
+	public static final String[] AUTO_MODE_CHOICES = {AUTOMATIC, SEMI_AUTOMATIC};
+	public static final String[] COLLECT_DATA_VALUE_TYPE_CHOICES = {CURRENT, AVERAGE, MINIMUM, MAXIMUM, STANDARD_DEVIATION};
+	public static final String[] COMPUTER_CHOICES = {SERVER, LOCAL};
 	public static final String[] COUNT_MODE_CHOICES = {COUNT_ABSOLUTE, COUNT_INCREMENTAL};
-	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
-	public static final String[] TIME_LIMIT_STRATEGY_CHOICES = {STATIC, RECIPE};
-	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK, TAG};
-	public static final String[] RESULTS_MODE_CHOICES = {UPDATE, UPDATE_OR_CREATE};
 	public static final String[] FETCH_MODE_CHOICES = {SINGLE, MULTIPLE};
 	public static final String[] KEY_MODE_CHOICES = {STATIC, DYNAMIC};
-	public static final String[] AUTO_MODE_CHOICES = {AUTOMATIC, SEMI_AUTOMATIC};
-	public static final String[] COMPUTER_CHOICES = {SERVER, LOCAL};
+	public static final String[] MONITOR_DOWNLOADS_LABEL_CHOICES = {NAME, ITEM_ID};
+	public static final String[] OUTPUT_VALUE_TYPE_CHOICES = {MODE, SETPOINT, OUTPUT, VALUE};
 	public static final String[] POSITION_CHOICES = {CENTER, TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT};
-	public static final String[] SECURITY_CHOICES = {PUBLIC, PRIVATE};
 	public static final String[] PRIORITY_CHOICES = {INFO, WARNING, ERROR};
-	public static final String[] AUDIT_LEVEL_CHOICES = {OFF, LOW, HIGH};
-	public static final String[] COLLECT_DATA_VALUE_TYPE_CHOICES = {CURRENT, AVERAGE, MINIMUM, MAXIMUM, STANDARD_DEVIATION};
-	public static final String[] TIMEOUT_BEHAVIOR_CHOICES = {ABORT, TIMEOUT, DEFAULT_VALUE};
 	public static final String[] PV_TARGET_TYPE_CHOICES = {SETPOINT, VALUE, TAG, RECIPE};
 	public static final String[] PV_STRATEGY_CHOICES = {MONITOR, WATCH};
 	public static final String[] PV_LIMITS_CHOICES = {HIGH_LOW, HIGH, LOW};
 	public static final String[] PV_DOWNLOAD_CHOICES = {IMMEDIATE, WAIT};
 	public static final String[] PV_TYPE_CHOICES = {ABS, PCT};
-	public static final String[] OUTPUT_VALUE_TYPE_CHOICES = {MODE, SETPOINT, OUTPUT, VALUE};
-	public static final String[] MONITOR_DOWNLOADS_LABEL_CHOICES = {NAME, ITEM_ID};
+	public static final String[] RESULTS_MODE_CHOICES = {UPDATE, UPDATE_OR_CREATE};
+	public static final String[] SECURITY_CHOICES = {PUBLIC, PRIVATE};
+	public static final String[] TIMEOUT_BEHAVIOR_CHOICES = {ABORT, TIMEOUT, DEFAULT_VALUE};
+	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
+	public static final String[] TIME_LIMIT_STRATEGY_CHOICES = {NO_LIMIT, STATIC, RECIPE};
+	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK, TAG};
 	public static final String[] UNIT_CHOICES = {""};    // To be replaced at run-time
 	public static final String[] VALUE_TYPE_CHOICES = {BOOLEAN, DATE_TIME,FLOAT,INT, STRING};
 	

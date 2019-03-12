@@ -13,6 +13,6 @@ public interface SimpleQueryStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.simpleQueryStep";
 	
     public static final BasicProperty<?>[] properties = { 
-    	SQL, RESULTS_MODE, FETCH_MODE, RECIPE_LOCATION, KEY_MODE, KEY
+    	SQL, RESULTS_MODE, CLASS_TO_CREATE, FETCH_MODE, RECIPE_LOCATION, KEY_MODE, KEY
     };
 }
