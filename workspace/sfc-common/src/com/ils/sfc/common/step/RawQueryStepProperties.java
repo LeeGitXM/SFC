@@ -13,6 +13,6 @@ public interface RawQueryStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.rawQueryStep";
 	
     public static final BasicProperty<?>[] properties = { 
-    	SQL, RECIPE_LOCATION, KEY
+    	SQL, RECIPE_LOCATION, KEY_AND_ATTRIBUTE
     };
 }
