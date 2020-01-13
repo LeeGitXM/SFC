@@ -3,6 +3,8 @@
 .settings/
 .metadata
 .version
+.project
+.classpath
 *.class
 *.db
 *.log
