@@ -168,7 +168,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                    	RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project);
+                    	RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
                     	recipeDataConverter.internalize();
                     }
                 }).start();
@@ -184,7 +184,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                    	RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project);
+                    	RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
                     	recipeDataConverter.storeToDatabase();
                     }
                 }).start();

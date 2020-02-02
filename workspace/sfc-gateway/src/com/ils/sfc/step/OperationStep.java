@@ -20,9 +20,18 @@ public class OperationStep extends FoundationStep {
 
 	@Override
 	public void activateStep(StepController controller) {
+		logger.tracef("In OperationStep.calling Python...");
 		exec(PythonCall.OPERATION);		
+		
 		scopeContext.getStepScope().put(Constants.S88_LEVEL, Constants.OPERATION);
+		
+		logger.tracef("In OperationStep.activating Step...");
 		super.activateStep(controller);
+		//UUID instanceUUID = super.getEnclosedChartInstanceId();
+		logger.tracef("In OperationStep.doneActivating()");
+		
+		// I think the IA engine automatically calls deactivate when the step is done.
+		//this.deactivateStep();
 	}
 
 }

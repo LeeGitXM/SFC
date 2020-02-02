@@ -43,6 +43,7 @@ public class StepSearchObject implements SearchObject {
 		this.step = step;
 		this.rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
+		log.infof("Initializing a StepSearchObject");
 	}
 	@Override
 	public Icon getIcon() {
@@ -82,7 +83,7 @@ public class StepSearchObject implements SearchObject {
 			e.printStackTrace();
 		}
 		
-		log.infof("StepSearchObject Returning: %s", xmlString);
+		log.tracef("StepSearchObject Returning: %s", xmlString);
 		return xmlString;
 	}
 

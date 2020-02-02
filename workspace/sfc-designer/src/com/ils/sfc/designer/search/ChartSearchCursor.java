@@ -101,12 +101,12 @@ public class ChartSearchCursor extends SearchObjectCursor {
 		}
 		
 		if( index==0 && (searchKey&IlsSfcSearchProvider.SEARCH_CHART)!=0 ) {
-			log.infof("%s.next %s", TAG, res.getName());
+			log.tracef("%s.next %s", TAG, res.getName());
 			so = new ChartNameSearchObject(context, chartPath, res.getResourceId());
 		}
 //		else if(index > (searchChart?1:0) && (searchKey&IlsSfcSearchProvider.SEARCH_STEP)!=0 ) {
 		else if( (searchKey&IlsSfcSearchProvider.SEARCH_STEP)!=0 ) {
-			log.info("Searching a step...");
+			log.tracef("Searching a step...");
 			int stepIndex = index - (searchChart?1:0);
 			if (stepIndex < stepList.getLength()){
 				Element element = (Element) stepList.item(stepIndex);
