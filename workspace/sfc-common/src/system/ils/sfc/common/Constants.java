@@ -47,6 +47,7 @@ public class Constants {
 	public static final String CHOICES= "choices";
 	public static final String CHOICES_KEY = "choicesKey";
 	public static final String CHOICES_RECIPE_LOCATION = "choicesRecipeLocation";
+	public static final String CHOICES_RECIPE_CHART_STEP_LOCATION = "choicesRecipeChartStepLocation";
 	public static final String COLUMN_KEY = "columnKey";
 	public static final String COLUMNS = "columns";
 	//public static final String COLUMN_KEYED = "columnKeyed";
@@ -171,6 +172,7 @@ public class Constants {
 	public static final String RECIPE = "recipe";
 	public static final String RECIPE_DATA_FOLDER = "SFC";
 	public static final String RECIPE_LOCATION = "recipeLocation"; 
+	public static final String RECIPE_CHART_STEP_LOCATION = "responseLocation"; 
 	public static final String REGISTER_AND_DISPLAY = "registerAndDisplay";
 	public static final String REGISTER_ONLY = "registerOnly";
 	public static final String RESPONSE_KEY_AND_ATTRIBUTE = "responseKeyAndAttribute";
@@ -352,7 +354,7 @@ public class Constants {
 	public static final String[] TIMEOUT_BEHAVIOR_CHOICES = {ABORT, TIMEOUT, DEFAULT_VALUE};
 	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
 	public static final String[] TIME_LIMIT_STRATEGY_CHOICES = {NO_LIMIT, STATIC, RECIPE};
-	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK, TAG};
+	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK, TAG, CHART_SCOPE};
 	public static final String[] UNIT_CHOICES = {""};    // To be replaced at run-time
 	public static final String[] VALUE_TYPE_CHOICES = {BOOLEAN, DATE_TIME,FLOAT,INT, STRING};
 	

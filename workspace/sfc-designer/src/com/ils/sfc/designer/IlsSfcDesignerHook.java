@@ -75,6 +75,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private static final String START_MENU_ISOLATION_TITLE       = "Start Chart (isolation)";
 	private static final String RECIPE_DATA_INTERNALIZE = "Internalize Recipe Data for Export";
 	private static final String RECIPE_DATA_STORE = "Store Internal Recipe Data into Database";
+	private static final String RECIPE_DATA_INITIALIZE = "Initialize Internal Recipe Data";
 	private static final String ZOOM_MENU_TITLE = "Scale Display";
 	private static final String ZOOM_100 = "100%";
 	private static final String ZOOM_75  = " 75%";
@@ -192,6 +193,22 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         };
         
         toolsMenu.add(storeInternalRecipeDataAction);
+        
+        Action initializeInternalRecipeDataAction = new AbstractAction(RECIPE_DATA_INITIALIZE) {
+            private static final long serialVersionUID = 5374487347733312464L;
+            public void actionPerformed(ActionEvent ae) {
+                
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                    	RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
+                    	recipeDataConverter.initialize();
+                    }
+                }).start();
+            }
+        };
+        
+        toolsMenu.add(initializeInternalRecipeDataAction);
         
         toolsMenu.addSeparator();
         toolsMenu.addSeparator();

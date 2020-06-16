@@ -142,6 +142,7 @@ public class IlsProperty {
     public static final BasicProperty<String> CATEGORY = createProperty(Constants.CATEGORY, String.class, "");
     public static final BasicProperty<String> CHART_PATH = createProperty("chart-path", String.class, "");
     public static final BasicProperty<String> CHOICES_RECIPE_LOCATION = createProperty(Constants.CHOICES_RECIPE_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
+    public static final BasicProperty<String> CHOICES_RECIPE_CHART_STEP_LOCATION = createProperty(Constants.CHOICES_RECIPE_CHART_STEP_LOCATION, String.class, Constants.RECIPE_PLUS_CHART_STEP_CHOICES[0], Constants.RECIPE_PLUS_CHART_STEP_CHOICES);
     public static final BasicProperty<String> CHOICES_KEY = createProperty(Constants.CHOICES_KEY, String.class, "");
     public static final BasicProperty<String> CLASS = createProperty(Constants.CLASS, String.class, "");
     public static final BasicProperty<String> CLASS_TO_CREATE = createProperty(Constants.CLASS_TO_CREATE, String.class, Constants.SIMPLE_VALUE, Constants.RECIPE_DATA_CLASS_CHOICES);
@@ -153,7 +154,7 @@ public class IlsProperty {
     public static final BasicProperty<String> COMPUTER = createProperty(Constants.COMPUTER, String.class, Constants.COMPUTER_CHOICES[0], Constants.COMPUTER_CHOICES);
     public static final BasicProperty<String> CUSTOM_WINDOW_PATH = createProperty(Constants.CUSTOM_WINDOW_PATH, String.class, "");
     public static final BasicProperty<String> DATA_ID = createProperty(Constants.DATA_ID, String.class, "");
-    public static final BasicProperty<String> TIME_LIMIT_RECIPE_LOCATION = createProperty(Constants.DATA_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], false, Constants.RECIPE_LOCATION_CHOICES, "time limit recipe location");
+
     public static final BasicProperty<Double> DEADTIME = createProperty(Constants.DEADTIME, Double.class, 0.);
     public static final BasicProperty<String> DEFAULT_VALUE = createProperty(Constants.DEFAULT_VALUE, String.class, "");
     public static final BasicProperty<Double> DELAY = createProperty(Constants.DELAY, Double.class, 0.);
@@ -226,6 +227,7 @@ public class IlsProperty {
     public static final BasicProperty<String> QUEUE = createProperty(Constants.QUEUE, String.class, "");
     public static final BasicProperty<Double> RAMP_TIME = createProperty(Constants.RAMP_TIME, Double.class, 5.);
     public static final BasicProperty<String> RECIPE_LOCATION = createProperty(Constants.RECIPE_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
+    public static final BasicProperty<String> RECIPE_CHART_STEP_LOCATION = createProperty(Constants.RECIPE_LOCATION, String.class, Constants.RECIPE_PLUS_CHART_STEP_CHOICES[0], Constants.RECIPE_PLUS_CHART_STEP_CHOICES);
     public static final BasicProperty<Boolean> REQUIRE_ALL_INPUTS = createProperty(Constants.REQUIRE_ALL_INPUTS, Boolean.class, Boolean.TRUE);
     public static final BasicProperty<String> RESPONSE_KEY_AND_ATTRIBUTE = createProperty(Constants.RESPONSE_KEY_AND_ATTRIBUTE, String.class, "");
     public static final BasicProperty<String> RESULTS_MODE = createProperty(Constants.RESULTS_MODE, String.class, Constants.RESULTS_MODE_CHOICES[0], Constants.RESULTS_MODE_CHOICES);
@@ -251,6 +253,7 @@ public class IlsProperty {
     public static final BasicProperty<String> TIME_LIMIT_RECIPE_KEY = createProperty(Constants.KEY, String.class, "", false, "time limit recipe key");
     public static final BasicProperty<String> TIME_DELAY_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.TIME_DELAY_STRATEGY_CHOICES[0], Constants.TIME_DELAY_STRATEGY_CHOICES);
     public static final BasicProperty<String> TIME_LIMIT_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.TIME_LIMIT_STRATEGY_CHOICES[0], false, Constants.TIME_LIMIT_STRATEGY_CHOICES, "time limit strategy");
+    public static final BasicProperty<String> TIME_LIMIT_RECIPE_LOCATION = createProperty(Constants.DATA_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], false, Constants.RECIPE_LOCATION_CHOICES, "time limit recipe location");
     public static final BasicProperty<Double> TIMING = createProperty(Constants.TIMING, Double.class, 0.);
     public static final BasicProperty<String> RECIPE_STATIC_STRATEGY = createProperty(Constants.STRATEGY, String.class, Constants.RECIPE_STATIC_STRATEGY_CHOICES[0], Constants.RECIPE_STATIC_STRATEGY_CHOICES);
     public static final BasicProperty<Double> SCALE = createProperty(Constants.SCALE, Double.class, 1.0);
