@@ -43,6 +43,7 @@ public class Constants {
 	public static final String CHILDREN = "children";
 	public static final String CLASS = "class";
 	public static final String CLASS_TO_CREATE = "classToCreate";
+	public static final String CLIENT = "client";
 	public static final String COMMAND = "callback";
 	public static final String CHOICES= "choices";
 	public static final String CHOICES_KEY = "choicesKey";
@@ -94,6 +95,8 @@ public class Constants {
 	public static final String FETCH_MODE = "fetchMode";
 	public static final String FILENAME = "filename";
 	public static final String FILEPATH = "filepath";
+	public static final String FILE_LOCATION = "fileLocation";
+	public static final String GATEWAY = "gateway";
 	public static final String GLOBAL_ERROR_COUNT_KEY = "globalErrorCountKey";
 	public static final String GLOBAL_ERROR_COUNT_LOCATION = "globalErrorCountLocation";
 	public static final String HEADING1 = "heading1";
@@ -339,6 +342,7 @@ public class Constants {
 	public static final String[] COMPUTER_CHOICES = {SERVER, LOCAL};
 	public static final String[] COUNT_MODE_CHOICES = {COUNT_ABSOLUTE, COUNT_INCREMENTAL};
 	public static final String[] FETCH_MODE_CHOICES = {SINGLE, MULTIPLE};
+	public static final String[] FILE_LOCATION_CHOICES = {GATEWAY, CLIENT};
 	public static final String[] KEY_MODE_CHOICES = {STATIC, DYNAMIC};
 	public static final String[] MONITOR_DOWNLOADS_LABEL_CHOICES = {NAME, ITEM_ID};
 	public static final String[] OUTPUT_VALUE_TYPE_CHOICES = {MODE, SETPOINT, OUTPUT, VALUE};

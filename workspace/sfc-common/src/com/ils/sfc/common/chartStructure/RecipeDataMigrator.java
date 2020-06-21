@@ -48,7 +48,7 @@ public class RecipeDataMigrator {
 
 				// This prints out nicely formatted XML of the resource.
 				String chartResourceAsXML=IlsSfcCommonUtils.returnResource(chartResourceData);
-				log.infof("Resource: %s", chartResourceAsXML);
+				log.tracef("Resource: %s", chartResourceAsXML);
 				
 				try {				
 					Object[] args = {chartPath, resourceId, chartResourceAsXML};
@@ -61,9 +61,6 @@ public class RecipeDataMigrator {
 			catch(IOException ioe) {
 				log.errorf("loadModels: Exception reading %s:%d (%s)",chartPath,res.getResourceId(),ioe.getLocalizedMessage());
 			}
-	
 		}
-	}
-	
+	}	
 }
-

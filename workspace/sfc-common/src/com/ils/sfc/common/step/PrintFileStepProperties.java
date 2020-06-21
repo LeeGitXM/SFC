@@ -17,7 +17,7 @@ public interface PrintFileStepProperties extends ChartStepProperties {
     	SCALE,
     	BUTTON_LABEL,
     	WINDOW_TITLE,
-    	COMPUTER,
+    	FILE_LOCATION,
     	FILENAME,
     	PRINT_FILE,
     	SHOW_PRINT_DIALOG,
