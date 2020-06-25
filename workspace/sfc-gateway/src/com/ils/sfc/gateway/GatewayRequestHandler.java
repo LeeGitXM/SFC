@@ -77,6 +77,16 @@ public class GatewayRequestHandler {
 	}
 	
 	/**
+	 * Find the full path to user-lib under the current running Ignition instance.
+	 * 
+	 * @return the path to the user-lib directory.
+	 */
+	public String getUserLibPath()  {
+		String userLibPath = context.getUserlibDir().getAbsolutePath();
+		return userLibPath;
+	}
+	
+	/**
 	 * A list of data sources is not available in client scope.
 	 * @return
 	 */

@@ -30,6 +30,16 @@ public class IlsClientScripts {
 	}
 	
 	/**
+	 * Find the path to the user-lib directory under the current running Ignition.
+	 * 
+	 * @return path to the directory1.
+	 */
+	public static String getUserLibPath()  {
+		String userLibPath = requestHandler.getUserLibPath();
+		return userLibPath;
+	}
+	
+	/**
 	 * Find the tag provider associated with the sequential function charts.
 	 * 
 	 * @param isIsolation true if this the chart is in an isolation (test) state.
