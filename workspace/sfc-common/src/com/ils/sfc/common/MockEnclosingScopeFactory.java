@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import system.ils.sfc.common.Constants;
-
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer.EnclosureInfo;
 import com.ils.sfc.common.step.OperationStepProperties;
 import com.ils.sfc.common.step.PhaseStepProperties;
 import com.ils.sfc.common.step.ProcedureStepProperties;
 import com.inductiveautomation.sfc.api.PyChartScope;
+
+import system.ils.sfc.common.Constants;
 
 /**
  * A factory that produces a set of initial chart parameters that mocks out an enclosing 

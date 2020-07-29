@@ -5,7 +5,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer.ChartInfo;
 import com.ils.sfc.common.recipe.objects.Data;

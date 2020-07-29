@@ -152,7 +152,8 @@ public class PythonCall {
 			PyList.class,  new String[]{"stepUUID"} );
 	public static final PythonCall MIGRATE_RECIPE_DATA = new PythonCall("ils.sfc.recipeData.migrator.migrateChart", 
 			null,  new String[]{"chartPath", "resourceId", "chartResourceAsXML", "database"} );
-	
+	public static final PythonCall GET_RECIPE_SEARCH_RESULTS = new PythonCall("ils.sfc.recipeData.search.getSearchResults", 
+			PyList.class,  new String[]{} );
 	// units
 	public static final PythonCall INITIALIZE_UNITS = new PythonCall("ils.common.units.lazyInitialize", 
 			null,  new String[]{"database"} );

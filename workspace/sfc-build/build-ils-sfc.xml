@@ -95,7 +95,7 @@
 			<param name="modName" value="${ils.sfc.name}_Common" />
 			<param name="sourceDirFolder" value="sfc-common" />
 			<param name="jarName" value="ils-sfc-common" />
-			<param name="javacSource" value="1.7" />
+			<param name="javacSource" value="1.8" />
 			<param name="module.build.classpath" value="sfc.common.classpath"/>
 		</antcall>
 		<!-- sfc-gateway jar -->

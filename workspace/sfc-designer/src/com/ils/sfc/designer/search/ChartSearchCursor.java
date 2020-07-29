@@ -2,23 +2,23 @@ package com.ils.sfc.designer.search;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.python.core.PyDictionary;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.ils.sfc.common.IlsSfcCommonUtils;
+import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObjectCursor;
@@ -29,8 +29,6 @@ import com.inductiveautomation.sfc.definitions.ElementDefinition;
 
 /**
  * The chart search cursor iterates over steps in a chart
- * @author chuckc
- *
  */
 public class ChartSearchCursor extends SearchObjectCursor {
 	private final String TAG = "ChartSearchCursor";
@@ -44,10 +42,13 @@ public class ChartSearchCursor extends SearchObjectCursor {
 	private final ProjectResource res;
 	private Document xmlDocument = null;
 	private final int searchKey;
-	private int index = 0;
-	private int subindex = 0;
-	private final List<UUID> visited;
+	private int chartIndex = 0;
+	private int stepIndex = 0;
+	private int transitionIndex = 0;
+	private int recipeIndex = 0;
+	private List<PyDictionary> recipeList = null;
 	private NodeList stepList = null;
+	private NodeList transitionList = null;
 
 	public ChartSearchCursor(DesignerContext ctx, StepRegistry stepRegistry, ProjectResource resource, Project project, int key) {
 		this.context = ctx;
@@ -56,20 +57,24 @@ public class ChartSearchCursor extends SearchObjectCursor {
 		this.stepRegistry = stepRegistry;
 		this.project = project;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
-		this.index = 0;
-		this.visited = new ArrayList<>();
+		this.chartIndex = 0;
+		this.stepIndex = 0;
+		this.transitionIndex = 0;
+		this.recipeIndex = 0;
 		log.infof("%s.new - initializing a search cursor for res=%d", TAG, res.getResourceId());
 	}
 	@Override
 	public Object next() {
-		log.tracef("%s.next - searching res=%d index=%d", TAG, res.getResourceId(),index);
+		log.infof("%s.next - searching res=%d", TAG, res.getResourceId());
 		Object so = null;   // Search Object
-		boolean searchChart = (searchKey & IlsSfcSearchProvider.SEARCH_CHART)!=0;
+		boolean searchChart  = (searchKey & IlsSfcSearchProvider.SEARCH_CHART)!=0;
+		boolean searchStep   = (searchKey & IlsSfcSearchProvider.SEARCH_STEP)!=0;
+		boolean searchRecipe = (searchKey & IlsSfcSearchProvider.SEARCH_RECIPE)!=0;
+		boolean searchTransition = (searchKey & IlsSfcSearchProvider.SEARCH_TRANSITION)!=0;
 		
 		// Deserialize here - first time through only - return next block cursor
-		if( index==0 ) {
+		if( chartIndex==0 ) {
 			byte[] chartResourceData = res.getData();					
-			
 			chartPath = project.getFolderPath(res.getResourceId());
 			try {
 				GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
@@ -81,52 +86,53 @@ public class ChartSearchCursor extends SearchObjectCursor {
 				Element documentElement = xmlDocument.getDocumentElement();
 				
 				stepList = documentElement.getElementsByTagName("step");
-				
-				
+				transitionList = documentElement.getElementsByTagName("transition");
+			
 				// Only leave this in during debugging
-				IlsSfcCommonUtils.printResource(chartResourceData);
+				//IlsSfcCommonUtils.printResource(chartResourceData);
+				
+				if(searchRecipe) {
+					recipeList = (List<PyDictionary>) PythonCall.GET_RECIPE_SEARCH_RESULTS.exec();
+				}
+			}
+			catch(JythonExecException jee) {
+				log.errorf("%s.next: Exception executing Python %s",TAG,PythonCall.GET_RECIPE_SEARCH_RESULTS);
 			}
 			catch(IOException ioe) {
-				log.errorf("loadModels: Exception reading %s:%d (%s)",chartPath, res.getResourceId(),ioe.getLocalizedMessage());
-//				success = false;
+				log.errorf("%s.next: Exception reading %s:%d (%s)",TAG,chartPath, res.getResourceId(),ioe.getLocalizedMessage());
 			}
-			catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			catch (SAXException saxe) {
+				log.errorf("%s.next: SAXException reading %s:%d (%s)",TAG,chartPath, res.getResourceId(),saxe.getLocalizedMessage());
 			}
-			catch (ParserConfigurationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			catch (ParserConfigurationException pce) {
+				log.errorf("%s.next: ParserConfigException reading %s:%d (%s)",TAG,chartPath, res.getResourceId(),pce.getLocalizedMessage());
 			}
 		}
 		
-		if( index==0 && (searchKey&IlsSfcSearchProvider.SEARCH_CHART)!=0 ) {
-			log.infof("%s.next %s", TAG, res.getName());
+		// First step is chart name
+		if( searchChart && chartIndex==0 ) {
+			//log.infof("%s.next %s", TAG, res.getName());
 			so = new ChartNameSearchObject(context, chartPath, res.getResourceId());
 		}
-//		else if(index > (searchChart?1:0) && (searchKey&IlsSfcSearchProvider.SEARCH_STEP)!=0 ) {
-		else if( (searchKey&IlsSfcSearchProvider.SEARCH_STEP)!=0 ) {
-			log.info("Searching a step...");
-			int stepIndex = index - (searchChart?1:0);
-			if (stepIndex < stepList.getLength()){
-				Element element = (Element) stepList.item(stepIndex);
-				so = new StepSearchObject(context, chartPath, res.getResourceId(), element);
-			}
+		else if(searchStep && stepIndex < stepList.getLength() ) {
+			//log.info("Searching a step...");
+			Element element = (Element) stepList.item(stepIndex);
+			so = new StepSearchObject(context, chartPath, res.getResourceId(), element);
+			stepIndex++;
+		}
+		else if(searchTransition && transitionIndex < transitionList.getLength() ) {
+			//log.info("Searching a transition...");
+			Element element = (Element) transitionList.item(transitionIndex);
+			so = new TransitionSearchObject(context, chartPath, res.getResourceId(), element);
+			transitionIndex++;
+		}
+		else if(searchRecipe && recipeList!=null && recipeIndex < recipeList.size() ) {
+			so = new RecipeSearchObject(context,recipeList.get(recipeIndex));
+			recipeIndex++;
 		}
 
-		index++;
+		chartIndex++;
 		return so;
 	}
-	
-	private ElementDefinition visitChildren(ElementDefinition ed) {
-		if(subindex==index) return ed;
-		if( visited.contains(ed.getElementId())) return null;
-		visited.add(ed.getElementId());
-		subindex++;
-		for(ElementDefinition def:ed.getNextElements() ) {
-			ElementDefinition child = visitChildren(def);
-			if(child!=null ) return child;
-		}
-		return null;
-	}
+
 }

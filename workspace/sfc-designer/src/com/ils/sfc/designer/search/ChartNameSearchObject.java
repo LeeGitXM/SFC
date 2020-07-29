@@ -5,11 +5,8 @@ import java.util.ResourceBundle;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import org.w3c.dom.Element;
-
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.inductiveautomation.ignition.client.util.gui.ErrorUtil;
-import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 /**

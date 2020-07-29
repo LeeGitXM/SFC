@@ -5,46 +5,49 @@ import java.util.ResourceBundle;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import org.python.core.PyDictionary;
+
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.inductiveautomation.ignition.client.util.gui.ErrorUtil;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 /**
- * The property iteration is trivial. On first call
- * return the property name, on the second call return its value.
- * @author chuckc
+ * This is a proxy for search results executed in Python against the database.
  *
  */
-public class StepPropertySearchObject implements SearchObject {
+public class RecipeSearchObject implements SearchObject {
+	// These are field names in the dictionary returned from Python
+	public final String NAME = "NAME";
+	public final String PARENT = "PARENT";
+	public final String RES = "RES";
+	public final String TEXT = "TEXT";
 	private final DesignerContext context;
-	private final long resourceId;
+	private final String name;
 	private final String parentName;
-	private final String propertyName;
-	private final String value;
+	private final String text;
+	private final long resourceId;
 	private final ResourceBundle rb;
 	
-	public StepPropertySearchObject(DesignerContext ctx,String parent,long resid,String name, String val) {
+	public RecipeSearchObject(DesignerContext ctx,PyDictionary dict) {
 		this.context = ctx;
-		this.resourceId = resid;
-		this.parentName = parent;
-		this.propertyName = name;
-		this.value = val;
+		this.name = (String)dict.get(NAME);
+		this.parentName = (String)dict.get(PARENT);
+		this.text = (String)dict.get(TEXT);
+		this.resourceId = (Long)dict.get(RES);
 		this.rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
 	}
+	
 	@Override
 	public Icon getIcon() {
-		ImageIcon icon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/text_tree.png"));
+		ImageIcon icon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/table.png"));
 		return icon;
 	}
 
 	@Override
 	public String getName() {
-		return propertyName;
+		return name;
 	}
 
-	/**
-	 * This should be a path to the object.
-	 */
 	@Override
 	public String getOwnerName() {
 		return parentName;
@@ -52,7 +55,7 @@ public class StepPropertySearchObject implements SearchObject {
 
 	@Override
 	public String getText() {
-		return value;
+		return text;
 	}
 
 	@Override
@@ -63,7 +66,7 @@ public class StepPropertySearchObject implements SearchObject {
 
 	@Override
 	public void setText(String arg0) throws IllegalArgumentException {
-		ErrorUtil.showWarning(rb.getString("Locator.ScopeDataChangeWarning"), rb.getString("Locator.WarningTitle"));	
+		ErrorUtil.showWarning(rb.getString("Locator.RecipeDataChangeWarning"), rb.getString("Locator.WarningTitle"));
+		
 	}
-
 }

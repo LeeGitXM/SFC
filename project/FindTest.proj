@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+<version>
+  <major>7</major>
+  <minor>9</minor>
+  <rev>14</rev>
+  <build>2020042813</build>
+</version>
+<timestamp>2020-07-28 12:50:51</timestamp>
+<id>1</id>
+<name>FindTest</name>
+<source></source>
+<title>Find and Replace Test</title>
+<description>Test of the Find/Replace feature.</description>
+<enabled>true</enabled>
+<lastModified>1595962222509</lastModified>
+<lastModifiedBy>chuckc</lastModifiedBy>
+<editCount>3</editCount>
+<uuid>5cf91834-d5b8-94ac-3d09-064e4d91adc2</uuid>
+<resources>
+	<resource id='1' name='' module='' modver='7.9.14.2020042813' type='sr.global.props' ver='0' dirty='false' editcount='3' parent='' oemlocked='false' scope='7' protected='false'>
+		<doc></doc>
+		<bytes><![CDATA[H4sIAAAAAAAAAG2QwUrDMBzGv6ybW7tNhicRvHnx0hfQiygoMnSiL5CmaY20zWjSgQ8h3obPMA+C
+j+BNX8RH8Oo/pggyQ9Pv45/vn/ySp/3H1fHX+eXrw8fh2fLlHUAHYGb59vmM/8cmzRFlEtIuqfDl
+vk7upLCGbAAcCF3GqkobYdVC8sbqklulq1jllfoxFChJ5rV2bfFpoRNezGo9dzuMgV7GCyM9TyAK
+V90Atoy0R429pWCmCnnBSxfpEUZJyujTpANqMbYmFxJYKjPeFNYxuquRDoEJbTSVORf3M09A5QjY
+pfKJz19fTW94bmh5oVJZu6Mm7ROwbfdjDi7090Ww489Ht+OABh4X/Yh5HrC91sC/G8L1juhvhzNY
+Tw1/U6N2DeNvuNnv0sgBAAA=]]></bytes></resource>
+	<resource id='4' name='' module='fpmi' modver='' type='client_tags' ver='0' dirty='false' editcount='1' parent='' oemlocked='false' scope='4' protected='false'>
+		<doc></doc>
+		<bytes><![CDATA[H4sIAAAAAAAAAG2QsU7DMBCGz5SStKWUbggxZGWxklCJtmIrqlAlYOkLGNepDHEcYqeIh0BsFc/A
+gsSGxAvAm/AErJxlBgYsWXc+333+fz8dPj5PvmeXrw+fJ2frlw8A2AAgZv32/gX/r13c2wCBEfaC
+KYGnLYCDeS2iWZ1H6TBK0vEgHqdJdH46j9I4jbGljVDu5wN9dS24NZg2kJSVStKVqIzUBZY2AcIR
+HdFkQN1ciE08d70dJCg3jlFj3MEbYyvMuk4wRgLQzyqUdKermz/IHlIrra331j/2dCcsHqTD5Ajr
+LYAp14rKYlFzK1eC1VYrZhFAM8atru6dTFaWueS+bG5zy5aGTnIpCjtny6nOF8LpaSLPSiWMZarc
+A+8TSOjfh0bobUIz9H8HxDUFxNlteTFA9r1VaLuRTuj/HLpt4q0DiX4TR+r9APkm7QLHAQAA]]></bytes></resource>
+</resources>
+<deletedResources>
+</deletedResources>
+</project>
