@@ -12,14 +12,17 @@ import system.ils.sfc.common.Constants;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 /** A helper class to make Swing components for editing/rendering various
  *  property types.
  */
 public class PropertyCellComponentFactory {
+	private final LoggerEx log = LogUtil.getLogger(getClass().getName());
 	
 	public PropertyCellComponentFactory() {
-
+		log.infof("Creating a PropertyCellComponentFactory.");
  	}
 
 	private JTextField createTextField() {
@@ -54,6 +57,7 @@ public class PropertyCellComponentFactory {
 	 */
 	protected Component getComponentForValue(PropertyRow rowObj, int alignment, boolean isEditable) {
 	    Component component = null;
+	    log.infof("...getting a component for a value....");
 		if(rowObj.getProperty().getType() == Boolean.class) {
 	    	JCheckBox checkBox = createCheckBox();
 	    	boolean value = rowObj.getValue() != null ? ((Boolean)rowObj.getValue()).booleanValue() : false;

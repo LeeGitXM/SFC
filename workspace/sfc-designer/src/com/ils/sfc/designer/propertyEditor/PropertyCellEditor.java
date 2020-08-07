@@ -1,5 +1,6 @@
 package com.ils.sfc.designer.propertyEditor;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +10,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 
 import com.ils.sfc.designer.DesignerUtil;
@@ -67,5 +69,5 @@ class PropertyCellEditor extends AbstractCellEditor implements TableCellEditor{
 	    	return "?";
 	    }
 	}
-	  
+	
 }

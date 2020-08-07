@@ -18,7 +18,7 @@ public interface InputStepProperties extends ChartStepProperties {
     	BUTTON_LABEL,
     	WINDOW_TITLE,
     	PROMPT, 
-    	RECIPE_LOCATION, 
+    	RECIPE_CHART_STEP_LOCATION, 
     	KEY,
     	DEFAULT_VALUE
     };

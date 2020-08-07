@@ -40,6 +40,10 @@ public class GatewayRpcDispatcher   {
 		return requestHandler.getDatasourceNames();
 	}
 	
+	public String getUserLibPath() {
+		return requestHandler.getUserLibPath();
+	}
+	
 	public String getToolkitProperty(String propertyName) {
 		return requestHandler.getToolkitProperty(propertyName);
 	}

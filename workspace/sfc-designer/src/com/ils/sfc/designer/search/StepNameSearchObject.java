@@ -1,20 +1,9 @@
 package com.ils.sfc.designer.search;
 
-import java.io.StringWriter;
 import java.util.ResourceBundle;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Element;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.inductiveautomation.ignition.client.util.gui.ErrorUtil;
@@ -23,24 +12,24 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 /**
- * Transition
- * @author chuckc
- *
+ * The property is Name.
  */
-public class TransitionSearchObject implements SearchObject {
+public class StepNameSearchObject implements SearchObject {
 
 	private final String chartPath;
-	private final long chartResourceId;
-	private final Element step;
+	private final String chartType;
+	private final long resourceId;
+	private final String name;
 	private final DesignerContext context;
 	private final ResourceBundle rb;
 	private final LoggerEx log;
 	
-	public TransitionSearchObject(DesignerContext ctx, String chartPath, long resid, Element step) {
+	public StepNameSearchObject(DesignerContext ctx, String chartPath, String type, long resid,String property) {
 		this.context = ctx;
-		this.chartResourceId = resid;
+		this.chartType = type;
 		this.chartPath = chartPath;
-		this.step = step;
+		this.name = property;
+		this.resourceId = resid;
 		this.rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
@@ -52,26 +41,23 @@ public class TransitionSearchObject implements SearchObject {
 
 	@Override
 	public String getName() {
-		return "Expression";
+		return "Name";
 	}
 
 	@Override
 	public String getOwnerName() {
-		String location = step.getAttribute("location");
-		return chartPath + " - transition at - " + location;
+		return chartPath + " - "+chartType;
 	}
 
 	@Override
 	public String getText() {
-		String text = step.getTextContent();
-		//log.infof("TransitionSearchObject expression: %s", text);
-		return text;
+		return name;
 	}
 
 	@Override
 	public void locate() {
 		ChartLocator locator = new ChartLocator(context);
-		locator.locate(chartResourceId);
+		locator.locate(resourceId);
 	}
 
 	@Override

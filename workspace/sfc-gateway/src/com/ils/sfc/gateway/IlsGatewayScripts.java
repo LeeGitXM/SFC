@@ -61,6 +61,17 @@ public class IlsGatewayScripts {
 	}
 	
 	/**
+	 * Find the full path to user-lib under the current running Ignition instance.
+	 * 
+	 * @return the path to the user-lib directory.
+	 */
+	public static String getUserLibPath()  {
+		String userLibPath = requestHandler.getUserLibPath();
+		return userLibPath;
+	}
+	
+	
+	/**
 	 * Find the tag provider associated with the sequential function charts.
 	 * 
 	 * @param isIsolation true if this the chart is in an isolation (test) state.

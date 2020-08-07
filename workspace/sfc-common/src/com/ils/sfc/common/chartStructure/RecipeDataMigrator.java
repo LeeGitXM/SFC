@@ -26,7 +26,6 @@ public class RecipeDataMigrator {
 		this.stepRegistry = stepRegistry;
 		this.globalProject = globalProject;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
-		this.database = "XOM";
 		log.info("Initializing my very own *** Recipe Data Migrator ***");
 	}
 
@@ -49,10 +48,10 @@ public class RecipeDataMigrator {
 
 				// This prints out nicely formatted XML of the resource.
 				String chartResourceAsXML=IlsSfcCommonUtils.returnResource(chartResourceData);
-				log.infof("Resource: %s", chartResourceAsXML);
+				log.tracef("Resource: %s", chartResourceAsXML);
 				
 				try {				
-					Object[] args = {chartPath, resourceId, chartResourceAsXML, database};
+					Object[] args = {chartPath, resourceId, chartResourceAsXML};
 					PythonCall.MIGRATE_RECIPE_DATA.exec( args );
 				} catch (JythonExecException e) {
 					log.errorf("Caught an error (%s)", e.getMessage());
@@ -62,9 +61,6 @@ public class RecipeDataMigrator {
 			catch(IOException ioe) {
 				log.errorf("loadModels: Exception reading %s:%d (%s)",chartPath,res.getResourceId(),ioe.getLocalizedMessage());
 			}
-	
 		}
-	}
-	
+	}	
 }
-

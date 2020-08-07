@@ -30,7 +30,6 @@ public class ChartStructureCompilerV2 {
 		this.stepRegistry = stepRegistry;
 		this.globalProject = globalProject;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
-		this.database = "XOM";
 		log.info("Initializing my very own chart structure compiler");
 	}
 
@@ -52,7 +51,7 @@ public class ChartStructureCompilerV2 {
 			byte[] chartResourceData = res.getData();
 			String chartResourceAsXML=IlsSfcCommonUtils.returnResource(chartResourceData);
 
-			Object[] args = {chartPath, resourceId, chartResourceAsXML, database};
+			Object[] args = {chartPath, resourceId, chartResourceAsXML};
 			PythonCall.UPDATE_CHART_HIERARCHY.exec( args );
 		}
 	}

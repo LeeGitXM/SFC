@@ -17,21 +17,18 @@ import com.inductiveautomation.ignition.designer.model.DesignerContext;
  */
 public class RecipeSearchObject implements SearchObject {
 	// These are field names in the dictionary returned from Python
-	public final String NAME = "NAME";
-	public final String PARENT = "PARENT";
+	public final String PATH = "PATH";
 	public final String RES = "RES";
 	public final String TEXT = "TEXT";
 	private final DesignerContext context;
-	private final String name;
-	private final String parentName;
+	private final String path;
 	private final String text;
 	private final long resourceId;
 	private final ResourceBundle rb;
 	
 	public RecipeSearchObject(DesignerContext ctx,PyDictionary dict) {
 		this.context = ctx;
-		this.name = (String)dict.get(NAME);
-		this.parentName = (String)dict.get(PARENT);
+		this.path = (String)dict.get(PATH);
 		this.text = (String)dict.get(TEXT);
 		this.resourceId = (Long)dict.get(RES);
 		this.rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
@@ -45,12 +42,12 @@ public class RecipeSearchObject implements SearchObject {
 
 	@Override
 	public String getName() {
-		return name;
+		return "Recipe Data";
 	}
 
 	@Override
 	public String getOwnerName() {
-		return parentName;
+		return path;
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import static com.ils.sfc.common.IlsProperty.BUTTON_LABEL;
 import static com.ils.sfc.common.IlsProperty.KEY;
 import static com.ils.sfc.common.IlsProperty.POSITION;
 import static com.ils.sfc.common.IlsProperty.PROMPT;
-import static com.ils.sfc.common.IlsProperty.RECIPE_LOCATION;
 import static com.ils.sfc.common.IlsProperty.SCALE;
 import static com.ils.sfc.common.IlsProperty.WINDOW_TITLE;
 

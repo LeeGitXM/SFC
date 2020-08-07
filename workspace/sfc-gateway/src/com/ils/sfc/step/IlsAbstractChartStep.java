@@ -217,6 +217,7 @@ public abstract class IlsAbstractChartStep extends AbstractChartElement<StepDefi
 	
 	/** Get the name of a step from its definition */
 	private String getName(StepDefinition definition) {
+		logger.info("getName is Getting called.");
 		return (String)definition.getProperties().getOrDefault(IlsProperty.NAME);
 	}
 	

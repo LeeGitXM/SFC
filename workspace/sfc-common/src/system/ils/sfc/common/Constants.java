@@ -43,10 +43,12 @@ public class Constants {
 	public static final String CHILDREN = "children";
 	public static final String CLASS = "class";
 	public static final String CLASS_TO_CREATE = "classToCreate";
+	public static final String CLIENT = "client";
 	public static final String COMMAND = "callback";
 	public static final String CHOICES= "choices";
 	public static final String CHOICES_KEY = "choicesKey";
 	public static final String CHOICES_RECIPE_LOCATION = "choicesRecipeLocation";
+	public static final String CHOICES_RECIPE_CHART_STEP_LOCATION = "choicesRecipeChartStepLocation";
 	public static final String COLUMN_KEY = "columnKey";
 	public static final String COLUMNS = "columns";
 	//public static final String COLUMN_KEYED = "columnKeyed";
@@ -93,6 +95,8 @@ public class Constants {
 	public static final String FETCH_MODE = "fetchMode";
 	public static final String FILENAME = "filename";
 	public static final String FILEPATH = "filepath";
+	public static final String FILE_LOCATION = "fileLocation";
+	public static final String GATEWAY = "gateway";
 	public static final String GLOBAL_ERROR_COUNT_KEY = "globalErrorCountKey";
 	public static final String GLOBAL_ERROR_COUNT_LOCATION = "globalErrorCountLocation";
 	public static final String HEADING1 = "heading1";
@@ -171,6 +175,7 @@ public class Constants {
 	public static final String RECIPE = "recipe";
 	public static final String RECIPE_DATA_FOLDER = "SFC";
 	public static final String RECIPE_LOCATION = "recipeLocation"; 
+	public static final String RECIPE_CHART_STEP_LOCATION = "responseLocation"; 
 	public static final String REGISTER_AND_DISPLAY = "registerAndDisplay";
 	public static final String REGISTER_ONLY = "registerOnly";
 	public static final String RESPONSE_KEY_AND_ATTRIBUTE = "responseKeyAndAttribute";
@@ -337,6 +342,7 @@ public class Constants {
 	public static final String[] COMPUTER_CHOICES = {SERVER, LOCAL};
 	public static final String[] COUNT_MODE_CHOICES = {COUNT_ABSOLUTE, COUNT_INCREMENTAL};
 	public static final String[] FETCH_MODE_CHOICES = {SINGLE, MULTIPLE};
+	public static final String[] FILE_LOCATION_CHOICES = {GATEWAY, CLIENT};
 	public static final String[] KEY_MODE_CHOICES = {STATIC, DYNAMIC};
 	public static final String[] MONITOR_DOWNLOADS_LABEL_CHOICES = {NAME, ITEM_ID};
 	public static final String[] OUTPUT_VALUE_TYPE_CHOICES = {MODE, SETPOINT, OUTPUT, VALUE};
@@ -352,7 +358,7 @@ public class Constants {
 	public static final String[] TIMEOUT_BEHAVIOR_CHOICES = {ABORT, TIMEOUT, DEFAULT_VALUE};
 	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};
 	public static final String[] TIME_LIMIT_STRATEGY_CHOICES = {NO_LIMIT, STATIC, RECIPE};
-	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK, TAG};
+	public static final String[] TIME_DELAY_STRATEGY_CHOICES = {STATIC, RECIPE, CALLBACK, TAG, CHART_SCOPE};
 	public static final String[] UNIT_CHOICES = {""};    // To be replaced at run-time
 	public static final String[] VALUE_TYPE_CHOICES = {BOOLEAN, DATE_TIME,FLOAT,INT, STRING};
 	

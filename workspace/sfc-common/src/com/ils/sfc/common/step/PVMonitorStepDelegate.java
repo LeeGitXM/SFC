@@ -30,11 +30,13 @@ PVMonitorStepProperties {
 	public void validate(ChartUIElement element, ChartCompilationResults results) {
 		// TODO: check stuff in element
 		//results.addError(new CompilationError("bad stuff", element.getLocation()));
+		logger.tracef("In validate() for PV Monitor");
 	}
 
 
 	@Override
 	public void validate(ChartInfo chart, ChartUIElement element, StepPropertyValidator validator) {
+		logger.tracef("In validate2() for PV Monitor");
 		
 		// validate recipe data keys:
 		String timerLocation = element.get(IlsProperty.TIMER_LOCATION);

@@ -23,24 +23,31 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 /**
- * Simply return the stepname for editing.
+ * If the property is null, simply return the stepname for editing.
  * @author chuckc
- *
+ * name = 
+ * <notes>
+ * <start-script>
+ * <stop-script>
+ * <error-handler-script>
+ * <timer-script>
  */
-public class StepSearchObject implements SearchObject {
+public class StepPropertySearchObject implements SearchObject {
 
 	private final String chartPath;
-	private final long chartResourceId;
-	private final Element step;
+	private final String chartType;
+	private final Element property;
 	private final DesignerContext context;
 	private final ResourceBundle rb;
+	private final long resourceId;
 	private final LoggerEx log;
 	
-	public StepSearchObject(DesignerContext ctx, String chartPath, long resid, Element step) {
+	public StepPropertySearchObject(DesignerContext ctx, String chartPath, String type, long res, Element property) {
 		this.context = ctx;
-		this.chartResourceId = resid;
+		this.chartType = type;
 		this.chartPath = chartPath;
-		this.step = step;
+		this.property = property;
+		this.resourceId = res;
 		this.rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
@@ -52,44 +59,25 @@ public class StepSearchObject implements SearchObject {
 
 	@Override
 	public String getName() {
-		return step.getAttribute("name");
+		return property.getNodeName();
 	}
 
 	@Override
 	public String getOwnerName() {
-		return chartPath;
+		return chartPath + " - " + chartType;
 	}
 
 	@Override
 	public String getText() {
-		
-		String xmlString = "";
-		Transformer transformer;
-		try {
-			transformer = TransformerFactory.newInstance().newTransformer();
-			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-			StreamResult result = new StreamResult(new StringWriter());
-			DOMSource source = new DOMSource(step);
-			transformer.transform(source, result);
-			xmlString = result.getWriter().toString();
-
-		} catch (TransformerConfigurationException | TransformerFactoryConfigurationError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		log.infof("StepSearchObject Returning: %s", xmlString);
-		return xmlString;
+		String text = property.getTextContent();
+		//log.info("StepSearchObject Returning: " + text);
+		return text;
 	}
 
 	@Override
 	public void locate() {
 		ChartLocator locator = new ChartLocator(context);
-		locator.locate(chartResourceId);
+		locator.locate(resourceId);
 	}
 
 	@Override

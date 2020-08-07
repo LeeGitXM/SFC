@@ -50,6 +50,23 @@ public class IlsSfcRequestHandler {
 	}
 	
 	/**
+	 * @return the path of a chart given its resource Id
+	 */
+	public String getUserLibPath()  {
+		String path = "";
+		try {
+			path = (String)GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
+					IlsSfcModule.MODULE_ID, "getUserLibPath");
+		}
+		catch(Exception ge) {
+			log.infof("%s.getUserLibPath: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());
+		};
+		return path;
+	}
+	
+	
+	
+	/**
 	 * Find the database associated with the sequential function charts.
 	 * 
 	 * @param isIsolated true if this the chart is in an isolation (test) state.

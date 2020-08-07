@@ -145,13 +145,13 @@ public class PythonCall {
 	public static final PythonCall SHUTDOWN_PROJECT = new PythonCall("ils.sfc.recipeData.structureManager.shutdown", 
 			null,  new String[]{"db"} );
 	public static final PythonCall UPDATE_CHART_HIERARCHY = new PythonCall("ils.sfc.recipeData.structureManager.updateChartHierarchy", 
-			null,  new String[]{"parentPath", "parentResourceId", "chartXML", "db"} );
+			null,  new String[]{"parentPath", "parentResourceId", "chartXML"} );
 	
 	// Recipe Data V2
 	public static final PythonCall GET_RECIPE_DATA_LIST = new PythonCall("ils.sfc.recipeData.editor.getRecipeDataList", 
 			PyList.class,  new String[]{"stepUUID"} );
 	public static final PythonCall MIGRATE_RECIPE_DATA = new PythonCall("ils.sfc.recipeData.migrator.migrateChart", 
-			null,  new String[]{"chartPath", "resourceId", "chartResourceAsXML", "database"} );
+			null,  new String[]{"chartPath", "resourceId", "chartResourceAsXML"} );
 	public static final PythonCall GET_RECIPE_SEARCH_RESULTS = new PythonCall("ils.sfc.recipeData.search.getSearchResults", 
 			PyList.class,  new String[]{} );
 	// units

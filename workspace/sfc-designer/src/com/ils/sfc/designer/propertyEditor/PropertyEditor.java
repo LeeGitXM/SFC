@@ -1,11 +1,14 @@
 package com.ils.sfc.designer.propertyEditor;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
@@ -22,7 +25,7 @@ public class PropertyEditor extends JPanel {
 		add(new JScrollPane(table), BorderLayout.CENTER);
 		
 		table.setDefaultEditor(Object.class, new PropertyCellEditor());
-		table.setDefaultRenderer(Object.class, new PropertyCellRenderer());
+		table.setDefaultRenderer(Object.class, new ErrorCellRenderer());
 		table.setCellSelectionEnabled(false);  // has side effect of setting row/col selection as well!
 		table.setRowSelectionAllowed(true);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -89,4 +92,24 @@ public class PropertyEditor extends JPanel {
 			tableModel.isCellEditable(selectedRow, 1);
 	}
 	
+	
+	public class ErrorCellRenderer extends DefaultTableCellRenderer {
+
+	    private static final long serialVersionUID = 1L;
+
+	    @Override
+	    public Component getTableCellRendererComponent(JTable table, Object value,
+	            boolean isSelected, boolean hasFocus, int row, int column) {
+	        Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+	                row, column);
+
+	        if(value.toString().contains("@") || value.toString().contains("$") || value.toString().contains("#")) {
+	            component.setBackground(Color.RED);
+	        } else {
+	            component.setBackground(Color.WHITE);
+	        }
+
+	        return component;
+	    }
+	}
 }

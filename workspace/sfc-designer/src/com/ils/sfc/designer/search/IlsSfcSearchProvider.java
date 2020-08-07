@@ -1,11 +1,15 @@
+
 package com.ils.sfc.designer.search;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,10 +17,9 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.tree.TreePath;
 
 import com.ils.sfc.common.chartStructure.ChartStructureCompilerV2;
-import com.inductiveautomation.factorypmi.designer.search.VisionSearchProvider;
-import com.inductiveautomation.factorypmi.designer.search.WhichWindows;
 import com.inductiveautomation.ignition.client.util.gui.PopupWrapper;
 import com.inductiveautomation.ignition.common.gui.progress.TaskProgressListener;
 import com.inductiveautomation.ignition.common.project.Project;
@@ -27,8 +30,13 @@ import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObjectAggregator;
 import com.inductiveautomation.ignition.designer.findreplace.SearchProvider;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
+import com.inductiveautomation.ignition.designer.navtree.model.AbstractNavTreeNode;
 import com.inductiveautomation.sfc.SFCModule;
-import com.inductiveautomation.sfc.api.StepRegistry;
+import com.inductiveautomation.sfc.designer.SFCDesignerHook;
+import com.inductiveautomation.sfc.designer.tree.SfcFolderNode;
+import com.inductiveautomation.sfc.designer.tree.SfcNode;
+import com.inductiveautomation.sfc.designer.workspace.SfcDesignPanel;
+import com.inductiveautomation.sfc.designer.workspace.SfcWorkspace;
 
 public class IlsSfcSearchProvider implements SearchProvider {
 	private final String TAG = "IlsSfcSearchProvider";
@@ -39,17 +47,17 @@ public class IlsSfcSearchProvider implements SearchProvider {
 
 	private final LoggerEx log;
 	private final DesignerContext context;
-	private final StepRegistry stepRegistry;
 	private PopupWrapper popup = new PopupWrapper();
 	private final Project project;
-	private int chartCount = 0;
+	private ChosenCharts which;
+	private final List<ProjectResource> allResources;
 
-	public IlsSfcSearchProvider(DesignerContext ctx, StepRegistry stepRegistry, Project project) {
+	public IlsSfcSearchProvider(DesignerContext ctx,Project project) {
 		this.context = ctx;
-		this.stepRegistry = stepRegistry;
 		this.project = project;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
-		log.infof("Initializing an ILS Search provider");
+		this.which = ChosenCharts.All;
+		this.allResources = context.getGlobalProject().getProject().getResourcesOfType(SFCModule.MODULE_ID,ChartStructureCompilerV2.CHART_RESOURCE_TYPE);
 	}
 
 	@Override
@@ -77,6 +85,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		// Close any resource edit locks here.
 	}
 
+	// Called when the user selects "Find" from the dialog.
 	@Override
 	public Iterator<SearchObject> retrieveSearchableObjects(Collection<Object> selectedCategories, List<Object> arg1,TaskProgressListener progress) {
 		SearchObjectAggregator agg = new SearchObjectAggregator(progress);
@@ -87,16 +96,15 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		if( selectedCategories.contains("Transition"))         searchKey += SEARCH_TRANSITION;
 
 		// Get a list of resources that we will consider for the search and pass it to the search engine.
-		String resourceType = ChartStructureCompilerV2.CHART_RESOURCE_TYPE;
-		List<ProjectResource> resources = context.getGlobalProject().getProject().getResourcesOfType(SFCModule.MODULE_ID,resourceType);
-		for(ProjectResource res:resources) {
-			log.infof("%s.retrieveSearchableObjects adding resId = %d to the search list", TAG, res.getResourceId());
-			agg.add(new ChartSearchCursor(context, stepRegistry, res, project, searchKey));
-			chartCount = chartCount+1;
+		List<ProjectResource> chartResources = getResources(which);
+		for(ProjectResource res:chartResources ) {
+			log.infof("%s.retrieveSearchableObjects %s (%d)", TAG, project.getFolderPath(res.getResourceId()), res.getResourceId());
+			agg.add(new ChartSearchCursor(context, res, project, searchKey));
 		}
 		return agg;
 	}
 
+	// This is called when the popup is opened
 	@Override
 	public void selectObjects(SelectedObjectsHandler handler) {
 		if (!this.popup.hidePopup()) {
@@ -106,42 +114,99 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	}
 
 	/** 
-	 * This is the hypertexted string that appears next to the category in the search/replace dialog
+	 * This is the hypertexted string that appears next to the category in the search/replace dialog.
+	 * It is called:
+	 * 	o  when the find dialog is opened
+	 * 	o  when the user selects from the popup
 	 * @param arg0 is null
 	 * @return string with chart count
 	 */
 	@Override
 	public String selectedObjectsToString(List<Object> objects) {
-		 ChosenCharts which = chosen(objects);
+		 this.which = chosen(objects);
 		 StringBuilder sb = new StringBuilder();
 		 sb.append(which.name() + " Charts");
-		 sb.append(" (").append(Integer.toString(getIds(which).size())).append(")");
+		 List<ProjectResource> chartResources = getResources(which);
+		 sb.append(" (").append(Integer.toString(chartResources.size())).append(")");
 		 return sb.toString();
 	}
 	
 	private ChosenCharts chosen(List<Object> selection) {
 		ChosenCharts which = null;
 		if ((selection == null) || (selection.isEmpty()))
-			which = ChosenCharts.Open;
+			which = ChosenCharts.All;
 		else {
 			which = (ChosenCharts)selection.get(0);
 		}
 		return which;
 	}
-	// Create a list of resourceIds for the charts of interest
-	private List<Long> getIds(ChosenCharts which) {
-		List<ProjectResource> resources = context.getGlobalProject().getProject().getResourcesOfType(SFCModule.MODULE_ID,ChartStructureCompilerV2.CHART_RESOURCE_TYPE);
-		List<Long> results = new ArrayList<>();
-		for(ProjectResource res:resources) {
-			if( which.equals(ChosenCharts.All) ) {
-				results.add(Long.valueOf(res.getResourceId()));
+	// Create a list of resources for the charts of interest
+	private List<ProjectResource> getResources(ChosenCharts which) {
+		List<ProjectResource> results = new ArrayList<>();
+		if( which.equals(ChosenCharts.All) ) {
+			for(ProjectResource res:allResources) {
+				results.add(res);
+			}
+		}
+		// Open
+		else if( which.equals(ChosenCharts.Open) ) {
+			SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
+			SfcWorkspace workspace = iaSfcHook.getWorkspace();
+			Container root = workspace.getRootPane().getContentPane();
+			gatherResources(results,root);
+		}
+		// Selected
+		else if( which.equals(ChosenCharts.Selected) ) {
+			SfcFolderNode root = getSfcRootFolder();
+			TreePath[] paths = root.getSelectionModel().getSelectionPaths();
+			if(paths!=null) {
+				for(TreePath path:paths) {
+					if(path.getLastPathComponent() instanceof SfcNode ) {
+						SfcNode node = (SfcNode)path.getLastPathComponent();
+						results.add(node.getProjectResource());
+					}
+				}
 			}
 		}
 		return results;
 	}
+	
+	// 
+	private void gatherResources(List<ProjectResource> results, Container node)  {
+		Component[] components = node.getComponents();                                                                                                      
+		for (Component child:components) {
+			if ( child instanceof Container ) {
+				if( child instanceof SfcDesignPanel ) {
+					SfcDesignPanel panel = (SfcDesignPanel)child;
+					long resid = panel.getDesignable().getResourceId();
+					for( ProjectResource pr:allResources) {
+						if( pr.getResourceId()==resid) {
+							results.add(pr);
+						}
+					}
+				}
+				gatherResources(results,(Container)child);
+			}
+		}
+	}
 
-	// This is the popup window.
+	private SfcFolderNode getSfcRootFolder() {
+		AbstractNavTreeNode global = context.getProjectBrowserRoot().getGlobalFolder();
+		SfcFolderNode root = null;
+		Enumeration<Object> enumeration = global.children();
+		while( enumeration.hasMoreElements()) {
+			Object node = enumeration.nextElement();
+			if(node instanceof SfcFolderNode ) {
+				root = (SfcFolderNode)node;
+				break;
+			}
+		}
+		return root;
+	}
+
+	// =============================== Popup Window ======================================
 	public class SelectionPanel extends JPanel {
+		private static final long serialVersionUID = -7374750676641708299L;
 		SearchProvider.SelectedObjectsHandler handler;
 
 		SelectionPanel(SearchProvider.SelectedObjectsHandler handler) {
@@ -158,10 +223,9 @@ public class IlsSfcSearchProvider implements SearchProvider {
 			bg.add(all);
 			bg.add(selected);
 			bg.add(open);
-
 			add(all, "wrap");
-			add(selected, "wrap");
-			add(open);
+			add(selected,"wrap" );
+			add(open,"wrap");
 		}
 		// Doubly nested
 		public class SelectionRadio extends JRadioButton {
@@ -198,4 +262,6 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		}
 	}
 
+	// ================================== Change Listener =================================
+	// When the open hierarchy changes, "regather" the Ids
 }

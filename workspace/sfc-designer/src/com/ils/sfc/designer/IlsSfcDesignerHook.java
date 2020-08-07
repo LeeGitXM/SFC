@@ -27,6 +27,7 @@ import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureCompiler;
 import com.ils.sfc.common.chartStructure.ChartStructureCompilerV2;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
+import com.ils.sfc.common.chartStructure.RecipeDataConverter;
 import com.ils.sfc.common.chartStructure.RecipeDataMigrator;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AllSteps;
@@ -72,7 +73,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private static final String SHOW_SUPERIOR_TITLE              = "Superior";
 	private static final String START_MENU_PRODUCTION_TITLE      = "Start Chart (production)";
 	private static final String START_MENU_ISOLATION_TITLE       = "Start Chart (isolation)";
-	private static final String VALIDATION_MENU_TITLE = "Validate Charts";
+	private static final String RECIPE_DATA_INTERNALIZE = "Internalize Recipe Data for Export";
+	private static final String RECIPE_DATA_STORE = "Store Internal Recipe Data into Database";
+	private static final String RECIPE_DATA_INITIALIZE = "Initialize Internal Recipe Data";
 	private static final String ZOOM_MENU_TITLE = "Scale Display";
 	private static final String ZOOM_100 = "100%";
 	private static final String ZOOM_75  = " 75%";
@@ -121,7 +124,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			PythonCall.INITIALIZE_UNITS.exec(args);
 			Dataset ds = (Dataset)PythonCall.GET_UNITS.exec(args);
 			String[] choices = new String[ds.getRowCount()+1];
-			log.infof("%d unit choices available ...",choices.length);
 			int row=0;
 			while(row<ds.getRowCount()) {
 				// First column in the dataset is the name
@@ -158,15 +160,55 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         	};
         	toolsMenu.add(interfaceAction);
         }
-        // ----------------------- Menu to launch chart validator -----------------------------
-        Action validateAction = new AbstractAction(VALIDATION_MENU_TITLE) {
-            private static final long serialVersionUID = 5374667367733312464L;
+        // ----------------------- Menu to launch recipe data importer and exporter (temporary until real fix)  -----------------------------
+
+        Action internalizeRecipeDataAction = new AbstractAction(RECIPE_DATA_INTERNALIZE) {
+            private static final long serialVersionUID = 5374887347733312464L;
             public void actionPerformed(ActionEvent ae) {
-                SwingUtilities.invokeLater(new ValidationDialogRunner());
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                    	RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
+                    	recipeDataConverter.internalize();
+                    }
+                }).start();
             }
         };
-
-        toolsMenu.add(validateAction);
+        
+        toolsMenu.add(internalizeRecipeDataAction);
+        
+        Action storeInternalRecipeDataAction = new AbstractAction(RECIPE_DATA_STORE) {
+            private static final long serialVersionUID = 5374487347733312464L;
+            public void actionPerformed(ActionEvent ae) {
+                
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                    	RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
+                    	recipeDataConverter.storeToDatabase();
+                    }
+                }).start();
+            }
+        };
+        
+        toolsMenu.add(storeInternalRecipeDataAction);
+        
+        Action initializeInternalRecipeDataAction = new AbstractAction(RECIPE_DATA_INITIALIZE) {
+            private static final long serialVersionUID = 5374487347733312464L;
+            public void actionPerformed(ActionEvent ae) {
+                
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                    	RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
+                    	recipeDataConverter.initialize();
+                    }
+                }).start();
+            }
+        };
+        
+        toolsMenu.add(initializeInternalRecipeDataAction);
+        
         toolsMenu.addSeparator();
         toolsMenu.addSeparator();
         
@@ -221,39 +263,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
             }
         };
      // ----------------------- Menus to zoom current chart -----------------------------
-        Action execute100Zoom = new AbstractAction(ZOOM_100) {
-			private static final long serialVersionUID = 4029901359528539761L;
 
-			public void actionPerformed(ActionEvent ae) {
-            	// Show operation for currently displayed chart
-				SwingUtilities.invokeLater(new ZoomChart(1.0));
-            }
-        };
-        Action execute75Zoom = new AbstractAction(ZOOM_75) {
-			private static final long serialVersionUID = 4029901359528539762L;
 
-			public void actionPerformed(ActionEvent ae) {
-				// Show phase for currently displayed chart
-				SwingUtilities.invokeLater(new ZoomChart(0.75));
-            }
-        };
-        Action execute50Zoom = new AbstractAction(ZOOM_50) {
-			private static final long serialVersionUID = 4029901359528539762L;
-
-			public void actionPerformed(ActionEvent ae) {
-				// Show phase for currently displayed chart
-				SwingUtilities.invokeLater(new ZoomChart(0.50));
-            }
-        };
-        Action execute25Zoom = new AbstractAction(ZOOM_25) {
-			private static final long serialVersionUID = 4029901359528539763L;
-
-			public void actionPerformed(ActionEvent ae) {
-            	// Show superior for currently displayed chart
-				SwingUtilities.invokeLater(new ZoomChart(0.25));
-				
-            }
-        };
         toolsMenu.addSeparator();
         toolsMenu.add(executeIsolationAction);
         toolsMenu.add(executeProductionAction);
@@ -263,12 +274,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         showMenu.add(executeShowPhase);
         showMenu.add(executeShowProcedure);
         showMenu.add(executeShowSuperior);
-        JMenu zoomMenu = new JMenu(ZOOM_MENU_TITLE);
-        toolsMenu.add(zoomMenu);
-        zoomMenu.add(execute100Zoom);
-        zoomMenu.add(execute75Zoom);
-        zoomMenu.add(execute50Zoom);
-        zoomMenu.add(execute25Zoom);
+
         merge.add(WellKnownMenuConstants.TOOLS_MENU_LOCATION, toolsMenu);
         return merge;
     }
@@ -318,9 +324,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		// Pete's Recipe Data Migrator - instantiate this once in the beginning because the step registry is static.
 		recipeDataMigrator = new RecipeDataMigrator(context.getGlobalProject().getProject(), stepRegistry);
 
-//  I added the step registry to the constructor
-//		searchProvider = new IlsSfcSearchProvider(context);
-		searchProvider = new IlsSfcSearchProvider(context, stepRegistry, project);
+		searchProvider = new IlsSfcSearchProvider(context, project);
 		context.registerSearchProvider(searchProvider);
 		
 		new Thread(new ModuleWatcher(context)).start();             // Watch for modules to start
@@ -398,7 +402,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 				
 			} else if (modType.toString().equals("Deleted")){
 				String chartPath = context.getGlobalProject().getProject().getFolderPath(res.getResourceId());
-				log.infof("A resource has been deleted (%s) - inserting it into the deleted list...", chartPath);
 				// Store the resource into a map that will be acted on when the project is Saved 
 				deletedResourceMap.put(new Long (res.getResourceId()), res);
 
@@ -417,8 +420,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	// resources that have been changed or deleted.
 	@Override
 	public void projectUpdated(Project proj) {
-		log.infof("A project has been updated (id = %d)", proj.getId());
-		
 		try {
 			if( proj.getId() == -1 ) {
 				for (ProjectResource res:changedResourceMap.values()){
@@ -543,48 +544,5 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
             
         }
     }
-    /**
-     * Show a chart superior to the one currently selected. Run in a separate thread.
-     */
-    private class ZoomChart implements Runnable {
-    	private double scaleFactor = 1.0;
-    	
-    	public ZoomChart(double scale) {
-    		this.scaleFactor = scale;
-    	}
 
-        public void run() {
-            log.infof("%s.run: ZoomChart %f...",TAG,scaleFactor);
-            // We get the path to the open chart via the workspace.
-            SfcWorkspace workspace = iaSfcHook.getWorkspace();
-            SfcDesignableContainer tab = workspace.getSelectedContainer();
-    		if( tab!=null ) {
-    			Long resourceId = workspace.getSelectedContainer().getResourceId();
-    			if( resourceId!=null ) workspace.openChart(resourceId.longValue());
-    		}
-    		else {
-    			// No chart is open.
-    		}
-            
-        }
-    }
-	/**
-     * Display a popup dialog for configuration of dialog execution parameters.
-     * Run in a separate thread, as a modal dialog in-line here will freeze the UI.
-     * 
-     * I HAVE NO IDEA WHAT THIS DOES, IS SUPPOSED TO DO, OR IF IT WORKS - PETE 3/17/17
-     * 
-     */
-    private class ValidationDialogRunner implements Runnable {
-
-        public void run() {
-            log.infof("%s.run: starting ValidationDialogRunner ...",TAG);
-            /*
-            ValidationDialog validator = new ValidationDialog(context,browser.getModel());
-            validator.pack();
-            validator.setVisible(true);
-            browser.addChangeListener(validator);
-            */
-        }
-    }
 }
