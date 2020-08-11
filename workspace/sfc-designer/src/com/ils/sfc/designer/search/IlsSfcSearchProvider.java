@@ -50,14 +50,14 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	private PopupWrapper popup = new PopupWrapper();
 	private final Project project;
 	private ChosenCharts which;
-	private final List<ProjectResource> allResources;
+	private List<ProjectResource> allResources;
 
 	public IlsSfcSearchProvider(DesignerContext ctx,Project project) {
 		this.context = ctx;
 		this.project = project;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.which = ChosenCharts.All;
-		this.allResources = context.getGlobalProject().getProject().getResourcesOfType(SFCModule.MODULE_ID,ChartStructureCompilerV2.CHART_RESOURCE_TYPE);
+		this.allResources = null; 
 	}
 
 	@Override
@@ -123,12 +123,13 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	 */
 	@Override
 	public String selectedObjectsToString(List<Object> objects) {
-		 this.which = chosen(objects);
-		 StringBuilder sb = new StringBuilder();
-		 sb.append(which.name() + " Charts");
-		 List<ProjectResource> chartResources = getResources(which);
-		 sb.append(" (").append(Integer.toString(chartResources.size())).append(")");
-		 return sb.toString();
+		this.allResources = context.getGlobalProject().getProject().getResourcesOfType(SFCModule.MODULE_ID,ChartStructureCompilerV2.CHART_RESOURCE_TYPE);
+		this.which = chosen(objects);
+		StringBuilder sb = new StringBuilder();
+		sb.append(which.name() + " Charts");
+		List<ProjectResource> chartResources = getResources(which);
+		sb.append(" (").append(Integer.toString(chartResources.size())).append(")");
+		return sb.toString();
 	}
 	
 	private ChosenCharts chosen(List<Object> selection) {

@@ -2,7 +2,6 @@ package com.ils.sfc.designer.search;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -15,6 +14,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
@@ -23,9 +23,6 @@ import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObjectCursor;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
-import com.inductiveautomation.sfc.api.StepRegistry;
-import com.inductiveautomation.sfc.definitions.ChartDefinition;
-import com.inductiveautomation.sfc.definitions.ElementDefinition;
 
 /**
  * The chart search cursor iterates over component types
@@ -109,7 +106,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 		// Create a property cursor for each new step. The cursor is guaranteed
 		// to return at least one property, the name.
 		else if(searchStep && stepIndex < stepList.getLength() ) {
-			//log.info("Searching a step...");
+			//log.infof("%s.next: Searching step %d...",TAG,stepIndex);
 			Element element = (Element) stepList.item(stepIndex);
 			if( propertyCursor==null ) propertyCursor = new PropertySearchCursor(context, chartPath, res.getResourceId(), element);
 			so = propertyCursor.next();
@@ -119,7 +116,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 			}
 		}
 		else if(searchTransition && transitionIndex < transitionList.getLength() ) {
-			//log.info("Searching a transition...");
+			log.info("Searching a transition...");
 			Element element = (Element) transitionList.item(transitionIndex);
 			so = new TransitionSearchObject(context, chartPath, res.getResourceId(), element);
 			transitionIndex++;

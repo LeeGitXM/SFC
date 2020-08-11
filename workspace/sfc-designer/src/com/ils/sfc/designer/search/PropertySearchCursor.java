@@ -47,17 +47,17 @@ public class PropertySearchCursor extends SearchObjectCursor {
 			so = new StepNameSearchObject(context,chartPath,chartType,resourceId,name);
 		}
 		// Depending on the binding, return either the value or binding string
-		//log.infof("%s.next %d %s:%s",TAG,index,block.getName(),property.getName());
 		else {
-			so = new StepPropertySearchObject(context,chartPath,chartType,resourceId,children.get(index));
+			so = new StepPropertySearchObject(context,chartPath,chartType,resourceId,children.get(index-1));
 		}
 		
 		index++;
 		return so;
 	}
 
+	// Index 0 is the name
 	public boolean hasNext() {
-		if( index<children.size() ) return true;
+		if( index<=children.size() ) return true;
 		return false;
 	}
 }

@@ -33,7 +33,7 @@ import com.inductiveautomation.ignition.designer.model.DesignerContext;
  * <timer-script>
  */
 public class StepPropertySearchObject implements SearchObject {
-
+	private final String TAG = "StepPropertySearchObject";
 	private final String chartPath;
 	private final String chartType;
 	private final Element property;
@@ -70,7 +70,7 @@ public class StepPropertySearchObject implements SearchObject {
 	@Override
 	public String getText() {
 		String text = property.getTextContent();
-		//log.info("StepSearchObject Returning: " + text);
+		//log.infof("%s.getText: %s",TAG,text);
 		return text;
 	}
 
