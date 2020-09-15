@@ -58,6 +58,7 @@ public class RecipeDataConverter {
 					String line = null;
 					while((line = rdr.readLine()) != null) {
 						bldr.append(line);
+						bldr.append('\n');
 					}
 					String stringXML = bldr.toString();
 					log.tracef("Chart XML: %s %s \n%s", path, res.getName(), stringXML);
@@ -142,6 +143,7 @@ public class RecipeDataConverter {
 					String line = null;
 					while((line = rdr.readLine()) != null) {
 						bldr.append(line);
+						bldr.append('\n');
 					}
 					String stringXML = bldr.toString();
 					log.tracef("%s %s \n%s", path, res.getName(), stringXML);
@@ -160,8 +162,6 @@ public class RecipeDataConverter {
 					zipper.close();
 					byte[] newChartResourceData = baos.toByteArray();
 					baos.close();
-					log.infof("... totally all done...");
-					
 				}
 			}
 		}
@@ -199,6 +199,7 @@ public class RecipeDataConverter {
 					String line = null;
 					while((line = rdr.readLine()) != null) {
 						bldr.append(line);
+						bldr.append('\n');
 					}
 					String stringXML = bldr.toString();
 					log.tracef("%s %s \n%s", path, res.getName(), stringXML);
@@ -218,16 +219,31 @@ public class RecipeDataConverter {
 					zipper.close();
 					byte[] newChartResourceData = baos.toByteArray();
 					baos.close();
-
-					log.infof("... totally all done...");
 					
+					log.tracef("initialize: Fetching lock for resource (%d)",resourceId); 
+					if( context.requestLock(resourceId) ) {
+						try
+						{
+							res.setData(newChartResourceData);
+							context.updateLock(resourceId);
+
+							diff.putResource(res, false);    // Mark as clean
+						}
+						finally {
+							log.tracef("%s.initialize: Releasing lock for resource (%d)",CLSS,resourceId); 
+							context.releaseLock(resourceId);
+						}
+					}
+					else {
+						log.warnf("%s.initialize: Unable to acquire a lock for resource (%d-%s) - resourse was not internalized",CLSS,resourceId, res.getName()); 
+					}
 				}
 			}
 			
 			project.applyDiff(diff,false);
 			project.clearAllFlags();          // Don't know what this does ...
 
-			log.infof("%s.internalize: Saving resources",CLSS);
+			log.infof("%s.initialize: Saving resources",CLSS);
 			DTGatewayInterface.getInstance().saveProject(IgnitionDesigner.getFrame(), project, true, "Committing ...");  // Not publish
 			//log.infof("%s.commitEdit: Publishing resources",CLSS);
 			//DTGatewayInterface.getInstance().publishGlobalProject(IgnitionDesigner.getFrame());
@@ -243,6 +259,4 @@ public class RecipeDataConverter {
 			log.errorf("%s.storeToDatabase:JythonExecException: Unable to save project update (%s)",CLSS,je.getMessage());
 		} 
 	}
-	
-	
 }
