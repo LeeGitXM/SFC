@@ -9,6 +9,8 @@ import org.python.core.PyDictionary;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.inductiveautomation.ignition.client.util.gui.ErrorUtil;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 /**
@@ -30,7 +32,16 @@ public class RecipeSearchObject implements SearchObject {
 		this.context = ctx;
 		this.path = (String)dict.get(PATH);
 		this.text = (String)dict.get(TEXT);
-		this.resourceId = (Long)dict.get(RES);
+		long resid = -1;
+		String stringValue = (String)dict.get(RES);
+		try {		
+			if( stringValue!=null ) resid =  Integer.parseInt(stringValue);
+		}
+		catch(NumberFormatException e) {
+			LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
+			log.warn("RecipeSearchObject:bad integer format: " + stringValue);
+		}
+		this.resourceId = resid;
 		this.rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
 	}
 	
