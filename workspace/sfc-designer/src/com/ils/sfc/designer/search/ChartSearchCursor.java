@@ -2,6 +2,7 @@ package com.ils.sfc.designer.search;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -9,12 +10,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.python.core.PyDictionary;
+import org.python.core.PyList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectResource;
@@ -47,6 +48,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 	private int recipeIndex = 0;
 	private NodeList stepList = null;
 	private NodeList transitionList = null;
+	private PyList recipeList = new PyList();
 	private PropertySearchCursor propertyCursor = null;
 
 	public ChartSearchCursor(DesignerContext ctx, ProjectResource resource, Project project, int key) {
@@ -78,6 +80,13 @@ public class ChartSearchCursor extends SearchObjectCursor {
 			
 			stepList = documentElement.getElementsByTagName("step");
 			transitionList = documentElement.getElementsByTagName("transition");
+			
+			try {
+				recipeList = (PyList)PythonCall.GET_RECIPE_SEARCH_RESULTS.exec(chartPath);
+			}
+			catch(JythonExecException jee) {
+				log.warnf("%s.next: JythonExecException executing %s:(%s)",TAG,PythonCall.GET_RECIPE_SEARCH_RESULTS,jee.getLocalizedMessage());
+			}
 		
 			// Only leave this in during debugging
 			//IlsSfcCommonUtils.printResource(chartResourceData);
@@ -121,17 +130,13 @@ public class ChartSearchCursor extends SearchObjectCursor {
 			so = new TransitionSearchObject(context, chartPath, res.getResourceId(), element);
 			transitionIndex++;
 		}
-		else if(searchRecipe && recipeIndex==0 ) {
-			try {
-				PyDictionary recipe = (PyDictionary) PythonCall.GET_RECIPE_SEARCH_RESULTS.exec();
+		else if(searchRecipe && recipeIndex<recipeList.size()) {
+			PyDictionary recipe = (PyDictionary)recipeList.get(recipeIndex);
+			if( recipe!=null ) {
 				so = new RecipeSearchObject(context,recipe);
 			} 
-			catch (JythonExecException jee) {
-				log.errorf("%s.next: JythonExecException executing %s:(%s)",TAG,PythonCall.GET_RECIPE_SEARCH_RESULTS,jee.getLocalizedMessage());
-			}
 			recipeIndex++;
 		}
-
 		return so;
 	}
 
