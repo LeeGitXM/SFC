@@ -68,7 +68,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 		
 		byte[] chartResourceData = res.getData();					
 		chartPath = project.getFolderPath(res.getResourceId());
-		log.infof("%s.new - initializing a search cursor %s (%d)", TAG, chartPath,res.getResourceId());
+		log.tracef("%s.new - initializing a search cursor %s (%d)", TAG, chartPath,res.getResourceId());
 		try {
 			GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 			
@@ -133,7 +133,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 		else if(searchRecipe && recipeIndex<recipeList.size()) {
 			PyDictionary recipe = (PyDictionary)recipeList.get(recipeIndex);
 			if( recipe!=null ) {
-				so = new RecipeSearchObject(context,recipe);
+				so = new RecipeSearchObject(context, res.getResourceId(), recipe);
 			} 
 			recipeIndex++;
 		}

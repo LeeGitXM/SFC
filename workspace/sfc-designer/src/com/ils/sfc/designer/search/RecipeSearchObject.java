@@ -20,18 +20,25 @@ import com.inductiveautomation.ignition.designer.model.DesignerContext;
 public class RecipeSearchObject implements SearchObject {
 	// These are field names in the dictionary returned from Python
 	public final String PATH = "PATH";
+	public final String STEP = "STEP";
+	public final String KEY = "KEY";
 	public final String RES = "RES";
 	public final String TEXT = "TEXT";
 	private final DesignerContext context;
 	private final String path;
+	private final String step;
+	private final String key;
 	private final String text;
 	private final long resourceId;
 	private final ResourceBundle rb;
 	
-	public RecipeSearchObject(DesignerContext ctx,PyDictionary dict) {
+	public RecipeSearchObject(DesignerContext ctx, long resourceId, PyDictionary dict) {
 		this.context = ctx;
 		this.path = (String)dict.get(PATH);
+		this.step = (String)dict.get(STEP);
+		this.key = (String)dict.get(KEY);
 		this.text = (String)dict.get(TEXT);
+		
 		long resid = -1;
 		String stringValue = (String)dict.get(RES);
 		try {		
@@ -41,24 +48,24 @@ public class RecipeSearchObject implements SearchObject {
 			LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
 			log.warn("RecipeSearchObject:bad integer format: " + stringValue);
 		}
-		this.resourceId = resid;
+		this.resourceId = resourceId;
 		this.rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
 	}
 	
 	@Override
 	public Icon getIcon() {
-		ImageIcon icon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/table.png"));
+		ImageIcon icon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/step.png"));
 		return icon;
 	}
 
 	@Override
 	public String getName() {
-		return "Recipe Data";
+		return "Recipe Data:" + this.key;
 	}
 
 	@Override
 	public String getOwnerName() {
-		return path;
+		return this.path + ": Step " + this.step;
 	}
 
 	@Override

@@ -98,7 +98,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		// Get a list of resources that we will consider for the search and pass it to the search engine.
 		List<ProjectResource> chartResources = getResources(which);
 		for(ProjectResource res:chartResources ) {
-			log.infof("%s.retrieveSearchableObjects %s (%d)", TAG, project.getFolderPath(res.getResourceId()), res.getResourceId());
+			log.tracef("%s.retrieveSearchableObjects %s (%d)", TAG, project.getFolderPath(res.getResourceId()), res.getResourceId());
 			agg.add(new ChartSearchCursor(context, res, project, searchKey));
 		}
 		return agg;
