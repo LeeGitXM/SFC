@@ -135,18 +135,9 @@ public class PythonCall {
 		Boolean.class, stepArgs );
 
 	//Structure Manager
-	
-	public static final PythonCall CREATE_CHART = new PythonCall("ils.sfc.recipeData.structureManager.createChart", 
-			null,  new String[]{"resourceId", "chartPath", "db"} );
-	public static final PythonCall DELETE_CHARTS = new PythonCall("ils.sfc.recipeData.structureManager.deleteCharts", 
-			null,  new String[]{"resources", "db"} );
-	public static final PythonCall SAVE_PROJECT = new PythonCall("ils.sfc.recipeData.structureManager.saveProject", 
-			null,  new String[]{"project", "db"} );
-	public static final PythonCall SHUTDOWN_PROJECT = new PythonCall("ils.sfc.recipeData.structureManager.shutdown", 
-			null,  new String[]{"db"} );
-	public static final PythonCall UPDATE_CHART_HIERARCHY = new PythonCall("ils.sfc.recipeData.structureManager.updateChartHierarchy", 
-			null,  new String[]{"parentPath", "parentResourceId", "chartXML"} );
-	
+	public static final PythonCall COMPILE_CHARTS = new PythonCall("ils.sfc.designer.saver.compileCharts", 
+			null,  new String[]{"deletedResources", "addedResources", "changedResources", "db"} );
+
 	// Recipe Data V2
 	public static final PythonCall GET_RECIPE_DATA_LIST = new PythonCall("ils.sfc.recipeData.editor.getRecipeDataList", 
 			PyList.class,  new String[]{"stepUUID"} );

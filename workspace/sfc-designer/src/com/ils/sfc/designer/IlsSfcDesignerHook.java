@@ -65,10 +65,11 @@ import system.ils.sfc.common.Constants;
 
 public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectChangeListener {
 	private final static String TAG = "IlsSfcDesignerHook";
+	private static final String SFC_SUBMENU_TITLE  = "SFC Extensions";
 	private static final String INTERFACE_MENU_TITLE  = "External Interface Configuration";
-	private static final String SHOW_ANCESTOR_TITLE              = "Show Chart Ancestor";
-	private static final String SHOW_OPERATION_TITLE             = "Operation";
-	private static final String SHOW_PHASE_TITLE                 = "Phase";
+	private static final String SHOW_ANCESTOR_TITLE = "Show Chart Ancestor";
+	private static final String SHOW_OPERATION_TITLE = "Operation";
+	private static final String SHOW_PHASE_TITLE = "Phase";
 	private static final String SHOW_PROCEDURE_TITLE             = "Procedure";
 	private static final String SHOW_SUPERIOR_TITLE              = "Superior";
 	private static final String START_MENU_PRODUCTION_TITLE      = "Start Chart (production)";
@@ -94,9 +95,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private IlsSfcSearchProvider searchProvider = null;
 /*	private RecipeEditorFrame recipeEditorFrame; */
 	private RecipeDataCleaner recipeDataCleaner;
-//	private Map <Long, ProjectResource> addedResourceMap;
+	private Map <Long, ProjectResource> addedResourceMap;
 	private Map <Long, ProjectResource> changedResourceMap;
-	private Map <Long, ProjectResource> deletedResourceMap;
+	private List <String> deletedResourceList;
 	
 	private static ClientStepRegistry stepRegistry;
 	private static SfcWorkspace sfcWorkspace;
@@ -106,8 +107,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		LogUtil.getLogger("com.ils.sfc.python.structureManager");
 		this.frames = new ArrayList<>();
 		this.changedResourceMap = new HashMap<>();
-		this.deletedResourceMap = new HashMap<>();
-//		this.addedResourceMap = new HashMap<>();
+		this.deletedResourceList = new ArrayList<>();
+		this.addedResourceMap = new HashMap<>();
 	}
 		
 	@Override
@@ -144,22 +145,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	// If the menu already exists, do nothing
     @Override
     public MenuBarMerge getModuleMenu() {
-    	
-        MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  
- 
-        JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
-        toolsMenu.addSeparator();
-        toolsMenu.addSeparator();
-        
-        if( !menuExists(context.getFrame(),INTERFACE_MENU_TITLE) ) {
-        	Action interfaceAction = new AbstractAction(INTERFACE_MENU_TITLE) {
-        		private static final long serialVersionUID = 5374667367733312464L;
-        		public void actionPerformed(ActionEvent ae) {
-        			SwingUtilities.invokeLater(new DialogRunner());
-        		}
-        	};
-        	toolsMenu.add(interfaceAction);
-        }
+
         // ----------------------- Menu to launch recipe data importer and exporter (temporary until real fix)  -----------------------------
 
         Action internalizeRecipeDataAction = new AbstractAction(RECIPE_DATA_INTERNALIZE) {
@@ -175,8 +161,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
             }
         };
         
-        toolsMenu.add(internalizeRecipeDataAction);
-        
         Action storeInternalRecipeDataAction = new AbstractAction(RECIPE_DATA_STORE) {
             private static final long serialVersionUID = 5374487347733312464L;
             public void actionPerformed(ActionEvent ae) {
@@ -190,8 +174,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
                 }).start();
             }
         };
-        
-        toolsMenu.add(storeInternalRecipeDataAction);
         
         Action initializeInternalRecipeDataAction = new AbstractAction(RECIPE_DATA_INITIALIZE) {
             private static final long serialVersionUID = 5374487347733312464L;
@@ -207,11 +189,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
             }
         };
         
-        toolsMenu.add(initializeInternalRecipeDataAction);
-        
-        toolsMenu.addSeparator();
-        toolsMenu.addSeparator();
-        
         // ----------------------- Menus to start current chart -----------------------------
         Action executeIsolationAction = new AbstractAction(START_MENU_ISOLATION_TITLE) {
             private static final long serialVersionUID = 5374887367733312464L;
@@ -221,6 +198,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
                 runner.start();
             }
         };
+        
         Action executeProductionAction = new AbstractAction(START_MENU_PRODUCTION_TITLE) {
             private static final long serialVersionUID = 5374667367733312464L;
             public void actionPerformed(ActionEvent ae) {
@@ -229,6 +207,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
                 runner.start();
             }
         };
+        
         Action executeShowOperation = new AbstractAction(SHOW_OPERATION_TITLE) {
 			private static final long serialVersionUID = 4029901359528539761L;
 
@@ -237,6 +216,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 				SwingUtilities.invokeLater(new ShowAncestor(Constants.OPERATION));
             }
         };
+        
         Action executeShowPhase = new AbstractAction(SHOW_PHASE_TITLE) {
 			private static final long serialVersionUID = 4029901359528539762L;
 
@@ -245,6 +225,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 				SwingUtilities.invokeLater(new ShowAncestor(Constants.PHASE));
             }
         };
+        
         Action executeShowProcedure = new AbstractAction(SHOW_PROCEDURE_TITLE) {
 			private static final long serialVersionUID = 4029901359528539762L;
 
@@ -253,6 +234,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 				SwingUtilities.invokeLater(new ShowAncestor(Constants.GLOBAL));
             }
         };
+        
         Action executeShowSuperior = new AbstractAction(SHOW_SUPERIOR_TITLE) {
 			private static final long serialVersionUID = 4029901359528539763L;
 
@@ -264,17 +246,44 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
         };
      // ----------------------- Menus to zoom current chart -----------------------------
 
+        JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
+        
+        JMenu sfcMenu = new JMenu(SFC_SUBMENU_TITLE);
+        toolsMenu.add(sfcMenu);
+        
+        sfcMenu.addSeparator();
+        
+        sfcMenu.add(executeIsolationAction);
+        sfcMenu.add(executeProductionAction);
 
-        toolsMenu.addSeparator();
-        toolsMenu.add(executeIsolationAction);
-        toolsMenu.add(executeProductionAction);
+        sfcMenu.addSeparator();
+        
+        sfcMenu.add(internalizeRecipeDataAction);
+        sfcMenu.add(storeInternalRecipeDataAction);
+        sfcMenu.add(initializeInternalRecipeDataAction);
+        
+        sfcMenu.addSeparator();
+        
         JMenu showMenu = new JMenu(SHOW_ANCESTOR_TITLE);
-        toolsMenu.add(showMenu);
+        sfcMenu.add(showMenu);
         showMenu.add(executeShowOperation);
         showMenu.add(executeShowPhase);
         showMenu.add(executeShowProcedure);
         showMenu.add(executeShowSuperior);
+        
+        /* We want this if they are running BLT or SFC so both modules try and add it, this attempts to only add it if it doesn't already exist.  */
+        if( !menuExists(context.getFrame(),INTERFACE_MENU_TITLE) ) {
+        	Action interfaceAction = new AbstractAction(INTERFACE_MENU_TITLE) {
+        		private static final long serialVersionUID = 5374667367733312464L;
+        		public void actionPerformed(ActionEvent ae) {
+        			SwingUtilities.invokeLater(new DialogRunner());
+        		}
+        	};
+            sfcMenu.addSeparator();
+        	sfcMenu.add(interfaceAction);
+        }
 
+        MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  
         merge.add(WellKnownMenuConstants.TOOLS_MENU_LOCATION, toolsMenu);
         return merge;
     }
@@ -387,30 +396,27 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	// Called when there is a change to a chart resource
 	@Override//
 	public void projectResourceModified(ProjectResource res,ResourceModification modType) {
-		log.infof("A project Resource has been modified (modification type: %s, resource type: %s)", modType.toString(), res.getResourceType());
-
+		
+		// Store the resource into a map that will be acted on when the project is Saved 
 		if( res.getResourceType().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE) ) {
+			String chartPath = context.getGlobalProject().getProject().getFolderPath(res.getResourceId());
+			log.infof("SFC chart: %s, id: %d, has been modified (modification type: %s, resource type: %s)", chartPath, res.getResourceId(), modType.toString(), res.getResourceType());
 			
 			if (modType.toString().equals("Added")){
 				// This is called as soon as a chart is created.  Literally, as soon as user presses create chart in the project resource tree.
 				// The Updated case will be called when the Save button is pressed or when the new cart is renamed
 				
 				// CJL  At this point we should check the resource IDs and see if it is a copy, in which case the UUIDs should be updated
-//				addedResourceMap.put(new Long (res.getResourceId()), res);
-				
-				log.tracef("A resource has been added");
+				log.tracef("...inserting it into the addedResourceMap!");
+				addedResourceMap.put(new Long (res.getResourceId()), res);
 				
 			} else if (modType.toString().equals("Deleted")){
-				String chartPath = context.getGlobalProject().getProject().getFolderPath(res.getResourceId());
-				// Store the resource into a map that will be acted on when the project is Saved 
-				deletedResourceMap.put(new Long (res.getResourceId()), res);
+				log.tracef("...inserting it into the deletedResourceMap!");
+				deletedResourceList.add(String.valueOf(res.getResourceId()));
 
 			} else {
-				// This is the updated case - keep track of the changed resource
-				log.infof("Inserting resource id %d - chart %s into the changedResourceMap...", 
-						res.getResourceId(), context.getGlobalProject().getProject().getFolderPath(res.getResourceId()));
-				
-				// Store the resource into a map that will be acted on when the project is Saved
+				// This is the updated case - when a chart is renamed this is called for the new and the old name.
+				log.tracef("...inserting it into the changedResourceMap!");
 				changedResourceMap.put(new Long (res.getResourceId()), res);
 			}
 		}
@@ -422,24 +428,11 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	public void projectUpdated(Project proj) {
 		try {
 			if( proj.getId() == -1 ) {
-				for (ProjectResource res:changedResourceMap.values()){
-					log.infof("Saving resource %d", res.getResourceId());
-					structureCompilerV2.compileResource(res);
-					recipeDataMigrator.migrateResource(res);
-				}
+				structureCompilerV2.syncDatabase(deletedResourceList, addedResourceMap, changedResourceMap);
+				
 				changedResourceMap.clear();
-				
-//				for (ProjectResource res:deletedResourceMap.values()){
-//					log.infof("Deleting resource %d", res.getResourceId());
-//					structureCompilerV2.deleteChart(res);
-//				}
-//				deletedResourceMap.clear();
-				
-				structureCompilerV2.deleteCharts(deletedResourceMap);
-				deletedResourceMap.clear();
-				
-//				structureCompilerV2.deleteCharts(deletedResourceIds);
-//				deletedResourceIds.clear();
+				addedResourceMap.clear();
+				deletedResourceList.clear();
 			}
 			
 		} catch (Exception ex) {
@@ -481,6 +474,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
             setup.setVisible(true);
         }
     }
+    
 	/**
 	 * We are dependent on the Ignition SFC module, but don't know about other modules that
 	 * also may be dependent on "com.inductiveautomation.sfc". In order for any custom chart
