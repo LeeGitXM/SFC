@@ -1,0 +1,28 @@
+#
+# Test of the SFC chart UseCase 1. 
+# There are 3 delays: 30 sec, 30 sec(encapsulated), 5 sec
+#
+CHART = "Test10"
+CPATH      = "TestUnitProcedure10/Test10"
+YESNO = "S88-YES-NO-TASK-XXX-4321"
+Show: chart $CHART
+
+Test: Use Case 10
+Step: Yes Path
+
+chartid = startChart($CPATH,$ISOLATION)
+animate: chart $chartid
+assert: $chartid != "None"  "Started $CHART"
+assert:  getStepState($chartid,"S88Callback_4320") = "NOT_VISITED" "Positive callback has not been visited"
+assert:  getStepState($chartid,"S88Callback_4317") = "NOT_VISITED" "Negative callback has not been visited"
+assert:  getStepCount($chartid,"POSITIVE-TRANSITION") = 0 "Zero times through positive transition"
+assert:  getStepCount($chartid,"NEGATIVE-TRANSITION") = 0 "Zero times through negative transition"
+until:  getRequestCount($CPATH,$YESNO) > 0  "Wait until yes-no step has  pending request"
+postResponse($CPATH,$YESNO,"Yes")
+wait: 15 seconds
+assert:  getStepState($chartid,"S88Callback_4320") = "Inactive" "Positive callback has been visited"
+assert:  getStepState($chartid,"S88Callback_4317") = "NOT_VISITED" "Negative callback has not been visited"
+assert:  getStepCount($chartid,"POSITIVE-TRANSITION") = 1 "One time through positive transition"
+assert:  getStepCount($chartid,"NEGATIVE-TRANSITION") = 0 "Zero times through negative transition"
+assert: getChartState($chartid)="Stopped" "Chart is complete"
+monitor.clear()

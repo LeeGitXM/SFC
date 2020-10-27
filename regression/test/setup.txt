@@ -1,0 +1,38 @@
+#
+# Define properties that are generically valid for SFC testing
+#
+log: [DATE] [TIME] Start Testing ...
+
+# Script aliases - module is with respect to script directory
+script: getProviderName chartProxy.getProviderName(isIsolation)
+script: getChartState   chartProxy.getChartState(chart)
+script: getRequestCount chartProxy.getPendingRequestCount(chart,name)
+script: getStepCount   chartProxy.getStepCount(chart,name)
+script: getStepState   chartProxy.getStepState(chart,name)
+script: postResponse   chartProxy.postResponse(chart,step,text)
+script: prepareForTest chartProxy.prepareForTest()
+script: startChart chartProxy.start(name,mode)
+script: setTimeFactor timeFactor.setSfcTimeFactor(factor)
+script: updateConsoleRecord chartProxy.updateConsoleRecord(path)
+# We need to set the test framework and internal clocks the same
+# The test factor is the rate speedup.
+timefactor: 2
+setTimeFactor(2)
+
+# Set default values for "until" statements
+poll: 5 seconds
+timeout: 2 minutes
+
+ISOLATION = True
+PROVIDER = getProviderName($ISOLATION)
+tagprovider: $PROVIDER mode=current
+
+# Prepare database and default tags for testing
+# Probably not needed - Pete
+#prepareForTest()
+#tag: CURRENT_ID   "[default]CurrentChartId"
+#tag: CURRENT_PATH "[default]CurrentChartPath"
+
+# Start the step monior
+monitor.start()
+status: setup complete.

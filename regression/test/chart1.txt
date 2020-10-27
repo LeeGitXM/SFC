@@ -1,0 +1,24 @@
+#
+# Test of the SFC chart "Test/Chart1". 
+# Note: We've inserted:
+#       10 secs to get started
+#       10 secs after first setter
+#       10 secs wait before quitting
+#
+CHART = "Chart1"
+CPATH = "Test/Chart1"
+Show: chart $CPATH
+
+# Define the tags that will be used
+tag: T1 "SFC/T1"
+tagset: MyTags "SFC/T1"
+Tagset: MyTags
+
+Test: Test1
+Step: Example1
+
+10:00:00 1 
+chartid = startChart($CPATH,$ISOLATION)
+10:00:15 CURRENT_ID   = $chartid
+CURRENT_PATH = $CPATH
+

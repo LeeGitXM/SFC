@@ -1,0 +1,54 @@
+#
+# Test of the SFC chart UseCase 1. 
+# Note: We've inserted:
+#       10 secs to get started
+#       10 secs after first setter
+#       10 secs wait before quitting
+#
+CHART = "Use Case 1"
+CPATH = "Use Cases/Use Case 1 Recipe Data Access/UseCase1"
+Show: chart $CPATH
+
+# GLOBAL is equivalent to PROCEDURE
+Tag: GLOBAL    "SFC/Use Cases/Use Case 1 Recipe Data Access/UseCase1/UP/foo/value"
+Tag: PHASE "SFC/Use Cases/Use Case 1 Recipe Data Access/My Operation/S3/foo/value"
+Tag: OPERATION "SFC/Use Cases/Use Case 1 Recipe Data Access/Unit Procedure/S3/foo/value"
+Tag: SUPERIOR "SFC/Use Cases/Use Case 1 Recipe Data Access/My Phase/E1/foo/value"
+Tag: LOCAL1 "SFC/Use Cases/Use Case 1 Recipe Data Access/Recipe Data API Tests/Setter1/foo/value"
+Tag: LOCAL2 "SFC/Use Cases/Use Case 1 Recipe Data Access/Recipe Data API Tests/Setter2/foo/value"
+
+Test: Use Case 1
+Step: RecipeData Access
+
+chartid = startChart($CPATH,$ISOLATION)
+CURRENT_ID   = $chartid
+CURRENT_PATH = $CPATH
+updateConsoleRecord($CPATH)
+animate: chart $chartid
+assert: $chartid != "None"  "Started $CHART"
+PRIOR1 = -2
+PRIOR2 = 0
+# This wait is to make sure the chart is running
+wait: 5 secs
+assert: getChartState($chartid)="Running" "Chart is running"
+assert: getStepState($chartid,"S1") != "NOT_VISITED" "S1 has been visited"
+assert: getStepState($chartid,"S2") = "NOT_VISITED" "S2 has not been visited"
+assert: PRIOR1 = -2  "Setter1 data are initialized"
+assert: PRIOR2 = 0   "Setter2 data are initialized"
+assert: getStepState($chartid,"UP") = "Deactivating" "UP has not completed"
+# This wait is to make sure that Setter1 has executed
+wait: 10 secs
+assert: GLOBAL = 2  "GLOBAL value is 2"
+assert: OPERATION = 25.4  "OPERATION value is 25.4"
+assert: PHASE = 7.8  "PHASE value is 7.8"
+assert: SUPERIOR = "Hello world"  "SUPERIOR value is Hello world"
+# This wait is to make sure that Setter2 has executed
+wait: 10 secs
+assert: GLOBAL = 6.5  "GLOBAL value is 6.5"
+assert: OPERATION = 9.8  "OPERATION value is 9.8"
+assert: PHASE = 19.76  "PHASE value is 19.76"
+assert: SUPERIOR = "Goodnight Moon"  "SUPERIOR value is Goodnight Moon"
+assert: LOCAL1 = 78  "Setter1 value is 78"
+assert: LOCAL2 = 88.19  "Setter2 value is 88.19"
+assert: getChartState($chartid)="Stopped" "Chart is complete"
+monitor.clear()
