@@ -10,12 +10,17 @@ import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.ils.sfc.designer.stepEditor.rowEditor.GenericCellRenderer;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowCellEditor;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowEditorPanel;
+import com.ils.sfc.designer.stepEditor.rowEditor.TableHeaderWithTooltips;
 import com.ils.sfc.designer.stepEditor.rowEditor.reviewFlows.ReviewFlowsTableModel;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 @SuppressWarnings("serial")
 public class WriteOutputPanel extends RowEditorPanel {
 	private WriteOutputConfig config;
+	private static final String[] colHeaderTooltips = {
+			"Recipe data key that specifies the tag being monitored",  
+			"Wait until the write can be confirmed"}; 
+	private TableHeaderWithTooltips tableHeader;
 	
 	public WriteOutputPanel(StepEditorController controller,
 			int index) {
@@ -30,6 +35,8 @@ public class WriteOutputPanel extends RowEditorPanel {
 		tableModel = new WriteOutputTableModel();
 		tableModel.setConfig(config);		
 		table = new JTable(tableModel);
+		tableHeader = new TableHeaderWithTooltips(table.getColumnModel(), colHeaderTooltips);
+		table.setTableHeader(tableHeader);
 		tablePanel = createTablePanel(table, tablePanel, new RowCellEditor(),
 			new GenericCellRenderer());
 		buttonPanel.getEditButton().setEnabled(false);

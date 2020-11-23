@@ -1,11 +1,16 @@
 package com.ils.sfc.designer.stepEditor;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellRenderer;
 
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
@@ -13,11 +18,14 @@ import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.panels.EditorPanel;
 import com.ils.sfc.designer.propertyEditor.PropertyEditor;
 import com.ils.sfc.designer.propertyEditor.PropertyRow;
+import com.ils.sfc.designer.propertyEditor.PropertyTableModel;
 import com.ils.sfc.designer.propertyEditor.ValueHolder;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 import system.ils.sfc.common.Constants;
 
@@ -26,6 +34,7 @@ import system.ils.sfc.common.Constants;
  *  editing for strings and tags.  */
 @SuppressWarnings("serial")
 public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
+	private final LoggerEx log = LogUtil.getLogger(getClass().getName());
 	private StepEditorController controller;
 	private PropertyEditor editor = new PropertyEditor();
 	private ButtonPanel buttonPanel = new ButtonPanel(false, false, false, true, true,  false, false, true);
@@ -33,6 +42,7 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 	public StepPropertyEditorPane(StepEditorController controller, int index) {
 		super(controller, index);
 		this.controller = controller;
+		log.tracef("Creating a %s", getClass().getName());
 		add(editor, BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.NORTH);
 		buttonPanel.getEditButton().addActionListener(new ActionListener() {
@@ -42,17 +52,86 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 		buttonPanel.getExecButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {doExec();}			
 		});
+		
 		// listen for selection so we can enable/disable buttons e.g.
-		getPropertyEditor().getSelectionModel().addListSelectionListener(
+		editor.getSelectionModel().addListSelectionListener(
 			new ListSelectionListener(){
 				public void valueChanged(ListSelectionEvent e) {
 					selectionChanged();
 				}
 		});
+		addMouseListener();
 		selectionChanged();
 	}
+	
+	
+	private void addMouseListener() {
+		/* An attempt by Pete to add a mouse listener to every text fiel in the table that will automatically slide to another pane, based on the type of property and cell being edited. */
+  		// Can't add a mouse listener to a table!
+		log.tracef("Adding a mouse listener...");
+		
+		JTable table = editor.getTable();
+		PropertyTableModel tableModel = editor.getTableModel();
+		
+		/* Add a mouse listener to the table, this only seems to do anything if they click on the first column */
+		table.addMouseListener(new java.awt.event.MouseAdapter() {
+		    public void mouseClicked(java.awt.event.MouseEvent evt) {
+		        if (evt.getClickCount() == 2) {
+		        	log.tracef("In mouseClicked()!");
+		        	 
+		        	Property<?> selectedProperty = getPropertyEditor().getSelectedRow().getProperty();
+		        	PropertyValue<?> selectedPropertyValue =  getPropertyEditor().getSelectedRow().getPropertyValue();
+		        	log.tracef("  Property: %s", selectedProperty.toString());
+		        	
+		        	if(selectedProperty.equals(IlsProperty.PRIMARY_REVIEW_DATA) ||
+		    				selectedProperty.equals(IlsProperty.PRIMARY_REVIEW_DATA_WITH_ADVICE) ||
+		    				selectedProperty.equals(IlsProperty.SECONDARY_REVIEW_DATA) ||
+		    				selectedProperty.equals(IlsProperty.SECONDARY_REVIEW_DATA_WITH_ADVICE )) {
+		    			// REVIEW_DATA properties hold a complex configuration in a stringified JSON object
+		    			controller.getReviewDataPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getReviewDataPanel().activate(myIndex);				
+		    		}
+		    		else if(selectedProperty.equals(IlsProperty.REVIEW_FLOWS)) {
+		    			controller.getReviewFlowsPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getReviewFlowsPanel().activate(myIndex);							
+		    		}
+		    		else if(selectedProperty.equals(IlsProperty.COLLECT_DATA_CONFIG)) {
+		    			// COLLECT_DATA properties hold a complex configuration in a stringified JSON object
+		    			controller.getCollectDataPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getCollectDataPanel().activate(myIndex);							
+		    		}
+		    		else if(selectedProperty.equals(IlsProperty.CONFIRM_CONTROLLERS_CONFIG)) {
+		    			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
+		    			controller.getConfirmControllersPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getConfirmControllersPanel().activate(myIndex);							
+		    		}
+		    		else if(selectedProperty.equals(IlsProperty.MONITOR_DOWNLOADS_CONFIG)) {
+		    			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
+		    			controller.getMonitorDownloadsPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getMonitorDownloadsPanel().activate(myIndex);							
+		    		}
+		    		else if(selectedProperty.equals(IlsProperty.PV_MONITOR_CONFIG)) {
+		    			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
+		    			controller.getPvMonitorPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getPvMonitorPanel().activate(myIndex);							
+		    		}
+		    		else if(selectedProperty.equals(IlsProperty.WRITE_OUTPUT_CONFIG)) {
+		    			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
+		    			controller.getWriteOutputPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getWriteOutputPanel().activate(myIndex);							
+		    		}
+		    		else if(selectedProperty.equals(IlsProperty.MANUAL_DATA_CONFIG)) {
+		    			controller.getManualDataEntryPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getManualDataEntryPanel().activate(myIndex);							
+		    		}
+		        }
+		    }
+		});
+	}
 
+	
 	private void selectionChanged() {
+		log.tracef("Selection changed");
 		buttonPanel.enableEditButton(getPropertyEditor());
 	}
 	
@@ -70,6 +149,8 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 
 	@Override
 	public void activate(int returnIndex) {
+		log.tracef("In activate() with index: %d", returnIndex);
+
 		// HACK!! we recognize "testable" elements by looking for SQL related properties
 		boolean isTestable = editor.getPropertyValues().contains(IlsProperty.SQL);
 		buttonPanel.getExecButton().setVisible(isTestable);
@@ -79,11 +160,13 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 	
 	@SuppressWarnings("unchecked")
 	private void doEdit() {
+		log.tracef("Editing...");
 		PropertyRow selectedRow = getPropertyEditor().getSelectedRow();
 		boolean hasChoices = selectedRow != null && selectedRow.getChoices() != null;
 		PropertyValue<?> selectedPropertyValue = getPropertyEditor().getSelectedPropertyValue();
 		if(selectedPropertyValue == null) return;
 		Property<?>selectedProperty = selectedPropertyValue.getProperty();
+		log.tracef("Property: %s", selectedProperty);
 		editor.stopCellEditing();
 		if(selectedProperty.equals(IlsProperty.TAG_PATH)) {
 			controller.getTagBrowser().setValue(selectedPropertyValue.getValue());

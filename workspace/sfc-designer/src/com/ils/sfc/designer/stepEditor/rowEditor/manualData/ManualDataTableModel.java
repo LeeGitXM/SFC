@@ -8,17 +8,21 @@ import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.rowconfig.ManualDataEntryConfig;
 import com.ils.sfc.designer.EditorErrorHandler;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowTableModel;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 @SuppressWarnings("serial")
 public class ManualDataTableModel extends RowTableModel {
-private EditorErrorHandler errorHandler;
-public static final int KEY_COL = 0;
-public static final int DESTINATION_COL = 1;
-public static final int UNITS_COL = 3;
-private static final String[] columnNames = {"Key", "Destination", "Prompt", "Units", "Default Value", "Low Limit", "High Limit"};
+	private EditorErrorHandler errorHandler;
+	private final LoggerEx log = LogUtil.getLogger(getClass().getName());
+	public static final int KEY_COL = 0;
+	public static final int DESTINATION_COL = 1;
+	public static final int UNITS_COL = 3;
+	private static final String[] columnNames = {"Key", "Destination", "Prompt", "Units", "Default Value", "Low Limit", "High Limit"};
 	
 	public ManualDataTableModel(EditorErrorHandler errorHandler) {
 		this.errorHandler = errorHandler;
+		log.infof("Creating a %s", getClass().getName());
 	}
 	
 	public String[] getColumnNames() {

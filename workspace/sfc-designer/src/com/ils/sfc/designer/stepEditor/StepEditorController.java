@@ -19,6 +19,8 @@ import com.ils.sfc.designer.stepEditor.rowEditor.pvMonitor.PVMonitorPanel;
 import com.ils.sfc.designer.stepEditor.rowEditor.reviewData.ReviewDataPanel;
 import com.ils.sfc.designer.stepEditor.rowEditor.reviewFlows.ReviewFlowsPanel;
 import com.ils.sfc.designer.stepEditor.rowEditor.writeOutput.WriteOutputPanel;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
@@ -39,6 +41,7 @@ public class StepEditorController extends PanelController implements EditorError
 	public static final int REVIEW_FLOWS = 12;
 	public static final int RECIPE_BROWSER = 13;
 
+	private final LoggerEx log = LogUtil.getLogger(getClass().getName());
 	private ChartUIElement element;
 	private String chartPath;
 	
@@ -60,6 +63,7 @@ public class StepEditorController extends PanelController implements EditorError
 	
 	public StepEditorController(DesignerContext context, String chartPath) {
 		super(context);
+		log.tracef("Creating a %s, creating sliding panes...", getClass().getName());
 		this.chartPath = chartPath;
 		slidingPane.add(propertyEditor);
 		slidingPane.add(stringEditor);

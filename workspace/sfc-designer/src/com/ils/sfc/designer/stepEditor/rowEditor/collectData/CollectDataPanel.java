@@ -14,11 +14,20 @@ import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.ils.sfc.designer.stepEditor.rowEditor.GenericCellRenderer;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowCellEditor;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowEditorPanel;
+import com.ils.sfc.designer.stepEditor.rowEditor.TableHeaderWithTooltips;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 @SuppressWarnings("serial")
 public class CollectDataPanel extends RowEditorPanel {
 	private CollectDataConfig config;
+	private static final String[] colHeaderTooltips = {
+			"Recipe data location that specifies the controller", 
+			"Recipe data key that specifies the controller",  
+			"Full tag path whose value will be read",
+			"Type of value aggregation (current, average, minimum, maximum, standard deviation)", 
+			"Time window that is used for value types other than current",
+			"Value that will be returned if value cannot be read"};
+	private TableHeaderWithTooltips tableHeader;
 	
 	public CollectDataPanel(StepEditorController controller, int index) {
 		super(controller, index, false);
@@ -32,6 +41,8 @@ public class CollectDataPanel extends RowEditorPanel {
 		tableModel = new CollectDataTableModel(stepController);
 		tableModel.setConfig(config);		
 		table = new JTable(tableModel);
+		tableHeader = new TableHeaderWithTooltips(table.getColumnModel(), colHeaderTooltips);
+		table.setTableHeader(tableHeader);
 		tablePanel = createTablePanel(table, tablePanel, new RowCellEditor(),
 			new GenericCellRenderer());
 		buttonPanel.getEditButton().setEnabled(false);

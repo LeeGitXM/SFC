@@ -16,11 +16,14 @@ import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.designer.propertyEditor.PropertyEditor;
 import com.ils.sfc.designer.propertyEditor.PropertyRow;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 /** This appears to the right of all recipe editor panels to provide
  *  add/remove/edit/accept actions. */
 @SuppressWarnings("serial")
 public class ButtonPanel extends JPanel {
+	private final LoggerEx log = LogUtil.getLogger(getClass().getName());
 	private static Icon checkIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/check.png"));
 	private static Icon addIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/add.png"));
 	private static Icon removeIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/delete.png"));
@@ -42,6 +45,7 @@ public class ButtonPanel extends JPanel {
 
 	public ButtonPanel(boolean showAccept, boolean showAdd, boolean showRemove, 
 		boolean showEdit, boolean showExec, boolean showCancel, boolean showBack, boolean showCheckBox) {
+		log.tracef("Creating a %s", getClass().getName());
 		setBackground(background);
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 		setPreferredSize(new Dimension(100,20));

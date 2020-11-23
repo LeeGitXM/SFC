@@ -10,22 +10,27 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.ils.sfc.common.IlsProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 /** A property editor grid/table */
 @SuppressWarnings("serial")
 public class PropertyEditor extends JPanel {
 	private final PropertyTableModel tableModel = new PropertyTableModel();
 	private final JTable table = new JTable(tableModel);
+	private final LoggerEx log = LogUtil.getLogger(getClass().getName());
 	
 	public PropertyEditor() {
+		log.tracef("Creating a %s", getClass().getName());
 		setLayout(new BorderLayout());
 		add(new JScrollPane(table), BorderLayout.CENTER);
 		
 		table.setDefaultEditor(Object.class, new PropertyCellEditor());
-		table.setDefaultRenderer(Object.class, new ErrorCellRenderer());
+		table.setDefaultRenderer(Object.class, new PropertyCellRenderer());
 		table.setCellSelectionEnabled(false);  // has side effect of setting row/col selection as well!
 		table.setRowSelectionAllowed(true);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -55,6 +60,10 @@ public class PropertyEditor extends JPanel {
 	
 	public ListSelectionModel getSelectionModel() {
 		return table.getSelectionModel();
+	}
+	
+	public JTable getTable() {
+		return table;
 	}
 	
 	public PropertyTableModel getTableModel() {
@@ -92,24 +101,4 @@ public class PropertyEditor extends JPanel {
 			tableModel.isCellEditable(selectedRow, 1);
 	}
 	
-	
-	public class ErrorCellRenderer extends DefaultTableCellRenderer {
-
-	    private static final long serialVersionUID = 1L;
-
-	    @Override
-	    public Component getTableCellRendererComponent(JTable table, Object value,
-	            boolean isSelected, boolean hasFocus, int row, int column) {
-	        Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
-	                row, column);
-
-	        if(value.toString().contains("@") || value.toString().contains("$") || value.toString().contains("#")) {
-	            component.setBackground(Color.RED);
-	        } else {
-	            component.setBackground(Color.WHITE);
-	        }
-
-	        return component;
-	    }
-	}
 }

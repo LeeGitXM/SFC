@@ -10,12 +10,18 @@ import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.ils.sfc.designer.stepEditor.rowEditor.GenericCellRenderer;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowCellEditor;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowEditorPanel;
+import com.ils.sfc.designer.stepEditor.rowEditor.TableHeaderWithTooltips;
 import com.ils.sfc.designer.stepEditor.rowEditor.manualData.ManualDataTableModel;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 @SuppressWarnings("serial")
 public class MonitorDownloadsPanel extends RowEditorPanel {
 	private MonitorDownloadsConfig config;
+	private static final String[] colHeaderTooltips = {
+			"Recipe data key that specifies the tag being monitored",  
+			"Specifies what will be displayed, the tagname or ithe item id", 
+			"Display units, value will automatically be converted if necessary"};
+	private TableHeaderWithTooltips tableHeader;
 	
 	public MonitorDownloadsPanel(StepEditorController controller, int index) {
 		super(controller, index, false);
@@ -29,6 +35,8 @@ public class MonitorDownloadsPanel extends RowEditorPanel {
 		tableModel = new MonitorDownloadsTableModel();
 		tableModel.setConfig(config);		
 		table = new JTable(tableModel);
+		tableHeader = new TableHeaderWithTooltips(table.getColumnModel(), colHeaderTooltips);
+		table.setTableHeader(tableHeader);
 		tablePanel = createTablePanel(table, tablePanel, new RowCellEditor(),
 			new GenericCellRenderer());
 		buttonPanel.getEditButton().setEnabled(false);
