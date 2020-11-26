@@ -94,7 +94,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private RecipeDataMigrator recipeDataMigrator = null;
 	private IlsSfcSearchProvider searchProvider = null;
 /*	private RecipeEditorFrame recipeEditorFrame; */
-	private RecipeDataCleaner recipeDataCleaner;
 	private Map <Long, ProjectResource> addedResourceMap;
 	private Map <Long, ProjectResource> changedResourceMap;
 	private List <String> deletedResourceList;
@@ -306,7 +305,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		for(ClientStepFactory clientStepFactory: AbstractIlsStepUI.clientStepFactories) {
 			stepRegistry.register(clientStepFactory);
 		}
-		recipeDataCleaner = new RecipeDataCleaner(context, stepRegistry);
 		
 		// Listen to changes on the global project PETE
 		context.getGlobalProject().addProjectChangeListener(this);
@@ -355,7 +353,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	public void shutdown() {	
 		log.info("IlsSfcDesignerHook.shutdown...");
 		context.removeProjectChangeListener(this);
-		context.removeProjectChangeListener(recipeDataCleaner);
 /*		frames.remove(recipeEditorFrame); */
 	}
 	
