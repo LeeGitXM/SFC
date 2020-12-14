@@ -23,8 +23,8 @@ public class CancelStep extends IlsAbstractChartStep implements CancelStepProper
 		canceled = true;
 	}
 
-	@Override
-	public void deactivateStep() {
+	//@Override -PETE 11/29/2020
+	public void deactivateStepX() {
 		super.deactivateStep();
 		/** Prevent execution from passing beyond this step until this 
 		 *  chart has been paused, as we may have to wait until pausing 

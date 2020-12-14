@@ -57,7 +57,7 @@ public class RecipeDataCleaner implements ProjectChangeListener {
 		IlsSfcRequestHandler requestHandler = new IlsSfcRequestHandler();
 		String provider = requestHandler.getProviderName(false);
 		Object[] args = {provider, chartPath, stepNames};
-		PythonCall.CLEANUP_RECIPE_DATA.exec(args);
+		//PythonCall.CLEANUP_RECIPE_DATA.exec(args);
 	}
 
 	/** Get the step names in the given chart resource. */
