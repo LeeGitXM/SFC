@@ -36,7 +36,7 @@ do
    fi
 done
 cd "${SVNGLINERAW}"
-for dir in *
+for dir in *PROCEDURE
 do
    if [ -d "$dir" ]
    then
