@@ -29,7 +29,7 @@ import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 public class IlsStepEditor  extends AbstractStepEditor {
 	private static final String CLSS = "IlsStepEditor";
 	private static final Logger logger = LoggerFactory.getLogger(IlsStepEditor.class);
-	public final static String ROOT_HELP_PATH = "http://localhost:8088/main/system/moduledocs/com.ils.sfc/SFCUsersGuide.html#";
+	public final static String ROOT_HELP_PATH = "http://localhost:8088/main/system/moduledocs/com.ils.sfc/SFCUsersGuide_filtered.html#";
 	private static final ResourceBundle rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
 	private StepEditorController stepEditorController;
 
