@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.swing.AbstractAction;
@@ -15,6 +14,7 @@ import javax.swing.JPopupMenu;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ils.sfc.common.IlsSfcRequestHandler;
 import com.ils.sfc.designer.IlsSfcDesignerHook;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
@@ -29,9 +29,11 @@ import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 public class IlsStepEditor  extends AbstractStepEditor {
 	private static final String CLSS = "IlsStepEditor";
 	private static final Logger logger = LoggerFactory.getLogger(IlsStepEditor.class);
+	private final static String OS = System.getProperty("os.name").toLowerCase();
 	public final static String ROOT_HELP_PATH = "http://localhost:8088/main/system/moduledocs/com.ils.sfc/SFCUsersGuide_filtered.html#";
 	private static final ResourceBundle rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
 	private StepEditorController stepEditorController;
+	
 
 	protected IlsStepEditor(ChartUIModel chartModel, DesignerContext context) {
 		super(new BorderLayout(), chartModel);
@@ -59,11 +61,13 @@ public class IlsStepEditor  extends AbstractStepEditor {
 	}
 
 	public static class Factory implements StepConfigFactory {
-		DesignerContext context;
-		IlsStepEditor editor;
+		private DesignerContext context;
+		private final IlsSfcRequestHandler requestHandler;
+		private IlsStepEditor editor;
 
 		public Factory(DesignerContext context) {
 			this.context = context;
+			this.requestHandler = new IlsSfcRequestHandler();
 		}
 
 		@Override
@@ -82,8 +86,9 @@ public class IlsStepEditor  extends AbstractStepEditor {
 			popup.add(ha);
 			
 		}
+		
 		/**
-		 * Display context-sensitive help in a browser window 
+		 * Display context-sensitive help in a browser window. This is a nested class of Factory. 
 		 */
 		public class HelpAction extends AbstractAction {
 			private static final long serialVersionUID = 1L;
@@ -100,9 +105,18 @@ public class IlsStepEditor  extends AbstractStepEditor {
 				String address = ROOT_HELP_PATH+getFactoryId(element);
 				logger.info(String.format("%s.HelpAction: Address is: %s",CLSS,address)); 
 				try {
-
-					URI url = new URI(address);
-					desktop.browse(url);
+					if( OS.indexOf("win")>=0) {
+						String browserPath = requestHandler.getWindowsBrowserPath();
+						if( browserPath==null ) browserPath = "PATH_NOT_FOUND_IN_ORM";
+						logger.info(String.format("%s.HelpAction: Windows command: %s %s",CLSS,browserPath,address));
+						new ProcessBuilder().command(browserPath, "/c", "start", "\"\"", "\"" + address + "\"")
+	                    .start();
+					}
+					else {
+						URI url = new URI(address);
+						logger.info(String.format("%s.HelpAction: URI is: %s",CLSS,url.toASCIIString()));
+						desktop.browse(url);
+					}
 				}
 				catch(URISyntaxException use) {
 					logger.info(String.format("%s.HelpAction: Illegal URI: %s (%s)",CLSS,address,use.getLocalizedMessage())); 
@@ -123,5 +137,6 @@ public class IlsStepEditor  extends AbstractStepEditor {
 			}
 		}
 	}
+
 }
 

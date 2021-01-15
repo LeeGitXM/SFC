@@ -47,6 +47,9 @@ public class GatewayRpcDispatcher   {
 	public String getToolkitProperty(String propertyName) {
 		return requestHandler.getToolkitProperty(propertyName);
 	}
+	public String getWindowsBrowserPath() {
+		return requestHandler.getWindowsBrowserPath();
+	}
 	/**
 	 * Set a clock rate factor. This will change timing for isolation mode only.
 	 * This method is provided as a hook for test frameworks.

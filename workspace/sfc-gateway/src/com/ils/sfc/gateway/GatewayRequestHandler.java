@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.python.core.PyDictionary;
 
+import com.ils.common.help.HelpRecordProxy;
 import com.ils.common.persistence.ToolkitProperties;
 import com.ils.common.persistence.ToolkitRecordHandler;
 import com.ils.sfc.common.chartStructure.ChartStructureCompiler;
@@ -21,6 +22,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.datasource.Datasource;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 
+import simpleorm.dataset.SQuery;
 import system.ils.sfc.common.Constants;
 
 /**
@@ -139,6 +141,17 @@ public class GatewayRequestHandler {
 	 */
 	public String getToolkitProperty(String propertyName) {
 		return recordHandler.getToolkitProperty(propertyName);
+	}
+	/**
+	 * Retrieve the configured browser path from the ORM database HelpRecord
+	 * @return the configured browser path (for Windows)
+	 */
+	public String getWindowsBrowserPath() {
+		String path = null;
+		SQuery<HelpRecordProxy> query = new SQuery<HelpRecordProxy>(HelpRecordProxy.META).eq(HelpRecordProxy.Id,0L);
+		HelpRecordProxy rec = this.context.getPersistenceInterface().queryOne(query);
+		if(rec!=null ) path = rec.getWindowsBrowserPath();
+		return path;
 	}
 	/**
 	 * If there is an outstanding request from the specified step,
