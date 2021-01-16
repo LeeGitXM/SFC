@@ -66,6 +66,8 @@ import system.ils.sfc.common.Constants;
 public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectChangeListener {
 	private final static String TAG = "IlsSfcDesignerHook";
 	private static final String SFC_SUBMENU_TITLE  = "SFC Extensions";
+	private static final String EXPORT_MENU_TITLE  = "Export";
+	private static final String IMPORT_MENU_TITLE  = "Import";
 	private static final String INTERFACE_MENU_TITLE  = "External Interface Configuration";
 	private static final String SHOW_ANCESTOR_TITLE = "Show Chart Ancestor";
 	private static final String SHOW_OPERATION_TITLE = "Operation";
@@ -142,150 +144,167 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	
 	// Insert a menu to allow control of database and tag provider.
 	// If the menu already exists, do nothing
-    @Override
-    public MenuBarMerge getModuleMenu() {
+	@Override
+	public MenuBarMerge getModuleMenu() {
 
-        // ----------------------- Menu to launch recipe data importer and exporter (temporary until real fix)  -----------------------------
+		// ----------------------- Menu to launch recipe data importer and exporter (temporary until real fix)  -----------------------------
+		Action internalizeRecipeDataAction = new AbstractAction(RECIPE_DATA_INTERNALIZE) {
+			private static final long serialVersionUID = 5374887347733312464L;
+			public void actionPerformed(ActionEvent ae) {
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
+						recipeDataConverter.internalize();
+					}
+				}).start();
+			}
+		};
 
-        Action internalizeRecipeDataAction = new AbstractAction(RECIPE_DATA_INTERNALIZE) {
-            private static final long serialVersionUID = 5374887347733312464L;
-            public void actionPerformed(ActionEvent ae) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                    	RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
-                    	recipeDataConverter.internalize();
-                    }
-                }).start();
-            }
-        };
-        
-        Action storeInternalRecipeDataAction = new AbstractAction(RECIPE_DATA_STORE) {
-            private static final long serialVersionUID = 5374487347733312464L;
-            public void actionPerformed(ActionEvent ae) {
-                
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                    	RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
-                    	recipeDataConverter.storeToDatabase();
-                    }
-                }).start();
-            }
-        };
-        
-        Action initializeInternalRecipeDataAction = new AbstractAction(RECIPE_DATA_INITIALIZE) {
-            private static final long serialVersionUID = 5374487347733312464L;
-            public void actionPerformed(ActionEvent ae) {
-                
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                    	RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
-                    	recipeDataConverter.initialize();
-                    }
-                }).start();
-            }
-        };
-        
-        // ----------------------- Menus to start current chart -----------------------------
-        Action executeIsolationAction = new AbstractAction(START_MENU_ISOLATION_TITLE) {
-            private static final long serialVersionUID = 5374887367733312464L;
-            public void actionPerformed(ActionEvent ae) {
-            	SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-                Thread runner = new Thread(new ChartRunner(context,iaSfcHook.getWorkspace(),true));
-                runner.start();
-            }
-        };
-        
-        Action executeProductionAction = new AbstractAction(START_MENU_PRODUCTION_TITLE) {
-            private static final long serialVersionUID = 5374667367733312464L;
-            public void actionPerformed(ActionEvent ae) {
-            	SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-                Thread runner = new Thread(new ChartRunner(context,iaSfcHook.getWorkspace(),false));
-                runner.start();
-            }
-        };
-        
-        Action executeShowOperation = new AbstractAction(SHOW_OPERATION_TITLE) {
+		Action storeInternalRecipeDataAction = new AbstractAction(RECIPE_DATA_STORE) {
+			private static final long serialVersionUID = 5374487347733312464L;
+			public void actionPerformed(ActionEvent ae) {
+
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
+						recipeDataConverter.storeToDatabase();
+					}
+				}).start();
+			}
+		};
+
+		Action initializeInternalRecipeDataAction = new AbstractAction(RECIPE_DATA_INITIALIZE) {
+			private static final long serialVersionUID = 5374487347733312464L;
+			public void actionPerformed(ActionEvent ae) {
+
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
+						recipeDataConverter.initialize();
+					}
+				}).start();
+			}
+		};
+
+		// ----------------------- Menus to start current chart -----------------------------
+		Action executeIsolationAction = new AbstractAction(START_MENU_ISOLATION_TITLE) {
+			private static final long serialVersionUID = 5374887367733312464L;
+			public void actionPerformed(ActionEvent ae) {
+				SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
+				Thread runner = new Thread(new ChartRunner(context,iaSfcHook.getWorkspace(),true));
+				runner.start();
+			}
+		};
+
+		Action executeProductionAction = new AbstractAction(START_MENU_PRODUCTION_TITLE) {
+			private static final long serialVersionUID = 5374667367733312464L;
+			public void actionPerformed(ActionEvent ae) {
+				SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
+				Thread runner = new Thread(new ChartRunner(context,iaSfcHook.getWorkspace(),false));
+				runner.start();
+			}
+		};
+
+		Action executeShowOperation = new AbstractAction(SHOW_OPERATION_TITLE) {
 			private static final long serialVersionUID = 4029901359528539761L;
 
 			public void actionPerformed(ActionEvent ae) {
-            	// Show operation for currently displayed chart
+				// Show operation for currently displayed chart
 				SwingUtilities.invokeLater(new ShowAncestor(Constants.OPERATION));
-            }
-        };
-        
-        Action executeShowPhase = new AbstractAction(SHOW_PHASE_TITLE) {
+			}
+		};
+
+		Action executeShowPhase = new AbstractAction(SHOW_PHASE_TITLE) {
 			private static final long serialVersionUID = 4029901359528539762L;
 
 			public void actionPerformed(ActionEvent ae) {
 				// Show phase for currently displayed chart
 				SwingUtilities.invokeLater(new ShowAncestor(Constants.PHASE));
-            }
-        };
-        
-        Action executeShowProcedure = new AbstractAction(SHOW_PROCEDURE_TITLE) {
+			}
+		};
+
+		Action executeShowProcedure = new AbstractAction(SHOW_PROCEDURE_TITLE) {
 			private static final long serialVersionUID = 4029901359528539762L;
 
 			public void actionPerformed(ActionEvent ae) {
 				// Show phase for currently displayed chart
 				SwingUtilities.invokeLater(new ShowAncestor(Constants.GLOBAL));
-            }
-        };
-        
-        Action executeShowSuperior = new AbstractAction(SHOW_SUPERIOR_TITLE) {
+			}
+		};
+
+		Action executeShowSuperior = new AbstractAction(SHOW_SUPERIOR_TITLE) {
 			private static final long serialVersionUID = 4029901359528539763L;
 
 			public void actionPerformed(ActionEvent ae) {
-            	// Show superior for currently displayed chart
+				// Show superior for currently displayed chart
 				SwingUtilities.invokeLater(new ShowAncestor(Constants.SUPERIOR));
-				
-            }
-        };
-     // ----------------------- Menus to zoom current chart -----------------------------
 
-        JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
-        
-        JMenu sfcMenu = new JMenu(SFC_SUBMENU_TITLE);
-        toolsMenu.add(sfcMenu);
-        
-        sfcMenu.addSeparator();
-        
-        sfcMenu.add(executeIsolationAction);
-        sfcMenu.add(executeProductionAction);
+			}
+		};
+		// ----------------------- export/Import Actions -----------------------------------
+		Action executeExportAction = new AbstractAction(EXPORT_MENU_TITLE) {
+			private static final long serialVersionUID = 5384887367733312464L;
+			public void actionPerformed(ActionEvent ae) {
+				SwingUtilities.invokeLater(new ShowExportDialog());
+			}
+		};
+		Action executeImportAction = new AbstractAction(IMPORT_MENU_TITLE) {
+			private static final long serialVersionUID = 5394887367733312464L;
+			public void actionPerformed(ActionEvent ae) {
+				SwingUtilities.invokeLater(new ShowImportDialog());
+			}
+		};
+		// ----------------------- Menus to zoom current chart -----------------------------
 
-        sfcMenu.addSeparator();
-        
-        sfcMenu.add(internalizeRecipeDataAction);
-        sfcMenu.add(storeInternalRecipeDataAction);
-        sfcMenu.add(initializeInternalRecipeDataAction);
-        
-        sfcMenu.addSeparator();
-        
-        JMenu showMenu = new JMenu(SHOW_ANCESTOR_TITLE);
-        sfcMenu.add(showMenu);
-        showMenu.add(executeShowOperation);
-        showMenu.add(executeShowPhase);
-        showMenu.add(executeShowProcedure);
-        showMenu.add(executeShowSuperior);
-        
-        /* We want this if they are running BLT or SFC so both modules try and add it, this attempts to only add it if it doesn't already exist.  */
-        if( !menuExists(context.getFrame(),INTERFACE_MENU_TITLE) ) {
-        	Action interfaceAction = new AbstractAction(INTERFACE_MENU_TITLE) {
-        		private static final long serialVersionUID = 5374667367733312464L;
-        		public void actionPerformed(ActionEvent ae) {
-        			SwingUtilities.invokeLater(new DialogRunner());
-        		}
-        	};
-            sfcMenu.addSeparator();
-        	sfcMenu.add(interfaceAction);
-        }
+		JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
 
-        MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  
-        merge.add(WellKnownMenuConstants.TOOLS_MENU_LOCATION, toolsMenu);
-        return merge;
-    }
+		JMenu sfcMenu = new JMenu(SFC_SUBMENU_TITLE);
+		toolsMenu.add(sfcMenu);
+
+		sfcMenu.addSeparator();
+
+		sfcMenu.add(executeIsolationAction);
+		sfcMenu.add(executeProductionAction);
+
+		sfcMenu.addSeparator();
+
+		sfcMenu.add(internalizeRecipeDataAction);
+		sfcMenu.add(storeInternalRecipeDataAction);
+		sfcMenu.add(initializeInternalRecipeDataAction);
+
+		sfcMenu.addSeparator();
+
+		JMenu showMenu = new JMenu(SHOW_ANCESTOR_TITLE);
+		sfcMenu.add(showMenu);
+		showMenu.add(executeShowOperation);
+		showMenu.add(executeShowPhase);
+		showMenu.add(executeShowProcedure);
+		showMenu.add(executeShowSuperior);
+
+		/* We want this if they are running BLT or SFC so both modules try and add it, this attempts to only add it if it doesn't already exist.  */
+		if( !menuExists(context.getFrame(),INTERFACE_MENU_TITLE) ) {
+			Action interfaceAction = new AbstractAction(INTERFACE_MENU_TITLE) {
+				private static final long serialVersionUID = 5374667367733312464L;
+				public void actionPerformed(ActionEvent ae) {
+					SwingUtilities.invokeLater(new DialogRunner());
+				}
+			};
+			sfcMenu.addSeparator();
+			sfcMenu.add(interfaceAction);
+		}
+
+		sfcMenu.addSeparator();
+
+		sfcMenu.add(executeImportAction);
+		sfcMenu.add(executeExportAction);
+
+		MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  
+		merge.add(WellKnownMenuConstants.TOOLS_MENU_LOCATION, toolsMenu);
+		return merge;
+	}
     
 	@Override
 	public void startup(DesignerContext ctx, LicenseState activationState) throws Exception {
@@ -514,6 +533,69 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 
         public void run() {
             log.infof("%s.run: ShowAncestor %s...",TAG,level);
+            // We get the path to the open chart via the workspace.
+            SfcWorkspace workspace = iaSfcHook.getWorkspace();
+            SfcDesignableContainer tab = workspace.getSelectedContainer();
+    		if( tab!=null ) {
+    			long resourceId = workspace.getSelectedContainer().getResourceId();
+    			String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
+    			SimpleHierarchyAnalyzer hierarchyAnalyzer = new SimpleHierarchyAnalyzer(context.getGlobalProject().getProject(),stepRegistry);
+    			hierarchyAnalyzer.analyze();
+    			List<String> paths = hierarchyAnalyzer.getParentPathsForEnclosingScope(chartPath,level);
+    			// Now that we have the paths, display them
+    			for(String path:paths) {
+    				Long resid = hierarchyAnalyzer.getChartResourceForPath(path);
+    				if( resid!=null ) workspace.openChart(resid.longValue());
+    			}
+    		}
+    		else {
+    			// No chart is open.
+    		}
+            
+        }
+    }
+    /**
+     * Show a file chooser and import charts from the chosen .sproj file.
+     */
+    private class ShowImportDialog implements Runnable {
+    	private String level = Constants.GLOBAL;
+    	
+    	public ShowImportDialog() {
+    	}
+
+        public void run() {
+            log.infof("%s.run: ShowImportDialog %s...",TAG,level);
+            // We get the path to the open chart via the workspace.
+            SfcWorkspace workspace = iaSfcHook.getWorkspace();
+            SfcDesignableContainer tab = workspace.getSelectedContainer();
+    		if( tab!=null ) {
+    			long resourceId = workspace.getSelectedContainer().getResourceId();
+    			String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
+    			SimpleHierarchyAnalyzer hierarchyAnalyzer = new SimpleHierarchyAnalyzer(context.getGlobalProject().getProject(),stepRegistry);
+    			hierarchyAnalyzer.analyze();
+    			List<String> paths = hierarchyAnalyzer.getParentPathsForEnclosingScope(chartPath,level);
+    			// Now that we have the paths, display them
+    			for(String path:paths) {
+    				Long resid = hierarchyAnalyzer.getChartResourceForPath(path);
+    				if( resid!=null ) workspace.openChart(resid.longValue());
+    			}
+    		}
+    		else {
+    			// No chart is open.
+    		}
+            
+        }
+    }
+    /**
+     * Show a dialog that allows the user to choose which charts are to be exported. 
+     */
+    private class ShowExportDialog implements Runnable {;
+    	private String level = Constants.GLOBAL;
+    	public ShowExportDialog() {
+    	}
+
+        public void run() {
+            log.infof("%s.run: ShowExportDialog %s...",TAG,level);
             // We get the path to the open chart via the workspace.
             SfcWorkspace workspace = iaSfcHook.getWorkspace();
             SfcDesignableContainer tab = workspace.getSelectedContainer();
