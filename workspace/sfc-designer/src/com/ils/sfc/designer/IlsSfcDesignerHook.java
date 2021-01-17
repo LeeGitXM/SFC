@@ -32,6 +32,7 @@ import com.ils.sfc.common.chartStructure.RecipeDataConverter;
 import com.ils.sfc.common.chartStructure.RecipeDataMigrator;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AllSteps;
+import com.ils.sfc.designer.exim.ExportSelectionDialog;
 import com.ils.sfc.designer.exim.ImportSelectionDialog;
 import com.ils.sfc.designer.runner.ChartRunner;
 import com.ils.sfc.designer.search.IlsSfcSearchProvider;
@@ -66,7 +67,7 @@ import com.jidesoft.docking.DockableFrame;
 import system.ils.sfc.common.Constants;
 
 public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectChangeListener {
-	private final static String TAG = "IlsSfcDesignerHook";
+	private final static String CLSS = "IlsSfcDesignerHook";
 	private static final String SFC_SUBMENU_TITLE  = "SFC Extensions";
 	private static final String EXPORT_MENU_TITLE  = "Export";
 	private static final String IMPORT_MENU_TITLE  = "Import";
@@ -81,11 +82,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private static final String RECIPE_DATA_INTERNALIZE = "Internalize Recipe Data for Export";
 	private static final String RECIPE_DATA_STORE = "Store Internal Recipe Data into Database";
 	private static final String RECIPE_DATA_INITIALIZE = "Initialize Internal Recipe Data";
-	private static final String ZOOM_MENU_TITLE = "Scale Display";
-	private static final String ZOOM_100 = "100%";
-	private static final String ZOOM_75  = " 75%";
-	private static final String ZOOM_50  = " 50%";
-	private static final String ZOOM_25  = " 25%";
 	private DesignerContext context = null;
 	private Project project = null;
 
@@ -454,7 +450,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			}
 
 		} catch (Exception ex) {
-			log.errorf("%s: Error Updating Project (Project updated): %s", TAG, ex.getLocalizedMessage());
+			log.errorf("%s: Error Updating Project (Project updated): %s", CLSS, ex.getLocalizedMessage());
 
 			ExceptionDialogRunner dlg = new ExceptionDialogRunner();
 			dlg.setMsg(ex.getLocalizedMessage());
@@ -511,7 +507,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 					Collection<ModuleDependency> dependencies = minfo.getDependencies().values();
 					for(ModuleDependency dep:dependencies) {
 						if( dep.getModuleId().equals(SFCModule.MODULE_ID) ) {
-							log.infof("%s.MainMenuWatcher ...%s depends on %s",TAG,minfo.getName(),SFCModule.MODULE_ID);
+							log.infof("%s.MainMenuWatcher ...%s depends on %s",CLSS,minfo.getName(),SFCModule.MODULE_ID);
 						}
 					}
 					// Don't really know how to wait until module is ready. We just assume it
@@ -534,7 +530,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		}
 
 		public void run() {
-			log.infof("%s.run: ShowAncestor %s...",TAG,level);
+			log.infof("%s.run: ShowAncestor %s...",CLSS,level);
 			// We get the path to the open chart via the workspace.
 			SfcWorkspace workspace = iaSfcHook.getWorkspace();
 			SfcDesignableContainer tab = workspace.getSelectedContainer();
@@ -566,9 +562,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		}
 
 		public void run() {
-			log.infof("%s.run: ShowImportDialog %s...",TAG,level);
+			log.infof("%s.run: ShowImportDialog %s...",CLSS,level);
 			// We get the path to the open chart via the workspace.
-			SfcWorkspace workspace = iaSfcHook.getWorkspace();
 			JRootPane root = context.getRootPaneContainer().getRootPane();
 			ImportSelectionDialog dialog = new ImportSelectionDialog(root);
 			dialog.pack();
@@ -588,26 +583,14 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		}
 
 		public void run() {
-			log.infof("%s.run: ShowExportDialogx %s...",TAG,level);
+			log.infof("%s.run: ShowExportDialog %s...",CLSS,level);
 			// We get the path to the open chart via the workspace.
 			SfcWorkspace workspace = iaSfcHook.getWorkspace();
-			SfcDesignableContainer tab = workspace.getSelectedContainer();
-			if( tab!=null ) {
-				long resourceId = workspace.getSelectedContainer().getResourceId();
-				String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
-				SimpleHierarchyAnalyzer hierarchyAnalyzer = new SimpleHierarchyAnalyzer(context.getGlobalProject().getProject(),stepRegistry);
-				hierarchyAnalyzer.analyze();
-				List<String> paths = hierarchyAnalyzer.getParentPathsForEnclosingScope(chartPath,level);
-				// Now that we have the paths, display them
-				for(String path:paths) {
-					Long resid = hierarchyAnalyzer.getChartResourceForPath(path);
-					if( resid!=null ) workspace.openChart(resid.longValue());
-				}
-			}
-			else {
-				// No chart is open.
-			}
-
+			// We get the path to the open chart via the workspace.
+			JRootPane root = context.getRootPaneContainer().getRootPane();
+			ExportSelectionDialog dialog = new ExportSelectionDialog(root,context);
+			dialog.pack();
+			dialog.setVisible(true);   // Returns when dialog is closed
 		}
 	}
 }
