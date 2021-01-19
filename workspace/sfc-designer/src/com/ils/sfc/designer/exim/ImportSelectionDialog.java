@@ -48,6 +48,7 @@ public class ImportSelectionDialog extends JDialog implements ActionListener {
         this.prefs = Preferences.userRoot().node(ILSProperties.ILS_PREFERENCES_DOMAIN);
         this.log = LogUtil.getLogger(getClass().getPackage().getName());
         initialize();
+		setLocation(root.getWidth()/2-getWidth()/2, root.getHeight()/2-getHeight()/2);
 	}
 
 	/**

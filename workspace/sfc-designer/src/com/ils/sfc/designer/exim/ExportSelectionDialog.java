@@ -2,21 +2,19 @@ package com.ils.sfc.designer.exim;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.prefs.Preferences;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.ils.common.ILSProperties;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -31,8 +29,12 @@ public class ExportSelectionDialog extends JDialog implements ActionListener {
 	private final Dimension BUTTON_SIZE = new Dimension(25,25);
 	private static final String APPROVE_BUTTON = "Export";
 	private static final String CANCEL_BUTTON = "Cancel";
+	private static final String SELECT_ALL_BUTTON = "Select All";
+	private static final String SELECT_NONE_BUTTON = "Select None";
 	final JButton approveButton = new JButton(APPROVE_BUTTON);
 	final JButton cancelButton = new JButton(CANCEL_BUTTON);
+	final JButton selectAllButton = new JButton(SELECT_ALL_BUTTON);
+	final JButton selectNoneButton = new JButton(SELECT_NONE_BUTTON);
 	private static final int DLG_HEIGHT = 80;
 	private static final int DLG_WIDTH = 400;
 	private ChartSelectionPane chartSelector;
@@ -52,6 +54,7 @@ public class ExportSelectionDialog extends JDialog implements ActionListener {
         this.prefs = Preferences.userRoot().node(ILSProperties.ILS_PREFERENCES_DOMAIN);
         this.log = LogUtil.getLogger(getClass().getPackage().getName());
         initialize();
+        setLocation(root.getWidth()/2-getWidth()/2, root.getHeight()/2-getHeight()/2);
 	}
 
 	/**
@@ -79,9 +82,23 @@ public class ExportSelectionDialog extends JDialog implements ActionListener {
 	    namePanel.add(label, "skip");    
 	    add(namePanel, "wrap");
 	    add(chartSelector, "wrap");
-	    JPanel bottomPanel = new JPanel(new MigLayout("","20%[]40[]",""));
+	    JPanel bottomPanel = new JPanel(new MigLayout("","[][][][]",""));
 		add(bottomPanel,BorderLayout.SOUTH);
 		
+		bottomPanel.add(selectAllButton);
+		cancelButton.setPreferredSize(BUTTON_SIZE);
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		bottomPanel.add(selectNoneButton);
+		cancelButton.setPreferredSize(BUTTON_SIZE);
+		cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		bottomPanel.add(approveButton);
 		approveButton.setPreferredSize(BUTTON_SIZE);
 		approveButton.addActionListener(new ActionListener() {
