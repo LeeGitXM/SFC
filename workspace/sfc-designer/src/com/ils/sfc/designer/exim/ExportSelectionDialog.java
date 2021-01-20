@@ -2,9 +2,10 @@ package com.ils.sfc.designer.exim;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.prefs.Preferences;
 
 import javax.swing.JButton;
@@ -13,10 +14,17 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
+import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeSelectionModel;
+
+import org.python.core.PyDictionary;
 
 import com.ils.common.ILSProperties;
+import com.ils.sfc.common.PythonCall;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
@@ -82,28 +90,67 @@ public class ExportSelectionDialog extends JDialog implements ActionListener {
 	    namePanel.add(label, "skip");    
 	    add(namePanel, "wrap");
 	    add(chartSelector, "wrap");
-	    JPanel bottomPanel = new JPanel(new MigLayout("","[][][][]",""));
+	    JPanel bottomPanel = new JPanel(new MigLayout("","20%[]10[]10[]10[]",""));
 		add(bottomPanel,BorderLayout.SOUTH);
 		
 		bottomPanel.add(selectAllButton);
-		cancelButton.setPreferredSize(BUTTON_SIZE);
-		cancelButton.addActionListener(new ActionListener() {
+		selectAllButton.setPreferredSize(BUTTON_SIZE);
+		selectAllButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
+				JTree tree = chartSelector.getTree();
+				expandAllNodes(tree,0,tree.getRowCount());
+				// Skip the first row
+				int count = tree.getRowCount()-1;
+				if( count>0 ) {
+					int[] rows = new int[count];
+					int row = 0;
+					while( row < count ) {
+						rows[row] = row+1;
+						row++;
+					}
+					tree.setSelectionRows(rows);
+				}
 			}
 		});
 		bottomPanel.add(selectNoneButton);
-		cancelButton.setPreferredSize(BUTTON_SIZE);
-		cancelButton.addActionListener(new ActionListener() {
+		selectNoneButton.setPreferredSize(BUTTON_SIZE);
+		selectNoneButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
+				TreeSelectionModel selectionModel = chartSelector.getSelectionModel();
+				selectionModel.clearSelection();
 			}
 		});
 		bottomPanel.add(approveButton);
 		approveButton.setPreferredSize(BUTTON_SIZE);
 		approveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
+				JTree tree = chartSelector.getTree();
+				expandAllNodes(tree,0,tree.getRowCount());
+				TreeSelectionModel selectionModel = chartSelector.getSelectionModel();
+				int[] rows = selectionModel.getSelectionRows();
+				if( rows!=null && rows.length>0 ) {
+				for( int row:rows) {
+					log.info(String.format("%s.approve: %s",CLSS,selectionModel.getSelectionPath().getLastPathComponent()));
+				}
+			
+					// Initialize units. Since this is a lazy initialization, 
+					Object[] args = new Object[1];
+					PyDictionary dict = new PyDictionary();
+					args[0] = dict;
+					try {
+						PythonCall.EXPORT_CHARTS.exec(args);
+						TreeModel model = tree.getModel();
+						List<Object> nodes = new ArrayList<>();
+						getChildren(nodes,model,model.getRoot());
+					} 
+					catch (JythonExecException jee) {
+						log.errorf("%s: Error eecuting importCharts (%s)",CLSS,jee.getMessage());
+					}
+					catch (Exception ex) {
+						log.errorf(CLSS+": Exception importing charts (%s)",ex.getMessage());
+					}
+				}
+				log.infof("%s.actionPerformed: exporting selections.",CLSS);
 			}
 		});
 		
@@ -116,6 +163,17 @@ public class ExportSelectionDialog extends JDialog implements ActionListener {
 		});
 	}
 	
+	// Recursively expand all nodes.
+	private void expandAllNodes(JTree tree, int startingIndex, int rowCount){
+	    for(int i=startingIndex;i<rowCount;++i){
+	        tree.expandRow(i);
+	    }
+
+	    if(tree.getRowCount()!=rowCount){
+	        expandAllNodes(tree,rowCount, tree.getRowCount());
+	    }
+	}
+
 	/**
 	 * We receive events from the file chooser.
 	 * For the text field, the command is the field contents.
@@ -124,4 +182,13 @@ public class ExportSelectionDialog extends JDialog implements ActionListener {
 		log.infof("%s.actionPerformed %s = %s", CLSS,e.getActionCommand(),((JComponent)(e.getSource())).getName());
 		this.dispose();
 	}
+	
+	// Recursively get all children (leaf only) in a list
+	private void getChildren(List<Object> list,TreeModel model, Object node) {
+		if( model.getRoot().equals(node)) return;  // Don't include 
+		if( model.isLeaf(node) ) {
+			list.add(node);
+		}
+	}
+	
 }

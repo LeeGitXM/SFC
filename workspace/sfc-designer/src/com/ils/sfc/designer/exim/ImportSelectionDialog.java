@@ -17,6 +17,10 @@ import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.ils.common.ILSProperties;
+import com.ils.sfc.common.IlsProperty;
+import com.ils.sfc.common.PythonCall;
+import com.inductiveautomation.ignition.common.Dataset;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 
@@ -29,11 +33,11 @@ public class ImportSelectionDialog extends JDialog implements ActionListener {
 	private static final long serialVersionUID = 8813971334526492335L;
 	private static final int DLG_HEIGHT = 80;
 	private static final int DLG_WIDTH = 400;
-	private File filePath = null;
 	private JFileChooser fc;
 	private final String nameLabel;
 	private final LoggerEx log;
 	private final Preferences prefs;
+	private File filePath = null;
 
 	
 	// Doing nothing works quite well.
@@ -115,13 +119,24 @@ public class ImportSelectionDialog extends JDialog implements ActionListener {
 		if( e.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
 			filePath = fc.getSelectedFile();
 			if( filePath!=null ) {
-				//requestHandler.setPreference(PREF_READWRITE_DIR, filePath.getParent());
-				this.dispose();
+				// Initialize units. Since this is a lazy initialization, 
+				Object[] args = new Object[1];
+				args[0] = filePath.getAbsolutePath();
+				try {
+					PythonCall.IMPORT_CHARTS.exec(args);
+				} 
+				catch (JythonExecException jee) {
+					log.errorf("%s: Error executing importCharts (%s)",CLSS,jee.getMessage());
+				}
+				catch (Exception ex) {
+					log.errorf(CLSS+": Exception importing charts (%s)",ex.getMessage());
+				}
 			}
 			log.infof("%s.actionPerformed set file path to: %s (%s)",CLSS,filePath.getAbsolutePath(),filePath.getParent());
+			this.dispose();
 		}
 		else if(e.getActionCommand().equals(JFileChooser.CANCEL_SELECTION)){
-			filePath =null;
+			filePath = null;
 			this.dispose();
 		}
 	}

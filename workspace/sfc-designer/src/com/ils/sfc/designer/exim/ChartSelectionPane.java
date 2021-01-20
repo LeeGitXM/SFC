@@ -56,6 +56,9 @@ class ChartSelectionPane extends JPanel {
 		add(mainPanel,BorderLayout.CENTER);
 	}
 	
+	public JTree getTree() { return this.chartTree; }
+	public TreeSelectionModel getSelectionModel() { return this.chartSelectionModel; }
+	
 	// Traverse the hierarchy
 	private void createNodes(DefaultMutableTreeNode root) {
 		SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
