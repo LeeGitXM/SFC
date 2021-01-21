@@ -29,7 +29,7 @@ import net.miginfocom.swing.MigLayout;
 public class ImportSelectionDialog extends JDialog implements ActionListener {
 	private final static String CLSS = "ImportSelectionDialog.java";
 	private static final String APPROVE_BUTTON = "OK";
-	private final static String FILE_CHOOSER_NAME = "FileChoser";
+	private final static String FILE_CHOOSER_NAME = "FileChooser";
 	private static final long serialVersionUID = 8813971334526492335L;
 	private static final int DLG_HEIGHT = 80;
 	private static final int DLG_WIDTH = 400;

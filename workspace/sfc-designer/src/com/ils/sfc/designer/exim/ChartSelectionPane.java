@@ -58,6 +58,7 @@ class ChartSelectionPane extends JPanel {
 	
 	public JTree getTree() { return this.chartTree; }
 	public TreeSelectionModel getSelectionModel() { return this.chartSelectionModel; }
+	public SimpleHierarchyAnalyzer getAnalyzer() { return this.hierarchyAnalyzer; }
 	
 	// Traverse the hierarchy
 	private void createNodes(DefaultMutableTreeNode root) {

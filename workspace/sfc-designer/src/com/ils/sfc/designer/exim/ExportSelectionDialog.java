@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.prefs.Preferences;
 
 import javax.swing.JButton;
@@ -18,16 +16,20 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import org.python.core.PyDictionary;
 
 import com.ils.common.ILSProperties;
 import com.ils.sfc.common.PythonCall;
+import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
+import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer.ChartInfo;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
+import com.inductiveautomation.sfc.api.StepRegistry;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -49,12 +51,14 @@ public class ExportSelectionDialog extends JDialog implements ActionListener {
 	private final DesignerContext context;
 	private final LoggerEx log;
 	private final Preferences prefs;
+	private final StepRegistry registry;
 
 	
 	// Doing nothing works quite well.
-	public ExportSelectionDialog(JRootPane root,DesignerContext ctx) {
+	public ExportSelectionDialog(JRootPane root,DesignerContext ctx,StepRegistry reg) {
 		super(SwingUtilities.getWindowAncestor(root));
 		this.context = ctx;
+		this.registry = reg;
 		setModal(true);
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         setSize(new Dimension(DLG_WIDTH,DLG_HEIGHT));
@@ -127,24 +131,36 @@ public class ExportSelectionDialog extends JDialog implements ActionListener {
 				JTree tree = chartSelector.getTree();
 				expandAllNodes(tree,0,tree.getRowCount());
 				TreeSelectionModel selectionModel = chartSelector.getSelectionModel();
+				TreeModel model = tree.getModel();
+				SimpleHierarchyAnalyzer analyzer = chartSelector.getAnalyzer();
 				int[] rows = selectionModel.getSelectionRows();
 				if( rows!=null && rows.length>0 ) {
-				for( int row:rows) {
-					log.info(String.format("%s.approve: %s",CLSS,selectionModel.getSelectionPath().getLastPathComponent()));
-				}
-			
 					// Initialize units. Since this is a lazy initialization, 
 					Object[] args = new Object[1];
 					PyDictionary dict = new PyDictionary();
 					args[0] = dict;
+					
+					for( int row:rows) {
+						TreePath path = tree.getPathForRow(row);
+						String chartPath = chartPathForTreePath(path);
+						ChartInfo info = analyzer.getChartsByPath().get(chartPath);
+						if( info!=null ) {
+							try {
+								String xml = info.model.toXml(registry);
+								dict.put(chartPath, xml);
+								//log.info(String.format("%s.approve: %d = %s (%s)",CLSS,row,chartPath,xml));
+							}
+							catch(Exception ex) {
+								log.errorf(CLSS+": Exception getting chart XML (%s)",ex.getMessage());
+							}
+						}
+					}
+					
 					try {
 						PythonCall.EXPORT_CHARTS.exec(args);
-						TreeModel model = tree.getModel();
-						List<Object> nodes = new ArrayList<>();
-						getChildren(nodes,model,model.getRoot());
 					} 
 					catch (JythonExecException jee) {
-						log.errorf("%s: Error eecuting importCharts (%s)",CLSS,jee.getMessage());
+						log.errorf("%s: Error executing importCharts (%s)",CLSS,jee.getMessage());
 					}
 					catch (Exception ex) {
 						log.errorf(CLSS+": Exception importing charts (%s)",ex.getMessage());
@@ -152,6 +168,7 @@ public class ExportSelectionDialog extends JDialog implements ActionListener {
 				}
 				log.infof("%s.actionPerformed: exporting selections.",CLSS);
 			}
+
 		});
 		
 		bottomPanel.add(cancelButton);
@@ -183,12 +200,19 @@ public class ExportSelectionDialog extends JDialog implements ActionListener {
 		this.dispose();
 	}
 	
-	// Recursively get all children (leaf only) in a list
-	private void getChildren(List<Object> list,TreeModel model, Object node) {
-		if( model.getRoot().equals(node)) return;  // Don't include 
-		if( model.isLeaf(node) ) {
-			list.add(node);
+	// Create a chart path from a tree path
+	private String chartPathForTreePath(TreePath tp) {
+		StringBuilder path = new StringBuilder();
+		int count = tp.getPathCount();
+		int index = 1;
+		while(index<count) {
+			if( path.length()>0) {
+				path.append("/");
+			}
+			path.append(tp.getPathComponent(index));
+			index++;
 		}
+		return path.toString();
 	}
 	
 }

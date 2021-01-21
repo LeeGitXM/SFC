@@ -588,7 +588,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			SfcWorkspace workspace = iaSfcHook.getWorkspace();
 			// We get the path to the open chart via the workspace.
 			JRootPane root = context.getRootPaneContainer().getRootPane();
-			ExportSelectionDialog dialog = new ExportSelectionDialog(root,context);
+			ExportSelectionDialog dialog = new ExportSelectionDialog(root,context,stepRegistry);
 			dialog.pack();
 			dialog.setVisible(true);   // Returns when dialog is closed
 		}
