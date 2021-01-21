@@ -30,10 +30,10 @@ public class IlsStepEditor  extends AbstractStepEditor {
 	private static final String CLSS = "IlsStepEditor";
 	private static final Logger logger = LoggerFactory.getLogger(IlsStepEditor.class);
 	private final static String OS = System.getProperty("os.name").toLowerCase();
-	public final static String ROOT_HELP_PATH = "http://localhost:8088/main/system/moduledocs/com.ils.sfc/SFCUsersGuide_filtered.html#";
+	public final static String ROOT_HELP_PATH = "http://%s:8088/main/system/moduledocs/com.ils.sfc/SFCUsersGuide_filtered.html#%s";
 	private static final ResourceBundle rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
 	private StepEditorController stepEditorController;
-	
+	private final IlsSfcRequestHandler requestHandler = new IlsSfcRequestHandler();
 
 	protected IlsStepEditor(ChartUIModel chartModel, DesignerContext context) {
 		super(new BorderLayout(), chartModel);
@@ -102,7 +102,8 @@ public class IlsStepEditor  extends AbstractStepEditor {
 			// Display a browser pointing to the help text for the block
 			public void actionPerformed(final ActionEvent e) {
 				Desktop desktop=Desktop.getDesktop();
-				String address = ROOT_HELP_PATH+getFactoryId(element);
+				String hostname = requestHandler.getGatewayHostname();
+				String address = String.format(ROOT_HELP_PATH,hostname,getFactoryId(element));
 				logger.info(String.format("%s.HelpAction: Address is: %s",CLSS,address)); 
 				try {
 					if( OS.indexOf("win")>=0) {
