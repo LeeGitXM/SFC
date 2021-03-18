@@ -169,11 +169,15 @@
 		<copy file="${basedir}/../../external/lib/jackson-annotations-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
 		<copy file="${jar.dir}/${common.jar.name}" todir="${basedir}/sfc-build/temp_modl/" />
 
-		<!-- Copy license file and javadoc into the bundle -->
-		<mkdir dir="${basedir}/sfc-build/doc" />
+		<!-- Copy license file, users guide and javadoc into the bundle -->
+		<mkdir dir="${basedir}/sfc-build/doc/SFCUsersGuide_filtered_files" />
 		<copy file="${basedir}/sfc-build/license.html" todir="${basedir}/sfc-build/temp_modl/" />
 		<copy todir="${basedir}/sfc-build/temp_modl/doc">
 		    <fileset dir="${basedir}/sfc-build/doc"/>
+			<fileset file="${svn.repo}/EMChemicals/Sequential Control/Documentation/User's Guide/SFCUsersGuide_filtered.html"/>
+		</copy>
+		<copy todir="${basedir}/sfc-build/temp_modl/doc/SFCUsersGuide_filtered_files">
+			<fileset dir="${svn.repo}/EMChemicals/Sequential Control/Documentation/User's Guide/SFCUsersGuide_filtered_files"/>
 		</copy>
 		<!-- Echo the version into .version in the bundle and to be saved -->
 		<echo message="${ils.sfc.name}-${ils.sfc.version}" file="${basedir}/sfc-build/temp_modl/.version" append="false"/>

@@ -10,12 +10,28 @@ import com.ils.sfc.designer.stepEditor.StepEditorController;
 import com.ils.sfc.designer.stepEditor.rowEditor.GenericCellRenderer;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowCellEditor;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowEditorPanel;
+import com.ils.sfc.designer.stepEditor.rowEditor.TableHeaderWithTooltips;
 import com.ils.sfc.designer.stepEditor.rowEditor.manualData.ManualDataTableModel;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 @SuppressWarnings("serial")
 public class PVMonitorPanel extends RowEditorPanel {
 	private PVMonitorConfig config;
+	private static final String[] colHeaderTooltips = {
+			"Enabled",
+			"PV Key",
+			"Target Type",
+			"Target Name",
+			"Strategy",
+			"Limits",
+			"Download",
+			"Persistence",
+			"Consistency",
+			"Deadtime",  
+			"Tolerance", 
+			"Type",
+			"Status"};
+	private TableHeaderWithTooltips tableHeader;
 	
 	public PVMonitorPanel(StepEditorController controller, int index) {
 		super(controller, index, false);
@@ -29,6 +45,8 @@ public class PVMonitorPanel extends RowEditorPanel {
 		tableModel = new PVMonitorTableModel(stepController);
 		tableModel.setConfig(config);		
 		table = new JTable(tableModel);
+		tableHeader = new TableHeaderWithTooltips(table.getColumnModel(), colHeaderTooltips);
+		table.setTableHeader(tableHeader);
 		tablePanel = createTablePanel(table, tablePanel, new RowCellEditor(),
 			new GenericCellRenderer());
 		buttonPanel.getEditButton().setEnabled(false);

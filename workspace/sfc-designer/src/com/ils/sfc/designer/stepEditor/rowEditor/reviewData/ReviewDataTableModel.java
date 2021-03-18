@@ -54,6 +54,10 @@ public class ReviewDataTableModel extends RowTableModel {
 	public boolean isUnitsColumn(int col) {
 		return col == UNITS_COLUMN;
 	}
+	
+	public boolean showAdvice() {
+		return showAdvice;
+	}
 
 	public String[] getColumnNames() {
 		return showAdvice ? columnNamesWithAdvice : columnNames;

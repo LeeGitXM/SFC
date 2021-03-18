@@ -1,8 +1,10 @@
 /**
- *   (c) 2015  ILS Automation. All rights reserved.
+ *   (c) 2015-2021  ILS Automation. All rights reserved.
  */
 package com.ils.sfc.gateway;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,12 +42,26 @@ public class GatewayRpcDispatcher   {
 		return requestHandler.getDatasourceNames();
 	}
 	
+	public String getHostname() {
+		String hostname = "localhost";
+		try {
+			InetAddress host = InetAddress.getLocalHost();
+			hostname = host.getHostName();
+		}
+		catch(UnknownHostException ex) {
+			log.warnf("%s: getHostname: unknown host exception (%s)", TAG, ex.getLocalizedMessage());
+		}
+		return hostname;
+	}
 	public String getUserLibPath() {
 		return requestHandler.getUserLibPath();
 	}
 	
 	public String getToolkitProperty(String propertyName) {
 		return requestHandler.getToolkitProperty(propertyName);
+	}
+	public String getWindowsBrowserPath() {
+		return requestHandler.getWindowsBrowserPath();
 	}
 	/**
 	 * Set a clock rate factor. This will change timing for isolation mode only.

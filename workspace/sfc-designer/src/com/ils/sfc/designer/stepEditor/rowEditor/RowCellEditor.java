@@ -10,16 +10,25 @@ import javax.swing.JTextField;
 import javax.swing.table.TableCellEditor;
 
 import com.ils.sfc.designer.stepEditor.EditorUtil;
-import com.inductiveautomation.sfc.designer.workspace.editors.ChartPathComboBox;
+import com.inductiveautomation.ignition.common.util.LogUtil;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 
+/***
+ * This is used by the structure editor that is used for a step property that is a list of dictionaries.  
+ * This is NOT used on the primary property editor pane.
+ * 
+ * @author phass
+ */
 @SuppressWarnings("serial")
 public class RowCellEditor extends AbstractCellEditor implements TableCellEditor{
 	private Component component;
+	private final LoggerEx log = LogUtil.getLogger(getClass().getName());
 
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected,
 		int row, int col) {
 		RowTableModel model = (RowTableModel) table.getModel();
 		if(model.isComboColumn(col)) {
+			log.infof("Returning a combo box");
 			String[] choices = model.getChoices(row, col);
 			JComboBox<?> comboBox = EditorUtil.createChoiceCombo(choices, (String)value);
 			return component = comboBox;

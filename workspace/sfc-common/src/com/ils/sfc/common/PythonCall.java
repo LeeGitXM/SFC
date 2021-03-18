@@ -182,9 +182,6 @@ public class PythonCall {
 
 	public static final PythonCall SET_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "setRecipeData", 
 			null,  new String[]{"provider", "path", "value", "synchronous"} );
-	
-	public static final PythonCall CLEANUP_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "cleanupRecipeData", 
-			null,  new String[]{"provider", "chartPath", "stepNames"} );
 
 	public static final PythonCall CREATE_RECIPE_DATA = new PythonCall("ils.sfc.common.recipe." + "createRecipeDataTag", 
 			null,  new String[]{"provider", "folder", "rdName", "rdType", "valueType"} );
@@ -198,7 +195,10 @@ public class PythonCall {
 	// misc:
 	public static final PythonCall DO_NOTHING = new PythonCall("ils.sfc.common.util." + "doNothing", 
 			null,  new String[0] );
-
+	
+	public static final PythonCall EXPORT_CHARTS = new PythonCall("ils.sfc.designer.exportCharts.setChartsForExport", 
+			null, new String[]{"charts"});
+	
 	public static final PythonCall GET_QUEUE_NAMES = new PythonCall("ils.queue.commons.getQueueNames", 
 			PyList.class, new String[]{"db"});
 
@@ -211,6 +211,9 @@ public class PythonCall {
 	public static final PythonCall GET_KEY_SIZE = new PythonCall("ils.sfc.client.util." + "getKeySize", 
 			Integer.class,  new String[]{"keyName"} );
 
+	public static final PythonCall IMPORT_CHARTS = new PythonCall("ils.sfc.designer.importCharts.setChartProjectPath", 
+			null, new String[]{"path"});
+	
 	public static final PythonCall S88_GET = new PythonCall("ils.sfc.recipeData.api.s88Get", 
 			Object.class, new String[]{"chartScope","stepScope","keyAttribute","scope"} );
 	

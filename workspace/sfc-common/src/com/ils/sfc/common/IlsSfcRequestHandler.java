@@ -1,5 +1,5 @@
 /**
- *   (c) 2015  ILS Automation. All rights reserved.
+ *   (c) 2015-2021  ILS Automation. All rights reserved.
  *  
  */
 package com.ils.sfc.common;
@@ -48,7 +48,21 @@ public class IlsSfcRequestHandler {
 		};
 		return path;
 	}
-	
+
+	/**
+	 * @return the hostname of the Gateway system
+	 */
+	public String getGatewayHostname()  {
+		String path = "";
+		try {
+			path = (String)GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
+					IlsSfcModule.MODULE_ID, "getHostname");
+		}
+		catch(Exception ge) {
+			log.infof("%s.getGatewayHostname: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());
+		};
+		return path;
+	}
 	/**
 	 * @return the path of a chart given its resource Id
 	 */
@@ -143,7 +157,23 @@ public class IlsSfcRequestHandler {
 		}
 		return 1/factor;
 	}
-
+	/**
+	 * Retrieve the configured browser path from the ORM database HelpRecord. This is used for 
+	 * context-sensitive help.
+	 * @return the configured browser path (for Windows)
+	 */
+	public String getWindowsBrowserPath() {
+		String result = null;
+		try {
+			result = (String)GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
+					IlsSfcModule.MODULE_ID, "getWindowsBrowserPath");
+			log.tracef("%s.getWindowsBrowserPath ... %s",TAG,result);
+		}
+		catch(Exception ge) {
+			log.infof("%s.getWindowsBrowserPath: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());
+		}
+		return result;
+	}
 	/**
 	 * Set a clock rate factor for isolation mode only. We set in the BLT module
 	 * as well. If that module is not present, then we simply ignore the exception.

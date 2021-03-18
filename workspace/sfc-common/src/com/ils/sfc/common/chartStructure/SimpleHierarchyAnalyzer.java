@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 import org.json.JSONObject;
@@ -270,4 +271,5 @@ public class SimpleHierarchyAnalyzer {
 		return chartsByPath;
 	}
 
+	public Set<String> getChartPaths() { return chartsByPath.keySet(); }
 }
