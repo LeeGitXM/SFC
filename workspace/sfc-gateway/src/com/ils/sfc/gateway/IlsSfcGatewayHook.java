@@ -30,6 +30,7 @@ import com.ils.sfc.step.InputStepFactory;
 import com.ils.sfc.step.LimitedInputStepFactory;
 import com.ils.sfc.step.ManualDataEntryStepFactory;
 import com.ils.sfc.step.MonitorDownloadStepFactory;
+import com.ils.sfc.step.OcAlertStepFactory;
 import com.ils.sfc.step.OperationStepFactory;
 import com.ils.sfc.step.PVMonitorStepFactory;
 import com.ils.sfc.step.PauseStepFactory;
@@ -101,43 +102,43 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private WatchdogTimer timer = null;
 	private ChartDebugger chartDebugger = null;
 	private static StepFactory[] stepFactories = {
-		new QueueMessageStepFactory(),
-		new SaveQueueStepFactory(),
-		new SetQueueStepFactory(),
-		new ShowQueueStepFactory(),
-		new ClearQueueStepFactory(),
-		new YesNoStepFactory(),
 		new CancelStepFactory(),
-		new PauseStepFactory(),
-		new ControlPanelMessageStepFactory(),
-		new TimedDelayStepFactory(),
-		new DeleteDelayNotificationStepFactory(),
-		new PostDelayNotificationStepFactory(),
-		new EnableDisableStepFactory(),
-		new SelectInputStepFactory(),
-		new LimitedInputStepFactory(),
-		new DialogMessageStepFactory(),
+		new ClearQueueStepFactory(),
+		new CloseWindowStepFactory(),
 		new CollectDataStepFactory(),
+		new ConfirmControllersStepFactory(),
+		new ControlPanelMessageStepFactory(),
+		new DeleteDelayNotificationStepFactory(),
+		new DialogMessageStepFactory(),
+		new EnableDisableStepFactory(),
 		new InputStepFactory(),
-		new RawQueryStepFactory(),
-		new SimpleQueryStepFactory(),
-		new SaveDataStepFactory(),
+		new LimitedInputStepFactory(),
+		new MonitorDownloadStepFactory(),
+		new ManualDataEntryStepFactory(),
+		new OcAlertStepFactory(),
+		new OperationStepFactory(),
+		new PauseStepFactory(),
+		new PhaseStepFactory(),
+		new PostDelayNotificationStepFactory(),
 		new PrintFileStepFactory(),
 		new PrintWindowStepFactory(),
-		new ShowWindowStepFactory(),
-		new CloseWindowStepFactory(),
+		new ProcedureStepFactory(),
+		new PVMonitorStepFactory(),
+		new QueueMessageStepFactory(),
+		new RawQueryStepFactory(),
 		new ReviewDataStepFactory(),
 		new ReviewDataWithAdviceStepFactory(),
 		new ReviewFlowsStepFactory(),
-		//new IlsEnclosingStepFactory(),
-		new ProcedureStepFactory(),
-		new OperationStepFactory(),
-		new PhaseStepFactory(),
-		new ConfirmControllersStepFactory(),
+		new SaveDataStepFactory(),
+		new SaveQueueStepFactory(),
+		new SelectInputStepFactory(),
+		new SetQueueStepFactory(),
+		new SimpleQueryStepFactory(),
+		new ShowQueueStepFactory(),
+		new ShowWindowStepFactory(),
+		new TimedDelayStepFactory(),
 		new WriteOutputStepFactory(),
-		new PVMonitorStepFactory(),
-		new MonitorDownloadStepFactory(),
-		new ManualDataEntryStepFactory()
+		new YesNoStepFactory()
 	};
 
 	// an index of step property names by the factory id:

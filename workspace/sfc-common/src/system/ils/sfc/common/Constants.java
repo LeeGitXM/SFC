@@ -33,6 +33,7 @@ public class Constants {
 	public static final String AVERAGE = "average";
 	public static final String BOTTOM_CENTER = "bottomCenter";
 	public static final String BOTTOM_LEFT = "bottomLeft";
+	public static final String BOTTOM_MESSAGE = "bottomMessage";
 	public static final String BOTTOM_RIGHT = "bottomRight";
 	public static final String BUTTON_LABEL = "buttonLabel";
 	public static final String BUTTON_KEY = "buttonKey";
@@ -130,6 +131,7 @@ public class Constants {
 	public static final String METHOD = "method";
 	public static final String MINIMUM = "minimum";
 	public static final String MINIMUM_VALUE = "minimumValue";
+	public static final String MAIN_MESSAGE = "mainMessage";
 	public static final String MAXIMUM = "maximum";
 	public static final String MAXIMUM_VALUE = "maximumValue";
 	public static final String MODE = "mode";
@@ -143,6 +145,7 @@ public class Constants {
 	public static final String NONE = "none";
 	public static final String NOT_PERSISTENT = "NotPersistent";
 	public static final String NOT_CONSISTENT = "NotConsistent";
+	public static final String OC_ALERT_WINDOW = "ocAlertWindow";
 	public static final String OFF = "Off";
 	public static final String OK = "OK";
 	public static final String OUT_OF_RANGE = "Out of Range";
@@ -152,6 +155,7 @@ public class Constants {
 	public static final String PARENT = "parent";
 	public static final String PCT = "Pct";
 	public static final String PENDING = "Pending";
+	public static final String POST = "post";
 	public static final String POSITION = "position";
 	public static final String POST_TO_QUEUE = "postToQueue";
 	public static final String POST_NOTIFICATION = "postNotification";
@@ -234,6 +238,7 @@ public class Constants {
 	public static final String TRANSLATION_ERROR = "Translation Error!";
 	public static final String TOP_CENTER = "topCenter";
 	public static final String TOP_LEFT = "topLeft";
+	public static final String TOP_MESSAGE = "topMessage";
 	public static final String TOP_RIGHT = "topRight";
 	public static final String TYPE = "type";
 	public static final String UNIT_SUFFIX = "Unit";
