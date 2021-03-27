@@ -35,6 +35,7 @@ public class Constants {
 	public static final String BOTTOM_LEFT = "bottomLeft";
 	public static final String BOTTOM_MESSAGE = "bottomMessage";
 	public static final String BOTTOM_RIGHT = "bottomRight";
+	public static final String BUTTON_CALLBACK = "buttonCallback";
 	public static final String BUTTON_LABEL = "buttonLabel";
 	public static final String BUTTON_KEY = "buttonKey";
 	public static final String BUTTON_KEY_LOCATION = "buttonKeyLocation";

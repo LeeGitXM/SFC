@@ -18,6 +18,7 @@ public interface OcAlertStepProperties extends ChartStepProperties{
     	BOTTOM_MESSAGE,
     	MAIN_MESSAGE,
     	BUTTON_LABEL,
+    	BUTTON_CALLBACK,
     	OC_ALERT_WINDOW,
     	ACK_REQUIRED
     };

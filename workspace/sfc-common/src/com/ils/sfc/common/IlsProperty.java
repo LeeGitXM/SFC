@@ -139,6 +139,7 @@ public class IlsProperty {
     public static final BasicProperty<String> BUTTON_KEY = createProperty(Constants.BUTTON_KEY, String.class, "");
     public static final BasicProperty<String> BUTTON_KEY_LOCATION = createProperty(Constants.BUTTON_KEY_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);
     public static final BasicProperty<String> BUTTON_LABEL = createProperty(Constants.BUTTON_LABEL, String.class, "");
+    public static final BasicProperty<String> BUTTON_CALLBACK = createProperty(Constants.BUTTON_CALLBACK, String.class, "");
     public static final BasicProperty<String> CALLBACK = createProperty(Constants.CALLBACK, String.class, "");
     public static final BasicProperty<String> CATEGORY = createProperty(Constants.CATEGORY, String.class, "");
     public static final BasicProperty<String> CHART_PATH = createProperty("chart-path", String.class, "");
