@@ -62,6 +62,11 @@ public class WriteOutputConfig extends RowConfig implements java.io.Serializable
 	}
 
 	@Override
+	public void addRow(int index) {
+		rows.add(index, new Row());
+	}
+	
+	@Override
 	public void removeRow(int index) {
 		rows.remove(index);
 	}

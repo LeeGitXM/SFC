@@ -80,6 +80,8 @@ public abstract class RowConfig {
 	}
 
 	public abstract void addRow();
+	
+	public abstract void addRow(int index);
 
 	public abstract void removeRow(int index);
 

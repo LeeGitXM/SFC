@@ -61,6 +61,10 @@ public class PVMonitorConfig extends RowConfig {
 		@JsonIgnore
 		public double targetValue;  
 		@JsonIgnore
+		public String targetStringValue;  // added by Pete to support Strings
+		@JsonIgnore
+		public String dataType;  // added by Pete to support Strings
+		@JsonIgnore
 		public double lowLimit;  
 		@JsonIgnore
 		public double highLimit;  
@@ -87,6 +91,8 @@ public class PVMonitorConfig extends RowConfig {
 		@JsonIgnore
 		public double lastPV;   // the PV from the last invocation
 		@JsonIgnore
+		public String lastStringPV;   // the PV from the last invocation - added by Pete to support Strings 7/20/21
+		@JsonIgnore
 		public String lastStatus;   // the status from the last invocation
 		@JsonIgnore
 		public int targetRecipeDataId;   // the target recipe data id to optimize s88 access
@@ -110,6 +116,11 @@ public class PVMonitorConfig extends RowConfig {
 	@Override
 	public void addRow() {
 		rows.add(new Row());
+	}
+	
+	@Override
+	public void addRow(int index) {
+		rows.add(index, new Row());
 	}
 
 	@Override
@@ -191,7 +202,7 @@ public class PVMonitorConfig extends RowConfig {
 					newRow.status = strValue;
 				}
 				else {
-					logger.error("Error parsing PVMonitorConfig: Unknown G2 attribute - " + name);
+					logger.error("Error parsing PVMonitorConfig: Unknown attribute - " + name);
 				}
 			}
 		}
