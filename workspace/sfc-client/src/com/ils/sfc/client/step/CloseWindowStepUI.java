@@ -39,12 +39,12 @@ public class CloseWindowStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Close Window";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "Close a specific window on every client";
         }
 
         @Override

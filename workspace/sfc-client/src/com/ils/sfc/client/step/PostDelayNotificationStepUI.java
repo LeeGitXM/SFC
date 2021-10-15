@@ -39,12 +39,12 @@ public class PostDelayNotificationStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Post Notice";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return "Put up a delay notification dialog";
+            return "Post up a delay notification window";
         }
 
         @Override

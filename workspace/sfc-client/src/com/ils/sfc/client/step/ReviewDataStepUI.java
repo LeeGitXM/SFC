@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -19,6 +21,9 @@ public class ReviewDataStepUI extends AbstractIlsStepUI {
 	@Override
 	protected String getHeading() { return "Review Data"; }
 
+	@Override
+	protected Color getBorderColor() { return Color.blue; }
+	
     public static final class ReviewDataStepFactory extends ReviewDataStepDelegate implements ClientStepFactory {
     	private ReviewDataStepUI UI = new ReviewDataStepUI();
  
@@ -39,12 +44,12 @@ public class ReviewDataStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Review Data";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return "Show user the specified data";
+            return "Show data for review and confirmation";
         }
 
         @Override

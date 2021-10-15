@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -18,6 +20,9 @@ public class ControlPanelMessageStepUI extends AbstractIlsStepUI {
 	
 	@Override
 	protected String getHeading() { return "Control Panel"; }
+	
+	@Override
+	protected Color getBorderColor() { return Color.blue; }
 	
     public static final class ControlPanelMessageStepFactory extends ControlPanelMessageStepDelegate implements ClientStepFactory {
     	private ControlPanelMessageStepUI UI = new ControlPanelMessageStepUI();
@@ -39,12 +44,12 @@ public class ControlPanelMessageStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Post Message";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "Post a message to the SFC control panel";
         }
 
         @Override

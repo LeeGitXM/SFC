@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -18,6 +20,9 @@ public class OcAlertStepUI extends AbstractIlsStepUI {
 	
 	@Override
 	protected String getHeading() { return "OC Alert"; }
+	
+	@Override
+	protected Color getBorderColor() { return Color.blue; }
 	
     public static final class OcAlertStepFactory extends OcAlertStepDelegate implements ClientStepFactory {
     	private OcAlertStepUI UI = new OcAlertStepUI();
@@ -39,7 +44,7 @@ public class OcAlertStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "OC Alert";
+            return "";
         }
 
         @Override

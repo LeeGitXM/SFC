@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -18,6 +20,9 @@ public class ReviewFlowsStepUI extends AbstractIlsStepUI {
 	
 	@Override
 	protected String getHeading() { return "Review Flows"; }
+	
+	@Override
+	protected Color getBorderColor() { return Color.blue; }
 
 	public static final class ReviewFlowsStepFactory extends ReviewFlowsStepDelegate implements ClientStepFactory {
     	private ReviewFlowsStepUI UI = new ReviewFlowsStepUI();
@@ -39,12 +44,12 @@ public class ReviewFlowsStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Review Flows";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return "Show user the specified data";
+            return "Show data flows with advice for review and confirmation";
         }
 
         @Override

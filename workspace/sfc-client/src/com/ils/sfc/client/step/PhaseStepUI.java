@@ -43,12 +43,12 @@ public class PhaseStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Phase";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "An S88 phase encapsulation";
         }
 
         @Override

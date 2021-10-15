@@ -20,9 +20,10 @@ public class SelectInputStepUI extends AbstractIlsStepUI {
 	
 	@Override
 	protected String getHeading() { return "Select Input"; }
-    @Override
-    protected Color getHeadingColor() {return Color.red; }
-
+	
+	@Override
+	protected Color getBorderColor() { return Color.blue; }
+    
     public static final class SelectInputStepFactory extends SelectInputStepDelegate implements ClientStepFactory {
     	private SelectInputStepUI UI = new SelectInputStepUI();
 
@@ -43,7 +44,7 @@ public class SelectInputStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Select Input";
+            return "";
         }
 
         @Override

@@ -22,9 +22,9 @@ public class LimitedInputStepUI extends AbstractIlsStepUI {
 	@Override
 	protected String getHeading() { return "Input Limit"; }
 	
-    @Override
-    protected Color getHeadingColor() {return Color.red;}
-
+	@Override
+	protected Color getBorderColor() { return Color.blue; }
+	
     public static final class LimitedInputStepFactory extends LimitedInputStepDelegate implements ClientStepFactory {
     	private LimitedInputStepUI UI = new LimitedInputStepUI();
 
@@ -45,12 +45,12 @@ public class LimitedInputStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Get w/ Limits";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "Get input from a client within specified limits";
         }
 
         @Override

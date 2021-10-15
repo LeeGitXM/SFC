@@ -39,12 +39,12 @@ public class SaveDataStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Save Recipe";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "Save recipe data to a file";
         }
 
         @Override

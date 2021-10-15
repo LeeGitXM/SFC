@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -18,6 +20,9 @@ public class ConfirmControllersStepUI extends AbstractIlsStepUI {
 	
 	@Override
 	protected String getHeading() { return "Check Mode"; }
+	
+	@Override
+	protected Color getBorderColor() { return Color.blue; }
 
     public static final class ConfirmControllersStepFactory extends ConfirmControllersStepDelegate implements ClientStepFactory {
     	private ConfirmControllersStepUI UI = new ConfirmControllersStepUI();
@@ -39,12 +44,12 @@ public class ConfirmControllersStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Check Mode";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return "Confirm Controller Mode";
+            return "Confirm the mode of one or more controllers in the DCS";
         }
 
         @Override

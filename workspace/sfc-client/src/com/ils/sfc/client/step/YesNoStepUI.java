@@ -22,8 +22,8 @@ public class YesNoStepUI extends AbstractIlsStepUI {
 	@Override
 	protected String getHeading() { return "Yes No"; }
 	
-    @Override
-    protected Color getHeadingColor() {return Color.red;}
+	@Override
+	protected Color getBorderColor() { return Color.blue; }
 
     public static final class YesNoStepFactory extends YesNoStepDelegate implements ClientStepFactory {
     	private YesNoStepUI UI = new YesNoStepUI();
@@ -45,7 +45,7 @@ public class YesNoStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Yes/No";
+            return "";
         }
 
         @Override

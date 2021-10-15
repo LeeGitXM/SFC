@@ -43,12 +43,12 @@ public class OperationStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Operation";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "An S88 operation encapsulation";
         }
 
         @Override

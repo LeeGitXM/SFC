@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -19,6 +21,9 @@ public class TimedDelayStepUI extends AbstractIlsStepUI {
 	@Override
 	protected String getHeading() { return null; }
 
+	@Override
+	protected Color getBorderColor() { return Color.blue; }
+	
     public static final class TimedDelayStepFactory extends TimedDelayStepDelegate implements ClientStepFactory {
     	private TimedDelayStepUI UI = new TimedDelayStepUI();
  
@@ -39,7 +44,7 @@ public class TimedDelayStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Timed Delay";
+            return "";
         }
 
         @Override

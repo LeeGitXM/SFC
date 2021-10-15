@@ -116,7 +116,9 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	/** Subclasses override to set the color of the heading text. */
 	protected Color getHeadingColor() { return Color.black; }
 	
-
+	/** Subclasses override to set the color of the heading text. */
+	protected Color getBorderColor() { return Color.black; }
+	
 	/**
 	 * This is the method that draws the block plus label and icon. Since there is so little
 	 * space, treat the icon as a "badge".
@@ -150,7 +152,7 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 		float outlineWidth = 4.0f;
 		Stroke stroke = new BasicStroke(outlineWidth,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND);
 		g2d.setStroke(stroke);
-		g2d.setPaint(BORDER_DARK_COLOR);
+		g2d.setPaint(getBorderColor());
 		g2d.draw(rect);
 
     	// Draw the heading in the upper 1/3 of the box.
