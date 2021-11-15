@@ -18,9 +18,9 @@
 	<property name="ils.sfc.release" value="0.5" />
 	<property name="ils.sfc.description" value="ILS SFC Customizations" />
 	<property name="jar.dir" value="${root.dir}/external/lib" />
-	<property name="sdk.dir" value="${root.dir}/ignition-79/lib" />
-	<property name="ant.build.javac.source" value="1.8"/>
-	<property name="ant.build.javac.target" value="1.8"/>
+	<property name="sdk.dir" value="${root.dir}/ignition-80/lib" />
+	<property name="ant.build.javac.source" value="11"/>
+	<property name="ant.build.javac.target" value="11"/>
 		
 	
 	<!-- For the steps -->
@@ -73,7 +73,7 @@
 	<target name="common.build" description="Compile the source">
 		<echo  message="Using Java version ${ant.java.version}."/>
 		<mkdir dir="${common.bin.dir}/images"/>
-		<javac destdir="${common.bin.dir}" source="1.8" target="1.8" debug="true" debuglevel="lines,vars,source">
+		<javac destdir="${common.bin.dir}" source="11" target="11" debug="true" debuglevel="lines,vars,source">
 			<src path="${common.src.dir}"/>
 			<classpath refid="sfc.common.classpath"/>
 		</javac>
