@@ -10,7 +10,7 @@ import org.python.core.PyObject;
 import org.python.core.PyStringMap;
 
 import com.inductiveautomation.ignition.common.Dataset;
-import com.inductiveautomation.ignition.common.model.BaseContext;
+import com.inductiveautomation.ignition.common.model.CommonContext;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -27,7 +27,7 @@ public class PythonCall {
 	private final Class<?> returnType;	// is null if no return value
 	private PyCode compiledCode;	// cached compiled code
 
-	private static BaseContext context = null;
+	private static CommonContext context = null;
 	private static final String[] stepArgs = new String[]{"scopeContext", "stepProperties", "state"};
 	private static final String STEPS_PKG = "ils.sfc.gateway.steps.";
 
@@ -321,7 +321,7 @@ public class PythonCall {
 		compiledCode = Py.compile_flags(script, "ils", CompileMode.exec, CompilerFlags.getCompilerFlags());		
 	}
 
-	public static void setContext(BaseContext ctx) {
+	public static void setContext(CommonContext ctx) {
 		context = ctx;
 	}
 	

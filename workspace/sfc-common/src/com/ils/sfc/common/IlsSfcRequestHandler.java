@@ -41,7 +41,7 @@ public class IlsSfcRequestHandler {
 		String path = "";
 		try {
 			path = (String)GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
-					IlsSfcModule.MODULE_ID, "getChartPath",new Long(resourceId));
+					IlsSfcModule.MODULE_ID, "getChartPath", resourceId);
 		}
 		catch(Exception ge) {
 			log.infof("%s.getChartPath: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());

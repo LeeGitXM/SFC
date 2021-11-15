@@ -345,7 +345,7 @@ public abstract class Data {
 	public JSONObject toJSON() throws JSONException {
 		JSONObject jsonObj = new JSONObject();
 		boolean hasDateValue = hasDateValueType();  // CAUTION: must call OUTSIDE property iteration to avoid concurrent mod
-		for(PropertyValue<?> pvalue: properties) {
+		for(PropertyValue pvalue: properties) {
 			String propName = pvalue.getProperty().getName();
 			Object value = pvalue.getValue();
 			if(value != null && hasDateValue && 
@@ -409,7 +409,7 @@ public abstract class Data {
 	}
 	
 	protected void print(int level) {
-		for(PropertyValue<?> pvalue: properties) {
+		for(PropertyValue pvalue: properties) {
 			printSpace(level);
 			System.out.println(pvalue.getProperty().getName() + ": " + pvalue.getValue());
 		}
@@ -465,7 +465,7 @@ public abstract class Data {
 		// you can't have a UDT folder, so we have to create all the child property tags 
 		// explicitly
 		if(this instanceof Group) {
-			for(PropertyValue<?> prop: getProperties()) {
+			for(PropertyValue prop: getProperties()) {
 				createGroupPropertyTag(prop.getProperty().getName());
 			}
 		}
@@ -569,7 +569,7 @@ public abstract class Data {
 	/** Write all the attribute values out to the tags. */
 	private void basicWriteToTags() {
 		try {
-			for(PropertyValue<?> pval: getProperties()) {
+			for(PropertyValue pval: getProperties()) {
 				String attributePath = getTagAttributePath(pval.getProperty());
 				Object value = getValue(pval.getProperty());
 				if(value != null && pval.getProperty() == IlsProperty.JSON_MATRIX) {

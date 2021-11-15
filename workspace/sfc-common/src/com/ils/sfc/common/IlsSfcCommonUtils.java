@@ -9,8 +9,6 @@ import java.util.zip.GZIPInputStream;
 
 import javax.xml.stream.XMLStreamWriter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -19,13 +17,14 @@ import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
+import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.PyChartScope;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 /** Misc. utilities that don't fit into any ILS class or superclass. */
 public class IlsSfcCommonUtils {
-	private static final Logger logger = LoggerFactory.getLogger(IlsSfcCommonUtils.class);
-
+	private static final LoggerEx logger = LoggerEx.newBuilder().build(IlsSfcCommonUtils.class);
+	
 	/** Get the value of a string property from XML, using the default if necessary. */
 	public static String getStringProperty(Property<String> property, Element dom) {
 		String domValue = getPropertyAsString(property, dom);
@@ -92,7 +91,7 @@ public class IlsSfcCommonUtils {
 		// TODO: XMLStreamWriter's escaping of characters is incomplete; e.g.
 		// it doesn't handle single quotes. Should we handle that?
 		try {
-			for(PropertyValue<?> pvalue: element) {
+			for(PropertyValue pvalue: element) {
 				// Note: the ignition code will take care of writing xml for ignition properties:
 				if(IlsProperty.isHiddenProperty(pvalue.getProperty().getName())) continue;
 				writer.writeStartElement(pvalue.getProperty().getName());
@@ -150,7 +149,7 @@ public class IlsSfcCommonUtils {
 	}
 
 	public static Object getStepPropertyValue(ChartUIElement element, String name) {
-		for(PropertyValue<?> value: element.getValues()) {
+		for(PropertyValue value: element.getValues()) {
 			if(value.getProperty().getName().equals(name)) {
 				return value.getValue();
 			}
@@ -159,7 +158,7 @@ public class IlsSfcCommonUtils {
 	}
 
 	public static Object getStepPropertyValue(PropertySet properties, String name) {
-		for(PropertyValue<?> value: properties.getValues()) {
+		for(PropertyValue value: properties.getValues()) {
 			if(value.getProperty().getName().equals(name)) {
 				return value.getValue();
 			}
@@ -168,7 +167,7 @@ public class IlsSfcCommonUtils {
 	}
 
 	public static void printSfcStepProperties(ChartUIElement element) {
-		for(PropertyValue<?> pv: element.getValues()) {
+		for(PropertyValue pv: element.getValues()) {
 			System.out.println(pv.getProperty().getName() + ": " + pv.getValue());
 		}
 	}			

@@ -13,7 +13,7 @@ import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
 import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.project.ProjectResource;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResource;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.StepRegistry;
@@ -43,12 +43,12 @@ public class ChartStructureCompiler {
 	public static final String CHART_RESOURCE_TYPE="sfc-chart-ui-model";
 	public static final String FOLDER_RESOURCE_TYPE="__folder";
 	public static final String ENCLOSING_FACTORY_ID = EnclosingStepProperties.FACTORY_ID;
-	static final UUID ROOT_FOLDER_ID = ChartUIModel.ROOT_FOLDER;	
+	//static final UUID ROOT_FOLDER_ID = ChartUIModel.ROOT_FOLDER;	travis.sareault 20211114 - source field is removed, and this seems to be unused.
 	private final Project project;
 	private final StepRegistry stepRegistry;
 	
 	// intermediate structures:
-	private final Map<Long,ChartModelInfo> modelInfoByResourceId;
+	private final Map<ProjectResourceId,ChartModelInfo> modelInfoByResourceId;
 	private final Map<String,ChartModelInfo> modelInfoByChartPath; // Reverse directory
 	private final Map<String,StepStructure> stepsById;
 	private final Map<String,StepStructure> stepsByKey;            // Reverse lookup by chartId,stepname
@@ -113,7 +113,7 @@ public class ChartStructureCompiler {
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 					ChartUIModel uiModel = ChartUIModel.fromXml(xmlInput, stepRegistry );
 					ChartModelInfo info = new ChartModelInfo(uiModel,res,path);
-					modelInfoByResourceId.put(new Long(res.getResourceId()),info);
+					modelInfoByResourceId.put(res.getResourceId().,info);
 					modelInfoByChartPath.put(path,info);
 					log.debugf("loadModels: found resource %s (%d)",path,res.getResourceId());
 				}
