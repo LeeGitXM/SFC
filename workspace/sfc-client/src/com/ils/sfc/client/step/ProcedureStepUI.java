@@ -19,6 +19,9 @@ public class ProcedureStepUI extends AbstractIlsStepUI {
 		
    	@Override
 	protected ImageIcon getIcon() { return null; }
+   	
+   	@Override
+	protected boolean isEncapsulation() { return true; }
 	
 	@Override
 	protected String getHeading() { return "Procedure"; }
