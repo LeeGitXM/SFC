@@ -39,7 +39,7 @@ public class ShowWindowStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Show Window";
+            return "";
         }
 
         @Override

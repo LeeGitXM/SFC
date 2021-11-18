@@ -39,12 +39,12 @@ public class MonitorDownloadStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Download GUI";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "Post a window to every client for monitoring a download";
         }
 
         @Override

@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -18,6 +20,9 @@ public class ManualDataEntryStepUI extends AbstractIlsStepUI {
 	
 	@Override
 	protected String getHeading() { return "Enter Data"; }
+	
+	@Override
+	protected Color getBorderColor() { return Color.blue; }
 	
     public static final class ManualDataEntryStepFactory extends ManualDataEntryStepDelegate implements ClientStepFactory {
     	private ManualDataEntryStepUI UI = new ManualDataEntryStepUI();
@@ -39,12 +44,12 @@ public class ManualDataEntryStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Data Entry";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "Enter a table of data ";
         }
 
         @Override

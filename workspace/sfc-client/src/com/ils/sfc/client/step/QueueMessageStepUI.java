@@ -9,7 +9,7 @@ import com.inductiveautomation.sfc.client.api.StepUI;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
 public class QueueMessageStepUI extends AbstractIlsStepUI {
-	protected static Icon queueIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/queue.png"));
+	protected static Icon queueIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/queueMessage.png"));
   
     public static final ClientStepFactory FACTORY = new QueueMessageStepFactory();
     
@@ -39,12 +39,12 @@ public class QueueMessageStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Post Message";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "Post a message to a queue";
         }
 
         @Override

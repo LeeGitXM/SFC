@@ -44,12 +44,12 @@ public class CancelStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Cancel Recipe";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "Cancel the unit procedure from the bottom up";
         }
 
         @Override

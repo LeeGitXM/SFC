@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -18,6 +20,9 @@ public class WriteOutputStepUI extends AbstractIlsStepUI {
 	
 	@Override
 	protected String getHeading() { return "Write Output"; }
+	
+	@Override
+	protected Color getBorderColor() { return Color.blue; }
 
     public static final class WriteOutputStepFactory extends WriteOutputStepDelegate implements ClientStepFactory {
     	private WriteOutputStepUI UI = new WriteOutputStepUI();
@@ -39,12 +44,12 @@ public class WriteOutputStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Write Outputs";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "Write Outputs";
         }
 
         @Override

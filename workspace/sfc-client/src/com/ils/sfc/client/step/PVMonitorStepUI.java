@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -21,6 +23,9 @@ public class PVMonitorStepUI extends AbstractIlsStepUI {
    	 */
 	@Override
 	protected String getHeading() { return "PV Monitor"; } 
+	
+	@Override
+	protected Color getBorderColor() { return Color.blue; }
 
     public static final class PVMonitorStepFactory extends PVMonitorStepDelegate implements ClientStepFactory {
     	private PVMonitorStepUI UI = new PVMonitorStepUI();
@@ -42,12 +47,12 @@ public class PVMonitorStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "PV Monitor";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "Monitor a set of tags for download / performance status";
         }
 
         @Override

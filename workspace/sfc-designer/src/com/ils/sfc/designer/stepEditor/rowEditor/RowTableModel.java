@@ -25,6 +25,11 @@ public abstract class RowTableModel extends AbstractTableModel {
 		rowConfig.addRow();
 		fireTableStructureChanged();
 	}
+	
+	public void addRow(int index) {
+		rowConfig.addRow(index);
+		fireTableStructureChanged();
+	}
 
 	public void removeSelectedRow(int row) {
 		if(row == -1) return;

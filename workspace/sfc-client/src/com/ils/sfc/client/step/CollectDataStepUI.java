@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -18,6 +20,9 @@ public class CollectDataStepUI extends AbstractIlsStepUI {
 	
 	@Override
 	protected String getHeading() { return "Collect Data"; }
+	
+	@Override
+	protected Color getBorderColor() { return Color.blue; }
 
     public static final class CollectDataStepFactory extends CollectDataStepDelegate implements ClientStepFactory {
     	private CollectDataStepUI UI = new CollectDataStepUI();
@@ -39,12 +44,12 @@ public class CollectDataStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Collect Data";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return "Read data from a tag";
+            return "Read the value of tag(s)";
         }
 
         @Override

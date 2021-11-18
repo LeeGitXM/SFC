@@ -43,6 +43,7 @@ public abstract class RowEditorPanel extends EditorPanel implements ValueHolder 
 
 	protected RowEditorPanel(StepEditorController controller, int index, boolean addUpperPanel) {
 		super(controller, index);
+		logger.infof("Creating a RowEditorPanel()...");
 		this.stepController = controller;
 		upperPanel = new JPanel(new BorderLayout());
 		if(addUpperPanel) {
@@ -120,7 +121,14 @@ public abstract class RowEditorPanel extends EditorPanel implements ValueHolder 
 	}
 	
 	protected void doAdd() {
-		tableModel.addRow();
+		int selectedRow = table.getSelectedRow();
+		logger.tracef("In doAdd(), the selectedRow is %d", selectedRow);
+		if (selectedRow >= 0){
+			tableModel.addRow(selectedRow);
+		}
+		else {
+			tableModel.addRow();
+		}
 	}
 	
 	protected void doRemove() {

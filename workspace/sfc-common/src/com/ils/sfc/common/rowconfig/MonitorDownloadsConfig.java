@@ -45,6 +45,11 @@ public class MonitorDownloadsConfig extends RowConfig {
 	public void addRow() {
 		rows.add(new Row());
 	}
+	
+	@Override
+	public void addRow(int index) {
+		rows.add(index, new Row());
+	}
 
 	@Override
 	public void removeRow(int index) {

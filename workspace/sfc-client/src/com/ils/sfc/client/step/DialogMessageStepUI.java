@@ -1,5 +1,7 @@
 package com.ils.sfc.client.step;
 
+import java.awt.Color;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -18,6 +20,9 @@ public class DialogMessageStepUI extends AbstractIlsStepUI {
 	
 	@Override
 	protected String getHeading() { return "Notify Dialog"; }
+	
+	@Override
+	protected Color getBorderColor() { return Color.blue; }
 	
     public static final class DialogMessageStepFactory extends DialogMessageStepDelegate implements ClientStepFactory {
     	private DialogMessageStepUI UI = new DialogMessageStepUI();
@@ -39,12 +44,12 @@ public class DialogMessageStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Post Dialog";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return  "Post Dialog";
         }
 
         @Override

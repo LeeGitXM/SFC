@@ -213,7 +213,8 @@ public class IlsProperty {
     public static final BasicProperty<String> MONITOR_DOWNLOADS_CONFIG = createProperty(Constants.MONITOR_DOWNLOADS_CONFIG, String.class, EMPTY_MANUAL_DATA_CONFIG, true, Constants.CONFIG);
     public static final BasicProperty<String> MONITOR_DOWNLOADS_WINDOW = createProperty(Constants.WINDOW, String.class, Constants.SFC_MONITOR_DOWNLOADS_WINDOW, false);
 	public static final BasicProperty<String> NAME = new BasicProperty<String>(Constants.NAME, String.class);
-	public static final BasicProperty<String> OC_ALERT_WINDOW = createProperty(Constants.OC_ALERT_WINDOW, String.class, "Common/OC Alert");
+	public static final BasicProperty<String> OC_ALERT_WINDOW = createProperty(Constants.OC_ALERT_WINDOW, String.class, "");
+	public static final BasicProperty<String> OC_ALERT_WINDOW_TYPE = createProperty(Constants.OC_ALERT_WINDOW_TYPE, String.class, Constants.OC_ALERT_WINDOW_TYPE_CHOICES[0], Constants.OC_ALERT_WINDOW_TYPE_CHOICES);
 	public static final BasicProperty<Object> OUTPUT_TYPE = createProperty(Constants.OUTPUT_TYPE, Object.class, Constants.OUTPUT_VALUE_TYPE_CHOICES[0], Constants.OUTPUT_VALUE_TYPE_CHOICES);
     public static final BasicProperty<String> PARALLEL_CHILDREN = createProperty("parallel-children", String.class, "");
     public static final BasicProperty<String> POSITION = createProperty(Constants.POSITION, String.class, Constants.POSITION_CHOICES[0], Constants.POSITION_CHOICES);
@@ -247,6 +248,7 @@ public class IlsProperty {
     public static final BasicProperty<String> SECURITY = createProperty(Constants.SECURITY, String.class, Constants.SECURITY_CHOICES[1], Constants.SECURITY_CHOICES);
     public static final BasicProperty<String> SECONDARY_REVIEW_DATA = createProperty(Constants.SECONDARY_REVIEW_DATA, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "secondary data");
     public static final BasicProperty<String> SECONDARY_REVIEW_DATA_WITH_ADVICE = createProperty(Constants.SECONDARY_REVIEW_DATA_WITH_ADVICE, String.class, EMPTY_REVIEW_DATA_CONFIG, true, "secondary data");
+    public static final BasicProperty<String> SECONDARY_SORT_KEY = createProperty(Constants.SECONDARY_SORT_KEY, String.class, Constants.SECONDARY_SORT_KEY_CHOICES[0], Constants.SECONDARY_SORT_KEY_CHOICES);
     public static final BasicProperty<String> SECONDARY_TAB_LABEL = createProperty(Constants.SECONDARY_TAB_LABEL, String.class, "Secondary");
     public static final BasicProperty<String> SETPOINT_STATUS = createProperty(Constants.SETPOINT_STATUS, String.class, "");
     public static final BasicProperty<Boolean> SHOW_PRINT_DIALOG = createProperty(Constants.SHOW_PRINT_DIALOG, Boolean.class, Boolean.TRUE);

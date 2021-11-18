@@ -39,12 +39,12 @@ public class SimpleQueryStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Simple Query";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "Fetch data from a database";
         }
 
         @Override

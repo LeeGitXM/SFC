@@ -31,6 +31,7 @@ public class Constants {
 	public static final String AUTO_MODE = "autoMode";
 	public static final String AUTOMATIC = "automatic";
 	public static final String AVERAGE = "average";
+	public static final String BLANK = "";
 	public static final String BOTTOM_CENTER = "bottomCenter";
 	public static final String BOTTOM_LEFT = "bottomLeft";
 	public static final String BOTTOM_MESSAGE = "bottomMessage";
@@ -117,6 +118,7 @@ public class Constants {
 	public static final String ISOLATION_MODE = "isolationMode";
 	public static final String JSON_LIST = "jsonList";
 	public static final String JSON_MATRIX = "jsonMatrix";
+	public static final String LARGE_TEXT = "largeText";
 	public static final String LOW_LIMIT = "lowLimit";
 	public static final String LOW = "Low";
 	public static final String KEY = "key";
@@ -144,9 +146,11 @@ public class Constants {
 	public static final String NO = "No";
 	public static final String NO_LIMIT = "No Limit";
 	public static final String NONE = "none";
+	public static final String NORMAL = "normal";
 	public static final String NOT_PERSISTENT = "NotPersistent";
 	public static final String NOT_CONSISTENT = "NotConsistent";
 	public static final String OC_ALERT_WINDOW = "ocAlertWindow";
+	public static final String OC_ALERT_WINDOW_TYPE = "ocAlertWindowType";
 	public static final String OFF = "Off";
 	public static final String OK = "OK";
 	public static final String OUT_OF_RANGE = "Out of Range";
@@ -200,6 +204,7 @@ public class Constants {
 	public static final String SCREEN_HEADER = "screenHeader";
 	public static final String SECONDARY_REVIEW_DATA = "secondaryReviewData"; 
 	public static final String SECONDARY_REVIEW_DATA_WITH_ADVICE = "secondaryReviewDataWithAdvice"; 
+	public static final String SECONDARY_SORT_KEY = "secondarySortKey"; 
 	public static final String SECONDARY_TAB_LABEL = "secondaryTabLabel"; 
 	public static final String SECURITY = "security";
 	public static final String SEMI_AUTOMATIC = "semiAutomatic";
@@ -298,6 +303,10 @@ public class Constants {
 	public static final String PHASE = "phase";
 	public static final String REFERENCE = "reference";  // Used to implement pass-by-reference for libraries.
 	
+	// secondary sort order choices
+	public static final String ALPHABETICAL = "alphabetical";
+	public static final String ORDER = "order";
+	
 	// standard Ignition scopes:
 	public static final String CHART_SCOPE = "chartScope";
 	public static final String STEP_SCOPE = "stepScope";
@@ -337,8 +346,8 @@ public class Constants {
 	public static final String[] RECIPE_STATIC_STRATEGY_CHOICES = {STATIC, RECIPE};
 	public static final String[] RECIPE_DATA_CLASS_CHOICES = {ARRAY, INPUT, OUTPUT, OUTPUT_RAMP, RECIPE, SIMPLE_VALUE, SQC};
 	public static String[] RECIPE_LOCATION_CHOICES = {LOCAL, SUPERIOR, PHASE, OPERATION, GLOBAL, REFERENCE};
-	public static String[] RECIPE_PLUS_VALUE_LOCATION_CHOICES = {VALUE, LOCAL, SUPERIOR, PHASE, OPERATION, GLOBAL, REFERENCE};
-	public static String[] RECIPE_PLUS_TAG_LOCATION_CHOICES = {LOCAL, SUPERIOR, PHASE, OPERATION, GLOBAL, REFERENCE, TAG};
+	public static String[] RECIPE_PLUS_VALUE_LOCATION_CHOICES = {BLANK, VALUE, LOCAL, SUPERIOR, PHASE, OPERATION, GLOBAL, REFERENCE};
+	public static String[] RECIPE_PLUS_TAG_LOCATION_CHOICES = {BLANK, LOCAL, SUPERIOR, PHASE, OPERATION, GLOBAL, REFERENCE, TAG};
 	public static String[] RECIPE_PLUS_CHART_STEP_CHOICES = {LOCAL, SUPERIOR, PHASE, OPERATION, GLOBAL, REFERENCE, CHART_SCOPE, STEP_SCOPE};
 	
 	// General choices
@@ -351,6 +360,7 @@ public class Constants {
 	public static final String[] FILE_LOCATION_CHOICES = {GATEWAY, CLIENT};
 	public static final String[] KEY_MODE_CHOICES = {STATIC, DYNAMIC};
 	public static final String[] MONITOR_DOWNLOADS_LABEL_CHOICES = {NAME, ITEM_ID};
+	public static final String[] OC_ALERT_WINDOW_TYPE_CHOICES = {NORMAL, LARGE_TEXT};
 	public static final String[] OUTPUT_VALUE_TYPE_CHOICES = {MODE, SETPOINT, OUTPUT, VALUE};
 	public static final String[] POSITION_CHOICES = {CENTER, TOP_LEFT, TOP_CENTER, TOP_RIGHT, BOTTOM_LEFT, BOTTOM_CENTER, BOTTOM_RIGHT};
 	public static final String[] PRIORITY_CHOICES = {INFO, WARNING, ERROR};
@@ -360,6 +370,7 @@ public class Constants {
 	public static final String[] PV_DOWNLOAD_CHOICES = {IMMEDIATE, WAIT};
 	public static final String[] PV_TYPE_CHOICES = {ABS, PCT};
 	public static final String[] RESULTS_MODE_CHOICES = {UPDATE, UPDATE_OR_CREATE};
+	public static final String[] SECONDARY_SORT_KEY_CHOICES = {ALPHABETICAL, ORDER};
 	public static final String[] SECURITY_CHOICES = {PUBLIC, PRIVATE};
 	public static final String[] TIMEOUT_BEHAVIOR_CHOICES = {ABORT, TIMEOUT, DEFAULT_VALUE};
 	public static final String[] TIME_DELAY_UNIT_CHOICES = {DELAY_UNIT_SECOND, DELAY_UNIT_MINUTE, DELAY_UNIT_HOUR};

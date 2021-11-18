@@ -11,6 +11,9 @@ import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 import system.ils.sfc.common.Constants;
 
 public class OperationStepUI extends AbstractIlsStepUI {
+	protected static Icon operationIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/operation.png"));
+	protected static ImageIcon operationImageIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/operation.png"));
+	
     public static final ClientStepFactory FACTORY = new OperationStepFactory();
 
     public OperationStepUI() {
@@ -18,13 +21,15 @@ public class OperationStepUI extends AbstractIlsStepUI {
 		
    	@Override
 	protected ImageIcon getIcon() { return null; }
+   	
+   	@Override
+	protected boolean isEncapsulation() { return true; }
 	
 	@Override
 	protected String getHeading() { return "Operation"; }
 
     public static final class OperationStepFactory extends OperationStepDelegate implements ClientStepFactory {
     	private OperationStepUI UI = new OperationStepUI();
-    	protected static Icon operationIcon = new ImageIcon(AbstractIlsStepUI.class.getResource("/images/operation.png"));
 
         @Override
         public StepUI createStepUI(ChartUIElement element) {
@@ -43,12 +48,12 @@ public class OperationStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Operation";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "An S88 operation encapsulation";
         }
 
         @Override

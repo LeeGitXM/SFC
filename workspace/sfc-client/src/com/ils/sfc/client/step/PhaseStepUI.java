@@ -19,6 +19,9 @@ public class PhaseStepUI extends AbstractIlsStepUI {
 		
    	@Override
 	protected ImageIcon getIcon() { return null; }
+   	
+   	@Override
+	protected boolean isEncapsulation() { return true; }
 	
 	@Override
 	protected String getHeading() { return "Phase"; }
@@ -43,12 +46,12 @@ public class PhaseStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Phase";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "An S88 phase encapsulation";
         }
 
         @Override

@@ -39,7 +39,7 @@ public class EnableDisableStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Enable/Disable";
+            return "";
         }
 
         @Override

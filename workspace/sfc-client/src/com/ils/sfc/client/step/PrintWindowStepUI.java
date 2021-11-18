@@ -39,12 +39,12 @@ public class PrintWindowStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Print Window";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "Print a window";
         }
 
         @Override

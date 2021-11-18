@@ -43,12 +43,12 @@ public class PauseStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Pause Recipe";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "Pause the unit procedure from the top down";
         }
 
         @Override

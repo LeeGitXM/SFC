@@ -11,6 +11,7 @@ import java.awt.Stroke;
 import java.awt.font.FontRenderContext;
 import java.awt.font.GlyphVector;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.util.Collection;
@@ -116,7 +117,12 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 	/** Subclasses override to set the color of the heading text. */
 	protected Color getHeadingColor() { return Color.black; }
 	
-
+	/** Subclasses override to set the color of the heading text. */
+	protected Color getBorderColor() { return Color.black; }
+	
+	/** Subclasses override to set the color of the heading text. */
+	protected boolean isEncapsulation() { return false; }
+	
 	/**
 	 * This is the method that draws the block plus label and icon. Since there is so little
 	 * space, treat the icon as a "badge".
@@ -150,8 +156,18 @@ public abstract class AbstractIlsStepUI extends AbstractStepUI {
 		float outlineWidth = 4.0f;
 		Stroke stroke = new BasicStroke(outlineWidth,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND);
 		g2d.setStroke(stroke);
-		g2d.setPaint(BORDER_DARK_COLOR);
+		g2d.setPaint(getBorderColor());
 		g2d.draw(rect);
+		
+		if (isEncapsulation()) {
+			// draw the dog ear in each corner if this class is special type of encapsulation
+			double dX = 20;
+			double dY = 20;
+			g2d.draw(new Line2D.Double(0, dY, dX, 0));	// Upper-Left
+			g2d.draw(new Line2D.Double(cellWidth - dX - 2*INSET, 0, cellWidth - 2*INSET, dY));	// Upper-Right
+			g2d.draw(new Line2D.Double(0, cellHeight - dY - 2*INSET, dX, cellHeight - 2*INSET));	// Lower-Left
+			g2d.draw(new Line2D.Double(cellWidth - dX - 2*INSET, cellHeight - 2*INSET, cellWidth - 2*INSET, cellHeight - dY - 2*INSET));	// Lower-Right
+		}
 
     	// Draw the heading in the upper 1/3 of the box.
 		String heading = getHeading();

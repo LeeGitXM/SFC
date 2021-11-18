@@ -39,12 +39,12 @@ public class RawQueryStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Raw Query";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "Fetch data from a database using raw SQL";
         }
 
         @Override

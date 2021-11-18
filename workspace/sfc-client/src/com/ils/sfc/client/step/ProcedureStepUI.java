@@ -19,6 +19,9 @@ public class ProcedureStepUI extends AbstractIlsStepUI {
 		
    	@Override
 	protected ImageIcon getIcon() { return null; }
+   	
+   	@Override
+	protected boolean isEncapsulation() { return true; }
 	
 	@Override
 	protected String getHeading() { return "Procedure"; }
@@ -43,12 +46,12 @@ public class ProcedureStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Unit Procedure";
+            return "";
         }
 
         @Override
         public String getPaletteTooltip() {
-            return getPaletteText();
+            return "An S88 unit procedure encapsulation";
         }
 
         @Override

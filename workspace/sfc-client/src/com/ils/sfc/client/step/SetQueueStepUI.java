@@ -39,7 +39,7 @@ public class SetQueueStepUI extends AbstractIlsStepUI {
 
         @Override
         public String getPaletteText() {
-            return "Set Queue";
+            return "";
         }
 
         @Override
