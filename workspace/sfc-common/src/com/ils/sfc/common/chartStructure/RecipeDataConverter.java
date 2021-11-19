@@ -13,7 +13,9 @@ import java.util.zip.GZIPOutputStream;
 import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.client.gateway_interface.GatewayException;
 import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.project.ProjectResource;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResource;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResourceId;
+import com.inductiveautomation.ignition.common.project.resource.ResourceType;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -42,15 +44,13 @@ public class RecipeDataConverter {
 		boolean success = true;
 		PythonCall pCall = new PythonCall("ils.sfc.recipeData.internalize.internalize", String.class, new String[]{"path", "xml"});
 
-		// Create a project to collect the updated resources - it will all be saved at the end
-		Project diff = context.getGlobalProject().getProject().getEmptyCopy();
-
+		
 		try {
 			log.infof("%s.internalize: Internalizing resources...",CLSS);
 			for(ProjectResource res:resources) {
 				if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
-					String path = project.getFolderPath(res.getResourceId());
-					long resourceId = res.getResourceId();
+					String path = res.getFolderPath();
+					ProjectResourceId resourceId = res.getResourceId();
 
 					byte[] chartResourceData = res.getData();					
 					BufferedReader rdr = new BufferedReader(new InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(chartResourceData))));
@@ -61,7 +61,7 @@ public class RecipeDataConverter {
 						bldr.append('\n');
 					}
 					String stringXML = bldr.toString();
-					log.tracef("Chart XML: %s %s \n%s", path, res.getName(), stringXML);
+					log.tracef("Chart XML: %s %s \n%s", path, res.getResourceName(), stringXML);
 
 					Object[] args = {path, stringXML};
 
@@ -78,38 +78,16 @@ public class RecipeDataConverter {
 					zipper.close();
 					byte[] newChartResourceData = baos.toByteArray();
 					baos.close();
-
-					log.tracef("internalize: Fetching lock for resource (%d)",resourceId); 
-					if( context.requestLock(resourceId) ) {
-						try
-						{
-							res.setData(newChartResourceData);
-							context.updateLock(resourceId);
-
-							diff.putResource(res, false);    // Mark as clean
-						}
-						finally {
-							log.tracef("%s.internalize: Releasing lock for resource (%d)",CLSS,resourceId); 
-							context.releaseLock(resourceId);
-						}
-					}
-					else {
-						log.warnf("%s.internalize: Unable to acquire a lock for resource (%d-%s) - resourse was not internalized",CLSS,resourceId, res.getName()); 
-					}
+					
+					res = ProjectResource.newBuilder().setProjectName(context.getProject().getName())
+							.setResourcePath(res.getResourceType().rootPath())
+							.setApplicationScope(res.getApplicationScope())
+							.putData(newChartResourceData).build();
+					
+					context.getProject().createOrModify(res);
 				}
 			}
-
-			project.applyDiff(diff,false);
-			project.clearAllFlags();          // Don't know what this does ...
-
-			log.infof("%s.internalize: Saving resources",CLSS);
-			DTGatewayInterface.getInstance().saveProject(IgnitionDesigner.getFrame(), project, true, "Committing ...");  // Not publish
-			//log.infof("%s.commitEdit: Publishing resources",CLSS);
-			//DTGatewayInterface.getInstance().publishGlobalProject(IgnitionDesigner.getFrame());
 		}
-		catch(GatewayException ge) {
-			log.errorf("%s.internalize:GatewayException: Unable to save project update (%s)",CLSS,ge.getLocalizedMessage());
-		} 
 		catch(IOException ioe) {
 			log.errorf("%s.internalize:IOException: Unable to save project update (%s)",CLSS,ioe.getMessage());
 		} 
@@ -127,15 +105,12 @@ public class RecipeDataConverter {
 		boolean success = true;
 		PythonCall pCall = new PythonCall("ils.sfc.recipeData.save.storeToDatabase", String.class, new String[]{"path", "xml"});
 
-		// Create a project to collect the updated resources - it will all be saved at the end.  I think we will clear the associated data as it is saved!
-		Project diff = context.getGlobalProject().getProject().getEmptyCopy();
-
 		try {
 			log.infof("%s.storeToDatabase: Storing internalized recipe data to the database...",CLSS);
 			for(ProjectResource res:resources) {
 				if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
-					String path = project.getFolderPath(res.getResourceId());
-					long resourceId = res.getResourceId();
+					String path = res.getFolderPath();
+					long resourceId = res.getResourceId().hashCode();
 
 					byte[] chartResourceData = res.getData();					
 					BufferedReader rdr = new BufferedReader(new InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(chartResourceData))));
@@ -146,7 +121,7 @@ public class RecipeDataConverter {
 						bldr.append('\n');
 					}
 					String stringXML = bldr.toString();
-					log.tracef("%s %s \n%s", path, res.getName(), stringXML);
+					log.tracef("%s %s \n%s", path, res.getResourceName(), stringXML);
 					
 					Object[] args = {path, stringXML};
 
@@ -162,6 +137,13 @@ public class RecipeDataConverter {
 					zipper.close();
 					byte[] newChartResourceData = baos.toByteArray();
 					baos.close();
+					
+					res = ProjectResource.newBuilder().setProjectName(context.getProject().getName())
+							.setResourcePath(res.getResourceType().rootPath())
+							.setApplicationScope(res.getApplicationScope())
+							.putData(newChartResourceData).build();
+					
+					context.getProject().createOrModify(res);
 				}
 			}
 		}
@@ -183,15 +165,13 @@ public class RecipeDataConverter {
 		boolean success = true;
 		PythonCall pCall = new PythonCall("ils.sfc.recipeData.initialize.initialize", String.class, new String[]{"path", "xml"});
 		
-		// Create a project to collect the updated resources - it will all be saved at the end.  I think we will clear the associated data as it is saved!
-		Project diff = context.getGlobalProject().getProject().getEmptyCopy();
 
 		try {
 			log.infof("%s.initialize: Clearing the associated data property for every step...",CLSS);
 			for(ProjectResource res:resources) {
 				if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
-					String path = project.getFolderPath(res.getResourceId());
-					long resourceId = res.getResourceId();
+					String path = res.getFolderPath();
+					long resourceId = res.getResourceId().hashCode();
 
 					byte[] chartResourceData = res.getData();					
 					BufferedReader rdr = new BufferedReader(new InputStreamReader(new GZIPInputStream(new ByteArrayInputStream(chartResourceData))));
@@ -202,7 +182,7 @@ public class RecipeDataConverter {
 						bldr.append('\n');
 					}
 					String stringXML = bldr.toString();
-					log.tracef("%s %s \n%s", path, res.getName(), stringXML);
+					log.tracef("%s %s \n%s", path, res.getResourceName(), stringXML);
 					
 					Object[] args = {path, stringXML};
 
@@ -220,38 +200,16 @@ public class RecipeDataConverter {
 					byte[] newChartResourceData = baos.toByteArray();
 					baos.close();
 					
-					log.tracef("initialize: Fetching lock for resource (%d)",resourceId); 
-					if( context.requestLock(resourceId) ) {
-						try
-						{
-							res.setData(newChartResourceData);
-							context.updateLock(resourceId);
-
-							diff.putResource(res, false);    // Mark as clean
-						}
-						finally {
-							log.tracef("%s.initialize: Releasing lock for resource (%d)",CLSS,resourceId); 
-							context.releaseLock(resourceId);
-						}
-					}
-					else {
-						log.warnf("%s.initialize: Unable to acquire a lock for resource (%d-%s) - resourse was not internalized",CLSS,resourceId, res.getName()); 
-					}
+					res = ProjectResource.newBuilder().setProjectName(context.getProject().getName())
+							.setResourcePath(res.getResourceType().rootPath())
+							.setApplicationScope(res.getApplicationScope())
+							.putData(newChartResourceData).build();
+					
+					context.getProject().createOrModify(res);
 				}
 			}
 			
-			project.applyDiff(diff,false);
-			project.clearAllFlags();          // Don't know what this does ...
-
-			log.infof("%s.initialize: Saving resources",CLSS);
-			DTGatewayInterface.getInstance().saveProject(IgnitionDesigner.getFrame(), project, true, "Committing ...");  // Not publish
-			//log.infof("%s.commitEdit: Publishing resources",CLSS);
-			//DTGatewayInterface.getInstance().publishGlobalProject(IgnitionDesigner.getFrame());
-			
 		}
-		catch(GatewayException ge) {
-			log.errorf("%s.internalize:GatewayException: Unable to save project update (%s)",CLSS,ge.getLocalizedMessage());
-		} 
 		catch(IOException ioe) {
 			log.errorf("%initialize: Unable to save project update (%s)",CLSS,ioe.getMessage());
 		} 

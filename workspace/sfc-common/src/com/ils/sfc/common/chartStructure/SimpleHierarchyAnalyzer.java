@@ -17,7 +17,7 @@ import com.ils.sfc.common.step.ProcedureStepProperties;
 import com.inductiveautomation.ignition.common.config.BasicProperty;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.project.ProjectResource;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResource;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.StepRegistry;
@@ -89,12 +89,12 @@ public class SimpleHierarchyAnalyzer {
 		List<ProjectResource> resources = globalProject.getResources();
 		for(ProjectResource res:resources) {
 			if( res.getResourceType().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE)) {
-				String chartPath = globalProject.getFolderPath(res.getResourceId());
+				String chartPath = res.getFolderPath();
 				try {
 					byte[] chartResourceData = res.getData();					
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 					ChartUIModel uiModel = ChartUIModel.fromXml(xmlInput, stepRegistry );					
-					chartsByPath.put(chartPath, new ChartInfo(uiModel, chartPath, res.getResourceId()));
+					chartsByPath.put(chartPath, new ChartInfo(uiModel, chartPath, res.getResourceId().hashCode()));
 					analyzeModel(uiModel, chartPath);					
 				}
 				catch(Exception e) {

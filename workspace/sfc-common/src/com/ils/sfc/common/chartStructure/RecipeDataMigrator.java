@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.project.ProjectResource;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResource;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -39,10 +39,10 @@ public class RecipeDataMigrator {
 		
 
 		if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
-			chartPath = globalProject.getFolderPath(res.getResourceId());
-			resourceId = res.getResourceId();
+			chartPath = res.getFolderPath();
+			resourceId = res.getResourceId().hashCode();
 			
-			log.infof("Migrating a SFC Recipe Data. Path: %s, Name: %s, id: %d", chartPath, res.getName(), resourceId);
+			log.infof("Migrating a SFC Recipe Data. Path: %s, Name: %s, id: %d", chartPath, res.getResourceName(), resourceId);
 			try {
 				byte[] chartResourceData = res.getData();
 

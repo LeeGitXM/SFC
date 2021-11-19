@@ -37,14 +37,18 @@ public class ChartStructureManager   {
 	 * @param resid resource Id
 	 * @return a compiled chart definition. If the lookup fails return NULL.
 	 */
-	public ChartDefinition getChartDefinition(long resourceId) {
+	public ChartDefinition getChartDefinition(Long resourceId) {
 		ChartDefinition def = null;
 		ChartModelInfo info = compiler.getChartInformation(resourceId);
 		if( info!=null ) def = info.chartDefinition;
 		return def;
 	}
 	
-	public String getChartPath(long resourceId) { return project.getFolderPath(resourceId); }
+	public String getChartPath(long resourceId) {
+		ChartModelInfo info = compiler.getChartInformation(resourceId);
+		if( info!=null ) return info.chartPath;
+		return "";
+	}
 	/**
 	 * Remove the final segment of a chart path to get its parent folder. If there is no parent
 	 * return a "/". If the resource doesn't exist, return a null.
@@ -52,7 +56,7 @@ public class ChartStructureManager   {
 	 * @return the path to the chart's enclosing folder in the NavTree. 
 	 */
 	public String getParentPath(long resourceId) { 
-		String chartPath = project.getFolderPath(resourceId);
+		String chartPath = this.getChartPath(resourceId);
 		if( chartPath!=null ) {
 			int pos = chartPath.lastIndexOf("/");
 			if( pos>0 )  chartPath = chartPath.substring(0, pos);

@@ -48,7 +48,7 @@ public class ChartStructureCompiler {
 	private final StepRegistry stepRegistry;
 	
 	// intermediate structures:
-	private final Map<ProjectResourceId,ChartModelInfo> modelInfoByResourceId;
+	private final Map<Long,ChartModelInfo> modelInfoByResourceId;
 	private final Map<String,ChartModelInfo> modelInfoByChartPath; // Reverse directory
 	private final Map<String,StepStructure> stepsById;
 	private final Map<String,StepStructure> stepsByKey;            // Reverse lookup by chartId,stepname
@@ -87,7 +87,7 @@ public class ChartStructureCompiler {
 		linkParents();
 	}
 	
-	public ChartModelInfo  getChartInformation(long resourceId) { return modelInfoByResourceId.get(new Long(resourceId)); }
+	public ChartModelInfo  getChartInformation(long resourceId) { return modelInfoByResourceId.get(resourceId); }
 	public StepStructure   getStepInformation(String stepId) { return stepsById.get(stepId); }
 	public StepStructure   getStepInformation(String chartPath,String stepName) { 
 		String key = makeKey(chartPath,stepName);
@@ -105,7 +105,7 @@ public class ChartStructureCompiler {
 		boolean success = true;
 		for(ProjectResource res:resources) {
 			if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
-				String path = project.getFolderPath(res.getResourceId());
+				String path = res.getFolderPath();
 				try {
 					
 					byte[] chartResourceData = res.getData();					
@@ -113,7 +113,7 @@ public class ChartStructureCompiler {
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 					ChartUIModel uiModel = ChartUIModel.fromXml(xmlInput, stepRegistry );
 					ChartModelInfo info = new ChartModelInfo(uiModel,res,path);
-					modelInfoByResourceId.put(res.getResourceId().,info);
+					modelInfoByResourceId.put((long)res.getResourceId().hashCode(),info);
 					modelInfoByChartPath.put(path,info);
 					log.debugf("loadModels: found resource %s (%d)",path,res.getResourceId());
 				}
@@ -138,8 +138,7 @@ public class ChartStructureCompiler {
 				ChartCompilationResults ccr = chartCompiler.compile();
 				if(ccr.isSuccessful()) {
 					modelInfo.chartDefinition = ccr.getChartDefinition();
-					long resid = modelInfo.resource.getResourceId();
-					ChartStructure newChart = new ChartStructure(modelInfo.resource.getName(),resid,project.getFolderPath(resid));
+					ChartStructure newChart = new ChartStructure(modelInfo.resource.getResourceName(),modelInfo.resource.getResourceId(),modelInfo.resource.getFolderPath());
 					modelInfo.chartStructure = newChart;
 					Set<UUID> seen = new HashSet<UUID>();
 					StepStructure.parallelCount = 0;
@@ -289,7 +288,7 @@ public class ChartStructureCompiler {
 		List<ProjectResource> resources = project.getResources();
 		for(ProjectResource res:resources) {
 			if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
-				String path = project.getFolderPath(res.getResourceId());
+				String path = res.getFolderPath();
 				if(path.matches(regex)) {
 					matchingCharts.add(path);
 				}

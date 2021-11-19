@@ -11,7 +11,8 @@ import com.ils.common.JavaToPython;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.project.ProjectResource;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResource;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResourceId;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -59,7 +60,7 @@ public class ChartStructureCompilerV2 {
 		for (ProjectResource res:changedResourceMap.values()){
 				Map<String, String> map = new HashMap<>();
 				// This might change in Ignition 8 to be rres.getFolderPath()
-				map.put(PATH_KEY, globalProject.getFolderPath(res.getResourceId()));
+				map.put(PATH_KEY, res.getFolderPath());
 				
 				byte[] chartResourceData = res.getData();
 				String chartResourceAsXML;
@@ -75,7 +76,7 @@ public class ChartStructureCompilerV2 {
 		}
 		
 		for (ProjectResource res:addedResourceMap.values()){
-			String chartPath = globalProject.getFolderPath(res.getResourceId());
+			String chartPath = res.getFolderPath();
 			log.infof("Adding resource %d - %s", res.getResourceId(), chartPath);
 			addedResources.put(String.valueOf(res.getResourceId()), chartPath);
 		}
@@ -90,13 +91,13 @@ public class ChartStructureCompilerV2 {
 	 */
 	public void compileResource (ProjectResource res)  throws IOException, JythonExecException, XmlParseException  {
 		String chartPath;
-		long resourceId;		
+		ProjectResourceId resourceId;		
 
 		if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
-			chartPath = globalProject.getFolderPath(res.getResourceId());
+			chartPath = res.getFolderPath();
 			resourceId = res.getResourceId();
 			
-			log.infof("Compiling a SFC chart resource. Path: %s, Name: %s, id: %d", chartPath, res.getName(), resourceId);
+			log.infof("Compiling a SFC chart resource. Path: %s, Name: %s, id: %d", chartPath, res.getResourceName(), resourceId);
 
 			byte[] chartResourceData = res.getData();
 			String chartResourceAsXML=IlsSfcCommonUtils.returnResource(chartResourceData);

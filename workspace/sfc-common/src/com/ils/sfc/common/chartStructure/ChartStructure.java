@@ -3,6 +3,7 @@ package com.ils.sfc.common.chartStructure;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.inductiveautomation.ignition.common.project.resource.ProjectResourceId;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.definitions.ElementDefinition;
@@ -19,10 +20,10 @@ public class ChartStructure {
 	private final List<StepStructure> parents = new ArrayList<StepStructure>();
 	private final List<StepStructure> steps; 	// the steps in this chart
 	private final String name;                  // the name (last path element) of this chart
-	private final long resourceId;
+	private final ProjectResourceId resourceId;
 	private final String path;                  // the path of this chart
 	
-	public ChartStructure(String name,long resid,String path) {
+	public ChartStructure(String name, ProjectResourceId resid,String path) {
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.name = name;
 		this.resourceId = resid;
@@ -38,7 +39,7 @@ public class ChartStructure {
 	
 	
 	public String getName() {return this.name;}
-	public long getResourceId() { return this.resourceId; }
+	public long getResourceId() { return this.resourceId.hashCode(); }
 	public String getPath() { return this.path; }
 
 	//Get all chart steps that enclose this chart.
