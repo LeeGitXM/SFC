@@ -12,13 +12,14 @@ import javax.swing.tree.TreePath;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.sfc.designer.workspace.editors.ChartPathComboBox;
+import com.inductiveautomation.sfc.uimodel.ChartUIModel;
 
 public class DesignerUtil {
 	static DesignerContext context; 
 	
 	public static ChartPathComboBox getChartPathComboBox(String currentValue) {
-		ChartPathComboBox cb = new ChartPathComboBox();
-		Project globalProject = context.getGlobalProject().getProject();
+		ChartPathComboBox cb = new ChartPathComboBox(new ChartUIModel());
+		Project globalProject = context.getProject();
 		cb.initRoot(globalProject);
 		cb.setSelectedItem(currentValue);
 		cb.setBorder(new EmptyBorder(0,0,0,0));

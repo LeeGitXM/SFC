@@ -49,8 +49,7 @@ public class RecipeEditorFrame extends com.jidesoft.docking.DockableFrame implem
 		JComponent selectedComponent = selectedComponents.size() == 1 ? selectedComponents.get(0) : null;
 		if(selectedComponent instanceof StepComponent) {
 			StepComponent stepComponent = (StepComponent) selectedComponent;
-			long resourceId = sfcWorkspace.getSelectedContainer().getResourceId();
-			String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
+			String chartPath = sfcWorkspace.getSelectedContainer().getResourcePath().getFolderPath();
 			controller.setElement(stepComponent.getElement(), chartPath);
 		}
 		else {

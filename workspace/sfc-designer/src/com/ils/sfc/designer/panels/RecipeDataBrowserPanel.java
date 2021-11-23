@@ -62,7 +62,7 @@ public class RecipeDataBrowserPanel extends ValueHoldingEditorPanel {
 	private void buildRecipeKeysTree(String childChartPath, ChartUIElement element) throws Exception {
 		rootNode.removeAllChildren();
 		SimpleHierarchyAnalyzer analyzer = new SimpleHierarchyAnalyzer(
-			panelController.getContext().getGlobalProject().getProject(), 
+			panelController.getContext().getProject(), 
 			IlsSfcDesignerHook.getStepRegistry());
 		analyzer.analyze();
 		List<EnclosureInfo> enclosureHierarchy = analyzer.getEnclosureHierarchyBottomUp(childChartPath,false);
@@ -111,7 +111,7 @@ public class RecipeDataBrowserPanel extends ValueHoldingEditorPanel {
 			}
 		}
 		else {
-			for(PropertyValue<?> pv: data.getProperties()) {
+			for(PropertyValue pv: data.getProperties()) {
 				dataNode.add(new DefaultMutableTreeNode(pv.getProperty().getName()));				
 			}
 		}

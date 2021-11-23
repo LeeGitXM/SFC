@@ -9,6 +9,7 @@ import org.python.core.PyDictionary;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.inductiveautomation.ignition.client.util.gui.ErrorUtil;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResourceId;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
@@ -29,10 +30,10 @@ public class RecipeSearchObject implements SearchObject {
 	private final String step;
 	private final String key;
 	private final String text;
-	private final long resourceId;
+	private final ProjectResourceId resourceId;
 	private final ResourceBundle rb;
 	
-	public RecipeSearchObject(DesignerContext ctx, long resourceId, PyDictionary dict) {
+	public RecipeSearchObject(DesignerContext ctx, ProjectResourceId resourceId, PyDictionary dict) {
 		this.context = ctx;
 		this.path = (String)dict.get(PATH);
 		this.step = (String)dict.get(STEP);
@@ -76,7 +77,7 @@ public class RecipeSearchObject implements SearchObject {
 	@Override
 	public void locate() {
 		ChartLocator locator = new ChartLocator(context);
-		locator.locate(resourceId);
+		locator.locate(resourceId.getResourcePath());
 	}
 
 	@Override

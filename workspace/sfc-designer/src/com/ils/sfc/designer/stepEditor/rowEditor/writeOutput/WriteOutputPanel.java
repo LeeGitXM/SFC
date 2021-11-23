@@ -27,7 +27,7 @@ public class WriteOutputPanel extends RowEditorPanel {
 		super(controller, index, false);
 	}
 
-	public void setConfig(PropertyValue<String> pvalue) {
+	public void setConfig(PropertyValue pvalue) {
 		// Changing to a different config 
 		this.pvalue = pvalue;
 		String json = (String) pvalue.getValue();

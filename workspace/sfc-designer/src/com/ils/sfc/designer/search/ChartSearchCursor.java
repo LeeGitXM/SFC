@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
 
 import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.project.ProjectResource;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResource;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -67,7 +67,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 		this.propertyCursor = null;
 		
 		byte[] chartResourceData = res.getData();					
-		chartPath = project.getFolderPath(res.getResourceId());
+		chartPath = res.getFolderPath();
 		log.tracef("%s.new - initializing a search cursor %s (%d)", TAG, chartPath,res.getResourceId());
 		try {
 			GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));

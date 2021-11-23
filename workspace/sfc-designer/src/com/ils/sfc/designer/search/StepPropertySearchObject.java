@@ -18,6 +18,7 @@ import org.w3c.dom.Element;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.inductiveautomation.ignition.client.util.gui.ErrorUtil;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResourceId;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
@@ -39,10 +40,10 @@ public class StepPropertySearchObject implements SearchObject {
 	private final Element property;
 	private final DesignerContext context;
 	private final ResourceBundle rb;
-	private final long resourceId;
+	private final ProjectResourceId resourceId;
 	private final LoggerEx log;
 	
-	public StepPropertySearchObject(DesignerContext ctx, String chartPath, String type, long res, Element property) {
+	public StepPropertySearchObject(DesignerContext ctx, String chartPath, String type, ProjectResourceId res, Element property) {
 		this.context = ctx;
 		this.chartType = type;
 		this.chartPath = chartPath;
@@ -77,7 +78,7 @@ public class StepPropertySearchObject implements SearchObject {
 	@Override
 	public void locate() {
 		ChartLocator locator = new ChartLocator(context);
-		locator.locate(resourceId);
+		locator.locate(resourceId.getResourcePath());
 	}
 
 	@Override

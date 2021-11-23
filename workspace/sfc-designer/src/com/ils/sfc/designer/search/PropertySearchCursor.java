@@ -7,6 +7,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.inductiveautomation.ignition.common.project.resource.ProjectResourceId;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObjectCursor;
@@ -19,10 +20,10 @@ public class PropertySearchCursor extends SearchObjectCursor {
 	private final String chartPath;
 	private final String chartType ;
 	private final Element parent;
-	private final long resourceId;
+	private final ProjectResourceId resourceId;
 	private final List<Element> children;
 
-	public PropertySearchCursor(DesignerContext ctx,String path,long resId,Element element) {
+	public PropertySearchCursor(DesignerContext ctx,String path,ProjectResourceId resId,Element element) {
 		this.context = ctx;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.index = 0;

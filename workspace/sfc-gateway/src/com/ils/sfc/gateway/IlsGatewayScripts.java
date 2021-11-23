@@ -29,7 +29,7 @@ import com.ils.sfc.gateway.recipe.RecipeDataAccess;
 import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.project.ProjectResource;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResource;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.DatasetBuilder;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -542,13 +542,13 @@ public class IlsGatewayScripts {
 		ilsSfcGatewayHook.getTestMgr().report();
 	}
 	
-	public static List<String> getMatchingCharts(String regex) {
-		Project globalProject = ilsSfcGatewayHook.getContext().getProjectManager().getGlobalProject(ApplicationScope.GATEWAY);
+	public static List<String> getMatchingCharts(String regex, String projectName) {
+		Project project = ilsSfcGatewayHook.getContext().getProjectManager().getProject(projectName).get();
 		List<String> matchingCharts = new ArrayList<String>();
-		List<ProjectResource> resources = globalProject.getResources();
+		List<ProjectResource> resources = project.getResources();
 		for(ProjectResource res:resources) {
 			if( res.getResourceType().equals("sfc-chart-ui-model")) {
-				String path = globalProject.getFolderPath(res.getResourceId());
+				String path = res.getFolderPath();
 				if(path.matches(regex)) {
 					matchingCharts.add(path);
 				}

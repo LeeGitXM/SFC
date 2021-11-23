@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -23,7 +24,8 @@ import com.ils.sfc.common.chartStructure.ChartStructureCompilerV2;
 import com.inductiveautomation.ignition.client.util.gui.PopupWrapper;
 import com.inductiveautomation.ignition.common.gui.progress.TaskProgressListener;
 import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.project.ProjectResource;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResource;
+import com.inductiveautomation.ignition.common.project.resource.ResourceType;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
@@ -98,7 +100,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		// Get a list of resources that we will consider for the search and pass it to the search engine.
 		List<ProjectResource> chartResources = getResources(which);
 		for(ProjectResource res:chartResources ) {
-			log.tracef("%s.retrieveSearchableObjects %s (%d)", TAG, project.getFolderPath(res.getResourceId()), res.getResourceId());
+			log.tracef("%s.retrieveSearchableObjects %s (%d)", TAG, res.getFolderPath(), res.getResourceId().hashCode());
 			agg.add(new ChartSearchCursor(context, res, project, searchKey));
 		}
 		return agg;
@@ -123,7 +125,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	 */
 	@Override
 	public String selectedObjectsToString(List<Object> objects) {
-		this.allResources = context.getGlobalProject().getProject().getResourcesOfType(SFCModule.MODULE_ID,ChartStructureCompilerV2.CHART_RESOURCE_TYPE);
+		this.allResources = context.getProject().getResourcesOfType(new ResourceType(SFCModule.MODULE_ID,ChartStructureCompilerV2.CHART_RESOURCE_TYPE));
 		this.which = chosen(objects);
 		StringBuilder sb = new StringBuilder();
 		sb.append(which.name() + " Charts");
@@ -164,7 +166,10 @@ public class IlsSfcSearchProvider implements SearchProvider {
 				for(TreePath path:paths) {
 					if(path.getLastPathComponent() instanceof SfcNode ) {
 						SfcNode node = (SfcNode)path.getLastPathComponent();
-						results.add(node.getProjectResource());
+						Optional<ProjectResource> res = node.getProjectResource();
+						if(!res.isEmpty()) {
+							results.add(res.get());
+						}
 					}
 				}
 			}
@@ -179,9 +184,9 @@ public class IlsSfcSearchProvider implements SearchProvider {
 			if ( child instanceof Container ) {
 				if( child instanceof SfcDesignPanel ) {
 					SfcDesignPanel panel = (SfcDesignPanel)child;
-					long resid = panel.getDesignable().getResourceId();
+					String resPath = panel.getDesignable().getResourcePath().getFolderPath();
 					for( ProjectResource pr:allResources) {
-						if( pr.getResourceId()==resid) {
+						if( pr.getFolderPath() == resPath) {
 							results.add(pr);
 						}
 					}
@@ -192,7 +197,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	}
 
 	private SfcFolderNode getSfcRootFolder() {
-		AbstractNavTreeNode global = context.getProjectBrowserRoot().getGlobalFolder();
+		AbstractNavTreeNode global = context.getProjectBrowserRoot().getParent();
 		SfcFolderNode root = null;
 		Enumeration<Object> enumeration = global.children();
 		while( enumeration.hasMoreElements()) {

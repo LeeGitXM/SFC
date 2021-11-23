@@ -8,8 +8,6 @@ import com.ils.sfc.common.PythonCall;
 import com.inductiveautomation.ignition.client.model.ClientContext;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
-import com.inductiveautomation.ignition.common.project.ProjectResource;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
@@ -31,15 +29,6 @@ public class IlsSfcClientHook extends AbstractClientModuleHook implements Client
     @Override
     public void startup(final ClientContext context, LicenseState activationState) throws Exception {
         this.context = context;
-        context.getGlobalProject().addProjectChangeListener(new ProjectChangeListener() {
-			public void projectResourceModified(ProjectResource arg0,ResourceModification arg1) {
-				System.out.println("projectResourceModified");
-			}
-
-			public void projectUpdated(Project arg0) {
-				// System.out.println("projectUpdated");				
-			}        	
-        });
         log.debug("starting up...");
         PythonCall.setContext(context);
 		registerSteps();

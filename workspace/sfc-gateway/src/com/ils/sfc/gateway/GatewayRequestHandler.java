@@ -84,7 +84,7 @@ public class GatewayRequestHandler {
 	 * @return the path to the user-lib directory.
 	 */
 	public String getUserLibPath()  {
-		String userLibPath = context.getUserlibDir().getAbsolutePath();
+		String userLibPath = context.getSystemManager().getUserLibDir().getAbsolutePath();
 		return userLibPath;
 	}
 	

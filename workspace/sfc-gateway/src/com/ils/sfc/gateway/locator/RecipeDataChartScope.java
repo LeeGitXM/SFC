@@ -11,12 +11,9 @@ import org.python.core.PyString;
 import system.ils.sfc.common.Constants;
 
 import com.inductiveautomation.ignition.common.expressions.TagListener;
-import com.inductiveautomation.ignition.common.sqltags.model.Tag;
-import com.inductiveautomation.ignition.common.sqltags.model.TagPath;
-import com.inductiveautomation.ignition.common.sqltags.model.TagProp;
-import com.inductiveautomation.ignition.common.sqltags.model.event.TagChangeEvent;
-import com.inductiveautomation.ignition.common.sqltags.model.types.TagType;
-import com.inductiveautomation.ignition.common.sqltags.parser.BasicTagPath;
+import com.inductiveautomation.ignition.common.tags.model.TagPath;
+import com.inductiveautomation.ignition.common.tags.model.event.TagChangeEvent;
+import com.inductiveautomation.ignition.common.tags.paths.BasicTagPath;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
@@ -57,7 +54,7 @@ public class RecipeDataChartScope extends PyChartScope {
 	@Override
 	public void removeScopeObserver(ScopeObserver observer) {
 		for(ListenerInfo listenerInfo: listenersByKey.values()) {
-			gatewayContext.getTagManager().unsubscribe(listenerInfo.tagPath, listenerInfo.tagListener);
+			gatewayContext.getTagManager().unsubscribeAsync(listenerInfo.tagPath, listenerInfo.tagListener);
 		}
 		listenersByKey = null;
 	}
@@ -144,20 +141,19 @@ public class RecipeDataChartScope extends PyChartScope {
 	
 	private void addValueChangeListener(final String key, TagPath igTagPath) {
 		TagListener tagListener = new TagListener() {
+			
 			@Override
 			public void tagChanged(TagChangeEvent e) {
+
 				notifyObservers();
 				if( DEBUG ) log.infof("tag changed: %s", e.getTagPath());
-			}
-			public TagProp getTagProperty() {
-				return TagProp.Value;
 			}
 		};
 		// Note: we only listen for changes in the "value" member of a recipe data tag
 		if( DEBUG ) log.infof("addValueChangeListener: on %s.value", igTagPath.toString());
 		igTagPath = (BasicTagPath) BasicTagPath.append(igTagPath, "value");
 		listenersByKey.put(key, new ListenerInfo(igTagPath, tagListener));
-		gatewayContext.getTagManager().subscribe(igTagPath, tagListener);
+		gatewayContext.getTagManager().subscribeAsync(igTagPath, tagListener);
 	}	
 }
 

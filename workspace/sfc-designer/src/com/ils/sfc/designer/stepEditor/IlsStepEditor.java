@@ -38,8 +38,7 @@ public class IlsStepEditor  extends AbstractStepEditor {
 	protected IlsStepEditor(ChartUIModel chartModel, DesignerContext context) {
 		super(new BorderLayout(), chartModel);
 		// TODO: this is cryptic--can we encapsulate it in a better place?
-		long resourceId = IlsSfcDesignerHook.getSfcWorkspace().getSelectedContainer().getResourceId();
-		String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
+		String chartPath = IlsSfcDesignerHook.getSfcWorkspace().getSelectedContainer().getResourcePath().getFolderPath();
 		stepEditorController = new StepEditorController(context, chartPath);
 		add(stepEditorController.getSlidingPane());
 	}

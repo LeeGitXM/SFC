@@ -84,7 +84,7 @@ public class PropertyEditor extends JPanel {
 		return tableModel.getPropertyValues();
 	}
 
-	public PropertyValue<?> getSelectedPropertyValue() {
+	public PropertyValue getSelectedPropertyValue() {
 		PropertyRow selectedRow = getSelectedRow();
 		return selectedRow != null ? selectedRow.getPropertyValue() : null;
 	}

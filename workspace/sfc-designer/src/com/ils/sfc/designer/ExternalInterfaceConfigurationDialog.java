@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -160,14 +161,14 @@ public class ExternalInterfaceConfigurationDialog extends JDialog {
 	 */
 	private JComboBox<String> createProviderCombo(String bundle,String key,boolean isIsolation) {
 		JComboBox<String> box = new JComboBox<String>();
-		List<TagProviderMeta> providers = context.getTagManager().getProviderInformation();
+		Set<String> providers = context.getTagBrowser().getProviders$designer();
 		box.removeAllItems();
 		box.addItem("");
-		for(TagProviderMeta meta:providers) {
-			if( meta.getName().length()>0) box.addItem(meta.getName());
+		for(String prov:providers) {
+			if( prov != null && prov.length()>0) box.addItem(prov);
 		}
 		String currentValue = requestHandler.getToolkitProperty(key);
-		if( currentValue!=null && currentValue.length()==0 && !isIsolation ) currentValue = context.getDefaultSQLTagsProviderName();
+		if( currentValue!=null && currentValue.length()==0 && !isIsolation ) currentValue = context.getDefaultTagProviderName();
 		box.setSelectedItem(currentValue);
 		// If the current value wasn't in the list, then add it.
 		if( box.getSelectedIndex()<0 ) {
@@ -249,7 +250,7 @@ public class ExternalInterfaceConfigurationDialog extends JDialog {
 					"Production tag provider must be configured.",
 					"Unset provider warning",
 					JOptionPane.WARNING_MESSAGE);
-			mainProviderBox.setSelectedItem(context.getDefaultSQLTagsProviderName());
+			mainProviderBox.setSelectedItem(context.getDefaultTagProviderName());
 		}
 		// Check numeric value of the speed factor
 		String val = secondaryTimeFactorField.getText();

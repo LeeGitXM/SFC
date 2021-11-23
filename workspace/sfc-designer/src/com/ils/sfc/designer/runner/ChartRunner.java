@@ -34,8 +34,7 @@ public class ChartRunner implements Runnable {
 	public void run() {
 		SfcDesignableContainer tab = workspace.getSelectedContainer();
 		if( tab!=null ) {
-			long resourceId = workspace.getSelectedContainer().getResourceId();
-			String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
+			String chartPath = workspace.getSelectedContainer().getResourcePath().getFolderPath();
 			String clientProject = context.getProject().getName();
 			String username = "UNDEFINED";
 			try {

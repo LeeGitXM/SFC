@@ -58,7 +58,7 @@ import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.model.ApplicationScope;
 import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.project.ProjectVersion;
+import com.inductiveautomation.ignition.common.project.ProjectListener;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -66,7 +66,6 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.clientcomm.ClientReqSession;
 import com.inductiveautomation.ignition.gateway.model.AbstractGatewayModuleHook;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
-import com.inductiveautomation.ignition.gateway.project.ProjectListener;
 import com.inductiveautomation.ignition.gateway.services.ModuleServiceConsumer;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.api.ChartManagerService;
@@ -85,6 +84,7 @@ import system.ils.sfc.common.Constants;
  * Ignition core.
  */
 public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements ModuleServiceConsumer,ProjectListener {
+
 	public static String CLSS = "IlsSfcGatewayHook";
 	private final LoggerEx log;
 	private transient GatewayContext context = null;
@@ -149,7 +149,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 			List<String> propertyNames = new ArrayList<String>();
 			AbstractIlsStepDelegate delegate = (AbstractIlsStepDelegate)stepFactory;
 			propertyNamesById.put(delegate.getId(), propertyNames);
-			for(PropertyValue<?> pval: delegate.getPropertySet()) {
+			for(PropertyValue pval: delegate.getPropertySet()) {
 				propertyNames.add(pval.getProperty().getName());
 			}
 		}		
@@ -194,8 +194,12 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public IlsRequestResponseManager getRequestResponseManager() {
 		return requestResponseManager;
 	}
+	
+
 	@Override
-	public Object getRPCHandler(ClientReqSession session, Long projectId) {return dispatcher;}
+	public Object getRPCHandler(ClientReqSession session, String projectName) {
+		return dispatcher;
+	}
 	
 	// @Override  (Ignition-7.8.3 feature)
 	public boolean isFreeModule() { return true; }
@@ -271,7 +275,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	
 	@Override
 	public void shutdown() {
-		log.infof("In Shutdown(), context is " + context.getContextName());
+		log.infof("In Shutdown(), context is " + context.toString());
 
 //		context.getProjectManager().removeProjectListener(this);  // disabled to see if it is preventing shutdown - cjl
 		log.tracef("Shutdown 2");
@@ -317,6 +321,27 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public static Map<String, List<String>> getPropertyNamesById() {
 		return propertyNamesById;
 	}
+	
+
+	@Override
+	public void projectAdded(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void projectDeleted(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void projectUpdated(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 	// =================================== Project Listener ========================
 	@Override
 	public void projectAdded(Project staging, Project published) {

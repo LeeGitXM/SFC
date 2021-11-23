@@ -80,7 +80,7 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 		        	log.tracef("In mouseClicked()!");
 		        	 
 		        	Property<?> selectedProperty = getPropertyEditor().getSelectedRow().getProperty();
-		        	PropertyValue<?> selectedPropertyValue =  getPropertyEditor().getSelectedRow().getPropertyValue();
+		        	PropertyValue selectedPropertyValue =  getPropertyEditor().getSelectedRow().getPropertyValue();
 		        	log.tracef("  Property: %s", selectedProperty.toString());
 		        	
 		        	if(selectedProperty.equals(IlsProperty.PRIMARY_REVIEW_DATA) ||
@@ -88,40 +88,40 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 		    				selectedProperty.equals(IlsProperty.SECONDARY_REVIEW_DATA) ||
 		    				selectedProperty.equals(IlsProperty.SECONDARY_REVIEW_DATA_WITH_ADVICE )) {
 		    			// REVIEW_DATA properties hold a complex configuration in a stringified JSON object
-		    			controller.getReviewDataPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getReviewDataPanel().setConfig((PropertyValue) selectedPropertyValue);
 		    			controller.getReviewDataPanel().activate(myIndex);				
 		    		}
 		    		else if(selectedProperty.equals(IlsProperty.REVIEW_FLOWS)) {
-		    			controller.getReviewFlowsPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getReviewFlowsPanel().setConfig((PropertyValue) selectedPropertyValue);
 		    			controller.getReviewFlowsPanel().activate(myIndex);							
 		    		}
 		    		else if(selectedProperty.equals(IlsProperty.COLLECT_DATA_CONFIG)) {
 		    			// COLLECT_DATA properties hold a complex configuration in a stringified JSON object
-		    			controller.getCollectDataPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getCollectDataPanel().setConfig((PropertyValue) selectedPropertyValue);
 		    			controller.getCollectDataPanel().activate(myIndex);							
 		    		}
 		    		else if(selectedProperty.equals(IlsProperty.CONFIRM_CONTROLLERS_CONFIG)) {
 		    			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
-		    			controller.getConfirmControllersPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getConfirmControllersPanel().setConfig((PropertyValue) selectedPropertyValue);
 		    			controller.getConfirmControllersPanel().activate(myIndex);							
 		    		}
 		    		else if(selectedProperty.equals(IlsProperty.MONITOR_DOWNLOADS_CONFIG)) {
 		    			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
-		    			controller.getMonitorDownloadsPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getMonitorDownloadsPanel().setConfig((PropertyValue) selectedPropertyValue);
 		    			controller.getMonitorDownloadsPanel().activate(myIndex);							
 		    		}
 		    		else if(selectedProperty.equals(IlsProperty.PV_MONITOR_CONFIG)) {
 		    			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
-		    			controller.getPvMonitorPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getPvMonitorPanel().setConfig((PropertyValue) selectedPropertyValue);
 		    			controller.getPvMonitorPanel().activate(myIndex);							
 		    		}
 		    		else if(selectedProperty.equals(IlsProperty.WRITE_OUTPUT_CONFIG)) {
 		    			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
-		    			controller.getWriteOutputPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getWriteOutputPanel().setConfig((PropertyValue) selectedPropertyValue);
 		    			controller.getWriteOutputPanel().activate(myIndex);							
 		    		}
 		    		else if(selectedProperty.equals(IlsProperty.MANUAL_DATA_CONFIG)) {
-		    			controller.getManualDataEntryPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+		    			controller.getManualDataEntryPanel().setConfig((PropertyValue) selectedPropertyValue);
 		    			controller.getManualDataEntryPanel().activate(myIndex);							
 		    		}
 		        }
@@ -163,7 +163,10 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 		log.tracef("Editing...");
 		PropertyRow selectedRow = getPropertyEditor().getSelectedRow();
 		boolean hasChoices = selectedRow != null && selectedRow.getChoices() != null;
-		PropertyValue<?> selectedPropertyValue = getPropertyEditor().getSelectedPropertyValue();
+		PropertyValue selectedPropertyValue = null;
+		if (selectedRow != null) {
+			selectedPropertyValue = (PropertyValue)selectedRow.getValue();
+		}
 		if(selectedPropertyValue == null) return;
 		Property<?>selectedProperty = selectedPropertyValue.getProperty();
 		log.tracef("Property: %s", selectedProperty);
@@ -185,40 +188,40 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 				selectedProperty.equals(IlsProperty.SECONDARY_REVIEW_DATA) ||
 				selectedProperty.equals(IlsProperty.SECONDARY_REVIEW_DATA_WITH_ADVICE )) {
 			// REVIEW_DATA properties hold a complex configuration in a stringified JSON object
-			controller.getReviewDataPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getReviewDataPanel().setConfig((PropertyValue) selectedPropertyValue);
 			controller.getReviewDataPanel().activate(myIndex);				
 		}
 		else if(selectedProperty.equals(IlsProperty.REVIEW_FLOWS)) {
-			controller.getReviewFlowsPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getReviewFlowsPanel().setConfig((PropertyValue) selectedPropertyValue);
 			controller.getReviewFlowsPanel().activate(myIndex);							
 		}
 		else if(selectedProperty.equals(IlsProperty.COLLECT_DATA_CONFIG)) {
 			// COLLECT_DATA properties hold a complex configuration in a stringified JSON object
-			controller.getCollectDataPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getCollectDataPanel().setConfig((PropertyValue) selectedPropertyValue);
 			controller.getCollectDataPanel().activate(myIndex);							
 		}
 		else if(selectedProperty.equals(IlsProperty.CONFIRM_CONTROLLERS_CONFIG)) {
 			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
-			controller.getConfirmControllersPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getConfirmControllersPanel().setConfig((PropertyValue) selectedPropertyValue);
 			controller.getConfirmControllersPanel().activate(myIndex);							
 		}
 		else if(selectedProperty.equals(IlsProperty.MONITOR_DOWNLOADS_CONFIG)) {
 			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
-			controller.getMonitorDownloadsPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getMonitorDownloadsPanel().setConfig((PropertyValue) selectedPropertyValue);
 			controller.getMonitorDownloadsPanel().activate(myIndex);							
 		}
 		else if(selectedProperty.equals(IlsProperty.PV_MONITOR_CONFIG)) {
 			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
-			controller.getPvMonitorPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getPvMonitorPanel().setConfig((PropertyValue) selectedPropertyValue);
 			controller.getPvMonitorPanel().activate(myIndex);							
 		}
 		else if(selectedProperty.equals(IlsProperty.WRITE_OUTPUT_CONFIG)) {
 			// CONFIRM_CONTROLLERS properties hold a complex configuration in a stringified JSON object
-			controller.getWriteOutputPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getWriteOutputPanel().setConfig((PropertyValue) selectedPropertyValue);
 			controller.getWriteOutputPanel().activate(myIndex);							
 		}
 		else if(selectedProperty.equals(IlsProperty.MANUAL_DATA_CONFIG)) {
-			controller.getManualDataEntryPanel().setConfig((PropertyValue<String>) selectedPropertyValue);
+			controller.getManualDataEntryPanel().setConfig((PropertyValue) selectedPropertyValue);
 			controller.getManualDataEntryPanel().activate(myIndex);							
 		}
 		else if(selectedProperty.getName().endsWith(Constants.UNIT_SUFFIX) && !hasChoices) {

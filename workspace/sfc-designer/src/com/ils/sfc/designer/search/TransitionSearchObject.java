@@ -18,6 +18,7 @@ import org.w3c.dom.Element;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.inductiveautomation.ignition.client.util.gui.ErrorUtil;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResourceId;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
@@ -30,13 +31,13 @@ import com.inductiveautomation.ignition.designer.model.DesignerContext;
 public class TransitionSearchObject implements SearchObject {
 
 	private final String chartPath;
-	private final long chartResourceId;
+	private final ProjectResourceId chartResourceId;
 	private final Element step;
 	private final DesignerContext context;
 	private final ResourceBundle rb;
 	private final LoggerEx log;
 	
-	public TransitionSearchObject(DesignerContext ctx, String chartPath, long resid, Element step) {
+	public TransitionSearchObject(DesignerContext ctx, String chartPath, ProjectResourceId resid, Element step) {
 		this.context = ctx;
 		this.chartResourceId = resid;
 		this.chartPath = chartPath;
@@ -71,7 +72,7 @@ public class TransitionSearchObject implements SearchObject {
 	@Override
 	public void locate() {
 		ChartLocator locator = new ChartLocator(context);
-		locator.locate(chartResourceId);
+		locator.locate(chartResourceId.getResourcePath());
 	}
 
 	@Override

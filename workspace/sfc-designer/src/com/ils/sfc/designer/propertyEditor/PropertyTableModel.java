@@ -151,24 +151,24 @@ public class PropertyTableModel extends AbstractTableModel {
     	return propertyValues;
     }
     
-	public void setPropertyValues(BasicPropertySet propertyValues, Property<?>[] orderedPropertiesOrNull) {
+	public void setPropertyValues(BasicPropertySet propertyValues, Property[] orderedPropertiesOrNull) {
 		this.propertyValues = propertyValues;		
 		rows.clear();
 		String valueTypeOrNull = propertyValues.get(IlsProperty.VALUE_TYPE);
 		if(orderedPropertiesOrNull != null) {
 			// order the properties in the order they are declared in the array--
-			Map<String, PropertyValue<?>> pvsByName = new HashMap<String, PropertyValue<?>>();
-			for(PropertyValue<?> pValue: propertyValues.getValues()) {
+			Map<String, PropertyValue> pvsByName = new HashMap<String, PropertyValue>();
+			for(PropertyValue pValue: propertyValues.getValues()) {
 				pvsByName.put(pValue.getProperty().getName(), pValue);
 			}
-			for(Property<?> prop: orderedPropertiesOrNull) {
+			for(Property prop: orderedPropertiesOrNull) {
 				if( IlsProperty.isHiddenProperty(prop.getName())) continue;
-				PropertyValue<?> pval = pvsByName.get(prop.getName());
+				PropertyValue pval = pvsByName.get(prop.getName());
 				addPropertyValue(pval, valueTypeOrNull);
 			}
 		}
 		else{
-			for(PropertyValue<?> pValue: propertyValues.getValues()) {
+			for(PropertyValue pValue: propertyValues.getValues()) {
 				addPropertyValue(pValue, valueTypeOrNull);
 			}
 			sortRowsAlphabetical();
@@ -176,7 +176,7 @@ public class PropertyTableModel extends AbstractTableModel {
 		fireTableStructureChanged();
 	}
 
-	private void addPropertyValue(PropertyValue<?> pValue, String valueTypeOrNull) {
+	private void addPropertyValue(PropertyValue pValue, String valueTypeOrNull) {
 		if(pValue == null) {
 			log.errorf("Null property value !?");
 			return;

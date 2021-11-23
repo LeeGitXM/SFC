@@ -126,7 +126,7 @@ public class RecipeBrowserPane extends EditorPanel implements ValueHolder {
 		RecipeDataTreeNode childNode = new RecipeDataTreeNode(data);
 		parentNode.add(childNode);
 		if(showLeafNodes) {
-			for(PropertyValue<?> pval: data.getProperties().getValues()) {
+			for(PropertyValue pval: data.getProperties().getValues()) {
 				DefaultMutableTreeNode leafNode = new DefaultMutableTreeNode(formatValue(pval));
 				childNode.add(leafNode);
 			}			
@@ -140,7 +140,7 @@ public class RecipeBrowserPane extends EditorPanel implements ValueHolder {
 	}
 	
 
-	private Object formatValue(PropertyValue<?> pval) {
+	private Object formatValue(PropertyValue pval) {
 		Object value = pval.getValue();
 		if(value instanceof double[][]) {
 			StringBuilder buf = new StringBuilder();

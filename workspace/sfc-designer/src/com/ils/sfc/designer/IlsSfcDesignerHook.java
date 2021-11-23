@@ -41,9 +41,12 @@ import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.modules.ModuleInfo;
 import com.inductiveautomation.ignition.common.modules.ModuleInfo.ModuleDependency;
+import com.inductiveautomation.ignition.common.project.ChangeOperation.CreateResourceOperation;
+import com.inductiveautomation.ignition.common.project.ChangeOperation.DeleteResourceOperation;
+import com.inductiveautomation.ignition.common.project.ChangeOperation.ModifyResourceOperation;
 import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.project.ProjectChangeListener;
-import com.inductiveautomation.ignition.common.project.ProjectResource;
+import com.inductiveautomation.ignition.common.project.ProjectResourceListener;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResource;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -54,6 +57,7 @@ import com.inductiveautomation.ignition.designer.model.DesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.menu.JMenuMerge;
 import com.inductiveautomation.ignition.designer.model.menu.MenuBarMerge;
 import com.inductiveautomation.ignition.designer.model.menu.WellKnownMenuConstants;
+import com.inductiveautomation.ignition.gateway.project.ResourceFilter;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
@@ -66,7 +70,7 @@ import com.jidesoft.docking.DockableFrame;
 
 import system.ils.sfc.common.Constants;
 
-public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectChangeListener {
+public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectResourceListener {
 	private final static String CLSS = "IlsSfcDesignerHook";
 	private static final String SFC_SUBMENU_TITLE  = "SFC Extensions";
 	private static final String EXPORT_MENU_TITLE  = "Export";
@@ -307,7 +311,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void startup(DesignerContext ctx, LicenseState activationState) throws Exception {
 		this.context = ctx;
-		this.project = context.getGlobalProject().getProject();
+		this.project = context.getProject();
 		DesignerUtil.context = ctx;
 		log.info("IlsSfcDesignerHook.startup...");
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
@@ -324,7 +328,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		}
 
 		// Listen to changes on the global project PETE
-		context.getGlobalProject().addProjectChangeListener(this);
+		//TODO: Reimplement project listening
+		//context.getProject().addProjectResourceListener(null);
+		context.getProject().add
 
 		// register the step config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory(context);
@@ -343,10 +349,10 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		//		AbstractIlsStepDelegate.setStructureManager(structureManager);
 
 		// Pete's Structure compiler - instantiate this once in the beginning because the step registry is static.
-		structureCompilerV2 = new ChartStructureCompilerV2(context.getGlobalProject().getProject(), stepRegistry);
+		structureCompilerV2 = new ChartStructureCompilerV2(context.getProject(), stepRegistry);
 
 		// Pete's Recipe Data Migrator - instantiate this once in the beginning because the step registry is static.
-		recipeDataMigrator = new RecipeDataMigrator(context.getGlobalProject().getProject(), stepRegistry);
+		recipeDataMigrator = new RecipeDataMigrator(context.getProject(), stepRegistry);
 
 		searchProvider = new IlsSfcSearchProvider(context, project);
 		context.registerSearchProvider(searchProvider);
@@ -369,7 +375,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void shutdown() {	
 		log.info("IlsSfcDesignerHook.shutdown...");
-		context.removeProjectChangeListener(this);
+		//TODO: Implement project change listeners
+		//context.removeProjectChangeListener(this);
 		/*		frames.remove(recipeEditorFrame); */
 	}
 

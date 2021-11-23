@@ -19,7 +19,6 @@ import com.inductiveautomation.ignition.common.sqltags.parser.TagPathParser;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
-import com.inductiveautomation.ignition.gateway.sqltags.TagProvider;
 import com.inductiveautomation.sfc.api.MonitoredScopeLifecycle;
 import com.inductiveautomation.sfc.api.PyChartScope;
 

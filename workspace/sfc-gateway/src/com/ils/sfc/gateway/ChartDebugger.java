@@ -52,7 +52,7 @@ public class ChartDebugger {
 			getTopParams(debugParams).put(Constants.MESSAGE_QUEUE, messageQueue);
 			
 			// start the chart
-			return ChartManager.get().startChart(chartPath, debugParams, user);
+			return ChartManager.get().startChart(clientProject, chartPath, debugParams, user);
 		}
 		catch(Exception e) {
 			logger.errorf("%s.startChart: exception trying to start chart %s\n", TAG, chartPath, e);

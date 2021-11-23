@@ -16,13 +16,11 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.ils.sfc.common.IlsClientScripts;
-import com.inductiveautomation.ignition.client.sqltags.tree.AbstractTagPathTreeNode;
-import com.inductiveautomation.ignition.client.sqltags.tree.TagPathTreeNode;
-import com.inductiveautomation.ignition.client.sqltags.tree.TagRenderer;
-import com.inductiveautomation.ignition.client.sqltags.tree.TagTreeNode;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
+import com.inductiveautomation.ignition.designer.tags.tree.TagRenderer;
+import com.inductiveautomation.ignition.designer.tags.tree.node.TagTreeNode;
 
 /**
  * Display a panel to find and select tag paths.   
@@ -38,12 +36,13 @@ public class TagBrowser extends JPanel {
 	
 	public TagBrowser(DesignerContext ctx) {
 		this.context = ctx;
-		this.cellRenderer = new TagRenderer();
+		this.cellRenderer = new TagRenderer(ctx);
 		setLayout(new BorderLayout());
 		tagTree = new JTree();
 		tagTree.setOpaque(true);
 		tagTree.setCellRenderer(cellRenderer);
-		tagTree.setModel(context.getTagBrowser().getSqlTagTreeModel());
+		//TODO: Find replacement
+		//tagTree.setModel(context.getTagBrowser().getSqlTagTreeModel());
 		tagTreeSelectionModel = tagTree.getSelectionModel();
 		tagTreeSelectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		tagTree.setBackground(getBackground());
@@ -63,11 +62,11 @@ public class TagBrowser extends JPanel {
 		for(String part: parts) {
 			names.add(part);
 		}
-		TagPathTreeNode node = (AbstractTagPathTreeNode)tagTree.getModel().getRoot();
+		TagTreeNode node = (TagTreeNode)tagTree.getModel().getRoot();
 		TreePath treePath = new TreePath(node);
 		for(String name: names) {
 			node.blockLoad();  // synchronously populate the children
-			node = node.findChildNodeByName(name);
+			node = (TagTreeNode)node.findChildNodeByName(name);
 			if(node != null) {
 				treePath = treePath.pathByAddingChild(node);
 			}
@@ -84,7 +83,7 @@ public class TagBrowser extends JPanel {
 		if(selectedPaths.length == 1) {
 			Object lastPathComponent = selectedPaths[0].getLastPathComponent();
 			// It's possible to select something that's not a node.
-			if(lastPathComponent instanceof TagPathTreeNode ) {
+			if(lastPathComponent instanceof TagTreeNode ) {
 				TagTreeNode node = (TagTreeNode)lastPathComponent;
 				selectedPath = node.getTagPath().toString();			
 				return selectedPath;

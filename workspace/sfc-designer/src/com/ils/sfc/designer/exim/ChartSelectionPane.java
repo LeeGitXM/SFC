@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
@@ -64,7 +65,7 @@ class ChartSelectionPane extends JPanel {
 	private void createNodes(DefaultMutableTreeNode root) {
 		SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
 		ClientStepRegistry stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
-		hierarchyAnalyzer = new SimpleHierarchyAnalyzer(context.getGlobalProject().getProject(),stepRegistry);
+		hierarchyAnalyzer = new SimpleHierarchyAnalyzer(context.getProject(),stepRegistry);
 		hierarchyAnalyzer.analyze();
 		for( String path:hierarchyAnalyzer.getChartPaths()) {
 			System.out.println(String.format("ChartSelectionPane.createNodes: %s",path));
@@ -78,13 +79,13 @@ class ChartSelectionPane extends JPanel {
 				ChartTreeNode partialNode = new ChartTreeNode(partial,index<components.length); // Leaf does not allow children
 				// Add to node if it doesn't already exist
 				@SuppressWarnings("unchecked")
-				Enumeration<ChartTreeNode> childWalker = node.children();
+				Enumeration<TreeNode> childWalker = node.children();
 				boolean exists = false;
 				while(childWalker.hasMoreElements()) {
-					ChartTreeNode child = childWalker.nextElement();
-					if( child.getUserObject().equals(partial) ) {
+					TreeNode child = childWalker.nextElement();
+					if(child instanceof ChartTreeNode && ((ChartTreeNode)child).getUserObject().equals(partial) ) {
 						exists = true;
-						node = child;
+						node = (DefaultMutableTreeNode)child;
 						break;
 					}
 				}

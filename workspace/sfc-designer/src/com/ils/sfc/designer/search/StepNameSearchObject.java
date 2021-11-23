@@ -7,6 +7,7 @@ import javax.swing.ImageIcon;
 
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.inductiveautomation.ignition.client.util.gui.ErrorUtil;
+import com.inductiveautomation.ignition.common.project.resource.ProjectResourceId;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
@@ -18,13 +19,13 @@ public class StepNameSearchObject implements SearchObject {
 
 	private final String chartPath;
 	private final String chartType;
-	private final long resourceId;
+	private final ProjectResourceId resourceId;
 	private final String name;
 	private final DesignerContext context;
 	private final ResourceBundle rb;
 	private final LoggerEx log;
 	
-	public StepNameSearchObject(DesignerContext ctx, String chartPath, String type, long resid,String property) {
+	public StepNameSearchObject(DesignerContext ctx, String chartPath, String type, ProjectResourceId resid,String property) {
 		this.context = ctx;
 		this.chartType = type;
 		this.chartPath = chartPath;
@@ -57,7 +58,7 @@ public class StepNameSearchObject implements SearchObject {
 	@Override
 	public void locate() {
 		ChartLocator locator = new ChartLocator(context);
-		locator.locate(resourceId);
+		locator.locate(resourceId.getResourcePath());
 	}
 
 	@Override

@@ -67,7 +67,7 @@ public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder
 	}
 
 	private void doEdit() {
-		PropertyValue<?> selectedPropertyValue = getPropertyEditor().getSelectedPropertyValue();
+		PropertyValue selectedPropertyValue = getPropertyEditor().getSelectedPropertyValue();
 		if(selectedPropertyValue == null) return;
 		if(selectedPropertyValue.getProperty().equals(IlsProperty.TAG_PATH)) {
 			editor.stopCellEditing();
@@ -89,7 +89,7 @@ public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder
 	}
 	
 	private void doRemove() {
-		PropertyValue<?> selectedPropertyValue = getPropertyEditor().getSelectedPropertyValue();
+		PropertyValue selectedPropertyValue = getPropertyEditor().getSelectedPropertyValue();
 		if(selectedPropertyValue == null) return;
 		Structure structureData = (Structure) recipeData;
 		structureData.removeDynamicProperty(selectedPropertyValue.getProperty());

@@ -8,15 +8,13 @@ import org.python.core.PyObject;
 import org.python.core.PyString;
 
 import com.inductiveautomation.ignition.common.expressions.TagListener;
-import com.inductiveautomation.ignition.common.sqltags.model.Tag;
-import com.inductiveautomation.ignition.common.sqltags.model.TagPath;
-import com.inductiveautomation.ignition.common.sqltags.model.TagProp;
-import com.inductiveautomation.ignition.common.sqltags.model.event.TagChangeEvent;
-import com.inductiveautomation.ignition.common.sqltags.parser.TagPathParser;
+import com.inductiveautomation.ignition.common.tags.model.TagPath;
+import com.inductiveautomation.ignition.common.tags.model.TagProvider;
+import com.inductiveautomation.ignition.common.tags.model.event.TagChangeEvent;
+import com.inductiveautomation.ignition.common.tags.paths.parser.TagPathParser;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
-import com.inductiveautomation.ignition.gateway.sqltags.TagProvider;
 import com.inductiveautomation.sfc.api.PyChartScope;
 
 /** A wrapper around a chart scope that actually goes out to recipe data
@@ -51,7 +49,7 @@ public class TagChartScope extends PyChartScope {
 	@Override
 	public void removeScopeObserver(ScopeObserver observer) {
 		for(ListenerInfo listenerInfo: listenersByKey.values()) {
-			context.getTagManager().unsubscribe(listenerInfo.tagPath, listenerInfo.tagListener);
+			context.getTagManager().unsubscribeAsync(listenerInfo.tagPath, listenerInfo.tagListener);
 		}
 		listenersByKey.clear();
 	}
@@ -123,14 +121,11 @@ public class TagChartScope extends PyChartScope {
 				notifyObservers();
 				if( DEBUG ) log.infof("tag changed: %s", e.getTagPath());
 			}
-			public TagProp getTagProperty() {
-				return TagProp.Value;
-			}
 		};
 		// Note: we only listen for changes in the "value" member of a recipe data tag
 		if( DEBUG ) log.infof("addValueChangeListener: on %s.value", tagPath.toString());
 		listenersByKey.put(key, new ListenerInfo(tagPath, tagListener));
-		context.getTagManager().subscribe(tagPath, tagListener);
+		context.getTagManager().subscribeAsync(tagPath, tagListener);
 	}	
 }
 

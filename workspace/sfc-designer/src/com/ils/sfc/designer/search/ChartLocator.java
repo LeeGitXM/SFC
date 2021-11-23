@@ -4,6 +4,7 @@
  */
 package com.ils.sfc.designer.search;
 
+import com.inductiveautomation.ignition.common.project.resource.ResourcePath;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
@@ -31,8 +32,8 @@ public class ChartLocator {
 	/**
 	 * Display a chart given its resourceId.
 	 */
-	public void locate(long resourceId) {
+	public void locate(ResourcePath chartPath) {
 		SFCDesignerHook hook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-		hook.getWorkspace().openChart(resourceId);
+		hook.getWorkspace().openChart(chartPath);
 	}
 }

@@ -18,11 +18,11 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 
 public class PropertyRow {
 	private static final LoggerEx logger = LogUtil.getLogger(PropertyValue.class.getName());
-	private PropertyValue<?> propertyValue;
+	private PropertyValue propertyValue;
 	private String displayLabel;
 	private String valueType; // for Object-valued properties, a hint as to the value type
 	
-	public PropertyRow(PropertyValue<?> propertyValue) {
+	public PropertyRow(PropertyValue propertyValue) {
 		this.propertyValue = propertyValue;
 		displayLabel = createDisplayLabel();
 	}
@@ -104,7 +104,7 @@ public class PropertyRow {
 		return propertyValue.getProperty();
 	}
 
-	public PropertyValue<?> getPropertyValue() {
+	public PropertyValue getPropertyValue() {
 		return propertyValue;
 	}
 

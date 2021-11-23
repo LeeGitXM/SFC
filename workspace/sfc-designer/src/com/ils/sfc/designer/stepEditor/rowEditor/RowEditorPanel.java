@@ -32,7 +32,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 @SuppressWarnings("serial")
 public abstract class RowEditorPanel extends EditorPanel implements ValueHolder {
 	private static LoggerEx logger = LogUtil.getLogger(RowEditorPanel.class.getName());
-	protected PropertyValue<String> pvalue;
+	protected PropertyValue pvalue;
 	protected JTable table;
 	protected int selectedColumn;
 	protected JPanel tablePanel;

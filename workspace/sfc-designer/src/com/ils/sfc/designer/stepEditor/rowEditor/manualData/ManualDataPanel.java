@@ -34,7 +34,7 @@ public class ManualDataPanel extends RowEditorPanel {
 		log.tracef("Creating a %s", getClass().getName());
 	}
 
-	public void setConfig(PropertyValue<String> pvalue) {
+	public void setConfig(PropertyValue pvalue) {
 		// Changing to a different config 
 		log.trace("In setConfig() for a ManualDataPanel");
 		this.pvalue = pvalue;
