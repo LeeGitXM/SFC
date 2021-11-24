@@ -1,13 +1,16 @@
 package com.ils.sfc.gateway.locator;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.python.core.PyObject;
 import org.python.core.PyString;
 
 import com.inductiveautomation.ignition.common.expressions.TagListener;
+import com.inductiveautomation.ignition.common.model.values.QualifiedValue;
 import com.inductiveautomation.ignition.common.tags.model.TagPath;
 import com.inductiveautomation.ignition.common.tags.model.TagProvider;
 import com.inductiveautomation.ignition.common.tags.model.event.TagChangeEvent;
@@ -79,17 +82,19 @@ public class TagChartScope extends PyChartScope {
 		String path = String.format("[%s]%s",providerName,key);
 		try {
 			TagPath tp = TagPathParser.parse(path);
+			ArrayList<TagPath> tpWrapper = new ArrayList();
+			tpWrapper.add(tp);
 			String providerName = tp.getSource();
 			TagProvider provider = context.getTagManager().getTagProvider(providerName);
 			if( provider!=null) {
-				Tag tag = provider.getTag(tp);
+				QualifiedValue tag = provider.readAsync(tpWrapper, null).get().get(0);
 				if(tag != null) {
 					// Read the tag return its value.
-					if( DEBUG ) log.infof("get: return %s = %s", tag.getName(), tag.getValue().getValue());
-					if(!listenersByKey.containsKey(tag.getName())) {
-						addValueChangeListener(tag.getName(), tp);
+					if( DEBUG ) log.infof("get: return %s = %s", tp.getItemName(), tag.getValue());
+					if(!listenersByKey.containsKey(tp.getItemName())) {
+						addValueChangeListener(tp.getItemName(), tp);
 					}
-					return tag.getValue().getValue();
+					return tag.getValue();
 				}
 				else {
 					log.errorf("get: tag %s not found", tp.toString());
@@ -104,6 +109,10 @@ public class TagChartScope extends PyChartScope {
 		}
 		catch(NullPointerException npe) {
 			log.warnf("get: Null value for path %s",path);
+		} catch (InterruptedException e) {
+			//caused by thread interrupt, no need to log
+		} catch (ExecutionException e) {
+			log.warnf("get: error reading value for path %s",  path, e);
 		}
 		return "";   // Error return
 	}

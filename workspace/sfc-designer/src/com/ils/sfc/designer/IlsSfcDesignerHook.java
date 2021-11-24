@@ -45,8 +45,10 @@ import com.inductiveautomation.ignition.common.project.ChangeOperation.CreateRes
 import com.inductiveautomation.ignition.common.project.ChangeOperation.DeleteResourceOperation;
 import com.inductiveautomation.ignition.common.project.ChangeOperation.ModifyResourceOperation;
 import com.inductiveautomation.ignition.common.project.Project;
+import com.inductiveautomation.ignition.common.project.ProjectListener;
 import com.inductiveautomation.ignition.common.project.ProjectResourceListener;
 import com.inductiveautomation.ignition.common.project.resource.ProjectResource;
+import com.inductiveautomation.ignition.common.project.resource.ResourcePath;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -70,7 +72,7 @@ import com.jidesoft.docking.DockableFrame;
 
 import system.ils.sfc.common.Constants;
 
-public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectResourceListener {
+public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectResourceListener, ProjectListener {
 	private final static String CLSS = "IlsSfcDesignerHook";
 	private static final String SFC_SUBMENU_TITLE  = "SFC Extensions";
 	private static final String EXPORT_MENU_TITLE  = "Export";
@@ -328,9 +330,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		}
 
 		// Listen to changes on the global project PETE
-		//TODO: Reimplement project listening
-		//context.getProject().addProjectResourceListener(null);
-		context.getProject().add
+		context.getProject().addProjectResourceListener(this);
 
 		// register the step config factories (ie the editors)
 		IlsStepEditor.Factory editorFactory = new IlsStepEditor.Factory(context);
@@ -375,8 +375,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void shutdown() {	
 		log.info("IlsSfcDesignerHook.shutdown...");
-		//TODO: Implement project change listeners
-		//context.removeProjectChangeListener(this);
+		context.getProject().removeProjectResourceListener(this);
 		/*		frames.remove(recipeEditorFrame); */
 	}
 
@@ -412,57 +411,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			}
 		}
 		return false;
-	}
-	// =================================== Project Change Listener ========================
-	// Called when there is a change to a chart resource
-	@Override//
-	public void projectResourceModified(ProjectResource res,ResourceModification modType) {
-
-		// Store the resource into a map that will be acted on when the project is Saved 
-		if( res.getResourceType().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE) ) {
-			String chartPath = context.getGlobalProject().getProject().getFolderPath(res.getResourceId());
-			log.infof("SFC chart: %s, id: %d, has been modified (modification type: %s, resource type: %s)", chartPath, res.getResourceId(), modType.toString(), res.getResourceType());
-
-			if (modType.toString().equals("Added")){
-				// This is called as soon as a chart is created.  Literally, as soon as user presses create chart in the project resource tree.
-				// The Updated case will be called when the Save button is pressed or when the new cart is renamed
-
-				// CJL  At this point we should check the resource IDs and see if it is a copy, in which case the UUIDs should be updated
-				log.tracef("...inserting it into the addedResourceMap!");
-				addedResourceMap.put(new Long (res.getResourceId()), res);
-
-			} else if (modType.toString().equals("Deleted")){
-				log.tracef("...inserting it into the deletedResourceMap!");
-				deletedResourceList.add(String.valueOf(res.getResourceId()));
-
-			} else {
-				// This is the updated case - when a chart is renamed this is called for the new and the old name.
-				log.tracef("...inserting it into the changedResourceMap!");
-				changedResourceMap.put(new Long (res.getResourceId()), res);
-			}
-		}
-	}
-
-	// This is called when the project is saved - Ignition is going to make chart resources permanent now so I can update all of the 
-	// resources that have been changed or deleted.
-	@Override
-	public void projectUpdated(Project proj) {
-		try {
-			if( proj.getId() == -1 ) {
-				structureCompilerV2.syncDatabase(deletedResourceList, addedResourceMap, changedResourceMap);
-
-				changedResourceMap.clear();
-				addedResourceMap.clear();
-				deletedResourceList.clear();
-			}
-
-		} catch (Exception ex) {
-			log.errorf("%s: Error Updating Project (Project updated): %s", CLSS, ex.getLocalizedMessage());
-
-			ExceptionDialogRunner dlg = new ExceptionDialogRunner();
-			dlg.setMsg(ex.getLocalizedMessage());
-			SwingUtilities.invokeLater(dlg);
-		}
 	}
 
 	/**
@@ -511,7 +459,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			while( !ready ) {
 				List<ModuleInfo> moduleInfos = ctx.getModules();
 				for( ModuleInfo minfo:moduleInfos ) {
-					Collection<ModuleDependency> dependencies = minfo.getDependencies().values();
+					Collection<ModuleDependency> dependencies = minfo.getDependencies();
 					for(ModuleDependency dep:dependencies) {
 						if( dep.getModuleId().equals(SFCModule.MODULE_ID) ) {
 							log.infof("%s.MainMenuWatcher ...%s depends on %s",CLSS,minfo.getName(),SFCModule.MODULE_ID);
@@ -542,15 +490,15 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			SfcWorkspace workspace = iaSfcHook.getWorkspace();
 			SfcDesignableContainer tab = workspace.getSelectedContainer();
 			if( tab!=null ) {
-				long resourceId = workspace.getSelectedContainer().getResourceId();
-				String chartPath = context.getGlobalProject().getProject().getFolderPath(resourceId);
-				SimpleHierarchyAnalyzer hierarchyAnalyzer = new SimpleHierarchyAnalyzer(context.getGlobalProject().getProject(),stepRegistry);
+				String chartPath = workspace.getSelectedContainer().getResourcePath().getFolderPath();
+				SimpleHierarchyAnalyzer hierarchyAnalyzer = new SimpleHierarchyAnalyzer(context.getProject(),stepRegistry);
 				hierarchyAnalyzer.analyze();
 				List<String> paths = hierarchyAnalyzer.getParentPathsForEnclosingScope(chartPath,level);
 				// Now that we have the paths, display them
 				for(String path:paths) {
 					Long resid = hierarchyAnalyzer.getChartResourceForPath(path);
-					if( resid!=null ) workspace.openChart(resid.longValue());
+					ResourcePath resPath = new ResourcePath(workspace.getSelectedContainer().getResourcePath().getResourceType(), path);
+					if( resid!=null ) workspace.openChart(resPath);
 				}
 			}
 			else {
@@ -598,6 +546,85 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			ExportSelectionDialog dialog = new ExportSelectionDialog(root,context,stepRegistry);
 			dialog.pack();
 			dialog.setVisible(true);   // Returns when dialog is closed
+		}
+	}
+	@Override
+	public void projectAdded(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void projectDeleted(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void projectUpdated(String arg0) {
+
+		try {
+				structureCompilerV2.syncDatabase(deletedResourceList, addedResourceMap, changedResourceMap);
+
+				changedResourceMap.clear();
+				addedResourceMap.clear();
+				deletedResourceList.clear();
+
+		} catch (Exception ex) {
+			log.errorf("%s: Error Updating Project (Project updated): %s", CLSS, ex.getLocalizedMessage());
+
+			ExceptionDialogRunner dlg = new ExceptionDialogRunner();
+			dlg.setMsg(ex.getLocalizedMessage());
+			SwingUtilities.invokeLater(dlg);
+		}
+	}
+
+	@Override
+	public void resourcesCreated(String arg0, List<CreateResourceOperation> arg1) {
+		for(CreateResourceOperation op : arg1) {
+			// Store the resource into a map that will be acted on when the project is Saved 
+					if( op.getResource().getResourceType().getTypeId().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE) ) {
+						String chartPath = op.getResource().getFolderPath();
+						log.infof("SFC chart: %s, id: %d, has been modified (modification type: %s, resource type: %s)", chartPath, op.getResourceId().hashCode(), op.getOperationType().toString(), op.getResource().getResourceType());
+					
+						// This is called as soon as a chart is created.  Literally, as soon as user presses create chart in the project resource tree.
+						// The Updated case will be called when the Save button is pressed or when the new cart is renamed
+
+						// CJL  At this point we should check the resource IDs and see if it is a copy, in which case the UUIDs should be updated
+						log.tracef("...inserting it into the addedResourceMap!");
+						addedResourceMap.put((long)op.getResourceId().hashCode(), op.getResource());
+					}
+		}
+	}
+
+	@Override
+	public void resourcesDeleted(String arg0, List<DeleteResourceOperation> arg1) {
+		for(DeleteResourceOperation op : arg1) {
+			// Store the resource into a map that will be acted on when the project is Saved 
+					if( op.getResourceId().getResourceType().getTypeId().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE) ) {
+						String chartPath = op.getResourceId().getFolderPath();
+						log.infof("SFC chart: %s, id: %d, has been modified (modification type: %s, resource type: %s)", chartPath, op.getResourceId().hashCode(), op.getOperationType().toString(), op.getResourceId().getResourceType());
+
+
+						log.tracef("...inserting it into the deletedResourceMap!");
+						deletedResourceList.add(String.valueOf(op.getResourceId().hashCode()));
+					}
+		}
+		
+	}
+
+	@Override
+	public void resourcesModified(String arg0, List<ModifyResourceOperation> arg1) {
+		for(ModifyResourceOperation op : arg1) {
+		// Store the resource into a map that will be acted on when the project is Saved 
+				if( op.getResource().getResourceType().getTypeId().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE) ) {
+					String chartPath = op.getResource().getFolderPath();
+					log.infof("SFC chart: %s, id: %d, has been modified (modification type: %s, resource type: %s)", chartPath, op.getResourceId().hashCode(), op.getOperationType().toString(), op.getResource().getResourceType());
+
+						// This is the updated case - when a chart is renamed this is called for the new and the old name.
+						log.tracef("...inserting it into the changedResourceMap!");
+						changedResourceMap.put((long)op.getResource().getResourceId().hashCode(), op.getResource());
+				}
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.ils.sfc.gateway.locator;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.python.core.PyString;
 import system.ils.sfc.common.Constants;
 
 import com.inductiveautomation.ignition.common.expressions.TagListener;
+import com.inductiveautomation.ignition.common.tags.browsing.NodeDescription;
 import com.inductiveautomation.ignition.common.tags.model.TagPath;
 import com.inductiveautomation.ignition.common.tags.model.event.TagChangeEvent;
 import com.inductiveautomation.ignition.common.tags.paths.BasicTagPath;
@@ -74,38 +76,40 @@ public class RecipeDataChartScope extends PyChartScope {
 	 *  subfolders as the keys.
 	 */
 	public Object get(Object keyObj) {		
-		// Build the tag path as far as the name of the UDT
-		log.infof("Class name: %s",keyObj.getClass().getCanonicalName());
-		key = (String)keyObj;
-		String keyPath = getKeyPath();
-		String strTagPath = Constants.RECIPE_DATA_FOLDER + "/" + stepPath + "/" + keyPath;
-		if( DEBUG ) log.infof("get: key %s keyPath %s strTagPath", key.toString(), keyPath, strTagPath);
-		TagPath igTagPath = new BasicTagPath(providerName, getPathComponents(strTagPath));
-		Tag tag = gatewayContext.getTagManager().getTag(igTagPath);
-		if(tag == null) {
-			log.errorf("tag %s not found", strTagPath);
-			return new PyChartScope();
-		}
-		// get the child tags
-		List<Tag> childTags = gatewayContext.getTagManager().browse(igTagPath);	
-		PyChartScope resultScope = null;
-		if(tag.getType() == TagType.Folder) {
-			// a hierarchy exists, build sub-scope that will handle requests for sub-keys
-			return new RecipeDataChartScope(stepPath, this, providerName, gatewayContext);
-		}
-		else{ 
-			// Leaf level; read the values of all the UDT members and put them in a PyChartScope, 
-			// which is the return result
-			resultScope = new PyChartScope();
-			for(Tag childTag: childTags) {
-				resultScope.put(childTag.getName(), childTag.getValue().getValue());
-				if( DEBUG ) log.infof("get: adding to scope %s = %s", childTag.getName(), childTag.getValue().getValue());
-				if(!listenersByKey.containsKey(strTagPath)) {
-					addValueChangeListener(strTagPath, igTagPath);
-				}
-			}
-			return resultScope;
-		}
+		//TODO: Revisit this because tag querying behaves completely differently
+//		// Build the tag path as far as the name of the UDT
+//		log.infof("Class name: %s",keyObj.getClass().getCanonicalName());
+//		key = (String)keyObj;
+//		String keyPath = getKeyPath();
+//		String strTagPath = Constants.RECIPE_DATA_FOLDER + "/" + stepPath + "/" + keyPath;
+//		if( DEBUG ) log.infof("get: key %s keyPath %s strTagPath", key.toString(), keyPath, strTagPath);
+//		TagPath igTagPath = new BasicTagPath(providerName, getPathComponents(strTagPath));
+//		Collection<NodeDescription> nodes = gatewayContext.getTagManager().browseAsync(igTagPath, null).get().getResults();
+//		if(nodes.size() == 0) {
+//			log.errorf("tag %s not found", strTagPath);
+//			return new PyChartScope();
+//		}
+//		// get the child tags
+//		List<Tag> childTags = gatewayContext.getTagManager().browse(igTagPath);	
+//		PyChartScope resultScope = null;
+//		if(tag.getType() == TagType.Folder) {
+//			// a hierarchy exists, build sub-scope that will handle requests for sub-keys
+//			return new RecipeDataChartScope(stepPath, this, providerName, gatewayContext);
+//		}
+//		else{ 
+//			// Leaf level; read the values of all the UDT members and put them in a PyChartScope, 
+//			// which is the return result
+//			resultScope = new PyChartScope();
+//			for(Tag childTag: childTags) {
+//				resultScope.put(childTag.getName(), childTag.getValue().getValue());
+//				if( DEBUG ) log.infof("get: adding to scope %s = %s", childTag.getName(), childTag.getValue().getValue());
+//				if(!listenersByKey.containsKey(strTagPath)) {
+//					addValueChangeListener(strTagPath, igTagPath);
+//				}
+//			}
+//			return resultScope;
+//		}
+		return null;
 	}
 
 	private String getKeyPath() {

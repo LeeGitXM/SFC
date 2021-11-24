@@ -256,12 +256,12 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);				
 		chartManager.addChartObserver(dropBox);
 
- 		structureManager = new ChartStructureManager(context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY),iaSfcHook.getStepRegistry());
+ 		structureManager = new ChartStructureManager(context.getProjectManager().getProject("global").get(),iaSfcHook.getStepRegistry());
  		AbstractIlsStepDelegate.setStructureManager(structureManager);
  		requestHandler = new GatewayRequestHandler(context,structureManager,requestResponseManager);
 		dispatcher = new GatewayRpcDispatcher(context,requestHandler);
 		chartDebugger = new ChartDebugger(
-			context.getProjectManager().getGlobalProject(ApplicationScope.GATEWAY), 
+			context.getProjectManager().getProject("global").get(),
 			iaSfcHook.getStepRegistry());
 		IlsGatewayScripts.setRequestHandler(requestHandler);
 		RecipeDataAccess.setRequestHandler(requestHandler);
@@ -325,8 +325,10 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 	@Override
 	public void projectAdded(String arg0) {
-		// TODO Auto-generated method stub
-		
+		if(arg0 == "global") {
+			structureManager.getCompiler().compile();
+			log.infof("%s.projectAdded: re-analyzing charts.",CLSS);
+		}
 	}
 
 	@Override
@@ -337,27 +339,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 	@Override
 	public void projectUpdated(String arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	
-	// =================================== Project Listener ========================
-	@Override
-	public void projectAdded(Project staging, Project published) {
-		if( staging.getId()==-1) {
-			structureManager.getCompiler().compile();
-			log.infof("%s.projectAdded: re-analyzing charts.",CLSS);
-		}
-	}
-
-	@Override
-	public void projectDeleted(long projectId) {
-	}
-
-	@Override
-	public void projectUpdated(Project proj, ProjectVersion vers) {
-		if( proj.getId()==-1 && vers==ProjectVersion.Staging) {
+		if(arg0 == "global") {
 			structureManager.getCompiler().compile();
 			log.infof("%s.projectUpdated: re-analyzing charts.",CLSS);
 		}
