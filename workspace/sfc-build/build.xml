@@ -7,20 +7,12 @@
 		</classpath>
 	</taskdef>
 
-	<!-- Create our packer task -->
-	<taskdef name="pack200" classname="com.sun.tools.apache.ant.pack200.Pack200Task" classpath="${basedir}/sfc-build/AntLib/Pack200Task.jar" />
-
-	<!-- Create our unpacker task -->
-	<taskdef name="unpack200" classname="com.sun.tools.apache.ant.pack200.Unpack200Task" classpath="${basedir}/sfc-build/AntLib/Pack200Task.jar" />
-
 	<!-- Add the postmodule task. This task can deploy a module to a local Ignition gateway. -->
 	<taskdef name="postmodule" classname="com.inductiveautomation.ant.PostModule">
 		<classpath location="${basedir}/sfc-build/AntLib/ant-post-module.jar" />
 	</taskdef>
 
 	<property name="local.gateway.url" value="http://localhost:8088/main/system/DeveloperModuleLoadingServlet" />
-
-	<property name="p200props" value="${basedir}/sfc-build/pack200.properties" />
 
 	<tstamp>
 		<format property="build.date" pattern="MM/dd/yyyy hh:mm aa" />

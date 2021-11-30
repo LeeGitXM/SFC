@@ -6,8 +6,8 @@
 		<description>@DESCRIPTION@</description>
 		<version>@VERSION@</version>
 		<license></license>
-		<requiredignitionversion>7.9.5</requiredignitionversion>
-		<requiredframeworkversion>8</requiredframeworkversion>
+		<requiredignitionversion>8.1.0</requiredignitionversion>
+		<requiredframeworkversion>9</requiredframeworkversion>
 		<freemodule>true</freemodule>
 		<documentation></documentation>
 
@@ -17,13 +17,13 @@
 		<depends scope="D">com.inductiveautomation.sfc</depends>
 		
 		<!-- Load in our jars for each scope -->
-		<jar scope="CD">ils-sfc-client.jar.pack.gz</jar>
-		<jar scope="D">ils-sfc-designer.jar.pack.gz</jar>
-		<jar scope="CD">ils-sfc-common.jar.pack.gz</jar>
-		<jar scope="CD">jackson-databind-2.2.3.jar.pack.gz</jar>
-		<jar scope="CD">jackson-core-2.2.3.jar.pack.gz</jar>
-		<jar scope="CD">jackson-annotations-2.2.3.jar.pack.gz</jar>
-		<jar scope="CD">ils-common.jar.pack.gz</jar>
+		<jar scope="CD">ils-sfc-client.jar</jar>
+		<jar scope="D">ils-sfc-designer.jar</jar>
+		<jar scope="CD">ils-sfc-common.jar</jar>
+		<jar scope="CD">jackson-databind-2.2.3.jar</jar>
+		<jar scope="CD">jackson-core-2.2.3.jar</jar>
+		<jar scope="CD">jackson-annotations-2.2.3.jar</jar>
+		<jar scope="CD">ils-common.jar</jar>
 		<jar scope="G">ils-sfc-gateway.jar</jar>
 		<jar scope="G">ils-sfc-common.jar</jar>
 		<jar scope="G">commons-math3-3.6.1.jar</jar>

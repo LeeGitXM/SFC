@@ -1,4 +1,6 @@
 <project name="ILSSils.sfcBuilder" basedir="../" default="BuildAndInstallModule">
+	
+	<echo  message="basedir: ${basedir}"/>
 
 	<import file="${basedir}/sfc-build/build.xml"/>
 
@@ -145,16 +147,16 @@
 		<replace file="${basedir}/sfc-build/temp_modl/module.xml" token="@VERSION@" value="${ils.sfc.version}" />
 
 		<!-- Pack200 and then copy the designer, client jars -->
-		<pack200 src="${basedir}/sfc-build/bin/${ils.sfc.name}_Client/dist/ils-sfc-client.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-client.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
-		<pack200 src="${basedir}/sfc-build/bin/${ils.sfc.name}_Designer/dist/ils-sfc-designer.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-designer.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
-		<pack200 src="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/ils-sfc-common.jar" destfile="${basedir}/sfc-build/temp_modl/ils-sfc-common.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
-		<pack200 src="${root.dir}/external/lib/ils-common.jar" destfile="${basedir}/sfc-build/temp_modl/ils-common.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
-		<pack200 src="${root.dir}/external/lib/jackson-core-2.2.3.jar" destfile="${basedir}/sfc-build/temp_modl/jackson-core-2.2.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
-		<pack200 src="${root.dir}/external/lib/jackson-databind-2.2.3.jar" destfile="${basedir}/sfc-build/temp_modl/jackson-databind-2.2.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
-		<pack200 src="${root.dir}/external/lib/jackson-annotations-2.2.3.jar" destfile="${basedir}/sfc-build/temp_modl/jackson-annotations-2.2.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
-		<pack200 src="${jar.dir}/${common.jar.name}" destfile="${basedir}/sfc-build/temp_modl/ils-common.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
-		<pack200 src="${root.dir}/external/lib/lucene-1.4.3.jar" destfile="${basedir}/sfc-build/temp_modl/lucene-1.4.3.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
-		<pack200 src="${root.dir}/external/lib/prefuse-1.0.1.jar" destfile="${basedir}/sfc-build/temp_modl/prefuse-1.0.1.jar.pack.gz" gzipoutput="true" configfile="${p200props}" />
+		<copy file="${basedir}/sfc-build/bin/${ils.sfc.name}_Client/dist/ils-sfc-client.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${basedir}/sfc-build/bin/${ils.sfc.name}_Designer/dist/ils-sfc-designer.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/ils-sfc-common.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${root.dir}/external/lib/ils-common.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${root.dir}/external/lib/jackson-core-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${root.dir}/external/lib/jackson-databind-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${root.dir}/external/lib/jackson-annotations-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${jar.dir}/${common.jar.name}" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${root.dir}/external/lib/lucene-1.4.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${root.dir}/external/lib/prefuse-1.0.1.jar" todir="${basedir}/sfc-build/temp_modl/" />
 
 		
 		<!-- Copy gateway jar -->
