@@ -19,6 +19,7 @@ import com.ils.sfc.common.IlsClientScripts;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
+import com.inductiveautomation.ignition.designer.tags.tree.TagBrowserTree;
 import com.inductiveautomation.ignition.designer.tags.tree.TagRenderer;
 import com.inductiveautomation.ignition.designer.tags.tree.node.TagTreeNode;
 
@@ -38,11 +39,9 @@ public class TagBrowser extends JPanel {
 		this.context = ctx;
 		this.cellRenderer = new TagRenderer(ctx);
 		setLayout(new BorderLayout());
-		tagTree = new JTree();
+		tagTree = new TagBrowserTree.Builder().build(ctx);
 		tagTree.setOpaque(true);
 		tagTree.setCellRenderer(cellRenderer);
-		//TODO: Find replacement
-		//tagTree.setModel(context.getTagBrowser().getSqlTagTreeModel());
 		tagTreeSelectionModel = tagTree.getSelectionModel();
 		tagTreeSelectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		tagTree.setBackground(getBackground());
