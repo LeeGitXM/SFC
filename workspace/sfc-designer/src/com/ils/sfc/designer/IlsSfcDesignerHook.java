@@ -72,7 +72,7 @@ import com.jidesoft.docking.DockableFrame;
 
 import system.ils.sfc.common.Constants;
 
-public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectResourceListener, ProjectListener {
+public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectResourceListener {
 	private final static String CLSS = "IlsSfcDesignerHook";
 	private static final String SFC_SUBMENU_TITLE  = "SFC Extensions";
 	private static final String EXPORT_MENU_TITLE  = "Export";
@@ -548,20 +548,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			dialog.setVisible(true);   // Returns when dialog is closed
 		}
 	}
-	@Override
-	public void projectAdded(String arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void projectDeleted(String arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void projectUpdated(String arg0) {
+	public void projectUpdated() {
 
 		try {
 				structureCompilerV2.syncDatabase(deletedResourceList, addedResourceMap, changedResourceMap);
@@ -595,6 +583,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 						addedResourceMap.put((long)op.getResourceId().hashCode(), op.getResource());
 					}
 		}
+		
+		projectUpdated();
 	}
 
 	@Override
@@ -610,7 +600,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 						deletedResourceList.add(String.valueOf(op.getResourceId().hashCode()));
 					}
 		}
-		
+
+		projectUpdated();
 	}
 
 	@Override
@@ -626,5 +617,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 						changedResourceMap.put((long)op.getResource().getResourceId().hashCode(), op.getResource());
 				}
 		}
+
+		projectUpdated();
 	}
 }
