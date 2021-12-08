@@ -570,8 +570,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	@Override
 	public void resourcesCreated(String arg0, List<CreateResourceOperation> arg1) {
 		for(CreateResourceOperation op : arg1) {
+
 			// Store the resource into a map that will be acted on when the project is Saved 
-					if( op.getResource().getResourceType().getTypeId().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE) ) {
+					if( op.getResource().getResourceType().toString().equals("com.inductiveautomation.sfc")) {
 						String chartPath = op.getResource().getFolderPath();
 						log.infof("SFC chart: %s, id: %d, has been modified (modification type: %s, resource type: %s)", chartPath, op.getResourceId().hashCode(), op.getOperationType().toString(), op.getResource().getResourceType());
 					
@@ -582,6 +583,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 						log.tracef("...inserting it into the addedResourceMap!");
 						addedResourceMap.put((long)op.getResourceId().hashCode(), op.getResource());
 					}
+					
 		}
 		
 		projectUpdated();
@@ -591,7 +593,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	public void resourcesDeleted(String arg0, List<DeleteResourceOperation> arg1) {
 		for(DeleteResourceOperation op : arg1) {
 			// Store the resource into a map that will be acted on when the project is Saved 
-					if( op.getResourceId().getResourceType().getTypeId().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE) ) {
+					if( op.getResourceId().getResourceType().toString().equals("com.inductiveautomation.sfc")) {
 						String chartPath = op.getResourceId().getFolderPath();
 						log.infof("SFC chart: %s, id: %d, has been modified (modification type: %s, resource type: %s)", chartPath, op.getResourceId().hashCode(), op.getOperationType().toString(), op.getResourceId().getResourceType());
 
@@ -608,7 +610,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	public void resourcesModified(String arg0, List<ModifyResourceOperation> arg1) {
 		for(ModifyResourceOperation op : arg1) {
 		// Store the resource into a map that will be acted on when the project is Saved 
-				if( op.getResource().getResourceType().getTypeId().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE) ) {
+				if(op.getResource().getResourceType().toString().equals("com.inductiveautomation.sfc")) {
 					String chartPath = op.getResource().getFolderPath();
 					log.infof("SFC chart: %s, id: %d, has been modified (modification type: %s, resource type: %s)", chartPath, op.getResourceId().hashCode(), op.getOperationType().toString(), op.getResource().getResourceType());
 
