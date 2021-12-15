@@ -88,7 +88,8 @@ public class SimpleHierarchyAnalyzer {
 	public void analyze() {
 		List<ProjectResource> resources = globalProject.getResources();
 		for(ProjectResource res:resources) {
-			if( res.getResourceType().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE)) {
+			if(res.getResourceType().getModuleId().equals(ChartStructureCompiler.CHART_MODULE) &&
+					res.getResourceType().getTypeId().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE)) {
 				String chartPath = res.getFolderPath();
 				try {
 					byte[] chartResourceData = res.getData();					

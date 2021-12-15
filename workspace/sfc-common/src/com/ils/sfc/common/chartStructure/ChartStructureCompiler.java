@@ -105,7 +105,8 @@ public class ChartStructureCompiler {
 		List<ProjectResource> resources = project.getResources();
 		boolean success = true;
 		for(ProjectResource res:resources) {
-			if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
+			if( res.getResourceType().getModuleId().equals(CHART_MODULE) &&
+				res.getResourceType().getTypeId().equals(CHART_RESOURCE_TYPE)) {
 				String path = res.getFolderPath();
 				try {
 					
@@ -288,7 +289,8 @@ public class ChartStructureCompiler {
 		List<String> matchingCharts = new ArrayList<String>();
 		List<ProjectResource> resources = project.getResources();
 		for(ProjectResource res:resources) {
-			if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
+			if(res.getResourceType().getModuleId().equals(CHART_MODULE) &&
+					res.getResourceType().getTypeId().equals(CHART_RESOURCE_TYPE)) {
 				String path = res.getFolderPath();
 				if(path.matches(regex)) {
 					matchingCharts.add(path);
