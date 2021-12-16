@@ -72,13 +72,13 @@ public class ChartStructureCompilerV2 {
 					log.errorf("Caught an error in syncDatabase()");
 					e.printStackTrace();
 				}
-				changedResources.put(String.valueOf(res.getResourceId()), map);
+				changedResources.put(String.valueOf(res.getResourceId().hashCode()), map);
 		}
 		
 		for (ProjectResource res:addedResourceMap.values()){
 			String chartPath = res.getFolderPath();
-			log.infof("Adding resource %d - %s", res.getResourceId(), chartPath);
-			addedResources.put(String.valueOf(res.getResourceId()), chartPath);
+			log.infof("Adding resource %d - %s", res.getResourceId().hashCode(), chartPath);
+			addedResources.put(String.valueOf(res.getResourceId().hashCode()), chartPath);
 		}
 
 		Object[] args = {jToP.objectToPy(deletedResourceList), jToP.objectToPy(addedResources), jToP.objectToPy(changedResources), database};

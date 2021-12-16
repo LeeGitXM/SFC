@@ -110,7 +110,13 @@ public class ChartStructureCompiler {
 				String path = res.getFolderPath();
 				try {
 					
-					byte[] chartResourceData = res.getData();					
+					byte[] chartResourceData = res.getData();
+					
+					if(chartResourceData == null) {
+						log.warnf("loadModels: Chart %s has no byte data.", path);
+						return false;
+					}
+					
 					//IlsSfcCommonUtils.printResource(data);					
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 					ChartUIModel uiModel = ChartUIModel.fromXml(xmlInput, stepRegistry );
