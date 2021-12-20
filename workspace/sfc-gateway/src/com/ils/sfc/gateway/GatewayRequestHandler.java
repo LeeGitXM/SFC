@@ -11,8 +11,8 @@ import java.util.Map;
 import org.python.core.PyDictionary;
 
 import com.ils.common.help.HelpRecordProxy;
+import com.ils.common.persistence.ToolkitProjectRecordHandler;
 import com.ils.common.persistence.ToolkitProperties;
-import com.ils.common.persistence.ToolkitRecordHandler;
 import com.ils.sfc.common.chartStructure.ChartStructureCompiler;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.chartStructure.StepStructure;
@@ -39,7 +39,7 @@ public class GatewayRequestHandler {
 	private final LoggerEx log;
 	private final GatewayContext context;
 	private final ChartStructureManager structureManager;
-	private final ToolkitRecordHandler recordHandler;
+	private final ToolkitProjectRecordHandler recordHandler;
 	private final IlsRequestResponseManager responseManager;
 
 	/**
@@ -47,7 +47,7 @@ public class GatewayRequestHandler {
 	 */
 	public GatewayRequestHandler(GatewayContext ctx,ChartStructureManager structMgr,IlsRequestResponseManager responseMgr) {
 		this.context = ctx;
-		this.recordHandler = new ToolkitRecordHandler(context);
+		this.recordHandler = new ToolkitProjectRecordHandler(context);
 		this.structureManager = structMgr;
 		this.responseManager = responseMgr;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
@@ -71,10 +71,10 @@ public class GatewayRequestHandler {
 	 * @param isIsolation true if this the chart is in an isolation (test) state.
 	 * @return name of the database for production or isolation mode, as appropriate.
 	 */
-	public String getDatabaseName(boolean isIsolated) {
+	public String getProjectDatabaseName(String projectName,boolean isIsolated) {
 		String dbName = "";
-		if( isIsolated ) dbName = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_DATABASE);
-		else dbName = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_DATABASE);
+		if( isIsolated ) dbName = getProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_DATABASE);
+		else dbName = getProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_DATABASE);
 		return dbName;
 	}
 	
@@ -109,10 +109,10 @@ public class GatewayRequestHandler {
 	 * @param isIsolation true if this the chart is in an isolation (test) state.
 	 * @return name of the tag provider for production or isolation mode, as appropriate.
 	 */
-	public String getProviderName(boolean isIsolated)  {
+	public String getProjectProviderName(String projectName,boolean isIsolated)  {
 		String providerName = "";
-		if( isIsolated ) providerName = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_PROVIDER);
-		else providerName = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_PROVIDER);
+		if( isIsolated ) providerName = getProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_PROVIDER);
+		else providerName = getProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_PROVIDER);
 		return providerName;
 	}
 	/**
@@ -122,10 +122,10 @@ public class GatewayRequestHandler {
 	 * @return the amount to speed up or slow down the clock. A value less
 	 *         than one represents a clock speedup.
 	 */
-	public double getTimeFactor(boolean isIsolated) {
+	public double getProjectTimeFactor(String projectName,boolean isIsolated) {
 		double factor = 1.0;
 		if( isIsolated ) {
-			String value = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME);
+			String value = getProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME);
 			try {
 				factor = Double.parseDouble(value);
 			}
@@ -139,8 +139,8 @@ public class GatewayRequestHandler {
 	/**
 	 * On a failure to find the property, an empty string is returned.
 	 */
-	public String getToolkitProperty(String propertyName) {
-		return recordHandler.getToolkitProperty(propertyName);
+	public String getProjectToolkitProperty(String projectName,String propertyName) {
+		return recordHandler.getToolkitProjectProperty(projectName,propertyName);
 	}
 	/**
 	 * Retrieve the configured browser path from the ORM database HelpRecord
@@ -220,10 +220,10 @@ public class GatewayRequestHandler {
 	 * This method is provided as a hook for test frameworks.
 	 * @param factor the amount to factor all times.
 	 */
-	public void setTimeFactor(double factor) {
+	public void setProjectTimeFactor(String projectName,double factor) {
 		if( factor<=0.0 ) factor = 1.0;
 		String value = String.valueOf(factor);
-		setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME,value);
+		setProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME,value);
 	}
 	/**
 	 * We have two types of properties of interest here. The first set is found in ScriptConstants
@@ -231,8 +231,8 @@ public class GatewayRequestHandler {
 	 * The second category represents database and tag interfaces for production and isolation
 	 * modes.
 	 */
-	public void setToolkitProperty(String propertyName, String value) {
-		recordHandler.setToolkitProperty(propertyName, value);
+	public void setProjectToolkitProperty(String projectName,String propertyName, String value) {
+		recordHandler.setToolkitProjectProperty(projectName,propertyName, value);
 	}
 }
 

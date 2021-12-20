@@ -23,7 +23,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
  *  Each request is relayed to the Gateway scope via an RPC call.
  */
 public class IlsSfcRequestHandler {
-	private final static String TAG = "IlsSfcRequestHandler";
+	private final static String CLSS = "IlsSfcRequestHandler";
 	private final LoggerEx log;
 
 	/**
@@ -44,7 +44,7 @@ public class IlsSfcRequestHandler {
 					IlsSfcModule.MODULE_ID, "getChartPath", resourceId);
 		}
 		catch(Exception ge) {
-			log.infof("%s.getChartPath: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());
+			log.infof("%s.getChartPath: GatewayException (%s:%s)",CLSS,ge.getClass().getName(),ge.getMessage());
 		};
 		return path;
 	}
@@ -59,7 +59,7 @@ public class IlsSfcRequestHandler {
 					IlsSfcModule.MODULE_ID, "getHostname");
 		}
 		catch(Exception ge) {
-			log.infof("%s.getGatewayHostname: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());
+			log.infof("%s.getGatewayHostname: GatewayException (%s:%s)",CLSS,ge.getClass().getName(),ge.getMessage());
 		};
 		return path;
 	}
@@ -73,12 +73,10 @@ public class IlsSfcRequestHandler {
 					IlsSfcModule.MODULE_ID, "getUserLibPath");
 		}
 		catch(Exception ge) {
-			log.infof("%s.getUserLibPath: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());
+			log.infof("%s.getUserLibPath: GatewayException (%s:%s)",CLSS,ge.getClass().getName(),ge.getMessage());
 		};
 		return path;
 	}
-	
-	
 	
 	/**
 	 * Find the database associated with the sequential function charts.
@@ -86,10 +84,10 @@ public class IlsSfcRequestHandler {
 	 * @param isIsolated true if this the chart is in an isolation (test) state.
 	 * @return name of the database for production or isolation mode, as appropriate.
 	 */
-	public String getDatabaseName(boolean isIsolated) {
+	public String getProjectDatabaseName(String projectName, boolean isIsolated) {
 		String dbName = "";
-		if( isIsolated ) dbName = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_DATABASE);
-		else dbName = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_DATABASE);
+		if( isIsolated ) dbName = getProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_DATABASE);
+		else dbName = getProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_DATABASE);
 		return dbName;
 	}
 	
@@ -101,7 +99,7 @@ public class IlsSfcRequestHandler {
 					IlsSfcModule.MODULE_ID, "getDatasourceNames");
 		}
 		catch(Exception ge) {
-			log.infof("%s.getDatasourceNames: GatewayException (%s)",TAG,ge.getMessage());
+			log.infof("%s.getDatasourceNames: GatewayException (%s)",CLSS,ge.getMessage());
 		}
 		return names;
 	}
@@ -111,10 +109,10 @@ public class IlsSfcRequestHandler {
 	 * @param isIsolated true if this the chart is in an isolation (test) state.
 	 * @return name of the tag provider for production or isolation mode, as appropriate.
 	 */
-	public String getProviderName(boolean isIsolated)  {
+	public String getProjectProviderName(String projectName,boolean isIsolated)  {
 		String providerName = "";
-		if( isIsolated ) providerName = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_PROVIDER);
-		else providerName = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_PROVIDER);
+		if( isIsolated ) providerName = getProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_PROVIDER);
+		else providerName = getProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_PROVIDER);
 		return providerName;
 	}
 	/**
@@ -123,16 +121,16 @@ public class IlsSfcRequestHandler {
 	 * @param propertyName name of the property for which a value is to be returned
 	 * @return the value of the specified property.
 	 */
-	public String getToolkitProperty(String propertyName) {
+	public String getProjectToolkitProperty(String projectName,String propertyName) {
 		String result = null;
-		//log.infof("%s.getToolkitProperty ... %s",TAG,propertyName);
+		//log.infof("%s.getToolkitProperty ... %s:%s",TAG,projectName,propertyName);
 		try {
 			result = (String)GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
-					IlsSfcModule.MODULE_ID, "getToolkitProperty",propertyName);
-			log.tracef("%s.getToolkitProperty ... %s = %s",TAG,propertyName,result.toString());
+					IlsSfcModule.MODULE_ID, "getProjectToolkitProperty",projectName,propertyName);
+			log.tracef("%s.getProjectToolkitProperty ... %s:%s = %s",CLSS,projectName,propertyName,result.toString());
 		}
 		catch(Exception ge) {
-			log.infof("%s.getToolkitProperty: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());
+			log.infof("%s.getProjectToolkitProperty: GatewayException (%s:%s)",CLSS,ge.getClass().getName(),ge.getMessage());
 		}
 		return result;
 	}
@@ -144,15 +142,15 @@ public class IlsSfcRequestHandler {
 	 * @return the amount to speed up or slow down the clock. A value greater
 	 *         than one represents a test speedup.
 	 */
-	public double getTimeFactor(boolean isIsolated) {
+	public double getProjectTimeFactor(String projectName,boolean isIsolated) {
 		double factor = 1.0;
 		if( isIsolated ) {
-			String value = getToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME);
+			String value = getProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_TIME);
 			try {
 				factor = Double.parseDouble(value);
 			}
 			catch( NumberFormatException nfe) {
-				log.warnf("%s.getTimeFactor: stored value (%s), not a double. Using 1.0",TAG,value);
+				log.warnf("%s.getProjectTimeFactor: stored value (%s), not a double. Using 1.0",CLSS,value);
 			}
 		}
 		return 1/factor;
@@ -167,10 +165,10 @@ public class IlsSfcRequestHandler {
 		try {
 			result = (String)GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
 					IlsSfcModule.MODULE_ID, "getWindowsBrowserPath");
-			log.tracef("%s.getWindowsBrowserPath ... %s",TAG,result);
+			log.tracef("%s.getWindowsBrowserPath ... %s",CLSS,result);
 		}
 		catch(Exception ge) {
-			log.infof("%s.getWindowsBrowserPath: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());
+			log.infof("%s.getWindowsBrowserPath: GatewayException (%s:%s)",CLSS,ge.getClass().getName(),ge.getMessage());
 		}
 		return result;
 	}
@@ -180,20 +178,20 @@ public class IlsSfcRequestHandler {
 	 * @param factor the amount to speed up or slow down time values. A value less
 	 *        than one represents a speedup of the test.
 	 */
-	public void setTimeFactor(double factor) {
-		log.infof("%s.setTimeFactor ... %s",TAG,String.valueOf(factor));
+	public void setProjectTimeFactor(String projectName,double factor) {
+		log.infof("%s.setProjectTimeFactor ... %s:%s",CLSS,projectName,String.valueOf(factor));
 		if( factor<=0.0 ) factor = 1.0;
 		
 		try {
 			GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
-					IlsSfcModule.MODULE_ID, "setTimeFactor",new Double(factor));
+					IlsSfcModule.MODULE_ID, "setProjectTimeFactor",projectName,factor);
 		}
 		catch(Exception ge) {
-			log.infof("%s.setTimeFactor: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());
+			log.infof("%s.setProjectTimeFactor: GatewayException (%s:%s)",CLSS,ge.getClass().getName(),ge.getMessage());
 		}
 		try {
 			GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
-					IlsSfcModule.BLT_MODULE_ID, "setTimeFactor",new Double(factor));
+					IlsSfcModule.BLT_MODULE_ID, "setProjectTimeFactor",projectName,factor);
 		}
 		catch(Exception ignore) {}
 	}
@@ -206,18 +204,18 @@ public class IlsSfcRequestHandler {
 	 * @param propertyName name of the property for which a value is to be set
 	 * @param the new value of the property.
 	 */
-	public void setToolkitProperty(String propertyName,String value) {
-		log.tracef("%s.setToolkitProperty ... %s=%s",TAG,propertyName,value);
+	public void setProjectToolkitProperty(String projectName,String propertyName,String value) {
+		log.tracef("%s.setProjectToolkitProperty ... %s:%s=%s",CLSS,projectName,propertyName,value);
 		try {
 			GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
-					IlsSfcModule.MODULE_ID, "setToolkitProperty",propertyName,value);
+					IlsSfcModule.MODULE_ID, "setProjectToolkitProperty",projectName,propertyName,value);
 		}
 		catch(Exception ge) {
-			log.infof("%s.setToolkitProperty: GatewayException (%s:%s)",TAG,ge.getClass().getName(),ge.getMessage());
+			log.infof("%s.setProjectToolkitProperty: GatewayException (%s:%s)",CLSS,ge.getClass().getName(),ge.getMessage());
 		}
 		try {
 			GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
-					IlsSfcModule.BLT_MODULE_ID, "setToolkitProperty",propertyName,value);
+					IlsSfcModule.BLT_MODULE_ID, "setProjectToolkitProperty",projectName,propertyName,value);
 		}
 		catch(Exception ignore) {}
 	}

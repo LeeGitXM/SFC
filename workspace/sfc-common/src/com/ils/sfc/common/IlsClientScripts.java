@@ -24,8 +24,8 @@ public class IlsClientScripts {
 	 * @param isIsolation true if this the chart is in an isolation (test) state.
 	 * @return name of the database for production or isolation mode, as appropriate.
 	 */
-	public static String getDatabaseName(boolean isIsolation)  {
-		String dbName = requestHandler.getDatabaseName(isIsolation);
+	public static String getProjectDatabaseName(String projectName,boolean isIsolation)  {
+		String dbName = requestHandler.getProjectDatabaseName(projectName,isIsolation);
 		return dbName;
 	}
 	
@@ -45,13 +45,13 @@ public class IlsClientScripts {
 	 * @param isIsolation true if this the chart is in an isolation (test) state.
 	 * @return name of the tag provider for production or isolation mode, as appropriate.
 	 */
-	public static String getProviderName(boolean isIsolation)  {
-		String providerName = requestHandler.getProviderName(isIsolation);
+	public static String getProjectProviderName(String projectName,boolean isIsolation)  {
+		String providerName = requestHandler.getProjectProviderName(projectName,isIsolation);
 		return providerName;
 	}
 	
-	public static double getTimeFactor(boolean isIsolation) {
-		return requestHandler.getTimeFactor(isIsolation);
+	public static double getProjectTimeFactor(String projectName,boolean isIsolation) {
+		return requestHandler.getProjectTimeFactor(projectName,isIsolation);
 	}
 	
 	/**
@@ -60,8 +60,8 @@ public class IlsClientScripts {
 	 * @param factor the amount to speed up or slow down time values. A value less
 	 *        than one represents a speedup.
 	 */
-	public static void setTimeFactor(double factor) {
-		requestHandler.setTimeFactor(factor);
+	public static void setProjectTimeFactor(String projectName,double factor) {
+		requestHandler.setProjectTimeFactor(projectName,factor);
 	}
 	
 	/** Time the overhead for calling java-to-python */

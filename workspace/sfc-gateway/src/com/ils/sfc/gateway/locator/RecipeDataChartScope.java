@@ -1,16 +1,12 @@
 package com.ils.sfc.gateway.locator;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import org.python.core.PyObject;
 import org.python.core.PyString;
-
-import system.ils.sfc.common.Constants;
 
 import com.inductiveautomation.ignition.common.browsing.BrowseFilter;
 import com.inductiveautomation.ignition.common.expressions.TagListener;
@@ -24,6 +20,8 @@ import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 import com.inductiveautomation.sfc.api.PyChartScope;
+
+import system.ils.sfc.common.Constants;
 
 /** A wrapper around a chart scope that actually goes out to recipe data
  *  tags to get the value. */

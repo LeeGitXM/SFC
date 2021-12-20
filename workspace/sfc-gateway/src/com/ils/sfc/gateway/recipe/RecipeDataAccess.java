@@ -16,16 +16,16 @@ import system.ils.sfc.common.Constants;
  */
 public class RecipeDataAccess {
 	private static LoggerEx logger = LogUtil.getLogger(RecipeDataAccess.class.getName());
-	private static GatewayRequestHandler reqHandler = null;
-	
+	private static GatewayRequestHandler requestHandler = null;
+
 	/**
 	 * @see IlsSfcGatewayHook for initialization.
 	 * @param rh
 	 */
 	public static void setRequestHandler(GatewayRequestHandler rh) {
-		reqHandler = rh;
+		requestHandler = rh;
 	}
-		
+
 	/** Get the chart/step path for the given recipe data scope (not including provider). */
 	public static String getRecipeDataTagPath(PyChartScope chartScope, PyChartScope stepScope, String scope) {
 		PyChartScope resolvedStepScope = resolveStepScope(chartScope, stepScope, scope);
@@ -39,7 +39,7 @@ public class RecipeDataAccess {
 		String stepPath = chartPath + "/" + stepName;
 		return stepPath;
 	}	
-	
+
 	public static String getFullChartPath(PyChartScope chartScope) {
 		String myPath = (String)chartScope.get(Constants.CHART_PATH);
 		if(chartScope.get(Constants.PARENT) != null ) {
@@ -49,7 +49,7 @@ public class RecipeDataAccess {
 			return myPath;
 		}
 	}
-	
+
 	/** Log an error to the chart's logger. */
 	public static void logChartError(PyChartScope chartScope, String msg, Exception e) {
 		String loggerName = getFullChartPath(chartScope);
@@ -61,11 +61,11 @@ public class RecipeDataAccess {
 			logger.error(msg);
 		}
 	}
-	
+
 	public static boolean s88DataExists(PyChartScope chartScope,
 			PyChartScope stepScope, String path, String scopeIdentifier) {
 		try {
-			String providerName = getProviderName(getIsolationMode(chartScope));
+			String providerName = getTagProvider(chartScope);
 			String tagPath = getRecipeDataTagPath(chartScope, stepScope, scopeIdentifier);
 			Object[] args = {providerName, tagPath};
 			Boolean result = (Boolean) PythonCall.RECIPE_DATA_EXISTS.exec(args);
@@ -75,12 +75,50 @@ public class RecipeDataAccess {
 			return false;
 		}					
 	}
+	public static Object s88Get(PyChartScope chartScope,
+			PyChartScope stepScope, String s88Path, String scopeIdentifier) {
+
+
+		try {
+			String providerName = getTagProvider(chartScope);
+			Object value = null;
+			String tagPath = getRecipeDataTagPath(chartScope, stepScope, scopeIdentifier) +
+					"/" + s88Path;
+			Object[] args = {providerName, tagPath};
+			value = PythonCall.GET_RECIPE_DATA.exec(args);
+			return value;
+		} catch (JythonExecException e) {
+			logChartError(chartScope, "Recipe Data tag read failed", e);
+			return null;
+		}		
+
+	}
+
+	public static Object s88GetOld(PyChartScope chartScope,
+			PyChartScope stepScope, String s88Path, String scopeIdentifier) {
+
+		throw new IllegalStateException("This is the old version of s88Get in RecipeDataAccess");
+		/*		
+					try {
+						String providerName = getProviderName(getIsolationMode(chartScope));
+						Object value = null;
+						String tagPath = getRecipeDataTagPath(chartScope, stepScope, scopeIdentifier) +
+							"/" + s88Path;
+						Object[] args = {providerName, tagPath};
+						value = PythonCall.GET_RECIPE_DATA.exec(args);
+						return value;
+					} catch (JythonExecException e) {
+						logChartError(chartScope, "Recipe Data tag read failed", e);
+						return null;
+					}		
+		 */	
+	}
 
 	public static void s88SetOld(PyChartScope chartScope, PyChartScope stepScope,
-		String path, String scopeIdentifier, Object value) {
-		
+			String path, String scopeIdentifier, Object value) {
+
 		throw new IllegalStateException("This is the old version of s88Get in RecipeDataAccess");
-		
+
 		/*
 		try {
 			String providerName = getProviderName(getIsolationMode(chartScope));
@@ -91,32 +129,12 @@ public class RecipeDataAccess {
 		} catch (JythonExecException e) {
 			logChartError(chartScope,"Recipe Data tag read failed", e);
 		}
-		*/
-	}
-
-	public static Object s88GetOld(PyChartScope chartScope,
-			PyChartScope stepScope, String s88Path, String scopeIdentifier) {
-		
-		throw new IllegalStateException("This is the old version of s88Get in RecipeDataAccess");
-/*		
-		try {
-			String providerName = getProviderName(getIsolationMode(chartScope));
-			Object value = null;
-			String tagPath = getRecipeDataTagPath(chartScope, stepScope, scopeIdentifier) +
-				"/" + s88Path;
-			Object[] args = {providerName, tagPath};
-			value = PythonCall.GET_RECIPE_DATA.exec(args);
-			return value;
-		} catch (JythonExecException e) {
-			logChartError(chartScope, "Recipe Data tag read failed", e);
-			return null;
-		}		
-*/	
+		 */
 	}
 
 	/** Get the chart scope corresponding to the given recipe data scope. */
 	private static PyChartScope resolveChartScope(PyChartScope chartScope, 
-		String scopeIdentifier) {
+			String scopeIdentifier) {
 		if(scopeIdentifier.equals(Constants.LOCAL) || scopeIdentifier.equals(Constants.PRIOR)) {
 			return chartScope;
 		}
@@ -133,10 +151,10 @@ public class RecipeDataAccess {
 				}
 			}
 		}
-		
+
 		throw new IllegalArgumentException("could not resolve scope " + scopeIdentifier);		
 	}
-	
+
 	/** Get the step scope corresponding to the given recipe data scope. */
 	private static PyChartScope resolveStepScope(PyChartScope chartScope, 
 			PyChartScope stepScopeOrPrior, String scopeIdentifier) {
@@ -188,7 +206,7 @@ public class RecipeDataAccess {
 		}
 		return null;
 	}
-	
+
 	public static PyChartScope getTopScope(PyChartScope scope) {
 		while(scope.getSubScope(ScopeContext.PARENT) != null) {
 			scope = scope.getSubScope(ScopeContext.PARENT);
@@ -197,8 +215,14 @@ public class RecipeDataAccess {
 	}
 
 
-	public static String getProviderName(boolean isolationMode) {
-		String providerName = reqHandler.getProviderName(isolationMode);
+	/**
+	 * The scope contains the correct provider for the current isolation mode
+	 * @param scope
+	 * @return provider name
+	 */
+	public static String getTagProvider(PyChartScope scope) {
+		PyChartScope topScope = getTopScope(scope);
+		String providerName = topScope.get(Constants.TAG_PROVIDER).toString();
 		return providerName;
 	}
 
@@ -213,7 +237,7 @@ public class RecipeDataAccess {
 		}
 		return isolationMode;
 	}
-		
+
 	/** Handle a problem with recipe data access. Returns an object appropriate for read failures,
 	 *  but if the implementation throws this is irrelevant (though the compiler may like it). */
 	private Object handleAccessError(String msg, String path, Exception e) {

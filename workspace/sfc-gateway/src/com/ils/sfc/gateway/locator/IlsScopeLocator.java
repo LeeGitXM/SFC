@@ -30,7 +30,7 @@ public class IlsScopeLocator implements ScopeLocator {
 	@Override
 	public synchronized PyChartScope locate(ScopeContext scopeContext, String identifier) {
 		PyChartScope chartScope = scopeContext.getChartScope();
-		String providerName = RecipeDataAccess.getProviderName(RecipeDataAccess.getIsolationMode(chartScope));
+		String providerName = RecipeDataAccess.getTagProvider(chartScope);
 
 		if( !identifier.equalsIgnoreCase(Constants.TAG)) {
 			

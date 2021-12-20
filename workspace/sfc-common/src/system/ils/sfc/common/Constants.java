@@ -67,6 +67,7 @@ public class Constants {
 	public static final String DATA_ID = "dataId";
 	public static final String DATA_LOCATION = "dataLocation";
 	public static final String DATA_TYPE = "dataType";
+	public static final String DATABASE = "database";
 	public static final String DEADTIME = "deadTime";
 	public static final String DESCRIPTION = "description";
 	public static final String DEFAULT_MESSAGE_QUEUE = "SFC-Message-Queue";
@@ -229,6 +230,7 @@ public class Constants {
 	public static final String STRATEGY = "strategy";
 	public static final String TAG = "tag";
 	public static final String TAG_PATH = "tagPath";
+	public static final String TAG_PROVIDER = "tagProvider";
 	public static final String TARGET_VALUE = "targetValue";
 	public static final String TIME = "time";
 	public static final String TIMER_START = "timerStart";

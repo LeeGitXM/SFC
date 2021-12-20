@@ -52,7 +52,7 @@ public class RecipeDataCleaner {
 		// call the Python method to do the actual cleanup:
 		String chartPath = resource.getFolderPath();
 		IlsSfcRequestHandler requestHandler = new IlsSfcRequestHandler();
-		String provider = requestHandler.getProviderName(false);
+		String provider = requestHandler.getProjectProviderName(context.getProjectName(),false);
 		Object[] args = {provider, chartPath, stepNames};
 		//PythonCall.CLEANUP_RECIPE_DATA.exec(args);
 	}

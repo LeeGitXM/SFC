@@ -45,8 +45,7 @@ public class IlsChartObserver implements ChartObserver {
 	private synchronized void createTags(ChartContext chartContext) {
 		PyChartScope chartScope = chartContext.getChartScope();
 		String chartPath = (String)chartScope.get("chartPath");
-		boolean isolationMode = RecipeDataAccess.getIsolationMode(chartScope);
-		String tagProvider = RecipeDataAccess.getProviderName(isolationMode);
+		String tagProvider = RecipeDataAccess.getTagProvider(chartScope);
 		for(ChartElement<?> element: chartContext.getElements()) {
 			if(element instanceof StepContainer) {
 				StepContainer stepElement = (StepContainer)element;

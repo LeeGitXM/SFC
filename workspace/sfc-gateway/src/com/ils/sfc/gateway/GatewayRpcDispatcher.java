@@ -22,14 +22,12 @@ import com.inductiveautomation.ignition.gateway.model.GatewayContext;
 public class GatewayRpcDispatcher   {
 	private static String TAG = "GatewayRpcDispatcher";
 	private final LoggerEx log;
-	private final GatewayContext context;
 	private final GatewayRequestHandler requestHandler;
 
 	/**
 	 * Constructor. There is a separate dispatcher for each project.
 	 */
-	public GatewayRpcDispatcher(GatewayContext ctx,GatewayRequestHandler rh) {
-		this.context = ctx;
+	public GatewayRpcDispatcher(GatewayRequestHandler rh) {
 		this.requestHandler = rh;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
@@ -57,8 +55,8 @@ public class GatewayRpcDispatcher   {
 		return requestHandler.getUserLibPath();
 	}
 	
-	public String getToolkitProperty(String propertyName) {
-		return requestHandler.getToolkitProperty(propertyName);
+	public String getProjectToolkitProperty(String projectName,String propertyName) {
+		return requestHandler.getProjectToolkitProperty(projectName,propertyName);
 	}
 	public String getWindowsBrowserPath() {
 		return requestHandler.getWindowsBrowserPath();
@@ -68,12 +66,12 @@ public class GatewayRpcDispatcher   {
 	 * This method is provided as a hook for test frameworks.
 	 * @param factor the amount to speed up or slow down the all times.
 	 */
-	public void setTimeFactor(Double factor) {
-		requestHandler.setTimeFactor(factor.doubleValue());
+	public void setProjectTimeFactor(String projectName,Double factor) {
+		requestHandler.setProjectTimeFactor(projectName,factor.doubleValue());
 	}
-	public void setToolkitProperty(String propertyName,String value) {
+	public void setProjectToolkitProperty(String projectName,String propertyName,String value) {
 		//log.infof("%s.setToolkitProperty: %s: %s", TAG, propertyName, value);
-		requestHandler.setToolkitProperty(propertyName,value);
+		requestHandler.setProjectToolkitProperty(projectName,propertyName,value);
 	}
 	
 	public UUID startChart(String chartPath,String clientProject, String user,Boolean isolation) {

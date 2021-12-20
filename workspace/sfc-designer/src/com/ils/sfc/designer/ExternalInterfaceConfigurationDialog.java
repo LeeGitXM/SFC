@@ -53,10 +53,12 @@ public class ExternalInterfaceConfigurationDialog extends JDialog {
 	private int secondaryDatabaseInitialSelection=-1;
 	private int primaryProviderInitialSelection=-1;
 	private int secondaryProviderInitialSelection=-1;
+	private final String projectName;
 	
 	public ExternalInterfaceConfigurationDialog(DesignerContext ctx) {
 		super(ctx.getFrame());
 		this.context = ctx;
+		this.projectName = ctx.getProjectName();
 		this.setTitle("SFC Interface Configuration");
 		this.rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
 		this.requestHandler = new IlsSfcRequestHandler();
@@ -143,7 +145,7 @@ public class ExternalInterfaceConfigurationDialog extends JDialog {
 			if( name.length()>0 ) box.addItem(name);
 		}
 		box.setToolTipText(rb.getString(bundle));
-		String currentValue = requestHandler.getToolkitProperty(key);
+		String currentValue = requestHandler.getProjectToolkitProperty(projectName,key);
 		if( (currentValue==null || currentValue.length()==0) && !isIsolation) currentValue = context.getDefaultDatasourceName();
 		if( currentValue!=null ) box.setSelectedItem(currentValue);
 		else box.setSelectedIndex(0);  // The blank
@@ -167,7 +169,7 @@ public class ExternalInterfaceConfigurationDialog extends JDialog {
 		for(String prov:providers) {
 			if( prov != null && prov.length()>0) box.addItem(prov);
 		}
-		String currentValue = requestHandler.getToolkitProperty(key);
+		String currentValue = requestHandler.getProjectToolkitProperty(projectName,key);
 		if( currentValue!=null && currentValue.length()==0 && !isIsolation ) currentValue = context.getDefaultTagProviderName();
 		box.setSelectedItem(currentValue);
 		// If the current value wasn't in the list, then add it.
@@ -186,7 +188,7 @@ public class ExternalInterfaceConfigurationDialog extends JDialog {
 		field.setText("1.0");  // Default
 		field.setForeground(Color.BLACK);
 		if( key.length()>0 ) {
-			String currentValue = requestHandler.getToolkitProperty(key);
+			String currentValue = requestHandler.getProjectToolkitProperty(projectName,key);
 			if( currentValue!=null && currentValue.length()>0 ) {
 				field.setText(currentValue);
 			}
@@ -279,19 +281,19 @@ public class ExternalInterfaceConfigurationDialog extends JDialog {
 		// For these we set new values for the next time queried.
 		// For providers, make sure there has been a change.
 		if(mainDatabaseBox.getSelectedIndex()>=0 && mainDatabaseBox.getSelectedIndex()!= primaryDatabaseInitialSelection)  { 
-			requestHandler.setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_DATABASE,mainDatabaseBox.getSelectedItem().toString() );
+			requestHandler.setProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_DATABASE,mainDatabaseBox.getSelectedItem().toString() );
 		}
 		if(secondaryDatabaseBox.getSelectedIndex()>=0 && secondaryDatabaseBox.getSelectedIndex()!= secondaryDatabaseInitialSelection)  {
-			requestHandler.setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_DATABASE,secondaryDatabaseBox.getSelectedItem().toString() );
+			requestHandler.setProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_DATABASE,secondaryDatabaseBox.getSelectedItem().toString() );
 		}
 		if(mainProviderBox.getSelectedIndex()>=0 && mainProviderBox.getSelectedIndex()!= primaryProviderInitialSelection)  {
-			requestHandler.setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_PROVIDER,mainProviderBox.getSelectedItem().toString() );
+			requestHandler.setProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_PROVIDER,mainProviderBox.getSelectedItem().toString() );
 		}
 		if(secondaryProviderBox.getSelectedIndex()>=0 && secondaryProviderBox.getSelectedIndex()!= secondaryProviderInitialSelection) {
-			requestHandler.setToolkitProperty(ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_PROVIDER,secondaryProviderBox.getSelectedItem().toString());
+			requestHandler.setProjectToolkitProperty(projectName,ToolkitProperties.TOOLKIT_PROPERTY_ISOLATION_PROVIDER,secondaryProviderBox.getSelectedItem().toString());
 		}
 		// This causes an immediate active update.
 		double speedup = Double.parseDouble(secondaryTimeFactorField.getText());  // We've already validated the field ...
-		requestHandler.setTimeFactor(speedup);
+		requestHandler.setProjectTimeFactor(projectName,speedup);
 	}
 }

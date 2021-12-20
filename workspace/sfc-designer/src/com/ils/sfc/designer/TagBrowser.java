@@ -55,7 +55,7 @@ public class TagBrowser extends JPanel {
 	public void setSelectedTagPath(String tagPathString) {
 		List<String> names = new ArrayList<String>();
 		names.add("All Providers");
-		String provider = IlsClientScripts.getProviderName(false);
+		String provider = IlsClientScripts.getProjectProviderName(context.getProjectName(),false);
 		names.add(provider);
 		String[] parts = tagPathString.split("/|\\.");
 		for(String part: parts) {

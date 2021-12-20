@@ -55,8 +55,8 @@ public class IlsGatewayScripts {
 	 * @param isIsolation true if this the chart is in an isolation (test) state.
 	 * @return name of the database for production or isolation mode, as appropriate.
 	 */
-	public static String getDatabaseName(boolean isIsolation)  {
-		String dbName = requestHandler.getDatabaseName(isIsolation);
+	public static String getProjectDatabaseName(String projectName,boolean isIsolation)  {
+		String dbName = requestHandler.getProjectDatabaseName(projectName,isIsolation);
 		return dbName;
 	}
 	
@@ -77,8 +77,8 @@ public class IlsGatewayScripts {
 	 * @param isIsolation true if this the chart is in an isolation (test) state.
 	 * @return name of the tag provider for production or isolation mode, as appropriate.
 	 */
-	public static String getProviderName(boolean isolationMode)  {
-		return requestHandler.getProviderName(isolationMode);
+	public static String getProjectProviderName(String projectName,boolean isolationMode)  {
+		return requestHandler.getProjectProviderName(projectName,isolationMode);
 	}
 	
 	public static boolean getIsolationMode(PyChartScope chartScope) {
@@ -126,7 +126,7 @@ public class IlsGatewayScripts {
 			    		if(isEmpty(advice)) {
 			    			String adviceKey = changeValueKey(row.valueKey, "advice");
 			    			try {
-			    				advice = (String) RecipeDataAccess.s88GetOld(chartScope, stepScope, adviceKey, row.recipeScope);
+			    				advice = (String) RecipeDataAccess.s88Get(chartScope, stepScope, adviceKey, row.recipeScope);
 			    			}
 			    			catch(Exception e) {
 			    				logger.error("Error getting advice from recipe data", e);
@@ -322,8 +322,8 @@ public class IlsGatewayScripts {
 	 * @return the amount to speed up or slow down the clock. Values larger than
 	 *         1.0 imply that the system is to run faster.
 	 */
-	public static double getTimeFactor(boolean isIsolation) {
-		return requestHandler.getTimeFactor(isIsolation);
+	public static double getProjectTimeFactor(String projectName,boolean isIsolation) {
+		return requestHandler.getProjectTimeFactor(projectName,isIsolation);
 	}
 	
 	/**
@@ -331,8 +331,8 @@ public class IlsGatewayScripts {
 	 * This method is provided as a hook for test frameworks.
 	 * @param factor the amount (for values over 1) to speed up the clock
 	 */
-	public static void setTimeFactor(double factor) {
-		requestHandler.setTimeFactor(factor);
+	public static void setProjectTimeFactor(String projectName,double factor) {
+		requestHandler.setProjectTimeFactor(projectName,factor);
 	}
 	/**
 	 * Clear any pending requests/responses.

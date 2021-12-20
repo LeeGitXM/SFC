@@ -53,6 +53,7 @@ public class RecipeEditorController extends PanelController implements EditorErr
 	private RecipeFieldCreatorPane fieldCreator = new RecipeFieldCreatorPane(this, FIELD_CREATOR);
 	private TagBrowserPanel tagBrowser = new TagBrowserPanel(this, TAG_BROWSER);
 	private UnitChooserPanel unitChooser = new UnitChooserPanel(this, UNIT_CHOOSER);
+	private final String projectName;
 	
 	// The step whose recipe data we are editing:
 	private ChartUIElement element= null;
@@ -60,6 +61,7 @@ public class RecipeEditorController extends PanelController implements EditorErr
 	
 	public RecipeEditorController(DesignerContext ctx) { 
 		super(ctx);
+		this.projectName = ctx.getProjectName();
 		logger.info("Initializing a RecipeEditorController");
 		objectEditor.getPropertyEditor().getTableModel().setErrorHandler(this);
 		// sub-panes added according to the indexes above:
@@ -95,6 +97,10 @@ public class RecipeEditorController extends PanelController implements EditorErr
 
 	public RecipeBrowserPane getBrowser() {
 		return browser;
+	}
+	
+	public String getProjectName() {
+		return projectName;
 	}
 
 	public RecipeObjectCreatorPane getCreator() {
@@ -145,7 +151,7 @@ public class RecipeEditorController extends PanelController implements EditorErr
 		logger.infof("In setElement with %s - %s", stepName, stepUUID);
 		try {
 			List<Data> recipeData = Data.fromDatabase(stepUUID);
-			String provider = IlsClientScripts.getProviderName(false);
+			String provider = IlsClientScripts.getProjectProviderName(context.getProjectName(),false);
 			for(Data data: recipeData) {
 				data.setStepPath(stepPath);
 				data.setProvider(provider);

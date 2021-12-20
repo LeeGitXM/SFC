@@ -137,7 +137,7 @@ public class RecipeObjectCreatorPane extends ValueHoldingEditorPanel {
 		try {
 			Class<?> selectedClass = (Class<?>)selectedType.getObject();
 			String selectedValueType = (String) valueTypeCombo.getSelectedItem();
-			String provider = IlsClientScripts.getProviderName(false);
+			String provider = IlsClientScripts.getProjectProviderName(controller.getProjectName(),false);
 			newObject = Data.createRecipeData(selectedClass.getCanonicalName(), chartPath, key, selectedValueType, provider, parentGroup);
 			keyTextField.setText("");
 			super.accept();

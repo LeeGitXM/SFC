@@ -102,7 +102,7 @@ public class RecipePropertyEditorPane extends EditorPanel implements ValueHolder
 	
 	private void doOK() {
 		recipeData.setProperties(editor.getPropertyValues());
-		String provider = IlsClientScripts.getProviderName(false);
+		String provider = IlsClientScripts.getProjectProviderName(controller.getProjectName(),false);
 		recipeData.setProvider(provider);
 		recipeData.writeToTags();		
 		String validationErrorMsg = recipeData.validate();

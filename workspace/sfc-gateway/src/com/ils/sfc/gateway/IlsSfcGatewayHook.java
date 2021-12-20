@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ils.common.persistence.ToolkitRecord;
+import com.ils.common.persistence.ToolkitProjectRecord;
 import com.ils.common.watchdog.WatchdogTimer;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
@@ -56,8 +56,6 @@ import com.ils.sfc.step.WriteOutputStepFactory;
 import com.ils.sfc.step.YesNoStepFactory;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
-import com.inductiveautomation.ignition.common.model.ApplicationScope;
-import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.ProjectListener;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
@@ -217,7 +215,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		//sessionMgr = new IlsSfcSessionMgr(context.getMessageDispatchManager());
 		// Register the ToolkitRecord to make sure that the table exists
 		try {
-			context.getSchemaUpdater().updatePersistentRecords(ToolkitRecord.META);
+			context.getSchemaUpdater().updatePersistentRecords(ToolkitProjectRecord.META);
 		}
 		catch(SQLException sqle) {
 			log.error("IlsSfcGatewayHook.setup: Error registering ToolkitRecord",sqle);
@@ -230,26 +228,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		manager.addStaticFields("system.ils.sfc.common.Constants", Constants.class);	
 	};
 	
-	private void initializeUnits() {
-		// Because there are apparently a lot of different script managers in the gateway,
-		// we have to ensure that the one we use for calling into Python has the units
-		// initialized. There is potentially a conflict between the units in the production
-		// database and the isolation database, but since we only have one PythonCall singleton
-		// we aren't set up to handle that anyway. We choose to use the units from the 
-		// production database.
-		String databaseName =  requestHandler.getDatabaseName(false);
-		log.infof("%s:initializeUnits: Database name is %s", CLSS,databaseName);
-		Object[] args = {databaseName};
-		try {
-			PythonCall.INITIALIZE_UNITS.exec(args);
-		} 
-		catch (JythonExecException jee) {
-			log.error("IlsSfcGatewayHook.initializeUnits: Error in PythonCall script manager", jee);
-		}
-		catch (Exception ex) {
-			log.error("IlsSfcGatewayHook.initializeUnits: Error executing PythonCall script manager", ex);
-		}
-	}
 
 	@Override
 	public void startup(LicenseState licenseState) {			
@@ -259,7 +237,7 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
  		structureManager = new ChartStructureManager(context.getProjectManager().getProject("global").get(),iaSfcHook.getStepRegistry());
  		AbstractIlsStepDelegate.setStructureManager(structureManager);
  		requestHandler = new GatewayRequestHandler(context,structureManager,requestResponseManager);
-		dispatcher = new GatewayRpcDispatcher(context,requestHandler);
+		dispatcher = new GatewayRpcDispatcher(requestHandler);
 		chartDebugger = new ChartDebugger(
 			context.getProjectManager().getProject("global").get(),
 			iaSfcHook.getStepRegistry());
