@@ -40,7 +40,8 @@ public class ChartStructureCompiler {
 	private final LoggerEx log;
 	// constants:
 	public static final String NAME_PROPERTY = "name";
-	public static final String CHART_RESOURCE_TYPE="sfc-chart-ui-model";
+	public static final String CHART_RESOURCE_TYPE="charts";
+	public static final String CHART_MODULE = "com.inductiveautomation.sfc";
 	public static final String FOLDER_RESOURCE_TYPE="__folder";
 	public static final String ENCLOSING_FACTORY_ID = EnclosingStepProperties.FACTORY_ID;
 	//static final UUID ROOT_FOLDER_ID = ChartUIModel.ROOT_FOLDER;	travis.sareault 20211114 - source field is removed, and this seems to be unused.
@@ -104,11 +105,18 @@ public class ChartStructureCompiler {
 		List<ProjectResource> resources = project.getResources();
 		boolean success = true;
 		for(ProjectResource res:resources) {
-			if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
+			if( res.getResourceType().getModuleId().equals(CHART_MODULE) &&
+				res.getResourceType().getTypeId().equals(CHART_RESOURCE_TYPE)) {
 				String path = res.getFolderPath();
 				try {
 					
-					byte[] chartResourceData = res.getData();					
+					byte[] chartResourceData = res.getData();
+					
+					if(chartResourceData == null) {
+						log.warnf("loadModels: Chart %s has no byte data.", path);
+						return false;
+					}
+					
 					//IlsSfcCommonUtils.printResource(data);					
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 					ChartUIModel uiModel = ChartUIModel.fromXml(xmlInput, stepRegistry );
@@ -287,7 +295,8 @@ public class ChartStructureCompiler {
 		List<String> matchingCharts = new ArrayList<String>();
 		List<ProjectResource> resources = project.getResources();
 		for(ProjectResource res:resources) {
-			if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
+			if(res.getResourceType().getModuleId().equals(CHART_MODULE) &&
+					res.getResourceType().getTypeId().equals(CHART_RESOURCE_TYPE)) {
 				String path = res.getFolderPath();
 				if(path.matches(regex)) {
 					matchingCharts.add(path);
