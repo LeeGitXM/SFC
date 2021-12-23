@@ -4,7 +4,6 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.rowconfig.ReviewFlowsConfig;
 import com.ils.sfc.common.rowconfig.RowConfig;
 import com.ils.sfc.designer.stepEditor.StepEditorController;
@@ -12,7 +11,6 @@ import com.ils.sfc.designer.stepEditor.rowEditor.GenericCellRenderer;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowCellEditor;
 import com.ils.sfc.designer.stepEditor.rowEditor.RowEditorPanel;
 import com.ils.sfc.designer.stepEditor.rowEditor.TableHeaderWithTooltips;
-import com.ils.sfc.designer.stepEditor.rowEditor.manualData.ManualDataTableModel;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 
 @SuppressWarnings("serial")

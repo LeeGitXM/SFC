@@ -114,23 +114,6 @@ public class RecipeDataAccess {
 		 */	
 	}
 
-	public static void s88SetOld(PyChartScope chartScope, PyChartScope stepScope,
-			String path, String scopeIdentifier, Object value) {
-
-		throw new IllegalStateException("This is the old version of s88Get in RecipeDataAccess");
-
-		/*
-		try {
-			String providerName = getProviderName(getIsolationMode(chartScope));
-			String fullPath = getRecipeDataTagPath(chartScope, stepScope, scopeIdentifier) +
-				"/" + path;
-			Object[] args = {providerName, fullPath, value};
-			PythonCall.SET_RECIPE_DATA.exec(args);
-		} catch (JythonExecException e) {
-			logChartError(chartScope,"Recipe Data tag read failed", e);
-		}
-		 */
-	}
 
 	/** Get the chart scope corresponding to the given recipe data scope. */
 	private static PyChartScope resolveChartScope(PyChartScope chartScope, 

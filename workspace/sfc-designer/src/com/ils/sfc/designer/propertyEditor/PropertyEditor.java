@@ -1,16 +1,12 @@
 package com.ils.sfc.designer.propertyEditor;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.table.DefaultTableCellRenderer;
 
-import com.ils.sfc.common.IlsProperty;
 import com.inductiveautomation.ignition.common.config.BasicPropertySet;
 import com.inductiveautomation.ignition.common.config.Property;
 import com.inductiveautomation.ignition.common.config.PropertyValue;

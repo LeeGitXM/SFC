@@ -17,9 +17,7 @@ import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.ils.common.ILSProperties;
-import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
-import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;

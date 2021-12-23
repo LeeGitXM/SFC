@@ -26,7 +26,7 @@ import com.inductiveautomation.sfc.api.PyChartScope;
 @SuppressWarnings("serial")
 public class TagChartScope extends PyChartScope {
 	private static LoggerEx log = LogUtil.getLogger(TagChartScope.class.getName());
-	private final static boolean DEBUG = false;
+	private final static boolean DEBUG = true;
 	private final String providerName;
 	private final GatewayContext context;
 	private final Map<String,ListenerInfo> listenersByKey = new HashMap<String, ListenerInfo>();
@@ -44,6 +44,7 @@ public class TagChartScope extends PyChartScope {
 	};
 	
 	public TagChartScope(String providerName, GatewayContext gatewayContext) {
+		log.infof("Constructing a TagChartScope, provider: %s", providerName);
 		this.providerName = providerName;
 		this.context = gatewayContext;
 		if( DEBUG ) log.infof("new tagchartscope");

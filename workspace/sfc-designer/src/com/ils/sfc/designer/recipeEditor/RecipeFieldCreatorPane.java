@@ -20,12 +20,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import com.ils.sfc.common.recipe.objects.Structure;
-import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.BasicUnitChooserPanel;
 import com.ils.sfc.designer.ComboWrapper;
 import com.ils.sfc.designer.DesignerUtil;
+import com.ils.sfc.designer.panels.ButtonPanel;
 import com.ils.sfc.designer.panels.EditorPanel;
-import com.ils.sfc.designer.panels.UnitChooserPanel;
 
 @SuppressWarnings("serial")
 public class RecipeFieldCreatorPane extends EditorPanel {

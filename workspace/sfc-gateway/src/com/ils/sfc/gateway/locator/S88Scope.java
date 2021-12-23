@@ -35,7 +35,7 @@ public class S88Scope extends PyChartScope implements WatchdogObserver,Monitored
 	private static final double POLL_INTERVAL = 5.0;
 	private static final double INITIAL_POLL_INTERVAL = 0.0;
 	private final LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
-	private static boolean DEBUG = false;
+	private static boolean DEBUG = true;
 	private final GatewayContext context;
 	private final PyChartScope stepScope;
 	private final PyChartScope chartScope;
@@ -46,6 +46,7 @@ public class S88Scope extends PyChartScope implements WatchdogObserver,Monitored
 	private final WatchdogTimer timer;
 	
 	public S88Scope(GatewayContext ctx,PyChartScope chartScope,PyChartScope stepScope,String identifier, String key) {
+		log.infof("%s: In the constructore with identifier: <%s> and key: <%s>", CLSS, identifier, key);
 		this.context = ctx;
 		this.chartScope = chartScope;
 		this.stepScope = stepScope;
