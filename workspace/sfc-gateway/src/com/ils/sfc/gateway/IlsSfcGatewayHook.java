@@ -234,19 +234,21 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);				
 		chartManager.addChartObserver(dropBox);
 
- 		structureManager = new ChartStructureManager(context.getProjectManager().getProject("global").get(),iaSfcHook.getStepRegistry());
- 		AbstractIlsStepDelegate.setStructureManager(structureManager);
- 		requestHandler = new GatewayRequestHandler(context,structureManager,requestResponseManager);
-		dispatcher = new GatewayRpcDispatcher(requestHandler);
-		chartDebugger = new ChartDebugger(
-			context.getProjectManager().getProject("global").get(),
-			iaSfcHook.getStepRegistry());
-		IlsGatewayScripts.setRequestHandler(requestHandler);
-		RecipeDataAccess.setRequestHandler(requestHandler);
-		stepMonitor = new IlsStepMonitor(structureManager,chartManager);
-		Thread delayThread = new Thread(new StructureCompilerRunner());
-		delayThread.start();
-    	context.getProjectManager().addProjectListener(this);
+ 		//structureManager = new ChartStructureManager(context.getProjectManager().getProject("global").get(),iaSfcHook.getStepRegistry());
+ 		//AbstractIlsStepDelegate.setStructureManager(structureManager);
+ 		//requestHandler = new GatewayRequestHandler(context,structureManager,requestResponseManager);
+		//dispatcher = new GatewayRpcDispatcher(requestHandler);
+		//chartDebugger = new ChartDebugger(
+		//	context.getProjectManager().getProject("global").get(),
+		//	iaSfcHook.getStepRegistry());
+		//IlsGatewayScripts.setRequestHandler(requestHandler);
+		//RecipeDataAccess.setRequestHandler(requestHandler);
+		//stepMonitor = new IlsStepMonitor(structureManager,chartManager);
+		
+		//Thread delayThread = new Thread(new StructureCompilerRunner());
+		//delayThread.start();
+    	
+		context.getProjectManager().addProjectListener(this);
     	this.timer.start();
 		log.infof("%s: Startup complete.",CLSS);
 	}

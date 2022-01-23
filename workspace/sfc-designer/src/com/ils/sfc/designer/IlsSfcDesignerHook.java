@@ -21,6 +21,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 
+import org.python.core.PyList;
+
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
@@ -29,7 +31,6 @@ import com.ils.sfc.common.chartStructure.ChartStructureCompiler;
 import com.ils.sfc.common.chartStructure.ChartStructureCompilerV2;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.chartStructure.RecipeDataConverter;
-import com.ils.sfc.common.chartStructure.RecipeDataMigrator;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AllSteps;
 import com.ils.sfc.designer.exim.ExportSelectionDialog;
@@ -56,6 +57,7 @@ import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.ignition.designer.model.AbstractDesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.DesignerModuleHook;
+import com.inductiveautomation.ignition.designer.model.SaveContext;
 import com.inductiveautomation.ignition.designer.model.menu.JMenuMerge;
 import com.inductiveautomation.ignition.designer.model.menu.MenuBarMerge;
 import com.inductiveautomation.ignition.designer.model.menu.WellKnownMenuConstants;
@@ -88,6 +90,10 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private static final String RECIPE_DATA_INTERNALIZE = "Internalize Recipe Data for Export";
 	private static final String RECIPE_DATA_STORE = "Store Internal Recipe Data into Database";
 	private static final String RECIPE_DATA_INITIALIZE = "Initialize Internal Recipe Data";
+	
+	public static final String CHART_RESOURCE_TYPE = "com.inductiveautomation.sfc/charts";
+	
+	
 	private DesignerContext context = null;
 	private Project project = null;
 
@@ -97,7 +103,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private final List<DockableFrame> frames;
 	private ChartStructureManager structureManager = null;
 	private ChartStructureCompilerV2 structureCompilerV2 = null;
-	private RecipeDataMigrator recipeDataMigrator = null;
 	private IlsSfcSearchProvider searchProvider = null;
 	/*	private RecipeEditorFrame recipeEditorFrame; */
 	private Map <Long, ProjectResource> addedResourceMap;
@@ -197,8 +202,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		Action executeIsolationAction = new AbstractAction(START_MENU_ISOLATION_TITLE) {
 			private static final long serialVersionUID = 5374887367733312464L;
 			public void actionPerformed(ActionEvent ae) {
+				log.infof("%s:Start Chart in Isolation selected...", CLSS);
 				SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-				Thread runner = new Thread(new ChartRunner(context,iaSfcHook.getWorkspace(),true));
+				Thread runner = new Thread(new ChartRunner(context, iaSfcHook.getWorkspace(), project.getName(), true));
 				runner.start();
 			}
 		};
@@ -206,12 +212,24 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		Action executeProductionAction = new AbstractAction(START_MENU_PRODUCTION_TITLE) {
 			private static final long serialVersionUID = 5374667367733312464L;
 			public void actionPerformed(ActionEvent ae) {
+				log.infof("%s:Start Chart in Production selected...", CLSS);
 				SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-				Thread runner = new Thread(new ChartRunner(context,iaSfcHook.getWorkspace(),false));
+				Thread runner = new Thread(new ChartRunner(context, iaSfcHook.getWorkspace(), project.getName(), false));
 				runner.start();
 			}
 		};
 
+		// ----------------------- Menus to show ancestors of the current chart -----------------------------
+		
+		Action executeShowProcedure = new AbstractAction(SHOW_PROCEDURE_TITLE) {
+			private static final long serialVersionUID = 4029901359528539762L;
+
+			public void actionPerformed(ActionEvent ae) {
+				// Show phase for currently displayed chart
+				SwingUtilities.invokeLater(new ShowAncestor(Constants.GLOBAL));
+			}
+		};
+		
 		Action executeShowOperation = new AbstractAction(SHOW_OPERATION_TITLE) {
 			private static final long serialVersionUID = 4029901359528539761L;
 
@@ -227,15 +245,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			public void actionPerformed(ActionEvent ae) {
 				// Show phase for currently displayed chart
 				SwingUtilities.invokeLater(new ShowAncestor(Constants.PHASE));
-			}
-		};
-
-		Action executeShowProcedure = new AbstractAction(SHOW_PROCEDURE_TITLE) {
-			private static final long serialVersionUID = 4029901359528539762L;
-
-			public void actionPerformed(ActionEvent ae) {
-				// Show phase for currently displayed chart
-				SwingUtilities.invokeLater(new ShowAncestor(Constants.GLOBAL));
 			}
 		};
 
@@ -283,9 +292,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 
 		JMenu showMenu = new JMenu(SHOW_ANCESTOR_TITLE);
 		sfcMenu.add(showMenu);
+		showMenu.add(executeShowProcedure);
 		showMenu.add(executeShowOperation);
 		showMenu.add(executeShowPhase);
-		showMenu.add(executeShowProcedure);
 		showMenu.add(executeShowSuperior);
 
 		/* We want this if they are running BLT or SFC so both modules try and add it, this attempts to only add it if it doesn't already exist.  */
@@ -308,6 +317,17 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  
 		merge.add(WellKnownMenuConstants.TOOLS_MENU_LOCATION, toolsMenu);
 		return merge;
+	}
+	
+	@Override
+	public void notifyProjectSaveStart(SaveContext ctx) {
+		log.infof("%s:notifyProjectSaveStart()...", CLSS);
+		projectUpdated();
+	}
+	
+	@Override
+	public void notifyProjectSaveDone() {
+		log.infof("%s:notifyProjectSaveDone()...", CLSS);
 	}
 
 	@Override
@@ -350,9 +370,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 
 		// Pete's Structure compiler - instantiate this once in the beginning because the step registry is static.
 		structureCompilerV2 = new ChartStructureCompilerV2(context.getProject(), stepRegistry);
-
-		// Pete's Recipe Data Migrator - instantiate this once in the beginning because the step registry is static.
-		recipeDataMigrator = new RecipeDataMigrator(context.getProject(), stepRegistry);
 
 		searchProvider = new IlsSfcSearchProvider(context, project);
 		context.registerSearchProvider(searchProvider);
@@ -481,30 +498,39 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		private String level = Constants.GLOBAL;
 
 		public ShowAncestor(String lvl) {
+			log.infof("Instantiating a ShowAncestor");
 			this.level = lvl;
 		}
 
 		public void run() {
-			log.infof("%s.run: ShowAncestor %s...",CLSS,level);
-			// We get the path to the open chart via the workspace.
+			log.infof("%s.ShowAncestor.run()", CLSS);
+			String[] pyPaths = null;
+
+			// Get the path to the open chart that currently has focus via the workspace.
 			SfcWorkspace workspace = iaSfcHook.getWorkspace();
 			SfcDesignableContainer tab = workspace.getSelectedContainer();
 			if( tab!=null ) {
 				String chartPath = workspace.getSelectedContainer().getResourcePath().getFolderPath();
-				SimpleHierarchyAnalyzer hierarchyAnalyzer = new SimpleHierarchyAnalyzer(context.getProject(),stepRegistry);
-				hierarchyAnalyzer.analyze();
-				List<String> paths = hierarchyAnalyzer.getParentPathsForEnclosingScope(chartPath,level);
-				// Now that we have the paths, display them
-				for(String path:paths) {
-					Long resid = hierarchyAnalyzer.getChartResourceForPath(path);
+				log.infof("Looking for the %s ancestor for %s", level, chartPath);
+	
+				try {
+					pyPaths = PythonCall.toArray(PythonCall.GET_CHART_ANCESTOR.exec(chartPath, level));
+				}
+				catch(JythonExecException jee) {
+					log.warnf("%s.next: JythonExecException executing %s:(%s)", CLSS, PythonCall.GET_CHART_ANCESTOR, jee.getLocalizedMessage());
+				}
+				
+				log.infof("...Python returned: %s", pyPaths.toString());
+				
+				for(String path:pyPaths) {
+					log.infof("Handling %s", path);
 					ResourcePath resPath = new ResourcePath(workspace.getSelectedContainer().getResourcePath().getResourceType(), path);
-					if( resid!=null ) workspace.openChart(resPath);
+					workspace.openChart(resPath);
 				}
 			}
 			else {
 				// No chart is open.
 			}
-
 		}
 	}
 	/**
@@ -550,78 +576,91 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	}
 
 	public void projectUpdated() {
-
+		log.infof("%s.projectUpdated()...", CLSS);
 		try {
-				structureCompilerV2.syncDatabase(deletedResourceList, addedResourceMap, changedResourceMap);
+			structureCompilerV2.syncDatabase(deletedResourceList, addedResourceMap, changedResourceMap);
 
-				changedResourceMap.clear();
-				addedResourceMap.clear();
-				deletedResourceList.clear();
-
-		} catch (Exception ex) {
-			log.errorf("%s: Error Updating Project (Project updated): %s", CLSS, ex.getLocalizedMessage());
-
-			ExceptionDialogRunner dlg = new ExceptionDialogRunner();
-			dlg.setMsg(ex.getLocalizedMessage());
-			SwingUtilities.invokeLater(dlg);
+			changedResourceMap.clear();
+			addedResourceMap.clear();
+			deletedResourceList.clear();
+			
 		}
+		catch (JythonExecException jee) {
+			log.errorf("Caught a Jython exception updating project (%s)", jee.getMessage());
+			jee.printStackTrace();
+		}
+		catch (Exception ex) {
+			log.errorf("Caught an exception updating project (%s)", ex.getMessage());
+			ex.printStackTrace();
+		}
+
 	}
 
 	@Override
+	/*
+	 * This is called immediately when a new chart is created.  We need to cache this information until they save the project.
+	 * If they create a chart and then quit the designer, then the chart will not be saved.
+	 */
 	public void resourcesCreated(String arg0, List<CreateResourceOperation> arg1) {
-		for(CreateResourceOperation op : arg1) {
+		log.infof("%s.resourcesCreated()", CLSS);
 
-			// Store the resource into a map that will be acted on when the project is Saved 
-					if(op.getResourceId().getResourceType().getModuleId().equals(ChartStructureCompiler.CHART_MODULE) &&
-							op.getResourceId().getResourceType().getTypeId().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE)) {
-						String chartPath = op.getResource().getFolderPath();
-						log.infof("SFC chart: %s, id: %d, has been modified (modification type: %s, resource type: %s)", chartPath, op.getResourceId().hashCode(), op.getOperationType().toString(), op.getResource().getResourceType());
-					
-						// This is called as soon as a chart is created.  Literally, as soon as user presses create chart in the project resource tree.
-						// The Updated case will be called when the Save button is pressed or when the new cart is renamed
+		for(CreateResourceOperation op : arg1) {			
+			// This gets called for every resource that has changed since the last save, be careful to only process SFC resources
+			if(op.getResource().getResourceType().toString().equals(CHART_RESOURCE_TYPE)) {
+				String chartPath = op.getResource().getFolderPath();
+				log.infof("SFC chart: %s, id: %d, has been created (modification type: %s, resource type: %s)", chartPath, op.getResourceId().hashCode(), op.getOperationType().toString(), op.getResource().getResourceType());
 
-						// CJL  At this point we should check the resource IDs and see if it is a copy, in which case the UUIDs should be updated
-						log.tracef("...inserting it into the addedResourceMap!");
-						addedResourceMap.put((long)op.getResourceId().hashCode(), op.getResource());
-					}
+				// CJL  At this point we should check the resource IDs and see if it is a copy, in which case the UUIDs should be updated
+				// Store the resource into a map that will be acted on when the project is Saved 
+				log.tracef("...inserting it into the addedResourceMap!");
+				addedResourceMap.put((long)op.getResourceId().hashCode(), op.getResource());
+			} else {
+				log.infof("...skipping a non-SFC resource...");
+			}
 		}
-		
-		projectUpdated();
 	}
 
 	@Override
+	/*
+	 * This is called immediately when ANY RESORCE is deleted.  We need to cache this information until they save the project.
+	 * If they delete a chart and then quit the designer, then the chart will not be deleted.
+	 */
 	public void resourcesDeleted(String arg0, List<DeleteResourceOperation> arg1) {
+		log.infof("%s.resourcesDeleted()...", CLSS);
 		for(DeleteResourceOperation op : arg1) {
-			// Store the resource into a map that will be acted on when the project is Saved 
-					if(op.getResourceId().getResourceType().getModuleId().equals(ChartStructureCompiler.CHART_MODULE) &&
-							op.getResourceId().getResourceType().getTypeId().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE)) {
-						String chartPath = op.getResourceId().getFolderPath();
-						log.infof("SFC chart: %s, id: %d, has been modified (modification type: %s, resource type: %s)", chartPath, op.getResourceId().hashCode(), op.getOperationType().toString(), op.getResourceId().getResourceType());
-
-
-						log.tracef("...inserting it into the deletedResourceMap!");
-						deletedResourceList.add(String.valueOf(op.getResourceId().hashCode()));
-					}
+			// This gets called for every resource that is deleted, be careful to only process SFC resources
+			if(op.getResourceId().getResourceType().toString().equals(CHART_RESOURCE_TYPE)) {
+				String chartPath = op.getResourceId().getFolderPath();
+				log.infof("SFC chart: %s, id: %d, has been deleted (modification type: %s, resource type: %s)", chartPath, op.getResourceId().hashCode(), op.getOperationType().toString(), op.getResourceId().getResourceType());
+	
+				// Store the resource into a map that will be acted on when the project is Saved 
+				log.tracef("...inserting it into the deletedResourceMap!");
+				deletedResourceList.add(String.valueOf(op.getResourceId().hashCode()));
+			} else {
+				log.infof("...skipping a non SFC resource...");
+			}
 		}
-
-		projectUpdated();
 	}
 
 	@Override
+	/*
+	 * This is called when the project is saved.  It has a list of all of the resources that have been changed since the project was last saved.
+	 */
 	public void resourcesModified(String arg0, List<ModifyResourceOperation> arg1) {
+		log.infof("%s.resourcesModified()...", CLSS);
+		
 		for(ModifyResourceOperation op : arg1) {
-		// Store the resource into a map that will be acted on when the project is Saved 
-				if(op.getResourceId().getResourceType().getModuleId().equals(ChartStructureCompiler.CHART_MODULE) &&
-						op.getResourceId().getResourceType().getTypeId().equals(ChartStructureCompiler.CHART_RESOURCE_TYPE)) {
-					String chartPath = op.getResource().getFolderPath();
-					log.infof("SFC chart: %s, id: %d, has been modified (modification type: %s, resource type: %s)", chartPath, op.getResourceId().hashCode(), op.getOperationType().toString(), op.getResource().getResourceType());
-
-						// This is the updated case - when a chart is renamed this is called for the new and the old name.
-						log.tracef("...inserting it into the changedResourceMap!");
-						changedResourceMap.put((long)op.getResource().getResourceId().hashCode(), op.getResource());
-				}
+			// This gets called for every resource that has changed since the last save, be careful to only process SFC resource
+			if(op.getResource().getResourceType().toString().equals(CHART_RESOURCE_TYPE)) {
+				String chartPath = op.getResource().getFolderPath();
+				log.infof("SFC chart: %s, id: %d, has been modified (modification type: %s, resource type: %s)", chartPath, op.getResourceId().hashCode(), op.getOperationType().toString(), op.getResource().getResourceType());
+	
+				// Store the resource into a map that will be acted on when the project is Saved 	
+				log.tracef("...inserting it into the changedResourceMap!");
+				changedResourceMap.put((long)op.getResource().getResourceId().hashCode(), op.getResource());
+			} else {
+				log.infof("...skipping a non SFC resource...");
+			}
 		}
-
-		projectUpdated();
 	}
 }

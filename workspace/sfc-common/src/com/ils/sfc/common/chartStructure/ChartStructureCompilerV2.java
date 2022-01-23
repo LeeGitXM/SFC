@@ -1,6 +1,7 @@
 package com.ils.sfc.common.chartStructure;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,62 +49,48 @@ public class ChartStructureCompilerV2 {
 	public void syncDatabase(List <String> deletedResourceList,
 			Map <Long, ProjectResource> addedResourceMap,
 			Map <Long, ProjectResource> changedResourceMap) throws JythonExecException {
-		log.infof("Consolidated Compile");
+		
+		log.infof("In syncDatabase()");
 		
 		JavaToPython jToP = new JavaToPython();  
 		
 		HashMap<String, String> addedResources = new HashMap <String, String>();
 		HashMap<String, Map<String,String>> changedResources = new HashMap <>();
 		
+		log.infof("...preparing changed resources...");
 		for (ProjectResource res:changedResourceMap.values()){
-				Map<String, String> map = new HashMap<>();
-				// This might change in Ignition 8 to be rres.getFolderPath()
-				map.put(PATH_KEY, res.getFolderPath());
-				
-				byte[] chartResourceData = res.getData();
-				String chartResourceAsXML;
-				try {
-					chartResourceAsXML = IlsSfcCommonUtils.returnResource(chartResourceData);
-					map.put(CHART_XML_KEY, chartResourceAsXML);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					log.errorf("Caught an error in syncDatabase()");
-					e.printStackTrace();
-				}
-				changedResources.put(String.valueOf(res.getResourceId().hashCode()), map);
+			log.infof("...processing chart: %s...", res.getFolderPath());
+			log.infof("    as a string: %s", res.toString());
+			log.infof("    project: %s",  res.getProjectName());
+			log.infof("    resource id: %s", res.getResourceId());
+			log.infof("    data keys: %s", res.getDataKeys().toString());
+			
+			Map<String, String> map = new HashMap<>();
+			map.put(PATH_KEY, res.getFolderPath());
+			
+			log.infof("Getting <sfc.xml> chart data...");
+			byte[] chartResourceData = res.getData("sfc.xml");
+			log.infof("Fetched %d bytes", chartResourceData.length);
+
+			String chartResourceAsXML = new String(chartResourceData, StandardCharsets.UTF_8);
+			log.infof("  as string (converted): %s", chartResourceAsXML);
+			map.put(CHART_XML_KEY, chartResourceAsXML);
+			
+			changedResources.put(String.valueOf(res.getResourceId().hashCode()), map);
 		}
 		
+		log.infof("...preparing added resources...");
 		for (ProjectResource res:addedResourceMap.values()){
 			String chartPath = res.getFolderPath();
 			log.infof("Adding resource %d - %s", res.getResourceId().hashCode(), chartPath);
 			addedResources.put(String.valueOf(res.getResourceId().hashCode()), chartPath);
 		}
 
+		log.infof("...converting arguments for Python...");
 		Object[] args = {jToP.objectToPy(deletedResourceList), jToP.objectToPy(addedResources), jToP.objectToPy(changedResources), database};
+		log.infof("...calling Python...");
 		PythonCall.COMPILE_CHARTS.exec(args);
+		log.infof("...done!");
 	}
-	
-	/** Compile Ignition charts and create an ILS model of the structure. We try to do an error-tolerant
-	 *  compile so some useful information is available even if there are errors. A null return indicates
-	 *  the errors were severe enough we couldn't get any useful info.
-	 */
-	public void compileResource (ProjectResource res)  throws IOException, JythonExecException, XmlParseException  {
-		String chartPath;
-		ProjectResourceId resourceId;		
-
-		if( res.getResourceType().equals(CHART_RESOURCE_TYPE)) {
-			chartPath = res.getFolderPath();
-			resourceId = res.getResourceId();
-			
-			log.infof("Compiling a SFC chart resource. Path: %s, Name: %s, id: %d", chartPath, res.getResourceName(), resourceId);
-
-			byte[] chartResourceData = res.getData();
-			String chartResourceAsXML=IlsSfcCommonUtils.returnResource(chartResourceData);
-
-			//Object[] args = {chartPath, resourceId, chartResourceAsXML};
-			//PythonCall.SAVE_PROJECT_START.exec( args );
-		}
-	}
-
 
 }

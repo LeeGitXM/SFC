@@ -140,6 +140,15 @@ public class PythonCall {
 	//Structure Manager
 	public static final PythonCall COMPILE_CHARTS = new PythonCall("ils.sfc.designer.saver.compileCharts", 
 			null,  new String[]{"deletedResources", "addedResources", "changedResources", "db"} );
+	
+	public static final PythonCall GET_CHART_ANCESTOR = new PythonCall("ils.sfc.designer.getAncestor.main", 
+			PyList.class, new String[]{"chartPath", "scope"});
+	
+	public static final PythonCall GET_ENCLOSING_CHARTS = new PythonCall("ils.sfc.designer.getAncestor.getEnclosingCharts", 
+			Dataset.class, new String[]{"chartPath", "isolationMode"});
+	
+	public static final PythonCall GET_PROJECT_INTERFACES = new PythonCall("ils.sfc.designer.getAncestor.getProjectInterfaces", 
+			PyList.class, new String[]{"projectName", "isolationMode"});
 
 	// Recipe Data V2
 	public static final PythonCall GET_RECIPE_DATA_LIST = new PythonCall("ils.sfc.recipeData.editor.getRecipeDataList", 

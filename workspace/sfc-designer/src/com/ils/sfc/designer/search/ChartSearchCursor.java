@@ -88,8 +88,6 @@ public class ChartSearchCursor extends SearchObjectCursor {
 				log.warnf("%s.next: JythonExecException executing %s:(%s)",TAG,PythonCall.GET_RECIPE_SEARCH_RESULTS,jee.getLocalizedMessage());
 			}
 		
-			// Only leave this in during debugging
-			//IlsSfcCommonUtils.printResource(chartResourceData);
 		}
 		catch(IOException ioe) {
 			log.errorf("%s.next: Exception reading %s:%d (%s)",TAG,chartPath, res.getResourceId(),ioe.getLocalizedMessage());

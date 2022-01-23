@@ -116,8 +116,7 @@ public class ChartStructureCompiler {
 						log.warnf("loadModels: Chart %s has no byte data.", path);
 						return false;
 					}
-					
-					//IlsSfcCommonUtils.printResource(data);					
+									
 					GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 					ChartUIModel uiModel = ChartUIModel.fromXml(xmlInput, stepRegistry );
 					ChartModelInfo info = new ChartModelInfo(uiModel,res,path);

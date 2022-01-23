@@ -233,6 +233,7 @@ public class Constants {
 	public static final String TAG_PROVIDER = "tagProvider";
 	public static final String TARGET_VALUE = "targetValue";
 	public static final String TIME = "time";
+	public static final String TIME_FACTOR = "timeFactor";
 	public static final String TIMER_START = "timerStart";
 	public static final String TIMING = "timing";
 	public static final String TIMEOUT = "timeout";
