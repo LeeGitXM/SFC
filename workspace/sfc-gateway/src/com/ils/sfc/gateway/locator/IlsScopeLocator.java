@@ -5,8 +5,8 @@
 package com.ils.sfc.gateway.locator;
 
 
+import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.gateway.IlsSfcGatewayHook;
-import com.ils.sfc.gateway.recipe.RecipeDataAccess;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.PyChartScope;
@@ -33,7 +33,7 @@ public class IlsScopeLocator implements ScopeLocator {
 	@Override
 	public synchronized PyChartScope locate(ScopeContext scopeContext, String identifier) {
 		PyChartScope chartScope = scopeContext.getChartScope();
-		String providerName = RecipeDataAccess.getTagProvider(chartScope);
+		String providerName = IlsSfcCommonUtils.getTagProvider(chartScope);
 		log.infof("PAH - In contructor with a IlsScopeLocator with identifier: %s", identifier);
 
 		if( !identifier.equalsIgnoreCase(Constants.TAG)) {
@@ -46,7 +46,7 @@ public class IlsScopeLocator implements ScopeLocator {
 			return new S88Scope(hook.getContext(),chartScope,stepScope,identifier, "");
 		}
 		else {
-			log.infof("PAH - creating a TyagChartScope locator using provider: %s!", providerName);
+			log.infof("PAH - creating a TagChartScope locator using provider: %s!", providerName);
 			return new TagChartScope(providerName, hook.getContext());	
 		}
 	}

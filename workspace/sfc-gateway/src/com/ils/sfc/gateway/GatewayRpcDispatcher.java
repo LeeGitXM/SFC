@@ -73,8 +73,4 @@ public class GatewayRpcDispatcher   {
 		//log.infof("%s.setToolkitProperty: %s: %s", TAG, propertyName, value);
 		requestHandler.setProjectToolkitProperty(projectName,propertyName,value);
 	}
-	
-	public UUID startChart(String chartPath,String clientProject, String user,Boolean isolation) {
-		return IlsGatewayScripts.debugChart(chartPath, clientProject, user, isolation);
-	}
 }

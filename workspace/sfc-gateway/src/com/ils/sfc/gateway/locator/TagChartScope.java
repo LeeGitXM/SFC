@@ -91,8 +91,9 @@ public class TagChartScope extends PyChartScope {
 				QualifiedValue tag = provider.readAsync(tpWrapper, null).get().get(0);
 				if(tag != null) {
 					// Read the tag return its value.
-					if( DEBUG ) log.infof("get: return %s = %s", tp.getItemName(), tag.getValue());
+					if( DEBUG ) log.infof("get: %s = %s", tp.getItemName(), tag.getValue());
 					if(!listenersByKey.containsKey(tp.getItemName())) {
+						if( DEBUG ) log.infof("get: Adding a valueChangeListener...");
 						addValueChangeListener(tp.getItemName(), tp);
 					}
 					return tag.getValue();

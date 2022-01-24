@@ -19,7 +19,10 @@ import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.config.PropertyValue;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
 import com.inductiveautomation.sfc.api.PyChartScope;
+import com.inductiveautomation.sfc.api.ScopeContext;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
+
+import system.ils.sfc.common.Constants;
 
 /** Misc. utilities that don't fit into any ILS class or superclass. */
 public class IlsSfcCommonUtils {
@@ -174,6 +177,64 @@ public class IlsSfcCommonUtils {
 			scope = (PyChartScope)scope.get("parent");
 		}
 		return scope;
+	}
+	
+	/*
+	 * This is a slightly different version that was in the now obsolete class RecipeDataAccess
+	 */
+	public static PyChartScope getTopScopeV2(PyChartScope scope) {
+		while(scope.getSubScope(ScopeContext.PARENT) != null) {
+			scope = scope.getSubScope(ScopeContext.PARENT);
+		}
+		return scope;
+	}
+	
+	/** Return the scope of the enclosing step. Return "global" if the chart scope
+	 *  has no parent. Returns null if no particular level is available.
+	 *  I rescued this from RecipeDataAccess before I deleted it, I don't think it is used but it looked useful - PAH 1/23/2022
+	 */
+	private static String getEnclosingStepScope(PyChartScope chartScope) {
+		if(chartScope.get(Constants.ENCLOSING_STEP_SCOPE_KEY) != null) {  // don't use containsKey !
+			PyChartScope parentChartScope = chartScope.getSubScope(ScopeContext.PARENT);
+			boolean parentIsRoot = parentChartScope.getSubScope(ScopeContext.PARENT) == null;
+			PyChartScope enclosingStepScope = chartScope.getSubScope(Constants.ENCLOSING_STEP_SCOPE_KEY);				
+			String scopeIdentifier = (String) enclosingStepScope.get(Constants.S88_LEVEL);
+			if(scopeIdentifier != null && !scopeIdentifier.toString().equals(Constants.NONE)) {
+				return scopeIdentifier;
+			}
+			else if(parentIsRoot) {
+				// global steps don't need to be tagged
+				return Constants.GLOBAL;
+			}
+			else {
+				return null;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * The scope contains the correct provider for the current isolation mode
+	 * @param scope
+	 * @return provider name
+	 * This used to be in RecipeDataAccess
+	 */
+	public static String getTagProvider(PyChartScope scope) {
+		PyChartScope topScope = getTopScope(scope);
+		String providerName = topScope.get(Constants.TAG_PROVIDER).toString();
+		return providerName;
+	}
+	
+	public static boolean getIsolationMode(PyChartScope scope) {
+		PyChartScope topScope = getTopScope(scope);
+		boolean isolationMode = false;
+		if( topScope.get(Constants.ISOLATION_MODE) !=null ) {
+			isolationMode = ((Boolean)topScope.get(Constants.ISOLATION_MODE)).booleanValue();
+		}
+		else {
+			logger.warnf("RecipeDataAccess.getIsolationMode: %s not defined in top scope, assuming production",Constants.ISOLATION_MODE);
+		}
+		return isolationMode;
 	}
 	
 	public static void main(String[] args) {

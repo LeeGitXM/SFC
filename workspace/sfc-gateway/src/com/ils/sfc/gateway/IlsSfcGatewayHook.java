@@ -15,8 +15,6 @@ import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.ils.sfc.gateway.locator.IlsScopeLocator;
-import com.ils.sfc.gateway.monitor.IlsStepMonitor;
-import com.ils.sfc.gateway.recipe.RecipeDataAccess;
 import com.ils.sfc.step.CancelStepFactory;
 import com.ils.sfc.step.ClearQueueStepFactory;
 import com.ils.sfc.step.CloseWindowStepFactory;
@@ -91,14 +89,12 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	private ChartManagerService chartManager;
 	private IlsScopeLocator scopeLocator = new IlsScopeLocator(this);
 	private IlsChartObserver chartObserver = new IlsChartObserver();
-	private IlsStepMonitor stepMonitor = null;
 	private ChartStructureManager structureManager = null;
 	private GatewayRequestHandler requestHandler = null;
 	private IlsRequestResponseManager requestResponseManager = new IlsRequestResponseManager();
 	private TestMgr testMgr = new TestMgr();
 	private IlsDropBox dropBox = new IlsDropBox();
 	private WatchdogTimer timer = null;
-	private ChartDebugger chartDebugger = null;
 	private static StepFactory[] stepFactories = {
 		new CancelStepFactory(),
 		new ClearQueueStepFactory(),
@@ -164,13 +160,9 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		return testMgr;
 	}
 
-	public ChartDebugger getChartDebugger() {return chartDebugger;}
 	public IlsDropBox getDropBox() {return dropBox;}	
 	public LoggerEx getLogger() { return log; }
-	public IlsStepMonitor getStepMonitor() {return stepMonitor;}
 	public WatchdogTimer getTimer() { return this.timer; };
-
-
 
 	public GatewayContext getContext() {
 		return context;
@@ -183,7 +175,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public IlsScopeLocator getScopeLocator() {
 		return scopeLocator;
 	}
-
 
 	public IlsChartObserver getChartObserver() {
 		return chartObserver;
@@ -233,17 +224,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 	public void startup(LicenseState licenseState) {			
 		iaSfcHook = (SfcGatewayHook)context.getModule(SFCModule.MODULE_ID);				
 		chartManager.addChartObserver(dropBox);
-
- 		//structureManager = new ChartStructureManager(context.getProjectManager().getProject("global").get(),iaSfcHook.getStepRegistry());
- 		//AbstractIlsStepDelegate.setStructureManager(structureManager);
- 		//requestHandler = new GatewayRequestHandler(context,structureManager,requestResponseManager);
-		//dispatcher = new GatewayRpcDispatcher(requestHandler);
-		//chartDebugger = new ChartDebugger(
-		//	context.getProjectManager().getProject("global").get(),
-		//	iaSfcHook.getStepRegistry());
-		//IlsGatewayScripts.setRequestHandler(requestHandler);
-		//RecipeDataAccess.setRequestHandler(requestHandler);
-		//stepMonitor = new IlsStepMonitor(structureManager,chartManager);
 		
 		//Thread delayThread = new Thread(new StructureCompilerRunner());
 		//delayThread.start();
@@ -259,7 +239,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 
 //		context.getProjectManager().removeProjectListener(this);  // disabled to see if it is preventing shutdown - cjl
 		log.tracef("Shutdown 2");
-		stepMonitor.shutdown();
 		log.tracef("Shutdown 3");
 		this.timer.stop();
 	}
@@ -294,8 +273,6 @@ public class IlsSfcGatewayHook extends AbstractGatewayModuleHook implements Modu
 		log.tracef("Service Shutdown 5");
 		chartManager = null;
 		log.tracef("Service Shutdown 6");
-		stepMonitor.shutdown();
-		log.tracef("Service Shutdown 7");
 	}
 
 	public static Map<String, List<String>> getPropertyNamesById() {
