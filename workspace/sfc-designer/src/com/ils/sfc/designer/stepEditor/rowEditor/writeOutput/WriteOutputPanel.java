@@ -49,15 +49,15 @@ public class WriteOutputPanel extends RowEditorPanel {
 		});	
 	}
 
-	@Override
-	protected void doEdit() {
-		super.doEdit();
-		int col = table.getSelectedColumn();
-		if(col == WriteOutputTableModel.KEY_COLUMN) {		
-			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
-			stepController.getRecipeDataBrowser().activate(this);			
-		}
-	}
+//PAH	@Override
+//PAH	protected void doEdit() {
+//PAH		super.doEdit();
+//PAH		int col = table.getSelectedColumn();
+//PAH		if(col == WriteOutputTableModel.KEY_COLUMN) {		
+//PAH			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
+//PAH			stepController.getRecipeDataBrowser().activate(this);			
+//PAH		}
+//PAH	}
 
 	@Override
 	public RowConfig getConfig() {

@@ -4,8 +4,8 @@
 
 	<import file="${basedir}/sfc-build/build.xml"/>
 
-	<property name="version.major" value="1" />
-	<property name="version.minor" value="3" />
+	<property name="version.major" value="3" />
+	<property name="version.minor" value="0" />
 	<property name="version.release" value="0" />
 	<property name="version.build" value="${DSTAMP}" />
 

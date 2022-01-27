@@ -52,13 +52,13 @@ public class ConfirmControllersPanel extends RowEditorPanel {
 		return config;
 	}
 	
-	@Override
-	protected void doEdit() {
-		super.doEdit();
-		int selectedColumn = table.getSelectedColumn();
-		if(selectedColumn == ConfirmControllersTableModel.KEY_COLUMN ) {
-			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
-			stepController.getRecipeDataBrowser().activate(this);
-		}
-	}
+//PAH	@Override
+//PAH	protected void doEdit() {
+//PAH		super.doEdit();
+//PAH		int selectedColumn = table.getSelectedColumn();
+//PAH		if(selectedColumn == ConfirmControllersTableModel.KEY_COLUMN ) {
+//PAH			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
+//PAH			stepController.getRecipeDataBrowser().activate(this);
+//PAH		}
+//PAH	}
 }

@@ -60,10 +60,10 @@ public class ReviewFlowsPanel extends RowEditorPanel {
 		if(col == ReviewFlowsTableModel.UNITS_COLUMN) {
 			stepController.getUnitChooser().activate(this);
 		}
-		else if(((ReviewFlowsTableModel)table.getModel()).isRecipeKeyColumn(col)) {
-			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
-			stepController.getRecipeDataBrowser().activate(this);			
-		}
+//PAH		else if(((ReviewFlowsTableModel)table.getModel()).isRecipeKeyColumn(col)) {
+//PAH			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
+//PAH			stepController.getRecipeDataBrowser().activate(this);			
+//PAH		}
 	}
 
 	@Override

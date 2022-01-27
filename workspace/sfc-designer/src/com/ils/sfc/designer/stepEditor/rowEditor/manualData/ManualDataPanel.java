@@ -70,11 +70,12 @@ public class ManualDataPanel extends RowEditorPanel {
 		log.trace("In doEdit() for a ManualDataPanel");
 		super.doEdit();
 		int selectedColumn = table.getSelectedColumn();
-		if(selectedColumn == ManualDataTableModel.KEY_COL ) {
-			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
-			stepController.getRecipeDataBrowser().activate(this);
-		}
-		else if(selectedColumn == ManualDataTableModel.UNITS_COL) {
+//PAH		if(selectedColumn == ManualDataTableModel.KEY_COL ) {
+//PAH			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
+//PAH			stepController.getRecipeDataBrowser().activate(this);
+//PAH		}
+//PAH		else 
+		if(selectedColumn == ManualDataTableModel.UNITS_COL) {
 			stepController.getUnitChooser().activate(this);
 		}
 	}

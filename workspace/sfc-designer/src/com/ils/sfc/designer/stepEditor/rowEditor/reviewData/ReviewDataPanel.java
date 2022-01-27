@@ -75,10 +75,10 @@ public class ReviewDataPanel extends RowEditorPanel {
 		if(((ReviewDataTableModel)tableModel).isUnitsColumn(col)) {
 			stepController.getUnitChooser().activate(this);
 		}
-		else if(((ReviewDataTableModel)tableModel).isRecipeKeyColumn(col)) {
-			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
-			stepController.getRecipeDataBrowser().activate(this);
-		}		
+//PAH		else if(((ReviewDataTableModel)tableModel).isRecipeKeyColumn(col)) {
+//PAH			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
+//PAH			stepController.getRecipeDataBrowser().activate(this);
+//PAH		}		
 	}
 
 	@Override

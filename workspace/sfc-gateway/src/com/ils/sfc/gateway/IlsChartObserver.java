@@ -9,7 +9,6 @@ import org.python.core.PyDictionary;
 import system.ils.sfc.common.Constants;
 
 import com.ils.sfc.common.IlsProperty;
-import com.ils.sfc.common.recipe.objects.Data;
 import com.inductiveautomation.ignition.common.config.PropertySet;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;

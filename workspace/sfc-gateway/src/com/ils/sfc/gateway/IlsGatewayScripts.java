@@ -17,7 +17,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.IlsSfcCommonUtils;
 import com.ils.sfc.common.PythonCall;
-import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.rowconfig.ConfirmControllersConfig;
 import com.ils.sfc.common.rowconfig.ManualDataEntryConfig;
 import com.ils.sfc.common.rowconfig.MonitorDownloadsConfig;
@@ -158,10 +157,17 @@ public class IlsGatewayScripts {
 	}
 
 	// =====================================  =======================
+	
+	/*
+	 * 
+	//PAH - not sure if anyone ever calls this from Python???
+	//PAH  The Data. started to throw an error when I deleted the recipe.object classes from the common scope 1/26/22 PAH
+	 *  
 	public static String getJSONForScope(PyChartScope scope) throws JSONException {
 		JSONObject jsonObject = Data.fromStepScope(scope);
 		return jsonObject.toString();
 	}
+	*/
 
 	public static MonitorDownloadsConfig getMonitorDownloadsConfig(String json) throws JsonParseException, JsonMappingException, IOException {
 		return MonitorDownloadsConfig.fromJSON(json);

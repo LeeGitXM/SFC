@@ -60,10 +60,10 @@ public class CollectDataPanel extends RowEditorPanel {
 	protected void doEdit() {
 		super.doEdit();
 		int selectedColumn = table.getSelectedColumn();
-		if(selectedColumn == CollectDataTableModel.KEY_COLUMN ) {
-			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
-			stepController.getRecipeDataBrowser().activate(this);
-		}
+//PAH		if(selectedColumn == CollectDataTableModel.KEY_COLUMN ) {
+//PAH			stepController.getRecipeDataBrowser().setValue(getSelectedValue());
+//PAH			stepController.getRecipeDataBrowser().activate(this);
+//PAH		}
 		if(selectedColumn == CollectDataTableModel.TAG_COLUMN ) {
 			stepController.getTagBrowser().setValue(getSelectedValue());
 			stepController.getTagBrowser().activate(this);			

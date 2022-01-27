@@ -175,14 +175,14 @@ public class StepPropertyEditorPane extends EditorPanel implements ValueHolder {
 			controller.getTagBrowser().setValue(selectedPropertyValue.getValue());
 			controller.getTagBrowser().activate(this);
 		}
-		else if(selectedProperty.equals(IlsProperty.KEY) ||
-				selectedProperty.equals(IlsProperty.BUTTON_KEY) ||
-				selectedProperty.equals(IlsProperty.TIMER_KEY) ||
-				selectedProperty.equals(IlsProperty.TIME_LIMIT_RECIPE_KEY) ||
-				selectedProperty.equals(IlsProperty.CHOICES_KEY)) {
+//PAH		else if(selectedProperty.equals(IlsProperty.KEY) ||
+//PAH				selectedProperty.equals(IlsProperty.BUTTON_KEY) ||
+//PAH				selectedProperty.equals(IlsProperty.TIMER_KEY) ||
+//PAH				selectedProperty.equals(IlsProperty.TIME_LIMIT_RECIPE_KEY) ||
+//PAH				selectedProperty.equals(IlsProperty.CHOICES_KEY)) {
 			//controller.getRecipeDataBrowser().setConfig((PropertyValue<String>) selectedPropertyValue);
-			controller.getRecipeDataBrowser().activate(this);										
-		}
+//PAH			controller.getRecipeDataBrowser().activate(this);										
+//PAH		}
 		else if(selectedProperty.equals(IlsProperty.PRIMARY_REVIEW_DATA) ||
 				selectedProperty.equals(IlsProperty.PRIMARY_REVIEW_DATA_WITH_ADVICE) ||
 				selectedProperty.equals(IlsProperty.SECONDARY_REVIEW_DATA) ||

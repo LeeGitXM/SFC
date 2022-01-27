@@ -7,7 +7,7 @@ import com.ils.sfc.designer.EditorErrorHandler;
 import com.ils.sfc.designer.panels.EditorPanel;
 import com.ils.sfc.designer.panels.MessagePanel;
 import com.ils.sfc.designer.panels.PanelController;
-import com.ils.sfc.designer.panels.RecipeDataBrowserPanel;
+//PAH import com.ils.sfc.designer.panels.RecipeDataBrowserPanel;
 import com.ils.sfc.designer.panels.StringEditorPanel;
 import com.ils.sfc.designer.panels.TagBrowserPanel;
 import com.ils.sfc.designer.panels.UnitChooserPanel;
@@ -59,7 +59,7 @@ public class StepEditorController extends PanelController implements EditorError
 	private PVMonitorPanel pvMonitorPanel = new PVMonitorPanel(this, PV_MONITOR);
 	private WriteOutputPanel writeOutputPanel = new WriteOutputPanel(this, WRITE_OUTPUT);
 	private ManualDataPanel manualDataEntryPanel = new ManualDataPanel(this, MANUAL_DATA_ENTRY);
-	private RecipeDataBrowserPanel recipeDataBrowser = new RecipeDataBrowserPanel(this, RECIPE_BROWSER);
+//PAH	private RecipeDataBrowserPanel recipeDataBrowser = new RecipeDataBrowserPanel(this, RECIPE_BROWSER);
 	
 	public StepEditorController(DesignerContext context, String chartPath) {
 		super(context);
@@ -78,7 +78,7 @@ public class StepEditorController extends PanelController implements EditorError
 		slidingPane.add(writeOutputPanel);	
 		slidingPane.add(manualDataEntryPanel);	
 		slidingPane.add(reviewFlowsPanel);	
-		slidingPane.add(recipeDataBrowser);	
+//PAH		slidingPane.add(recipeDataBrowser);	
 	}
 
 	
@@ -140,10 +140,6 @@ public class StepEditorController extends PanelController implements EditorError
 	
 	public ManualDataPanel getManualDataEntryPanel() {
 		return manualDataEntryPanel;
-	}
-
-	public RecipeDataBrowserPanel getRecipeDataBrowser() {
-		return recipeDataBrowser;
 	}
 
 	public void showMessage(String message, int returnPanelIndex) {

@@ -7,7 +7,6 @@ import java.util.List;
 
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer.ChartInfo;
-import com.ils.sfc.common.recipe.objects.Data;
 import com.ils.sfc.common.step.AbstractIlsStepDelegate;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.util.LogUtil;
@@ -60,52 +59,9 @@ public class StepPropertyValidator {
 			AbstractIlsStepDelegate stepDelegate = (AbstractIlsStepDelegate)stepFactory;
 			stepDelegate.validate(chart, element, this);
 		}
-		else if(factoryId.equals(ActionStepProperties.FACTORY_ID)) {
-			String startScript = element.get(ActionStepProperties.START_SCRIPT);
-			if( startScript==null ) {
-				addError(Long.valueOf(chart.resourceId), chart.path, getStepName(element), "start script is missing");
-			}
-			else {
-				validateScript(startScript, chart, element);
-			}
-		}
 	}
 
-	private void validateScript(String script, ChartInfo chart, ChartUIElement element) {
-		final String s88GetPrefix = "s88Get";
-		final String s88SetPrefix = "s88Set";
-		try {
-			BufferedReader in = new BufferedReader(new StringReader(script));
-			String line = null;
-			while((line = in.readLine()) != null) {
-				if(line.contains(s88GetPrefix) || line.contains(s88SetPrefix)) {
-					int startIndex = line.indexOf(s88GetPrefix);
-					int lparenIndex = line.indexOf("(", startIndex);
-					if(lparenIndex >= 0) {
-						int rparenIndex = line.indexOf(")", lparenIndex);
-						if(rparenIndex >= 0) {
-							String[] args = line.substring(lparenIndex+1, rparenIndex).split(",");
-							String key = null;
-							String location = null;
-							if(line.contains(s88GetPrefix) && args.length>3) {
-								location = args[3].trim();
-								key = args[2].trim();
-							}
-							else if(args.length>4 ){  // s88Set
-								location = args[4].trim();
-								key = args[2].trim();								
-							}
-							validateRecipeKey(location, key, chart, element);
-						}
-					}
-				}
-			}
-		}
-		catch(Exception e) {
-			logger.error("Error validating script", e);
-		}
-	}
-
+	
 	/** Check if the given recipe data exists as a step property--if not, add an 
 	 *  error to that effect. Note: this does not necessarily mean the corresponding
 	 *  tag has been created yet--this will happen automatically.
@@ -116,14 +72,7 @@ public class StepPropertyValidator {
 		if(scopeElement == null) {
 			String errMsg = String.format("Step not found for recipe scope: %s:%s", scope, keyPath);
 			addError(Long.valueOf(chart.resourceId), chart.path, getStepName(step), errMsg);			
-		}
-		else {
-			List<Data> recipeData = Data.fromStepProperties(scopeElement);
-			if(recipeData == null || !Data.hasPath(recipeData, keyPath)) {
-				String errMsg = String.format("Recipe data not found: %s:%s", scope, keyPath);
-				addError(Long.valueOf(chart.resourceId), chart.path, getStepName(step), errMsg);
 			}
-		}
 		}
 		catch(Exception e) {
 			logger.error("Error checking for recipe data", e);
