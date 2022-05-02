@@ -130,7 +130,7 @@ public class SimpleHierarchyAnalyzer {
 		Long result = null;
 		ChartInfo info = chartsByPath.get(path);
 		if( info!=null ) {
-			result = new Long(info.resourceId);
+			result = info.resourceId;
 		}
 		else {
 			log.warnf("%s.getChartResourceForPath: WARNING: Path %s not found while searching for chart",CLSS,path);

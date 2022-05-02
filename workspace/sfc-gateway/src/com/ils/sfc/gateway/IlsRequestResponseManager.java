@@ -30,10 +30,6 @@ public class IlsRequestResponseManager {
 		return reply;
 	}
 	
-	public synchronized void setResponse(String id, PyDictionary payload) {
-		repliesById.put(id, payload);
-		stepIdsByRequestId.remove(id);
-	}
 	
 	public synchronized void addRequestId(String requestId, String stepId) {
 		stepIdsByRequestId.put(requestId, stepId);

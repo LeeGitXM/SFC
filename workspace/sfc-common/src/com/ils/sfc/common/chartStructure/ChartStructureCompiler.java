@@ -257,7 +257,7 @@ public class ChartStructureCompiler {
 								step.setEnclosedChart(enclosedChart);
 								enclosedChart.addParent(step);
 								if( log.isInfoEnabled()) {
-									ChartModelInfo stepInfo = modelInfoByResourceId.get(new Long(enclosedChart.getResourceId()));
+									ChartModelInfo stepInfo = modelInfoByResourceId.get(enclosedChart.getResourceId());
 									log.tracef("%s.linkParents: %s is a parent of %s",TAG,modelInfo.chartPath,stepInfo.chartPath);
 								}
 							}

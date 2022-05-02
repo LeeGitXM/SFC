@@ -40,7 +40,7 @@ public class SfcBrowserRequestHandler {
 		UUID result = null;
 		try {
 			result = GatewayConnectionManager.getInstance().getGatewayInterface().moduleInvoke(
-				IlsSfcModule.MODULE_ID, "startChart",path,clientProject,user,new Boolean(isolation));
+				IlsSfcModule.MODULE_ID, "startChart",path,clientProject,user, isolation);
 		}
 		catch(Exception ge) {
 			log.infof("%s.startChart: GatewayException (%s)",TAG,ge.getMessage());

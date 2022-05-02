@@ -136,6 +136,10 @@ public class PythonCall {
 	
 	public static final PythonCall YES_NO = new PythonCall(STEPS_PKG + "yesNo.activate", 
 			Boolean.class, stepArgs);
+	
+	// Run Chart 
+	public static final PythonCall RUN_CHART = new PythonCall("ils.sfc.designer.runChart.run", 
+			String.class, new String[]{"chartPath", "scope"});
 
 	//Structure Manager
 	public static final PythonCall COMPILE_CHARTS = new PythonCall("ils.sfc.designer.saver.compileCharts", 
@@ -153,8 +157,10 @@ public class PythonCall {
 	// Recipe Data V2
 	public static final PythonCall GET_RECIPE_DATA_LIST = new PythonCall("ils.sfc.recipeData.editor.getRecipeDataList", 
 			PyList.class,  new String[]{"stepUUID"} );
+
 	public static final PythonCall MIGRATE_RECIPE_DATA = new PythonCall("ils.sfc.recipeData.migrator.migrateChart", 
 			null,  new String[]{"chartPath", "resourceId", "chartResourceAsXML"} );
+	
 	public static final PythonCall GET_RECIPE_SEARCH_RESULTS = new PythonCall("ils.sfc.recipeData.search.getSearchResults", 
 			PyList.class,  new String[]{"chartPath"} );
 	// units

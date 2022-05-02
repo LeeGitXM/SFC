@@ -53,13 +53,6 @@ public class GatewayRequestHandler {
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 	}
 
-
-	/**
-	 * Clear any pending requests/responses.
-	 */
-	public void clearRequestResponseMaps() {
-		responseManager.clear();
-	}
 	
 	public String getChartPath(long resourceId) {
 		return structureManager.getChartPath(resourceId);
@@ -153,68 +146,8 @@ public class GatewayRequestHandler {
 		if(rec!=null ) path = rec.getWindowsBrowserPath();
 		return path;
 	}
-	/**
-	 * If there is an outstanding request from the specified step,
-	 * then post a response.
-	 * @param diagramId UUID of the parent diagram as a String.
-	 * @param stepName
-	 * @return the count of outstanding requests for this step. 
-	 */
-	public int requestCount(String chartPath, String stepName) {
-		Map<String,String> stepMap = responseManager.getStepIdsByRequestId();
-		int count = 0;
-		if( !stepMap.isEmpty() ) {
-			// Convert step name into id
-			ChartStructureCompiler compiler = structureManager.getCompiler();
-			StepStructure stepInfo = compiler.getStepInformation(chartPath, stepName);
-			if( stepInfo!=null ) {
-				String sid = stepInfo.getId();
-				// Look for the specified step in the list of pending responses.
-				for( String stepId:stepMap.values()) {
-					if( stepId.equals(sid) ) {
-						count++;
-					}
-				}
-			}
-		}
-		return count;
-	}
-	/**
-	 * If there is an outstanding request from the specified step,
-	 * then post a response.
-	 * @param diagramId UUID of the parent diagram as a String.
-	 * @param stepName
-	 */
-	public boolean postResponse(String chartPath, String stepName, String response) {
-		boolean result = false;
-		Map<String,String> stepMap = responseManager.getStepIdsByRequestId();
-		// Convert step name into id
-		ChartStructureCompiler compiler = structureManager.getCompiler();
-		StepStructure stepInfo = compiler.getStepInformation(chartPath, stepName);
-		if( stepInfo!=null ) {
-			String sid = stepInfo.getId();
-			// Look for the specified step in the list of pending responses.
-			// Arbitrarily choose the first for this step (there should only be one)
-			for( String rid:stepMap.keySet()) {
-				if( sid.equals(stepMap.get(rid)) ) {
-					// Assemble response
-					PyDictionary payload = new PyDictionary();
-					payload.put(Constants.MESSAGE_ID, rid);
-				    payload.put(Constants.RESPONSE,response);
-					responseManager.setResponse(rid,payload);
-					result = true;
-				}
-			}
-			if( !result ) {
-				log.warnf("%s.postResponse: No pending request for %s:%s(%s)",TAG,chartPath,stepName,sid);
-			}
-		}
-		else {
-			log.warnf("%s.postResponse: No stepInfo for %s:%s",TAG,chartPath,stepName);
-		}
-		
-		return result;
-	}
+
+
 	/**
 	 * Set a clock rate factor. This will change timing for isolation mode only.
 	 * This method is provided as a hook for test frameworks.

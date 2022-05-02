@@ -91,24 +91,6 @@ public class IlsGatewayScripts {
 		ilsSfcGatewayHook.getRequestResponseManager().addRequestId(requestId, stepId);
 	}
 
-	public static void setResponse(String id, PyDictionary payload) {
-		ilsSfcGatewayHook.getRequestResponseManager().setResponse(id, payload);
-	}	
-	
-	
-	/** Change a recipe data key to get a "sibling" value, e.g. "advice" instead of "value" */
-	private static String changeValueKey(String path, String newKey) {
-		int lastDotIndex = path.lastIndexOf(".");
-		if(lastDotIndex >= 0) {
-			return path.substring(0, lastDotIndex + 1) + newKey;
-		}
-		else {
-			logger.error("Could not replace key in recipe data path: " + path);
-			return path;
-		}
-	}
-
-	
 	public static void setHook(IlsSfcGatewayHook hook) {
 		ilsSfcGatewayHook = hook;		
 	}
@@ -131,30 +113,7 @@ public class IlsGatewayScripts {
 	public static void setProjectTimeFactor(String projectName,double factor) {
 		requestHandler.setProjectTimeFactor(projectName,factor);
 	}
-	/**
-	 * Clear any pending requests/responses.
-	 */
-	public static void clearRequestResponseMaps() {
-		requestHandler.clearRequestResponseMaps();
-	}
-	/**
-	 * If there is an outstanding request from the specified step,
-	 * then post a response.
-	 * @param diagramId UUID of the parent diagram as a String.
-	 * @param stepName
-	 */
-	public static boolean postResponse(String diagramId, String stepName, String response) {
-		return requestHandler.postResponse(diagramId, stepName, response);
-	}
-	/**
-	 * If there is an outstanding request from the specified step,
-	 * then post a response.
-	 * @param diagramId UUID of the parent diagram as a String.
-	 * @param stepName
-	 */
-	public static int requestCount(String chartPath, String stepName) {
-		return requestHandler.requestCount(chartPath, stepName);
-	}
+
 
 	// =====================================  =======================
 	
