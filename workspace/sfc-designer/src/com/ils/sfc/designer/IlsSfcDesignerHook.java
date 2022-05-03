@@ -296,21 +296,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		showMenu.add(executeShowOperation);
 		showMenu.add(executeShowPhase);
 		showMenu.add(executeShowSuperior);
-
-		/* We want this if they are running BLT or SFC so both modules try and add it, this attempts to only add it if it doesn't already exist.  */
-		if( !menuExists(context.getFrame(),INTERFACE_MENU_TITLE) ) {
-			Action interfaceAction = new AbstractAction(INTERFACE_MENU_TITLE) {
-				private static final long serialVersionUID = 5374667367733312464L;
-				public void actionPerformed(ActionEvent ae) {
-					SwingUtilities.invokeLater(new DialogRunner());
-				}
-			};
-			sfcMenu.addSeparator();
-			sfcMenu.add(interfaceAction);
-		}
-
 		sfcMenu.addSeparator();
-
 		sfcMenu.add(executeImportAction);
 		sfcMenu.add(executeExportAction);
 
@@ -447,19 +433,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		}
 	}
 
-
-	/**
-	 * Display a popup dialog for configuration of dialog execution parameters.
-	 * Run in a separate thread, as a modal dialog in-line here will freeze the UI.
-	 */
-	private class DialogRunner implements Runnable {
-
-		public void run() {
-			ExternalInterfaceConfigurationDialog setup = new ExternalInterfaceConfigurationDialog(context);
-			setup.pack();
-			setup.setVisible(true);
-		}
-	}
 
 	/**
 	 * We are dependent on the Ignition SFC module, but don't know about other modules that
