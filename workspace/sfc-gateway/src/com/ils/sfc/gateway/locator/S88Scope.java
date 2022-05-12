@@ -47,6 +47,7 @@ public class S88Scope extends PyChartScope implements WatchdogObserver,Monitored
 	private final WatchdogTimer timer;
 	
 	public S88Scope(GatewayContext ctx,PyChartScope chartScope,PyChartScope stepScope,String identifier, String key) {
+		log.infof("%s: In S88Scope with identifier: <%s> and key: <%s>", CLSS, identifier, key);
 		this.context = ctx;
 		this.chartScope = chartScope;
 		this.stepScope = stepScope;

@@ -11,13 +11,13 @@
 	<property name="version.beta" value="-development" />
 	<property name="root.dir" value="${basedir}/../.." />
 	<property name="common.jar.name" value="ils-common.jar" />
-	<property name="common.bin.dir" value="${root.dir}/ils-common/bin" />
+	<property name="common.bin.dir" value="${root.dir}/ils-common/ILS_Common/bin" />
 	<property name="common.src.dir" value="${root.dir}/ils-common/ILS_Common/src" />
 	<property name="ils.sfc.version" value="${version.major}.${version.minor}.${version.release}.${version.build}" />
 	<property name="ils.sfc.name" value="ILS-SFC" />
 	<property name="ils.sfc.release" value="0.5" />
 	<property name="ils.sfc.description" value="ILS SFC Customizations" />
-	<property name="jar.dir" value="${root.dir}/external/lib" />
+	<property name="jar.dir" value="${ignition.py.lib}/../../lib/core/common" />
 	<property name="sdk.dir" value="${root.dir}/ignition-79/lib" />
 	<property name="ant.build.javac.source" value="1.8"/>
 	<property name="ant.build.javac.target" value="1.8"/>
@@ -162,7 +162,8 @@
 		<copy file="${basedir}/sfc-build/bin/${ils.sfc.name}_Common/dist/ils-sfc-common.jar" todir="${basedir}/sfc-build/temp_modl/" />
 		
 		<!-- Copy dependent jars -->
-		<copy file="${root.dir}/external/lib/ils-common.jar" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${ignition.py.lib}/../../lib/core/common/${common.jar.name}" todir="${basedir}/sfc-build/temp_modl/" />
+		<copy file="${ignition.py.lib}/../../lib/core/common/${common.jar.name}.pack.gz" todir="${basedir}/sfc-build/temp_modl/" />
 		<copy file="${basedir}/../../external/lib/commons-math3-3.6.1.jar" todir="${basedir}/sfc-build/temp_modl/" />
 		<copy file="${basedir}/../../external/lib/jackson-databind-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
 		<copy file="${basedir}/../../external/lib/jackson-core-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
