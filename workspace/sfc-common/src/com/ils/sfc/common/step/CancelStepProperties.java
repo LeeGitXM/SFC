@@ -14,5 +14,5 @@ public interface CancelStepProperties extends ChartStepProperties {
 	
     public static final BasicProperty<?>[] properties = {
     	ACK_REQUIRED,
-    	MESSAGE };
+    	CANCEL_MESSAGE };
 }

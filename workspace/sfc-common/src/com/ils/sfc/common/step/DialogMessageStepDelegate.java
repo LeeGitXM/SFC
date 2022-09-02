@@ -2,6 +2,10 @@ package com.ils.sfc.common.step;
 
 import system.ils.sfc.common.Constants;
 
+/*
+ * This is for the step known as "Notify Dialog"
+ */
+
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.StepPropertyValidator;
 import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer.ChartInfo;

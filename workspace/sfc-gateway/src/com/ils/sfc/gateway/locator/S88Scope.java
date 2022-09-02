@@ -13,6 +13,7 @@ import com.ils.sfc.common.IlsSfcModule;
 import com.ils.sfc.common.PythonCall;
 import com.ils.sfc.gateway.IlsSfcGatewayHook;
 import com.inductiveautomation.ignition.common.TypeUtilities;
+import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.sqltags.model.Tag;
 import com.inductiveautomation.ignition.common.sqltags.model.TagPath;
 import com.inductiveautomation.ignition.common.sqltags.parser.TagPathParser;
@@ -35,24 +36,26 @@ public class S88Scope extends PyChartScope implements WatchdogObserver,Monitored
 	private static final double POLL_INTERVAL = 5.0;
 	private static final double INITIAL_POLL_INTERVAL = 0.0;
 	private final LoggerEx log = LogUtil.getLogger(getClass().getPackage().getName());
-	private static boolean DEBUG = true;
+	private static boolean DEBUG = false;
 	private final GatewayContext context;
 	private final PyChartScope stepScope;
 	private final PyChartScope chartScope;
 	private boolean running = false;  // Until proved otherwise
 	private final String identifier;
 	private String key;
+	private String chartPath;
 	private final Watchdog dog;
 	private final WatchdogTimer timer;
 	
 	public S88Scope(GatewayContext ctx,PyChartScope chartScope,PyChartScope stepScope,String identifier, String key) {
-		log.infof("%s: In the constructore with identifier: <%s> and key: <%s>", CLSS, identifier, key);
+		log.tracef("%s: In the constructor with identifier: <%s> and key: <%s>", CLSS, identifier, key);
 		this.context = ctx;
 		this.chartScope = chartScope;
 		this.stepScope = stepScope;
 		this.identifier = identifier;
 		if( key==null ) key="";
 		this.key = key;
+		this.chartPath = (String)chartScope.get("chartPath");
 		IlsSfcGatewayHook hook = (IlsSfcGatewayHook)context.getModule(IlsSfcModule.MODULE_ID);
 		this.timer = hook.getTimer();
 		this.dog = new Watchdog(key,this);
@@ -87,8 +90,7 @@ public class S88Scope extends PyChartScope implements WatchdogObserver,Monitored
 		return false;
 	}
 
-	
-	
+		
 	/***************
 	* MonitoredScopeLifecycle functions. These are called based on when the transition starts/stops.
 	****************/
@@ -110,6 +112,21 @@ public class S88Scope extends PyChartScope implements WatchdogObserver,Monitored
 	/** 
 	 * Run periodically to read the recipe data value. If successful, it "pets" the dog
 	 * to trigger another cycle.
+	 * 
+	 * Regarding error handling - an error that happens from time to time is that the specified recipe data does not exist.
+	 * This can occur during development due to a mis-configuring or it can happen long after development if the recipe data
+	 * somehow got deleted.  
+	 * 
+	 * There isn't a way to gracefully recover from this.  There is no right way to continue, I can't assume True or False.
+	 * Ideally, I would abort the chart and then if there was an abort handler on the chart then the unit procedure could continue.  
+	 * But since I can't abort the chart, all I can do is cancel which is easier to do from the Python environment.
+	 * 
+	 * There is an abort method on a chart context but I can't figure out how to get the chart context from here!
+	 * It would look something like this:
+	 *             getChartContext().abort(e) where e is the exception 
+	 * 
+	 * There isn't a Python call to abort the chart, all I can do at the Python level is cancel the chart, when canceling, we cancel
+	 * the Unit procedure which cancels the whole shebang from the bottom up.
 	 */
 	@Override
 	public void evaluate() {
@@ -125,7 +142,18 @@ public class S88Scope extends PyChartScope implements WatchdogObserver,Monitored
 			}
 		}
 		catch(Exception ex) {
-			log.errorf("S88PollTask: EXCEPTION: Running S88 %s.%s (%s)", identifier,key, ex.getMessage());
+			log.errorf("%s: EXCEPTION: Running S88 %s.%s (%s)", CLSS, identifier, key, ex.getMessage());
+			
+			/*
+			 * I'd like to cancel the chart here - we've decided that it is dangerous to just let this chart hang on this transition.
+			 * Better to abort the chart so that the operator / AE is forced 
+			 */
+			try {
+				String notificationText = "Cancelling the chart due to an invalid recipe data <" + identifier + "." + key +"> specified in a transition on chart <" + this.chartPath + ">";
+				PythonCall.CANCEL_CHART.exec(chartScope, notificationText);
+			} catch (JythonExecException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

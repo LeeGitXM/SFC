@@ -8,7 +8,7 @@ import static com.ils.sfc.common.IlsProperty.*;
 
 /**
  * This interface just exists to store some constants for the step's properties and factory id
- *
+ * This is for the block on the Notification palette titled "Working..."
  */
 public interface PostDelayNotificationStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.postDelayNotification";

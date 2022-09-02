@@ -141,6 +141,7 @@ public class IlsProperty {
     public static final BasicProperty<String> BUTTON_LABEL = createProperty(Constants.BUTTON_LABEL, String.class, "");
     public static final BasicProperty<String> BUTTON_CALLBACK = createProperty(Constants.BUTTON_CALLBACK, String.class, "");
     public static final BasicProperty<String> CALLBACK = createProperty(Constants.CALLBACK, String.class, "");
+    public static final BasicProperty<String> CANCEL_MESSAGE = createProperty(Constants.MESSAGE, String.class, "<HTML>Are you sure you want to <b>Cancel</b>?");
     public static final BasicProperty<String> CATEGORY = createProperty(Constants.CATEGORY, String.class, "");
     public static final BasicProperty<String> CHART_PATH = createProperty("chart-path", String.class, "");
     public static final BasicProperty<String> CHOICES_RECIPE_LOCATION = createProperty(Constants.CHOICES_RECIPE_LOCATION, String.class, Constants.RECIPE_LOCATION_CHOICES[0], Constants.RECIPE_LOCATION_CHOICES);

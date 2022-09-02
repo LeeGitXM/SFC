@@ -140,6 +140,10 @@ public class PythonCall {
 	// Run Chart 
 	public static final PythonCall RUN_CHART = new PythonCall("ils.sfc.designer.runChart.run", 
 			String.class, new String[]{"chartPath", "scope"});
+	
+	// Cancel Chart
+	public static final PythonCall CANCEL_CHART = new PythonCall("ils.sfc.gateway.api.cancelChartWithNotification", 
+			null, new String[]{"chartScope", "notificationText"});
 
 	//Structure Manager
 	public static final PythonCall COMPILE_CHARTS = new PythonCall("ils.sfc.designer.saver.compileCharts", 

@@ -7,7 +7,7 @@ import static com.ils.sfc.common.IlsProperty.*;
 
 /**
  * This interface just exists to store some constants for the step's properties and factory id
- *
+ * This is for the step known as "Notify Dialog" 
  */
 public interface DialogMessageStepProperties extends ChartStepProperties {
 	public static final String FACTORY_ID = "com.ils.dialogMessageStep";

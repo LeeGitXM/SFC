@@ -9,8 +9,10 @@
 		<requiredignitionversion>8.1.0</requiredignitionversion>
 		<requiredframeworkversion>9</requiredframeworkversion>
 		<freemodule>true</freemodule>
-		<documentation></documentation>
-
+		
+		<!--  This is the new approach to save it as a PDF... -->
+		<documentation>SFCUsersGuide.pdf</documentation>
+	
 		<!-- Add the module dependencies for each scope -->
 		<depends scope="G">com.inductiveautomation.sfc</depends>
 		<depends scope="C">com.inductiveautomation.sfc</depends>

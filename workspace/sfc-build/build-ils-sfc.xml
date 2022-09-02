@@ -104,6 +104,7 @@
 			<param name="javacSource" value="1.8" />
 			<param name="module.build.classpath" value="sfc.common.classpath"/>
 		</antcall>
+		
 		<!-- sfc-gateway jar -->
 		<antcall target="MakeProject">
 			<param name="modName" value="${ils.sfc.name}_Gateway" />
@@ -139,7 +140,6 @@
 		<mkdir dir="${basedir}/sfc-build/temp_modl" />
 		<mkdir dir="${basedir}/sfc-build/modules" />
 		
-
 		<copy file="${basedir}/sfc-build/module-ils-sfc.xml" tofile="${basedir}/sfc-build/temp_modl/module.xml" overwrite="true" />
 
 		<replace file="${basedir}/sfc-build/temp_modl/module.xml" token="@NAME@" value="${ils.sfc.name}" />
@@ -157,7 +157,6 @@
 		<copy file="${jar.dir}/${common.jar.name}" todir="${basedir}/sfc-build/temp_modl/" />
 		<copy file="${root.dir}/external/lib/lucene-1.4.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
 		<copy file="${root.dir}/external/lib/prefuse-1.0.1.jar" todir="${basedir}/sfc-build/temp_modl/" />
-
 		
 		<!-- Copy gateway jar -->
 		<copy file="${basedir}/sfc-build/bin/${ils.sfc.name}_Gateway/dist/ils-sfc-gateway.jar" todir="${basedir}/sfc-build/temp_modl/" />
@@ -171,16 +170,18 @@
 		<copy file="${basedir}/../../external/lib/jackson-annotations-2.2.3.jar" todir="${basedir}/sfc-build/temp_modl/" />
 		<copy file="${jar.dir}/${common.jar.name}" todir="${basedir}/sfc-build/temp_modl/" />
 
-		<!-- Copy license file, users guide and javadoc into the bundle -->
-		<mkdir dir="${basedir}/sfc-build/doc/SFCUsersGuide_filtered_files" />
+		<!-- Copy license and users guide into the bundle -->		
 		<copy file="${basedir}/sfc-build/license.html" todir="${basedir}/sfc-build/temp_modl/" />
-		<copy todir="${basedir}/sfc-build/temp_modl/doc">
-		    <fileset dir="${basedir}/sfc-build/doc"/>
-			<fileset file="${svn.repo}/EMChemicals/Sequential Control/Documentation/User's Guide/SFCUsersGuide_filtered.html"/>
+		
+		<!-- This is the new approach to store the User's Guide as PDF documents -->
+		<echo message="Copying PDF User's Guide files..." />
+
+		<copy todir="${basedir}/sfc-build/temp_modl/doc/">
+			<fileset dir="${svn.repo}/EMChemicals/Sequential Control/Documentation/User's Guide/">
+				<include name="*.pdf"/>
+			</fileset>
 		</copy>
-		<copy todir="${basedir}/sfc-build/temp_modl/doc/SFCUsersGuide_filtered_files">
-			<fileset dir="${svn.repo}/EMChemicals/Sequential Control/Documentation/User's Guide/SFCUsersGuide_filtered_files"/>
-		</copy>
+		
 		<!-- Echo the version into .version in the bundle and to be saved -->
 		<echo message="${ils.sfc.name}-${ils.sfc.version}" file="${basedir}/sfc-build/temp_modl/.version" append="false"/>
 		<echo message="${ils.sfc.name}-${ils.sfc.name}:${ils.sfc.release}" file="${basedir}/sfc-build/.version" append="false"/>

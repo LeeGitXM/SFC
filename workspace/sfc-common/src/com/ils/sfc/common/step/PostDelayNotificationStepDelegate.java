@@ -3,6 +3,10 @@ package com.ils.sfc.common.step;
 import com.inductiveautomation.sfc.uimodel.ChartCompilationResults;
 import com.inductiveautomation.sfc.uimodel.ChartUIElement;
 
+/*
+ * This is for the block on the Notification palette titled "Working..."
+ */
+
 public class PostDelayNotificationStepDelegate extends AbstractIlsStepDelegate implements
 PostDelayNotificationStepProperties {
 

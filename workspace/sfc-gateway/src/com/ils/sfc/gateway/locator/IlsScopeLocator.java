@@ -34,7 +34,7 @@ public class IlsScopeLocator implements ScopeLocator {
 	public synchronized PyChartScope locate(ScopeContext scopeContext, String identifier) {
 		PyChartScope chartScope = scopeContext.getChartScope();
 		String providerName = IlsSfcCommonUtils.getTagProvider(chartScope);
-		log.infof("PAH - In contructor with a IlsScopeLocator with identifier: %s", identifier);
+		log.tracef("In IlsScopeLocator.locate() with identifier: %s", identifier);
 
 		if( !identifier.equalsIgnoreCase(Constants.TAG)) {
 			
@@ -42,11 +42,11 @@ public class IlsScopeLocator implements ScopeLocator {
 			// step, which is really handy when the transition uses scope locator PRIOR
 			PyChartScope stepScope = scopeContext.getStepOrPrevious();
 			PyChartScope rootScope = scopeContext.getRoot();
-			log.infof("PAH - creating a S88Scope locator with identifier: %s", identifier);
+			log.tracef("Creating an S88Scope locator with identifier: %s", identifier);
 			return new S88Scope(hook.getContext(),chartScope,stepScope,identifier, "");
 		}
 		else {
-			log.infof("PAH - creating a TagChartScope locator using provider: %s!", providerName);
+			log.tracef("Creating a TagChartScope locator using provider: %s", providerName);
 			return new TagChartScope(providerName, hook.getContext());	
 		}
 	}

@@ -23,6 +23,7 @@ import javax.swing.SwingUtilities;
 
 import org.python.core.PyList;
 
+import com.adbs.utils.Helpers;
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
@@ -38,6 +39,7 @@ import com.ils.sfc.designer.exim.ImportSelectionDialog;
 import com.ils.sfc.designer.runner.ChartRunner;
 import com.ils.sfc.designer.search.IlsSfcSearchProvider;
 import com.ils.sfc.designer.stepEditor.IlsStepEditor;
+import com.inductiveautomation.factorypmi.application.script.builtin.ClientSystemUtilities;
 import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.modules.ModuleInfo;
@@ -90,6 +92,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	private static final String RECIPE_DATA_INTERNALIZE = "Internalize Recipe Data for Export";
 	private static final String RECIPE_DATA_STORE = "Store Internal Recipe Data into Database";
 	private static final String RECIPE_DATA_INITIALIZE = "Initialize Internal Recipe Data";
+	private static final String USERS_GUIDE_TITLE = "User's Guide";
 	
 	public static final String CHART_RESOURCE_TYPE = "com.inductiveautomation.sfc/charts";
 	
@@ -270,7 +273,26 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 				SwingUtilities.invokeLater(new ShowImportDialog());
 			}
 		};
-		// ----------------------- Menus to zoom current chart -----------------------------
+		
+		// ----------------------- Open User's Guide Actions -----------------------------------
+		Action openUsersGuideAction = new AbstractAction(USERS_GUIDE_TITLE) {
+			private static final long serialVersionUID = 5384887367733312465L;
+			public void actionPerformed(ActionEvent ae) {
+				String gatewayHostname = ClientSystemUtilities.getGatewayAddress();
+				log.tracef(String.format("Gateway Host: %s", gatewayHostname));
+				
+				String address = String.format("%s%s", gatewayHostname, "/main/system/moduledocs/com.ils.sfc/SFCUsersGuide.pdf");
+				log.infof(String.format("%s.HelpAction(): Document address is: %s", CLSS, address));
+				
+				// This Helpers class is pretty handy, not exactly sure how this is working...
+				Helpers.openURL(address);
+			
+			
+			}
+		};
+		
+		
+		// ----------------------- Build the Menu -----------------------------
 
 		JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
 
@@ -296,9 +318,15 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		showMenu.add(executeShowOperation);
 		showMenu.add(executeShowPhase);
 		showMenu.add(executeShowSuperior);
+
 		sfcMenu.addSeparator();
+		
 		sfcMenu.add(executeImportAction);
 		sfcMenu.add(executeExportAction);
+		
+		sfcMenu.addSeparator();
+		
+		sfcMenu.add(openUsersGuideAction);
 
 		MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  
 		merge.add(WellKnownMenuConstants.TOOLS_MENU_LOCATION, toolsMenu);
@@ -576,17 +604,24 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	 */
 	public void resourcesCreated(String arg0, List<CreateResourceOperation> arg1) {
 		log.infof("%s.resourcesCreated()", CLSS);
-
-		for(CreateResourceOperation op : arg1) {			
+		
+		for(CreateResourceOperation op : arg1) {
+			log.tracef("Resource Name:%s, isFolder: %s", op.getResource().getResourceName(), op.getResource().isFolder());
+					
 			// This gets called for every resource that has changed since the last save, be careful to only process SFC resources
 			if(op.getResource().getResourceType().toString().equals(CHART_RESOURCE_TYPE)) {
-				String chartPath = op.getResource().getFolderPath();
-				log.infof("SFC chart: %s, id: %d, has been created (modification type: %s, resource type: %s)", chartPath, op.getResourceId().hashCode(), op.getOperationType().toString(), op.getResource().getResourceType());
+				if (op.getResource().isFolder()) {
+					log.tracef("...skipping a SFC folder...");
+				}
+				else {
+					String chartPath = op.getResource().getFolderPath();
+					log.tracef("SFC chart: %s, id: %d, has been created (modification type: %s, resource type: %s)", chartPath, op.getResourceId().hashCode(), op.getOperationType().toString(), op.getResource().getResourceType());
 
-				// CJL  At this point we should check the resource IDs and see if it is a copy, in which case the UUIDs should be updated
-				// Store the resource into a map that will be acted on when the project is Saved 
-				log.tracef("...inserting it into the addedResourceMap!");
-				addedResourceMap.put((long)op.getResourceId().hashCode(), op.getResource());
+					// CJL  At this point we should check the resource IDs and see if it is a copy, in which case the UUIDs should be updated
+					// Store the resource into a map that will be acted on when the project is Saved 
+					log.tracef("...inserting it into the addedResourceMap!");
+					addedResourceMap.put((long)op.getResourceId().hashCode(), op.getResource());
+				}
 			} else {
 				log.infof("...skipping a non-SFC resource...");
 			}

@@ -117,17 +117,6 @@ public class IlsGatewayScripts {
 
 	// =====================================  =======================
 	
-	/*
-	 * 
-	//PAH - not sure if anyone ever calls this from Python???
-	//PAH  The Data. started to throw an error when I deleted the recipe.object classes from the common scope 1/26/22 PAH
-	 *  
-	public static String getJSONForScope(PyChartScope scope) throws JSONException {
-		JSONObject jsonObject = Data.fromStepScope(scope);
-		return jsonObject.toString();
-	}
-	*/
-
 	public static MonitorDownloadsConfig getMonitorDownloadsConfig(String json) throws JsonParseException, JsonMappingException, IOException {
 		return MonitorDownloadsConfig.fromJSON(json);
 	}
