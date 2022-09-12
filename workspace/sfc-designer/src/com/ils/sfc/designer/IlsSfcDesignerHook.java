@@ -286,13 +286,12 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 				
 				// This Helpers class is pretty handy, not exactly sure how this is working...
 				Helpers.openURL(address);
-			
-			
 			}
 		};
 		
 		
 		// ----------------------- Build the Menu -----------------------------
+		log.infof("%s.getModuleMenu()...", CLSS);
 
 		JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
 
@@ -363,7 +362,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			stepRegistry.register(clientStepFactory);
 		}
 
-		// Listen to changes on the global project PETE
+		// Listen to changes on the this project
 		context.getProject().addProjectResourceListener(this);
 
 		// register the step config factories (ie the editors)
@@ -411,38 +410,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	}
 
 	public ChartStructureManager getChartStructureManager() {return structureManager;}
-
-	// Search the menu tree to see if the same menu has been added by another module
-	private boolean menuExists(Frame frame,String title) {
-		for(Component c:context.getFrame().getComponents() ) {
-			if( c instanceof JRootPane ) {
-				JRootPane root = (JRootPane)c;
-				JMenuBar bar = root.getJMenuBar();
-				if( bar!=null ) {
-					int count = bar.getMenuCount();
-					int index = 0;
-					while( index<count) {
-						JMenu menu = bar.getMenu(index);
-						if( menu.getName().equalsIgnoreCase(WellKnownMenuConstants.VIEW_MENU_NAME)) {
-							int nitems = menu.getItemCount();
-							int jndex = 0;
-							while(jndex<nitems ) {
-								JMenuItem item = menu.getItem(jndex);
-								if( item!=null ) {
-									String name = item.getText();
-									if( title.equalsIgnoreCase(name)) return true;
-								}
-								jndex++;
-							}
-							break;
-						}
-						index++;
-					}
-				}
-			}
-		}
-		return false;
-	}
 
 	/**
 	 * Display a popup error dialog
