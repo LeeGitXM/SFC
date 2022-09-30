@@ -295,37 +295,60 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		// ----------------------- Build the Menu -----------------------------
 		log.infof("%s.getModuleMenu()...", CLSS);
 		
-		MenuBarMerge theMenu = iaSfcHook.getModuleMenu();
 		
-		/* Try to attach my custom menu PETE */
+		//MenuBarMerge theMenu = iaSfcHook.getModuleMenu();
+		
+		// Try to attach my custom menu PETE 
 		log.info("Getting THE menu...");
-		//MenuBarMerge theMenu = sfcWorkspace.getMenu();
-		if( theMenu != null ) {
-			log.infof("Got: %s", theMenu.toString());
-			
+		MenuBarMerge theMenu = sfcWorkspace.getMenu();
+		
+		if( theMenu == null ) {
 			log.info("Creating a new merge menu...");
-			merge = new MenuBarMerge("sfc");  // as suggested in javadocs
-			
-			log.info("Creating SFC menu...");
-	    	JMenuMerge sfcMenu = new JMenuMerge("SFCs", "sfc.Menu.AlignBlocks");
-	    	// ".Menu.AlignBlocks" needs to be in the resource bundle or else it gets ? added to it.
-	    	log.info("Adding seperator...");
-			sfcMenu.addSeparator();	
-	    	log.info("Adding seperator...");
-			sfcMenu.addSeparator();	
-	
-			log.infof("Adding SFC menu to the merge..");
-	    	merge.add(sfcMenu);
-			
-	    	log.infof("Adding the merge to the main menu..");
-			theMenu.add(merge);
-			
-			
-			log.infof("Done!");
+			theMenu = new MenuBarMerge(SFCModule.MODULE_ID);  // as suggested in javadocs
 		}
 		else {
-			log.info("--- the menu is null ---");
+			log.info("The SFC menu is NOT null...");
+			log.infof("Got: %s", theMenu.toString());
 		}
+			
+		log.info("Creating SFC menu...");
+    	JMenuMerge sfcMenu = new JMenuMerge("SFCs", "Menu.SFC");
+    	// ".Menu.AlignBlocks" needs to be in the resource bundle or else it gets ? added to it.
+		
+    	log.infof("Adding choices...");
+    	sfcMenu.add(executeIsolationAction);
+		sfcMenu.add(executeProductionAction);
+    	
+		log.info("Adding seperator...");
+		sfcMenu.addSeparator();	
+		
+		log.infof("Adding More choices...");
+		sfcMenu.add(internalizeRecipeDataAction);
+		sfcMenu.add(storeInternalRecipeDataAction);
+		sfcMenu.add(initializeInternalRecipeDataAction);
+		
+    	log.info("Adding seperator...");
+		sfcMenu.addSeparator();	
+		
+		JMenu showMenu = new JMenu(SHOW_ANCESTOR_TITLE);
+		sfcMenu.add(showMenu);
+		showMenu.add(executeShowProcedure);
+		showMenu.add(executeShowOperation);
+		showMenu.add(executeShowPhase);
+		showMenu.add(executeShowSuperior);
+
+		sfcMenu.addSeparator();
+		
+		sfcMenu.add(executeImportAction);
+		sfcMenu.add(executeExportAction);
+
+		log.infof("Adding SFC menu to the merge..");
+		theMenu.add(sfcMenu);
+		
+//    	log.infof("Adding the merge to the main menu..");
+//		theMenu.add(merge);
+		
+		log.infof("Done!");
 
 		return theMenu;
 		
@@ -398,6 +421,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		sfcWorkspace = iaSfcHook.getWorkspace();
 		
 		/* Try to attach my custom menu PETE */
+/*
 		log.info("Getting THE menu...");
 		MenuBarMerge theMenu = sfcWorkspace.getMenu();
 		if( theMenu != null ) {
@@ -426,7 +450,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		else {
 			log.info("--- the menu is null ---");
 		}
-		
+*/		
 //		JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
 //    	JMenuMerge sfcMenu = new JMenuMerge(SFC_SUBMENU_TITLE, "SFC.Menu."+SFC_SUBMENU_TITLE);
 
