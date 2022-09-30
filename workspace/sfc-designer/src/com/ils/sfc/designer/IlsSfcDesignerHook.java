@@ -158,6 +158,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	// If the menu already exists, do nothing
 	@Override
 	public MenuBarMerge getModuleMenu() {
+		
+		MenuBarMerge merge = null; /* PETE */
 
 		// ----------------------- Menu to launch recipe data importer and exporter (temporary until real fix)  -----------------------------
 		Action internalizeRecipeDataAction = new AbstractAction(RECIPE_DATA_INTERNALIZE) {
@@ -292,6 +294,44 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		
 		// ----------------------- Build the Menu -----------------------------
 		log.infof("%s.getModuleMenu()...", CLSS);
+		
+		MenuBarMerge theMenu = iaSfcHook.getModuleMenu();
+		
+		/* Try to attach my custom menu PETE */
+		log.info("Getting THE menu...");
+		//MenuBarMerge theMenu = sfcWorkspace.getMenu();
+		if( theMenu != null ) {
+			log.infof("Got: %s", theMenu.toString());
+			
+			log.info("Creating a new merge menu...");
+			merge = new MenuBarMerge("sfc");  // as suggested in javadocs
+			
+			log.info("Creating SFC menu...");
+	    	JMenuMerge sfcMenu = new JMenuMerge("SFCs", "sfc.Menu.AlignBlocks");
+	    	// ".Menu.AlignBlocks" needs to be in the resource bundle or else it gets ? added to it.
+	    	log.info("Adding seperator...");
+			sfcMenu.addSeparator();	
+	    	log.info("Adding seperator...");
+			sfcMenu.addSeparator();	
+	
+			log.infof("Adding SFC menu to the merge..");
+	    	merge.add(sfcMenu);
+			
+	    	log.infof("Adding the merge to the main menu..");
+			theMenu.add(merge);
+			
+			
+			log.infof("Done!");
+		}
+		else {
+			log.info("--- the menu is null ---");
+		}
+
+		return theMenu;
+		
+		
+		
+/*		
 
 		JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
 
@@ -330,6 +370,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  
 		merge.add(WellKnownMenuConstants.TOOLS_MENU_LOCATION, toolsMenu);
 		return merge;
+*/
 	}
 	
 	@Override
@@ -347,11 +388,68 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	public void startup(DesignerContext ctx, LicenseState activationState) throws Exception {
 		this.context = ctx;
 		this.project = context.getProject();
+		
+		MenuBarMerge merge = null; /* PETE */
+		
 		DesignerUtil.context = ctx;
 		log.info("IlsSfcDesignerHook.startup...");
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
 		/*		recipeEditorFrame = new RecipeEditorFrame(ctx, iaSfcHook.getWorkspace()); */
 		sfcWorkspace = iaSfcHook.getWorkspace();
+		
+		/* Try to attach my custom menu PETE */
+		log.info("Getting THE menu...");
+		MenuBarMerge theMenu = sfcWorkspace.getMenu();
+		if( theMenu != null ) {
+			log.infof("Got: %s", theMenu.toString());
+			
+			log.info("Creating a new merge menu...");
+			merge = new MenuBarMerge("sfc");  // as suggested in javadocs
+			
+			log.info("Creating SFC menu...");
+	    	JMenuMerge sfcMenu = new JMenuMerge("SFCs", "sfc.Menu.AlignBlocks");
+	    	// ".Menu.AlignBlocks" needs to be in the resource bundle or else it gets ? added to it.
+	    	log.info("Adding seperator...");
+			sfcMenu.addSeparator();	
+	    	log.info("Adding seperator...");
+			sfcMenu.addSeparator();	
+	
+			log.infof("Adding SFC menu to the merge..");
+	    	merge.add(sfcMenu);
+			
+	    	log.infof("Adding the merge to the main menu..");
+			theMenu.add(merge);
+			
+			
+			log.infof("Done!");
+		}
+		else {
+			log.info("--- the menu is null ---");
+		}
+		
+//		JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
+//    	JMenuMerge sfcMenu = new JMenuMerge(SFC_SUBMENU_TITLE, "SFC.Menu."+SFC_SUBMENU_TITLE);
+
+//    	JMenuMerge sfcMenu = new JMenuMerge(SFC_SUBMENU_TITLE, BLTProperties.BUNDLE_PREFIX+".Menu.AlignBlocks");
+//		JMenuMerge sfcMenu = new JMenuMerge(SFC_SUBMENU_TITLE);
+
+    	/*
+    	JMenu sfcMenu = new JMenu(SFC_SUBMENU_TITLE);
+
+    	log.info("Adding seperator...");
+		sfcMenu.addSeparator();		
+		log.info("Adding seperator...");
+		sfcMenu.addSeparator();		
+		
+		log.info("Adding SFC menu to THE menu...");
+		//theMenu.add(sfcMenu);
+		
+		MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  
+		merge.add(WellKnownMenuConstants.TOOLS_MENU_LOCATION, theMenu);
+		*/
+
+		/* end of creating new menu PETE */
+		
 		/*      	iaSfcHook.getWorkspace().getInnerWorkspace().addDesignableWorkspaceListener(recipeEditorFrame); */
 
 		/*      	frames.add(recipeEditorFrame); */
