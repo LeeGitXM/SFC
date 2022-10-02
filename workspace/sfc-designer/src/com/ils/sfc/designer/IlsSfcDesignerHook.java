@@ -3,12 +3,9 @@
  */
 package com.ils.sfc.designer;
 
-import java.awt.Component;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,23 +13,17 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
-
-import org.python.core.PyList;
 
 import com.adbs.utils.Helpers;
 import com.ils.sfc.client.step.AbstractIlsStepUI;
 import com.ils.sfc.common.IlsClientScripts;
 import com.ils.sfc.common.IlsProperty;
 import com.ils.sfc.common.PythonCall;
-import com.ils.sfc.common.chartStructure.ChartStructureCompiler;
 import com.ils.sfc.common.chartStructure.ChartStructureCompilerV2;
 import com.ils.sfc.common.chartStructure.ChartStructureManager;
 import com.ils.sfc.common.chartStructure.RecipeDataConverter;
-import com.ils.sfc.common.chartStructure.SimpleHierarchyAnalyzer;
 import com.ils.sfc.common.step.AllSteps;
 import com.ils.sfc.designer.exim.ExportSelectionDialog;
 import com.ils.sfc.designer.exim.ImportSelectionDialog;
@@ -40,6 +31,7 @@ import com.ils.sfc.designer.runner.ChartRunner;
 import com.ils.sfc.designer.search.IlsSfcSearchProvider;
 import com.ils.sfc.designer.stepEditor.IlsStepEditor;
 import com.inductiveautomation.factorypmi.application.script.builtin.ClientSystemUtilities;
+import com.inductiveautomation.ignition.common.BundleUtil;
 import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.modules.ModuleInfo;
@@ -48,7 +40,6 @@ import com.inductiveautomation.ignition.common.project.ChangeOperation.CreateRes
 import com.inductiveautomation.ignition.common.project.ChangeOperation.DeleteResourceOperation;
 import com.inductiveautomation.ignition.common.project.ChangeOperation.ModifyResourceOperation;
 import com.inductiveautomation.ignition.common.project.Project;
-import com.inductiveautomation.ignition.common.project.ProjectListener;
 import com.inductiveautomation.ignition.common.project.ProjectResourceListener;
 import com.inductiveautomation.ignition.common.project.resource.ProjectResource;
 import com.inductiveautomation.ignition.common.project.resource.ResourcePath;
@@ -62,8 +53,6 @@ import com.inductiveautomation.ignition.designer.model.DesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.SaveContext;
 import com.inductiveautomation.ignition.designer.model.menu.JMenuMerge;
 import com.inductiveautomation.ignition.designer.model.menu.MenuBarMerge;
-import com.inductiveautomation.ignition.designer.model.menu.WellKnownMenuConstants;
-import com.inductiveautomation.ignition.gateway.project.ResourceFilter;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
@@ -73,12 +62,16 @@ import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
 import com.inductiveautomation.sfc.designer.workspace.SfcDesignableContainer;
 import com.inductiveautomation.sfc.designer.workspace.SfcWorkspace;
 import com.jidesoft.docking.DockableFrame;
+import com.jidesoft.docking.event.DockableFrameEvent;
+import com.jidesoft.docking.event.DockableFrameListener;
 
 import system.ils.sfc.common.Constants;
 
-public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectResourceListener {
+public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectResourceListener,DockableFrameListener {
 	private final static String CLSS = "IlsSfcDesignerHook";
 	private static final String SFC_SUBMENU_TITLE  = "SFC Extensions";
+	private static final String HOOK_BUNDLE_NAME = "designer";  // Properties file is designer.properties
+	private static final String PREFIX = "sfc";                 // Properties are accessed by this prefix.
 	private static final String EXPORT_MENU_TITLE  = "Export";
 	private static final String IMPORT_MENU_TITLE  = "Import";
 	private static final String INTERFACE_MENU_TITLE  = "External Interface Configuration";
@@ -99,6 +92,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	
 	private DesignerContext context = null;
 	private Project project = null;
+	private MenuBarMerge sfcMenuMerge = null;    // Menu bar merge extensions for SFC module
 
 	private final LoggerEx log;
 	//private JPopupMenu stepPopup;
@@ -114,6 +108,9 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 
 	private static ClientStepRegistry stepRegistry;
 	private static SfcWorkspace sfcWorkspace;
+	static {
+		BundleUtil.get().addBundle(PREFIX,IlsSfcDesignerHook.class,HOOK_BUNDLE_NAME);
+	}
 
 	public IlsSfcDesignerHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
@@ -154,12 +151,10 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		}
 	}
 
-	// Insert a menu to allow control of database and tag provider.
+	// Create a new menu to control ILS extensions of the SFC module. 
 	// If the menu already exists, do nothing
 	@Override
 	public MenuBarMerge getModuleMenu() {
-		
-		MenuBarMerge merge = null; /* PETE */
 
 		// ----------------------- Menu to launch recipe data importer and exporter (temporary until real fix)  -----------------------------
 		Action internalizeRecipeDataAction = new AbstractAction(RECIPE_DATA_INTERNALIZE) {
@@ -293,41 +288,33 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		
 		
 		// ----------------------- Build the Menu -----------------------------
-		log.infof("%s.getModuleMenu()...", CLSS);
-		
-		
-		//MenuBarMerge theMenu = iaSfcHook.getModuleMenu();
+		log.infof("%s.getModuleMenu building ...", CLSS);
 		
 		// Try to attach my custom menu PETE 
-		log.info("Getting THE menu...");
-		MenuBarMerge theMenu = sfcWorkspace.getMenu();
+		log.infof("Getting THE menu... SFC is active %s",(sfcWorkspace.isActiveWorkspace()?"TRUE":"FALSE"));
 		
-		if( theMenu == null ) {
+		
+		if( sfcMenuMerge == null ) {
 			log.info("Creating a new merge menu...");
-			theMenu = new MenuBarMerge(SFCModule.MODULE_ID);  // as suggested in javadocs
+			sfcMenuMerge = new MenuBarMerge(SFCModule.MODULE_ID);  // as suggested in javadocs
 		}
 		else {
-			log.info("The SFC menu is NOT null...");
-			log.infof("Got: %s", theMenu.toString());
+			log.info("The SFC menu exists ...");
+			return sfcMenuMerge;
 		}
 			
 		log.info("Creating SFC menu...");
-    	JMenuMerge sfcMenu = new JMenuMerge("SFCs", "Menu.SFC");
+    	JMenuMerge sfcMenu = new JMenuMerge("SFC (ILS)",PREFIX+".Menu.SFC");
     	// ".Menu.AlignBlocks" needs to be in the resource bundle or else it gets ? added to it.
 		
-    	log.infof("Adding choices...");
     	sfcMenu.add(executeIsolationAction);
 		sfcMenu.add(executeProductionAction);
     	
-		log.info("Adding seperator...");
 		sfcMenu.addSeparator();	
 		
-		log.infof("Adding More choices...");
 		sfcMenu.add(internalizeRecipeDataAction);
 		sfcMenu.add(storeInternalRecipeDataAction);
 		sfcMenu.add(initializeInternalRecipeDataAction);
-		
-    	log.info("Adding seperator...");
 		sfcMenu.addSeparator();	
 		
 		JMenu showMenu = new JMenu(SHOW_ANCESTOR_TITLE);
@@ -343,57 +330,12 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		sfcMenu.add(executeExportAction);
 
 		log.infof("Adding SFC menu to the merge..");
-		theMenu.add(sfcMenu);
-		
-//    	log.infof("Adding the merge to the main menu..");
-//		theMenu.add(merge);
+		sfcMenuMerge.add(sfcMenu);
 		
 		log.infof("Done!");
 
-		return theMenu;
-		
-		
-		
-/*		
+		return sfcMenuMerge;
 
-		JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
-
-		JMenu sfcMenu = new JMenu(SFC_SUBMENU_TITLE);
-		toolsMenu.add(sfcMenu);
-
-		sfcMenu.addSeparator();
-
-		sfcMenu.add(executeIsolationAction);
-		sfcMenu.add(executeProductionAction);
-
-		sfcMenu.addSeparator();
-
-		sfcMenu.add(internalizeRecipeDataAction);
-		sfcMenu.add(storeInternalRecipeDataAction);
-		sfcMenu.add(initializeInternalRecipeDataAction);
-
-		sfcMenu.addSeparator();
-
-		JMenu showMenu = new JMenu(SHOW_ANCESTOR_TITLE);
-		sfcMenu.add(showMenu);
-		showMenu.add(executeShowProcedure);
-		showMenu.add(executeShowOperation);
-		showMenu.add(executeShowPhase);
-		showMenu.add(executeShowSuperior);
-
-		sfcMenu.addSeparator();
-		
-		sfcMenu.add(executeImportAction);
-		sfcMenu.add(executeExportAction);
-		
-		sfcMenu.addSeparator();
-		
-		sfcMenu.add(openUsersGuideAction);
-
-		MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  
-		merge.add(WellKnownMenuConstants.TOOLS_MENU_LOCATION, toolsMenu);
-		return merge;
-*/
 	}
 	
 	@Override
@@ -412,71 +354,11 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		this.context = ctx;
 		this.project = context.getProject();
 		
-		MenuBarMerge merge = null; /* PETE */
-		
 		DesignerUtil.context = ctx;
 		log.info("IlsSfcDesignerHook.startup...");
 		iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
 		/*		recipeEditorFrame = new RecipeEditorFrame(ctx, iaSfcHook.getWorkspace()); */
 		sfcWorkspace = iaSfcHook.getWorkspace();
-		
-		/* Try to attach my custom menu PETE */
-/*
-		log.info("Getting THE menu...");
-		MenuBarMerge theMenu = sfcWorkspace.getMenu();
-		if( theMenu != null ) {
-			log.infof("Got: %s", theMenu.toString());
-			
-			log.info("Creating a new merge menu...");
-			merge = new MenuBarMerge("sfc");  // as suggested in javadocs
-			
-			log.info("Creating SFC menu...");
-	    	JMenuMerge sfcMenu = new JMenuMerge("SFCs", "sfc.Menu.AlignBlocks");
-	    	// ".Menu.AlignBlocks" needs to be in the resource bundle or else it gets ? added to it.
-	    	log.info("Adding seperator...");
-			sfcMenu.addSeparator();	
-	    	log.info("Adding seperator...");
-			sfcMenu.addSeparator();	
-	
-			log.infof("Adding SFC menu to the merge..");
-	    	merge.add(sfcMenu);
-			
-	    	log.infof("Adding the merge to the main menu..");
-			theMenu.add(merge);
-			
-			
-			log.infof("Done!");
-		}
-		else {
-			log.info("--- the menu is null ---");
-		}
-*/		
-//		JMenuMerge toolsMenu = new JMenuMerge(WellKnownMenuConstants.TOOLS_MENU_NAME);
-//    	JMenuMerge sfcMenu = new JMenuMerge(SFC_SUBMENU_TITLE, "SFC.Menu."+SFC_SUBMENU_TITLE);
-
-//    	JMenuMerge sfcMenu = new JMenuMerge(SFC_SUBMENU_TITLE, BLTProperties.BUNDLE_PREFIX+".Menu.AlignBlocks");
-//		JMenuMerge sfcMenu = new JMenuMerge(SFC_SUBMENU_TITLE);
-
-    	/*
-    	JMenu sfcMenu = new JMenu(SFC_SUBMENU_TITLE);
-
-    	log.info("Adding seperator...");
-		sfcMenu.addSeparator();		
-		log.info("Adding seperator...");
-		sfcMenu.addSeparator();		
-		
-		log.info("Adding SFC menu to THE menu...");
-		//theMenu.add(sfcMenu);
-		
-		MenuBarMerge merge = new MenuBarMerge(SFCModule.MODULE_ID);  
-		merge.add(WellKnownMenuConstants.TOOLS_MENU_LOCATION, theMenu);
-		*/
-
-		/* end of creating new menu PETE */
-		
-		/*      	iaSfcHook.getWorkspace().getInnerWorkspace().addDesignableWorkspaceListener(recipeEditorFrame); */
-
-		/*      	frames.add(recipeEditorFrame); */
 
 		// Register steps
 		stepRegistry =  ((ClientStepRegistryProvider)iaSfcHook).getStepRegistry();
@@ -496,13 +378,6 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		PythonCall.setContext(ctx);
 		IlsClientScripts.setContext(context);
 		// Provide a central repository for the structure of the charts
-
-		// Commented out on 8/1/17 to unwind the old structure manager.
-		// Removing this eliminated all of the chart analysis that would happen when opening the designer.  I verified that I could still run charts 
-		// From Designer using the Run Production menu and correctly access recipe data.
-		//    	structureManager = new ChartStructureManager(context.getGlobalProject().getProject(),stepRegistry);
-		//		AbstractIlsStepDelegate.setStructureManager(structureManager);
-
 		// Pete's Structure compiler - instantiate this once in the beginning because the step registry is static.
 		structureCompilerV2 = new ChartStructureCompilerV2(context.getProject(), stepRegistry);
 
@@ -552,9 +427,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 
 
 	/**
-	 * We are dependent on the Ignition SFC module, but don't know about other modules that
-	 * also may be dependent on "com.inductiveautomation.sfc". In order for any custom chart
-	 * classes to be registered, we need to wait on those modules also
+	 * Wait a good long time, then loop through the modules. Become a listener on the dockable frames
 	 */
 	private class ModuleWatcher implements Runnable {
 		private final DesignerContext ctx;
@@ -562,22 +435,17 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			this.ctx = dc;
 		}
 		public void run() {
-			boolean ready = false;
-			while( !ready ) {
-				List<ModuleInfo> moduleInfos = ctx.getModules();
-				for( ModuleInfo minfo:moduleInfos ) {
-					Collection<ModuleDependency> dependencies = minfo.getDependencies();
-					for(ModuleDependency dep:dependencies) {
-						if( dep.getModuleId().equals(SFCModule.MODULE_ID) ) {
-							log.infof("%s.MainMenuWatcher ...%s depends on %s",CLSS,minfo.getName(),SFCModule.MODULE_ID);
-						}
-					}
-					// Don't really know how to wait until module is ready. We just assume it
-					// works by letting whatever calls startup() finish.
-					try { Thread.sleep( 2000 ); }
-					catch (InterruptedException ignore) {}
+			try { Thread.sleep( 20000 ); }
+			catch (InterruptedException ignore) {}
+			List<ModuleInfo> moduleInfos = ctx.getModules();
+			for( ModuleInfo minfo:moduleInfos ) {
+				String id = minfo.getId();
+				DesignerModuleHook hook = (DesignerModuleHook)context.getModule(id);
+				List<DockableFrame> frames = hook.getFrames();
+				for(DockableFrame frame:frames) {
+					frame.addDockableFrameListener(IlsSfcDesignerHook.this);
+					log.infof("%s.MainMenuWatcher ... listening to %s.%%s ",CLSS,minfo.getName(),frame.getTitle());
 				}
-				ready = true;
 			}
 		}
 	}
@@ -711,7 +579,8 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 					log.tracef("...inserting it into the addedResourceMap!");
 					addedResourceMap.put((long)op.getResourceId().hashCode(), op.getResource());
 				}
-			} else {
+			} 
+			else {
 				log.infof("...skipping a non-SFC resource...");
 			}
 		}
@@ -760,4 +629,100 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			}
 		}
 	}
+	// =========================================== DockableFrameListener ==========================================
+	// Listen to workspaces gaining and losing focus
+	@Override
+	public void dockableFrameActivated(DockableFrameEvent arg0) {
+		log.infof("%s.dockableFrameActivated  ... ",CLSS);
+		
+	}
+
+	@Override
+	public void dockableFrameAdded(DockableFrameEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dockableFrameAutohidden(DockableFrameEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dockableFrameAutohideShowing(DockableFrameEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dockableFrameDeactivated(DockableFrameEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dockableFrameDocked(DockableFrameEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dockableFrameFloating(DockableFrameEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dockableFrameHidden(DockableFrameEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dockableFrameMaximized(DockableFrameEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dockableFrameMoved(DockableFrameEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dockableFrameRemoved(DockableFrameEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dockableFrameRestored(DockableFrameEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dockableFrameShown(DockableFrameEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dockableFrameTabHidden(DockableFrameEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dockableFrameTabShown(DockableFrameEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dockableFrameTransferred(DockableFrameEvent arg0) {
+	}
+
 }
