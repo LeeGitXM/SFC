@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 
@@ -35,7 +37,6 @@ import com.inductiveautomation.ignition.common.BundleUtil;
 import com.inductiveautomation.ignition.common.Dataset;
 import com.inductiveautomation.ignition.common.licensing.LicenseState;
 import com.inductiveautomation.ignition.common.modules.ModuleInfo;
-import com.inductiveautomation.ignition.common.modules.ModuleInfo.ModuleDependency;
 import com.inductiveautomation.ignition.common.project.ChangeOperation.CreateResourceOperation;
 import com.inductiveautomation.ignition.common.project.ChangeOperation.DeleteResourceOperation;
 import com.inductiveautomation.ignition.common.project.ChangeOperation.ModifyResourceOperation;
@@ -47,12 +48,13 @@ import com.inductiveautomation.ignition.common.script.JythonExecException;
 import com.inductiveautomation.ignition.common.script.ScriptManager;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
+import com.inductiveautomation.ignition.designer.IgnitionDesigner;
+import com.inductiveautomation.ignition.designer.WorkspaceManager;
+import com.inductiveautomation.ignition.designer.WorkspaceManager.WorkspaceNavigationListener;
 import com.inductiveautomation.ignition.designer.model.AbstractDesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
 import com.inductiveautomation.ignition.designer.model.DesignerModuleHook;
 import com.inductiveautomation.ignition.designer.model.SaveContext;
-import com.inductiveautomation.ignition.designer.model.menu.JMenuMerge;
-import com.inductiveautomation.ignition.designer.model.menu.MenuBarMerge;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.client.api.ClientStepFactory;
 import com.inductiveautomation.sfc.client.api.ClientStepRegistry;
@@ -62,12 +64,10 @@ import com.inductiveautomation.sfc.designer.api.StepConfigRegistry;
 import com.inductiveautomation.sfc.designer.workspace.SfcDesignableContainer;
 import com.inductiveautomation.sfc.designer.workspace.SfcWorkspace;
 import com.jidesoft.docking.DockableFrame;
-import com.jidesoft.docking.event.DockableFrameEvent;
-import com.jidesoft.docking.event.DockableFrameListener;
 
 import system.ils.sfc.common.Constants;
 
-public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectResourceListener,DockableFrameListener {
+public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements DesignerModuleHook, ProjectResourceListener,WorkspaceNavigationListener {
 	private final static String CLSS = "IlsSfcDesignerHook";
 	private static final String SFC_SUBMENU_TITLE  = "SFC Extensions";
 	private static final String HOOK_BUNDLE_NAME = "designer";  // Properties file is designer.properties
@@ -92,9 +92,10 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 	
 	private DesignerContext context = null;
 	private Project project = null;
-	private MenuBarMerge sfcMenuMerge = null;    // Menu bar merge extensions for SFC module
+	private JMenu ilsSfcMenu = null;
 
 	private final LoggerEx log;
+	private final ResourceBundle rb = ResourceBundle.getBundle("com.ils.sfc.designer.designer");  // designer.properties
 	//private JPopupMenu stepPopup;
 	private SFCDesignerHook iaSfcHook;
 	private final List<DockableFrame> frames;
@@ -108,9 +109,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 
 	private static ClientStepRegistry stepRegistry;
 	private static SfcWorkspace sfcWorkspace;
-	static {
-		BundleUtil.get().addBundle(PREFIX,IlsSfcDesignerHook.class,HOOK_BUNDLE_NAME);
-	}
+
 
 	public IlsSfcDesignerHook() {
 		log = LogUtil.getLogger(getClass().getPackage().getName());
@@ -151,193 +150,7 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		}
 	}
 
-	// Create a new menu to control ILS extensions of the SFC module. 
-	// If the menu already exists, do nothing
-	@Override
-	public MenuBarMerge getModuleMenu() {
-
-		// ----------------------- Menu to launch recipe data importer and exporter (temporary until real fix)  -----------------------------
-		Action internalizeRecipeDataAction = new AbstractAction(RECIPE_DATA_INTERNALIZE) {
-			private static final long serialVersionUID = 5374887347733312464L;
-			public void actionPerformed(ActionEvent ae) {
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
-						recipeDataConverter.internalize();
-					}
-				}).start();
-			}
-		};
-
-		Action storeInternalRecipeDataAction = new AbstractAction(RECIPE_DATA_STORE) {
-			private static final long serialVersionUID = 5374487347733312464L;
-			public void actionPerformed(ActionEvent ae) {
-
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
-						recipeDataConverter.storeToDatabase();
-					}
-				}).start();
-			}
-		};
-
-		Action initializeInternalRecipeDataAction = new AbstractAction(RECIPE_DATA_INITIALIZE) {
-			private static final long serialVersionUID = 5374487347733312464L;
-			public void actionPerformed(ActionEvent ae) {
-
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
-						recipeDataConverter.initialize();
-					}
-				}).start();
-			}
-		};
-
-		// ----------------------- Menus to start current chart -----------------------------
-		Action executeIsolationAction = new AbstractAction(START_MENU_ISOLATION_TITLE) {
-			private static final long serialVersionUID = 5374887367733312464L;
-			public void actionPerformed(ActionEvent ae) {
-				log.infof("%s:Start Chart in Isolation selected...", CLSS);
-				SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-				Thread runner = new Thread(new ChartRunner(context, iaSfcHook.getWorkspace(), project.getName(), true));
-				runner.start();
-			}
-		};
-
-		Action executeProductionAction = new AbstractAction(START_MENU_PRODUCTION_TITLE) {
-			private static final long serialVersionUID = 5374667367733312464L;
-			public void actionPerformed(ActionEvent ae) {
-				log.infof("%s:Start Chart in Production selected...", CLSS);
-				SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
-				Thread runner = new Thread(new ChartRunner(context, iaSfcHook.getWorkspace(), project.getName(), false));
-				runner.start();
-			}
-		};
-
-		// ----------------------- Menus to show ancestors of the current chart -----------------------------
 		
-		Action executeShowProcedure = new AbstractAction(SHOW_PROCEDURE_TITLE) {
-			private static final long serialVersionUID = 4029901359528539762L;
-
-			public void actionPerformed(ActionEvent ae) {
-				// Show phase for currently displayed chart
-				SwingUtilities.invokeLater(new ShowAncestor(Constants.GLOBAL));
-			}
-		};
-		
-		Action executeShowOperation = new AbstractAction(SHOW_OPERATION_TITLE) {
-			private static final long serialVersionUID = 4029901359528539761L;
-
-			public void actionPerformed(ActionEvent ae) {
-				// Show operation for currently displayed chart
-				SwingUtilities.invokeLater(new ShowAncestor(Constants.OPERATION));
-			}
-		};
-
-		Action executeShowPhase = new AbstractAction(SHOW_PHASE_TITLE) {
-			private static final long serialVersionUID = 4029901359528539762L;
-
-			public void actionPerformed(ActionEvent ae) {
-				// Show phase for currently displayed chart
-				SwingUtilities.invokeLater(new ShowAncestor(Constants.PHASE));
-			}
-		};
-
-		Action executeShowSuperior = new AbstractAction(SHOW_SUPERIOR_TITLE) {
-			private static final long serialVersionUID = 4029901359528539763L;
-
-			public void actionPerformed(ActionEvent ae) {
-				// Show superior for currently displayed chart
-				SwingUtilities.invokeLater(new ShowAncestor(Constants.SUPERIOR));
-
-			}
-		};
-		// ----------------------- export/Import Actions -----------------------------------
-		Action executeExportAction = new AbstractAction(EXPORT_MENU_TITLE) {
-			private static final long serialVersionUID = 5384887367733312464L;
-			public void actionPerformed(ActionEvent ae) {
-				SwingUtilities.invokeLater(new ShowExportDialog());
-			}
-		};
-		Action executeImportAction = new AbstractAction(IMPORT_MENU_TITLE) {
-			private static final long serialVersionUID = 5394887367733312464L;
-			public void actionPerformed(ActionEvent ae) {
-				SwingUtilities.invokeLater(new ShowImportDialog());
-			}
-		};
-		
-		// ----------------------- Open User's Guide Actions -----------------------------------
-		Action openUsersGuideAction = new AbstractAction(USERS_GUIDE_TITLE) {
-			private static final long serialVersionUID = 5384887367733312465L;
-			public void actionPerformed(ActionEvent ae) {
-				String gatewayHostname = ClientSystemUtilities.getGatewayAddress();
-				log.tracef(String.format("Gateway Host: %s", gatewayHostname));
-				
-				String address = String.format("%s%s", gatewayHostname, "/main/system/moduledocs/com.ils.sfc/SFCUsersGuide.pdf");
-				log.infof(String.format("%s.HelpAction(): Document address is: %s", CLSS, address));
-				
-				// This Helpers class is pretty handy, not exactly sure how this is working...
-				Helpers.openURL(address);
-			}
-		};
-		
-		
-		// ----------------------- Build the Menu -----------------------------
-		log.infof("%s.getModuleMenu building ...", CLSS);
-		
-		// Try to attach my custom menu PETE 
-		log.infof("Getting THE menu... SFC is active %s",(sfcWorkspace.isActiveWorkspace()?"TRUE":"FALSE"));
-		
-		
-		if( sfcMenuMerge == null ) {
-			log.info("Creating a new merge menu...");
-			sfcMenuMerge = new MenuBarMerge(SFCModule.MODULE_ID);  // as suggested in javadocs
-		}
-		else {
-			log.info("The SFC menu exists ...");
-			return sfcMenuMerge;
-		}
-			
-		log.info("Creating SFC menu...");
-    	JMenuMerge sfcMenu = new JMenuMerge("SFC (ILS)",PREFIX+".Menu.SFC");
-    	// ".Menu.AlignBlocks" needs to be in the resource bundle or else it gets ? added to it.
-		
-    	sfcMenu.add(executeIsolationAction);
-		sfcMenu.add(executeProductionAction);
-    	
-		sfcMenu.addSeparator();	
-		
-		sfcMenu.add(internalizeRecipeDataAction);
-		sfcMenu.add(storeInternalRecipeDataAction);
-		sfcMenu.add(initializeInternalRecipeDataAction);
-		sfcMenu.addSeparator();	
-		
-		JMenu showMenu = new JMenu(SHOW_ANCESTOR_TITLE);
-		sfcMenu.add(showMenu);
-		showMenu.add(executeShowProcedure);
-		showMenu.add(executeShowOperation);
-		showMenu.add(executeShowPhase);
-		showMenu.add(executeShowSuperior);
-
-		sfcMenu.addSeparator();
-		
-		sfcMenu.add(executeImportAction);
-		sfcMenu.add(executeExportAction);
-
-		log.infof("Adding SFC menu to the merge..");
-		sfcMenuMerge.add(sfcMenu);
-		
-		log.infof("Done!");
-
-		return sfcMenuMerge;
-
-	}
-	
 	@Override
 	public void notifyProjectSaveStart(SaveContext ctx) {
 		log.infof("%s:notifyProjectSaveStart()...", CLSS);
@@ -406,28 +219,176 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 		/*		frames.remove(recipeEditorFrame); */
 	}
 
+
+
 	public ChartStructureManager getChartStructureManager() {return structureManager;}
+	
+	// Create a new menu to control ILS extensions of the SFC module. 
+	// This menu is attached to the SFC workspace menu.
+	private JMenu createIlsExtensionMenu() {
 
-	/**
-	 * Display a popup error dialog
-	 * Run in a separate thread, as a modal dialog in-line here will freeze the UI.
-	 */
-	private class ExceptionDialogRunner implements Runnable {
-		String msg = "";
+		// ----------------------- Menu to launch recipe data importer and exporter (temporary until real fix)  -----------------------------
+		Action internalizeRecipeDataAction = new AbstractAction(RECIPE_DATA_INTERNALIZE) {
+			private static final long serialVersionUID = 5374887347733312464L;
+			public void actionPerformed(ActionEvent ae) {
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
+						recipeDataConverter.internalize();
+					}
+				}).start();
+			}
+		};
 
-		public void setMsg(String errMsg) { this.msg = errMsg;};
+		Action storeInternalRecipeDataAction = new AbstractAction(RECIPE_DATA_STORE) {
+			private static final long serialVersionUID = 5374487347733312464L;
+			public void actionPerformed(ActionEvent ae) {
+
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
+						recipeDataConverter.storeToDatabase();
+					}
+				}).start();
+			}
+		};
+
+		Action initializeInternalRecipeDataAction = new AbstractAction(RECIPE_DATA_INITIALIZE) {
+			private static final long serialVersionUID = 5374487347733312464L;
+			public void actionPerformed(ActionEvent ae) {
+
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						RecipeDataConverter recipeDataConverter = new RecipeDataConverter(project, context);
+						recipeDataConverter.initialize();
+					}
+				}).start();
+			}
+		};
+
+		// ----------------------- Menus to start current chart -----------------------------
+		Action executeIsolationAction = new AbstractAction(START_MENU_ISOLATION_TITLE) {
+			private static final long serialVersionUID = 5374887367733312464L;
+			public void actionPerformed(ActionEvent ae) {
+				log.infof("%s:Start Chart in Isolation selected...", CLSS);
+				SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
+				Thread runner = new Thread(new ChartRunner(context, iaSfcHook.getWorkspace(), project.getName(), true));
+				runner.start();
+			}
+		};
+
+		Action executeProductionAction = new AbstractAction(START_MENU_PRODUCTION_TITLE) {
+			private static final long serialVersionUID = 5374667367733312464L;
+			public void actionPerformed(ActionEvent ae) {
+				log.infof("%s:Start Chart in Production selected...", CLSS);
+				SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
+				Thread runner = new Thread(new ChartRunner(context, iaSfcHook.getWorkspace(), project.getName(), false));
+				runner.start();
+			}
+		};
+
+		// ----------------------- Menus to show ancestors of the current chart -----------------------------
+
+		Action executeShowProcedure = new AbstractAction(SHOW_PROCEDURE_TITLE) {
+			private static final long serialVersionUID = 4029901359528539762L;
+
+			public void actionPerformed(ActionEvent ae) {
+				// Show phase for currently displayed chart
+				SwingUtilities.invokeLater(new ShowAncestor(Constants.GLOBAL));
+			}
+		};
+
+		Action executeShowOperation = new AbstractAction(SHOW_OPERATION_TITLE) {
+			private static final long serialVersionUID = 4029901359528539761L;
+
+			public void actionPerformed(ActionEvent ae) {
+				// Show operation for currently displayed chart
+				SwingUtilities.invokeLater(new ShowAncestor(Constants.OPERATION));
+			}
+		};
+
+		Action executeShowPhase = new AbstractAction(SHOW_PHASE_TITLE) {
+			private static final long serialVersionUID = 4029901359528539762L;
+
+			public void actionPerformed(ActionEvent ae) {
+				// Show phase for currently displayed chart
+				SwingUtilities.invokeLater(new ShowAncestor(Constants.PHASE));
+			}
+		};
+
+		Action executeShowSuperior = new AbstractAction(SHOW_SUPERIOR_TITLE) {
+			private static final long serialVersionUID = 4029901359528539763L;
+
+			public void actionPerformed(ActionEvent ae) {
+				// Show superior for currently displayed chart
+				SwingUtilities.invokeLater(new ShowAncestor(Constants.SUPERIOR));
+
+			}
+		};
+		// ----------------------- export/Import Actions -----------------------------------
+		Action executeExportAction = new AbstractAction(EXPORT_MENU_TITLE) {
+			private static final long serialVersionUID = 5384887367733312464L;
+			public void actionPerformed(ActionEvent ae) {
+				SwingUtilities.invokeLater(new ShowExportDialog());
+			}
+		};
+		Action executeImportAction = new AbstractAction(IMPORT_MENU_TITLE) {
+			private static final long serialVersionUID = 5394887367733312464L;
+			public void actionPerformed(ActionEvent ae) {
+				SwingUtilities.invokeLater(new ShowImportDialog());
+			}
+		};
+
+		// ----------------------- Open User's Guide Actions -----------------------------------
+		Action openUsersGuideAction = new AbstractAction(USERS_GUIDE_TITLE) {
+			private static final long serialVersionUID = 5384887367733312465L;
+			public void actionPerformed(ActionEvent ae) {
+				String gatewayHostname = ClientSystemUtilities.getGatewayAddress();
+				log.tracef(String.format("Gateway Host: %s", gatewayHostname));
+
+				String address = String.format("%s%s", gatewayHostname, "/main/system/moduledocs/com.ils.sfc/SFCUsersGuide.pdf");
+				log.infof(String.format("%s.HelpAction(): Document address is: %s", CLSS, address));
+
+				// This Helpers class is pretty handy, not exactly sure how this is working...
+				Helpers.openURL(address);
+			}
+		};
 
 
-		public void run() {
-			ExceptionDialog errorDlg = new ExceptionDialog(context, msg);
-			errorDlg.pack();
-			errorDlg.setVisible(true);
-		}
+		// ----------------------- Build the Menu -----------------------------
+
+		log.info("Creating SFC extension menu...");
+		JMenu sfcMenu = new JMenu(rb.getString("Menu.SFC"));
+		sfcMenu.add(executeIsolationAction);
+		sfcMenu.add(executeProductionAction);
+
+		sfcMenu.addSeparator();	
+
+		sfcMenu.add(internalizeRecipeDataAction);
+		sfcMenu.add(storeInternalRecipeDataAction);
+		sfcMenu.add(initializeInternalRecipeDataAction);
+		sfcMenu.addSeparator();	
+
+		JMenu showMenu = new JMenu(SHOW_ANCESTOR_TITLE);
+		sfcMenu.add(showMenu);
+		showMenu.add(executeShowProcedure);
+		showMenu.add(executeShowOperation);
+		showMenu.add(executeShowPhase);
+		showMenu.add(executeShowSuperior);
+
+		sfcMenu.addSeparator();
+
+		sfcMenu.add(executeImportAction);
+		sfcMenu.add(executeExportAction);
+		return sfcMenu;
+
 	}
 
-
 	/**
-	 * Wait a good long time, then loop through the modules. Become a listener on the dockable frames
+	 * Wait for the modules to be loaded, then become a listener
 	 */
 	private class ModuleWatcher implements Runnable {
 		private final DesignerContext ctx;
@@ -435,18 +396,21 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			this.ctx = dc;
 		}
 		public void run() {
-			try { Thread.sleep( 20000 ); }
-			catch (InterruptedException ignore) {}
-			List<ModuleInfo> moduleInfos = ctx.getModules();
-			for( ModuleInfo minfo:moduleInfos ) {
-				String id = minfo.getId();
-				DesignerModuleHook hook = (DesignerModuleHook)context.getModule(id);
-				List<DockableFrame> frames = hook.getFrames();
-				for(DockableFrame frame:frames) {
-					frame.addDockableFrameListener(IlsSfcDesignerHook.this);
-					log.infof("%s.MainMenuWatcher ... listening to %s.%%s ",CLSS,minfo.getName(),frame.getTitle());
+			// Wait for the SFC Module to be loaded
+			boolean loaded = false;
+			while( !loaded) {
+				try { Thread.sleep(2000); }
+				catch(InterruptedException ignore) {}
+				for(ModuleInfo info:ctx.getModules()) {
+					if( info.getId().equals(SFCModule.MODULE_ID)) {
+						loaded = true;
+						break;
+					}
 				}
 			}
+			IgnitionDesigner designer = (IgnitionDesigner)context.getFrame();
+			WorkspaceManager wmgr = designer.getWorkspace();
+			wmgr.addNavigationListener(IlsSfcDesignerHook.this);
 		}
 	}
 	/**
@@ -629,100 +593,38 @@ public class IlsSfcDesignerHook extends AbstractDesignerModuleHook implements De
 			}
 		}
 	}
-	// =========================================== DockableFrameListener ==========================================
+	// =========================================== WorkspaceNavigationListener ==========================================
 	// Listen to workspaces gaining and losing focus
 	@Override
-	public void dockableFrameActivated(DockableFrameEvent arg0) {
-		log.infof("%s.dockableFrameActivated  ... ",CLSS);
+	public void workspaceActivated(String key) {
+		if(key.equals(SfcWorkspace.KEY) ) {
+			log.infof("%s.workspaceActivated  ... %s",CLSS,key);
+			if(ilsSfcMenu==null) {
+				ilsSfcMenu = createIlsExtensionMenu();
+			}
+			IgnitionDesigner designer = (IgnitionDesigner)context.getFrame();
+			JMenuBar bar = designer.getJMenuBar();
+			bar.add(ilsSfcMenu);  // Gets added to end
+			bar.revalidate();
+
+		}
 		
 	}
 
 	@Override
-	public void dockableFrameAdded(DockableFrameEvent arg0) {
-		// TODO Auto-generated method stub
+	public void workspaceDeactivated(String key) {
+		if(key.equals(SfcWorkspace.KEY) ) {
+			log.infof("%s.workspaceDeactivated  ... %s",CLSS,key);
+			if(ilsSfcMenu!=null) {
+				IgnitionDesigner designer = (IgnitionDesigner)context.getFrame();
+				JMenuBar bar = designer.getJMenuBar();
+				bar.remove(ilsSfcMenu);
+				bar.revalidate();
+			}
+		}
 		
 	}
 
-	@Override
-	public void dockableFrameAutohidden(DockableFrameEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public void dockableFrameAutohideShowing(DockableFrameEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dockableFrameDeactivated(DockableFrameEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dockableFrameDocked(DockableFrameEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dockableFrameFloating(DockableFrameEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dockableFrameHidden(DockableFrameEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dockableFrameMaximized(DockableFrameEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dockableFrameMoved(DockableFrameEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dockableFrameRemoved(DockableFrameEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dockableFrameRestored(DockableFrameEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dockableFrameShown(DockableFrameEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dockableFrameTabHidden(DockableFrameEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dockableFrameTabShown(DockableFrameEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dockableFrameTransferred(DockableFrameEvent arg0) {
-	}
 
 }
