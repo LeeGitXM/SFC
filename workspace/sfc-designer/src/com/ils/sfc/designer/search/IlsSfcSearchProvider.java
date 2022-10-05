@@ -46,6 +46,8 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	public final static int SEARCH_STEP       = 2;
 	public final static int SEARCH_RECIPE     = 4;
 	public final static int SEARCH_TRANSITION = 8;
+	
+	public static final String CHART_TYPE_ID="charts";  // This doesn't belong here, IA should have this constant somewhere
 
 	private final LoggerEx log;
 	private final DesignerContext context;
@@ -60,6 +62,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
 		this.which = ChosenCharts.All;
 		this.allResources = null; 
+		log.infof("%s.creating an instance", TAG);
 	}
 
 	@Override
@@ -109,6 +112,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	// This is called when the popup is opened
 	@Override
 	public void selectObjects(SelectedObjectsHandler handler) {
+		log.infof("%s.selectObjects()...", TAG);
 		if (!this.popup.hidePopup()) {
 			SelectionPanel contents = new SelectionPanel(handler);
 			this.popup.showPopup(handler.getSelectionComponent(), contents);
@@ -125,7 +129,8 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	 */
 	@Override
 	public String selectedObjectsToString(List<Object> objects) {
-		this.allResources = context.getProject().getResourcesOfType(new ResourceType(SFCModule.MODULE_ID,ChartStructureCompilerV2.CHART_RESOURCE_TYPE));
+		log.infof("%s.selectedObjectsToString()...", TAG);
+		this.allResources = context.getProject().getResourcesOfType(new ResourceType(SFCModule.MODULE_ID, CHART_TYPE_ID));
 		this.which = chosen(objects);
 		StringBuilder sb = new StringBuilder();
 		sb.append(which.name() + " Charts");
@@ -135,6 +140,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	}
 	
 	private ChosenCharts chosen(List<Object> selection) {
+		log.infof("%s.chosen()...", TAG);
 		ChosenCharts which = null;
 		if ((selection == null) || (selection.isEmpty()))
 			which = ChosenCharts.All;
@@ -143,23 +149,43 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		}
 		return which;
 	}
+
 	// Create a list of resources for the charts of interest
+	// This appears to be called when the Find Window is posted and whenever the SFC search scope (all charts, open charts, selected charts) is changed
 	private List<ProjectResource> getResources(ChosenCharts which) {
+		log.infof("%s.getResources()...", TAG);
+		
 		List<ProjectResource> results = new ArrayList<>();
-		if( which.equals(ChosenCharts.All) ) {
+		
+		log.infof("Gathering ALL SFC resources...");
+		allResources = context.getProject().getResourcesOfType(new ResourceType(SFCModule.MODULE_ID, CHART_TYPE_ID));
+		log.infof("Found %d resources...", allResources.size());
+		for(ProjectResource aRes:allResources) {
+			log.infof("%s - found %s:%s", TAG, aRes.getResourceId().getProjectName(),
+					aRes.getResourceId().getResourcePath().getPath().toString());
+		}
+		
+		// All
+		if( which.equals(ChosenCharts.All) ) {			
+			log.infof("%s.getResources() - finding ALL resources...", TAG);
 			for(ProjectResource res:allResources) {
+				log.infof("%s.getResources() - adding %s...", TAG, res.getResourcePath());
 				results.add(res);
 			}
 		}
+		
 		// Open
 		else if( which.equals(ChosenCharts.Open) ) {
+			log.infof("%s.getResources() - finding OPEN resources...", TAG);
 			SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
 			SfcWorkspace workspace = iaSfcHook.getWorkspace();
 			Container root = workspace.getRootPane().getContentPane();
 			gatherResources(results,root);
 		}
+		
 		// Selected
 		else if( which.equals(ChosenCharts.Selected) ) {
+			log.infof("%s.getResources() - finding SELECTED resources...", TAG);
 			SfcFolderNode root = getSfcRootFolder();
 			TreePath[] paths = root.getSelectionModel().getSelectionPaths();
 			if(paths!=null) {
@@ -179,24 +205,31 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	
 	// 
 	private void gatherResources(List<ProjectResource> results, Container node)  {
+		log.infof("%s.gatherResources()...", TAG);
 		Component[] components = node.getComponents();                                                                                                      
 		for (Component child:components) {
+			//log.infof("A: %s", child.getClass().toString());
 			if ( child instanceof Container ) {
+				//log.infof(" B");
 				if( child instanceof SfcDesignPanel ) {
 					SfcDesignPanel panel = (SfcDesignPanel)child;
 					String resPath = panel.getDesignable().getResourcePath().getFolderPath();
+					log.infof("  Found a SFC Design Panel: %s", resPath);
 					for( ProjectResource pr:allResources) {
 						if( pr.getFolderPath() == resPath) {
+							log.infof("   D: Adding");
 							results.add(pr);
 						}
 					}
 				}
+				//log.infof("   D - making a recursive call...");
 				gatherResources(results,(Container)child);
 			}
 		}
 	}
 
 	private SfcFolderNode getSfcRootFolder() {
+		log.tracef("%s.getSfcRootFolder()...", TAG);
 		AbstractNavTreeNode global = context.getProjectBrowserRoot().getParent();
 		SfcFolderNode root = null;
 		Enumeration<Object> enumeration = global.children();
@@ -211,6 +244,9 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	}
 
 	// =============================== Popup Window ======================================
+	// This is the little popup window that allows the user to select the scope of charts to be searched.
+	// This only gets called when the user presses the little dropdown arrow to the right of the "SFC Charts" label
+	
 	public class SelectionPanel extends JPanel {
 		private static final long serialVersionUID = -7374750676641708299L;
 		SearchProvider.SelectedObjectsHandler handler;
@@ -232,7 +268,9 @@ public class IlsSfcSearchProvider implements SearchProvider {
 			add(all, "wrap");
 			add(selected,"wrap" );
 			add(open,"wrap");
+			log.info("Creating a SelectionPanel...");
 		}
+		
 		// Doubly nested
 		public class SelectionRadio extends JRadioButton {
 			private static final long serialVersionUID = -5779382592379733297L;

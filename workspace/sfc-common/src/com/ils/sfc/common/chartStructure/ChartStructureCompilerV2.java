@@ -59,6 +59,7 @@ public class ChartStructureCompilerV2 {
 		
 		log.infof("...preparing changed resources...");
 		for (ProjectResource res:changedResourceMap.values()){
+			log.infof("***  Resource Type *** %s - %s ", res.getResourceType().getModuleId(), res.getResourceType().getTypeId() );
 			log.infof("...processing chart: %s...", res.getFolderPath());
 			log.infof("    as a string: %s", res.toString());
 			log.infof("    project: %s",  res.getProjectName());
