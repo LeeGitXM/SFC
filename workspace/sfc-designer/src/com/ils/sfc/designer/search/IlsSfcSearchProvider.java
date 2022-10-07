@@ -25,19 +25,23 @@ import com.inductiveautomation.ignition.client.util.gui.PopupWrapper;
 import com.inductiveautomation.ignition.common.gui.progress.TaskProgressListener;
 import com.inductiveautomation.ignition.common.project.Project;
 import com.inductiveautomation.ignition.common.project.resource.ProjectResource;
+import com.inductiveautomation.ignition.common.project.resource.ResourcePath;
 import com.inductiveautomation.ignition.common.project.resource.ResourceType;
 import com.inductiveautomation.ignition.common.util.LogUtil;
 import com.inductiveautomation.ignition.common.util.LoggerEx;
+import com.inductiveautomation.ignition.designer.designable.AbstractDesignableWorkspace;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObject;
 import com.inductiveautomation.ignition.designer.findreplace.SearchObjectAggregator;
 import com.inductiveautomation.ignition.designer.findreplace.SearchProvider;
 import com.inductiveautomation.ignition.designer.model.DesignerContext;
+import com.inductiveautomation.ignition.designer.model.ResourceWorkspaceFrame;
 import com.inductiveautomation.ignition.designer.navtree.model.AbstractNavTreeNode;
 import com.inductiveautomation.sfc.SFCModule;
 import com.inductiveautomation.sfc.designer.SFCDesignerHook;
 import com.inductiveautomation.sfc.designer.tree.SfcFolderNode;
 import com.inductiveautomation.sfc.designer.tree.SfcNode;
 import com.inductiveautomation.sfc.designer.workspace.SfcDesignPanel;
+import com.inductiveautomation.sfc.designer.workspace.SfcDesignableContainer;
 import com.inductiveautomation.sfc.designer.workspace.SfcWorkspace;
 
 public class IlsSfcSearchProvider implements SearchProvider {
@@ -93,6 +97,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	// Called when the user selects "Find" from the dialog.
 	@Override
 	public Iterator<SearchObject> retrieveSearchableObjects(Collection<Object> selectedCategories, List<Object> arg1,TaskProgressListener progress) {
+		log.infof("%s.retrieveSearchableObjects()", TAG);
 		SearchObjectAggregator agg = new SearchObjectAggregator(progress);
 		int searchKey = 0;     // Describes what categories to search
 		if( selectedCategories.contains("Chart"))              searchKey += SEARCH_CHART;
@@ -103,7 +108,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		// Get a list of resources that we will consider for the search and pass it to the search engine.
 		List<ProjectResource> chartResources = getResources(which);
 		for(ProjectResource res:chartResources ) {
-			log.tracef("%s.retrieveSearchableObjects %s (%d)", TAG, res.getFolderPath(), res.getResourceId().hashCode());
+			log.infof("%s.retrieveSearchableObjects %s (%d)", TAG, res.getFolderPath(), res.getResourceId().hashCode());
 			agg.add(new ChartSearchCursor(context, res, project, searchKey));
 		}
 		return agg;
@@ -157,19 +162,23 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		
 		List<ProjectResource> results = new ArrayList<>();
 		
+		/*
+		 * I need to refresh the list of SFC charts when they open the Find dialog, it is not enough to build the list when they open the Designer.
+		 * This may not be the right place to get the list, but it is pretty lightweight
+		 */
+
 		log.infof("Gathering ALL SFC resources...");
 		allResources = context.getProject().getResourcesOfType(new ResourceType(SFCModule.MODULE_ID, CHART_TYPE_ID));
 		log.infof("Found %d resources...", allResources.size());
-		for(ProjectResource aRes:allResources) {
-			log.infof("%s - found %s:%s", TAG, aRes.getResourceId().getProjectName(),
-					aRes.getResourceId().getResourcePath().getPath().toString());
-		}
+		//for(ProjectResource aRes:allResources) {
+		//	log.infof("found %s:%s...", aRes.getResourceId().getProjectName(), aRes.getResourceId().getResourcePath().getPath().toString());
+		//}
 		
 		// All
 		if( which.equals(ChosenCharts.All) ) {			
 			log.infof("%s.getResources() - finding ALL resources...", TAG);
 			for(ProjectResource res:allResources) {
-				log.infof("%s.getResources() - adding %s...", TAG, res.getResourcePath());
+				log.tracef("%s.getResources() - adding %s...", TAG, res.getResourcePath());
 				results.add(res);
 			}
 		}
@@ -179,8 +188,30 @@ public class IlsSfcSearchProvider implements SearchProvider {
 			log.infof("%s.getResources() - finding OPEN resources...", TAG);
 			SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
 			SfcWorkspace workspace = iaSfcHook.getWorkspace();
-			Container root = workspace.getRootPane().getContentPane();
-			gatherResources(results,root);
+			
+			// Not sure what the inner workspace is
+			AbstractDesignableWorkspace innerWorkspace = workspace.getInnerWorkspace();
+			int tabCount = innerWorkspace.getTabCount();
+			log.tracef("Found %d tabs on the inner workspace", tabCount);
+			
+			log.tracef("Getting SFC resources associated with tabs...");
+			for (int j=0;j<tabCount;j++) {
+				Component component = innerWorkspace.getComponentAt(j);
+				if(component.getClass().getName().equals("com.inductiveautomation.sfc.designer.workspace.SfcDesignPanel")) {
+					log.tracef("At tab %d, found a SFC PANEL (%s)", j, component.getClass().toString());
+					SfcDesignPanel designPanel = (SfcDesignPanel) innerWorkspace.getComponentAt(j);
+					SfcDesignableContainer designableContainer = designPanel.getDesignable();
+					ResourcePath resourcePath = designableContainer.getResourcePath();
+					log.tracef("...with resource path: %s", resourcePath.toString());
+					
+					Optional<ProjectResource> option = context.getProject().getResource(resourcePath);
+					ProjectResource res = option.get();
+					results.add(res);
+				}
+			}
+
+			//Container root = workspace.getRootPane().getContentPane();
+			//gatherResources(results,root);
 		}
 		
 		// Selected
@@ -194,6 +225,7 @@ public class IlsSfcSearchProvider implements SearchProvider {
 						SfcNode node = (SfcNode)path.getLastPathComponent();
 						Optional<ProjectResource> res = node.getProjectResource();
 						if(!res.isEmpty()) {
+							log.infof("Found selected SFC node: %s", res.toString());
 							results.add(res.get());
 						}
 					}
@@ -229,14 +261,20 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	}
 
 	private SfcFolderNode getSfcRootFolder() {
-		log.tracef("%s.getSfcRootFolder()...", TAG);
-		AbstractNavTreeNode global = context.getProjectBrowserRoot().getParent();
+		/* Find the SFC Node in the project browser.  
+		 * Requires finding the root of the project browser and then iterating over its children and finding
+		 * the SFC node.
+		 */
+		log.infof("%s.getSfcRootFolder()...", TAG);
+		AbstractNavTreeNode browserRoot = context.getProjectBrowserRoot();
+		log.infof("Found a root named: %s", browserRoot.getName());
 		SfcFolderNode root = null;
-		Enumeration<Object> enumeration = global.children();
+		Enumeration<AbstractNavTreeNode> enumeration = browserRoot.children();
 		while( enumeration.hasMoreElements()) {
 			Object node = enumeration.nextElement();
 			if(node instanceof SfcFolderNode ) {
 				root = (SfcFolderNode)node;
+				log.infof("Found the SFC root node names %s!", root.getName());
 				break;
 			}
 		}

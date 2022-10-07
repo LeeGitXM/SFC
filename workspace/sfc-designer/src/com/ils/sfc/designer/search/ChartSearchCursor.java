@@ -68,7 +68,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 		
 		byte[] chartResourceData = res.getData();					
 		chartPath = res.getFolderPath();
-		log.tracef("%s.new - initializing a search cursor %s (%d)", TAG, chartPath,res.getResourceId());
+		log.infof("%s.new - initializing a search cursor for %s (%s)", TAG, chartPath, res.getResourceId().toString());
 		try {
 			GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
 			
@@ -78,9 +78,13 @@ public class ChartSearchCursor extends SearchObjectCursor {
 			
 			Element documentElement = xmlDocument.getDocumentElement();
 			
+			log.infof("Getting a step list...");
 			stepList = documentElement.getElementsByTagName("step");
+			
+			log.infof("Getting a transition list...");
 			transitionList = documentElement.getElementsByTagName("transition");
 			
+			log.infof("Getting a recipe data list");
 			try {
 				recipeList = (PyList)PythonCall.GET_RECIPE_SEARCH_RESULTS.exec(chartPath);
 			}
@@ -99,6 +103,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 			log.errorf("%s.next: ParserConfigException reading %s:%d (%s)",TAG,chartPath, res.getResourceId(),pce.getLocalizedMessage());
 		}
 	}
+	
 	@Override
 	public Object next() {
 		Object so = null;   // Search Object
