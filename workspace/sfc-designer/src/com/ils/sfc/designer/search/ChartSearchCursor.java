@@ -2,6 +2,8 @@ package com.ils.sfc.designer.search;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -14,6 +16,7 @@ import org.python.core.PyList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.ils.sfc.common.PythonCall;
@@ -51,7 +54,7 @@ public class ChartSearchCursor extends SearchObjectCursor {
 	private PyList recipeList = new PyList();
 	private PropertySearchCursor propertyCursor = null;
 
-	public ChartSearchCursor(DesignerContext ctx, ProjectResource resource, Project project, int key) {
+	public ChartSearchCursor(DesignerContext ctx, ProjectResource resource, int key) {
 		this.context = ctx;
 		this.res = resource;
 		this.searchKey = key;
@@ -60,47 +63,67 @@ public class ChartSearchCursor extends SearchObjectCursor {
 		searchRecipe = (searchKey & IlsSfcSearchProvider.SEARCH_RECIPE)!=0;
 		searchTransition = (searchKey & IlsSfcSearchProvider.SEARCH_TRANSITION)!=0;
 		this.log = LogUtil.getLogger(getClass().getPackage().getName());
+		log.infof("Creating a ChartSearchCursor...");
 		this.chartIndex = 0;
 		this.stepIndex = 0;
 		this.transitionIndex = 0;
 		this.recipeIndex = 0;
 		this.propertyCursor = null;
 		
-		byte[] chartResourceData = res.getData();					
+		/*
+		 * This was a bit of magic that changed from Ignition 7.x to 8.x
+		 * (Not sure how I was supposed to know that I needed to add "Sfc.xml") 
+		 */
+		byte[] chartResourceData = res.getData("sfc.xml");
+		
 		chartPath = res.getFolderPath();
 		log.infof("%s.new - initializing a search cursor for %s (%s)", TAG, chartPath, res.getResourceId().toString());
+		log.infof("Got %d bytes of resource data...", chartResourceData.length);
+		
 		try {
-			GZIPInputStream xmlInput = new GZIPInputStream(new ByteArrayInputStream(chartResourceData));
+			log.tracef("Converting the resource to a string...");
+			String xmlString = new String(chartResourceData, StandardCharsets.UTF_8);
+			log.tracef("The string is: %s", xmlString);
 			
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			xmlDocument = dBuilder.parse(xmlInput);
 			
+			log.tracef("Creating an InputSource from a string...");
+			InputSource is = new InputSource(new StringReader(xmlString));
+			log.tracef("...done!");
+			
+			log.tracef("Building an XML document from a string...");
+			xmlDocument = dBuilder.parse(is);
+			log.tracef("...built an XML document!");
+			
+			log.tracef("Getting XML document elements...");
 			Element documentElement = xmlDocument.getDocumentElement();
+			log.tracef("...done getting XML elements!");
 			
-			log.infof("Getting a step list...");
+			log.tracef("Getting a step list...");
 			stepList = documentElement.getElementsByTagName("step");
+			log.tracef("Step List: %s", stepList.toString());
 			
-			log.infof("Getting a transition list...");
+			log.tracef("Getting a transition list...");
 			transitionList = documentElement.getElementsByTagName("transition");
+			log.tracef("Transition List: %s", transitionList.toString());
 			
-			log.infof("Getting a recipe data list");
-			try {
+			log.infof("Getting a list of recipe data from Python...");
+			try {			
 				recipeList = (PyList)PythonCall.GET_RECIPE_SEARCH_RESULTS.exec(chartPath);
 			}
 			catch(JythonExecException jee) {
 				log.warnf("%s.next: JythonExecException executing %s:(%s)",TAG,PythonCall.GET_RECIPE_SEARCH_RESULTS,jee.getLocalizedMessage());
 			}
-		
 		}
 		catch(IOException ioe) {
-			log.errorf("%s.next: Exception reading %s:%d (%s)",TAG,chartPath, res.getResourceId(),ioe.getLocalizedMessage());
+			log.errorf("%s.next: Exception reading %s:%s (%s)", TAG, chartPath, res.getResourceId().toString(), ioe.getLocalizedMessage());
 		}
 		catch (SAXException saxe) {
-			log.errorf("%s.next: SAXException reading %s:%d (%s)",TAG,chartPath, res.getResourceId(),saxe.getLocalizedMessage());
+			log.errorf("%s.next: SAXException reading %s:%s (%s)", TAG, chartPath, res.getResourceId().toString(), saxe.getLocalizedMessage());
 		}
 		catch (ParserConfigurationException pce) {
-			log.errorf("%s.next: ParserConfigException reading %s:%d (%s)",TAG,chartPath, res.getResourceId(),pce.getLocalizedMessage());
+			log.errorf("%s.next: ParserConfigException reading %s:%s (%s)", TAG, chartPath, res.getResourceId().toString(), pce.getLocalizedMessage());
 		}
 	}
 	

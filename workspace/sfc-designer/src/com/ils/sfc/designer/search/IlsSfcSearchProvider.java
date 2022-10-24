@@ -106,11 +106,13 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		if( selectedCategories.contains("Transition"))         searchKey += SEARCH_TRANSITION;
 
 		// Get a list of resources that we will consider for the search and pass it to the search engine.
+		log.infof("Getting resources (in retrieveSearchableObjects)...");
 		List<ProjectResource> chartResources = getResources(which);
 		for(ProjectResource res:chartResources ) {
-			log.infof("%s.retrieveSearchableObjects %s (%d)", TAG, res.getFolderPath(), res.getResourceId().hashCode());
-			agg.add(new ChartSearchCursor(context, res, project, searchKey));
+			log.infof("%s.retrieveSearchableObjects %s (hash: %d) (string: %s)", TAG, res.getFolderPath(), res.getResourceId().hashCode(), res.toString());
+			agg.add(new ChartSearchCursor(context, res, searchKey));
 		}
+		log.infof("...done retrieving searchable objects!");
 		return agg;
 	}
 
@@ -155,28 +157,24 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		return which;
 	}
 
-	// Create a list of resources for the charts of interest
-	// This appears to be called when the Find Window is posted and whenever the SFC search scope (all charts, open charts, selected charts) is changed
+	/*
+	 * Create a list of resources for the charts of interest.
+	 * This is called:
+	 * 		1) When the Find Window is opened
+	 * 		2) whenever the SFC search scope (all charts, open charts, selected charts) is changed
+	 * 		3) when the Find button is pressed.
+	 */
 	private List<ProjectResource> getResources(ChosenCharts which) {
 		log.infof("%s.getResources()...", TAG);
 		
 		List<ProjectResource> results = new ArrayList<>();
 		
-		/*
-		 * I need to refresh the list of SFC charts when they open the Find dialog, it is not enough to build the list when they open the Designer.
-		 * This may not be the right place to get the list, but it is pretty lightweight
-		 */
-
-		log.infof("Gathering ALL SFC resources...");
-		allResources = context.getProject().getResourcesOfType(new ResourceType(SFCModule.MODULE_ID, CHART_TYPE_ID));
-		log.infof("Found %d resources...", allResources.size());
-		//for(ProjectResource aRes:allResources) {
-		//	log.infof("found %s:%s...", aRes.getResourceId().getProjectName(), aRes.getResourceId().getResourcePath().getPath().toString());
-		//}
-		
 		// All
 		if( which.equals(ChosenCharts.All) ) {			
-			log.infof("%s.getResources() - finding ALL resources...", TAG);
+			log.infof("...gathering ALL SFC resources...");
+			allResources = context.getProject().getResourcesOfType(new ResourceType(SFCModule.MODULE_ID, CHART_TYPE_ID));
+			log.infof("Found %d resources...", allResources.size());
+				
 			for(ProjectResource res:allResources) {
 				log.tracef("%s.getResources() - adding %s...", TAG, res.getResourcePath());
 				results.add(res);
@@ -185,16 +183,16 @@ public class IlsSfcSearchProvider implements SearchProvider {
 		
 		// Open
 		else if( which.equals(ChosenCharts.Open) ) {
-			log.infof("%s.getResources() - finding OPEN resources...", TAG);
+			log.infof("...using OPEN resources...", TAG);
 			SFCDesignerHook iaSfcHook = (SFCDesignerHook)context.getModule(SFCModule.MODULE_ID);
 			SfcWorkspace workspace = iaSfcHook.getWorkspace();
 			
 			// Not sure what the inner workspace is
 			AbstractDesignableWorkspace innerWorkspace = workspace.getInnerWorkspace();
 			int tabCount = innerWorkspace.getTabCount();
-			log.tracef("Found %d tabs on the inner workspace", tabCount);
+			log.tracef("...found %d tabs on the inner workspace", tabCount);
 			
-			log.tracef("Getting SFC resources associated with tabs...");
+			log.tracef("...getting SFC resources associated with tabs...");
 			for (int j=0;j<tabCount;j++) {
 				Component component = innerWorkspace.getComponentAt(j);
 				if(component.getClass().getName().equals("com.inductiveautomation.sfc.designer.workspace.SfcDesignPanel")) {
@@ -207,16 +205,14 @@ public class IlsSfcSearchProvider implements SearchProvider {
 					Optional<ProjectResource> option = context.getProject().getResource(resourcePath);
 					ProjectResource res = option.get();
 					results.add(res);
+					log.infof("...adding resource (%s) to the results list...", res.toString());
 				}
 			}
-
-			//Container root = workspace.getRootPane().getContentPane();
-			//gatherResources(results,root);
 		}
 		
 		// Selected
 		else if( which.equals(ChosenCharts.Selected) ) {
-			log.infof("%s.getResources() - finding SELECTED resources...", TAG);
+			log.infof("...using SELECTED resources...", TAG);
 			SfcFolderNode root = getSfcRootFolder();
 			TreePath[] paths = root.getSelectionModel().getSelectionPaths();
 			if(paths!=null) {
@@ -237,7 +233,9 @@ public class IlsSfcSearchProvider implements SearchProvider {
 	
 	// 
 	private void gatherResources(List<ProjectResource> results, Container node)  {
+		log.infof("*******************************");
 		log.infof("%s.gatherResources()...", TAG);
+		log.infof("*******************************");
 		Component[] components = node.getComponents();                                                                                                      
 		for (Component child:components) {
 			//log.infof("A: %s", child.getClass().toString());
