@@ -70,7 +70,7 @@ public class Constants {
 	public static final String DATABASE = "database";
 	public static final String DEADTIME = "deadTime";
 	public static final String DESCRIPTION = "description";
-	public static final String DEFAULT_MESSAGE_QUEUE = "SFC-Message-Queue";
+	public static final String DEFAULT_MESSAGE_QUEUE = "SFC";
 	public static final String DEFAULT_VALUE = "defaultValue";
 	public static final String DELAY = "delay";
 	public static final String DELAY_UNIT = "delayUnit";
